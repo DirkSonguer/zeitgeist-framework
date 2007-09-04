@@ -143,7 +143,7 @@ class zgMessages
 		return $retArray;
 	}
 
-	
+
 	/**
 	 * Clears all messages from the message stack
 	 * 

@@ -31,6 +31,7 @@
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/messages.class.php');
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/database.class.php');
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/configuration.class.php');
+	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/objectcache.class.php');
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/session.class.php');
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/errorhandler.class.php');
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/template.class.php');
