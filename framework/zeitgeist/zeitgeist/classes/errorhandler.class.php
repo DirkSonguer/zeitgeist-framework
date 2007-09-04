@@ -112,7 +112,7 @@ class zgErrorhandler
 			echo "Message: ". print_r( $errstr, true).'</p>';
 		}
 		
-		if ($this->outputLevel == 2) echo "\n\nContext:\n".print_r( $errcontext, true)."\n";
+		if ($this->outputLevel == 3) echo "\n\nContext:\n".print_r( $errcontext, true)."\n";
 	}	
 	
 }

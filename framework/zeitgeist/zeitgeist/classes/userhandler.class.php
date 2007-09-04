@@ -27,6 +27,8 @@ class zgUserhandler
 	
 	private $debug;
 	private $messages;
+	
+	public $rights;
 
 	/**
 	 * Class constructor
@@ -37,6 +39,8 @@ class zgUserhandler
 	{
 		$this->debug = zgDebug::init();
 		$this->messags = zgMessages::init();
+		
+		$this->rights = new zgUserrights();
 	}
 
 	

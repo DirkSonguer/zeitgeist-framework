@@ -119,7 +119,7 @@ class zgDebug
 		
 		if (!empty($backtrace['file']))
 		{
-			$newGuardMessage['filename'] = array_pop( explode('\\', $backtrace['file']) );
+			$newGuardMessage['filename'] = basename( array_pop( explode('\\', $backtrace['file']) ) );
 		}
 		
 		if (!empty($backtrace['class']))
@@ -171,7 +171,7 @@ class zgDebug
 
 		if (!empty($backtrace['file']))
 		{
-			$newGuardMessage['filename'] = array_pop( explode('\\', $backtrace['file']) );
+			$newGuardMessage['filename'] = basename( array_pop( explode('\\', $backtrace['file']) ) );
 		}
 		
 		if (!empty($backtrace['class']))
@@ -217,7 +217,7 @@ class zgDebug
 			$currentDebugLine .= '<td class="debugMessageLine">' . $debugID . '</td>';
 			$currentDebugLine .= '<td class="debugMessageLine">' . $debugMessage['executionTime'] . '</td>';
 			$currentDebugLine .= '<td class="debugMessageLine">' . strtoupper($debugMessage['type']) . '</td>';
-			$currentDebugLine .= '<td class="debugMessageLine">[' . $debugMessage['line'] . '] <strong>' . $debugMessage['filename'] . '</strong>::' .  $debugMessage['function'] . '</td>';
+			$currentDebugLine .= '<td class="debugMessageLine">[' . $debugMessage['line'] . '] <strong>' . $debugMessage['filename'] . '</strong></td>';
 			$currentDebugLine .= '<td class="debugMessageLine">' . $debugMessage['message'] . '</td>';
 
 			echo($currentDebugLine);
@@ -237,7 +237,7 @@ class zgDebug
 		echo '<h1>GuardMessages</h1>';
 		
 		echo '<table border="1" class="guardMessages">';
-		echo '<tr><th>ID</th><th>Time</th><th>Memory</th><th>Type</th><th>File</th><th>Parameters/ Return Value</th></tr>';
+		echo '<tr><th>ID</th><th>Time</th><th>Memory</th><th>Type</th><th>File</th></tr>';
 
 		foreach ($this->guardMessages as $guardID => $guardMessage)
 		{
@@ -260,15 +260,18 @@ class zgDebug
 				$currentGuardLine .= '<td class="guardMessageLine">' . $guardMessage['type'] . '</td>';
 				
 				$currentGuardLine .= '<td class="guardMessageLine">';
-				if (!empty($guardMessage['line'])) $currentGuardLine .= '[' . $guardMessage['line'] . ']';
-					else $currentGuardLine .= '[ ]';
 					
-				if (!empty($guardMessage['filename'])) $currentGuardLine .= '<strong>' . $guardMessage['filename'] . '</strong>::';
-					else $currentGuardLine .= '<strong> </strong>::';
-  
-				if (!empty($guardMessage['function'])) $currentGuardLine .= $guardMessage['function'];
+				if (!empty($guardMessage['filename'])) $currentGuardLine .= '[<span class="guardFile">' . $guardMessage['filename'] . '</span> ';
+					else $currentGuardLine .= '[ ';
+
+				if (!empty($guardMessage['line'])) $currentGuardLine .= '(<span class="guardLine">' . $guardMessage['line'] . '</span>)] ';
+					else $currentGuardLine .= ' ]';
+					
+				if (!empty($guardMessage['filename'])) $currentGuardLine .= '<span class="guardClass">' . $guardMessage['class'] . '-&gt;</span>';
 					else $currentGuardLine .= ' ';
-				$currentGuardLine .= '</td>';
+					
+				if (!empty($guardMessage['function'])) $currentGuardLine .= '<span class="guardFunction">' . $guardMessage['function'] . '</span>';
+					else $currentGuardLine .= ' ';
 				
 				if ($guardMessage['type'] == 'GUARD')
 				{
@@ -283,13 +286,15 @@ class zgDebug
 						$argstring = implode(',', $guardMessage['args']);
 					}
 					
-					$currentGuardLine .= '<td class="guardMessageLine">' . $guardMessage['function'] . '('.$argstring . ')</td>';
+					$currentGuardLine .= '('.$argstring . ')';
 				}
 				else
 				{
-					$currentGuardLine .= '<td class="guardMessageLine">' . $guardMessage['function'] . "() returned with: <span class=\"guardArgument\">'" . $guardMessage['returnValue'] . "'</span></td>";
+					$currentGuardLine .= "() returned with: <span class=\"guardArgument\">'" . $guardMessage['returnValue'] . "'</span>";
 				}
-	
+				
+				$currentGuardLine .= '</td>';
+				
 				echo($currentGuardLine);
 				echo '</tr>';
 			}

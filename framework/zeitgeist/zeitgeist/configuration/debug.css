@@ -10,6 +10,10 @@
 .debug td { font-size: 9pt; border-collapse: collapse; border: 1px; border-style: solid; border-color: #A0A0A0; vertical-align: top; text-align: left; }
 .debug th { font-size: 9pt; border-collapse: collapse; border: 1px; border-style: solid; border-color: #A0A0A0; vertical-align: top; text-align: left; }
 .debug span.guardArgument { color: #339933; }
+.debug span.guardLine { color: #993333; }
+.debug span.guardFile { color: #993333; }
+.debug span.guardClass {  }
+.debug span.guardFunction { font-weight:bold; }
 .debug span.unguardArgument { color: #339933; }
 
 </style>
