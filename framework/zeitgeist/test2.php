@@ -43,7 +43,7 @@
 	echo $testconfig . "<br />";
 	$testconfig = $configuration->getConfiguration('zeitgeist', 'userhandler', 'table_users');
 	echo $testconfig . "<br />";
-	$testconfig = $configuration->getConfiguration('test', 'show', 'PreSnapin');
+	$testconfig = $configuration->getConfiguration('test', 'show', 'PreSnapIn');
 	echo $testconfig . "<br />";
 	
 	foreach ($testconfig as $test)

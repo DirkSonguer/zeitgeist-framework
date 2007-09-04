@@ -206,7 +206,7 @@ class zgSession
 	 * 
 	 * @return integer 
 	 */
-	public function getSessionID()
+	public function getSessionId()
 	{
 		$this->debug->guard();
 		

@@ -27,6 +27,7 @@ class zgUserhandler
 	
 	private $debug;
 	private $messages;
+	private $session;
 	
 	public $rights;
 
@@ -38,7 +39,8 @@ class zgUserhandler
 	private function __construct()
 	{
 		$this->debug = zgDebug::init();
-		$this->messags = zgMessages::init();
+		$this->messages = zgMessages::init();
+		$this->session = zgSession::init();
 		
 		$this->rights = new zgUserrights();
 	}
@@ -62,7 +64,22 @@ class zgUserhandler
 	
 	public function establishUserSession()
 	{
+		$this->debug->guard();
 		
+		if (!$this->session->getSessionId())
+		{
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		if (!$this->session->getSessionVariable('user_userid'))
+		{
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$this->debug->unguard(true);
+		return true;
 	}
 	
 	private function _validateUserSession()

@@ -42,8 +42,8 @@ class zgConfiguration
 		$this->messages = zgMessages::init();
 
 		$this->database = new zgDatabase();
-//		$this->database->connect();
-//		$this->database->setDBCharset('utf8');
+		$this->database->connect();
+		$this->database->setDBCharset('utf8');
 
 		$this->configuration = array();
 	}
@@ -184,9 +184,6 @@ class zgConfiguration
 	private function _loadConfigurationFromDatabase($filename)
 	{
 		$this->debug->guard();
-		
-		$this->debug->unguard(false);
-		return false;
 
 		$res = $this->database->query("SELECT * FROM " . ZG_DB_CONFIGURATIONCACHE . " WHERE " . ZG_DB_CONFIGURATIONCACHE . "_name = '".$filename."'");
 	
@@ -241,9 +238,6 @@ class zgConfiguration
 	private function _saveConfigurationToDatabase($filename, $configuration)
 	{
 		$this->debug->guard();
-		
-		$this->debug->unguard(false);
-		return false;
 		
 		$serializedConfiguration = serialize($configuration);
 		if ($serializedConfiguration == '')

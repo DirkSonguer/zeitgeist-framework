@@ -38,7 +38,7 @@ class zgObjectcache
 	private function __construct()
 	{
 		$this->debug = zgDebug::init();
-		$this->messags = zgMessages::init();
+		$this->messages = zgMessages::init();
 		
 		$this->objects = array();
 	}
