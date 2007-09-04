@@ -1,0 +1,15 @@
+<style type="text/css">
+
+.debug { font-family:'Verdana'; color: black; background-color: #FFFFFF; vertical-align: top; text-align: left; clear: both; }
+.debug table { border-collapse: collapse; width: 100%; border: 1px; border-style: solid; border-color: #A0A0A0; }
+.debug tr.guardLine { background-color: #DAEFDA; }
+.debug tr.unguardLine { background-color: #fcd4be; }
+.debug tr.message { background-color: #DAEFDA; }
+.debug tr.warning { background-color: #ECC4AE; }
+.debug tr.error { background-color: #CF5A5A; }
+.debug td { font-size: 9pt; border-collapse: collapse; border: 1px; border-style: solid; border-color: #A0A0A0; vertical-align: top; text-align: left; }
+.debug th { font-size: 9pt; border-collapse: collapse; border: 1px; border-style: solid; border-color: #A0A0A0; vertical-align: top; text-align: left; }
+.debug span.guardArgument { color: #339933; }
+.debug span.unguardArgument { color: #339933; }
+
+</style>
