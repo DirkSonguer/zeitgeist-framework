@@ -28,8 +28,10 @@ class zgUserhandler
 	private $debug;
 	private $messages;
 	private $session;
+	private $database;
 	
 	public $rights;
+	public $userdata;
 
 	/**
 	 * Class constructor
@@ -41,6 +43,10 @@ class zgUserhandler
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
 		$this->session = zgSession::init();
+
+		$this->database = new zgDatabase();
+		$this->database->connect();
+		$this->database->setDBCharset('utf8');
 		
 		$this->rights = new zgUserrights();
 	}
@@ -82,18 +88,46 @@ class zgUserhandler
 		return true;
 	}
 	
+	
 	private function _validateUserSession()
 	{
 		
 	}
 	
-	public function loginUser()
+	public function loginUser($name, $password)
 	{
 		$this->debug->guard();
 		
-		echo "loginUser<br />";
-		$this->debug->unguard("yo");
-		return "yo";
+		$userTablename = $this->configuration->getConfiguration('zeitgeist','userhandler','table_users');
+		$sql = "SELECT * FROM " . $userTablename . " WHERE user_name = '" . $name . "' AND user_password = '". md5($password) . "'";
+	
+	    if ($res = $this->database->query($sql))
+	    {
+	        if ($this->database->numRows($res))
+	        {
+	            $row = $this->database->fetchArray($res);
+	        	$this->session->setSessionVariable('user_userid', $row['user_id']);
+				$this->debug->unguard(true);
+				return true;
+	        }
+	        else
+	        {
+				$this->debug->write('Error validating a user: user not found or password is wrong', 'error');
+				$this->messages->setMessage('Error validating a user: user not found or password is wrong', 'error');
+				$this->debug->unguard(false);
+				return false;
+	        }
+	    }
+	    else
+	    {
+			$this->debug->write('Error searching a user: could not read the user table', 'error');
+			$this->messages->setMessage('Error searching a user: could not read the user table', 'error');
+			$this->debug->unguard(false);
+			return false;
+	    }
+		
+		$this->debug->unguard(false);
+		return false;
 	}
 	
 	public function logoutUser()
