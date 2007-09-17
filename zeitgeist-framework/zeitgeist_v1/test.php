@@ -52,7 +52,6 @@
 	$testconfig = $configuration->getConfiguration('zeitgeist', 'userhandler', 'table_users');
 //	echo $testconfig . "<br />";
 	
-	
 	if (!$sesstest = $session->getSessionVariable('test'))
 	{
 		$session->setSessionVariable('test', 1);
