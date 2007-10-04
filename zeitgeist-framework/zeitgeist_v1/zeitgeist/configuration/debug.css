@@ -3,7 +3,7 @@
 .debug { font-family:'Verdana'; color: black; background-color: #FFFFFF; vertical-align: top; text-align: left; clear: both; }
 .debug table { border-collapse: collapse; width: 100%; border: 1px; border-style: solid; border-color: #A0A0A0; }
 .debug tr.guardLine { background-color: #DAEFDA; }
-.debug tr.unguardLine { background-color: #fcd4be; }
+.debug tr.unguardLine { background-color: #fcd4be;}
 .debug tr.message { background-color: #DAEFDA; }
 .debug tr.warning { background-color: #ECC4AE; }
 .debug tr.error { background-color: #CF5A5A; }

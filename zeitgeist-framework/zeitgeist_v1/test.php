@@ -49,7 +49,7 @@
 	$configuration->loadConfiguration('test', 'test1.ini');
 	$testconfig = $configuration->getConfiguration('test', 'create', 'department_color');
 //	echo $testconfig . "<br />";
-	$testconfig = $configuration->getConfiguration('zeitgeist', 'userhandler', 'table_users');
+	$testconfig = $configuration->getConfiguration('zeitgeist', 'tables', 'table_users');
 //	echo $testconfig . "<br />";
 	
 	if (!$sesstest = $session->getSessionVariable('test'))

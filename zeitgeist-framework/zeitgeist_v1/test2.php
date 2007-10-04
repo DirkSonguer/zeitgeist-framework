@@ -32,16 +32,22 @@
 	$debug->write('test');
 	$message->setMessage('Test', 'test.php');
 	
-	$ret = $user->loginUser();
-	echo $ret."<br />";
+	
+	if(!$user->establishUserSession())
+	{
+		$debug->write('Could not relogin user. logging again', 'error');
+		$ret = $user->loginUser('dirk', 'dirk');
+		echo $ret."<br />";
+	}
 
-	$ret = $user->rights->hasUserright();
+	$ret = $user->userrights->hasUserright();
 	echo $ret."<br />";
+	
 
 	$configuration->loadConfiguration('test', 'test1.ini');
 	$testconfig = $configuration->getConfiguration('test', 'create', 'department_color');
 	echo $testconfig . "<br />";
-	$testconfig = $configuration->getConfiguration('zeitgeist', 'userhandler', 'table_users');
+	$testconfig = $configuration->getConfiguration('zeitgeist', 'tables', 'table_users');
 	echo $testconfig . "<br />";
 	$testconfig = $configuration->getConfiguration('test', 'show', 'PreSnapIn');
 	echo $testconfig . "<br />";

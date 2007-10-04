@@ -32,6 +32,7 @@ class zgSession
 	
 	private $storageMode;
 	private $newSession;
+	private $boundIP;
 
 	/**
 	 * Class constructor
@@ -48,8 +49,9 @@ class zgSession
 		$this->database->connect();
 		$this->database->setDBCharset('utf8');
 		
+		$this->boundIP = '';
 		$this->newSession = true;
-		$this->storageMode  = $this->configuration->getConfiguration('zeitgeist','session','session_storage');
+		$this->storageMode = $this->configuration->getConfiguration('zeitgeist','session','session_storage');
 	}
 
 
@@ -215,6 +217,22 @@ class zgSession
 		$this->debug->unguard($ret);
 		return $ret;
 	}
+	
+	
+	/**
+	 * gets the ip which is bound to the session id
+	 * 
+	 * @return string 
+	 */
+	public function getBoundIP()
+	{
+		$this->debug->guard();
+		
+		$ret = $this->boundIP;
+		
+		$this->debug->unguard($ret);
+		return $ret;
+	}	
 
 
 	/**
@@ -258,7 +276,7 @@ class zgSession
 		
 		$id = mysql_real_escape_string($id);
 		
-		$sessionTablename = $this->configuration->getConfiguration('zeitgeist','session','table_sessiondata');
+		$sessionTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_sessiondata');
 	    $sql = "SELECT * FROM " . $sessionTablename . " WHERE " . $sessionTablename . "_id = '" . $id . "'";
 	
 	    if ($res = $this->database->query($sql))
@@ -267,6 +285,7 @@ class zgSession
 	        {
 	            $row = $this->database->fetchArray($res);
 	            $sessiondata = $row[$sessionTablename.'_content'];
+	            $this->boundIP = $row[$sessionTablename.'_ip'];
 	            
 	            $this->newSession = false;
 
@@ -306,12 +325,12 @@ class zgSession
 	    $access = mysql_real_escape_string($access);
 	    $data = mysql_real_escape_string($data);
 
-	   	$sessionTablename = $this->configuration->getConfiguration('zeitgeist','session','table_sessiondata');
+	   	$sessionTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_sessiondata');
 	    
 	    if ($this->newSession)
 	    {
 			$startTime = time();
-		    $sql = "INSERT INTO " . $sessionTablename . " VALUES  ('" . $id . "', '" . $startTime . "', '" . $currentTime . "', '" . $data . "')";
+		    $sql = "INSERT INTO " . $sessionTablename . " VALUES  ('" . $id . "', '" . $startTime . "', '" . $currentTime . "', '" . $data . "', '" . getenv('REMOTE_ADDR') . "')";
 	    }
 	    else
 	    {
@@ -340,7 +359,7 @@ class zgSession
 		
 	    $id = mysql_real_escape_string($id);
 	
-		$sessionTablename = $this->configuration->getConfiguration('zeitgeist','session','table_sessiondata');
+		$sessionTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_sessiondata');
 	    $sql = "DELETE FROM " . $sessionTablename . " WHERE " . $sessionTablename . "_id = '" . $id . "'";
 	
 	    $ret = $this->database->query($sql);
@@ -364,7 +383,7 @@ class zgSession
 		$old = time() - $max;
 	    $old = mysql_real_escape_string($old);
 	
-		$sessionTablename = $this->configuration->getConfiguration('zeitgeist','session','table_sessiondata');
+		$sessionTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_sessiondata');
 	    $sql = "DELETE FROM " . $sessionTablename . " WHERE " . $sessionTablename . "_created < '" . $old . "'";
 	
 	    $ret = $this->database->query($sql);
