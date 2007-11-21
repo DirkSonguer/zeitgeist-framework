@@ -6,7 +6,7 @@
  * Userrights class
  * 
  * @author Dirk Songür <songuer@zeitgeist-framework.com>
- * @version 1.0.1 - 28.08.2007
+ * @version 1.0.2 - 18.11.2007
  * 
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
@@ -23,11 +23,11 @@ defined('ZEITGEIST_ACTIVE') or die();
  */
 class zgUserrights
 {
-	private $debug;
-	private $messages;
-	private $session;
-	private $configuration;
-	private $database;
+	protected $debug;
+	protected $messages;
+	protected $session;
+	protected $configuration;
+	protected $database;
 	
 	public $userrights;
 	
@@ -43,7 +43,6 @@ class zgUserrights
 		
 		$this->database = new zgDatabase();
 		$this->database->connect();
-		$this->database->setDBCharset('utf8');
 	}
 	
 
@@ -139,16 +138,30 @@ class zgUserrights
 	}
 	
 	
-	
-	public function hasUserright()
+	/**
+	 * Check if the user has a given userright
+	 * 
+	 * @param integer $actionid id of the action
+	 * 
+	 * @return boolean 
+	 */	
+	public function hasUserright($actionid)
 	{
 		$this->debug->guard();
 		
-		echo "hasUserright<br />";
-		$this->debug->unguard("yo");
-		return "yo";
+		if (!empty($this->userrights[$actionid]))
+		{
+			$this->debug->unguard(true);
+			return true;		
+		}
 		
+		$this->debug->write('User does not have the requested right for action ('.$actionid.')', 'warning');
+		$this->messages->setMessage('User does not have the requested right for action ('.$actionid.')', 'warning');
+		
+		$this->debug->unguard(false);
+		return false;		
 	}
+	
 	
 	public function setUserright()
 	{

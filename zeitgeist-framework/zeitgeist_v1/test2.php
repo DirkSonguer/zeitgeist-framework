@@ -20,7 +20,7 @@
 	define(ZG_DB_DBSERVER, 'localhost');
 	define(ZG_DB_USERNAME, 'zeitgeist');
 	define(ZG_DB_USERPASS, 'zeitgeist');
-	define(ZG_DB_DATABASE, 'zeitgeist');
+	define(ZG_DB_DATABASE, 'zeitgeist_test1');
 	define(ZG_DB_CONFIGURATIONCACHE, 'configurationcache');
 	
 	$debug = zgDebug::init();
@@ -36,14 +36,18 @@
 	if(!$user->establishUserSession())
 	{
 		$debug->write('Could not relogin user. logging again', 'error');
-		$ret = $user->loginUser('dirk', 'dirk');
+		$ret = $user->loginUser('songuer', 'songuer');
 		echo $ret."<br />";
 	}
-
-	$ret = $user->userrights->hasUserright();
-	echo $ret."<br />";
 	
+	echo "logged: ".$user->isLoggedIn()."<br />";
 
+	$ret = $user->userrights->hasUserright('test');
+	echo "Userrights: ".$ret."<br />";
+	
+	$ret = $user->userdata->getUserdata();
+	echo "Userdata: ".$ret."<br />";
+	
 	$configuration->loadConfiguration('test', 'test1.ini');
 	$testconfig = $configuration->getConfiguration('test', 'create', 'department_color');
 	echo $testconfig . "<br />";
@@ -56,6 +60,8 @@
 	{
 		echo $test."<br />";	
 	}
+	
+	$user->saveUserstates();
 	
 	$debug->loadStylesheet('debug.css');
 	$debug->showInnerLoops = true;

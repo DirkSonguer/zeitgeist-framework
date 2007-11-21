@@ -25,8 +25,8 @@ class zgMessages
 {
 	private static $instance = false;
 	
-	private $debug;
-	private $messages;
+	protected $debug;
+	protected $messages;
 
 	/**
 	 * Class constructor

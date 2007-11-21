@@ -1,0 +1,238 @@
+<?php
+/**
+ * Zeitgeist Browsergame Framework
+ * http://www.zeitgeist-framework.com
+ *
+ * Eventhandler class
+ * 
+ * @author Dirk Songür <songuer@zeitgeist-framework.com>
+ * @version 1.0.2 - 21.11.2007
+ * 
+ * @copyright http://www.zeitgeist-framework.com
+ * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
+ * 
+ * @package ZEITGEIST
+ * @subpackage ZEITGEIST EVENTHANDLER
+ */
+
+defined('ZEITGEIST_ACTIVE') or die();
+
+class zgEventhandler
+{
+	protected $debug;
+	protected $messages;
+	protected $database;
+	protected $configuration;
+	
+	protected $preSnapInList;
+	protected $postSnapInList;
+	
+
+	/**
+	 * Class constructor
+	 * 
+	 * The constructor is set to private to prevent files from calling the class as a class instead of a singleton.
+	 */
+	public function __construct()
+	{
+		$this->debug = zgDebug::init();
+		$this->messages = zgMessages::init();
+		$this->configuration = zgConfiguration::init();
+		
+		$this->database = new zgDatabase();
+		$this->database->connect();
+		
+		$this->preSnapInList = array();
+		$this->postSnapInList = array();
+	}
+
+
+//method_exists
+
+	
+	protected function _getModuleData($module)
+	{
+		$this->debug->guard();
+		
+		$modulesTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_modules');
+		$sql = "SELECT * FROM " . $modulesTablename . " WHERE module_name = '" . $module . "'";
+		
+	    if ($res = $this->database->query($sql))
+	    {
+	        $row = $this->database->fetchArray($res);
+
+	        $this->debug->unguard($row);
+			return $row;
+	    }
+	    else
+	    {
+			$this->debug->unguard(false);
+			return false;
+	    }
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+
+	
+	protected function _getActionData($module, $action)
+	{
+		$this->debug->guard();
+		
+		$actionsTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_actions');
+		$sql = "SELECT * FROM " . $actionsTablename . " WHERE action_module = '" . $module['module_id'] . "' AND action_name = '" . $action . "'";
+
+		if ($res = $this->database->query($sql))
+	    {
+	        $row = $this->database->fetchArray($res);
+
+	        $this->debug->unguard($row);
+			return $row;
+	    }
+	    else
+	    {
+			$this->debug->unguard(false);
+			return false;
+	    }
+		
+		$this->debug->unguard(true);
+		return true;
+	}	
+	
+	
+	protected function _loadSnapIns($snapinList)
+	{
+		$this->debug->guard();
+		
+		if (is_array($snapinList))
+		{
+			if ( (!empty($snapinList['PreSnapIn'])) && (is_array($snapinList['PreSnapIn'])) )
+			{
+				foreach ($snapinList['PreSnapIn'] as $v)
+				{
+					$this->preSnapInList[] = $v;
+				}
+			}
+			
+			if ( (!empty($snapinList['PostSnapIn'])) && (is_array($snapinList['PostSnapIn'])) )
+			{
+				foreach ($snapinList['PostSnapIn'] as $v)
+				{
+					$this->postSnapInList[] = $v;
+				}
+			}			
+		}
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+	
+	
+	
+	
+	protected function _executePreSnapIns($parameters)
+	{
+		$this->debug->guard();
+		
+		
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+
+	protected function _executePostSnapIns($parameters)
+	{
+		$this->debug->guard();
+		
+		
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+	
+	
+	
+	public function callEvent($module, $action, $parameters='', $user='')
+	{
+		$this->debug->guard();
+		
+		// check if module is installed and get module data
+		if (!$moduleData = $this->_getModuleData($module))
+		{
+			die('Error loading the module: Module is not found/ installed. Zeitgeist halted!');
+		}
+		
+		// check from data if module is active
+		if ($moduleData['module_active'] != '1')
+		{
+			die('Error loading the module: Module is not active. Zeitgeist halted!');
+		}
+		
+		// check if the classname is already used
+		if (class_exists($module, false))
+		{
+			die('Error loading the module class: Class name already used. Zeitgeist halted!');
+		}
+		
+		//check if zeitgeist can load the module
+		if (!class_exists($module, true))
+		{
+			die('Error loading the module class: Could not find matching class ('.$module.'). Zeitgeist halted!');
+		}
+		
+		// load the module class through the autoloader
+		$moduleClass = new $module;
+		
+		// check if action is installed and get action data
+		if (!$actionData = $this->_getActionData($moduleData, $action))
+		{
+			die('Error loading the action ('.$action.') in module ('.$module.'): Action is not installed for module). Zeitgeist halted!');
+		}
+		
+		// check if action method exists in module
+		if (!method_exists($moduleClass, $action))
+		{
+			die('Error loading the action ('.$action.') in module ('.$module.'): Could not find method. Zeitgeist halted!');
+		}
+		
+		// check if user has rights for given action
+		if ($actionData['action_requiresuserright'] == '1')
+		{
+			if (!$this->_checkRightsForAction($user, $moduleData, $actionData))
+			{
+				$this->debug->write('User ('.$user.') has no rights for action ('.$action.') in module ('.$module.')', 'warning');
+				$this->messages->setMessage('User ('.$user.') has no rights for action ('.$action.') in module ('.$module.')', 'warning');
+				
+				$this->debug->unguard(NO_USERRIGHTS_FOR_ACTION);
+				return NO_USERRIGHTS_FOR_ACTION;
+			}
+		}
+		
+		// load configuration
+		if (!$this->configuration->loadConfiguration($module, APPLICATION_ROOTDIRECTORY . 'modules/'.$module.'/'.$module.'.ini'))
+		{
+			$this->debug->write('Could not get configuration for module '.$module, 'warning');
+			$this->messages->setMessage('Could not get configuration for module '.$module, 'warning');
+		}
+
+		// filter parameters
+		
+		// load snapins in the configuration
+		$this->_loadSnapIns($this->configuration->getConfiguration($module, $action));
+				
+		// execute pre-snapins
+		$this->_executePreSnapIns($parameters);
+		
+		// execute action in module
+		
+		
+		// execute post-snapins
+		$this->_executePostSnapIns($parameters);
+		
+		$this->debug->unguard(true);
+		return true;
+		
+	}
+	
+}
+?>

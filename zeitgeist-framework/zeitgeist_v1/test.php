@@ -20,7 +20,7 @@
 	define(ZG_DB_DBSERVER, 'localhost');
 	define(ZG_DB_USERNAME, 'zeitgeist');
 	define(ZG_DB_USERPASS, 'zeitgeist');
-	define(ZG_DB_DATABASE, 'zeitgeist');
+	define(ZG_DB_DATABASE, 'zeitgeist_test1');
 	define(ZG_DB_CONFIGURATIONCACHE, 'configurationcache');
 	
 	$debug = zgDebug::init();
@@ -28,7 +28,7 @@
 	$configuration = zgConfiguration::init();
 	$session = zgSession::init();
 	$error = zgErrorhandler::init();
-	
+
 	$session->startSession();
 
 	$test = new zgTemplate();
@@ -37,20 +37,23 @@
 	$debug->write('test');
 	$message->setMessage('Test', 'test.php');
 	
-	$database = new zgDatabase();
-	$database->connect();
-	$ret = $database->query('SELECT * FROM test');
+//	$database = new zgDatabase();
+//	$database->connect();
+//	$ret = $database->query('SELECT * FROM test');
 	
-	while ($row = $database->fetchArray($ret))
-	{
+//	while ($row = $database->fetchArray($ret))
+//	{
 //		echo $row['test_content'].'<br />';
-	}
-	
+//	}
+
 	$configuration->loadConfiguration('test', 'test1.ini');
 	$testconfig = $configuration->getConfiguration('test', 'create', 'department_color');
-//	echo $testconfig . "<br />";
+	echo $testconfig . "<br />";
 	$testconfig = $configuration->getConfiguration('zeitgeist', 'tables', 'table_users');
-//	echo $testconfig . "<br />";
+	echo $testconfig . "<br />";
+
+	$sesstest = $session->getSessionVariable('test');
+	echo $sesstest . "<br />";
 	
 	if (!$sesstest = $session->getSessionVariable('test'))
 	{
@@ -62,7 +65,7 @@
 	}
 	
 	$sesstest = $session->getSessionVariable('test');
-//	echo $sesstest . "<br />";
+	echo $sesstest . "<br />";
 
 	if ($sesstest > 9)
 	{

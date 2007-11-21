@@ -25,10 +25,10 @@ class zgObjectcache
 {
 	private static $instance = false;
 	
-	private $debug;
-	private $messages;
+	protected $debug;
+	protected $messages;
 	
-	private $objects;
+	protected $objects;
 
 	/**
 	 * Class constructor

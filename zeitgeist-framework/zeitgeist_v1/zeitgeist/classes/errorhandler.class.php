@@ -25,12 +25,12 @@ class zgErrorhandler
 {
 	private static $instance = false;
 	
-	private $debug;
-	private $messages;
-	private $configuration;
+	protected $debug;
+	protected $messages;
+	protected $configuration;
 	
-	private $previousErrorhandler;
-	private $outputLevel;
+	protected $previousErrorhandler;
+	protected $outputLevel;
 		
 	/**
 	 * Class constructor
