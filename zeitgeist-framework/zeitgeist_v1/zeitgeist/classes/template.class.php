@@ -6,7 +6,7 @@
  * Template class
  * 
  * @author Dirk Songür <songuer@zeitgeist-framework.com>
- * @version 1.0.4 - 23.08.2007
+ * @version 1.0.5 - 18.11.2007
  * 
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
@@ -19,14 +19,15 @@ defined('ZEITGEIST_ACTIVE') or die();
 
 class zgTemplate
 {
-	private $debug;
-	private $messages;
-	private $configuration;
+	protected $debug;
+	protected $messages;
+	protected $configuration;
+	protected $database;
 	
-	private $file;
-	private $content;
-	private $blocks;
-	private $variables;
+	protected $file;
+	protected $content;
+	protected $blocks;
+	protected $variables;
 	
 	/**
 	 * Class constructor
@@ -36,6 +37,9 @@ class zgTemplate
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
 		$this->configuration = zgConfiguration::init();
+		
+		$this->database = new zgDatabase();
+		$this->database->connect();
 		
 		$this->file = '';
 		$this->content = '';
@@ -62,42 +66,58 @@ class zgTemplate
 			$this->debug->unguard(false);
 			return false;
 		}
-
-		$filehandle = fopen($filename, "r");
-		$this->content = fread($filehandle, filesize($filename));
-		fclose($filehandle);
 		
-		if (!$this->_loadLinks())
+		// try to load the template
+		$template = $this->_loadTemplateFromDatabase($filename);
+		if ($template !== false)
 		{
-			$this->debug->write('Error while rewriting the links in: '.$filename, 'error');
-			$this->messages->setMessage('Error while rewriting the links in: '.$filename, 'error');
-			$this->debug->unguard(false);
-			return false;
+			$this->debug->write('Template found and successfully loaded: '.$filename);
+			
+			$this->file = $template['file'];
+			$this->content = $template['content'];
+			$this->blocks = $template['blocks'];
+			$this->variables = $template['variables'];
 		}
-				
-		if (!$this->_loadBlocks())
+		else
 		{
-			$this->debug->write('Error while loading the blocks in: '.$filename, 'error');
-			$this->messages->setMessage('Error while loading the blocks in: '.$filename, 'error');
-			$this->debug->unguard(false);
-			return false;
+			$filehandle = fopen($filename, "r");
+			$this->content = fread($filehandle, filesize($filename));
+			fclose($filehandle);
+			
+			if (!$this->_loadLinks())
+			{
+				$this->debug->write('Error while rewriting the links in: '.$filename, 'error');
+				$this->messages->setMessage('Error while rewriting the links in: '.$filename, 'error');
+				$this->debug->unguard(false);
+				return false;
+			}
+					
+			if (!$this->_loadBlocks())
+			{
+				$this->debug->write('Error while loading the blocks in: '.$filename, 'error');
+				$this->messages->setMessage('Error while loading the blocks in: '.$filename, 'error');
+				$this->debug->unguard(false);
+				return false;
+			}
+					
+			if (!$this->_loadVariables())
+			{
+				$this->debug->write('Error while loading the variables in: '.$filename, 'error');
+				$this->messages->setMessage('Error while loading the variables in: '.$filename, 'error');
+				$this->debug->unguard(false);
+				return false;
+			}
+					
+			if (!$this->_getBlockParents())
+			{
+				$this->debug->write('Error while resolving the block tree in: '.$filename, 'error');
+				$this->messages->setMessage('Error while resolving the block tree in: '.$filename, 'error');
+				$this->debug->unguard(false);
+				return false;
+			}
+
+			$ret = $this->_saveTemplateToDatabase($filename);
 		}
-				
-		if (!$this->_loadVariables())
-		{
-			$this->debug->write('Error while loading the variables in: '.$filename, 'error');
-			$this->messages->setMessage('Error while loading the variables in: '.$filename, 'error');
-			$this->debug->unguard(false);
-			return false;
-		}
-				
-		if (!$this->_getBlockParents())
-		{
-			$this->debug->write('Error while resolving the block tree in: '.$filename, 'error');
-			$this->messages->setMessage('Error while resolving the block tree in: '.$filename, 'error');
-			$this->debug->unguard(false);
-			return false;
-		}		
 		
 		$this->debug->unguard(true);
 		return true;
@@ -286,7 +306,7 @@ class zgTemplate
 	 * 
 	 * @return boolean 
 	 */
-	private function _loadLinks()
+	protected function _loadLinks()
 	{
 		$this->debug->guard();
 				
@@ -325,7 +345,7 @@ class zgTemplate
 	 * 
 	 * @return boolean 
 	 */
-	private function _loadVariables()
+	protected function _loadVariables()
 	{
 		$this->debug->guard();
 
@@ -364,7 +384,7 @@ class zgTemplate
 	 * 
 	 * @return boolean 
 	 */
-	private function _loadBlocks()
+	protected function _loadBlocks()
 	{
 		$this->debug->guard();
 		
@@ -437,7 +457,7 @@ class zgTemplate
 	 * 
 	 * @return boolean 
 	 */
-	private function _getBlockParents()
+	protected function _getBlockParents()
 	{
 		$this->debug->guard();
 
@@ -486,7 +506,7 @@ class zgTemplate
 	 * 
 	 * @return boolean 
 	 */
-	private function _insertVariablesIntoBlock($blockname)
+	protected function _insertVariablesIntoBlock($blockname)
 	{
 		$this->debug->guard();
 		
@@ -515,7 +535,7 @@ class zgTemplate
 	 * 
 	 * @return boolean 
 	 */
-	private function _resetBlock($name='')
+	protected function _resetBlock($name='')
 	{
 		$this->debug->guard();
 	
@@ -549,7 +569,7 @@ class zgTemplate
 	 * 
 	 * @return boolean 
 	 */
-	private function _filterTemplateCommands()
+	protected function _filterTemplateCommands()
 	{
 		foreach ($this->variables as $variablename => $variable)
 		{
@@ -562,6 +582,102 @@ class zgTemplate
 			$blockID = $this->configuration->getConfiguration('zeitgeist','template', 'blockSubstBegin') . $blockname . $this->configuration->getConfiguration('zeitgeist','template', 'blockSubstEnd');
 			$this->content = str_replace($blockID, '', $this->content);
 		}
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+
+	
+	/**
+	 * Loads a template from the database
+	 * 
+	 * @param string $filename name of the file/ template to load
+	 * 
+	 * @return array|boolean 
+	 */	
+	protected function _loadTemplateFromDatabase($filename)
+	{
+		$this->debug->guard();
+
+		$templatecacheTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_templatecache');
+		$res = $this->database->query("SELECT * FROM " . $templatecacheTablename . " WHERE templatecache_name = '".$filename."'");
+	
+		if ($this->database->numRows($res) == 1)
+		{
+			$row = $this->database->fetchArray($res);
+			
+			if ($row['templatecache_timestamp'] == filemtime($filename))
+			{
+				$serializedTemplate = $row['templatecache_content'];
+				$serializedTemplate = base64_decode($serializedTemplate);
+				$template = unserialize($serializedTemplate);
+
+				if ($template === false)
+				{
+					$this->debug->write('Error unserializing template content from the database', 'error');
+					$this->messages->setMessage('Error unserializing template content from the database', 'error');
+					$this->debug->unguard(false);
+					return false;
+				}
+			}
+			else
+			{
+				$res = $this->database->query("DELETE FROM " . $templatecacheTablename . " WHERE templatecache_name = '".$filename."'");
+				$this->debug->write('Template data in the database is outdated', 'warning');
+				$this->messages->setMessage('Template data in the database is outdated', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
+		}
+		else
+		{
+			$this->debug->write('No templatedata is stored in database for this template', 'warning');
+			$this->messages->setMessage('No templatedata is stored in database for this template', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard($template);
+		return $template;		
+	}
+
+	
+	/**
+	 * Save a given template into the database
+	 * 
+	 * @param string $filename name of the templatefile
+	 * 
+	 * @return boolean 
+	 */	
+	protected function _saveTemplateToDatabase($filename)
+	{
+		$this->debug->guard();
+		
+		$template = array();
+		
+		$template['file'] = $filename;
+		$template['content'] = $this->content;
+		$template['blocks'] = $this->blocks;
+		$template['variables'] = $this->variables;
+		
+		$serializedTemplate = serialize($template);
+		if ($serializedTemplate == '')
+		{
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$serializedTemplate = base64_encode($serializedTemplate);
+		if ($serializedTemplate === false)
+		{
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$templatecacheTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_templatecache');
+		$res = $this->database->query("INSERT INTO " . $templatecacheTablename . 
+		"(templatecache_name, templatecache_content, templatecache_timestamp) " .
+		"VALUES('" . $filename . "', '" . $serializedTemplate . "', '" . filemtime($filename) . "')");		
 		
 		$this->debug->unguard(true);
 		return true;
@@ -585,6 +701,8 @@ class zgTemplateBlock
 		$blockVariables = array();
 	}
 }
+
+
 
 
 class zgTemplateVariable

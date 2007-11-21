@@ -19,11 +19,11 @@ defined('ZEITGEIST_ACTIVE') or die();
 
 class zgDatabase
 {	
-	private $debug;
-	private $messages;
+	protected $debug;
+	protected $messages;
 	
-	private $dblink;
-	private $persistent;
+	protected $dblink;
+	protected $persistent;
 
 	/**
 	 * Class constructor
@@ -91,6 +91,8 @@ class zgDatabase
 			$this->debug->unguard(false);
 			return false;
 		}
+		
+		$this->setDBCharset('utf8');
 		
 		$this->debug->unguard(true);
 		return true;

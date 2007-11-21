@@ -25,17 +25,16 @@ class zgUserhandler
 {
 	private static $instance = false;
 	
-	private $debug;
-	private $messages;
-	private $session;
-	private $database;
-	private $configuration;
+	protected $debug;
+	protected $messages;
+	protected $session;
+	protected $database;
+	protected $configuration;
 	
 	public $userdata;
 	public $userrights;
-	public $character;
 	
-	private $loggedIn;
+	protected $loggedIn;
 
 	/**
 	 * Class constructor
@@ -50,13 +49,12 @@ class zgUserhandler
 		
 		$this->database = new zgDatabase();
 		$this->database->connect();
-		$this->database->setDBCharset('utf8');
 
 		$this->session = zgSession::init();
 		$this->session->startSession();
 		
 		$this->userrights = new zgUserrights();
-		$this->character = new zgUsercharacters();
+		$this->userdata = new zgUserdata();
 		
 		$this->loggedIn = false;
 	}
@@ -103,14 +101,6 @@ class zgUserhandler
 			$this->debug->unguard(false);
 			return false;
 		}
-
-		if (!$this->character->reloadCharacterdata())
-		{
-			$this->debug->write('Could not reload character data: data not found in session', 'warning');
-			$this->messages->setMessage('Could not reload character data: data not found in session', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
 		
 		if (!$this->_validateUserSession())
 		{
@@ -128,6 +118,8 @@ class zgUserhandler
 			return false;
 		}
 		
+		$this->loggedIn = true;
+		
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -138,7 +130,7 @@ class zgUserhandler
 	 * 
 	 * @return boolean 
 	 */
-	private function _validateUserSession()
+	protected function _validateUserSession()
 	{
 		$this->debug->guard();
 
@@ -168,51 +160,84 @@ class zgUserhandler
 	{
 		$this->debug->guard();
 		
-		$userTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_users');
-		$sql = "SELECT * FROM " . $userTablename . " WHERE user_name = '" . $name . "' AND user_password = '". md5($password) . "'";
-	
-	    if ($res = $this->database->query($sql))
-	    {
-	        if ($this->database->numRows($res))
-	        {
-	            $row = $this->database->fetchArray($res);
-	        	$this->session->setSessionVariable('user_userid', $row['user_id']);
-	        	$this->session->setSessionVariable('user_activecharacter', $row['user_activecharacter']);
-	        	$this->session->setSessionVariable('user_key', $row['user_key']);
-	        	
-	        	$this->userrights->loadUserrights($row['user_id']);
-	        	$this->character->loadCharacterdata($row['user_activecharacter']);
-	        	
-	        	$this->saveUserstates();
-	        	
-	        	$this->loggedIn = true;
-	        	
-				$this->debug->unguard(true);
-				return true;
-	        }
-	        else
-	        {
-				$this->debug->write('Error validating a user: user not found or password is wrong', 'error');
-				$this->messages->setMessage('Error validating a user: user not found or password is wrong', 'error');
+		if (!$this->loggedIn)
+		{
+			$userTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_users');
+			$sql = "SELECT * FROM " . $userTablename . " WHERE user_username = '" . $name . "' AND user_password = '". md5($password) . "'";
+		
+		    if ($res = $this->database->query($sql))
+		    {
+		        if ($this->database->numRows($res))
+		        {
+		            $row = $this->database->fetchArray($res);
+		        	$this->session->setSessionVariable('user_userid', $row['user_id']);
+		        	$this->session->setSessionVariable('user_key', $row['user_key']);
+		        	
+		        	$this->userrights->loadUserrights($row['user_id']);
+		        	$this->userdata->loadUserdata($row['user_id']);
+		        	
+		        	$this->saveUserstates();
+		        	
+		        	$this->loggedIn = true;
+		        	
+					$this->debug->unguard(true);
+					return true;
+		        }
+		        else
+		        {
+					$this->debug->write('Error validating a user: user not found or password is wrong', 'error');
+					$this->messages->setMessage('Error validating a user: user not found or password is wrong', 'error');
+					$this->debug->unguard(false);
+					return false;
+		        }
+		    }
+		    else
+		    {
+				$this->debug->write('Error searching a user: could not read the user table', 'error');
+				$this->messages->setMessage('Error searching a user: could not read the user table', 'error');
 				$this->debug->unguard(false);
 				return false;
-	        }
-	    }
+		    }
+		}
 	    else
 	    {
-			$this->debug->write('Error searching a user: could not read the user table', 'error');
-			$this->messages->setMessage('Error searching a user: could not read the user table', 'error');
+			$this->debug->write('Error logging in a user: user is already logged in. Cannot login user twice', 'error');
+			$this->messages->setMessage('Error logging in a user: user is already logged in. Cannot login user twice', 'error');
 			$this->debug->unguard(false);
 			return false;
-	    }
-		
+	    }		
+
 		$this->debug->unguard(false);
 		return false;
 	}
 	
+	
+	/**
+	 * Log out the user if he is currently logged in
+	 * 
+	 * @return boolean 
+	 */	
 	public function logoutUser()
 	{
+		$this->debug->guard();
 		
+		if ($this->loggedIn)
+		{
+			$this->session->unsetSessionVariable('user_userid');
+			$this->session->unsetSessionVariable('user_key');
+		}
+	    else
+	    {
+			$this->debug->write('Error logging out user: user is not logged in', 'warning');
+			$this->messages->setMessage('Error logging out user: user is not logged in', 'warning');
+			$this->debug->unguard(false);
+			return false;
+	    }
+	    
+	    $this->session->stopSession();
+	    
+		$this->debug->unguard(true);
+		return true;
 	}
 	
 	
@@ -221,13 +246,13 @@ class zgUserhandler
 	 * 
 	 * @return boolean 
 	 */
-	private function _reloginFromSession()
+	protected function _reloginFromSession()
 	{
 		$this->debug->guard();
 		
 		$this->userrights->reloadUserrights();
-		$this->character->reloadCharacterdata();
-
+		$this->userdata->reloadUserdata();
+		
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -242,10 +267,9 @@ class zgUserhandler
 	{
 		$this->debug->guard();
 		
-		$this->saveUserdata();
 		$this->userrights->saveUserrights();
-		$this->character->saveCharacterdata();
-
+		$this->userdata->saveUserdata();
+		
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -270,22 +294,6 @@ class zgUserhandler
 		return false;
 	}
 	
-	
-	public function getUserdata($dataid, $dataprofile)
-	{
-		
-	}
-	
-	
-	public function setUserdata()
-	{
-		
-	}
-	
-	public function saveUserdata()
-	{
-		
-	}
 	
 	
 }

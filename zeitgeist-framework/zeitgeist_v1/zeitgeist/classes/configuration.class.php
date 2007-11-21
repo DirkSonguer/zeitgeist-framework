@@ -25,11 +25,11 @@ class zgConfiguration
 {
 	private static $instance = false;
 	
-	private $configuration;
+	protected $configuration;
 	
-	private $debug;
-	private $messages;
-	private $database;
+	protected $debug;
+	protected $messages;
+	protected $database;
 
 	/**
 	 * Class constructor
@@ -43,7 +43,6 @@ class zgConfiguration
 
 		$this->database = new zgDatabase();
 		$this->database->connect();
-		$this->database->setDBCharset('utf8');
 
 		$this->configuration = array();
 	}
@@ -181,19 +180,19 @@ class zgConfiguration
 	 * 
 	 * @return array|boolean 
 	 */
-	private function _loadConfigurationFromDatabase($filename)
+	protected function _loadConfigurationFromDatabase($filename)
 	{
 		$this->debug->guard();
 
-		$res = $this->database->query("SELECT * FROM " . ZG_DB_CONFIGURATIONCACHE . " WHERE " . ZG_DB_CONFIGURATIONCACHE . "_name = '".$filename."'");
+		$res = $this->database->query("SELECT * FROM " . ZG_DB_CONFIGURATIONCACHE . " WHERE configurationcache_name = '".$filename."'");
 	
 		if ($this->database->numRows($res) == 1)
 		{
 			$row = $this->database->fetchArray($res);
 			
-			if ($row[ZG_DB_CONFIGURATIONCACHE . '_timestamp'] == filemtime($filename))
+			if ($row['configurationcache_timestamp'] == filemtime($filename))
 			{
-				$serializedConfiguration = $row[ZG_DB_CONFIGURATIONCACHE . '_content'];
+				$serializedConfiguration = $row['configurationcache_content'];
 				$serializedConfiguration = base64_decode($serializedConfiguration);
 				$configuration = unserialize($serializedConfiguration);
 
@@ -207,7 +206,7 @@ class zgConfiguration
 			}
 			else
 			{
-				$res = $this->database->query("DELETE FROM " . ZG_DB_CONFIGURATIONCACHE . " WHERE " . ZG_DB_CONFIGURATIONCACHE . "_name = '".$filename."'");
+				$res = $this->database->query("DELETE FROM " . ZG_DB_CONFIGURATIONCACHE . " WHERE configurationcache_name = '".$filename."'");
 				$this->debug->write('Configuration data in the database is outdated', 'warning');
 				$this->messages->setMessage('Configuration data in the database is outdated', 'warning');
 				$this->debug->unguard(false);
@@ -216,8 +215,8 @@ class zgConfiguration
 		}
 		else
 		{
-			$this->debug->write('No Configuration is stored in database for this module', 'warning');
-			$this->messages->setMessage('No Configuration is stored in database for this module', 'warning');
+			$this->debug->write('No configuration is stored in database for this module', 'warning');
+			$this->messages->setMessage('No configuration is stored in database for this module', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -235,7 +234,7 @@ class zgConfiguration
 	 * 
 	 * @return boolean 
 	 */
-	private function _saveConfigurationToDatabase($filename, $configuration)
+	protected function _saveConfigurationToDatabase($filename, $configuration)
 	{
 		$this->debug->guard();
 		
@@ -253,8 +252,8 @@ class zgConfiguration
 			return false;
 		}
 		
-		$res = $this->database->query("INSERT INTO " . ZG_DB_CONFIGURATIONCACHE . "(" .
-		ZG_DB_CONFIGURATIONCACHE . "_name, " . ZG_DB_CONFIGURATIONCACHE . "_content, " . ZG_DB_CONFIGURATIONCACHE . "_timestamp) " .
+		$res = $this->database->query("INSERT INTO " . ZG_DB_CONFIGURATIONCACHE . 
+		"(configurationcache_name, configurationcache_content, configurationcache_timestamp) " .
 		"VALUES('" . $filename . "', '" . $serializedConfiguration . "', '" . filemtime($filename) . "')");		
 		
 		$this->debug->unguard(true);
@@ -270,7 +269,7 @@ class zgConfiguration
 	 * 
 	 * @return array|boolean 
 	 */
-	private function _readINIfile($filename)
+	protected function _readINIfile($filename)
 	{
 		$this->debug->guard();
 		

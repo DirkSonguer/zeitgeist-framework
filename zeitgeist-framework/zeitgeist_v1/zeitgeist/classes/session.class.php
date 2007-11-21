@@ -6,7 +6,7 @@
  * Session class
  * 
  * @author Dirk Songür <songuer@zeitgeist-framework.com>
- * @version 1.0.1 - 19.08.2007
+ * @version 1.0.2 - 18.11.2007
  * 
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
@@ -25,14 +25,14 @@ class zgSession
 {
 	private static $instance = false;
 	
-	private $debug;
-	private $messages;
-	private $database;
-	private $configuration;
+	protected $debug;
+	protected $messages;
+	protected $database;
+	protected $configuration;
 	
-	private $storageMode;
-	private $newSession;
-	private $boundIP;
+	protected $storageMode;
+	protected $newSession;
+	protected $boundIP;
 
 	/**
 	 * Class constructor
@@ -47,7 +47,6 @@ class zgSession
 		
 		$this->database = new zgDatabase();
 		$this->database->connect();
-		$this->database->setDBCharset('utf8');
 		
 		$this->boundIP = '';
 		$this->newSession = true;
@@ -277,15 +276,15 @@ class zgSession
 		$id = mysql_real_escape_string($id);
 		
 		$sessionTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_sessiondata');
-	    $sql = "SELECT * FROM " . $sessionTablename . " WHERE " . $sessionTablename . "_id = '" . $id . "'";
+	    $sql = "SELECT * FROM " . $sessionTablename . " WHERE sessiondata_id = '" . $id . "'";
 	
 	    if ($res = $this->database->query($sql))
 	    {
 	        if ($this->database->numRows($res))
 	        {
 	            $row = $this->database->fetchArray($res);
-	            $sessiondata = $row[$sessionTablename.'_content'];
-	            $this->boundIP = $row[$sessionTablename.'_ip'];
+	            $sessiondata = $row['sessiondata_content'];
+	            $this->boundIP = $row['sessiondata_ip'];
 	            
 	            $this->newSession = false;
 
@@ -360,7 +359,7 @@ class zgSession
 	    $id = mysql_real_escape_string($id);
 	
 		$sessionTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_sessiondata');
-	    $sql = "DELETE FROM " . $sessionTablename . " WHERE " . $sessionTablename . "_id = '" . $id . "'";
+	    $sql = "DELETE FROM " . $sessionTablename . " WHERE sessiondata_id = '" . $id . "'";
 	
 	    $ret = $this->database->query($sql);
 		$this->debug->guard($ret);
@@ -384,7 +383,7 @@ class zgSession
 	    $old = mysql_real_escape_string($old);
 	
 		$sessionTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_sessiondata');
-	    $sql = "DELETE FROM " . $sessionTablename . " WHERE " . $sessionTablename . "_created < '" . $old . "'";
+	    $sql = "DELETE FROM " . $sessionTablename . " WHERE sessiondata_created < '" . $old . "'";
 	
 	    $ret = $this->database->query($sql);
 		$this->debug->guard($ret);

@@ -25,11 +25,11 @@ class zgDebug
 {
 	private static $instance = false;
 	
-	private $startTime;
+	protected $startTime;
 
-	private $debugMessages;
-	private $guardMessages;
-	private $guardStack;
+	protected $debugMessages;
+	protected $guardMessages;
+	protected $guardStack;
 	
 	public $showInnerLoops;	// Set this to true to show inner loops in the guard-output
 	
@@ -96,7 +96,7 @@ class zgDebug
 	 * There are somewhat 4 levels of importance:
 	 * 0 = core
 	 * 1 = public module/ class function
-	 * 2 = private module/ class function
+	 * 2 = private/ protected module/ class function
 	 * 3 = inner loop function
 	 *
 	 * This is by no means the only way to describe the levels, but we found it worked.
@@ -110,7 +110,15 @@ class zgDebug
 		$newGuardMessage['type'] = 'GUARD';
 		$newGuardMessage['executionTime'] = $this->_getExecutionTime();
 
-		$newGuardMessage['currentMemoryUsage'] = memory_get_usage() / 1024;
+		if (function_exists('memory_get_usage'))
+		{
+			$newGuardMessage['currentMemoryUsage'] = memory_get_usage() / 1024;
+		}
+		else
+		{
+			$newGuardMessage['currentMemoryUsage'] = '-';
+		}
+
 		$newGuardMessage['isInnerLoop'] = $innerLoop;
 		array_push($this->guardStack, $innerLoop);
 		
@@ -333,7 +341,7 @@ class zgDebug
 	 * 
 	 * @return integer 
 	 */	
-	private function _getExecutionTime()
+	protected function _getExecutionTime()
 	{
 		$currentTime = microtime();
 		return round($currentTime - $this->startTime, 4);
