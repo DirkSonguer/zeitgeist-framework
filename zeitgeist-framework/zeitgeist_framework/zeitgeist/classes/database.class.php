@@ -6,7 +6,6 @@
  * Database class
  * 
  * @author Dirk Songür <songuer@zeitgeist-framework.com>
- * @version 1.0.3 - 10.08.2007
  * 
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
