@@ -6,7 +6,6 @@
  * Eventhandler class
  * 
  * @author Dirk Songür <songuer@zeitgeist-framework.com>
- * @version 1.0.2 - 21.11.2007
  * 
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
@@ -49,6 +48,13 @@ class zgEventhandler
 	}
 
 	
+	/**
+	 * Loads all relevant data for a module from the database
+	 * 
+	 * @param string $module name of the module
+	 * 
+	 * @return boolean 
+	 */
 	protected function _getModuleData($module)
 	{
 		$this->debug->guard();
@@ -74,6 +80,14 @@ class zgEventhandler
 	}
 
 	
+	/**
+	 * Loads all relevant data for an action from the database
+	 * 
+	 * @param string $module name of the module
+	 * @param string $action name of the action
+	 * 
+	 * @return boolean 
+	 */
 	protected function _getActionData($module, $action)
 	{
 		$this->debug->guard();
@@ -99,6 +113,13 @@ class zgEventhandler
 	}	
 	
 	
+	/**
+	 * Extracts pre- and post-snapins
+	 * 
+	 * @param array $snapinList array containing all snapin definiitons
+	 * 
+	 * @return boolean 
+	 */
 	protected function _loadSnapIns($snapinList)
 	{
 		$this->debug->guard();
@@ -127,6 +148,14 @@ class zgEventhandler
 	}
 	
 	
+	/**
+	 * Checks if the user has the right for a given action
+	 * 
+	 * @param array $moduleData data of the module to load
+	 * @param array $actionData data of the action to load
+	 * 
+	 * @return boolean 
+	 */
 	protected function _checkRightsForAction($moduleData, $actionData)
 	{
 		$this->debug->guard();
@@ -241,9 +270,9 @@ class zgEventhandler
 			$this->messages->setMessage('Could not get configuration for module '.$module, 'warning');
 		}
 
-		// filter parameters
+		// filter parameters and get safe ones
 		$parameterhandler = new zgParameterhandler();
-		$parameters = $parameterhandler->getParameters($module, $action);
+		$parameters = $parameterhandler->getSafeParameters($module, $action);
 		
 		// load snapins in the configuration
 		$this->_loadSnapIns($this->configuration->getConfiguration($module, $action));
@@ -251,17 +280,19 @@ class zgEventhandler
 		// execute pre-snapins
 		$this->_executePreSnapIns($parameters);
 		
-		
 		// execute action in module
 		$ret = call_user_func(array(&$moduleClass, $action), $parameters);
-		
+		if ($ret !== true)
+		{
+			$this->debug->unguard($ret);
+			return $ret;
+		}
 		
 		// execute post-snapins
 		$this->_executePostSnapIns($parameters);
 		
 		$this->debug->unguard(true);
 		return true;
-		
 	}
 	
 }
