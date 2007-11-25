@@ -18,7 +18,4 @@
 defined('ZEITGEIST_ACTIVE') or die();
 
 
-	define('NO_USERRIGHTS_FOR_ACTION', 299);
-	define('REQUIRED_PARAMETER_NOT_FOUND', 999);
-
 ?>

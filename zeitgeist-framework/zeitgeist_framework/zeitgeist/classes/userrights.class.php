@@ -62,13 +62,12 @@ class zgUserrights
 		
 	    if ($res = $this->database->query($sql))
 	    {
-	        $row = $this->database->fetchArray($res);
-	        
-	        if (is_array($row))
+	        while ($row = $this->database->fetchArray($res))
 	        {
-	        	$this->userrights = $row;
+	        	$this->userrights[$row['userright_action']] = $row['userright_id'];
 	        }
-	        else
+
+	        if (count($this->userrights) == 0)
 	        {
 				$this->debug->write('Possible problem getting userrights for a user: the user seems to habe no assigned rights', 'warning');
 				$this->messages->setMessage('Possible problem getting userrights for a user: the user seems to habe no assigned rights', 'warning');

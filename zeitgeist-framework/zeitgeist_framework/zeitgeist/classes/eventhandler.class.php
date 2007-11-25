@@ -23,6 +23,7 @@ class zgEventhandler
 	protected $messages;
 	protected $database;
 	protected $configuration;
+	protected $user;
 	
 	protected $preSnapInList;
 	protected $postSnapInList;
@@ -38,6 +39,7 @@ class zgEventhandler
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
 		$this->configuration = zgConfiguration::init();
+		$this->user = zgUserhandler::init();
 		
 		$this->database = new zgDatabase();
 		$this->database->connect();
@@ -45,9 +47,6 @@ class zgEventhandler
 		$this->preSnapInList = array();
 		$this->postSnapInList = array();
 	}
-
-
-//method_exists
 
 	
 	protected function _getModuleData($module)
@@ -128,6 +127,21 @@ class zgEventhandler
 	}
 	
 	
+	protected function _checkRightsForAction($moduleData, $actionData)
+	{
+		$this->debug->guard();
+		
+		if ($this->user->isLoggedIn())
+		{
+			$ret = $this->user->userrights->hasUserright($actionData['action_id']);
+
+			$this->debug->unguard($ret);
+			return $ret;
+		}
+		
+		$this->debug->unguard(false);
+		return false;
+	}
 	
 	
 	protected function _executePreSnapIns($parameters)
@@ -152,7 +166,18 @@ class zgEventhandler
 	
 	
 	
-	public function callEvent($module, $action, $parameters='', $user='')
+	/**
+	 * Executes an action inside a module
+	 * Also handles all security related aspects
+	 * 
+	 * @param string $module name of the module to load
+	 * @param string $action name of the action to load
+	 * @param array $parameters array with parameters the action is called
+	 * @param integer $user id of the current user
+	 * 
+	 * @return boolean 
+	 */
+	public function callEvent($module, $action)
 	{
 		$this->debug->guard();
 		
@@ -198,15 +223,16 @@ class zgEventhandler
 		// check if user has rights for given action
 		if ($actionData['action_requiresuserright'] == '1')
 		{
-			if (!$this->_checkRightsForAction($user, $moduleData, $actionData))
+			if (!$this->_checkRightsForAction($moduleData, $actionData))
 			{
-				$this->debug->write('User ('.$user.') has no rights for action ('.$action.') in module ('.$module.')', 'warning');
-				$this->messages->setMessage('User ('.$user.') has no rights for action ('.$action.') in module ('.$module.')', 'warning');
+				$this->debug->write('User (' . $this->user->getUserID() . ') has no rights for action ('.$action.') in module ('.$module.')', 'warning');
+				$this->messages->setMessage('User (' . $this->user->getUserID() . ') has no rights for action ('.$action.') in module ('.$module.')', 'warning');
 				
-				$this->debug->unguard(NO_USERRIGHTS_FOR_ACTION);
-				return NO_USERRIGHTS_FOR_ACTION;
+				$this->debug->unguard($this->configuration->getConfiguration('zeitgeist', 'eventhandler', 'no_userrights_for_action'));
+				return $this->configuration->getConfiguration('zeitgeist', 'eventhandler', 'no_userrights_for_action');
 			}
 		}
+		
 		
 		// load configuration
 		if (!$this->configuration->loadConfiguration($module, APPLICATION_ROOTDIRECTORY . 'modules/'.$module.'/'.$module.'.ini'))
@@ -216,6 +242,8 @@ class zgEventhandler
 		}
 
 		// filter parameters
+		$parameterhandler = new zgParameterhandler();
+		$parameters = $parameterhandler->getParameters($module, $action);
 		
 		// load snapins in the configuration
 		$this->_loadSnapIns($this->configuration->getConfiguration($module, $action));
@@ -223,7 +251,9 @@ class zgEventhandler
 		// execute pre-snapins
 		$this->_executePreSnapIns($parameters);
 		
+		
 		// execute action in module
+		$ret = call_user_func(array(&$moduleClass, $action), $parameters);
 		
 		
 		// execute post-snapins

@@ -295,6 +295,28 @@ class zgUserhandler
 	}
 	
 	
-	
+	/**
+	 * Returns the current UserID
+	 * 
+	 * @return integer 
+	 */
+	public function getUserID()
+	{
+		$this->debug->guard();
+		
+		if ($this->loggedIn)
+		{
+			$userid = $this->session->getSessionVariable('user_userid');
+			
+			if ($userid)
+			{
+				$this->debug->unguard($userid);
+				return $userid;
+			}
+		}
+		
+		$this->debug->unguard(false);
+		return false;
+	}	
 }
 ?>
