@@ -83,7 +83,7 @@ class zgConfiguration
 		if ($section == '')
 		{
 			// return complete module
-			if (empty($this->configuration[$module][$section][$configuration]))
+			if (empty($this->configuration[$module]))
 			{
 				$this->debug->write('Error reading the configuration: module not found', 'error');
 				$this->messages->setMessage('Error reading the configuration: module not found', 'error');
@@ -327,19 +327,30 @@ class zgConfiguration
 					}
 
 					$arrayvalue = false;
-					if (substr($configurationKey, -2, 2) == '[]')
-					{
-						$arrayvalue = true;
-						$configurationKey = substr($configurationKey, 0, (strlen($configurationKey)-2));
-					}
 					
+					if ( (strpos($configurationKey, '[') !== false) && (strpos($configurationKey, ']') !== false) )
+					{
+						$keystart = strpos($configurationKey, '[');
+						$arrayvalue = true;
+						$arrayKey = substr($configurationKey, $keystart+1, -1);
+						$configurationKey = substr($configurationKey, 0, $keystart);
+					}
+
 					if (!$arrayvalue)
 					{
 						$retArray[$currentSection][$configurationKey] = stripcslashes($configurationValue);
+						$arrayKey = false;
 					}
 					else
 					{
-						$retArray[$currentSection][$configurationKey][] = stripcslashes($configurationValue);
+						if (!$arrayKey)
+						{
+							$retArray[$currentSection][$configurationKey][] = stripcslashes($configurationValue);
+						}
+						else
+						{
+							$retArray[$currentSection][$configurationKey][$arrayKey] = stripcslashes($configurationValue);
+						}
 					}
 				}
 			}
