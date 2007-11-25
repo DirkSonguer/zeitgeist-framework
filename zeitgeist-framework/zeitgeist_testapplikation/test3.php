@@ -46,7 +46,7 @@
 
 	$configuration->loadConfiguration('test', 'test1.ini');
 	$testconfig = $configuration->getConfiguration('test', 'show');
-		
+	
 	$ret = $eventhandler->callEvent('main', 'index');
 	
 	$debug->loadStylesheet('debug.css');

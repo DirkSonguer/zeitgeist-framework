@@ -21,9 +21,12 @@ class main
 	}
 	
 	
-	public function index()
+	public function index($parameters=array())
 	{
-		echo "index";
+		echo "index<br />";
+		
+		echo "in module main and action index: ";
+		var_dump($parameters);
 	}
 
 
