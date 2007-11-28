@@ -63,7 +63,7 @@ class zgUserrights
 	    {
 	        while ($row = $this->database->fetchArray($res))
 	        {
-	        	$this->userrights[$row['userright_action']] = $row['userright_id'];
+	        	$this->userrights[$row['userright_action']] = true;
 	        }
 
 	        if (count($this->userrights) == 0)
@@ -121,7 +121,8 @@ class zgUserrights
 	
 	
 	/**
-	 * Stores all userrights to the session for later use
+	 * Save all userrights to the session for later use
+	 * Also updates the according userright table with the current data
 	 * 
 	 * @return boolean 
 	 */
@@ -131,6 +132,18 @@ class zgUserrights
 		
 		$this->session->setSessionVariable('userrights', $this->userrights);
 		
+		$userrightsTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userrights');
+		$userid = $this->session->getSessionVariable('user_userid');
+		
+		$sql = 'DELETE FROM ' . $userrightsTablename . " WHERE userright_user='" . $userid . "'";
+		$res = $this->database->query($sql);
+
+		foreach ($this->userrights as $key => $value)
+		{
+			$sql = 'INSERT INTO ' . $userrightsTablename . "(userright_action, userright_user) VALUES('" . $key . "', '" . $userid . "')";
+			$res = $this->database->query($sql);
+		}
+
 		$this->debug->unguard(true);
 		return true;		
 	}
@@ -161,25 +174,45 @@ class zgUserrights
 	}
 	
 	
-	public function setUserright()
+	/**
+	 * Adds rights for the user for a given action
+	 * 
+	 * @param integer $userright id of the action to add rights to
+	 * 
+	 * @return boolean 
+	 */		
+	public function addUserright($userright)
 	{
+		$this->debug->guard();
 		
+		$this->userrights[$userright] = true;
+		$this->saveUserrights();
+
+		$this->debug->unguard(true);
+		return true;		
 	}
-		
 	
-	public function getUserrole()
-	{
-		
-	}
 	
-	public function setUserrole()
+	/**
+	 * Deletes a userright for an action
+	 * 
+	 * @param integer $userright id of the action to delete rights for
+	 * 
+	 * @return boolean 
+	 */		
+	public function deleteUserright($userright)
 	{
+		$this->debug->guard();
 		
-	}
-	
-	public function saveUserrole()
-	{
+		if (isset($this->userrights[$userright]))
+		{
+			unset($this->userrights[$userright]);
+			$this->saveUserrights();
+		}
+
+		$this->debug->unguard(true);
+		return true;		
+	}	
 		
-	}
 }
 ?>

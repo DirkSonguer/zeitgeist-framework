@@ -39,8 +39,6 @@ class zgParameterhandler
 		$this->rawParameters['GET'] = $_GET;
 		$this->rawParameters['POST'] = $_POST;
 		$this->rawParameters['COOKIE'] = $_COOKIE;
-		
-		var_dump($this->rawParameters);
 	}
 
 
@@ -167,14 +165,11 @@ class zgParameterhandler
 		
 		$allowedParameters = array();
 		$allowedParameters = $this->_getAllowedParameters($module, $action);
-		var_dump($allowedParameters);
 		
 		$safeParameters = array();
 		if (count($allowedParameters) > 0)
 		{
 			$safeParameters = $this->_filterParameters($allowedParameters);
-			echo "<br />Safe: <br />";
-			var_dump($safeParameters);
 		}
 		
 		$this->debug->unguard($safeParameters);

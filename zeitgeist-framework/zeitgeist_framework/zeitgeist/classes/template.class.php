@@ -702,8 +702,6 @@ class zgTemplateBlock
 }
 
 
-
-
 class zgTemplateVariable
 {
 	public $currentContent;
