@@ -58,6 +58,11 @@ class zgConfiguration
 		{
 			self::$instance = new zgConfiguration();
 			self::$instance->loadConfiguration('zeitgeist', ZEITGEIST_ROOTDIRECTORY . 'configuration/zeitgeist.ini');
+			
+			if (file_exists('./configuration/zeitgeist.ini'))
+			{
+				self::$instance->loadConfiguration('zeitgeist', './configuration/zeitgeist.ini', true);
+			}
 		}
 
 		return self::$instance;
@@ -132,25 +137,32 @@ class zgConfiguration
 	 * 
 	 * @return boolean 
 	 */
-	public function loadConfiguration($modulename, $filename)
+	public function loadConfiguration($modulename, $filename, $overwrite=false)
 	{
 		$this->debug->guard();
 
 		// check if module with this name is already loaded
-		if (!empty($this->configuration[$modulename]))
+		if ( (!empty($this->configuration[$modulename])) && ($overwrite == false) )
 		{
 			$this->debug->write('Error loading the configuration: module already loaded', 'error');
 			$this->messages->setMessage('Error loading the configuration: module already loaded', 'error');
 			$this->debug->unguard(false);
 			return false;	
 		}
-
+		
 		// try to load the configuration
 		$configuration = $this->_loadConfigurationFromDatabase($filename);
 		if ($configuration !== false)
 		{
 			$this->debug->write('Configuration found and successfully loaded: '.$filename);
-			$this->configuration[$modulename] = $configuration;
+			if ($overwrite == false)
+			{
+				$this->configuration[$modulename] = $configuration;
+			}
+			else
+			{
+				$this->configuration[$modulename] = array_merge($this->configuration[$modulename], $configuration);
+			}			
 		}
 		else
 		{
@@ -164,7 +176,15 @@ class zgConfiguration
 			}
 		
 			$ret = $this->_saveConfigurationToDatabase($filename, $configurationArray);
-			$this->configuration[$modulename] = $configurationArray;
+			
+			if ($overwrite == false)
+			{
+				$this->configuration[$modulename] = $configurationArray;
+			}
+			else
+			{
+				$this->configuration[$modulename] = array_merge($this->configuration[$modulename], $configurationArray);
+			}
 		}
 
 		$this->debug->unguard(true);

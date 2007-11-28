@@ -183,6 +183,7 @@ class zgEventhandler
 		return true;
 	}
 
+	
 	protected function _executePostSnapIns($parameters)
 	{
 		$this->debug->guard();
@@ -192,7 +193,6 @@ class zgEventhandler
 		$this->debug->unguard(true);
 		return true;
 	}
-	
 	
 	
 	/**

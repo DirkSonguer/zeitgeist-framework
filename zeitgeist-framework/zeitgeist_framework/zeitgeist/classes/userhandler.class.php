@@ -32,6 +32,7 @@ class zgUserhandler
 	
 	public $userdata;
 	public $userrights;
+	public $userroles;
 	
 	protected $loggedIn;
 
@@ -52,8 +53,9 @@ class zgUserhandler
 		$this->session = zgSession::init();
 		$this->session->startSession();
 		
-		$this->userrights = new zgUserrights();
 		$this->userdata = new zgUserdata();
+		$this->userrights = new zgUserrights();
+		$this->userroles = new zgUserroles();
 		
 		$this->loggedIn = false;
 	}

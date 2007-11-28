@@ -122,7 +122,8 @@ class zgUserdata
 
 	
 	/**
-	 * Stores all userrdata to the session for later use
+	 * Save all userrdata to the session for later use
+	 * Also updates the according userdata table with the current data
 	 * 
 	 * @return boolean 
 	 */
@@ -131,6 +132,21 @@ class zgUserdata
 		$this->debug->guard();
 		
 		$this->session->setSessionVariable('userdata', $this->userdata);
+		
+		$userdataTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userdata');
+		$userid = $this->session->getSessionVariable('user_userid');
+		
+		$sql = 'UPDATE ' . $userdataTablename . ' SET ';
+		$sqlupdate = '';
+
+		foreach ($this->userdata as $key => $value)
+		{
+			if ($sqlupdate != '') $sqlupdate .= ', ';
+			$sqlupdate .= $key . "='" . $value . "'";
+		}
+		
+		$sql .= $sqlupdate . " WHERE userdata_user='" . $userid . "'";
+		$res = $this->database->query($sql);
 		
 		$this->debug->unguard(true);
 		return true;		
@@ -176,15 +192,33 @@ class zgUserdata
 	}
 	
 	
-	public function setUserdata()
+	/**
+	 * Sets new value for a given userdata
+	 * 
+	 * @param string $userdata key of the userdata to write
+	 * @param string $value content to write
+	 * 
+	 * @return boolean 
+	 */	
+	public function setUserdata($userdata, $value)
 	{
+		$this->debug->guard();
 		
+		if (isset($this->userdata[$userdata]))
+		{
+			$this->userdata[$userdata] = $value;
+			$this->saveUserdata();
+
+			$this->debug->unguard(true);
+			return true;		
+		}
+		
+		$this->debug->write('Error setting userdata: Userdata ('.$userdata.') does not exist and could not be set.', 'error');
+		$this->messages->setMessage('Error setting userdata: Userdata ('.$userdata.') does not exist and could not be set.', 'error');
+		
+		$this->debug->unguard(false);
+		return false;
 	}
-
-	
-	
-
-	
 
 }
 ?>

@@ -35,6 +35,7 @@
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/session.class.php');
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/userdata.class.php');
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/userrights.class.php');
+	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/userroles.class.php');
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/userhandler.class.php');
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/errorhandler.class.php');
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/template.class.php');
