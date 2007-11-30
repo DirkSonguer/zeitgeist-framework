@@ -26,7 +26,9 @@ class main
 		echo "index<br />";
 		
 		echo "in module main and action index: ";
-		var_dump($parameters);
+//		var_dump($parameters);
+		
+		return true;
 	}
 
 

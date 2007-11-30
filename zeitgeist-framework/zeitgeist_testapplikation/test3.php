@@ -42,8 +42,10 @@
 		echo $ret."<br />";
 	}
 	
+	$user->saveUserstates();
+	
 	echo "logged: ".$user->isLoggedIn()."<br />";
-
+	
 	$configuration->loadConfiguration('test', 'test1.ini');
 	$testconfig = $configuration->getConfiguration('test', 'show');
 	
