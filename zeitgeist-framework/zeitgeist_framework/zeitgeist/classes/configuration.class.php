@@ -89,8 +89,8 @@ class zgConfiguration
 			// return complete module
 			if (empty($this->configuration[$module]))
 			{
-				$this->debug->write('Error reading the configuration: module not found', 'error');
-				$this->messages->setMessage('Error reading the configuration: module not found', 'error');
+				$this->debug->write('Problem reading the configuration: module not found', 'warning');
+				$this->messages->setMessage('Problem reading the configuration: module not found', 'warning');
 				$this->debug->unguard(false);
 				return false;	
 			}
@@ -102,8 +102,8 @@ class zgConfiguration
 			// return complete section
 			if (empty($this->configuration[$module][$section]))
 			{
-				$this->debug->write('Error reading the configuration: section not found', 'error');
-				$this->messages->setMessage('Error reading the configuration: section not found', 'error');
+				$this->debug->write('Problem reading the configuration: section not found', 'warning');
+				$this->messages->setMessage('Problem reading the configuration: section not found', 'warning');
 				$this->debug->unguard(false);
 				return false;	
 			}
@@ -115,8 +115,8 @@ class zgConfiguration
 			// return setting value
 			if (empty($this->configuration[$module][$section][$configuration]))
 			{
-				$this->debug->write('Error reading the configuration: configuration not found', 'error');
-				$this->messages->setMessage('Error reading the configuration: configuration not found', 'error');
+				$this->debug->write('Problem reading the configuration: configuration not found', 'warning');
+				$this->messages->setMessage('Problem reading the configuration: configuration not found', 'warning');
 				$this->debug->unguard(false);
 				return false;	
 			}

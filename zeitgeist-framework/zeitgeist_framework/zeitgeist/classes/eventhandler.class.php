@@ -124,6 +124,7 @@ class zgEventhandler
 	{
 		$this->debug->guard();
 		
+		$ret = false;
 		if (is_array($snapinList))
 		{
 			if ( (!empty($snapinList['PreSnapIn'])) && (is_array($snapinList['PreSnapIn'])) )
@@ -132,6 +133,8 @@ class zgEventhandler
 				{
 					$this->preSnapInList[] = $v;
 				}
+				
+				$ret = true;
 			}
 			
 			if ( (!empty($snapinList['PostSnapIn'])) && (is_array($snapinList['PostSnapIn'])) )
@@ -140,11 +143,13 @@ class zgEventhandler
 				{
 					$this->postSnapInList[] = $v;
 				}
+				
+				$ret = true;
 			}			
 		}
 		
-		$this->debug->unguard(true);
-		return true;
+		$this->debug->unguard($ret);
+		return $ret;
 	}
 	
 	
@@ -275,10 +280,10 @@ class zgEventhandler
 		$parameters = $parameterhandler->getSafeParameters($module, $action);
 		
 		// load snapins in the configuration
-		$this->_loadSnapIns($this->configuration->getConfiguration($module, $action));
+		$snapInsFound = $this->_loadSnapIns($this->configuration->getConfiguration($module, $action));
 				
 		// execute pre-snapins
-		$this->_executePreSnapIns($parameters);
+		if ($snapInsFound) $this->_executePreSnapIns($parameters);
 		
 		// execute action in module
 		$ret = call_user_func(array(&$moduleClass, $action), $parameters);
@@ -289,7 +294,7 @@ class zgEventhandler
 		}
 		
 		// execute post-snapins
-		$this->_executePostSnapIns($parameters);
+		if ($snapInsFound) $this->_executePostSnapIns($parameters);
 		
 		$this->debug->unguard(true);
 		return true;

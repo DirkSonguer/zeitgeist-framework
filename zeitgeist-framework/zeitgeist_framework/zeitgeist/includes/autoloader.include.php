@@ -42,7 +42,7 @@ defined('ZEITGEIST_ACTIVE') or die();
 			$debug->unguard('Class '.APPLICATION_ROOTDIRECTORY . 'modules/'.$class.'/'.$class.'.module.php loaded');
 			return;
 		}
-
+		
 		if (file_exists(APPLICATION_ROOTDIRECTORY . 'snapins/'.$class.'.snapin.php'))
 		{
 			require_once(APPLICATION_ROOTDIRECTORY . 'snapins/'.$class.'.snapin.php');
