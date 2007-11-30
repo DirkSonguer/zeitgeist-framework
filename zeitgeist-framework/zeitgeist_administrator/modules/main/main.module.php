@@ -1,7 +1,7 @@
 <?php
 
 
-defined('TEST_ACTIVE') or die();
+defined('ZGADMIN_ACTIVE') or die();
 
 class main
 {
@@ -26,6 +26,17 @@ class main
 		echo "index<br />";
 		
 		echo "in module main and action index: ";
+//		var_dump($parameters);
+		
+		return true;
+	}
+	
+	
+	public function login($parameters=array())
+	{
+		echo "index<br />";
+		
+		echo "in module main and action login: ";
 //		var_dump($parameters);
 		
 		return true;
