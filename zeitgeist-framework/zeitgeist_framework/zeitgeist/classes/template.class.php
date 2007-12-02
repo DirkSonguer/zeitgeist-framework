@@ -368,8 +368,6 @@ class zgTemplate
 				$newVariableID = $this->configuration->getConfiguration('zeitgeist','template', 'variableSubstBegin') . $variableContent . $this->configuration->getConfiguration('zeitgeist','template', 'variableSubstEnd');
 				$block->currentContent = str_replace($completeVariable, $newVariableID, $block->currentContent);
 				$block->blockVariables[$variableContent] = $newVariableID;
-				
-				echo "variable found & replaced: ".$variableContent." in block: ".$blockName."<br />";
 			}
 		}
 		
@@ -441,8 +439,6 @@ class zgTemplate
 			
 			$newBlockID = $this->configuration->getConfiguration('zeitgeist','template', 'blockSubstBegin') . $blockName . $this->configuration->getConfiguration('zeitgeist','template', 'blockSubstEnd');
 			$this->content = str_replace($completeBlock, $newBlockID, $this->content);
-
-			echo "block found & replaced: ".$blockName."<br />";
 		}
 		
 		$this->debug->unguard(true);
@@ -488,8 +484,6 @@ class zgTemplate
 				$subblockName = substr($blockID, strlen($this->configuration->getConfiguration('zeitgeist','template', 'blockSubstBegin')), ($endPosition-strlen($this->configuration->getConfiguration('zeitgeist','template', 'blockSubstBegin'))));
 				$this->blocks[$subblockName]->parent = $parentName;
 				$currentBlock = str_replace($blockID, '', $currentBlock);
-
-				echo "subblock ".$subblockName." found in block: ".$parentName."<br />";
 			}
 		}
 		
@@ -509,17 +503,20 @@ class zgTemplate
 	{
 		$this->debug->guard();
 		
-		foreach ($this->blocks[$blockname]->blockVariables as $variableName => $variableID)
+		if (!empty($this->blocks[$blockname]->blockVariables))
 		{
-			if (empty($this->variables[$variableName]))
+			foreach ($this->blocks[$blockname]->blockVariables as $variableName => $variableID)
 			{
-				$this->debug->write('Error inserting the variable '.$variableName.' into block '.$blockname, 'error');
-				$this->messages->setMessage('Error inserting the variable '.$variableName.' into block '.$blockname, 'error');
-				$this->debug->unguard(false);
-				return false;
+				if (empty($this->variables[$variableName]))
+				{
+					$this->debug->write('Error inserting the variable '.$variableName.' into block '.$blockname, 'error');
+					$this->messages->setMessage('Error inserting the variable '.$variableName.' into block '.$blockname, 'error');
+					$this->debug->unguard(false);
+					return false;
+				}
+	
+				$this->blocks[$blockname]->currentContent = str_replace($variableID, $this->variables[$variableName]->currentContent, $this->blocks[$blockname]->currentContent);
 			}
-
-			$this->blocks[$blockname]->currentContent = str_replace($variableID, $this->variables[$variableName]->currentContent, $this->blocks[$blockname]->currentContent);
 		}
 		
 		$this->debug->unguard(true);
