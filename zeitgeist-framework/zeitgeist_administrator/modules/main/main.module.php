@@ -23,10 +23,10 @@ class main
 	
 	public function index($parameters=array())
 	{
-		echo "index<br />";
+		$tpl = new adminTemplate();
+		$tpl->load('templates/admin/login.tpl.html');
 		
-		echo "in module main and action index: ";
-//		var_dump($parameters);
+		$tpl->show();
 		
 		return true;
 	}
@@ -34,11 +34,14 @@ class main
 	
 	public function login($parameters=array())
 	{
-		echo "index<br />";
+		$this->debug->guard();
 		
-		echo "in module main and action login: ";
-//		var_dump($parameters);
+		$tpl = new adminTemplate();
+		$tpl->load('templates/admin/login.tpl.html');
 		
+		$tpl->show();
+				
+		$this->debug->unguard(true);
 		return true;
 	}
 

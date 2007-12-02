@@ -1,0 +1,390 @@
+@charset "utf-8";
+/* CSS Document */
+
+CSS - http://frankfurt-handicap.de/backend/
+
+    * Collapse All
+    * Expand All
+
+http://frankfurt-handicap.de/backend/
+http://frankfurt-handicap.de/backend/templates/ffh/css/ffh.css
+
+body {
+	background:#dddddd;
+	margin-left:0px;
+	margin-right:0px;
+	margin-top:0px;
+	margin-bottom:0px;
+	overflow-y: yes;
+	overflow: -moz-scrollbars-vertical;
+	text-align:center;
+}
+
+
+p, table {
+	font-family: "Georgia",Serif;
+	font-size: 10pt;
+	letter-spacing:0.0pt;
+	word-spacing:0.2pt;
+	text-align:justify;
+	margin-left:10pt;
+	margin-right:10pt;
+	margin-top:5pt;
+	margin-bottom:10pt;
+	color:#000000;
+}	
+
+
+p.headline, label {
+	font-family: "Georgia",Serif;
+	font-size: 10pt;
+	letter-spacing:0.0pt;
+	word-spacing:0.2pt;
+	text-align:justify;
+	margin-left:0pt;
+	margin-right:0pt;
+	margin-top:5pt;
+	margin-bottom:5pt;
+	color:#000000;
+}
+
+
+h1 {
+	font-family: "Georgia",Serif;
+	font-size:20pt;
+	font-weight:bold;
+	letter-spacing:0.0pt;
+	word-spacing:0.5pt;
+	text-align:justify;
+	margin-left:10pt;
+	margin-right:10pt;
+	margin-top:0pt;
+	margin-bottom:10pt;
+	color:#555555;
+}
+
+
+h2 {
+	font-family: "Georgia",Serif;
+	font-size:14pt;
+	font-weight:bold;
+	letter-spacing:0.0pt;
+	word-spacing:0.5pt;
+	text-align:justify;
+	margin-left:10pt;
+	margin-right:10pt;
+	margin-top:5pt;
+	margin-bottom:10pt;
+	color:#555555;
+}
+	
+
+strong {
+	font-weight:bold;
+	color:#555555;
+}
+
+
+table {
+	margin-left:0pt;
+	margin-right:0pt;
+	margin-top:0pt;
+	margin-bottom:0pt; 
+}
+
+
+
+a:link {
+	text-decoration:underline;
+	letter-spacing:0.6pt;
+	word-spacing:0.7pt;
+	color:#555555;
+}
+
+
+
+a:visited {
+	text-decoration:underline;
+	letter-spacing:0.6pt;
+	word-spacing:0.7pt;
+	color:#555555;
+}
+
+
+
+a:active {
+	text-decoration:underline;
+	letter-spacing:0.6pt;
+	word-spacing:0.7pt;
+	color:#555555;
+}
+
+
+.maincontent {
+	background:#c1cacf;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 0px;
+	margin-bottom:10pt;
+	width: 900px;
+	text-align: left;
+	border-left: 1px solid #000000;
+	border-right: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+
+
+.headmenu	{
+	background:#fafafa;
+	margin-right: auto;
+	margin-left: auto;
+	width: 900px;
+	text-align: left;
+	margin-top: 0px;
+	margin-bottom:10pt;
+	border-bottom: 1px solid #000000;
+	padding-bottom:10px;
+	padding-top:10px;
+	}
+	
+
+.menuleiste	{
+	border-top: 1px solid #000000;
+	padding-top:10px;
+	margin-left:10px;
+	margin-right:10px;
+	}			
+	
+
+.menuitem	{
+	font-size: 10pt;
+	font-weight:bold;
+	}	
+				
+
+.menuicon	{
+	float:left;
+	margin-left:15px;
+	}
+
+
+
+.text
+
+{
+
+    border-top-width: 1px;
+
+    border-right-width: 1px;
+
+    border-bottom-width: 1px;
+
+    border-left-width: 1px;
+
+    border-top-style: solid;
+
+    border-right-style: solid;
+
+    border-bottom-style: solid;
+
+    border-left-style: solid;
+
+    border-top-color: black;
+
+    border-right-color: black;
+
+    border-bottom-color: black;
+
+    border-left-color: black;
+
+    font-family: Osaka,verdana,Sans-Serif;
+
+    font-size: 8pt;
+
+}
+
+
+
+.button
+
+{
+
+    border-top-width: 1px;
+
+    border-right-width: 1px;
+
+    border-bottom-width: 1px;
+
+    border-left-width: 1px;
+
+    border-top-style: solid;
+
+    border-right-style: solid;
+
+    border-bottom-style: solid;
+
+    border-left-style: solid;
+
+    border-top-color: black;
+
+    border-right-color: black;
+
+    border-bottom-color: black;
+
+    border-left-color: black;
+
+    font-family: Osaka,verdana,Sans-Serif;
+
+    font-size: 8pt;
+
+}
+
+
+
+.error
+
+{
+
+	padding:5px;
+
+	background:#ff0000;
+
+}
+
+
+
+.warning
+
+{
+
+	padding:5px;
+
+	background:#ffaa00;
+
+}
+
+
+
+.infobox
+
+{
+
+	background:#d1dadf;
+
+	border:solid 1px #000000;
+
+	margin-left:10px;
+
+	margin-right:10px;
+
+	margin-bottom:10px;
+
+	vertical-align:middle;
+
+}
+
+
+
+.textbox
+
+{
+
+	background:#fafafa;
+
+	border:solid 1px #000000;
+
+	margin-left:10px;
+
+	margin-right:10px;
+
+	margin-bottom:10px;
+
+	vertical-align:middle;
+
+}
+
+
+
+.tabbox
+
+{
+
+	background:#fafafa;
+
+	border:solid 1px #000000;
+
+	margin-left:10px;
+
+	margin-right:5px;
+
+	margin-bottom:10px;
+
+	vertical-align:middle;
+
+	float:left;
+
+}
+
+
+
+p.tabmenu		{
+	font-family: "Georgia",Serif;
+	font-size: 8pt;
+	letter-spacing:0.0pt;
+	word-spacing:0.2pt;
+	text-align:justify;
+	margin-left:10pt;
+	margin-right:10pt;
+	margin-top:5pt;
+	margin-bottom:5pt;
+	color:#000000;
+	}
+	
+
+.eingabefeld {
+
+	color: #000000;
+
+	background: #fafafa;
+
+	border: 1px solid #000000;
+
+	padding:2px;
+
+}
+
+
+
+.infobutton {
+	height:40px;
+	font-family: "Georgia",Serif;
+	font-size: 10pt;
+	letter-spacing:0.0pt;
+	word-spacing:0.2pt;
+	}
+
+
+
+.infobuttonsmall {
+	height:24px;
+	font-family: "Georgia",Serif;
+	font-size: 10pt;
+	letter-spacing:0.0pt;
+	margin-left:5px;
+	word-spacing:0.2pt;
+	}
+	
+
+#description {
+	font-size:9pt;
+	font-family:"Trebuchet MS",Trebuchet,Arial,Verdana,Sans-serif;
+	word-spacing:0.7pt;
+	margin:0 5px 5px;
+	padding:0 20px 20px;
+	border-width:0 1px 1px;
+	max-width:700px;
+	text-transform:uppercase;
+	color:#999999;
+	}
+
+
