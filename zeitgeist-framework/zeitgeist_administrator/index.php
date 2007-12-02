@@ -17,6 +17,8 @@
 	define('ZGADMIN_ACTIVE', true);
 	
 	include('zeitgeist/zeitgeist.php');
+	
+	require_once('classes/admintemplate.class.php');
 
 	define(ZG_DB_DBSERVER, 'localhost');
 	define(ZG_DB_USERNAME, 'zeitgeist');
