@@ -15,24 +15,29 @@
 
 <div class="maincontent">
 <div class="headmenu">
-    <!-- TemplateBeginBlock name="pagetitle" -->
-        <h1><img src="@@{templatepath}@@/nuvola/32x32/apps/kcontrol.png" alt="" /> Zeitgeist Administrator - @@{pagetitle}@@</h1>
-    <!-- TemplateEndBlock -->
+        <h1><img src="@@{templatepath}@@/nuvola/32x32/apps/kcontrol.png" alt="" /> ZGA <i>zeitgeist administration tool</i></h1>
     
     <!-- TemplateBeginBlock name="mainmenu" -->
         <div class="menuleiste">
         
-        <div class="menuicon"><a href="@@{[main.editapplication]}@@" alt=""><img src="@@{templatepath}@@/nuvola/22x22/actions/view_choose.png" alt="" align="left" border="0" /></a>
-        <span class="menuitem"><a href="@@{[main.editapplication]}@@" alt="">Setup application</a></span></div>
-        <div class="menuicon"><a href="@@{[main.editapplication]}@@" alt=""><img src="@@{templatepath}@@/nuvola/22x22/apps/kuser.png" alt="" align="left" border="0" /></a>
-        <span class="menuitem"><a href="@@{[main.editusers]}@@" alt="">Manage application users</a></span></div>
-        <div class="menuicon" style="float:right;"><a href="@@{[main.editapplication]}@@" alt=""><img src="@@{templatepath}@@/nuvola/22x22/apps/kcmdf.png" alt="" align="left" border="0" /></a>
-        <span class="menuitem"><a href="@@{[main.editadmintool]}@@" alt="">Configure ZG Administrator</a></span></div>
+        <div class="menuicon"><a href="@@{[setup.index]}@@" alt=""><img src="@@{templatepath}@@/nuvola/22x22/actions/view_choose.png" alt="" align="left" border="0" /></a>
+        <span class="menuitem"><a href="@@{[setup.index]}@@" alt="">Setup application</a></span></div>
+        <div class="menuicon"><a href="@@{[users.index]}@@" alt=""><img src="@@{templatepath}@@/nuvola/22x22/apps/kuser.png" alt="" align="left" border="0" /></a>
+        <span class="menuitem"><a href="@@{[users.index]}@@" alt="">Manage application users</a></span></div>
+        <div class="menuicon"><a href="@@{[configure.index]}@@" alt=""><img src="@@{templatepath}@@/nuvola/22x22/apps/kcmdf.png" alt="" align="left" border="0" /></a>
+        <span class="menuitem"><a href="@@{[configure.index]}@@" alt="">Configure ZGA</a></span></div>
+        <div class="menuicon" style="float:right;"><a href="@@{[main.logout]}@@" alt=""><img src="@@{templatepath}@@/nuvola/22x22/actions/exit.png" alt="" align="left" border="0" /></a>
+        <span class="menuitem"><a href="@@{[main.logout]}@@" alt="">Logout</a></span></div>
         
         <div style="clear:both"></div>
         </div> 
     <!-- TemplateEndBlock -->
 </div>
+
+	<h2>@@{pagetitle}@@</h2>
+
+<!-- InstanceBeginEditable name="pagetitle" -->
+<!-- InstanceEndEditable -->
 
     <!-- TemplateBeginBlock name="usererrors" -->
         <p class="error">@@{usererror}@@</p>
@@ -44,8 +49,49 @@
 
 <!-- InstanceBeginEditable name="body" -->
 
-<p>Hallo!</p>
-<p>@@{roottest}@@</p>
+<p>Welcome to the Zeitgeist administration tool. The purpose of this tool is to help you developing applications with the Zeitgeist Framework, as well as act as a central control and monitoring platform for your running Zeitgeist applications.</p>
+
+<div class="textbox">
+<table border="0" cellpadding="0" cellspacing="5" width="950">
+	<tr>
+		<td width="80">
+			<p><img src="@@{templatepath}@@/nuvola/64x64/apps/kcontrol.png" alt="Setup application" border="0" /></p>
+		</td>
+		<td>
+			<h2><a href="@@{[setup.index]}@@" alt="">Setup application</a></h2>
+            <p>This section helps you setting up your application, for example adding actions and modules to the database etc.</p>
+		</td>
+	</tr>
+</table>
+</div>
+
+<div class="textbox">
+<table border="0" cellpadding="0" cellspacing="5" width="950">
+	<tr>
+		<td width="80">
+			<p><img src="@@{templatepath}@@/nuvola/64x64/apps/kuser.png" alt="Application users" border="0" /></p>
+		</td>
+		<td>
+			<h2><a href="@@{[users.index]}@@" alt="">Application users</a></h2>
+            <p>This section lets you manage the users of your application as well as manage their rights and roles.</p>
+		</td>
+	</tr>
+</table>
+</div>
+
+<div class="textbox">
+<table border="0" cellpadding="0" cellspacing="5" width="950">
+	<tr>
+		<td width="80">
+			<p><img src="@@{templatepath}@@/nuvola/64x64/apps/kcmdf.png" alt="Configure ZGA" border="0" /></p>
+		</td>
+		<td>
+			<h2><a href="@@{[configure.index]}@@" alt="">Configure ZGA</a></h2>
+            <p>Here you can manage the Zeitgeist administrator tool.</p>
+		</td>
+	</tr>
+</table>
+</div>
 
 <!-- InstanceEndEditable -->
 
