@@ -71,7 +71,6 @@ class adminTemplate extends zgTemplate
 		{
 			$ret = parent::insertBlock('mainmenu');
 		}
-		$ret = parent::insertBlock('pagetitle');
 		parent::insertUsermessages();
 
 		$ret = parent::show();

@@ -27,6 +27,7 @@ class main
 	{
 		$tpl = new adminTemplate();
 		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_index'));
+		$tpl->assign('pagetitle', 'Welcome to ZGA');
 		
 		$tpl->assign('roottest', 'test');
 		
@@ -66,15 +67,26 @@ class main
 				$this->messages->setMessage('Please enter a valid username and password.', 'userwarning');
 			}
 		}
-		
-		$tpl->assign('pagetitle', 'Login');
-		
+				
 		$tpl->show();
 				
 		$this->debug->unguard(true);
 		return true;
 	}
 
+	
+	public function logout($parameters=array())
+	{
+		$this->debug->guard();
+		
+		$this->user->logoutUser();
+		
+		$tpl = new adminTemplate();
+		$tpl->redirect($tpl->createLink('main', 'index'));
+				
+		$this->debug->unguard(true);
+		return true;
+	}	
 
 
 }
