@@ -19,6 +19,8 @@ defined('ZGADMIN_ACTIVE') or die();
 class adminTemplate extends zgTemplate
 {
 	private $user;
+	private $basepath;
+	private $templatepath;
 	
 	/**
 	 * Class constructor
@@ -28,6 +30,9 @@ class adminTemplate extends zgTemplate
 		$this->user = zgUserhandler::init();
 		
 		parent::__construct();
+
+		$this->basepath = $this->configuration->getConfiguration('administrator', 'application', 'basepath');
+		$this->templatepath = $this->basepath . '/templates/' . $this->configuration->getConfiguration('administrator', 'application', 'templatepath');
 	}
 	
 	
@@ -43,6 +48,9 @@ class adminTemplate extends zgTemplate
 		$this->debug->guard();
 		
 		$ret = parent::load($filename);
+
+		$this->assign('basepath', $this->basepath);
+		$this->assign('templatepath', $this->templatepath);
 		
 		$this->debug->unguard($ret);
 		return $ret;
@@ -63,12 +71,52 @@ class adminTemplate extends zgTemplate
 		{
 			$ret = parent::insertBlock('mainmenu');
 		}
-		
+		$ret = parent::insertBlock('pagetitle');
+		parent::insertUsermessages();
+
 		$ret = parent::show();
 		
 		$this->debug->unguard($ret);
 		return $ret;
 	}
+	
+	
+	/**
+	 * Create a link for a given module and a given action
+	 * 
+	 * @param string $module module to call
+	 * @param string $action action to call
+	 * @param array $parameter possible parameters 
+	 * 
+	 * @return string 
+	 */
+	public function createLink($module, $action, $parameter=false)
+	{
+		$this->debug->guard();
+		
+		$linkurl = 'index.php';
+		
+		$link = array();
+		if ($module != 'main') $link[0] = 'module='.$module;
+		if ($action != 'index') $link[1] = 'action='.$action;
+		if (count($link) > 0)
+		{
+			$linkparameters = implode($link, '&');
+			$linkurl = $linkurl . '?' . $linkparameters;
+		}
+
+		if (is_array($parameter))
+		{
+			foreach ($parameter as $parameterkey => $parametervalue)
+			$linkurl .= '&'.$parameterkey.'='.$parametervalue;
+		}
+		
+		$linkurl = $this->basepath . $linkurl;
+
+		return $linkurl;
+		$this->debug->unguard($linkurl);
+	}
+	
 	
 }
 

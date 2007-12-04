@@ -1,14 +1,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/admin.dwt" codeOutsideHTMLIsLocked="false" -->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<!-- TemplateBeginEditable name="doctitle" -->
+<!-- InstanceBeginEditable name="doctitle" -->
 <title>Zeitgeist Administrator</title>
-<!-- TemplateEndEditable -->
+<!-- InstanceEndEditable -->
 
 <link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/admin.css" />
-<!-- TemplateBeginEditable name="head" -->
-<!-- TemplateEndEditable -->
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
 </head>
 
 <body>
@@ -42,13 +42,44 @@
         <p class="warning">@@{userwarning}@@</p>
     <!-- TemplateEndBlock -->
 
-<!-- TemplateBeginEditable name="body" -->
+<!-- InstanceBeginEditable name="body" -->
 
-<p>Haupttext</p>
+<div class="textbox">
+<table border="0" cellpadding="0" cellspacing="5" width="950">
+	<tr>
+		<td width="140">
+			<p><img src="@@{templatepath}@@/nuvola/128x128/apps/important.png" alt="Authentication required" border="0" /></p>
 
-<!-- TemplateEndEditable -->
+		</td>
+		<td valign="middle">
+			<h2>Authentication required</h2>
+			<p class="small" style="margin-left:10pt; margin-right:10pt;">Please enter your username and password to use the Zeitgeist Administrator.</p>
+			<form method="post" action="@@{[main.login]}@@" name="login">
+				<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+					<tr>
+						<td align="right" nowrap width="110"><p>Username:</p></td>
+						<td align="left" valign="middle" nowrap><input type="text" size="35" maxlength="20" name="username" class="text" /></td>
+					</tr>
+					<tr>
+						<td align="right" nowrap><p>Password:</p></td>
+						<td align="left" valign="middle" nowrap><input type="password" size="35" maxlength="32" name="password" class="text" /></td>
+					</tr>
+					<tr>
+						<td align="left" nowrap>&nbsp;</td>
+						<td align="right" valign="middle" nowrap><input type="submit" name="login" value="login" class="button" /></td>
+					</tr>
+				</table>
+			</form>
+		</td>
+	</tr>
+</table>
+</div>
+	
+
+
+<!-- InstanceEndEditable -->
 
 </div>
 
 </body>
-</html>
+<!-- InstanceEnd --></html>
