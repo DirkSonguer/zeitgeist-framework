@@ -63,17 +63,13 @@
 		$module = 'main';
 		$action = 'login';
 	}
-	else
-	{
-		// eigentlich unnötig?
-		$user->saveUserstates();
-	}
 	
 	// load event
 	$ret = $eventhandler->callEvent($module, $action);
 	
 	$debug->loadStylesheet('debug.css');
 	$debug->showInnerLoops = true;
+	$debug->showMiscInformation();
 	$debug->showDebugMessages();
 	$debug->showGuardMessages();
 	
