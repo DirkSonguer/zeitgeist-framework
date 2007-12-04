@@ -93,16 +93,22 @@ class zgParameterhandler
 
 		if (isset($this->rawParameters[$parameterdefinition['source']][$parametername]))
 		{
-			if (preg_match($parameterdefinition['type'], $this->rawParameters[$parameterdefinition['source']][$parametername]) == 1)
+			if ($parameterdefinition['type'] == 'constant')
+			{
+				if ( (!empty($parameterdefinition['value'])) && ($parameterdefinition['value'] == $this->rawParameters[$parameterdefinition['source']][$parametername]) )
+				{
+					$this->debug->unguard('Parameter appears to be safe: '.$parametername);
+					return true;
+				}
+			}
+			elseif (preg_match($parameterdefinition['type'], $this->rawParameters[$parameterdefinition['source']][$parametername]) == 1)
 			{
 				$this->debug->unguard('Parameter appears to be safe: '.$parametername);
 				return true;
 			}
-			else
-			{
-				$this->debug->unguard('Parameter not safe: '.$parametername);
-				return false;
-			}
+
+			$this->debug->unguard('Parameter not safe: '.$parametername);
+			return false;
 		}
 		else
 		{

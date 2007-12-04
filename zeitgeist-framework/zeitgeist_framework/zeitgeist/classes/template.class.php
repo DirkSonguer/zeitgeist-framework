@@ -114,6 +114,14 @@ class zgTemplate
 				$this->debug->unguard(false);
 				return false;
 			}
+			
+			if (!$this->_loadRootVariables())
+			{
+				$this->debug->write('Error while loading the root variables in: '.$filename, 'error');
+				$this->messages->setMessage('Error while loading the root variables in: '.$filename, 'error');
+				$this->debug->unguard(false);
+				return false;
+			}
 
 			$ret = $this->_saveTemplateToDatabase($filename);
 		}
@@ -131,11 +139,19 @@ class zgTemplate
 	public function show()
 	{
 		$this->debug->guard();
+		
+		if (!$this->_insertRootVariables())
+		{
+			$this->debug->write('Problem inserting the root variables', 'warning');
+			$this->messages->setMessage('Problem inserting the root variables', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
 
 		if (!$this->_filterTemplateCommands())
 		{
-			$this->debug->write('Error filtering the template commands', 'error');
-			$this->messages->setMessage('Error filtering the template commands', 'error');
+			$this->debug->write('Problem filtering the template commands', 'warning');
+			$this->messages->setMessage('Problem filtering the template commands', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -161,8 +177,8 @@ class zgTemplate
 
 		if (empty($this->variables[$name]))
 		{
-			$this->debug->write('Could not find the given variable: '.$name, 'error');
-			$this->messages->setMessage('Could not find the given variable: '.$name, 'error');
+			$this->debug->write('Could not find the given variable: '.$name, 'warning');
+			$this->messages->setMessage('Could not find the given variable: '.$name, 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -188,8 +204,8 @@ class zgTemplate
 
 		if (is_array($values))
 		{
-			$this->debug->write('Given dataset is not an array', 'error');
-			$this->messages->setMessage('Given dataset is not an array', 'error');
+			$this->debug->write('Given dataset is not an array', 'warning');
+			$this->messages->setMessage('Given dataset is not an array', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -221,16 +237,16 @@ class zgTemplate
 				
 		if (empty($this->blocks[$name]))
 		{
-			$this->debug->write('Could not find the given block: '.$name, 'error');
-			$this->messages->setMessage('Could not find the given block: '.$name, 'error');
+			$this->debug->write('Could not find the given block: '.$name, 'warning');
+			$this->messages->setMessage('Could not find the given block: '.$name, 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
 		
 		if (!$this->_insertVariablesIntoBlock($name))
 		{
-			$this->debug->write('Could not find the given block: '.$name, 'error');
-			$this->messages->setMessage('Could not find the given block: '.$name, 'error');
+			$this->debug->write('Could not insert variables into the given block: '.$name, 'error');
+			$this->messages->setMessage('Could not insert variables into the given block: '.$name, 'error');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -248,6 +264,42 @@ class zgTemplate
 	}
 
 
+	/**
+	 * Insert all usermessages to the default block
+	 * 
+	 * @return boolean 
+	 */
+	public function insertUsermessages()
+	{
+		$this->debug->guard();
+		
+		$warningblock = $this->configuration->getConfiguration('zeitgeist', 'template', 'UsermessageWarnings');
+		$currentUserwarnings = $this->messages->getMessagesByType('userwarning');
+		if (is_array($currentUserwarnings))
+		{
+			foreach ($currentUserwarnings as $warning)
+			{
+				$this->assign('userwarning', $warning['message']);
+				$this->insertBlock($warningblock);
+			}
+		}
+
+		$errorblock = $this->configuration->getConfiguration('zeitgeist', 'template', 'UsermessageErrors');
+		$currentUsererrors = $this->messages->getMessagesByType('usererror');
+		if (is_array($currentUsererrors))
+		{
+			foreach ($currentUsererrors as $error)
+			{
+				$this->assign('usererror', $error['message']);
+				$this->insertBlock($errorblock);
+			}
+		}
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+	
+	
 	/**
 	 * Redirect to a given url
 	 * 
@@ -285,18 +337,25 @@ class zgTemplate
 	{
 		$this->debug->guard();
 		
-		$link = 'index.php';
-		$link .= '?module='.$module;
-		$link .= '&action='.$action;
+		$linkurl = 'index.php';
+		
+		$link = array();
+		if ($module != 'main') $link[0] = 'module='.$module;
+		if ($action != 'index') $link[1] = 'action='.$action;
+		if (count($link) > 0)
+		{
+			$linkparameters = implode($link, '&');
+			$linkurl = $linkurl . '?' . $linkparameters;
+		}
 
 		if (is_array($parameter))
 		{
 			foreach ($parameter as $parameterkey => $parametervalue)
-			$link .= '&'.$parameterkey.'='.$parametervalue;
+			$linkurl .= '&'.$parameterkey.'='.$parametervalue;
 		}
 
-		return $link;
-		$this->debug->unguard($link);
+		return $linkurl;
+		$this->debug->unguard($linkurl);
 	}
 	
 
@@ -327,7 +386,7 @@ class zgTemplate
 			
 			if ($linkArray[0] == '')
 			{
-				$linkArray[0] = 'core';
+				$linkArray[0] = 'main';
 			}
 			
 			$newLink = $this->createLink($linkArray[0], $linkArray[1]);
@@ -375,7 +434,43 @@ class zgTemplate
 		return true;
 	}
 
+	
+	/**
+	 * Load all the variables in the root segment of a template and creates the objects for them
+	 * 
+	 * @return boolean 
+	 */
+	protected function _loadRootVariables()
+	{
+		$this->debug->guard();
+		
+		$this->blocks['root'] = new zgTemplateBlock();
 
+		while ($startPosition = strpos($this->content, $this->configuration->getConfiguration('zeitgeist','template', 'variableBegin')))
+		{
+			$endPosition = strpos($this->content, $this->configuration->getConfiguration('zeitgeist','template', 'variableEnd'), $startPosition);
+			if ($endPosition === false)
+			{
+				$this->debug->write('Error extracting root variable from template', 'error');
+				$this->messages->setMessage('Error extracting root variable from template', 'error');
+				$this->debug->unguard(false);
+				return false;
+			}
+
+			$completeVariable = substr($this->content, $startPosition, ($endPosition - $startPosition + strlen($this->configuration->getConfiguration('zeitgeist','template', 'variableEnd'))));
+			$variableContent = substr($completeVariable, strlen($this->configuration->getConfiguration('zeitgeist','template', 'variableBegin')), (strlen($completeVariable)-strlen($this->configuration->getConfiguration('zeitgeist','template', 'variableBegin'))-strlen($this->configuration->getConfiguration('zeitgeist','template', 'variableEnd'))));
+
+			$this->variables[$variableContent] = new zgTemplateVariable;
+			$newVariableID = $this->configuration->getConfiguration('zeitgeist','template', 'variableSubstBegin') . $variableContent . $this->configuration->getConfiguration('zeitgeist','template', 'variableSubstEnd');
+			$this->content = str_replace($completeVariable, $newVariableID, $this->content);
+			$this->blocks['root']->blockVariables[$variableContent] = $newVariableID;
+		}
+		
+		$this->debug->unguard(true);
+		return true;
+	}	
+
+	
 	/**
 	 * Load all the blocks in a template and creates the objects for them
 	 * 
@@ -391,7 +486,7 @@ class zgTemplate
 			$endPosition = strpos($this->content, $this->configuration->getConfiguration('zeitgeist','template', 'blockClose'), $startPosition);
 			if ($endPosition === false)
 			{
-				$this->debug->write('Error extracting bock from template', 'error');
+				$this->debug->write('Error extracting block from template', 'error');
 				$this->messages->setMessage('Error extracting block from template', 'error');
 				$this->debug->unguard(false);
 				return false;
@@ -410,7 +505,7 @@ class zgTemplate
 			if ($endPosition === false)
 			{
 				$this->debug->write('Error extracting blockname from block', 'error');
-				$this->messages->setMessage('Error blockname variable from block', 'error');
+				$this->messages->setMessage('Error extracting blockname from block', 'error');
 				$this->debug->unguard(false);
 				return false;
 			}
@@ -523,7 +618,37 @@ class zgTemplate
 		return true;
 	}
 	
-
+	
+	/**
+	 * Inserts all variable contents in the the root element of the template
+	 * 
+	 * @return boolean 
+	 */
+	protected function _insertRootVariables()
+	{
+		$this->debug->guard();
+		
+		if (!empty($this->blocks['root']->blockVariables))
+		{
+			foreach ($this->blocks['root']->blockVariables as $variableName => $variableID)
+			{
+				if (empty($this->variables[$variableName]))
+				{
+					$this->debug->write('Error inserting the variable '.$variableName.' into block '.$blockname, 'error');
+					$this->messages->setMessage('Error inserting the variable '.$variableName.' into block '.$blockname, 'error');
+					$this->debug->unguard(false);
+					return false;
+				}
+	
+				$this->content = str_replace($variableID, $this->variables[$variableName]->currentContent, $this->content);
+			}
+		}
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+	
+	
 	/**
 	 * Resets a given block or all blocks if no blockname is given
 	 * 

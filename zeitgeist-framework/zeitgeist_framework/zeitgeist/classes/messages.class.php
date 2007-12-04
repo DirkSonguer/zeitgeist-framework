@@ -91,7 +91,7 @@ class zgMessages
 	 * 
 	 * @return array
 	 */
-	public function getMessages($from='')
+	public function getMessagesForModule($from='')
 	{
 		$this->debug->guard();
 
@@ -115,6 +115,32 @@ class zgMessages
 		$this->debug->unguard($retArray);
 		return $retArray;
 	}
+	
+	
+	/**
+	 * Gets all messages with the given type from the message stack
+	 * 
+	 * @param string $type gets all messages with this type
+	 * 
+	 * @return array
+	 */
+	public function getMessagesByType($type='')
+	{
+		$this->debug->guard();
+
+		$retArray = array();
+		
+		foreach ($this->messages as $message)
+		{
+			if ($message['type'] == $type)
+			{
+				$retArray[] = $message;
+			}
+		}
+		
+		$this->debug->unguard($retArray);
+		return $retArray;
+	}	
 
 	
 	/**
