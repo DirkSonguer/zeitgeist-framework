@@ -18,7 +18,7 @@
 	
 	include('zeitgeist/zeitgeist.php');
 	
-	require_once('classes/admintemplate.class.php');
+	require_once('classes/zgatemplate.class.php');
 
 	define(ZG_DB_DBSERVER, 'localhost');
 	define(ZG_DB_USERNAME, 'zeitgeist');
@@ -32,11 +32,17 @@
 	$error = zgErrorhandler::init();
 	$user = zgUserhandler::init();
 	$eventhandler = new zgEventhandler();
-	
+
+/*	
+	$test = "Core module. This module is active by default. It can not be deactivated nor uninstalled. The module handles all the usual core actions like user handling, login/ -out etc.";
+	// It can not be deactivated nor uninstalled. The module handles all the usual core actions like user handling, login/ -out etc.";
+	$ret = preg_match("/^[\wüÜäÄöÖ ]+(([\'\,\.\-\/ ])?[\wüÜäÄöÖ ]*)*$/", $test);
+	echo "ret: ".$ret;
+	die();
+*/
 	// load configuration
 	$configuration->loadConfiguration('administrator', 'configuration/administrator.ini');
-	
-	
+
 	// set module
 	if (isset($_GET['module']))
 	{

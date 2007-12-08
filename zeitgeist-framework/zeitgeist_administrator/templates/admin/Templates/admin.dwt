@@ -15,12 +15,14 @@
 
 <div class="maincontent">
 <div class="headmenu">
-        <h1><img src="@@{templatepath}@@/nuvola/32x32/apps/kcontrol.png" alt="" /> ZGA <i>zeitgeist administration tool</i></h1>
+        <h1><img src="@@{templatepath}@@/nuvola/32x32/apps/kcontrol.png" alt="" align="left" style="margin-right:10px;" /> ZGA <i>zeitgeist administration tool</i></h1>
     
     <!-- TemplateBeginBlock name="mainmenu" -->
         <div class="menuleiste">
         
-        <div class="menuicon"><a href="@@{[setup.index]}@@" alt=""><img src="@@{templatepath}@@/nuvola/22x22/actions/view_choose.png" alt="" align="left" border="0" /></a>
+        <div class="menuicon"><a href="@@{[setup.index]}@@" alt=""><img src="@@{templatepath}@@/nuvola/22x22/actions/gohome.png" alt="" align="left" border="0" /></a>
+        <span class="menuitem"><a href="@@{[main.index]}@@" alt="">ZGA Index</a></span></div>
+        <div class="menuicon"><a href="@@{[setup.index]}@@" alt=""><img src="@@{templatepath}@@/nuvola/22x22/apps/kcmkwm.png" alt="" align="left" border="0" /></a>
         <span class="menuitem"><a href="@@{[setup.index]}@@" alt="">Setup application</a></span></div>
         <div class="menuicon"><a href="@@{[users.index]}@@" alt=""><img src="@@{templatepath}@@/nuvola/22x22/apps/kuser.png" alt="" align="left" border="0" /></a>
         <span class="menuitem"><a href="@@{[users.index]}@@" alt="">Manage application users</a></span></div>
@@ -34,19 +36,21 @@
     <!-- TemplateEndBlock -->
 </div>
 
-	<h2>@@{pagetitle}@@</h2>
-
 <!-- TemplateBeginEditable name="pagetitle" -->
 <!-- TemplateEndEditable -->
 
-    <!-- TemplateBeginBlock name="usererrors" -->
-        <p class="error">@@{usererror}@@</p>
-    <!-- TemplateEndBlock -->
-    
-    <!-- TemplateBeginBlock name="userwarnings" -->
-        <p class="warning">@@{userwarning}@@</p>
+    <!-- TemplateBeginBlock name="usermessage" -->
+        <h3 class="usermessage"><img src="@@{templatepath}@@/nuvola/16x16/actions/ok.png" alt="" align="left" style="margin-right:5px;" /> @@{usermessage}@@</h3>
     <!-- TemplateEndBlock -->
 
+    <!-- TemplateBeginBlock name="userwarnings" -->
+        <h3 class="userwarning"><img src="@@{templatepath}@@/nuvola/16x16/actions/messagebox_info.png" alt="" align="left" style="margin-right:5px;" /> @@{userwarning}@@</h3>
+    <!-- TemplateEndBlock -->
+
+    <!-- TemplateBeginBlock name="usererrors" -->
+        <h3 class="usererror"><img src="@@{templatepath}@@/nuvola/16x16/actions/no.png" alt="" align="left" style="margin-right:5px;" /> @@{usererror}@@</h3>
+    <!-- TemplateEndBlock -->
+    
 <!-- TemplateBeginEditable name="body" -->
 
 <p>Haupttext</p>

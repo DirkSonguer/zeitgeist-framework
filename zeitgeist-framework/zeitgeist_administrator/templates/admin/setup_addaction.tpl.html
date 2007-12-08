@@ -38,9 +38,6 @@
 
 <!-- InstanceBeginEditable name="pagetitle" -->
 
-<h2>Welcome to ZGA</h2>
-<p>Welcome to the Zeitgeist administration tool. The purpose of this tool is to help you developing applications with the Zeitgeist Framework, as well as act as a central control and monitoring platform for your running Zeitgeist applications.</p>
-
 <!-- InstanceEndEditable -->
 
     <!-- TemplateBeginBlock name="usermessage" -->
@@ -58,45 +55,42 @@
 <!-- InstanceBeginEditable name="body" -->
 
 <div class="textbox">
-<table border="0" cellpadding="0" cellspacing="5" width="950">
-	<tr>
-		<td width="80">
-			<p><img src="@@{templatepath}@@/nuvola/64x64/apps/kcmkwm.png" alt="Setup application" border="0" /></p>
-		</td>
-		<td>
-			<h2><a href="@@{[setup.index]}@@" alt="">Setup application</a></h2>
-            <p>This section helps you setting up your application, for example adding actions and modules to the database etc.</p>
-		</td>
-	</tr>
-</table>
+<h2><img src="@@{templatepath}@@/nuvola/22x22/actions/view_bottom.png" alt="" align="left" style="margin-right:10px;" /> Add action</h2>
+
+    <form method="post" action="@@{[setup.addaction]}@@" name="editaction" enctype="multipart/form-data; charset=utf-8">
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td align="right" valign="top" nowrap width="110"><p>Action name*</p></td>
+                <td align="left" valign="middle" nowrap><input type="text" maxlength="30" name="action_name" value="@@{action_name}@@" class="formtext" /></td>
+            </tr>
+            <tr>
+                <td align="right" valign="top" nowrap><p>Description*</p></td>
+                <td align="left" valign="middle" nowrap><textarea rows="5" name="action_description" class="formtext">@@{action_description}@@</textarea></td></td>
+            </tr>
+            <tr>
+                <td align="right" valign="top" nowrap><p>Module</p></td>
+                <td align="left" valign="middle" nowrap>
+                <select name="action_module" size="1">
+                <!-- TemplateBeginBlock name="moduleloop" -->
+					<option value="@@{modulevalue}@@" @@{modulecheck}@@>@@{moduletext}@@</option>
+				<!-- TemplateEndBlock -->
+                </select>
+            </tr>
+            <tr>
+                <td align="right" valign="top" nowrap><p>Action requires userright</p></td>
+                <td align="left" valign="middle" nowrap><input type="checkbox" name="action_requiresuserright" style="border:solid 1px #444455;" @@{action_requiresuserright}@@ /></td>
+            </tr>
+            <tr>
+                <td align="left" nowrap>&nbsp;</td>
+                <td align="right" valign="middle" nowrap><input type="submit" name="submit" value="Add action" class="formbutton" /></td>
+            </tr>
+        </table>
+    </form>
+
 </div>
 
 <div class="textbox">
-<table border="0" cellpadding="0" cellspacing="5" width="950">
-	<tr>
-		<td width="80">
-			<p><img src="@@{templatepath}@@/nuvola/64x64/apps/kuser.png" alt="Application users" border="0" /></p>
-		</td>
-		<td>
-			<h2><a href="@@{[users.index]}@@" alt="">Manage application users</a></h2>
-            <p>This section lets you manage the users of your application as well as manage their rights and roles.</p>
-		</td>
-	</tr>
-</table>
-</div>
-
-<div class="textbox">
-<table border="0" cellpadding="0" cellspacing="5" width="950">
-	<tr>
-		<td width="80">
-			<p><img src="@@{templatepath}@@/nuvola/64x64/apps/kcmdf.png" alt="Configure ZGA" border="0" /></p>
-		</td>
-		<td>
-			<h2><a href="@@{[configure.index]}@@" alt="">Configure ZGA</a></h2>
-            <p>Here you can manage the Zeitgeist administrator tool.</p>
-		</td>
-	</tr>
-</table>
+	<h3><img src="@@{templatepath}@@/nuvola/22x22/actions/2leftarrow.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[setup.manageactions]}@@" alt="Back to action overview">Back to action overview</a> (changes will not be saved)</h3>
 </div>
 
 <!-- InstanceEndEditable -->

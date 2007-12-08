@@ -5,11 +5,11 @@ defined('ZGADMIN_ACTIVE') or die();
 
 class main
 {
-	public $debug;
-	public $messages;
-	public $database;
-	public $configuration;
-	public $user;
+	protected $debug;
+	protected $messages;
+	protected $database;
+	protected $configuration;
+	protected $user;
 
 	public function __construct()
 	{
@@ -25,14 +25,14 @@ class main
 	
 	public function index($parameters=array())
 	{
-		$tpl = new adminTemplate();
-		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_index'));
-		$tpl->assign('pagetitle', 'Welcome to ZGA');
+		$this->debug->guard();
 		
-		$tpl->assign('roottest', 'test');
+		$tpl = new zgaTemplate();
+		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_index'));
 		
 		$tpl->show();
 		
+		$this->debug->unguard(true);
 		return true;
 	}
 	
@@ -41,7 +41,7 @@ class main
 	{
 		$this->debug->guard();
 		
-		$tpl = new adminTemplate();
+		$tpl = new zgaTemplate();
 		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_login'));
 		
 		if ($this->user->isLoggedIn())
@@ -81,13 +81,12 @@ class main
 		
 		$this->user->logoutUser();
 		
-		$tpl = new adminTemplate();
+		$tpl = new zgaTemplate();
 		$tpl->redirect($tpl->createLink('main', 'index'));
 				
 		$this->debug->unguard(true);
 		return true;
-	}	
-
+	}
 
 }
 ?>

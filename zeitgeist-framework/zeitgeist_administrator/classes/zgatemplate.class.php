@@ -16,7 +16,7 @@
 
 defined('ZGADMIN_ACTIVE') or die();
 
-class adminTemplate extends zgTemplate
+class zgaTemplate extends zgTemplate
 {
 	private $user;
 	private $basepath;
@@ -110,12 +110,11 @@ class adminTemplate extends zgTemplate
 			$linkurl .= '&'.$parameterkey.'='.$parametervalue;
 		}
 		
-		$linkurl = $this->basepath . $linkurl;
+		$linkurl = $this->basepath . '/' . $linkurl;
 
 		return $linkurl;
 		$this->debug->unguard($linkurl);
 	}
-	
 	
 }
 

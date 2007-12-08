@@ -8,6 +8,30 @@
 
 <link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/admin.css" />
 <!-- InstanceBeginEditable name="head" -->
+
+	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryData.js"></script>	
+	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/xpath.js"></script>
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryNestedXMLDataSet.js"></script>
+
+	<script type="text/javascript">
+		var dsOverviewActions = new Spry.Data.XMLDataSet("@@{[dataserver.getactioninfo]}@@", "container/element");
+		dsOverviewActions.setColumnType("action_id", "number");
+
+		function deleteAction(id, name)
+		{
+			var answer = window.confirm("Do you really want to delete the action '" + name + "'?");    
+			
+			/* Question icon, Yes/No button. */
+			/* 0 = error, 1 = OK, 2 = Cancel, 3 = No, 4 = Yes */
+			
+			if (answer == true)
+			{
+			   window.location.href = "@@{[setup.deleteaction]}@@"+"&id="+id;
+			}
+		}
+	</script>
+
+
 <!-- InstanceEndEditable -->
 </head>
 
@@ -38,8 +62,7 @@
 
 <!-- InstanceBeginEditable name="pagetitle" -->
 
-<h2>Welcome to ZGA</h2>
-<p>Welcome to the Zeitgeist administration tool. The purpose of this tool is to help you developing applications with the Zeitgeist Framework, as well as act as a central control and monitoring platform for your running Zeitgeist applications.</p>
+<h2>Manage actions</h2>
 
 <!-- InstanceEndEditable -->
 
@@ -58,45 +81,40 @@
 <!-- InstanceBeginEditable name="body" -->
 
 <div class="textbox">
-<table border="0" cellpadding="0" cellspacing="5" width="950">
-	<tr>
-		<td width="80">
-			<p><img src="@@{templatepath}@@/nuvola/64x64/apps/kcmkwm.png" alt="Setup application" border="0" /></p>
-		</td>
-		<td>
-			<h2><a href="@@{[setup.index]}@@" alt="">Setup application</a></h2>
-            <p>This section helps you setting up your application, for example adding actions and modules to the database etc.</p>
-		</td>
-	</tr>
-</table>
+	<h3><img src="@@{templatepath}@@/nuvola/22x22/actions/view_bottom.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[setup.addaction]}@@" alt="add new action">Add new Action</a></h3>
 </div>
 
 <div class="textbox">
-<table border="0" cellpadding="0" cellspacing="5" width="950">
-	<tr>
-		<td width="80">
-			<p><img src="@@{templatepath}@@/nuvola/64x64/apps/kuser.png" alt="Application users" border="0" /></p>
-		</td>
-		<td>
-			<h2><a href="@@{[users.index]}@@" alt="">Manage application users</a></h2>
-            <p>This section lets you manage the users of your application as well as manage their rights and roles.</p>
-		</td>
-	</tr>
-</table>
+	<div spry:region="dsOverviewActions">
+    <div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
+
+	<div spry:state="ready">
+	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
+	        <tr class="tablehead">
+				<th><p><a onClick="dsOverviewActions.sort('action_id');">ID</a></p></th>
+				<th><p><a onClick="dsOverviewActions.sort('action_name');">Name</a></p></th>
+				<th><p><a onClick="dsOverviewActions.sort('module_name');">Modul</a></p></th>
+				<th><p>Description</p></th>
+				<th><p><a onClick="dsOverviewActions.sort('action_requiresuserright');">Req. userrights</a></p></th>
+				<th><p>Action</p></th>
+	        </tr>			
+	        <tr class="{ds_EvenOddRow}" spry:repeat="dsOverviewActions">
+				<td><p>{dsOverviewActions::action_id}</p></td>
+				<td><p>{dsOverviewActions::action_name}</p></td>
+				<td><p>{dsOverviewActions::module_name}</p></td>
+				<td><p>{dsOverviewActions::action_description}</p></td>
+				<td><p>{dsOverviewActions::action_requiresuserright}</p></td>
+				<td width="90"><p>
+				<a href="@@{[setup.editaction]}@@&id={dsOverviewActions::action_id}" alt="edit action"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="edit action" border="0" /></a> &nbsp; <a href="javascript:deleteAction({dsOverviewActions::action_id}, '{dsOverviewActions::action_name}')" alt="delete action"><img src="@@{templatepath}@@/nuvola/22x22/actions/cancel.png" alt="delete action" border="0" /></a>
+                </p></td>
+	        </tr>
+	    </table>
+    </div>
+	</div>	
 </div>
 
 <div class="textbox">
-<table border="0" cellpadding="0" cellspacing="5" width="950">
-	<tr>
-		<td width="80">
-			<p><img src="@@{templatepath}@@/nuvola/64x64/apps/kcmdf.png" alt="Configure ZGA" border="0" /></p>
-		</td>
-		<td>
-			<h2><a href="@@{[configure.index]}@@" alt="">Configure ZGA</a></h2>
-            <p>Here you can manage the Zeitgeist administrator tool.</p>
-		</td>
-	</tr>
-</table>
+	<h3><img src="@@{templatepath}@@/nuvola/22x22/actions/2leftarrow.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[setup.index]}@@" alt="Back to application setup">Back to application setup</a></h3>
 </div>
 
 <!-- InstanceEndEditable -->
