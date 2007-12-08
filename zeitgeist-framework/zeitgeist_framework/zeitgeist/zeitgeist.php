@@ -41,6 +41,7 @@
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/template.class.php');
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/parameterhandler.class.php');
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/eventhandler.class.php');
+	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/dataserver.class.php');
 	
 // include misc functions
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'includes/autoloader.include.php');

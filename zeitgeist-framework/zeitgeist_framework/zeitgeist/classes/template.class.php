@@ -60,8 +60,8 @@ class zgTemplate
 
 		if (!file_exists($filename))
 		{
-			$this->debug->write('Could not find the template file: '.$filename, 'error');
-			$this->messages->setMessage('Could not find the template file: '.$filename, 'error');
+			$this->debug->write('Could not find the template file: ' . $filename, 'error');
+			$this->messages->setMessage('Could not find the template file: ' . $filename, 'error');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -70,7 +70,7 @@ class zgTemplate
 		$template = $this->_loadTemplateFromDatabase($filename);
 		if ($template !== false)
 		{
-			$this->debug->write('Template found and successfully loaded: '.$filename);
+			$this->debug->write('Template found and successfully loaded: ' . $filename);
 			
 			$this->file = $template['file'];
 			$this->content = $template['content'];
@@ -85,40 +85,40 @@ class zgTemplate
 			
 			if (!$this->_loadLinks())
 			{
-				$this->debug->write('Error while rewriting the links in: '.$filename, 'error');
-				$this->messages->setMessage('Error while rewriting the links in: '.$filename, 'error');
+				$this->debug->write('Error while rewriting the links in: ' . $filename, 'error');
+				$this->messages->setMessage('Error while rewriting the links in: ' . $filename, 'error');
 				$this->debug->unguard(false);
 				return false;
 			}
 					
 			if (!$this->_loadBlocks())
 			{
-				$this->debug->write('Error while loading the blocks in: '.$filename, 'error');
-				$this->messages->setMessage('Error while loading the blocks in: '.$filename, 'error');
+				$this->debug->write('Error while loading the blocks in: ' . $filename, 'error');
+				$this->messages->setMessage('Error while loading the blocks in: ' . $filename, 'error');
 				$this->debug->unguard(false);
 				return false;
 			}
 					
 			if (!$this->_loadVariables())
 			{
-				$this->debug->write('Error while loading the variables in: '.$filename, 'error');
-				$this->messages->setMessage('Error while loading the variables in: '.$filename, 'error');
+				$this->debug->write('Error while loading the variables in: ' . $filename, 'error');
+				$this->messages->setMessage('Error while loading the variables in: ' . $filename, 'error');
 				$this->debug->unguard(false);
 				return false;
 			}
 					
 			if (!$this->_getBlockParents())
 			{
-				$this->debug->write('Error while resolving the block tree in: '.$filename, 'error');
-				$this->messages->setMessage('Error while resolving the block tree in: '.$filename, 'error');
+				$this->debug->write('Error while resolving the block tree in: ' . $filename, 'error');
+				$this->messages->setMessage('Error while resolving the block tree in: ' . $filename, 'error');
 				$this->debug->unguard(false);
 				return false;
 			}
 			
 			if (!$this->_loadRootVariables())
 			{
-				$this->debug->write('Error while loading the root variables in: '.$filename, 'error');
-				$this->messages->setMessage('Error while loading the root variables in: '.$filename, 'error');
+				$this->debug->write('Error while loading the root variables in: ' . $filename, 'error');
+				$this->messages->setMessage('Error while loading the root variables in: ' . $filename, 'error');
 				$this->debug->unguard(false);
 				return false;
 			}
@@ -177,14 +177,14 @@ class zgTemplate
 
 		if (empty($this->variables[$name]))
 		{
-			$this->debug->write('Could not find the given variable: '.$name, 'warning');
-			$this->messages->setMessage('Could not find the given variable: '.$name, 'warning');
+			$this->debug->write('Could not find the given variable: ' . $name, 'warning');
+			$this->messages->setMessage('Could not find the given variable: ' . $name, 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
 
 		$this->variables[$name]->currentContent = $value;
-
+		
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -202,7 +202,7 @@ class zgTemplate
 	{
 		$this->debug->guard();
 
-		if (is_array($values))
+		if (!is_array($values))
 		{
 			$this->debug->write('Given dataset is not an array', 'warning');
 			$this->messages->setMessage('Given dataset is not an array', 'warning');
@@ -237,22 +237,22 @@ class zgTemplate
 				
 		if (empty($this->blocks[$name]))
 		{
-			$this->debug->write('Could not find the given block: '.$name, 'warning');
-			$this->messages->setMessage('Could not find the given block: '.$name, 'warning');
+			$this->debug->write('Could not find the given block: ' . $name, 'warning');
+			$this->messages->setMessage('Could not find the given block: ' . $name, 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
 		
 		if (!$this->_insertVariablesIntoBlock($name))
 		{
-			$this->debug->write('Could not insert variables into the given block: '.$name, 'error');
-			$this->messages->setMessage('Could not insert variables into the given block: '.$name, 'error');
+			$this->debug->write('Could not insert variables into the given block: ' . $name, 'error');
+			$this->messages->setMessage('Could not insert variables into the given block: ' . $name, 'error');
 			$this->debug->unguard(false);
 			return false;
 		}
 		
 		$blockID = $this->configuration->getConfiguration('zeitgeist','template', 'blockSubstBegin') . $name . $this->configuration->getConfiguration('zeitgeist','template', 'blockSubstEnd');
-		$this->content = str_replace($blockID, $this->blocks[$name]->currentContent, $this->content);
+		$this->content = str_replace($blockID, $this->blocks[$name]->currentContent . "\n" . $blockID, $this->content);
 		
 		if ($reset)
 		{
@@ -272,6 +272,17 @@ class zgTemplate
 	public function insertUsermessages()
 	{
 		$this->debug->guard();
+
+		$messageblock = $this->configuration->getConfiguration('zeitgeist', 'template', 'UsermessageMessages');
+		$currentUsermessages = $this->messages->getMessagesByType('usermessage');
+		if (is_array($currentUsermessages))
+		{
+			foreach ($currentUsermessages as $message)
+			{
+				$this->assign('usermessage', $message['message']);
+				$this->insertBlock($messageblock);
+			}
+		}
 		
 		$warningblock = $this->configuration->getConfiguration('zeitgeist', 'template', 'UsermessageWarnings');
 		$currentUserwarnings = $this->messages->getMessagesByType('userwarning');
@@ -318,7 +329,7 @@ class zgTemplate
 		
 //		if debug redirect to: $url
 		
-		header('Location: '.$url);
+		header('Location: ' . $url);
 
 		$this->debug->unguard(true);
 	}
@@ -340,8 +351,8 @@ class zgTemplate
 		$linkurl = 'index.php';
 		
 		$link = array();
-		if ($module != 'main') $link[0] = 'module='.$module;
-		if ($action != 'index') $link[1] = 'action='.$action;
+		if ($module != 'main') $link[0] = 'module=' . $module;
+		if ($action != 'index') $link[1] = 'action=' . $action;
 		if (count($link) > 0)
 		{
 			$linkparameters = implode($link, '&');
@@ -351,7 +362,7 @@ class zgTemplate
 		if (is_array($parameter))
 		{
 			foreach ($parameter as $parameterkey => $parametervalue)
-			$linkurl .= '&'.$parameterkey.'='.$parametervalue;
+			$linkurl .= '&' . $parameterkey . '=' . $parametervalue;
 		}
 
 		return $linkurl;
@@ -426,6 +437,7 @@ class zgTemplate
 				$this->variables[$variableContent] = new zgTemplateVariable;
 				$newVariableID = $this->configuration->getConfiguration('zeitgeist','template', 'variableSubstBegin') . $variableContent . $this->configuration->getConfiguration('zeitgeist','template', 'variableSubstEnd');
 				$block->currentContent = str_replace($completeVariable, $newVariableID, $block->currentContent);
+				$block->originalContent = $block->currentContent;
 				$block->blockVariables[$variableContent] = $newVariableID;
 			}
 		}
@@ -529,7 +541,7 @@ class zgTemplate
 			$blockContent = substr($completeBlock, ($startPosition+strlen($this->configuration->getConfiguration('zeitgeist','template', 'blockOpenEnd'))));
 			$endPosition = strpos($blockContent, $this->configuration->getConfiguration('zeitgeist','template', 'blockClose'));
 			$blockContent = substr($blockContent, 0, $endPosition);
-			$this->blocks[$blockName]->currentContent = $blockContent;
+			$this->blocks[$blockName]->currentContent = $blockContent;			
 			$this->blocks[$blockName]->originalContent = $blockContent;
 			
 			$newBlockID = $this->configuration->getConfiguration('zeitgeist','template', 'blockSubstBegin') . $blockName . $this->configuration->getConfiguration('zeitgeist','template', 'blockSubstEnd');
@@ -604,8 +616,8 @@ class zgTemplate
 			{
 				if (empty($this->variables[$variableName]))
 				{
-					$this->debug->write('Error inserting the variable '.$variableName.' into block '.$blockname, 'error');
-					$this->messages->setMessage('Error inserting the variable '.$variableName.' into block '.$blockname, 'error');
+					$this->debug->write('Error inserting the variable ' . $variableName . ' into block ' . $blockname, 'error');
+					$this->messages->setMessage('Error inserting the variable ' . $variableName . ' into block ' . $blockname, 'error');
 					$this->debug->unguard(false);
 					return false;
 				}
@@ -634,8 +646,8 @@ class zgTemplate
 			{
 				if (empty($this->variables[$variableName]))
 				{
-					$this->debug->write('Error inserting the variable '.$variableName.' into block '.$blockname, 'error');
-					$this->messages->setMessage('Error inserting the variable '.$variableName.' into block '.$blockname, 'error');
+					$this->debug->write('Error inserting the variable ' . $variableName . ' into block ' . $blockname, 'error');
+					$this->messages->setMessage('Error inserting the variable ' . $variableName . ' into block ' . $blockname, 'error');
 					$this->debug->unguard(false);
 					return false;
 				}
@@ -664,8 +676,8 @@ class zgTemplate
 		{
 			if (empty($this->blocks[$name]))
 			{
-				$this->debug->write('Error resetting block '.$name, 'error');
-				$this->messages->setMessage('Error resetting block '.$name, 'error');
+				$this->debug->write('Error resetting block ' . $name, 'error');
+				$this->messages->setMessage('Error resetting block ' . $name, 'error');
 				$this->debug->unguard(false);
 				return false;
 			}

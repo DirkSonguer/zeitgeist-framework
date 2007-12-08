@@ -87,32 +87,44 @@ class zgParameterhandler
 		
 		if ( (!isset($parameterdefinition['source'])) || (!isset($parameterdefinition['type'])) )
 		{
-			$this->debug->unguard('Problem checking parameter: could not get parameter definition for '.$parametername);
+			$this->debug->unguard('Problem checking parameter: could not get parameter definition for ' . $parametername);
 			return false;
 		}
 
 		if (isset($this->rawParameters[$parameterdefinition['source']][$parametername]))
 		{
-			if ($parameterdefinition['type'] == 'constant')
+			if ($parameterdefinition['type'] == 'CONSTANT')
 			{
 				if ( (!empty($parameterdefinition['value'])) && ($parameterdefinition['value'] == $this->rawParameters[$parameterdefinition['source']][$parametername]) )
 				{
-					$this->debug->unguard('Parameter appears to be safe: '.$parametername);
+					$this->debug->unguard('Parameter appears to be safe: ' . $parametername);
 					return true;
 				}
 			}
-			elseif (preg_match($parameterdefinition['type'], $this->rawParameters[$parameterdefinition['source']][$parametername]) == 1)
+			else
 			{
-				$this->debug->unguard('Parameter appears to be safe: '.$parametername);
-				return true;
+				$ret = preg_match($parameterdefinition['type'], $this->rawParameters[$parameterdefinition['source']][$parametername]);
+				
+				if ($ret === false)
+				{
+					$this->debug->unguard('Parameter could not be tested. There may be an error in the regexp definition: ' . $parameterdefinition['type']);
+					return false;
+				}
+				
+				if ($ret !== 0)
+				{
+					$this->debug->unguard('Parameter appears to be safe: ' . $parametername);
+					return true;
+				}
 			}
 
-			$this->debug->unguard('Parameter not safe: '.$parametername);
+//			$this->debug->unguard('squirrelz!');
+			$this->debug->unguard('Parameter not safe: ' . $parametername.' (value: ' . $this->rawParameters[$parameterdefinition['source']][$parametername].' tested against: ' . $parameterdefinition['type'].')');
 			return false;
 		}
 		else
 		{
-			$this->debug->unguard('Parameter not set: '.$parametername);
+			$this->debug->unguard('Parameter not set: ' . $parametername);
 			return false;
 		}
 		

@@ -137,8 +137,8 @@ class zgDatabase
 		$res = mysql_query("SET character_set_connection = ".$charset, $this->dblink);
 		if (!$res)
 		{
-			$this->debug->write('Error setting charset for connection: '.mysql_error().' Query was: "'.$query.'"', 'error');
-			$this->messages->setMessage('Error setting charset for connection: '.mysql_error().' Query was: "'.$query.'"', 'error');
+			$this->debug->write('Error setting charset for connection: '.mysql_error().' Query was: "' . $query . '"', 'error');
+			$this->messages->setMessage('Error setting charset for connection: '.mysql_error().' Query was: "' . $query . '"', 'error');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -146,8 +146,8 @@ class zgDatabase
 		$res = mysql_query("SET character_set_results = ".$charset, $this->dblink);
 		if (!$res)
 		{
-			$this->debug->write('Error setting charset for results: '.mysql_error().' Query was: "'.$query.'"', 'error');
-			$this->messages->setMessage('Error setting charset for results: '.mysql_error().' Query was: "'.$query.'"', 'error');
+			$this->debug->write('Error setting charset for results: '.mysql_error().' Query was: "' . $query . '"', 'error');
+			$this->messages->setMessage('Error setting charset for results: '.mysql_error().' Query was: "' . $query . '"', 'error');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -155,8 +155,8 @@ class zgDatabase
 		$res = mysql_query("SET character_set_client = ".$charset, $this->dblink);
 		if (!$res)
 		{
-			$this->debug->write('Error setting charset for client: '.mysql_error().' Query was: "'.$query.'"', 'error');
-			$this->messages->setMessage('Error setting charset for client: '.mysql_error().' Query was: "'.$query.'"', 'error');
+			$this->debug->write('Error setting charset for client: '.mysql_error().' Query was: "' . $query . '"', 'error');
+			$this->messages->setMessage('Error setting charset for client: '.mysql_error().' Query was: "' . $query . '"', 'error');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -181,8 +181,8 @@ class zgDatabase
 		
 		if (!$result)
 		{
-			$this->debug->write('Error executing query: '.mysql_error().' Query was: "'.$query.'"', 'error');
-			$this->messages->setMessage('Error executing query: '.mysql_error().' Query was: "'.$query.'"', 'error');
+			$this->debug->write('Error executing query: '.mysql_error().' Query was: "' . $query . '"', 'error');
+			$this->messages->setMessage('Error executing query: '.mysql_error().' Query was: "' . $query . '"', 'error');
 		}
 		
 		$this->debug->unguard($result);

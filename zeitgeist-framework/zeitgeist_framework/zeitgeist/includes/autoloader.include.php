@@ -36,22 +36,22 @@ defined('ZEITGEIST_ACTIVE') or die();
 		
 		$debug->guard();
 		
-		if (file_exists(APPLICATION_ROOTDIRECTORY . 'modules/'.$class.'/'.$class.'.module.php'))
+		if (file_exists(APPLICATION_ROOTDIRECTORY . 'modules/' . $class . '/' . $class . '.module.php'))
 		{
-			require_once(APPLICATION_ROOTDIRECTORY . 'modules/'.$class.'/'.$class.'.module.php');
-			$debug->unguard('Class '.APPLICATION_ROOTDIRECTORY . 'modules/'.$class.'/'.$class.'.module.php loaded');
+			require_once(APPLICATION_ROOTDIRECTORY . 'modules/' . $class . '/' . $class . '.module.php');
+			$debug->unguard('Class '.APPLICATION_ROOTDIRECTORY . 'modules/' . $class . '/' . $class . '.module.php loaded');
 			return;
 		}
 		
-		if (file_exists(APPLICATION_ROOTDIRECTORY . 'snapins/'.$class.'.snapin.php'))
+		if (file_exists(APPLICATION_ROOTDIRECTORY . 'snapins/' . $class . '.snapin.php'))
 		{
-			require_once(APPLICATION_ROOTDIRECTORY . 'snapins/'.$class.'.snapin.php');
-			$debug->unguard('Class '.APPLICATION_ROOTDIRECTORY . 'snapins/'.$class.'.snapin.php loaded');
+			require_once(APPLICATION_ROOTDIRECTORY . 'snapins/' . $class . '.snapin.php');
+			$debug->unguard('Class '.APPLICATION_ROOTDIRECTORY . 'snapins/' . $class . '.snapin.php loaded');
 			return;
 		}		
 		
-		$debug->write('Error autoloading class: Class '.$class.' not found', 'error');
-		$message->setMessage('Error autoloading class: Class '.$class.' not found', 'error');
+		$debug->write('Error autoloading class: Class ' . $class . ' not found', 'error');
+		$message->setMessage('Error autoloading class: Class ' . $class . ' not found', 'error');
 		
 		$debug->unguard(false);
 	}

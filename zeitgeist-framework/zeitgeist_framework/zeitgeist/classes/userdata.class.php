@@ -174,8 +174,8 @@ class zgUserdata
 			}
 			else
 			{
-				$this->debug->write('Problem getting selected userdata: userdata with given key ('.$datakey.') not found', 'warning');
-				$this->messages->setMessage('Problem getting selected userdata: userdata with given key ('.$datakey.') not found', 'warning');
+				$this->debug->write('Problem getting selected userdata: userdata with given key (' . $datakey . ') not found', 'warning');
+				$this->messages->setMessage('Problem getting selected userdata: userdata with given key (' . $datakey . ') not found', 'warning');
 				
 				$this->debug->unguard(false);
 				return false;
@@ -213,8 +213,8 @@ class zgUserdata
 			return true;		
 		}
 		
-		$this->debug->write('Error setting userdata: Userdata ('.$userdata.') does not exist and could not be set.', 'error');
-		$this->messages->setMessage('Error setting userdata: Userdata ('.$userdata.') does not exist and could not be set.', 'error');
+		$this->debug->write('Error setting userdata: Userdata (' . $userdata . ') does not exist and could not be set.', 'error');
+		$this->messages->setMessage('Error setting userdata: Userdata (' . $userdata . ') does not exist and could not be set.', 'error');
 		
 		$this->debug->unguard(false);
 		return false;

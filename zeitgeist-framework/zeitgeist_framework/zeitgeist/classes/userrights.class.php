@@ -166,8 +166,8 @@ class zgUserrights
 			return true;		
 		}
 		
-		$this->debug->write('User does not have the requested right for action ('.$actionid.')', 'warning');
-		$this->messages->setMessage('User does not have the requested right for action ('.$actionid.')', 'warning');
+		$this->debug->write('User does not have the requested right for action (' . $actionid . ')', 'warning');
+		$this->messages->setMessage('User does not have the requested right for action (' . $actionid . ')', 'warning');
 		
 		$this->debug->unguard(false);
 		return false;		
