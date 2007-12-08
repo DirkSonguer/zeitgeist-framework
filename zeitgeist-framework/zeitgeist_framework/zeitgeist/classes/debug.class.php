@@ -317,7 +317,7 @@ class zgDebug
 						$argstring = implode(',', $guardMessage['args']);
 					}
 					
-					$currentGuardLine .= '('.$argstring . ')';
+					$currentGuardLine .= '(' . $argstring . ')';
 				}
 				else
 				{

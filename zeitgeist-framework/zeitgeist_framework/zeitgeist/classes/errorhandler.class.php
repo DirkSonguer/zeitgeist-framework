@@ -105,10 +105,27 @@ class zgErrorhandler
 		if ( ($this->outputLevel > 0) && (array_key_exists($errno, $this->errornames)) )
 		{
 			echo '<p style="background-color:#ffff00;">An error occured: ';
-			echo "(". $this->errornames[$errno].")";
-			echo "In file ". print_r($errfile, true);
-			echo " (line ". print_r( $errline, true).")\n";
-			echo "Message: ". print_r( $errstr, true).'</p>';
+			echo "(" . $this->errornames[$errno] . ")";
+			echo "In file " . print_r($errfile, true);
+			echo " (line " . print_r( $errline, true) . ")\n";
+			echo "Message: " . print_r( $errstr, true) . '</p>';
+			
+			echo '<p style="background-color:#ffff00;">Backtrace:<br />';
+			$trace = debug_backtrace();
+			foreach ($trace as $backtrace)
+			{
+				echo basename($backtrace['file']);
+				if(!empty($backtrace['line'])) echo "[" . $backtrace['line'] . "]";
+				echo " ::" . $backtrace['function'];
+				if(!empty($backtrace['args']))
+				{
+					echo "(";
+					echo implode(' -- ', $backtrace['args']);
+					echo ")";
+				}
+				echo "<br />";
+			}
+			echo '</p>';
 		}
 		
 		if ($this->outputLevel == 3) echo "\n\nContext:\n".print_r( $errcontext, true)."\n";

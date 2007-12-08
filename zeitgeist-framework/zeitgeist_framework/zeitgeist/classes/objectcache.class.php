@@ -73,8 +73,8 @@ class zgObjectcache
 		
 		if (!empty($this->objects[$name]))
 		{
-			$this->debug->write('An object of this name ("'.$name.'") already exists', 'error');
-			$this->messages->setMessage('An object of this name ("'.$name.'") already exists', 'error');
+			$this->debug->write('An object of this name ("' . $name . '") already exists', 'error');
+			$this->messages->setMessage('An object of this name ("' . $name . '") already exists', 'error');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -93,14 +93,14 @@ class zgObjectcache
 	 * 
 	 * @return object 
 	 */
-	public function getOject($name)
+	public function getObject($name)
 	{
 		$this->debug->guard();
 
 		if (empty($this->objects[$name]))
 		{
-			$this->debug->write('Object with name '.$name.' not found', 'error');
-			$this->messages->setMessage('Object with name '.$name.' not found', 'error');
+			$this->debug->write('Object with name ' . $name . ' not found', 'error');
+			$this->messages->setMessage('Object with name ' . $name . ' not found', 'error');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -125,8 +125,8 @@ class zgObjectcache
 
 		if (empty($this->objects[$name]))
 		{
-			$this->debug->write('Object with name '.$name.' not found', 'error');
-			$this->messages->setMessage('Object with name '.$name.' not found', 'error');
+			$this->debug->write('Object with name ' . $name . ' not found', 'error');
+			$this->messages->setMessage('Object with name ' . $name . ' not found', 'error');
 			$this->debug->unguard(false);
 			return false;
 		}

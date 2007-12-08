@@ -96,6 +96,7 @@ class zgConfiguration
 			}
 			
 			$ret = $this->configuration[$module];
+			array_walk_recursive($ret, array($this, '_replaceReferences'));
 		}
 		elseif ($configuration == '')
 		{
@@ -109,6 +110,7 @@ class zgConfiguration
 			}
 			
 			$ret = $this->configuration[$module][$section];
+			array_walk_recursive($ret, array($this, '_replaceReferences'));
 		}
 		else
 		{
@@ -122,6 +124,14 @@ class zgConfiguration
 			}
 			
 			$ret = $this->configuration[$module][$section][$configuration];
+			if (!is_array($ret))
+			{
+				$this->_replaceReferences($ret, '');
+			}
+			else
+			{
+				array_walk_recursive($ret, array($this, '_replaceReferences'));
+			}
 		}
 
 		$this->debug->unguard($ret);
@@ -152,9 +162,10 @@ class zgConfiguration
 		
 		// try to load the configuration
 		$configuration = $this->_loadConfigurationFromDatabase($filename);
+		
 		if ($configuration !== false)
 		{
-			$this->debug->write('Configuration found and successfully loaded: '.$filename);
+			$this->debug->write('Configuration found and successfully loaded: ' . $filename);
 			if ($overwrite == false)
 			{
 				$this->configuration[$modulename] = $configuration;
@@ -225,7 +236,7 @@ class zgConfiguration
 			}
 			else
 			{
-				$res = $this->database->query("DELETE FROM " . ZG_DB_CONFIGURATIONCACHE . " WHERE configurationcache_name = '".$filename."'");
+				$res = $this->database->query("DELETE FROM " . ZG_DB_CONFIGURATIONCACHE . " WHERE configurationcache_name = '" . $filename."'");
 				$this->debug->write('Configuration data in the database is outdated', 'warning');
 				$this->messages->setMessage('Configuration data in the database is outdated', 'warning');
 				$this->debug->unguard(false);
@@ -281,6 +292,47 @@ class zgConfiguration
 
 
 	/**
+	 * Replaces the references in a configuration array
+	 * This function is called recursively by walk_array_recursive in the getConfiguration method 
+	 * 
+	 * @param string $configurationValue value of the configuration
+	 * @param string $configurationKey key of the configuration
+	 */
+	protected function _replaceReferences(&$configurationValue, $configurationKey)
+	{
+		// check for references
+		if ( (strpos($configurationValue, '[[') !== false) && (strpos($configurationValue, ']]') !== false) )
+		{
+			$referenceStart = strpos($configurationValue, '[[');
+			$referenceEnd = strpos($configurationValue, ']]');
+
+			$referenceString = substr($configurationValue, $referenceStart, $referenceEnd-$referenceStart+2);
+			$reference = substr($referenceString,2,-2);
+
+			$referenceArray = explode('.', $reference);
+			if (count($referenceArray) == 3)
+			{
+				if ($this->getConfiguration($referenceArray[0], $referenceArray[1], $referenceArray[2]))
+				{
+					$referenceValue = $this->getConfiguration($referenceArray[0], $referenceArray[1], $referenceArray[2]);
+					$configurationValue = str_replace($referenceString, $referenceValue, $configurationValue);
+				}
+				else
+				{
+					$this->debug->write('A reference (' . $reference . ') could not be resolved', 'warning');
+					$this->messages->setMessage('A reference (' . $reference . ') could not be resolved', 'warning');
+				}
+			}
+			else
+			{
+				$this->debug->write('A reference (' . $reference . ') is not stated correctly', 'warning');
+				$this->messages->setMessage('A reference (' . $reference . ') is not stated correctly', 'warning');
+			}
+		}
+	}
+	
+	
+	/**
 	 * Reads out the contents of an ini file into an array
 	 * Also handles all references inside the configuration file
 	 * 
@@ -294,8 +346,8 @@ class zgConfiguration
 		
 		if (!file_exists($filename))
 		{
-			$this->debug->write('Error loading the configuration file '.$filename.': file not found', 'error');
-			$this->messages->setMessage('Error loading the configuration file '.$filename.': file not found', 'error');
+			$this->debug->write('Error loading the configuration file ' . $filename . ': file not found', 'error');
+			$this->messages->setMessage('Error loading the configuration file ' . $filename . ': file not found', 'error');
 			$this->debug->unguard($retArray);
 			return false;
 		}
@@ -307,8 +359,8 @@ class zgConfiguration
 		
 		if (!$fileArray)
 		{
-			$this->debug->write('Error loading the configuration file '.$filename.': file not a valid ini file', 'error');
-			$this->messages->setMessage('Error loading the configuration file '.$filename.': file not a valid ini file', 'error');
+			$this->debug->write('Error loading the configuration file ' . $filename . ': file not a valid ini file', 'error');
+			$this->messages->setMessage('Error loading the configuration file ' . $filename . ': file not a valid ini file', 'error');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -318,7 +370,7 @@ class zgConfiguration
 		foreach ($fileArray as $fileData)
 		{
 			$fileData = trim($fileData);
-
+			
 			// check for comments
 			if ( (substr($fileData, 0, 1) == ';') && ($fileData == '') ) continue;
 
@@ -344,9 +396,8 @@ class zgConfiguration
 					{
 						$configurationValue = substr($value, 1, -1);
 					}
-
+	
 					$arrayvalue = false;
-					
 					if ( (strpos($configurationKey, '[') !== false) && (strpos($configurationKey, ']') !== false) )
 					{
 						$keystart = strpos($configurationKey, '[');
@@ -357,18 +408,18 @@ class zgConfiguration
 
 					if (!$arrayvalue)
 					{
-						$retArray[$currentSection][$configurationKey] = stripcslashes($configurationValue);
+						$retArray[$currentSection][$configurationKey] = $configurationValue;
 						$arrayKey = false;
 					}
 					else
 					{
 						if (!$arrayKey)
 						{
-							$retArray[$currentSection][$configurationKey][] = stripcslashes($configurationValue);
+							$retArray[$currentSection][$configurationKey][] = $configurationValue;
 						}
 						else
 						{
-							$retArray[$currentSection][$configurationKey][$arrayKey] = stripcslashes($configurationValue);
+							$retArray[$currentSection][$configurationKey][$arrayKey] = $configurationValue;
 						}
 					}
 				}

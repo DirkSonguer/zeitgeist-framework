@@ -236,7 +236,7 @@ class zgEventhandler
 		//check if zeitgeist can load the module
 		if (!class_exists($module, true))
 		{
-			die('Error loading the module class: Could not find matching class ('.$module.'). Zeitgeist halted!');
+			die('Error loading the module class: Could not find matching class (' . $module . '). Zeitgeist halted!');
 		}
 		
 		// load the module class through the autoloader
@@ -245,13 +245,13 @@ class zgEventhandler
 		// check if action is installed and get action data
 		if (!$actionData = $this->_getActionData($moduleData, $action))
 		{
-			die('Error loading the action ('.$action.') in module ('.$module.'): Action is not installed for module). Zeitgeist halted!');
+			die('Error loading the action (' . $action . ') in module (' . $module . '): Action is not installed for module. Zeitgeist halted!');
 		}
 		
 		// check if action method exists in module
 		if (!method_exists($moduleClass, $action))
 		{
-			die('Error loading the action ('.$action.') in module ('.$module.'): Could not find method. Zeitgeist halted!');
+			die('Error loading the action (' . $action . ') in module (' . $module . '): Could not find method. Zeitgeist halted!');
 		}
 		
 		// check if user has rights for given action
@@ -259,8 +259,8 @@ class zgEventhandler
 		{
 			if (!$this->_checkRightsForAction($moduleData, $actionData))
 			{
-				$this->debug->write('User (' . $this->user->getUserID() . ') has no rights for action ('.$action.') in module ('.$module.')', 'warning');
-				$this->messages->setMessage('User (' . $this->user->getUserID() . ') has no rights for action ('.$action.') in module ('.$module.')', 'warning');
+				$this->debug->write('User (' . $this->user->getUserID() . ') has no rights for action (' . $action . ') in module (' . $module . ')', 'warning');
+				$this->messages->setMessage('User (' . $this->user->getUserID() . ') has no rights for action (' . $action . ') in module (' . $module . ')', 'warning');
 				
 				$this->debug->unguard($this->configuration->getConfiguration('zeitgeist', 'eventhandler', 'no_userrights_for_action'));
 				return $this->configuration->getConfiguration('zeitgeist', 'eventhandler', 'no_userrights_for_action');
@@ -269,10 +269,10 @@ class zgEventhandler
 		
 		
 		// load configuration
-		if (!$this->configuration->loadConfiguration($module, APPLICATION_ROOTDIRECTORY . 'modules/'.$module.'/'.$module.'.ini'))
+		if (!$this->configuration->loadConfiguration($module, APPLICATION_ROOTDIRECTORY . 'modules/' . $module . '/' . $module . '.ini'))
 		{
-			$this->debug->write('Could not get configuration for module '.$module, 'warning');
-			$this->messages->setMessage('Could not get configuration for module '.$module, 'warning');
+			$this->debug->write('Could not get configuration for module ' . $module, 'warning');
+			$this->messages->setMessage('Could not get configuration for module ' . $module, 'warning');
 		}
 
 		// filter parameters and get safe ones
