@@ -412,5 +412,20 @@ class setup
 		return true;
 	}
 	
+	
+	public function manageuserroles($parameters=array())
+	{
+		$this->debug->guard();
+		
+		$tpl = new zgaTemplate();
+		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_manageuserroles'));
+
+		$tpl->show();
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+	
+		
 }
 ?>
