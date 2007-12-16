@@ -151,6 +151,10 @@ a:active {
 	margin-right:10px;
 }
 
+td {
+	padding-top:5px;
+}
+
 .even
 {
 	background-color:#e0e0e0;
@@ -162,6 +166,15 @@ a:active {
 }
 	
 
+.tooltip {
+	font-family: "Georgia",Serif;
+	font-size: 10pt;
+	padding: 3pt;
+	border: solid 1px black;
+	position: absolute;
+	background-color: #FFF;
+}  
+		
 .menuitem {
 	font-size: 10pt;
 	font-weight:bold;

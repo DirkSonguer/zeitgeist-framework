@@ -56,6 +56,51 @@
 </script>
 	
 <!-- InstanceBeginEditable name="head" -->
+
+	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryData.js"></script>	
+	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/xpath.js"></script>
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryNestedXMLDataSet.js"></script>
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/js/SpryExtensions.js"></script>
+
+	<script type="text/javascript">	
+	
+		var dsOverviewUserroles = new Spry.Data.XMLDataSet("@@{[dataserver.getuserroles]}@@", "container/element", { filterFunc: paginationFunc });
+		dsOverviewUserroles.setColumnType("userrole_id", "number");
+
+		function paginationFunc(ds, row, rowNumber)
+		{
+			if (rowNumber < paginationOffset || rowNumber >= paginationStop)
+				return null;
+			return row;
+		}
+		
+		function pagination(direction)
+		{
+			if (direction == 'up')
+			{
+				updatePagination(paginationOffset + paginationSize, dsOverviewUserroles);
+			}
+			else
+			{
+				updatePagination(paginationOffset - paginationSize, dsOverviewUserroles);
+			}
+		}
+		
+		function deleteUserrole(id, name)
+		{
+			var answer = window.confirm("Do you really want to delete the userrole '" + name + "'?");    
+			
+			/* Question icon, Yes/No button. */
+			/* 0 = error, 1 = OK, 2 = Cancel, 3 = No, 4 = Yes */
+			
+			if (answer == true)
+			{
+			   window.location.href = "@@{[setup.deleteuserrole]}@@"+"&id="+id;
+			}
+		}		
+	</script>
+
+
 <!-- InstanceEndEditable -->
 </head>
 
@@ -104,8 +149,7 @@
 
 <!-- InstanceBeginEditable name="pagetitle" -->
 
-<h2>Setup Application</h2>
-<p>This section helps you setting up your application, for example adding actions and modules to the database etc.</p>
+<h2>Manage userroles</h2>
 
 <!-- InstanceEndEditable -->
 
@@ -124,62 +168,48 @@
 <!-- InstanceBeginEditable name="body" -->
 
 <div class="textbox">
-<table border="0" cellpadding="0" cellspacing="5">
-	<tr>
-		<td width="90">
-			<p><img src="@@{templatepath}@@/nuvola/64x64/apps/kalzium.png" alt="Manage modules" border="0" /></p>
-		</td>
-		<td>
-			<h2><a href="@@{[setup.managemodules]}@@" alt="">Manage modules</a></h2>
-            <p>Manage the modules that are available for your application.</p>
-		</td>
-	</tr>
-</table>
+	<h3><img src="@@{templatepath}@@/nuvola/22x22/actions/view_bottom.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[setup.adduserrole]}@@" alt="add new userrole">Add new userrole</a></h3>
 </div>
 
 <div class="textbox">
-<table border="0" cellpadding="0" cellspacing="5">
-	<tr>
-		<td width="90">
-			<p><img src="@@{templatepath}@@/nuvola/64x64/apps/flashkard.png" alt="Manage actions" border="0" /></p>
-		</td>
-		<td>
-			<h2><a href="@@{[setup.manageactions]}@@" alt="">Manage actions</a></h2>
-            <p>Manage the actions within the modules that are available for your application.</p>
-		</td>
-	</tr>
-</table>
+	<div spry:region="dsOverviewUserroles">
+    <div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
+
+	<div spry:state="ready">
+	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
+	        <tr>
+				<td colspan="2" align="left"><p><span onmousemove="showTooltip('Previous Page', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/16x16/actions/previous.png" alt="" style="margin-left:5px;" onclick="pagination('down');" /></span></p></td>
+                <td><div id="pageinfo"><p>&nbsp;</p></div>
+                	<script type="text/javascript">
+                    	showPaginationInfo('pageinfo', dsOverviewUserroles);
+                    </script>
+                </td>
+				<td colspan="2" align="right"><p style="text-align:right;"><span onmousemove="showTooltip('Next Page', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/16x16/actions/next.png" alt="" style="margin-right:5px;" onclick="pagination('up');" /></span></p></td>
+	        </tr>      
+	        <tr class="tablehead">
+				<th><p><a onClick="dsOverviewUserroles.sort('userrole_id');">ID</a></p></th>
+				<th><p><a onClick="dsOverviewUserroles.sort('userrole_name');">Name</a></p></th>
+				<th><p>Description</p></th>
+				<th><p>Users with role</p></th>
+				<th><p>Action</p></th>
+	        </tr>
+	        <tr class="{ds_EvenOddRow}" spry:repeat="dsOverviewUserroles">
+				<td><p>{dsOverviewUserroles::userrole_id}</p></td>
+				<td><p>{dsOverviewUserroles::userrole_name}</p></td>
+				<td><p>{dsOverviewUserroles::userrole_description}</p></td>
+				<td><p>{dsOverviewUserroles::userrole_usercount}</p></td>
+				<td width="90"><p>
+				<a href="@@{[setup.edituserrole]}@@&id={dsOverviewUserroles::}}" alt="edit userrole"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="edit userrole" border="0" /></a> &nbsp; <a href="javascript:deleteModule({dsOverviewUserroles::}}, '{dsOverviewUserroles::userrole_name}')" alt="delete userrole"><img src="@@{templatepath}@@/nuvola/22x22/actions/cancel.png" alt="delete userrole" border="0" /></a>
+                </p></td>
+	        </tr>
+	    </table>
+    </div>
+	</div>	
 </div>
 
 <div class="textbox">
-<table border="0" cellpadding="0" cellspacing="5">
-	<tr>
-		<td width="90">
-			<p><img src="@@{templatepath}@@/nuvola/64x64/mimetypes/vcard.png" alt="Manage userroles" border="0" /></p>
-		</td>
-		<td>
-			<h2><a href="@@{[setup.manageuserroles]}@@" alt="">Manage userroles</a></h2>
-            <p>Manage the userroles that should be available for your application.</p>
-		</td>
-	</tr>
-</table>
+	<h3><img src="@@{templatepath}@@/nuvola/22x22/actions/2leftarrow.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[setup.index]}@@" alt="Back to application setup">Back to application setup</a></h3>
 </div>
-
-<div class="textbox">
-<table border="0" cellpadding="0" cellspacing="5">
-	<tr>
-		<td width="90">
-			<p><img src="@@{templatepath}@@/nuvola/64x64/mimetypes/wordprocessing.png" alt="Manage userdata" border="0" /></p>
-		</td>
-		<td>
-			<h2><a href="@@{[setup.manageusedata]}@@" alt="">Manage userdata</a></h2>
-            <p>Manage what userdata should be used in your application.</p>
-		</td>
-	</tr>
-</table>
-</div>
-
-<div style="clear:both"></div>
 
 <!-- InstanceEndEditable -->
 

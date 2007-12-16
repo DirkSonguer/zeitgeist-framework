@@ -59,7 +59,7 @@ class main
 				}
 				else
 				{
-					$this->messages->setMessage('Username and/or password was not correct. Please enter your name and password carefully.', 'userwarning');
+					$this->messages->setMessage('Username and/or password was not correct. Please enter your username and password carefully.', 'userwarning');
 				}
 			}
 			else

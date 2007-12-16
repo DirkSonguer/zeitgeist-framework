@@ -56,6 +56,90 @@
 </script>
 	
 <!-- InstanceBeginEditable name="head" -->
+
+	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryData.js"></script>	
+	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/xpath.js"></script>
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryNestedXMLDataSet.js"></script>
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/js/SpryExtensions.js"></script>
+
+	<script type="text/javascript">
+			
+		var dsUserdata = new Spry.Data.XMLDataSet("@@{[dataserver.getuserinformation]}@@", "container/element", { filterFunc: paginationFunc });
+		dsUserdata.setColumnType("user_id", "number");
+
+		var dsUserroles = new Spry.Data.XMLDataSet("@@{[dataserver.getuserroles]}@@", "container/element");
+
+		function paginationFunc(ds, row, rowNumber)
+		{
+			if (rowNumber < paginationOffset || rowNumber >= paginationStop)
+				return null;
+			return row;
+		}
+		
+		function pagination(direction)
+		{
+			if (direction == 'up')
+			{
+				updatePagination(paginationOffset + paginationSize, dsUserdata);
+			}
+			else
+			{
+				updatePagination(paginationOffset - paginationSize, dsUserdata);
+			}
+		}
+				
+		function deleteAction(id, name)
+		{
+			var answer = window.confirm("Do you really want to delete the user '" + name + "'?");    
+			
+			/* Question icon, Yes/No button. */
+			/* 0 = error, 1 = OK, 2 = Cancel, 3 = No, 4 = Yes */
+			
+			if (answer == true)
+			{
+			   window.location.href = "@@{[setup.deleteaction]}@@"+"&id="+id;
+			}
+		}
+				
+		function updateSearch()
+		{
+			document.searchform.submit();
+		}
+
+		
+		function filterUserrole()
+		{
+			filterParameter = document.getElementById('filter_userrole').value;
+			filterSpryDataset('userrole_id', filterParameter, dsUserdata);
+			
+			var numRows = dsUserdata.getData().length;
+			
+			if (numRows > 0)
+			{
+				if (numRows < paginationStop)
+				{
+					end = numRows;
+				}
+				else
+				{
+					end = paginationStop
+				}
+				
+				if (paginationOffset == 0)
+				{
+					start = 1;
+				}
+				else
+				{
+					start = paginationOffset;
+				}
+				
+				document.getElementById('pageinfo').innerHTML = '<p style="text-align:center;"><strong>Showing ' + numRows + ' entries</strong></p>';
+			}			
+		}
+		
+	</script>
+
 <!-- InstanceEndEditable -->
 </head>
 
@@ -103,10 +187,6 @@
 </div>
 
 <!-- InstanceBeginEditable name="pagetitle" -->
-
-<h2>Setup Application</h2>
-<p>This section helps you setting up your application, for example adding actions and modules to the database etc.</p>
-
 <!-- InstanceEndEditable -->
 
 	<!-- TemplateBeginBlock name="usermessage" -->
@@ -123,63 +203,93 @@
 	
 <!-- InstanceBeginEditable name="body" -->
 
+<h2>Manage application users</h2>
+
 <div class="textbox">
-<table border="0" cellpadding="0" cellspacing="5">
+	<h3><img src="@@{templatepath}@@/nuvola/22x22/actions/view_bottom.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[users.adduser]}@@" alt="add new user">Add new user</a></h3>
+</div>
+
+<form name="searchform" method="POST" action="@@{[users.index]}@@">
+<div class="textbox" style="padding:10px;">
+<table border="0" cellpadding="0" cellspacing="0" cellpadding="0" cellspacing="0">
 	<tr>
-		<td width="90">
-			<p><img src="@@{templatepath}@@/nuvola/64x64/apps/kalzium.png" alt="Manage modules" border="0" /></p>
+		<td width="130" valign="middle" rowspan="4">
+			<p><img src="@@{templatepath}@@/nuvola/128x128/apps/kghostview.png" alt="Filter users" border="0" /></p>
 		</td>
-		<td>
-			<h2><a href="@@{[setup.managemodules]}@@" alt="">Manage modules</a></h2>
-            <p>Manage the modules that are available for your application.</p>
+		<td colspan="2">
+			<h2 style="margin-top:5px; margin-bottom:5px;">Filter users</h2>
 		</td>
 	</tr>
+	<tr>
+		<td width="150" align="left" valign="middle">
+			<p style="margin-bottom:0px; padding-bottom:5px;">Free search</p>
+		</td>
+		<td align="left" valign="middle">
+			<input size="35" name="suchid" class="eingabefeld" value="@@{searchid}@@" style="width:185px;" /> <input type="submit" name="Submit" value="Suche"  class="infobuttonsmall"/>
+		</td>
+	</tr>
+	<tr>
+		<td align="left" valign="middle">
+			<p style="margin-bottom:0px; padding-bottom:5px;">Userrole</p>
+		</td>
+		<td align="left" valign="middle">	
+			<div spry:region="dsUserroles">
+			<select id="filter_userrole" class="eingabefeld" style="width:255px;" onChange="filterUserrole()">
+				<option value="-1">All</option>
+				<option spry:repeat="dsUserroles" value="{userrole_id}">{userrole_name}</option>
+			</select>
+			</p>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td align="left" valign="middle">&nbsp;</td>
+		<td align="left" valign="middle">&nbsp;</td>
+	</tr>    
 </table>
 </div>
 
 <div class="textbox">
-<table border="0" cellpadding="0" cellspacing="5">
-	<tr>
-		<td width="90">
-			<p><img src="@@{templatepath}@@/nuvola/64x64/apps/flashkard.png" alt="Manage actions" border="0" /></p>
-		</td>
-		<td>
-			<h2><a href="@@{[setup.manageactions]}@@" alt="">Manage actions</a></h2>
-            <p>Manage the actions within the modules that are available for your application.</p>
-		</td>
-	</tr>
-</table>
+	<div spry:region="dsUserdata">
+    <div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
+
+	<div spry:state="ready">
+	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
+	        <tr>
+				<td colspan="2" align="left"><p><span onmousemove="showTooltip('Previous Page', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/16x16/actions/previous.png" alt="" style="margin-left:5px;" onclick="pagination('down');" /></span></p></td>
+                <td colspan="2"><div id="pageinfo"><p>&nbsp;</p></div>
+                	<script type="text/javascript">
+                    	showPaginationInfo('pageinfo', dsUserdata);
+                    </script>
+                </td>
+				<td colspan="2" align="right"><p style="text-align:right;"><span onmousemove="showTooltip('Next Page', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/16x16/actions/next.png" alt="" style="margin-right:5px;" onclick="pagination('up');" /></span></p></td>
+	        </tr>        
+	        <tr class="tablehead">
+				<th><p><a onClick="dsUserdata.sort('user_id');">ID</a></p></th>
+				<th><p><a onClick="dsUserdata.sort('user_username');">Username</a></p></th>
+				<th><p><a onClick="dsUserdata.sort('userdata_firstname');">Full name</a></p></th>
+				<th><p>Userkey</p></th>
+				<th><p><a onClick="dsUserdata.sort('userrole_name');">Userrrole</a></p></th>
+				<th><p>Action</p></th>
+	        </tr>			
+	        <tr class="{ds_EvenOddRow}" spry:repeat="dsUserdata">
+				<td><p>{dsUserdata::user_id}</p></td>
+				<td><p>{dsUserdata::user_username}</p></td>
+				<td><p>{dsUserdata::userdata_firstname} {dsUserdata::userdata_lastname}</p></td>
+				<td><p>{dsUserdata::user_key}</p></td>
+				<td><p>{dsUserdata::userrole_name}</p></td>
+				<td width="90"><p>
+				<a href="@@{[setup.editaction]}@@&id={dsUserdata::action_id}" alt="edit action"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="edit action" border="0" /></a> &nbsp; <a href="javascript:deleteAction({dsUserdata::action_id}, '{dsUserdata::action_name}')" alt="delete action"><img src="@@{templatepath}@@/nuvola/22x22/actions/cancel.png" alt="delete action" border="0" /></a>
+                </p></td>
+	        </tr>
+	    </table>
+    </div>
+	</div>	
 </div>
 
 <div class="textbox">
-<table border="0" cellpadding="0" cellspacing="5">
-	<tr>
-		<td width="90">
-			<p><img src="@@{templatepath}@@/nuvola/64x64/mimetypes/vcard.png" alt="Manage userroles" border="0" /></p>
-		</td>
-		<td>
-			<h2><a href="@@{[setup.manageuserroles]}@@" alt="">Manage userroles</a></h2>
-            <p>Manage the userroles that should be available for your application.</p>
-		</td>
-	</tr>
-</table>
+	<h3><img src="@@{templatepath}@@/nuvola/22x22/actions/2leftarrow.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[setup.index]}@@" alt="Back to application setup">Back to application setup</a></h3>
 </div>
-
-<div class="textbox">
-<table border="0" cellpadding="0" cellspacing="5">
-	<tr>
-		<td width="90">
-			<p><img src="@@{templatepath}@@/nuvola/64x64/mimetypes/wordprocessing.png" alt="Manage userdata" border="0" /></p>
-		</td>
-		<td>
-			<h2><a href="@@{[setup.manageusedata]}@@" alt="">Manage userdata</a></h2>
-            <p>Manage what userdata should be used in your application.</p>
-		</td>
-	</tr>
-</table>
-</div>
-
-<div style="clear:both"></div>
 
 <!-- InstanceEndEditable -->
 
