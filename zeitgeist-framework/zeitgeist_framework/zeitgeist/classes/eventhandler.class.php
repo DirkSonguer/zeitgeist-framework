@@ -91,14 +91,14 @@ class zgEventhandler
 	protected function _getActionData($module, $action)
 	{
 		$this->debug->guard();
-		
+				
 		$actionsTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_actions');
 		$sql = "SELECT * FROM " . $actionsTablename . " WHERE action_module = '" . $module['module_id'] . "' AND action_name = '" . $action . "'";
 
 		if ($res = $this->database->query($sql))
 	    {
-	        $row = $this->database->fetchArray($res);
-
+	    	$row = $this->database->fetchArray($res);
+	    	
 	        $this->debug->unguard($row);
 			return $row;
 	    }

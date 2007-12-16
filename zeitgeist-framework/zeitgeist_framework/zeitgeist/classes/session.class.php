@@ -32,6 +32,9 @@ class zgSession
 	protected $storageMode;
 	protected $newSession;
 	protected $boundIP;
+	protected $lifetime;
+	protected $sessionName;
+	
 
 	/**
 	 * Class constructor
@@ -50,6 +53,8 @@ class zgSession
 		$this->boundIP = '';
 		$this->newSession = true;
 		$this->storageMode = $this->configuration->getConfiguration('zeitgeist','session','session_storage');
+		$this->lifetime = $this->configuration->getConfiguration('zeitgeist','session','session_lifetime');
+		$this->sessionName = $this->configuration->getConfiguration('zeitgeist','session','session_name');
 	}
 
 
@@ -92,6 +97,9 @@ class zgSession
 				$this->messages->setMessage('Could not register session save handlers!', 'error');
 			}
 		}
+		
+		ini_set('session.cookie_lifetime', $this->lifetime);
+		ini_set('session.name', $this->sessionName);
 
 		session_start();
 		
