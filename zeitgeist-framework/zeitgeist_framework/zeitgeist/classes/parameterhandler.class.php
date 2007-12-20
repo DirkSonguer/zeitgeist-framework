@@ -101,6 +101,14 @@ class zgParameterhandler
 					return true;
 				}
 			}
+			elseif ($parameterdefinition['type'] == 'ARRAY')
+			{
+				if (is_array($this->rawParameters[$parameterdefinition['source']][$parametername]))
+				{
+					$this->debug->unguard('Parameter appears to be safe: ' . $parametername);
+					return true;
+				}
+			}			
 			else
 			{
 				$ret = preg_match($parameterdefinition['type'], $this->rawParameters[$parameterdefinition['source']][$parametername]);
