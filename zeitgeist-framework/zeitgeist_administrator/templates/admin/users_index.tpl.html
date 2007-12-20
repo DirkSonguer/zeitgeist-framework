@@ -88,7 +88,7 @@
 			}
 		}
 				
-		function deleteAction(id, name)
+		function deleteUser(id, name)
 		{
 			var answer = window.confirm("Do you really want to delete the user '" + name + "'?");    
 			
@@ -97,7 +97,7 @@
 			
 			if (answer == true)
 			{
-			   window.location.href = "@@{[setup.deleteaction]}@@"+"&id="+id;
+			   window.location.href = "@@{[users.deleteuser]}@@"+"&id="+id;
 			}
 		}
 				
@@ -176,12 +176,26 @@
 <div class="textbox" id="Shortcuts" style="margin-top:-15px; padding:5px; display:none;">
 	<div class="menuicon"><a href="@@{[setup.managemodules]}@@" alt=""><span onmousemove="showTooltip('Manage modules', event)" onmouseout="hideTooltip()">
 	<img src="@@{templatepath}@@/nuvola/22x22/apps/kalzium.png" alt="" border="0" /></span></a></div>
+	<div class="menuicon" style="margin-left:-5px; margin-right:15px;"><a href="@@{[setup.addmodule]}@@" alt=""><span onmousemove="showTooltip('Add new module', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/16x16/actions/edit_add.png" alt="" border="0" /></span></a></div>
+
 	<div class="menuicon"><a href="@@{[setup.manageactions]}@@" alt=""><span onmousemove="showTooltip('Manage actions', event)" onmouseout="hideTooltip()">
 	<img src="@@{templatepath}@@/nuvola/22x22/apps/flashkard.png" alt="" align="left" border="0" /></a></span></div>
+	<div class="menuicon" style="margin-left:-5px; margin-right:15px;"><a href="@@{[setup.addaction]}@@" alt=""><span onmousemove="showTooltip('Add new action', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/16x16/actions/edit_add.png" alt="" border="0" /></span></a></div>
+
 	<div class="menuicon"><a href="@@{[setup.manageuserroles]}@@" alt=""><span onmousemove="showTooltip('Manage userroles', event)" onmouseout="hideTooltip()">
 	<img src="@@{templatepath}@@/nuvola/22x22/mimetypes/vcard.png" alt="" align="left" border="0" /></a></span></div>
+	<div class="menuicon" style="margin-left:-5px; margin-right:15px;"><a href="@@{[setup.adduserrole]}@@" alt=""><span onmousemove="showTooltip('Add new userrole', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/16x16/actions/edit_add.png" alt="" border="0" /></span></a></div>
+
 	<div class="menuicon"><a href="@@{[setup.manageusedata]}@@" alt=""><span onmousemove="showTooltip('Manage userdata', event)" onmouseout="hideTooltip()">
 	<img src="@@{templatepath}@@/nuvola/22x22/mimetypes/wordprocessing.png" alt="" align="left" border="0" /></a></span></div>
+
+	<div class="menuicon"><a href="@@{[users.index]}@@" alt=""><span onmousemove="showTooltip('Manage users', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/22x22/apps/kuser.png" alt="" align="left" border="0" /></a></span></div>
+	<div class="menuicon" style="margin-left:-5px; margin-right:15px;"><a href="@@{[users.adduser]}@@" alt=""><span onmousemove="showTooltip('Add new user', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/16x16/actions/edit_add.png" alt="" border="0" /></span></a></div>
 
 	<div style="clear:both"></div>
 </div>
@@ -279,7 +293,7 @@
 				<td><p>{dsUserdata::user_key}</p></td>
 				<td><p>{dsUserdata::userrole_name}</p></td>
 				<td width="90"><p>
-				<a href="@@{[setup.editaction]}@@&id={dsUserdata::action_id}" alt="edit action"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="edit action" border="0" /></a> &nbsp; <a href="javascript:deleteAction({dsUserdata::action_id}, '{dsUserdata::action_name}')" alt="delete action"><img src="@@{templatepath}@@/nuvola/22x22/actions/cancel.png" alt="delete action" border="0" /></a>
+				<a href="@@{[users.edituser]}@@&id={dsUserdata::user_id}" alt="edit user"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="edit user" border="0" /></a> &nbsp; <a href="javascript:deleteUser({dsUserdata::user_id}, '{dsUserdata::user_id}')" alt="delete action"><img src="@@{templatepath}@@/nuvola/22x22/actions/cancel.png" alt="delete user" border="0" /></a>
                 </p></td>
 	        </tr>
 	    </table>

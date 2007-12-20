@@ -325,15 +325,15 @@ class setup
 		{
 			if ( (!empty($parameters['action_name'])) && (!empty($parameters['action_description'])) )
 			{
-				$sql = "SELECT * FROM actions WHERE action_name = '" . $parameters['action_name'] . "'";
+				$sql = "SELECT * FROM actions WHERE action_name = '" . $parameters['action_name'] . "' AND action_module = '" . $parameters['action_module'] . "'";
 				$res = $this->managedDatabase->query($sql);
 				if ($this->managedDatabase->numRows($res) > 0)
 				{
-					$this->messages->setMessage('An action with this name already exists in the database. Please choose another name.', 'userwarning');
+					$this->messages->setMessage('An action with this name already exists for this module. Please choose another name.', 'userwarning');
 				}
 				else
 				{
-					$sql = 'INSERT INTO action(action_name, action_description, action_module, action_requiresuserright) VALUES(';
+					$sql = 'INSERT INTO actions(action_name, action_description, action_module, action_requiresuserright) VALUES(';
 					
 					if (empty($parameters['action_requiresuserright']))
 					{
@@ -426,6 +426,131 @@ class setup
 		return true;
 	}
 	
+	
+	public function edituserrole($parameters=array())
+	{
+		$this->debug->guard();
 		
+		$tpl = new zgaTemplate();
+		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_edituserrole'));
+		
+		$currentId = 1;
+		if (!empty($parameters['id'])) $currentId = $parameters['id'];
+		if (!empty($parameters['userrole_id'])) $currentId = $parameters['userrole_id'];
+
+		if (!empty($parameters['submit']))
+		{
+			if ( (!empty($parameters['userrole_name'])) && (!empty($parameters['userrole_description'])) )
+			{
+				$sql = 'UPDATE userroles SET ';
+				
+				foreach($parameters as $key => $value)
+				{
+					if (strpos($key, 'userrole_') !== false)
+					{
+						$sql .= $key . "='" . $value . "', ";
+					}
+				}
+				
+				$sql = substr($sql, 0, -2);
+				$sql = $sql . " WHERE userrole_id = '" . $currentId . "'";
+
+				$res = $this->managedDatabase->query($sql);
+				if (!$res)
+				{
+					$this->messages->setMessage('An error occured while saving the action data. Please contact an administrator.', 'usererror');
+				}
+				else
+				{
+					$this->messages->setMessage('Action data has been changed', 'usermessage');
+				}
+			}
+			else
+			{
+				$this->messages->setMessage('Please fill out all required fields (name and description).', 'userwarning');
+			}
+		}
+
+		$sql = "SELECT * FROM userroles WHERE userrole_id='" . $currentId . "'";
+		$res = $this->managedDatabase->query($sql);
+	    $row = $this->managedDatabase->fetchArray($res);
+	    
+	    $tpl->assignDataset($row);
+		$tpl->show();
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+	
+
+	public function adduserrole($parameters=array())
+	{
+		$this->debug->guard();
+		
+		$tpl = new zgaTemplate();
+		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_adduserrole'));
+
+		if (!empty($parameters['submit']))
+		{
+			if ( (!empty($parameters['userrole_name'])) && (!empty($parameters['userrole_description'])) )
+			{
+				$sql = "SELECT * FROM userroles WHERE userrole_name = '" . $parameters['userrole_name'] . "'";
+				$res = $this->managedDatabase->query($sql);
+				if ($this->managedDatabase->numRows($res) > 0)
+				{
+					$this->messages->setMessage('An userrole with this name already exists in the database. Please choose another name.', 'userwarning');
+				}
+				else
+				{
+					$sql = 'INSERT INTO userroles(userrole_name, userrole_description) VALUES(';
+										
+					$sql .= "'" . $parameters['userrole_name'] . "', ";
+					$sql .= "'" . $parameters['userrole_description'] . "')";
+	
+					$res = $this->managedDatabase->query($sql);
+					if (!$res)
+					{
+						$this->messages->setMessage('An error occured while saving the action data. Please contact an administrator.', 'usererror');
+					}
+					else
+					{
+						$this->debug->unguard(true);
+						$tpl->redirect($tpl->createLink('setup', 'manageuserroles'));
+					}
+				}
+			}
+			else
+			{
+				$this->messages->setMessage('Please fill out all required fields (name and description).', 'userwarning');
+			}
+			
+		}
+
+	    $tpl->assignDataset($parameters);
+		$tpl->show();
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+
+	
+	public function deleteuserrole($parameters=array())
+	{
+		$this->debug->guard();
+		
+		$tpl = new zgaTemplate();
+		if (!empty($parameters['id']))
+		{
+			$sql = "DELETE FROM userroles WHERE userrole_id='" . $parameters['id'] . "'";
+			$res = $this->managedDatabase->query($sql);
+		}
+		
+		$this->debug->unguard(true);
+		$tpl->redirect($tpl->createLink('setup', 'manageuserroles'));
+				
+		$this->debug->unguard(true);
+		return true;
+	}
+	
 }
 ?>
