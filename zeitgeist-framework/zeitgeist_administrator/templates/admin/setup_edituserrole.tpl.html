@@ -118,9 +118,6 @@
 
 <!-- InstanceBeginEditable name="pagetitle" -->
 
-<h2>Setup Application</h2>
-<p>This section helps you setting up your application, for example adding actions and modules to the database etc.</p>
-
 <!-- InstanceEndEditable -->
 
 	<!-- TemplateBeginBlock name="usermessage" -->
@@ -138,62 +135,31 @@
 <!-- InstanceBeginEditable name="body" -->
 
 <div class="textbox">
-<table border="0" cellpadding="0" cellspacing="5">
-	<tr>
-		<td width="90">
-			<p><img src="@@{templatepath}@@/nuvola/64x64/apps/kalzium.png" alt="Manage modules" border="0" /></p>
-		</td>
-		<td>
-			<h2><a href="@@{[setup.managemodules]}@@" alt="">Manage modules</a></h2>
-            <p>Manage the modules that are available for your application.</p>
-		</td>
-	</tr>
-</table>
+<h2><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="" align="left" style="margin-right:10px;" /> Edit userrole</h2>
+
+    <form method="post" action="@@{[setup.edituserrole]}@@" name="edituserrole" enctype="multipart/form-data; charset=utf-8">
+        <input type="hidden" value="@@{userrole_id}@@" name="userrole_id" />
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr>
+                <td align="right" valign="top" nowrap width="110"><p>Userrole name*</p></td>
+                <td align="left" valign="middle" nowrap><input type="text" maxlength="30" name="userrole_name" value="@@{userrole_name}@@" class="formtext" /></td>
+            </tr>
+            <tr>
+                <td align="right" valign="top" nowrap><p>Description*</p></td>
+                <td align="left" valign="middle" nowrap><textarea rows="5" name="userrole_description" class="formtext">@@{userrole_description}@@</textarea></td></td>
+            </tr>
+            <tr>
+                <td align="left" nowrap>&nbsp;</td>
+                <td align="right" valign="middle" nowrap><input type="submit" name="submit" value="Save changes" class="formbutton" /></td>
+            </tr>
+        </table>
+    </form>
+
 </div>
 
 <div class="textbox">
-<table border="0" cellpadding="0" cellspacing="5">
-	<tr>
-		<td width="90">
-			<p><img src="@@{templatepath}@@/nuvola/64x64/apps/flashkard.png" alt="Manage actions" border="0" /></p>
-		</td>
-		<td>
-			<h2><a href="@@{[setup.manageactions]}@@" alt="">Manage actions</a></h2>
-            <p>Manage the actions within the modules that are available for your application.</p>
-		</td>
-	</tr>
-</table>
+	<h3><img src="@@{templatepath}@@/nuvola/22x22/actions/2leftarrow.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[setup.manageuserroles]}@@" alt="Back to userrole overview">Back to userrole overview</a> (changes will not be saved)</h3>
 </div>
-
-<div class="textbox">
-<table border="0" cellpadding="0" cellspacing="5">
-	<tr>
-		<td width="90">
-			<p><img src="@@{templatepath}@@/nuvola/64x64/mimetypes/vcard.png" alt="Manage userroles" border="0" /></p>
-		</td>
-		<td>
-			<h2><a href="@@{[setup.manageuserroles]}@@" alt="">Manage userroles</a></h2>
-            <p>Manage the userroles that should be available for your application.</p>
-		</td>
-	</tr>
-</table>
-</div>
-
-<div class="textbox">
-<table border="0" cellpadding="0" cellspacing="5">
-	<tr>
-		<td width="90">
-			<p><img src="@@{templatepath}@@/nuvola/64x64/mimetypes/wordprocessing.png" alt="Manage userdata" border="0" /></p>
-		</td>
-		<td>
-			<h2><a href="@@{[setup.manageusedata]}@@" alt="">Manage userdata</a></h2>
-            <p>Manage what userdata should be used in your application.</p>
-		</td>
-	</tr>
-</table>
-</div>
-
-<div style="clear:both"></div>
 
 <!-- InstanceEndEditable -->
 
