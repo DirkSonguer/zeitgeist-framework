@@ -14,16 +14,16 @@
  * @subpackage ZEITGEIST ADMINISTRATOR
  */
 
-	define('ZGADMIN_ACTIVE', true);
+	define('LINERACER_ACTIVE', true);
 	
 	include('zeitgeist/zeitgeist.php');
 	
-	require_once('classes/zgatemplate.class.php');
+	require_once('classes/lrtemplate.class.php');
 
 	define(ZG_DB_DBSERVER, 'localhost');
-	define(ZG_DB_USERNAME, 'zeitgeist');
-	define(ZG_DB_USERPASS, 'zeitgeist');
-	define(ZG_DB_DATABASE, 'zeitgeist_administrator');
+	define(ZG_DB_USERNAME, 'lineracer');
+	define(ZG_DB_USERPASS, 'lineracer');
+	define(ZG_DB_DATABASE, 'lineracer');
 	define(ZG_DB_CONFIGURATIONCACHE, 'configurationcache');
 	
 	$debug = zgDebug::init();
@@ -33,15 +33,9 @@
 	$user = zgUserhandler::init();
 	$eventhandler = new zgEventhandler();
 
-/*	
-	$test = "Core module. This module is active by default. It can not be deactivated nor uninstalled. The module handles all the usual core actions like user handling, login/ -out etc.";
-	// It can not be deactivated nor uninstalled. The module handles all the usual core actions like user handling, login/ -out etc.";
-	$ret = preg_match("/^[\wüÜäÄöÖ ]+(([\'\,\.\-\/ ])?[\wüÜäÄöÖ ]*)*$/", $test);
-	echo "ret: ".$ret;
-	die();
-*/
+
 	// load configuration
-	$configuration->loadConfiguration('administrator', 'configuration/administrator.ini');
+	$configuration->loadConfiguration('lineracer', 'configuration/lineracer.ini');
 
 	// set module
 	if (isset($_GET['module']))
