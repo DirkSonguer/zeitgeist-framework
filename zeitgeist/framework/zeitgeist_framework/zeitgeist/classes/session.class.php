@@ -390,7 +390,7 @@ class zgSession
 	    $old = mysql_real_escape_string($old);
 	
 		$sessionTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_sessiondata');
-	    $sql = "DELETE FROM " . $sessionTablename . " WHERE sessiondata_created < '" . $old . "'";
+	    $sql = "DELETE FROM " . $sessionTablename . " WHERE sessiondata_lastupdate < '" . $old . "'";
 	
 	    $ret = $this->database->query($sql);
 		$this->debug->guard($ret);
