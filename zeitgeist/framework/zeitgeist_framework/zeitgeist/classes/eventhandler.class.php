@@ -23,6 +23,7 @@ class zgEventhandler
 	protected $database;
 	protected $configuration;
 	protected $user;
+	protected $traffic;
 	
 	protected $preSnapInList;
 	protected $postSnapInList;
@@ -39,6 +40,7 @@ class zgEventhandler
 		$this->messages = zgMessages::init();
 		$this->configuration = zgConfiguration::init();
 		$this->user = zgUserhandler::init();
+		$this->traffic = zgTrafficlogger::init();
 		
 		$this->database = new zgDatabase();
 		$this->database->connect();
@@ -284,6 +286,12 @@ class zgEventhandler
 				
 		// execute pre-snapins
 		if ($snapInsFound) $this->_executePreSnapIns($parameters);
+		
+		// log the pageview if logging is active
+		if ($this->configuration->getConfiguration('zeitgeist','trafficlogger','trafficlogger_active') == '1')
+		{
+			$this->traffic->logPageview($moduleData['module_id'], $actionData['action_id'], $this->user->getUserID(), $parameters);
+		}
 		
 		// execute action in module
 		$ret = call_user_func(array(&$moduleClass, $action), $parameters);
