@@ -67,6 +67,7 @@ class zgTemplate
 		}
 		
 		// try to load the template
+		$gotTemplateFromDatabase = false;
 		$template = $this->_loadTemplateFromDatabase($filename);
 		if ($template !== false)
 		{
@@ -76,6 +77,7 @@ class zgTemplate
 			$this->content = $template['content'];
 			$this->blocks = $template['blocks'];
 			$this->variables = $template['variables'];
+			$gotTemplateFromDatabase = true;
 		}
 		else
 		{
@@ -123,7 +125,10 @@ class zgTemplate
 				return false;
 			}
 
-			$ret = $this->_saveTemplateToDatabase($filename);
+			if (!$gotTemplateFromDatabase)
+			{
+				$ret = $this->_saveTemplateToDatabase($filename);
+			}
 		}
 		
 		$this->debug->unguard(true);
