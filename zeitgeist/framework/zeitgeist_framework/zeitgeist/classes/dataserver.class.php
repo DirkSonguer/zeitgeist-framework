@@ -70,7 +70,7 @@ class zgDataserver
 	    {
 	        $xmlDataset .= "\t<element id=\"" . $i . "\">\n";
 
-	        foreach($row as $key=>$value)
+	        foreach($row as $key => $value)
 	        {
 	            $value = htmlspecialchars($value);
 	            $xmlDataset .= "\t\t<{$key}>{$value}</{$key}>\n";
@@ -86,6 +86,48 @@ class zgDataserver
 	    return $xmlDataset;
 	}
 
+	
+	/**
+	 * Creates an xml dataset from an array
+	 * 
+	 * @param string $array array with the dataset
+	 * @param string $encoding the encoding of the final xml
+	 * @param string $rootElement root element of the final xml
+	 * 
+	 * @return string 
+	 */
+	public function createXMLDatasetFromArray($arrDataset, $encoding='UTF-8', $rootElement='container')
+	{
+		$this->debug->guard();
+		
+		if (!is_array($arrDataset))
+		{
+			return false;
+		}
+		
+	    $xmlDataset = '<?xml version="1.0" encoding="' . $encoding . "\" ?>\n";
+	    $xmlDataset .= '<' . $rootElement . ">\n";
+
+		$i = 1;
+		foreach ($arrDataset as $datarow)
+		{
+	        $xmlDataset .= "\t<element id=\"" . $i . "\">\n";
+
+	        foreach($datarow as $key => $value)
+	        {
+	            $value = htmlspecialchars($value);
+	            $xmlDataset .= "\t\t<{$key}>{$value}</{$key}>\n";
+	        }
+
+	        $xmlDataset .= "\t</element>\n";
+	        $i++;
+	    }
+
+		$xmlDataset .= '</' . $rootElement . ">\n";
+	    
+		$this->debug->unguard(true);
+	    return $xmlDataset;
+	}	
 	
 	/**
 	 * Streams an xml dataset to the browser
