@@ -56,6 +56,15 @@
 </script>
 	
 <!-- InstanceBeginEditable name="head" -->
+<script language="javascript" type="text/javascript">
+
+	function showRoleMessage()
+	{
+		alert("Be aware that you change the userrole. This will have severe impact on the userrights.\nAfter changing the userrole you should save the user information and check the rights again.");
+		document.getElementById(caller).checked = true;
+	}
+
+</script>
 <!-- InstanceEndEditable -->
 </head>
 
@@ -72,17 +81,17 @@
 		<div class="menuicon"><a href="@@{[main.index]}@@" alt=""><span onmousemove="showTooltip('ZGA Index', event)" onmouseout="hideTooltip()">
         <img src="@@{templatepath}@@/nuvola/22x22/actions/gohome.png" alt="" align="left" border="0" /></span></a></div>
 		<div class="menuicon"><a href="@@{[setup.index]}@@" alt=""><span onmousemove="showTooltip('Setup application', event)" onmouseout="hideTooltip()">
-        <img src="@@{templatepath}@@/nuvola/22x22/apps/kcmkwm.png" alt="" align="left" border="0" /></a></span></div>
+        <img src="@@{templatepath}@@/nuvola/22x22/apps/kcmkwm.png" alt="" align="left" border="0" /></span></a></div>
 		<div class="menuicon"><a href="@@{[users.index]}@@" alt=""><span onmousemove="showTooltip('Manage application users', event)" onmouseout="hideTooltip()">
-        <img src="@@{templatepath}@@/nuvola/22x22/apps/kuser.png" alt="" align="left" border="0" /></a></span></div>
-		<div class="menuicon"><a href="@@{[analyse.index]}@@" alt=""><span onmousemove="showTooltip('Analyse application traffic', event)" onmouseout="hideTooltip()">
-        <img src="@@{templatepath}@@/nuvola/22x22/apps/kchart.png" alt="" align="left" border="0" /></a></span></div>
+        <img src="@@{templatepath}@@/nuvola/22x22/apps/kuser.png" alt="" align="left" border="0" /></span></a></div>
+		<div class="menuicon"><a href="@@{[analyze.index]}@@" alt=""><span onmousemove="showTooltip('Analyze application traffic', event)" onmouseout="hideTooltip()">
+        <img src="@@{templatepath}@@/nuvola/22x22/apps/kchart.png" alt="" align="left" border="0" /></span></a></div>
 		<div class="menuicon"><a href="@@{[configure.index]}@@" alt=""><span onmousemove="showTooltip('Configure ZGA', event)" onmouseout="hideTooltip()">
-        <img src="@@{templatepath}@@/nuvola/22x22/apps/kcmdf.png" alt="" align="left" border="0" /></a></span></div>
+        <img src="@@{templatepath}@@/nuvola/22x22/apps/kcmdf.png" alt="" align="left" border="0" /></span></a></div>
 		<div class="menuicon" style="float:right;"><a href="@@{[main.logout]}@@" alt=""><span onmousemove="showTooltip('Logout', event)" onmouseout="hideTooltip()">
-        <img src="@@{templatepath}@@/nuvola/22x22/actions/exit.png" alt="" align="left" border="0" /></a></span></div>
+        <img src="@@{templatepath}@@/nuvola/22x22/actions/exit.png" alt="" align="left" border="0" /></span></a></div>
 		<div class="menuicon" style="float:right;"><a href="javascript:showShortcuts();" alt=""><span onmousemove="showTooltip('Show/hide shortcuts', event)" onmouseout="hideTooltip()">
-        <img src="@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png" alt="" name="shortcutIcon" align="left" border="0" /></a></span></div>
+        <img src="@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png" alt="" name="shortcutIcon" align="left" border="0" /></span></a></div>
 		
 		<div style="clear:both"></div>
 		</div>
@@ -96,20 +105,20 @@
 	<img src="@@{templatepath}@@/nuvola/16x16/actions/edit_add.png" alt="" border="0" /></span></a></div>
 
 	<div class="menuicon"><a href="@@{[setup.manageactions]}@@" alt=""><span onmousemove="showTooltip('Manage actions', event)" onmouseout="hideTooltip()">
-	<img src="@@{templatepath}@@/nuvola/22x22/apps/flashkard.png" alt="" align="left" border="0" /></a></span></div>
+	<img src="@@{templatepath}@@/nuvola/22x22/apps/flashkard.png" alt="" align="left" border="0" /></span></a></div>
 	<div class="menuicon" style="margin-left:-5px; margin-right:15px;"><a href="@@{[setup.addaction]}@@" alt=""><span onmousemove="showTooltip('Add new action', event)" onmouseout="hideTooltip()">
 	<img src="@@{templatepath}@@/nuvola/16x16/actions/edit_add.png" alt="" border="0" /></span></a></div>
 
 	<div class="menuicon"><a href="@@{[setup.manageuserroles]}@@" alt=""><span onmousemove="showTooltip('Manage userroles', event)" onmouseout="hideTooltip()">
-	<img src="@@{templatepath}@@/nuvola/22x22/mimetypes/vcard.png" alt="" align="left" border="0" /></a></span></div>
+	<img src="@@{templatepath}@@/nuvola/22x22/mimetypes/vcard.png" alt="" align="left" border="0" /></span></a></div>
 	<div class="menuicon" style="margin-left:-5px; margin-right:15px;"><a href="@@{[setup.adduserrole]}@@" alt=""><span onmousemove="showTooltip('Add new userrole', event)" onmouseout="hideTooltip()">
 	<img src="@@{templatepath}@@/nuvola/16x16/actions/edit_add.png" alt="" border="0" /></span></a></div>
 
 	<div class="menuicon"><a href="@@{[setup.manageusedata]}@@" alt=""><span onmousemove="showTooltip('Manage userdata', event)" onmouseout="hideTooltip()">
-	<img src="@@{templatepath}@@/nuvola/22x22/mimetypes/wordprocessing.png" alt="" align="left" border="0" /></a></span></div>
+	<img src="@@{templatepath}@@/nuvola/22x22/mimetypes/wordprocessing.png" alt="" align="left" border="0" /></span></a></div>
 
 	<div class="menuicon"><a href="@@{[users.index]}@@" alt=""><span onmousemove="showTooltip('Manage users', event)" onmouseout="hideTooltip()">
-	<img src="@@{templatepath}@@/nuvola/22x22/apps/kuser.png" alt="" align="left" border="0" /></a></span></div>
+	<img src="@@{templatepath}@@/nuvola/22x22/apps/kuser.png" alt="" align="left" border="0" /></span></a></div>
 	<div class="menuicon" style="margin-left:-5px; margin-right:15px;"><a href="@@{[users.adduser]}@@" alt=""><span onmousemove="showTooltip('Add new user', event)" onmouseout="hideTooltip()">
 	<img src="@@{templatepath}@@/nuvola/16x16/actions/edit_add.png" alt="" border="0" /></span></a></div>
 
@@ -141,16 +150,31 @@
         <input type="hidden" value="@@{user_id}@@" name="user_id" />
         <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;" width="95%">
             <tr>
-                <td align="right" valign="top" nowrap width="120"><p>Username*</p></td>
-                <td align="left" valign="middle" nowrap><input type="text" maxlength="30" name="user_username" value="@@{user_username}@@" class="formtext" /></td>
+                <td align="right" valign="top" nowrap width="150"><p>Username*</p></td>
+                <td align="left" valign="middle" nowrap><input type="text" maxlength="20" name="user_username" value="@@{user_username}@@" class="formtext" /></td>
             </tr>
             <tr>
-                <td align="right" valign="top" nowrap width="120"><p>Password*</p></td>
-                <td align="left" valign="middle" nowrap><input type="password" maxlength="30" name="user_password" value="@@{user_password}@@" class="formtext" /></td>
-            </tr>
-            <tr>
-                <td align="right" valign="top" nowrap width="120"><p>Key*</p></td>
+                <td align="right" valign="top" nowrap width="150"><p>Key*</p></td>
                 <td align="left" valign="middle" nowrap><input type="text" maxlength="30" name="user_key" value="@@{user_key}@@" class="formtext" /></td>
+            </tr>
+            <tr>
+                <td align="left" nowrap>&nbsp;</td>
+                <td align="right" valign="middle" nowrap><input type="submit" name="submit" value="Save changes" class="formbutton" /></td>
+            </tr>
+        </table>
+	</div>
+
+	<div class="textbox">
+	<h2>Change password</h2>
+        <input type="hidden" value="@@{user_id}@@" name="user_id" />
+        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;" width="95%">
+            <tr>
+                <td align="right" valign="top" nowrap width="150"><p> New Password</p></td>
+                <td align="left" valign="middle" nowrap><input type="password" maxlength="30" name="user_password" class="formtext" /></td>
+            </tr>
+            <tr>
+                <td align="right" valign="top" nowrap width="150"><p> Confirm Password</p></td>
+                <td align="left" valign="middle" nowrap><input type="password" maxlength="30" name="user_password2" class="formtext" /></td>
             </tr>
             <tr>
                 <td align="left" nowrap>&nbsp;</td>
@@ -163,10 +187,10 @@
 	<h2>Userrole</h2>
         <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;" width="95%">
             <tr>
-                <td align="right" valign="top" nowrap width="120"><p>Usergroup</p></td>
+                <td align="right" valign="top" nowrap width="120"><p>Userrole</p></td>
                 <td align="left" valign="top" nowrap>
 				<!-- TemplateBeginBlock name="userroleloop" -->
-				<input type="radio" @@{userrolecheck}@@ name="userroleuser_id" value="@@{userrolevalue}@@"> @@{userroletext}@@<br>
+				<input type="radio" @@{userrolecheck}@@ name="userroleuser_id" value="@@{userrolevalue}@@" onclick="showRoleMessage()"> @@{userroletext}@@<br>
 				<!-- TemplateEndBlock -->
 				</td>
             </tr>
@@ -176,26 +200,14 @@
             </tr>
         </table>
 	</div>
-
-	<div class="textbox">
-	<h2>Userdata</h2>
-        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;" width="95%">
-			<!-- TemplateBeginBlock name="userdataloop" -->
-            <tr>
-                <td align="right" valign="top" nowrap width="170"><p>@@{userdatakey}@@</p></td>
-                <td align="left" valign="top" nowrap>
-				@@{userdatavalue}@@
-				</td>
-            </tr>
-			<!-- TemplateEndBlock -->
-            <tr>
-                <td align="left" nowrap>&nbsp;</td>
-                <td align="right" valign="middle" nowrap><input type="submit" name="submit" value="Save changes" class="formbutton" /></td>
-            </tr>
-        </table>
-	</div>
 	
-</form>
+<div class="textbox">
+	<h3><img src="@@{templatepath}@@/nuvola/22x22/mimetypes/wordprocessing.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[users.edituserdata]}@@&id=@@{user_id}@@" alt="Edit userdata">Edit userdata for this user</a></h3>
+</div>	
+
+<div class="textbox">
+	<h3><img src="@@{templatepath}@@/nuvola/22x22/actions/kgpg.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[users.edituserrights]}@@&id=@@{user_id}@@" alt="Edit userrights">Edit userrights for this user</a></h3>
+</div>
 
 <div class="textbox">
 	<h3><img src="@@{templatepath}@@/nuvola/22x22/actions/2leftarrow.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[users.index]}@@" alt="Back to user overview">Back to user overview</a> (changes will not be saved)</h3>

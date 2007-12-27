@@ -1,10 +1,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/admin.dwt" codeOutsideHTMLIsLocked="false" -->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<!-- TemplateBeginEditable name="doctitle" -->
+<!-- InstanceBeginEditable name="doctitle" -->
 <title>Zeitgeist Administrator</title>
-<!-- TemplateEndEditable -->
+<!-- InstanceEndEditable -->
 
 <link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/admin.css" />
 
@@ -55,8 +55,17 @@
 
 </script>
 	
-<!-- TemplateBeginEditable name="head" -->
-<!-- TemplateEndEditable -->
+<!-- InstanceBeginEditable name="head" -->
+<script language="javascript" type="text/javascript">
+	
+	function showRightsMessage(caller)
+	{
+		alert("This userright cannot be deactivated as it is contained in the current userrole of this user.\nIf you want to deactivate it, please choose a userrole without it.");
+		document.getElementById(caller).checked = true;
+	}
+
+</script>
+<!-- InstanceEndEditable -->
 </head>
 
 <body>
@@ -116,8 +125,9 @@
 	<div style="clear:both"></div>
 </div>
 
-<!-- TemplateBeginEditable name="pagetitle" -->
-<!-- TemplateEndEditable -->
+<!-- InstanceBeginEditable name="pagetitle" -->
+
+<!-- InstanceEndEditable -->
 
 	<!-- TemplateBeginBlock name="usermessage" -->
 		<h3 class="usermessage"><img src="@@{templatepath}@@/nuvola/16x16/actions/ok.png" alt="" align="left" style="margin-right:5px;" /> @@{usermessage}@@</h3>
@@ -131,13 +141,39 @@
 		<h3 class="usererror"><img src="@@{templatepath}@@/nuvola/16x16/actions/no.png" alt="" align="left" style="margin-right:5px;" /> @@{usererror}@@</h3>
 	<!-- TemplateEndBlock -->
 	
-<!-- TemplateBeginEditable name="body" -->
+<!-- InstanceBeginEditable name="body" -->
 
-<p>Haupttext</p>
+<form method="post" action="@@{[users.edituserrights]}@@" name="editaction" enctype="multipart/form-data; charset=utf-8">
 
-<!-- TemplateEndEditable -->
+	<div class="textbox">
+	<h2><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="" align="left" style="margin-right:10px;" /> Edit userrights for user "@@{user_username}@@"</h2>
+        <input type="hidden" value="@@{user_id}@@" name="user_id" />
+
+		<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;" width="95%">
+		<!-- TemplateBeginBlock name="rightsloop" -->
+			<tr>
+				<td align="right" valign="middle" nowrap><p>@@{right_name}@@</p></td>
+				<td align="left" valign="middle" nowrap width="25"><input type="checkbox" id="@@{right_id}@@" name="userrights[@@{right_id}@@]" style="border:solid 1px #444455;" @@{right_active}@@ /></td>
+				<td align="left" valign="middle" nowrap><p>(@@{right_description}@@)</p></td>
+			</tr>
+		<!-- TemplateEndBlock -->
+			<tr>
+				<td align="left" nowrap>&nbsp;</td>
+				<td align="left" nowrap>&nbsp;</td>
+				<td align="right" valign="middle" nowrap><input type="submit" name="submit" value="Save changes" class="formbutton" /></td>
+			</tr>           
+		</table>
+	</div>
+	
+</form>
+
+<div class="textbox">
+	<h3><img src="@@{templatepath}@@/nuvola/22x22/actions/2leftarrow.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[users.edituser]}@@&id=@@{user_id}@@" alt="Back to user">Back to user</a> (changes will not be saved)</h3>
+</div>
+
+<!-- InstanceEndEditable -->
 
 </div>
 
 </body>
-</html>
+<!-- InstanceEnd --></html>

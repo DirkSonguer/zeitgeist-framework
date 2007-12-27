@@ -1,10 +1,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/admin.dwt" codeOutsideHTMLIsLocked="false" -->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<!-- TemplateBeginEditable name="doctitle" -->
+<!-- InstanceBeginEditable name="doctitle" -->
 <title>Zeitgeist Administrator</title>
-<!-- TemplateEndEditable -->
+<!-- InstanceEndEditable -->
 
 <link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/admin.css" />
 
@@ -55,8 +55,58 @@
 
 </script>
 	
-<!-- TemplateBeginEditable name="head" -->
-<!-- TemplateEndEditable -->
+<!-- InstanceBeginEditable name="head" -->
+
+	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryData.js"></script>	
+	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/xpath.js"></script>
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryNestedXMLDataSet.js"></script>
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/js/SpryExtensions.js"></script>
+
+	<script type="text/javascript">
+	
+		var dsActionAnalytics = new Spry.Data.XMLDataSet("@@{[dataserver.getactionanalytics]}@@", "container/element");
+		dsActionAnalytics.setColumnType("action_position", "number");
+		
+		var dsModuleAnalytics = new Spry.Data.XMLDataSet("@@{[dataserver.getmoduleanalytics]}@@", "container/element");
+		dsModuleAnalytics.setColumnType("module_position", "number");
+
+		var bShowActionAnalytics = false;
+		function showActionAnalytics()
+		{
+			if (bShowActionAnalytics == false)
+			{
+				bShowActionAnalytics = true;
+				document.getElementById('ActionAnalytics').style.display = "block";
+				document.images["ActionAnalyticsIcon"].src = shortcutUp.src;
+			}
+			else
+			{
+				bShowActionAnalytics = false;
+				document.getElementById('ActionAnalytics').style.display = "none";
+				document.images["ActionAnalyticsIcon"].src = shortcutDown.src;
+			}
+		}
+		
+		var bShowModuleAnalytics = false;
+		function showModuleAnalytics()
+		{
+			if (bShowModuleAnalytics == false)
+			{
+				bShowModuleAnalytics = true;
+				document.getElementById('ModuleAnalytics').style.display = "block";
+				document.images["ModuleAnalyticsIcon"].src = shortcutUp.src;
+			}
+			else
+			{
+				bShowModuleAnalytics = false;
+				document.getElementById('ModuleAnalytics').style.display = "none";
+				document.images["ModuleAnalyticsIcon"].src = shortcutDown.src;
+			}
+		}
+			
+	</script>
+	
+<!-- InstanceEndEditable -->
 </head>
 
 <body>
@@ -116,8 +166,8 @@
 	<div style="clear:both"></div>
 </div>
 
-<!-- TemplateBeginEditable name="pagetitle" -->
-<!-- TemplateEndEditable -->
+<!-- InstanceBeginEditable name="pagetitle" -->
+<!-- InstanceEndEditable -->
 
 	<!-- TemplateBeginBlock name="usermessage" -->
 		<h3 class="usermessage"><img src="@@{templatepath}@@/nuvola/16x16/actions/ok.png" alt="" align="left" style="margin-right:5px;" /> @@{usermessage}@@</h3>
@@ -131,13 +181,91 @@
 		<h3 class="usererror"><img src="@@{templatepath}@@/nuvola/16x16/actions/no.png" alt="" align="left" style="margin-right:5px;" /> @@{usererror}@@</h3>
 	<!-- TemplateEndBlock -->
 	
-<!-- TemplateBeginEditable name="body" -->
+<!-- InstanceBeginEditable name="body" -->
 
-<p>Haupttext</p>
+<h2>Analyze application traffic</h2>
 
-<!-- TemplateEndEditable -->
+<div class="textbox">
+	<table border="0" cellpadding="0" cellspacing="5" width="950">
+		<tr>
+			<td align="left">
+				<h2><img src="@@{templatepath}@@/nuvola/22x22/apps/xmag.png" alt="" align="left" style="margin-right:10px;" /> Most used modules</h2>
+			</td>
+			<td align="right">
+				<p><a href="javascript:showModuleAnalytics();" alt=""><span onmousemove="showTooltip('Show/hide module data', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png" alt="" name="ModuleAnalyticsIcon" align="right" border="0" /></span></p>
+			</td>
+		</tr>
+	</table>
+	
+	<div id="ModuleAnalytics" style="display:none;">
+	<div spry:region="dsModuleAnalytics">
+    <div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
+
+	<div spry:state="ready">
+	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
+	        <tr class="tablehead">
+				<th><p><a onClick="dsModuleAnalytics.sort('module_position');">Position</a></p></th>
+				<th><p><a onClick="dsModuleAnalytics.sort('module_name');">Name</a></p></th>
+				<th><p><a onClick="dsModuleAnalytics.sort('module_views');">Views</a></p></th>
+				<th><p>Description</p></th>
+	        </tr>			
+	        <tr class="{ds_EvenOddRow}" spry:repeat="dsModuleAnalytics">
+				<td><p>{dsModuleAnalytics::module_position}</p></td>
+				<td><p>{dsModuleAnalytics::module_name}</p></td>
+				<td><p>{dsModuleAnalytics::module_views}</p></td>
+				<td><p>{dsModuleAnalytics::module_description}</p></td>
+	        </tr>
+	    </table>
+    </div>
+	</div>
+	</div>	
+
+</div>
+
+<div class="textbox">
+	<table border="0" cellpadding="0" cellspacing="5" width="950">
+		<tr>
+			<td align="left">
+				<h2><img src="@@{templatepath}@@/nuvola/22x22/apps/xmag.png" alt="" align="left" style="margin-right:10px;" /> Most used actions</h2>
+			</td>
+			<td align="right">
+				<p><a href="javascript:showActionAnalytics();" alt=""><span onmousemove="showTooltip('Show/hide action data', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png" alt="" name="ActionAnalyticsIcon" align="right" border="0" /></span></p>
+			</td>
+		</tr>
+	</table>
+
+	<div id="ActionAnalytics" style="display:none;">
+	<div spry:region="dsActionAnalytics">
+    <div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
+
+	<div spry:state="ready">
+	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
+	        <tr class="tablehead">
+				<th><p><a onClick="dsActionAnalytics.sort('action_position');">Position</a></p></th>
+				<th><p><a onClick="dsActionAnalytics.sort('action_name');">Name</a></p></th>
+				<th><p><a onClick="dsActionAnalytics.sort('action_views');">Views</a></p></th>
+				<th><p><a onClick="dsActionAnalytics.sort('module_name');">Module</a></p></th>
+				<th><p>Description</p></th>
+	        </tr>			
+	        <tr class="{ds_EvenOddRow}" spry:repeat="dsActionAnalytics">
+				<td><p>{dsActionAnalytics::action_position}</p></td>
+				<td><p>{dsActionAnalytics::action_name}</p></td>
+				<td><p>{dsActionAnalytics::action_views}</p></td>
+				<td><p>{dsActionAnalytics::module_name}</p></td>
+				<td><p>{dsActionAnalytics::action_description}</p></td>
+	        </tr>
+	    </table>
+    </div>
+	</div>
+	</div>
+
+</div>
+
+<!-- InstanceEndEditable -->
 
 </div>
 
 </body>
-</html>
+<!-- InstanceEnd --></html>
