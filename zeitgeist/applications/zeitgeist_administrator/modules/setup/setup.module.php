@@ -469,11 +469,50 @@ class setup
 			{
 				$this->messages->setMessage('Please fill out all required fields (name and description).', 'userwarning');
 			}
+			
+			if (!empty($parameters['userrights']))
+			{
+				$sql = "DELETE FROM userroles_to_actions WHERE userroleaction_userrole='" . $currentId . "'";
+				$res = $this->managedDatabase->query($sql);
+				
+				foreach ($parameters['userrights'] as $key => $value)
+				{
+					$sql = "INSERT INTO userroles_to_actions(userroleaction_userrole, userroleaction_action) VALUES('" . $currentId . "', '" . $key . "')";
+					$res = $this->managedDatabase->query($sql);
+				}
+			}
 		}
-
+		
 		$sql = "SELECT * FROM userroles WHERE userrole_id='" . $currentId . "'";
 		$res = $this->managedDatabase->query($sql);
 	    $row = $this->managedDatabase->fetchArray($res);
+
+	    $userrole = array();
+		$sqlUserrole = "SELECT uta.* FROM userroles_to_actions uta WHERE uta.userroleaction_userrole = '" . $currentId . "'";
+		$resUserrole = $this->managedDatabase->query($sqlUserrole);
+	    while ($rowUserrole = $this->managedDatabase->fetchArray($resUserrole))
+	    {
+	    	$userrole[$rowUserrole['userroleaction_action']] = $rowUserrole['userroleaction_userrole'];
+	    }
+
+		$sqlUserrights = "SELECT a.* FROM actions a WHERE a.action_requiresuserright = '1'";
+		$resUserrights = $this->managedDatabase->query($sqlUserrights);
+	    while ($rowUserrights = $this->managedDatabase->fetchArray($resUserrights))
+	    {
+	    	$tpl->assign('right_id', $rowUserrights['action_id']);
+	    	$tpl->assign('right_name', $rowUserrights['action_name']);
+	    	$tpl->assign('right_description', $rowUserrights['action_description']);
+	    	if (!empty($userrole[$rowUserrights['action_id']]))
+	    	{
+	    		$tpl->assign('right_active', 'checked="checked"');
+	    	}
+	    	else
+	    	{
+	    		$tpl->assign('right_active', '');
+	    	}
+
+	    	$tpl->insertBlock('rightsloop');
+	    }
 	    
 	    $tpl->assignDataset($row);
 		$tpl->show();
@@ -514,6 +553,17 @@ class setup
 					}
 					else
 					{
+						if (!empty($parameters['userrights']))
+						{
+							$currentId = $this->managedDatabase->insertId();
+							
+							foreach ($parameters['userrights'] as $key => $value)
+							{
+								$sql = "INSERT INTO userroles_to_actions(userroleaction_userrole, userroleaction_action) VALUES('" . $currentId . "', '" . $key . "')";
+								$res = $this->managedDatabase->query($sql);
+							}
+						}
+						
 						$this->debug->unguard(true);
 						$tpl->redirect($tpl->createLink('setup', 'manageuserroles'));
 					}
@@ -523,9 +573,19 @@ class setup
 			{
 				$this->messages->setMessage('Please fill out all required fields (name and description).', 'userwarning');
 			}
-			
 		}
 
+		$sqlUserrights = "SELECT a.* FROM actions a WHERE a.action_requiresuserright = '1'";
+		$resUserrights = $this->managedDatabase->query($sqlUserrights);
+	    while ($rowUserrights = $this->managedDatabase->fetchArray($resUserrights))
+	    {
+	    	$tpl->assign('right_id', $rowUserrights['action_id']);
+	    	$tpl->assign('right_name', $rowUserrights['action_name']);
+	    	$tpl->assign('right_description', $rowUserrights['action_description']);
+
+	    	$tpl->insertBlock('rightsloop');
+	    }
+	    		
 	    $tpl->assignDataset($parameters);
 		$tpl->show();
 		
