@@ -3,6 +3,8 @@
 
 defined('ZGADMIN_ACTIVE') or die();
 
+include_once('includes/open-flash-chart/open_flash_chart_object.php');
+
 class analyze
 {
 	protected $debug;
@@ -29,6 +31,18 @@ class analyze
 		
 		$tpl = new zgaTemplate();
 		$tpl->load($this->configuration->getConfiguration('analyze', 'templates', 'analyze_index'));
+				
+		$dataLink = $tpl->createLink('dataserver', 'getmodulechartdata');
+		$ret = open_flash_chart_object_str( 900, 200, $dataLink, false, $this->configuration->getConfiguration('administrator', 'application', 'basepath') . '/includes/open-flash-chart/');
+		$tpl->assign('modulechart', $ret);
+
+		$dataLink = $tpl->createLink('dataserver', 'getactionchartdata');
+		$ret = open_flash_chart_object_str( 900, 200, $dataLink, false, $this->configuration->getConfiguration('administrator', 'application', 'basepath') . '/includes/open-flash-chart/');
+		$tpl->assign('actionchart', $ret);
+		
+		$dataLink = $tpl->createLink('dataserver', 'getuserchartdata');
+		$ret = open_flash_chart_object_str( 900, 200, $dataLink, false, $this->configuration->getConfiguration('administrator', 'application', 'basepath') . '/includes/open-flash-chart/');
+		$tpl->assign('userchart', $ret);
 		
 		$tpl->show();
 		

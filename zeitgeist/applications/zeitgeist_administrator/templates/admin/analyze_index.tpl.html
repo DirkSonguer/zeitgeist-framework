@@ -70,6 +70,9 @@
 		var dsModuleAnalytics = new Spry.Data.XMLDataSet("@@{[dataserver.getmoduleanalytics]}@@", "container/element");
 		dsModuleAnalytics.setColumnType("module_position", "number");
 
+		var dsUserAnalytics = new Spry.Data.XMLDataSet("@@{[dataserver.getuseranalytics]}@@", "container/element");
+		dsUserAnalytics.setColumnType("user_position", "number");
+
 		var bShowActionAnalytics = false;
 		function showActionAnalytics()
 		{
@@ -103,7 +106,23 @@
 				document.images["ModuleAnalyticsIcon"].src = shortcutDown.src;
 			}
 		}
-			
+		
+		var bShowUserAnalytics = false;
+		function showUserAnalytics()
+		{
+			if (bShowUserAnalytics == false)
+			{
+				bShowUserAnalytics = true;
+				document.getElementById('UserAnalytics').style.display = "block";
+				document.images["UserAnalyticsIcon"].src = shortcutUp.src;
+			}
+			else
+			{
+				bShowUserAnalytics = false;
+				document.getElementById('UserAnalytics').style.display = "none";
+				document.images["UserAnalyticsIcon"].src = shortcutDown.src;
+			}
+		}
 	</script>
 	
 <!-- InstanceEndEditable -->
@@ -219,7 +238,9 @@
 	    </table>
     </div>
 	</div>
-	</div>	
+	</div>
+	
+	<p>@@{modulechart}@@</p>
 
 </div>
 
@@ -261,8 +282,47 @@
 	</div>
 	</div>
 
+	<p>@@{actionchart}@@</p>
+
 </div>
 
+<div class="textbox">
+	<table border="0" cellpadding="0" cellspacing="5" width="950">
+		<tr>
+			<td align="left">
+				<h2><img src="@@{templatepath}@@/nuvola/22x22/apps/xmag.png" alt="" align="left" style="margin-right:10px;" /> Most active users</h2>
+			</td>
+			<td align="right">
+				<p><a href="javascript:showUserAnalytics();" alt=""><span onmousemove="showTooltip('Show/hide user data', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png" alt="" name="UserAnalyticsIcon" align="right" border="0" /></span></p>
+			</td>
+		</tr>
+	</table>
+
+	<div id="UserAnalytics" style="display:none;">
+	<div spry:region="dsUserAnalytics">
+    <div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
+
+	<div spry:state="ready">
+	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
+	        <tr class="tablehead">
+				<th><p><a onClick="dsUserAnalytics.sort('user_position');">Position</a></p></th>
+				<th><p><a onClick="dsUserAnalytics.sort('user_username');">User ID</a></p></th>
+				<th><p><a onClick="dsUserAnalytics.sort('user_views');">Actions</a></p></th>
+	        </tr>			
+	        <tr class="{ds_EvenOddRow}" spry:repeat="dsUserAnalytics">
+				<td><p>{dsUserAnalytics::user_position}</p></td>
+				<td><p>{dsUserAnalytics::user_username}</p></td>
+				<td><p>{dsUserAnalytics::user_views}</p></td>
+	        </tr>
+	    </table>
+    </div>
+	</div>
+	</div>
+
+	<p>@@{userchart}@@</p>
+
+</div>
 <!-- InstanceEndEditable -->
 
 </div>
