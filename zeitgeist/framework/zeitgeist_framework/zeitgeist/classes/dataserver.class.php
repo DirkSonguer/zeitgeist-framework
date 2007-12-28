@@ -56,17 +56,22 @@ class zgDataserver
 	 * 
 	 * @return string 
 	 */
-	public function createXMLDatasetFromSQL($sql, $encoding='UTF-8', $rootElement='container')
+	public function createXMLDatasetFromSQL($sql, $database=null, $encoding='UTF-8', $rootElement='container')
 	{
 		$this->debug->guard();
+		
+		if ($database == null)
+		{
+			$database = $this->database;
+		}
 		
 	    $xmlDataset = '<?xml version="1.0" encoding="' . $encoding . "\" ?>\n";
 	    $xmlDataset .= '<' . $rootElement . ">\n";
 
-		$res = $this->managedDatabase->query($sql);
+		$res = $database->query($sql);
 	
 		$i = 1;
-	    while ($row = $this->managedDatabase->fetchArray($res))
+	    while ($row = $database->fetchArray($res))
 	    {
 	        $xmlDataset .= "\t<element id=\"" . $i . "\">\n";
 
@@ -128,6 +133,7 @@ class zgDataserver
 		$this->debug->unguard(true);
 	    return $xmlDataset;
 	}	
+	
 	
 	/**
 	 * Streams an xml dataset to the browser
