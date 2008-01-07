@@ -50,5 +50,49 @@ class analyze
 		return true;
 	}
 
+	
+	public function showmodules($parameters=array())
+	{
+		$this->debug->guard();
+		
+		$tpl = new zgaTemplate();
+		$tpl->load($this->configuration->getConfiguration('analyze', 'templates', 'analyze_modules'));
+				
+		
+		$tpl->show();
+		
+		$this->debug->unguard(true);
+		return true;
+	}	
+
+	
+	public function showactions($parameters=array())
+	{
+		$this->debug->guard();
+		
+		$tpl = new zgaTemplate();
+		$tpl->load($this->configuration->getConfiguration('analyze', 'templates', 'analyze_actions'));
+				
+		
+		$tpl->show();
+		
+		$this->debug->unguard(true);
+		return true;
+	}	
+	
+	
+	public function showusers($parameters=array())
+	{
+		$this->debug->guard();
+		
+		$tpl = new zgaTemplate();
+		$tpl->load($this->configuration->getConfiguration('analyze', 'templates', 'analyze_users'));
+				
+		
+		$tpl->show();
+		
+		$this->debug->unguard(true);
+		return true;
+	}	
 }
 ?>
