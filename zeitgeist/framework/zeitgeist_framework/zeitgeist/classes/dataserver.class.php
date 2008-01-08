@@ -4,12 +4,12 @@
  * http://www.zeitgeist-framework.com
  *
  * Dataserver class
- * 
+ *
  * @author Dirk Songür <songuer@zeitgeist-framework.com>
- * 
+ *
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
- * 
+ *
  * @package ZEITGEIST
  * @subpackage ZEITGEIST MESSAGES
  */
@@ -23,10 +23,10 @@ class zgDataserver
 	protected $database;
 	protected $managedDatabase;
 	protected $configuration;
-	
+
 	/**
 	 * Class constructor
-	 * 
+	 *
 	 * The constructor is set to private to prevent files from calling the class as a class instead of a singleton.
 	 */
 	public  function __construct()
@@ -34,127 +34,138 @@ class zgDataserver
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
 		$this->configuration = zgConfiguration::init();
-		
+
 		$this->database = new zgDatabase();
 		$this->database->connect();
-		
+
 		$mdb_server = $this->configuration->getConfiguration('administrator', 'databases', 'manageddb_server');
 		$mdb_username = $this->configuration->getConfiguration('administrator', 'databases', 'manageddb_username');
 		$mdb_userpw = $this->configuration->getConfiguration('administrator', 'databases', 'manageddb_userpw');
 		$mdb_database = $this->configuration->getConfiguration('administrator', 'databases', 'manageddb_database');
 		$this->managedDatabase = new zgDatabase();
-		$this->managedDatabase->connect($mdb_server, $mdb_username, $mdb_userpw, $mdb_database);		
+		$this->managedDatabase->connect($mdb_server, $mdb_username, $mdb_userpw, $mdb_database);
 	}
 
-	
+
+
+
 	/**
 	 * Creates an xml dataset from an sql query
-	 * 
+	 *
 	 * @param string $sql string with the sql statement
 	 * @param string $encoding the encoding of the final xml
 	 * @param string $rootElement root element of the final xml
-	 * 
-	 * @return string 
+	 *
+	 * @return string
 	 */
 	public function createXMLDatasetFromSQL($sql, $database=null, $encoding='UTF-8', $rootElement='container')
 	{
 		$this->debug->guard();
-		
+
 		if ($database == null)
 		{
 			$database = $this->database;
 		}
-		
-	    $xmlDataset = '<?xml version="1.0" encoding="' . $encoding . "\" ?>\n";
-	    $xmlDataset .= '<' . $rootElement . ">\n";
+
+		$xmlDataset = '<?xml version="1.0" encoding="' . $encoding . "\" ?>\n";
+		$xmlDataset .= '<' . $rootElement . ">\n";
 
 		$res = $database->query($sql);
-	
+
 		$i = 1;
-	    while ($row = $database->fetchArray($res))
-	    {
-	        $xmlDataset .= "\t<element id=\"" . $i . "\">\n";
+		while ($row = $database->fetchArray($res))
+		{
+			$xmlDataset .= "\t<element id=\"" . $i . "\">\n";
 
-	        foreach($row as $key => $value)
-	        {
-	            $value = htmlspecialchars($value);
-	            $xmlDataset .= "\t\t<{$key}>{$value}</{$key}>\n";
-	        }
+			foreach($row as $key => $value)
+			{
+				$value = htmlspecialchars($value);
+				$xmlDataset .= "\t\t<{$key}>{$value}</{$key}>\n";
+			}
 
-	        $xmlDataset .= "\t</element>\n";
-	        $i++;
-	    }
+			$xmlDataset .= "\t</element>\n";
+			$i++;
+		}
 
 		$xmlDataset .= '</' . $rootElement . ">\n";
-	    
+
 		$this->debug->unguard(true);
-	    return $xmlDataset;
+		return $xmlDataset;
 	}
 
-	
+
 	/**
 	 * Creates an xml dataset from an array
-	 * 
+	 *
 	 * @param string $array array with the dataset
 	 * @param string $encoding the encoding of the final xml
 	 * @param string $rootElement root element of the final xml
-	 * 
-	 * @return string 
+	 *
+	 * @return string
 	 */
 	public function createXMLDatasetFromArray($arrDataset, $encoding='UTF-8', $rootElement='container')
 	{
 		$this->debug->guard();
-		
+
 		if (!is_array($arrDataset))
 		{
 			return false;
 		}
-		
-	    $xmlDataset = '<?xml version="1.0" encoding="' . $encoding . "\" ?>\n";
-	    $xmlDataset .= '<' . $rootElement . ">\n";
+
+		$xmlDataset = '<?xml version="1.0" encoding="' . $encoding . "\" ?>\n";
+		$xmlDataset .= '<' . $rootElement . ">\n";
 
 		$i = 1;
 		foreach ($arrDataset as $datarow)
 		{
-	        $xmlDataset .= "\t<element id=\"" . $i . "\">\n";
+			$xmlDataset .= "\t<element id=\"" . $i . "\">\n";
 
-	        foreach($datarow as $key => $value)
-	        {
-	            $value = htmlspecialchars($value);
-	            $xmlDataset .= "\t\t<{$key}>{$value}</{$key}>\n";
-	        }
+			foreach($datarow as $key => $value)
+			{
+				$value = htmlspecialchars($value);
+				$xmlDataset .= "\t\t<{$key}>{$value}</{$key}>\n";
+			}
 
-	        $xmlDataset .= "\t</element>\n";
-	        $i++;
-	    }
+			$xmlDataset .= "\t</element>\n";
+			$i++;
+		}
 
 		$xmlDataset .= '</' . $rootElement . ">\n";
-	    
+
 		$this->debug->unguard(true);
-	    return $xmlDataset;
-	}	
-	
-	
+		return $xmlDataset;
+	}
+
+
 	/**
 	 * Streams an xml dataset to the browser
 	 * Note: Headers should not be set at this point
-	 * 
+	 *
 	 * @param string $xmlData xml data to stream
-	 * 
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
-	public function streamXMLDataset($xmlData)
+
+
+	/**
+	 * Streams a given xml dataset to the browser as xml content
+	 *
+	 * @param string $xmldata string containing the xml data
+	 *
+	 * @return boolean
+	 */
+	public function streamXMLDataset($xmldata)
 	{
 		$this->debug->guard();
-		
+
 		header('Content-type: text/xml');
 		header('Pragma: public');
 		header('Cache-control: private');
 		header('Expires: -1');
-		echo $xmlData;
-		
+		echo $xmldata;
+
 		$this->debug->unguard(true);
-		return true;		
+		return true;
 	}
 
 }

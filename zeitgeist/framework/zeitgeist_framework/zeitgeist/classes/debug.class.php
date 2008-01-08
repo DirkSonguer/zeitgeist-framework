@@ -4,12 +4,12 @@
  * http://www.zeitgeist-framework.com
  *
  * Debug class
- * 
+ *
  * @author Dirk Songür <songuer@zeitgeist-framework.com>
- * 
+ *
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
- * 
+ *
  * @package ZEITGEIST
  * @subpackage ZEITGEIST DEBUG
  */
@@ -23,18 +23,18 @@ defined('ZEITGEIST_ACTIVE') or die();
 class zgDebug
 {
 	private static $instance = false;
-	
+
 	protected $startTime;
 
 	protected $debugMessages;
 	protected $guardMessages;
 	protected $guardStack;
-	
+
 	public $showInnerLoops;	// Set this to true to show inner loops in the guard-output
-	
+
 	/**
 	 * Class constructor
-	 * 
+	 *
 	 * The constructor is set to private to prevent files from calling the class as a class instead of a singleton.
 	 */
 	private function __construct()
@@ -45,13 +45,13 @@ class zgDebug
 
 		$this->showInnerLoops = false;
 
-		$this->startTime = microtime();		
+		$this->startTime = microtime();
 	}
 
 
 	/**
 	 * Initialize the singleton
-	 * 
+	 *
 	 * @return object
 	 */
 	public static function init()
@@ -67,14 +67,14 @@ class zgDebug
 
 	/**
 	 * Write a debug message to the cache
-	 * 
+	 *
 	 * @param string $message debug message to print
 	 * @param integer $level level of the message. 0 = important,.. , 3 = unimportant
 	 */
 	public function write($message, $type='message')
 	{
 		$newDebugMessage = array();
-		
+
 		$newDebugMessage['executionTime'] = $this->_getExecutionTime();
 		$newDebugMessage['message'] = $message;
 		$newDebugMessage['type'] = $type;
@@ -83,7 +83,7 @@ class zgDebug
 		$newDebugMessage['filename'] = array_pop( explode('\\', $backtrace['file']) );
 		$newDebugMessage['function'] = $backtrace['function'];
 		$newDebugMessage['line'] = $backtrace['line'];
-		
+
 		$this->debugMessages[] = $newDebugMessage;
 	}
 
@@ -91,7 +91,7 @@ class zgDebug
 	/**
 	 * Starts guarding a function
 	 * In Zeitgeist (and its applications), every function should guard/ unguard itself to get a complete image of the construction of a page.
-	 * 
+	 *
 	 * There are somewhat 4 levels of importance:
 	 * 0 = core
 	 * 1 = public module/ class function
@@ -99,7 +99,7 @@ class zgDebug
 	 * 3 = inner loop function
 	 *
 	 * This is by no means the only way to describe the levels, but we found it worked.
-	 * 
+	 *
 	 * @param boolean $innerLoop set true if the calling function is an inner loop
 	 */
 	public function guard($innerLoop = false)
@@ -120,15 +120,15 @@ class zgDebug
 
 		$newGuardMessage['isInnerLoop'] = $innerLoop;
 		array_push($this->guardStack, $innerLoop);
-		
+
 		$backtrace = debug_backtrace();
 		$backtrace = $backtrace[1];
-		
+
 		if (!empty($backtrace['file']))
 		{
 			$newGuardMessage['filename'] = basename( array_pop( explode('\\', $backtrace['file']) ) );
 		}
-		
+
 		if (!empty($backtrace['class']))
 		{
 			$newGuardMessage['class'] = $backtrace['class'];
@@ -137,22 +137,22 @@ class zgDebug
 		{
 			$newGuardMessage['class'] = '';
 		}
-		
+
 		foreach($backtrace['args'] as $parameter)
 		{
 			$newGuardMessage['args'][] = $parameter;
 		}
-		
+
 		if (!empty($backtrace['function']))
 		{
 			$newGuardMessage['function'] = $backtrace['function'];
 		}
-		
+
 		if (!empty($backtrace['line']))
 		{
 			$newGuardMessage['line'] = $backtrace['line'];
 		}
-		
+
 		$this->guardMessages[] = $newGuardMessage;
 	}
 
@@ -160,9 +160,9 @@ class zgDebug
 	/**
 	 * Ends guarding a function
 	 * In Zeitgeist (and its applications), every function should guard/ unguard itself to get a complete image of the construction of a page.
-	 * 
+	 *
 	 * @param variant $returnValue the return value of the guarded function (if it has one)
-	 */	
+	 */
 	public function unguard($returnValue)
 	{
 		$newGuardMessage = array();
@@ -170,7 +170,7 @@ class zgDebug
 		$newGuardMessage['type'] = 'UNGUARD';
 		$newGuardMessage['executionTime'] = $this->_getExecutionTime();
 		$newGuardMessage['currentMemoryUsage'] = memory_get_usage() / 1024;
-		
+
 		$newGuardMessage['isInnerLoop'] = array_pop($this->guardStack);
 
 		$backtrace = debug_backtrace();
@@ -180,7 +180,7 @@ class zgDebug
 		{
 			$newGuardMessage['filename'] = basename( array_pop( explode('\\', $backtrace['file']) ) );
 		}
-		
+
 		if (!empty($backtrace['class']))
 		{
 			$newGuardMessage['class'] = $backtrace['class'];
@@ -189,24 +189,23 @@ class zgDebug
 		{
 			$newGuardMessage['class'] = '';
 		}
-		
+
 		if (!empty($backtrace['function']))
 		{
 			$newGuardMessage['function'] = $backtrace['function'];
 		}
-		
+
 		if (!empty($backtrace['line']))
 		{
 			$newGuardMessage['line'] = $backtrace['line'];
 		}
 
 		$newGuardMessage['returnValue'] = $returnValue;
-		
+
 		$this->guardMessages[] = $newGuardMessage;
 	}
 
-	
-	
+
 	/**
 	 * Shows somemisc information
 	 */
@@ -219,7 +218,7 @@ class zgDebug
 		{
 			echo '<p>' . $key . ' : ' . $value;
 		}
-		
+
 		echo '<h2>_POST:</h2>';
 		foreach($_POST as $key => $value)
 		{
@@ -228,8 +227,8 @@ class zgDebug
 
 		echo '</div>';
 	}
-		
-	
+
+
 	/**
 	 * Shows all the debug messages as a table
 	 */
@@ -254,7 +253,7 @@ class zgDebug
 			echo($currentDebugLine);
 			echo '</tr>';
 		}
-		
+
 		echo '</table></div>';
 	}
 
@@ -266,7 +265,7 @@ class zgDebug
 	{
 		echo '<div class="debug">';
 		echo '<h1>GuardMessages</h1>';
-		
+
 		echo '<table border="1" class="guardMessages">';
 		echo '<tr><th>ID</th><th>Time</th><th>Memory</th><th>Type</th><th>File</th></tr>';
 
@@ -282,28 +281,28 @@ class zgDebug
 				{
 					echo '<tr class="unguardLine">';
 				}
-				
+
 				$currentGuardLine = '';
-	
+
 				$currentGuardLine .= '<td class="guardMessageLine">' . $guardID . '</td>';
 				$currentGuardLine .= '<td class="guardMessageLine">' . $guardMessage['executionTime'] . '</td>';
 				$currentGuardLine .= '<td class="guardMessageLine">' . number_format($guardMessage['currentMemoryUsage'], 2) . '</td>';
 				$currentGuardLine .= '<td class="guardMessageLine">' . $guardMessage['type'] . '</td>';
-				
+
 				$currentGuardLine .= '<td class="guardMessageLine">';
-					
+
 				if (!empty($guardMessage['filename'])) $currentGuardLine .= '[<span class="guardFile">' . $guardMessage['filename'] . '</span> ';
-					else $currentGuardLine .= '[ ';
+				else $currentGuardLine .= '[ ';
 
 				if (!empty($guardMessage['line'])) $currentGuardLine .= '(<span class="guardLine">' . $guardMessage['line'] . '</span>)] ';
-					else $currentGuardLine .= ' ]';
-					
+				else $currentGuardLine .= ' ]';
+
 				if (!empty($guardMessage['filename'])) $currentGuardLine .= '<span class="guardClass">' . $guardMessage['class'] . '-&gt;</span>';
-					else $currentGuardLine .= ' ';
-					
+				else $currentGuardLine .= ' ';
+
 				if (!empty($guardMessage['function'])) $currentGuardLine .= '<span class="guardFunction">' . $guardMessage['function'] . '</span>';
-					else $currentGuardLine .= ' ';
-				
+				else $currentGuardLine .= ' ';
+
 				if ($guardMessage['type'] == 'GUARD')
 				{
 					$argstring = '';
@@ -313,63 +312,63 @@ class zgDebug
 						{
 							$guardMessage['args'][$i] = "<span class=\"guardArgument\">'" . $guardMessage['args'][$i] . "</span>'";
 						}
-						
+
 						$argstring = implode(',', $guardMessage['args']);
 					}
-					
+
 					$currentGuardLine .= '(' . $argstring . ')';
 				}
 				else
 				{
 					$currentGuardLine .= "() returned with: <span class=\"guardArgument\">'" . $guardMessage['returnValue'] . "'</span>";
 				}
-				
+
 				$currentGuardLine .= '</td>';
-				
+
 				echo($currentGuardLine);
 				echo '</tr>';
 			}
 		}
-		
-		echo '</table></div>';		
+
+		echo '</table></div>';
 	}
 
 
 	/**
 	 * Loads a stylesheet to use with debug output
-	 * 
+	 *
 	 * @param string $stylesheet name of the stylesheet to load
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function loadStylesheet($stylesheet)
 	{
 		$filename = ZEITGEIST_ROOTDIRECTORY . 'configuration/' . $stylesheet;
-		
+
 		if (!file_exists($filename))
 		{
 			return false;
 		}
-		
+
 		$filehandle = fopen($filename, "r");
 		$filecontent = fread($filehandle, filesize($filename));
 		fclose($filehandle);
 		echo $filecontent;
-		
+
 		return true;
 	}
 
+
 	/**
 	 * Gets the current execution time
-	 * 
-	 * @return integer 
-	 */	
+	 *
+	 * @return integer
+	 */
 	protected function _getExecutionTime()
 	{
 		$currentTime = microtime();
 		return round($currentTime - $this->startTime, 4);
 	}
 
-	
 }
 ?>
