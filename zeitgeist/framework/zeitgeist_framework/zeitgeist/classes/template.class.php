@@ -4,12 +4,12 @@
  * http://www.zeitgeist-framework.com
  *
  * Template class
- * 
+ *
  * @author Dirk Songür <songuer@zeitgeist-framework.com>
- * 
+ *
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
- * 
+ *
  * @package ZEITGEIST
  * @subpackage ZEITGEIST TEMPLATE
  */
@@ -22,12 +22,12 @@ class zgTemplate
 	protected $messages;
 	protected $configuration;
 	protected $database;
-	
+
 	protected $file;
 	protected $content;
 	protected $blocks;
 	protected $variables;
-	
+
 	/**
 	 * Class constructor
 	 */
@@ -36,24 +36,24 @@ class zgTemplate
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
 		$this->configuration = zgConfiguration::init();
-		
+
 		$this->database = new zgDatabase();
 		$this->database->connect();
-		
+
 		$this->file = '';
 		$this->content = '';
 		$this->blocks = array();
 		$this->variables = array();
 	}
-	
-	
+
+
 	/**
 	 * Loads a template file
-	 * 
+	 *
 	 * @param string $filename name of the file to load
-	 * 
+	 *
 	 * @return boolean
-	 */	
+	 */
 	public function load($filename)
 	{
 		$this->debug->guard();
@@ -65,14 +65,14 @@ class zgTemplate
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		// try to load the template
 		$gotTemplateFromDatabase = false;
 		$template = $this->_loadTemplateFromDatabase($filename);
 		if ($template !== false)
 		{
 			$this->debug->write('Template found and successfully loaded: ' . $filename);
-			
+
 			$this->file = $template['file'];
 			$this->content = $template['content'];
 			$this->blocks = $template['blocks'];
@@ -84,7 +84,7 @@ class zgTemplate
 			$filehandle = fopen($filename, "r");
 			$this->content = fread($filehandle, filesize($filename));
 			fclose($filehandle);
-			
+
 			if (!$this->_loadLinks())
 			{
 				$this->debug->write('Error while rewriting the links in: ' . $filename, 'error');
@@ -92,7 +92,7 @@ class zgTemplate
 				$this->debug->unguard(false);
 				return false;
 			}
-					
+
 			if (!$this->_loadBlocks())
 			{
 				$this->debug->write('Error while loading the blocks in: ' . $filename, 'error');
@@ -100,7 +100,7 @@ class zgTemplate
 				$this->debug->unguard(false);
 				return false;
 			}
-					
+
 			if (!$this->_loadVariables())
 			{
 				$this->debug->write('Error while loading the variables in: ' . $filename, 'error');
@@ -108,7 +108,7 @@ class zgTemplate
 				$this->debug->unguard(false);
 				return false;
 			}
-					
+
 			if (!$this->_getBlockParents())
 			{
 				$this->debug->write('Error while resolving the block tree in: ' . $filename, 'error');
@@ -116,7 +116,7 @@ class zgTemplate
 				$this->debug->unguard(false);
 				return false;
 			}
-			
+
 			if (!$this->_loadRootVariables())
 			{
 				$this->debug->write('Error while loading the root variables in: ' . $filename, 'error');
@@ -130,21 +130,21 @@ class zgTemplate
 				$ret = $this->_saveTemplateToDatabase($filename);
 			}
 		}
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
-	
+
 
 	/**
 	 * Shows the template buffer
-	 * 
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
 	public function show()
 	{
 		$this->debug->guard();
-		
+
 		if (!$this->_insertRootVariables())
 		{
 			$this->debug->write('Problem inserting the root variables', 'warning');
@@ -160,21 +160,21 @@ class zgTemplate
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		echo $this->content;
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
-	
-	
+
+
 	/**
 	 * Assigns a value to a template variable
-	 * 
+	 *
 	 * @param string $name name of the template variable to fill
 	 * @param string $value value to fill the variable with
-	 * 
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
 	public function assign($name, $value)
 	{
@@ -189,7 +189,7 @@ class zgTemplate
 		}
 
 		$this->variables[$name]->currentContent = $value;
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -198,10 +198,10 @@ class zgTemplate
 	/**
 	 * Assigns an array with values to a template variable
 	 * The array keys are used as variable names
-	 * 
+	 *
 	 * @param array $values values to fill the variables with
-	 * 
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
 	public function assignDataset($values)
 	{
@@ -214,7 +214,7 @@ class zgTemplate
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		foreach ($values as $variablename => $variablevalue)
 		{
 			if (!empty($this->variables[$variablename]))
@@ -230,16 +230,16 @@ class zgTemplate
 
 	/**
 	 * Insert a block with its current content into the template buffer
-	 * 
+	 *
 	 * @param string $name name of the block to insert
 	 * @param boolean $reset flag if the contents of the block and the variables should be reset
-	 * 
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
 	public function insertBlock($name, $reset=true)
 	{
 		$this->debug->guard();
-				
+
 		if (empty($this->blocks[$name]))
 		{
 			$this->debug->write('Could not find the given block: ' . $name, 'warning');
@@ -247,7 +247,7 @@ class zgTemplate
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		if (!$this->_insertVariablesIntoBlock($name))
 		{
 			$this->debug->write('Could not insert variables into the given block: ' . $name, 'error');
@@ -255,10 +255,10 @@ class zgTemplate
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		$blockID = $this->configuration->getConfiguration('zeitgeist','template', 'blockSubstBegin') . $name . $this->configuration->getConfiguration('zeitgeist','template', 'blockSubstEnd');
 		$this->content = str_replace($blockID, $this->blocks[$name]->currentContent . "\n" . $blockID, $this->content);
-		
+
 		if ($reset)
 		{
 			$this->_resetBlock($name);
@@ -271,8 +271,8 @@ class zgTemplate
 
 	/**
 	 * Insert all usermessages to the default block
-	 * 
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
 	public function insertUsermessages()
 	{
@@ -288,7 +288,7 @@ class zgTemplate
 				$this->insertBlock($messageblock);
 			}
 		}
-		
+
 		$warningblock = $this->configuration->getConfiguration('zeitgeist', 'template', 'UsermessageWarnings');
 		$currentUserwarnings = $this->messages->getMessagesByType('userwarning');
 		if (is_array($currentUserwarnings))
@@ -310,30 +310,30 @@ class zgTemplate
 				$this->insertBlock($errorblock);
 			}
 		}
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
-	
-	
+
+
 	/**
 	 * Redirect to a given url
-	 * 
+	 *
 	 * @param string $url url to redirect to
-	 * 
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
 	public function redirect($url)
 	{
 		$this->debug->guard();
-		
+
 		if (strpos($url, 'http://') === false)
 		{
 			$url = 'http://' . $url;
 		}
-		
-//		if debug redirect to: $url
-		
+
+		//		if debug redirect to: $url
+
 		header('Location: ' . $url);
 
 		$this->debug->unguard(true);
@@ -342,19 +342,19 @@ class zgTemplate
 
 	/**
 	 * Create a link for a given module and a given action
-	 * 
+	 *
 	 * @param string $module module to call
 	 * @param string $action action to call
-	 * @param array $parameter possible parameters 
-	 * 
-	 * @return string 
+	 * @param array $parameter possible parameters
+	 *
+	 * @return string
 	 */
 	public function createLink($module, $action, $parameter=false)
 	{
 		$this->debug->guard();
-		
+
 		$linkurl = 'index.php';
-		
+
 		$link = array();
 		if ($module != 'main') $link[0] = 'module=' . $module;
 		if ($action != 'index') $link[1] = 'action=' . $action;
@@ -373,17 +373,17 @@ class zgTemplate
 		return $linkurl;
 		$this->debug->unguard($linkurl);
 	}
-	
+
 
 	/**
 	 * Loads the internal links of the template and converts them into real links
-	 * 
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
 	protected function _loadLinks()
 	{
 		$this->debug->guard();
-				
+
 		while ($startPosition = strpos($this->content, $this->configuration->getConfiguration('zeitgeist','template', 'linkBegin')))
 		{
 			$endPosition = strpos($this->content, $this->configuration->getConfiguration('zeitgeist','template', 'linkEnd'), $startPosition);
@@ -394,17 +394,17 @@ class zgTemplate
 				$this->debug->unguard(false);
 				return false;
 			}
-				
+
 			$completeLink = substr($this->content, $startPosition, ($endPosition - $startPosition + strlen($this->configuration->getConfiguration('zeitgeist','template', 'linkEnd'))));
 			$linkContent = substr($completeLink, strlen($this->configuration->getConfiguration('zeitgeist','template', 'linkBegin')), (strlen($completeLink)-strlen($this->configuration->getConfiguration('zeitgeist','template', 'linkBegin'))-strlen($this->configuration->getConfiguration('zeitgeist','template', 'linkEnd'))));
 
 			$linkArray = explode('.', $linkContent);
-			
+
 			if ($linkArray[0] == '')
 			{
 				$linkArray[0] = 'main';
 			}
-			
+
 			$newLink = $this->createLink($linkArray[0], $linkArray[1]);
 			$this->content = str_replace($completeLink, $newLink, $this->content);
 		}
@@ -416,8 +416,8 @@ class zgTemplate
 
 	/**
 	 * Load all the variables in a template and creates the objects for them
-	 * 
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
 	protected function _loadVariables()
 	{
@@ -438,7 +438,7 @@ class zgTemplate
 
 				$completeVariable = substr($block->currentContent, $startPosition, ($endPosition - $startPosition + strlen($this->configuration->getConfiguration('zeitgeist','template', 'variableEnd'))));
 				$variableContent = substr($completeVariable, strlen($this->configuration->getConfiguration('zeitgeist','template', 'variableBegin')), (strlen($completeVariable)-strlen($this->configuration->getConfiguration('zeitgeist','template', 'variableBegin'))-strlen($this->configuration->getConfiguration('zeitgeist','template', 'variableEnd'))));
-	
+
 				$this->variables[$variableContent] = new zgTemplateVariable;
 				$newVariableID = $this->configuration->getConfiguration('zeitgeist','template', 'variableSubstBegin') . $variableContent . $this->configuration->getConfiguration('zeitgeist','template', 'variableSubstEnd');
 				$block->currentContent = str_replace($completeVariable, $newVariableID, $block->currentContent);
@@ -446,21 +446,21 @@ class zgTemplate
 				$block->blockVariables[$variableContent] = $newVariableID;
 			}
 		}
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
 
-	
+
 	/**
 	 * Load all the variables in the root segment of a template and creates the objects for them
-	 * 
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
 	protected function _loadRootVariables()
 	{
 		$this->debug->guard();
-		
+
 		$this->blocks['root'] = new zgTemplateBlock();
 
 		while ($startPosition = strpos($this->content, $this->configuration->getConfiguration('zeitgeist','template', 'variableBegin')))
@@ -482,21 +482,21 @@ class zgTemplate
 			$this->content = str_replace($completeVariable, $newVariableID, $this->content);
 			$this->blocks['root']->blockVariables[$variableContent] = $newVariableID;
 		}
-		
+
 		$this->debug->unguard(true);
 		return true;
-	}	
+	}
 
-	
+
 	/**
 	 * Load all the blocks in a template and creates the objects for them
-	 * 
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
 	protected function _loadBlocks()
 	{
 		$this->debug->guard();
-		
+
 		while ($startPosition = strpos($this->content, $this->configuration->getConfiguration('zeitgeist','template', 'blockOpenBegin')))
 		{
 			// get block contents of next block
@@ -546,13 +546,13 @@ class zgTemplate
 			$blockContent = substr($completeBlock, ($startPosition+strlen($this->configuration->getConfiguration('zeitgeist','template', 'blockOpenEnd'))));
 			$endPosition = strpos($blockContent, $this->configuration->getConfiguration('zeitgeist','template', 'blockClose'));
 			$blockContent = substr($blockContent, 0, $endPosition);
-			$this->blocks[$blockName]->currentContent = $blockContent;			
+			$this->blocks[$blockName]->currentContent = $blockContent;
 			$this->blocks[$blockName]->originalContent = $blockContent;
-			
+
 			$newBlockID = $this->configuration->getConfiguration('zeitgeist','template', 'blockSubstBegin') . $blockName . $this->configuration->getConfiguration('zeitgeist','template', 'blockSubstEnd');
 			$this->content = str_replace($completeBlock, $newBlockID, $this->content);
 		}
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -561,8 +561,8 @@ class zgTemplate
 	/**
 	 * Create the tree of blocks
 	 * loops through all blocks in search of child blocks
-	 * 
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
 	protected function _getBlockParents()
 	{
@@ -581,9 +581,9 @@ class zgTemplate
 					$this->debug->unguard(false);
 					return false;
 				}
-				
+
 				$blockID = substr($currentBlock, $startPosition, ($endPosition-$startPosition+strlen($this->configuration->getConfiguration('zeitgeist','template', 'blockSubstEnd'))));
-				
+
 				$endPosition = strpos($blockID, $this->configuration->getConfiguration('zeitgeist','template', 'blockSubstEnd'));
 				if ($endPosition === false)
 				{
@@ -592,13 +592,13 @@ class zgTemplate
 					$this->debug->unguard(false);
 					return false;
 				}
-				
+
 				$subblockName = substr($blockID, strlen($this->configuration->getConfiguration('zeitgeist','template', 'blockSubstBegin')), ($endPosition-strlen($this->configuration->getConfiguration('zeitgeist','template', 'blockSubstBegin'))));
 				$this->blocks[$subblockName]->parent = $parentName;
 				$currentBlock = str_replace($blockID, '', $currentBlock);
 			}
 		}
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -606,15 +606,15 @@ class zgTemplate
 
 	/**
 	 * Inserts all variable contents in the given block
-	 * 
+	 *
 	 * @param string $blockname name of the block to insert the variables into
-	 * 
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
 	protected function _insertVariablesIntoBlock($blockname)
 	{
 		$this->debug->guard();
-		
+
 		if (!empty($this->blocks[$blockname]->blockVariables))
 		{
 			foreach ($this->blocks[$blockname]->blockVariables as $variableName => $variableID)
@@ -626,25 +626,25 @@ class zgTemplate
 					$this->debug->unguard(false);
 					return false;
 				}
-	
+
 				$this->blocks[$blockname]->currentContent = str_replace($variableID, $this->variables[$variableName]->currentContent, $this->blocks[$blockname]->currentContent);
 			}
 		}
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
-	
-	
+
+
 	/**
 	 * Inserts all variable contents in the the root element of the template
-	 * 
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
 	protected function _insertRootVariables()
 	{
 		$this->debug->guard();
-		
+
 		if (!empty($this->blocks['root']->blockVariables))
 		{
 			foreach ($this->blocks['root']->blockVariables as $variableName => $variableID)
@@ -656,27 +656,27 @@ class zgTemplate
 					$this->debug->unguard(false);
 					return false;
 				}
-	
+
 				$this->content = str_replace($variableID, $this->variables[$variableName]->currentContent, $this->content);
 			}
 		}
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
-	
-	
+
+
 	/**
 	 * Resets a given block or all blocks if no blockname is given
-	 * 
+	 *
 	 * @param string $name name of the block to reset
-	 * 
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
 	protected function _resetBlock($name='')
 	{
 		$this->debug->guard();
-	
+
 		if ($name != '')
 		{
 			if (empty($this->blocks[$name]))
@@ -686,7 +686,7 @@ class zgTemplate
 				$this->debug->unguard(false);
 				return false;
 			}
-			
+
 			$this->blocks[$name]->currentContent = $this->blocks[$name]->originalContent;
 		}
 		else
@@ -696,7 +696,7 @@ class zgTemplate
 				$block->currentContent = $block->originalContent;
 			}
 		}
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -704,8 +704,8 @@ class zgTemplate
 
 	/**
 	 * Filter the template commands from the template buffer
-	 * 
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
 	protected function _filterTemplateCommands()
 	{
@@ -720,30 +720,30 @@ class zgTemplate
 			$blockID = $this->configuration->getConfiguration('zeitgeist','template', 'blockSubstBegin') . $blockname . $this->configuration->getConfiguration('zeitgeist','template', 'blockSubstEnd');
 			$this->content = str_replace($blockID, '', $this->content);
 		}
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
 
-	
+
 	/**
 	 * Loads a template from the database
-	 * 
+	 *
 	 * @param string $filename name of the file/ template to load
-	 * 
-	 * @return array|boolean 
-	 */	
+	 *
+	 * @return array|boolean
+	 */
 	protected function _loadTemplateFromDatabase($filename)
 	{
 		$this->debug->guard();
 
 		$templatecacheTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_templatecache');
 		$res = $this->database->query("SELECT * FROM " . $templatecacheTablename . " WHERE templatecache_name = '".$filename."'");
-	
+
 		if ($this->database->numRows($res) == 1)
 		{
 			$row = $this->database->fetchArray($res);
-			
+
 			if ($row['templatecache_timestamp'] == filemtime($filename))
 			{
 				$serializedTemplate = $row['templatecache_content'];
@@ -776,47 +776,47 @@ class zgTemplate
 		}
 
 		$this->debug->unguard($template);
-		return $template;		
+		return $template;
 	}
 
-	
+
 	/**
 	 * Save a given template into the database
-	 * 
+	 *
 	 * @param string $filename name of the templatefile
-	 * 
-	 * @return boolean 
-	 */	
+	 *
+	 * @return boolean
+	 */
 	protected function _saveTemplateToDatabase($filename)
 	{
 		$this->debug->guard();
-		
+
 		$template = array();
-		
+
 		$template['file'] = $filename;
 		$template['content'] = $this->content;
 		$template['blocks'] = $this->blocks;
 		$template['variables'] = $this->variables;
-		
+
 		$serializedTemplate = serialize($template);
 		if ($serializedTemplate == '')
 		{
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		$serializedTemplate = base64_encode($serializedTemplate);
 		if ($serializedTemplate === false)
 		{
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		$templatecacheTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_templatecache');
-		$res = $this->database->query("INSERT INTO " . $templatecacheTablename . 
+		$res = $this->database->query("INSERT INTO " . $templatecacheTablename .
 		"(templatecache_name, templatecache_content, templatecache_timestamp) " .
-		"VALUES('" . $filename . "', '" . $serializedTemplate . "', '" . filemtime($filename) . "')");		
-		
+		"VALUES('" . $filename . "', '" . $serializedTemplate . "', '" . filemtime($filename) . "')");
+
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -830,7 +830,7 @@ class zgTemplateBlock
 	public $originalContent;
 	public $blockParent;
 	public $blockVariables;
-	
+
 	public function __construct()
 	{
 		$currentContent = '';
@@ -838,6 +838,7 @@ class zgTemplateBlock
 		$blockParent = '';
 		$blockVariables = array();
 	}
+
 }
 
 
@@ -845,12 +846,13 @@ class zgTemplateVariable
 {
 	public $currentContent;
 	public $defaultContent;
-	
+
 	public function __construct()
 	{
 		$currentContent = '';
 		$defaultContent = '';
 	}
+
 }
 
 ?>

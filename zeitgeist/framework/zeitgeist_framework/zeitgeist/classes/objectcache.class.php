@@ -4,12 +4,12 @@
  * http://www.zeitgeist-framework.com
  *
  * Objectcache class
- * 
+ *
  * @author Dirk Songür <songuer@zeitgeist-framework.com>
- * 
+ *
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
- * 
+ *
  * @package ZEITGEIST
  * @subpackage ZEITGEIST OBJECTCACHE
  */
@@ -23,29 +23,29 @@ defined('ZEITGEIST_ACTIVE') or die();
 class zgObjectcache
 {
 	private static $instance = false;
-	
+
 	protected $debug;
 	protected $messages;
-	
+
 	protected $objects;
 
 	/**
 	 * Class constructor
-	 * 
+	 *
 	 * The constructor is set to private to prevent files from calling the class as a class instead of a singleton.
 	 */
 	private function __construct()
 	{
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
-		
+
 		$this->objects = array();
 	}
 
 
 	/**
 	 * Initialize the singleton
-	 * 
+	 *
 	 * @return object
 	 */
 	public static function init()
@@ -57,20 +57,20 @@ class zgObjectcache
 
 		return self::$instance;
 	}
-	
+
 
 	/**
 	 * Adds an object to the cache
-	 * 
+	 *
 	 * @param string $name name of the object to store
 	 * @param object $object whatever to store into the cache
-	 * 
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
 	public function storeObject($name, $object)
 	{
 		$this->debug->guard();
-		
+
 		if (!empty($this->objects[$name]))
 		{
 			$this->debug->write('An object of this name ("' . $name . '") already exists', 'error');
@@ -88,10 +88,10 @@ class zgObjectcache
 
 	/**
 	 * Reads out a stored object
-	 * 
+	 *
 	 * @param string $name name of the object
-	 * 
-	 * @return object 
+	 *
+	 * @return object
 	 */
 	public function getObject($name)
 	{
@@ -104,9 +104,9 @@ class zgObjectcache
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		$ret = $this->objects[$name];
-		
+
 		$this->debug->unguard($ret);
 		return $ret;
 	}
@@ -114,10 +114,10 @@ class zgObjectcache
 
 	/**
 	 * Deletes an object from the cache
-	 * 
+	 *
 	 * @param string $name name of the object
-	 * 
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
 	public function deleteObject($name)
 	{
@@ -130,9 +130,9 @@ class zgObjectcache
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		unset($this->objects[$name]);
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -141,17 +141,17 @@ class zgObjectcache
 	/**
 	 * Clears the entire cache
 	 * All objects will be lost
-	 * 
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
 	public function deleteAllObjects()
 	{
 		$this->debug->guard();
 
 		$this->objects = array();
-		
+
 		$this->debug->unguard(true);
-		return true;		
+		return true;
 	}
 
 }

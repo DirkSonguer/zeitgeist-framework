@@ -4,12 +4,12 @@
  * http://www.zeitgeist-framework.com
  *
  * Userhandler class
- * 
+ *
  * @author Dirk Songür <songuer@zeitgeist-framework.com>
- * 
+ *
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
- * 
+ *
  * @package ZEITGEIST
  * @subpackage ZEITGEIST USERHANDLER
  */
@@ -23,22 +23,22 @@ defined('ZEITGEIST_ACTIVE') or die();
 class zgUserhandler
 {
 	private static $instance = false;
-	
+
 	protected $debug;
 	protected $messages;
 	protected $session;
 	protected $database;
 	protected $configuration;
-	
+
 	public $userdata;
 	public $userrights;
 	public $userroles;
-	
+
 	protected $loggedIn;
 
 	/**
 	 * Class constructor
-	 * 
+	 *
 	 * The constructor is set to private to prevent files from calling the class as a class instead of a singleton.
 	 */
 	private function __construct()
@@ -46,24 +46,24 @@ class zgUserhandler
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
 		$this->configuration = zgConfiguration::init();
-		
+
 		$this->database = new zgDatabase();
 		$this->database->connect();
 
 		$this->session = zgSession::init();
 		$this->session->startSession();
-		
+
 		$this->userdata = new zgUserdata();
 		$this->userrights = new zgUserrights();
 		$this->userroles = new zgUserroles();
-		
+
 		$this->loggedIn = false;
 	}
 
-	
+
 	/**
 	 * Initialize the singleton
-	 * 
+	 *
 	 * @return object
 	 */
 	public static function init()
@@ -75,18 +75,18 @@ class zgUserhandler
 
 		return self::$instance;
 	}
-	
-	
+
+
 	/**
 	 * Tries to establish a login for a user from the session data
 	 * Only works if the user was correctly logged in while the current session is active
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function establishUserSession()
 	{
 		$this->debug->guard();
-		
+
 		if (!$this->session->getSessionId())
 		{
 			$this->debug->write('Error establishing user session: could not find a session id', 'error');
@@ -94,7 +94,7 @@ class zgUserhandler
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		if (!$this->session->getSessionVariable('user_userid'))
 		{
 			$this->debug->write('Could not establish user session: user id not found in session', 'warning');
@@ -102,7 +102,7 @@ class zgUserhandler
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		if (!$this->_validateUserSession())
 		{
 			$this->debug->write('Could not validate the user session: session is not safe!', 'warning');
@@ -110,7 +110,7 @@ class zgUserhandler
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		if (!$this->_reloginFromSession())
 		{
 			$this->debug->write('Could not relogin the user from the session', 'warning');
@@ -118,18 +118,18 @@ class zgUserhandler
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		$this->loggedIn = true;
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
-	
-	
+
+
 	/**
-	 * Validates the session, trying to make sure that it is really the right user calling it 
-	 * 
-	 * @return boolean 
+	 * Validates the session, trying to make sure that it is really the right user calling it
+	 *
+	 * @return boolean
 	 */
 	protected function _validateUserSession()
 	{
@@ -151,173 +151,255 @@ class zgUserhandler
 	/**
 	 * Login a user with username and password
 	 * If successfull it will gather the user specific data and tie it to the session
-	 * 
+	 *
 	 * @param string $name name of the user
 	 * @param string $password supposed password of the user
-	 * 
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
 	public function loginUser($name, $password)
 	{
 		$this->debug->guard();
-		
+
 		if (!$this->loggedIn)
 		{
 			$userTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_users');
 			$sql = "SELECT * FROM " . $userTablename . " WHERE user_username = '" . $name . "' AND user_password = '". md5($password) . "'";
-		
-		    if ($res = $this->database->query($sql))
-		    {
-		        if ($this->database->numRows($res))
-		        {
-		            $row = $this->database->fetchArray($res);
-		        	$this->session->setSessionVariable('user_userid', $row['user_id']);
-		        	$this->session->setSessionVariable('user_key', $row['user_key']);
-		        	
-		        	$this->userrights->loadUserrights($row['user_id']);
-		        	$this->userdata->loadUserdata($row['user_id']);
-		        	
-		        	$this->saveUserstates();
-		        	
-		        	$this->loggedIn = true;
-		        	
+
+			if ($res = $this->database->query($sql))
+			{
+				if ($this->database->numRows($res))
+				{
+					$row = $this->database->fetchArray($res);
+					$this->session->setSessionVariable('user_userid', $row['user_id']);
+					$this->session->setSessionVariable('user_key', $row['user_key']);
+
+					$this->loggedIn = true;
+
 					$this->debug->unguard(true);
 					return true;
-		        }
-		        else
-		        {
+				}
+				else
+				{
 					$this->debug->write('Error validating a user: user not found or password is wrong', 'error');
 					$this->messages->setMessage('Error validating a user: user not found or password is wrong', 'error');
 					$this->debug->unguard(false);
 					return false;
-		        }
-		    }
-		    else
-		    {
+				}
+			}
+			else
+			{
 				$this->debug->write('Error searching a user: could not read the user table', 'error');
 				$this->messages->setMessage('Error searching a user: could not read the user table', 'error');
 				$this->debug->unguard(false);
 				return false;
-		    }
+			}
 		}
-	    else
-	    {
+		else
+		{
 			$this->debug->write('Error logging in a user: user is already logged in. Cannot login user twice', 'error');
 			$this->messages->setMessage('Error logging in a user: user is already logged in. Cannot login user twice', 'error');
 			$this->debug->unguard(false);
 			return false;
-	    }		
+		}
 
 		$this->debug->unguard(false);
 		return false;
 	}
-	
-	
+
+
 	/**
 	 * Log out the user if he is currently logged in
-	 * 
-	 * @return boolean 
-	 */	
+	 *
+	 * @return boolean
+	 */
 	public function logoutUser()
 	{
 		$this->debug->guard();
-		
+
 		if ($this->loggedIn)
 		{
 			$this->session->unsetSessionVariable('user_userid');
 			$this->session->unsetSessionVariable('user_key');
 		}
-	    else
-	    {
-			$this->debug->write('Error logging out user: user is not logged in', 'warning');
-			$this->messages->setMessage('Error logging out user: user is not logged in', 'warning');
+		else
+		{
+			$this->debug->write('Problem logging out user: user is not logged in', 'warning');
+			$this->messages->setMessage('Problem logging out user: user is not logged in', 'warning');
 			$this->debug->unguard(false);
 			return false;
-	    }
-	    
-	    $this->session->stopSession();
-	    
+		}
+
+		$this->session->stopSession();
+
 		$this->debug->unguard(true);
 		return true;
 	}
-	
-	
+
+
 	/**
 	 * Reload all the user specific data from the session into the structures and classes
-	 * 
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
 	protected function _reloginFromSession()
 	{
 		$this->debug->guard();
-		
-		$this->userrights->reloadUserrights();
-		$this->userdata->reloadUserdata();
-		
+
+		//		$this->userrights->reloadUserrights();
+		//		$this->userdata->reloadUserdata();
+
 		$this->debug->unguard(true);
 		return true;
 	}
-	
-	
+
+
 	/**
 	 * Calls all functions to save all user specific data into the session
-	 * 
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
 	public function saveUserstates()
 	{
 		$this->debug->guard();
-		
+
 		$this->userrights->saveUserrights();
 		$this->userdata->saveUserdata();
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
-	
-	
+
+
 	/**
 	 * Checks if the user is currently logged in
-	 * 
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
 	public function isLoggedIn()
 	{
 		$this->debug->guard();
-		
+
 		if ($this->loggedIn)
 		{
 			$this->debug->unguard(true);
 			return true;
 		}
-		
+
 		$this->debug->unguard(false);
 		return false;
 	}
-	
-	
+
+
 	/**
 	 * Returns the current UserID
-	 * 
-	 * @return integer 
+	 *
+	 * @return integer
 	 */
 	public function getUserID()
 	{
 		$this->debug->guard();
-		
+
 		if ($this->loggedIn)
 		{
 			$userid = $this->session->getSessionVariable('user_userid');
-			
+
 			if ($userid)
 			{
 				$this->debug->unguard($userid);
 				return $userid;
 			}
 		}
-		
+
 		$this->debug->unguard(false);
 		return false;
-	}	
+	}
+
+
+	/**
+	 * Creates a new user with a given name and password
+	 * Optional a usergroup and userdata can be given
+	 *
+	 * @param string $name name of the user
+	 * @param string $password password of the user
+	 * @param integer $userrole id of the userrole
+	 * @param array $userdata array containing the userdata
+	 * 	 *
+	 * @return boolean
+	 */
+	public function createUser($name, $password, $userrole=1, $userdata=array())
+	{
+		$this->debug->guard();
+
+		$sql = "SELECT * FROM users WHERE user_username = '" . $name . "'";
+		$res = $this->database->query($sql);
+		if ($this->database->numRows($res) > 0)
+		{
+			$this->debug->write('A user with this name already exists in the database. Please choose another username.', 'warning');
+			$this->messages->setMessage('A user with this name already exists in the database. Please choose another username.', 'userwarning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		// insert user
+		srand(microtime()*1000000);
+		$key = rand(10000,1000000000);
+		$key = md5($key);
+		$sqlUser = "INSERT INTO users(user_username, user_key, user_password) VALUES('" . $name . "', '" . $key . "', '" . $password . "')";
+		$resUser = $this->database->query($sqlUser);
+
+		$currentId = $this->database->insertId();
+
+		//userrole
+		$sqlUserrole = "INSERT INTO userroles_to_users(userroleuser_userrole, userroleuser_user) VALUES('" . $userrole . "', '" . $currentId . "')";
+		$resUserrole = $this->database->query($sqlUserrole);
+
+		//userdata
+		$userdataKeys = array();
+		$userdataValues = array();
+		foreach ($userdata as $key => $value)
+		{
+			$userdataKeys[] = $key;
+			$userdataValues[] = $value;
+		}
+
+		$sqlUserdata = "INSERT INTO userdata(userdata_user, " . implode(', ', $userdataKeys) . ") VALUES('" . $currentId . "', '" . implode("', '", $userdataValues) . "')";
+		$resPassword = $this->database->query($sqlUserdata);
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	/**
+	 * Deletes a user from the database
+	 *
+	 * @param integer $userid id of the user
+	 *
+	 * @return boolean
+	 */
+	public function deleteUser($userid)
+	{
+		$this->debug->guard();
+
+		// user account
+		$sql = "DELETE FROM users WHERE user_id='" . $userid . "'";
+		$res = $this->database->query($sql);
+
+		// userdata
+		$sql = "DELETE FROM userdata WHERE userdata_user='" . $userid . "'";
+		$res = $this->database->query($sql);
+
+		// userrights
+		$sql = "DELETE FROM userrights WHERE userright_user='" . $userid . "'";
+		$res = $this->database->query($sql);
+
+		// userrole
+		$sql = "DELETE FROM userroles_to_users WHERE userroleuser_user='" . $userid . "'";
+		$res = $this->database->query($sql);
+
+		$this->debug->unguard(true);
+		return true;
+	}
 }
 ?>
