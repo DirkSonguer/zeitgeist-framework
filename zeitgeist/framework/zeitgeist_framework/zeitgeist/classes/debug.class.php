@@ -225,6 +225,13 @@ class zgDebug
 			echo '<p>' . $key . ' : ' . $value;
 		}
 
+
+		if ($session = session_id())
+		{
+			echo '<h2>SESSION:</h2>';
+			echo '<p>' . $session . '</p>';
+		}
+
 		echo '</div>';
 	}
 
