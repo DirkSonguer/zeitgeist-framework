@@ -164,6 +164,11 @@ class zgParameterhandler
 			if ($this->_checkParameter($parametername, $parameterdefinition))
 			{
 				$safeParameters[$parametername] = $this->rawParameters[$parameterdefinition['source']][$parametername];
+				if ($this->configuration->getConfiguration('zeitgeist', 'parameterhandler', 'escape_parameters') == '1')
+				{
+					$safeParameters[$parametername] = mysql_escape_string($safeParameters[$parametername]);
+				}
+
 				unset($unsafeParameters[$parametername]);
 			}
 		}

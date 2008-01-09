@@ -163,8 +163,7 @@ class zgUserhandler
 
 		if (!$this->loggedIn)
 		{
-			$userTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_users');
-			$sql = "SELECT * FROM " . $userTablename . " WHERE user_username = '" . $name . "' AND user_password = '". md5($password) . "' AND user_active='1'";
+			$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " WHERE user_username = '" . $name . "' AND user_password = '". md5($password) . "' AND user_active='1'";
 
 			if ($res = $this->database->query($sql))
 			{
@@ -181,8 +180,8 @@ class zgUserhandler
 				}
 				else
 				{
-					$this->debug->write('Error validating a user: user not found/is inactive or password is wrong', 'error');
-					$this->messages->setMessage('Error validating a user: user not found/is inactive or password is wrong', 'error');
+					$this->debug->write('Problem validating a user: user not found/is inactive or password is wrong', 'warning');
+					$this->messages->setMessage('Problem validating a user: user not found/is inactive or password is wrong', 'warning');
 					$this->debug->unguard(false);
 					return false;
 				}
@@ -331,7 +330,7 @@ class zgUserhandler
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT * FROM users WHERE user_username = '" . $name . "'";
+		$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','users') . " WHERE user_username = '" . $name . "'";
 		$res = $this->database->query($sql);
 		if ($this->database->numRows($res) > 0)
 		{
@@ -345,13 +344,30 @@ class zgUserhandler
 		srand(microtime()*1000000);
 		$key = rand(10000,1000000000);
 		$key = md5($key);
-		$sqlUser = "INSERT INTO users(user_username, user_key, user_password, user_active) VALUES('" . $name . "', '" . $key . "', '" . $password . "', '0')";
+		$second = rand(10000,1000000000);
+		$key .= md5($second);
+
+		$active = 0;
+		if ($this->configuration->getConfiguration('zeitgeist', 'userhandler', 'use_doubleoptin') == '1')
+		{
+			$active = 1;
+		}
+
+		$sqlUser = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','users') . "(user_username, user_key, user_password, user_active) VALUES('" . $name . "', '" . $key . "', '" . $password . "', '" . $active . "')";
 		$resUser = $this->database->query($sqlUser);
 
 		$currentId = $this->database->insertId();
 
+		// insert confirmation key
+		$confirmationkey = rand(10000,1000000000);
+		$confirmationkey = md5($confirmationkey);
+		$second = rand(10000,1000000000);
+		$confirmationkey .= md5($second);
+		$sqlUser = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','userconfirmation') . "(userconfirmation_user, userconfirmation_key) VALUES('" . $currentId . "', '" . $key . "')";
+		$resUser = $this->database->query($sqlUser);
+
 		//userrole
-		$sqlUserrole = "INSERT INTO userroles_to_users(userroleuser_userrole, userroleuser_user) VALUES('" . $userrole . "', '" . $currentId . "')";
+		$sqlUserrole = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','userroles_to_users') . "(userroleuser_userrole, userroleuser_user) VALUES('" . $userrole . "', '" . $currentId . "')";
 		$resUserrole = $this->database->query($sqlUserrole);
 
 		//userdata
@@ -363,7 +379,7 @@ class zgUserhandler
 			$userdataValues[] = $value;
 		}
 
-		$sqlUserdata = "INSERT INTO userdata(userdata_user, " . implode(', ', $userdataKeys) . ") VALUES('" . $currentId . "', '" . implode("', '", $userdataValues) . "')";
+		$sqlUserdata = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','userdata') . "(userdata_user, " . implode(', ', $userdataKeys) . ") VALUES('" . $currentId . "', '" . implode("', '", $userdataValues) . "')";
 		$resPassword = $this->database->query($sqlUserdata);
 
 		$this->debug->unguard(true);
@@ -383,23 +399,119 @@ class zgUserhandler
 		$this->debug->guard();
 
 		// user account
-		$sql = "DELETE FROM users WHERE user_id='" . $userid . "'";
+		$sql = "DELETE FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " WHERE user_id='" . $userid . "'";
 		$res = $this->database->query($sql);
 
 		// userdata
-		$sql = "DELETE FROM userdata WHERE userdata_user='" . $userid . "'";
+		$sql = "DELETE FROM " . $this->configuration->getConfiguration('zeitgeist','tables','userdata') . " WHERE userdata_user='" . $userid . "'";
 		$res = $this->database->query($sql);
 
 		// userrights
-		$sql = "DELETE FROM userrights WHERE userright_user='" . $userid . "'";
+		$sql = "DELETE FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_userrights') . " WHERE userright_user='" . $userid . "'";
 		$res = $this->database->query($sql);
 
 		// userrole
-		$sql = "DELETE FROM userroles_to_users WHERE userroleuser_user='" . $userid . "'";
+		$sql = "DELETE FROM " . $this->configuration->getConfiguration('zeitgeist','tables','userroles_to_users') . " WHERE userroleuser_user='" . $userid . "'";
+		$res = $this->database->query($sql);
+
+		// userconfirmation
+		$sql = "DELETE FROM " . $this->configuration->getConfiguration('zeitgeist','tables','userconfirmation') . " WHERE userconfirmation_user='" . $userid . "'";
 		$res = $this->database->query($sql);
 
 		$this->debug->unguard(true);
 		return true;
 	}
+
+
+	/**
+	 * Checks if the confirmation key exists
+	 * Returns the user id if the key is found or false
+	 *
+	 * @param string $confirmationkey key to confirm
+	 *
+	 * @return integer
+	 */
+	public function checkConfirmation($confirmationkey)
+	{
+		$this->debug->guard();
+
+		$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_userconfirmation') . " WHERE userconfirmation_key = '" . $confirmationkey . "'";
+
+		if ($res = $this->database->query($sql))
+		{
+			if ($this->database->numRows($res))
+			{
+				$this->debug->unguard($row['userconfirmation_user']);
+				return $row['userconfirmation_user'];
+			}
+			else
+			{
+				$this->debug->write('Problem confirming a user: key not found', 'warning');
+				$this->messages->setMessage('Problem confirming a user: key not found', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
+		}
+		else
+		{
+			$this->debug->write('Error searching a user: could not read the user table', 'error');
+			$this->messages->setMessage('Error searching a user: could not read the user table', 'error');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(false);
+		return false;
+	}
+
+
+	/**
+	 * Activates a user
+	 *
+	 * @param integer $userid id of the user to activate
+	 *
+	 * @return boolean
+	 */
+	public function activateUser($userid)
+	{
+		$this->debug->guard();
+
+		$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " WHERE user_id = '" . $userid . "' AND user_active='0'";
+
+		if ($res = $this->database->query($sql))
+		{
+			if ($this->database->numRows($res))
+			{
+				// activate user
+				$sql = "UPDATE " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " SET user_active='1' WHERE user_id='" . $userid . "'";
+				$res = $this->database->query($sql);
+
+				// userconfirmation
+				$sql = "DELETE FROM " . $this->configuration->getConfiguration('zeitgeist','tables','userconfirmation') . " WHERE userconfirmation_user='" . $userid . "'";
+				$res = $this->database->query($sql);
+
+				$this->debug->unguard(true);
+				return true;
+			}
+			else
+			{
+				$this->debug->write('Problem activating user: user not found or is already active', 'warning');
+				$this->messages->setMessage('Problem activating user: user not found or is already active', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
+		}
+		else
+		{
+			$this->debug->write('Error searching a user: could not read the user table', 'error');
+			$this->messages->setMessage('Error searching a user: could not read the user table', 'error');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(false);
+		return false;
+	}
+
 }
 ?>
