@@ -164,7 +164,7 @@ class zgUserhandler
 		if (!$this->loggedIn)
 		{
 			$userTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_users');
-			$sql = "SELECT * FROM " . $userTablename . " WHERE user_username = '" . $name . "' AND user_password = '". md5($password) . "'";
+			$sql = "SELECT * FROM " . $userTablename . " WHERE user_username = '" . $name . "' AND user_password = '". md5($password) . "' AND user_active='1'";
 
 			if ($res = $this->database->query($sql))
 			{
@@ -181,8 +181,8 @@ class zgUserhandler
 				}
 				else
 				{
-					$this->debug->write('Error validating a user: user not found or password is wrong', 'error');
-					$this->messages->setMessage('Error validating a user: user not found or password is wrong', 'error');
+					$this->debug->write('Error validating a user: user not found/is inactive or password is wrong', 'error');
+					$this->messages->setMessage('Error validating a user: user not found/is inactive or password is wrong', 'error');
 					$this->debug->unguard(false);
 					return false;
 				}
@@ -345,7 +345,7 @@ class zgUserhandler
 		srand(microtime()*1000000);
 		$key = rand(10000,1000000000);
 		$key = md5($key);
-		$sqlUser = "INSERT INTO users(user_username, user_key, user_password) VALUES('" . $name . "', '" . $key . "', '" . $password . "')";
+		$sqlUser = "INSERT INTO users(user_username, user_key, user_password, user_active) VALUES('" . $name . "', '" . $key . "', '" . $password . "', '0')";
 		$resUser = $this->database->query($sqlUser);
 
 		$currentId = $this->database->insertId();
