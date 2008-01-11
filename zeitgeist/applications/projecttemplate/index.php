@@ -14,7 +14,7 @@
  * @subpackage ZEITGEIST ADMINISTRATOR
  */
 
-	define('ZGADMIN_ACTIVE', true);
+	define('PROJECT_ACTIVE', true);
 	
 	include('zeitgeist/zeitgeist.php');
 	
@@ -33,15 +33,8 @@
 	$user = zgUserhandler::init();
 	$eventhandler = new zgEventhandler();
 
-/*	
-	$test = "Core module. This module is active by default. It can not be deactivated nor uninstalled. The module handles all the usual core actions like user handling, login/ -out etc.";
-	// It can not be deactivated nor uninstalled. The module handles all the usual core actions like user handling, login/ -out etc.";
-	$ret = preg_match("/^[\wüÜäÄöÖ ]+(([\'\,\.\-\/ ])?[\wüÜäÄöÖ ]*)*$/", $test);
-	echo "ret: ".$ret;
-	die();
-*/
 	// load configuration
-	$configuration->loadConfiguration('administrator', 'configuration/administrator.ini');
+	$configuration->loadConfiguration('administrator', 'configuration/project.ini');
 
 	// set module
 	if (isset($_GET['module']))
