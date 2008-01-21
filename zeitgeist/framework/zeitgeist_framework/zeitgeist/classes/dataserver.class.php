@@ -38,15 +38,9 @@ class zgDataserver
 		$this->database = new zgDatabase();
 		$this->database->connect();
 
-		$mdb_server = $this->configuration->getConfiguration('administrator', 'databases', 'manageddb_server');
-		$mdb_username = $this->configuration->getConfiguration('administrator', 'databases', 'manageddb_username');
-		$mdb_userpw = $this->configuration->getConfiguration('administrator', 'databases', 'manageddb_userpw');
-		$mdb_database = $this->configuration->getConfiguration('administrator', 'databases', 'manageddb_database');
-		$this->managedDatabase = new zgDatabase();
-		$this->managedDatabase->connect($mdb_server, $mdb_username, $mdb_userpw, $mdb_database);
+		$this->database = new zgDatabase();
+		$this->database->connect();
 	}
-
-
 
 
 	/**
@@ -115,20 +109,8 @@ class zgDataserver
 		$xmlDataset = '<?xml version="1.0" encoding="' . $encoding . "\" ?>\n";
 		$xmlDataset .= '<' . $rootElement . ">\n";
 
-		$i = 1;
-		foreach ($arrDataset as $datarow)
-		{
-			$xmlDataset .= "\t<element id=\"" . $i . "\">\n";
-
-			foreach($datarow as $key => $value)
-			{
-				$value = htmlspecialchars($value);
-				$xmlDataset .= "\t\t<{$key}>{$value}</{$key}>\n";
-			}
-
-			$xmlDataset .= "\t</element>\n";
-			$i++;
-		}
+		$xmlArraydata = $this->_transformArrayRecursive($arrDataset);
+		$xmlDataset .= $xmlArraydata;
 
 		$xmlDataset .= '</' . $rootElement . ">\n";
 
@@ -138,17 +120,76 @@ class zgDataserver
 
 
 	/**
-	 * Streams an xml dataset to the browser
-	 * Note: Headers should not be set at this point
+	 * converts an array into xml
 	 *
-	 * @param string $xmlData xml data to stream
+	 * @param array $array array to convert
+	 * @param boolean $recursive true if called recursively
 	 *
-	 * @return boolean
+	 * @return string
 	 */
+	private function _transformArrayRecursive($array, $recursive=false)
+	{
+		static $depth;
+		static $xmlData;
+
+		if (!$recursive)
+		{
+			$xmlData = '';
+		}
+
+		foreach($array as $key => $value)
+		{
+			if (!is_array($value))
+			{
+				$tabs = '';
+				for ($i=1; $i<=$depth+1; $i++)
+				{
+					$tabs .= "\t";
+				}
+
+				$attribute = '';
+				if (preg_match("/^[0-9]\$/", $key))
+				{
+					$attribute = ' id="' . $key . '"';
+					$key = 'element';
+				}
+
+				$xmlData .= $tabs . '<'. $key . $attribute . '>' . $value . '</' . $key . ">\n";
+			}
+			else
+			{
+				$depth += 1;
+				$tabs = '';
+				for ($i=1; $i<=$depth; $i++)
+				{
+					$tabs .= "\t";
+				}
+
+				$attribute = '';
+				if (preg_match("/^[0-9]\$/", $key))
+				{
+					$attribute = ' id="' . $key . '"';
+					$key = 'element';
+				}
+				else
+				{
+					$key = $key;
+				}
+
+				$xmlData .= $tabs . '<' . $key.$attribute . ">\n";
+				$this->_transformArrayRecursive($value, true);
+				$xmlData .= $tabs . '</' . $key . ">\n";
+				$depth -= 1;
+			}
+		}
+
+		return $xmlData;
+	}
 
 
 	/**
 	 * Streams a given xml dataset to the browser as xml content
+	 * Note: Headers should not be set at this point
 	 *
 	 * @param string $xmldata string containing the xml data
 	 *
