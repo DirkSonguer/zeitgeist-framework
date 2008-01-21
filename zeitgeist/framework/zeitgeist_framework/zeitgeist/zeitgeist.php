@@ -4,19 +4,19 @@
  * http://www.zeitgeist-framework.com
  *
  * Main Zeitgeist file
- * 
+ *
  * @author Dirk Songür <songuer@zeitgeist-framework.com>
  * @version 1.0.2 - 24.07.2007
- * 
+ *
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
- * 
+ *
  * @package ZEITGEIST
  * @subpackage ZEITGEIST CORE
  */
 
 // Define a constant to indicate that Zeitgeist is active
-// Every file in this package should test for this constant to verify that it is called from the framework 
+// Every file in this package should test for this constant to verify that it is called from the framework
 	define('ZEITGEIST_ACTIVE', true);
 
 // definitions
@@ -39,13 +39,14 @@
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/userhandler.class.php');
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/errorhandler.class.php');
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/template.class.php');
+	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/formhandler.class.php');
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/parameterhandler.class.php');
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/eventhandler.class.php');
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/trafficlogger.class.php');
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/dataserver.class.php');
-	
+
 // include misc functions
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'includes/autoloader.include.php');
-	
-	
+
+
 ?>

@@ -67,11 +67,11 @@ class zgObjectcache
 	 *
 	 * @return boolean
 	 */
-	public function storeObject($name, $object)
+	public function storeObject($name, $object, $overwrite=false)
 	{
 		$this->debug->guard();
 
-		if (!empty($this->objects[$name]))
+		if ( (!empty($this->objects[$name])) && (!$overwrite) )
 		{
 			$this->debug->write('An object of this name ("' . $name . '") already exists', 'error');
 			$this->messages->setMessage('An object of this name ("' . $name . '") already exists', 'error');

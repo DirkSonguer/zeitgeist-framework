@@ -154,8 +154,8 @@ class zgConfiguration
 		// check if module with this name is already loaded
 		if ( (!empty($this->configuration[$modulename])) && ($overwrite == false) )
 		{
-			$this->debug->write('Error loading the configuration: module already loaded', 'error');
-			$this->messages->setMessage('Error loading the configuration: module already loaded', 'error');
+			$this->debug->write('Problem loading the configuration: module already loaded', 'warning');
+			$this->messages->setMessage('Problem loading the configuration: module already loaded', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}

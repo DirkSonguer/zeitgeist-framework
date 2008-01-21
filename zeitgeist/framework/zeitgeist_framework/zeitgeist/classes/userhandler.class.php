@@ -316,6 +316,31 @@ class zgUserhandler
 
 
 	/**
+	 * Returns the current UserKey
+	 *
+	 * @return string
+	 */
+	public function getUserKey()
+	{
+		$this->debug->guard();
+
+		if ($this->loggedIn)
+		{
+			$userkey = $this->session->getSessionVariable('user_key');
+
+			if ($userkey)
+			{
+				$this->debug->unguard($userkey);
+				return $userkey;
+			}
+		}
+
+		$this->debug->unguard(false);
+		return false;
+	}
+
+
+	/**
 	 * Creates a new user with a given name and password
 	 * Optional a usergroup and userdata can be given
 	 *
@@ -330,12 +355,12 @@ class zgUserhandler
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','users') . " WHERE user_username = '" . $name . "'";
+		$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " WHERE user_username = '" . $name . "'";
 		$res = $this->database->query($sql);
 		if ($this->database->numRows($res) > 0)
 		{
 			$this->debug->write('A user with this name already exists in the database. Please choose another username.', 'warning');
-			$this->messages->setMessage('A user with this name already exists in the database. Please choose another username.', 'userwarning');
+			$this->messages->setMessage('A user with this name already exists in the database. Please choose another username.', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -353,7 +378,7 @@ class zgUserhandler
 			$active = 1;
 		}
 
-		$sqlUser = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','users') . "(user_username, user_key, user_password, user_active) VALUES('" . $name . "', '" . $key . "', '" . $password . "', '" . $active . "')";
+		$sqlUser = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . "(user_username, user_key, user_password, user_active) VALUES('" . $name . "', '" . $key . "', '" . md5($password) . "', '" . $active . "')";
 		$resUser = $this->database->query($sqlUser);
 
 		$currentId = $this->database->insertId();
@@ -363,11 +388,11 @@ class zgUserhandler
 		$confirmationkey = md5($confirmationkey);
 		$second = rand(10000,1000000000);
 		$confirmationkey .= md5($second);
-		$sqlUser = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','userconfirmation') . "(userconfirmation_user, userconfirmation_key) VALUES('" . $currentId . "', '" . $key . "')";
+		$sqlUser = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','table_userconfirmation') . "(userconfirmation_user, userconfirmation_key) VALUES('" . $currentId . "', '" . $key . "')";
 		$resUser = $this->database->query($sqlUser);
 
 		//userrole
-		$sqlUserrole = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','userroles_to_users') . "(userroleuser_userrole, userroleuser_user) VALUES('" . $userrole . "', '" . $currentId . "')";
+		$sqlUserrole = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','table_userroles_to_users') . "(userroleuser_userrole, userroleuser_user) VALUES('" . $userrole . "', '" . $currentId . "')";
 		$resUserrole = $this->database->query($sqlUserrole);
 
 		//userdata
@@ -379,7 +404,7 @@ class zgUserhandler
 			$userdataValues[] = $value;
 		}
 
-		$sqlUserdata = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','userdata') . "(userdata_user, " . implode(', ', $userdataKeys) . ") VALUES('" . $currentId . "', '" . implode("', '", $userdataValues) . "')";
+		$sqlUserdata = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','table_userdata') . "(userdata_user, " . implode(', ', $userdataKeys) . ") VALUES('" . $currentId . "', '" . implode("', '", $userdataValues) . "')";
 		$resPassword = $this->database->query($sqlUserdata);
 
 		$this->debug->unguard(true);
@@ -403,7 +428,7 @@ class zgUserhandler
 		$res = $this->database->query($sql);
 
 		// userdata
-		$sql = "DELETE FROM " . $this->configuration->getConfiguration('zeitgeist','tables','userdata') . " WHERE userdata_user='" . $userid . "'";
+		$sql = "DELETE FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_userdata') . " WHERE userdata_user='" . $userid . "'";
 		$res = $this->database->query($sql);
 
 		// userrights
@@ -411,11 +436,11 @@ class zgUserhandler
 		$res = $this->database->query($sql);
 
 		// userrole
-		$sql = "DELETE FROM " . $this->configuration->getConfiguration('zeitgeist','tables','userroles_to_users') . " WHERE userroleuser_user='" . $userid . "'";
+		$sql = "DELETE FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_userroles_to_users') . " WHERE userroleuser_user='" . $userid . "'";
 		$res = $this->database->query($sql);
 
 		// userconfirmation
-		$sql = "DELETE FROM " . $this->configuration->getConfiguration('zeitgeist','tables','userconfirmation') . " WHERE userconfirmation_user='" . $userid . "'";
+		$sql = "DELETE FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_userconfirmation') . " WHERE userconfirmation_user='" . $userid . "'";
 		$res = $this->database->query($sql);
 
 		$this->debug->unguard(true);
@@ -487,7 +512,7 @@ class zgUserhandler
 				$res = $this->database->query($sql);
 
 				// userconfirmation
-				$sql = "DELETE FROM " . $this->configuration->getConfiguration('zeitgeist','tables','userconfirmation') . " WHERE userconfirmation_user='" . $userid . "'";
+				$sql = "DELETE FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_userconfirmation') . " WHERE userconfirmation_user='" . $userid . "'";
 				$res = $this->database->query($sql);
 
 				$this->debug->unguard(true);
