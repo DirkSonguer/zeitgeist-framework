@@ -1,0 +1,32 @@
+
+userdata_firstname[parameter] = true
+userdata_firstname[source] = POST
+userdata_firstname[type] = [[zeitgeist.parameterhandler.string]]
+
+userdata_lastname[parameter] = true
+userdata_lastname[source] = POST
+userdata_lastname[type] = [[zeitgeist.parameterhandler.string]]
+
+userdata_address1[parameter] = true
+userdata_address1[source] = POST
+userdata_address1[type] = [[zeitgeist.parameterhandler.string]]
+
+userdata_zip[parameter] = true
+userdata_zip[source] = POST
+userdata_zip[type] = [[zeitgeist.parameterhandler.zip]]
+
+userdata_city[parameter] = true
+userdata_city[source] = POST
+userdata_city[type] = [[zeitgeist.parameterhandler.string]]
+
+userdata_im[parameter] = true
+userdata_im[source] = POST
+userdata_im[type] = [[zeitgeist.parameterhandler.string]]
+
+userdata_url[parameter] = true
+userdata_url[source] = POST
+userdata_url[type] = /^.{1,100}$/
+
+userdata_description[parameter] = true
+userdata_description[source] = POST
+userdata_description[type] = [[zeitgeist.parameterhandler.text]]
