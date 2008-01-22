@@ -157,7 +157,7 @@ class zgUserhandler
 	 *
 	 * @return boolean
 	 */
-	public function loginUser($name, $password)
+	public function login($name, $password)
 	{
 		$this->debug->guard();
 
@@ -212,7 +212,7 @@ class zgUserhandler
 	 *
 	 * @return boolean
 	 */
-	public function logoutUser()
+	public function logout()
 	{
 		$this->debug->guard();
 
