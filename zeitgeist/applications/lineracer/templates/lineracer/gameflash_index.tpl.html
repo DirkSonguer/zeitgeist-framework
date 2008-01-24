@@ -10,18 +10,6 @@
 <script language="Javascript" type="text/javascript" src="@@{templatepath}@@/includes/Spry/SpryNestedXMLDataSet.js"></script>
 <script language="Javascript" type="text/javascript" src="@@{templatepath}@@/js/SpryExtensions.js"></script>
 
-<script type="text/javascript">	
-
-	var dsGamedata = new  Spry.Data.XMLDataSet("@@{[game.update]}@@&playerid=@@{playerid}@@&playerkey=@@{playerkey}@@", "container/element", { useCache:  false, loadInterval: 10000 }); 
-	var dsPlayerdata = new Spry.Data.NestedXMLDataSet(dsGamedata, "players/element");
-
-	function stopUpdating()
-	{
-		dsGamedata.stopLoadInterval();
-	}
-
-</script>
-
 <!-- InstanceEndEditable -->
 
 <link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/lineracer.css" />
@@ -48,40 +36,45 @@
 	<!-- TemplateBeginBlock name="usererrors" -->
 		<h3 class="usererror"><img src="@@{templatepath}@@/nuvola/16x16/actions/no.png" alt="" align="left" style="margin-right:5px;" /> @@{usererror}@@</h3>
 	<!-- TemplateEndBlock -->
+
+	<h1>Lineracer</h1>
+
+	<!-- TemplateBeginBlock name="loginbox" -->
+		<div style="border:1px solid #000000; margin-left:10px; width:400px;">
+			<form method="post" action="@@{[main.login]}@@" name="login">
+
+				<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+					<tr>
+						<td align="right" nowrap width="110"><p>Username</p></td>
+						<td align="left" valign="middle" nowrap><input type="text" size="35" maxlength="20" name="username" class="formtext" style="width:250px;" /></td>
+					</tr>
+					<tr>
+						<td align="right" nowrap><p>Password</p></td>
+						<td align="left" valign="middle" nowrap><input type="password" size="35" maxlength="32" name="password" class="formtext" style="width:250px;" /></td>
+
+					</tr>
+					<tr>
+						<td align="left" nowrap>&nbsp;</td>
+						<td align="right" valign="middle" nowrap><input type="submit" name="login" value="Login" class="formbutton" /></td>
+					</tr>
+				</table>
+			</form>		
+		</div>
+	<!-- TemplateEndBlock -->
 	
+	<!-- TemplateBeginBlock name="logoutbox" -->
+		<div style="border:1px solid #000000; margin-left:10px; width:400px;">
+			<p>Hallo, du bist eingeloggt<br />
+			<a href="@@{[main.logout]}@@">Ausloggen</a></p>
+		</div>
+	<!-- TemplateEndBlock -->	
+
 <!-- InstanceBeginEditable name="body" -->
-
-<div spry:region="dsGamedata">
-	<div spry:state="ready">
-		<table cellpadding="0" cellspacing="0" border="0" style="margin-left:100px;">
-		<tr>
-		<td valign="top">
-		<p>Game Index</p>
-		<p><a href="@@{[game.reset]}@@">Spiel resetten</a></p>
-		<p><a href="javascript:stopUpdating();">Spiel pausieren</a></p>
-		
-		</td>
-			<td>
-				<h1>Spieler {dsGamedata::activePlayer} ist am Zug.<br />Anzahl der Züge: {dsGamedata::activePlayer}</h1>
-			</td>
-		</tr>
-		<tr spry:repeat="dsGamedata">
-			<td><p>{dsGamedata::num}</p></td>
-		</tr>
-		</table>
-	</div>
-</div>
-
-<div spry:region="dsPlayerdata">
-	<ul spry:repeatchildren="dsPlayerdata">
-		<li>{dsPlayerdata::movecount}</li>
-	</ul>
-</div>
 
 <form action="@@{[game.move]}@@" method="post">
 	<table cellpadding="0" cellspacing="0" border="0" style="margin-left:100px;">
 	<tr>
-		<td colspan="2">		
+		<td colspan="2">
 			<object width="800" height="600">
 			<param name="movie" value="testdata/test.swf">
 			<embed src="testdata/test.swf" width="800" height="600">

@@ -48,7 +48,39 @@
 	<!-- TemplateBeginBlock name="usererrors" -->
 		<h3 class="usererror"><img src="@@{templatepath}@@/nuvola/16x16/actions/no.png" alt="" align="left" style="margin-right:5px;" /> @@{usererror}@@</h3>
 	<!-- TemplateEndBlock -->
+
+	<h1>Lineracer</h1>
+
+	<!-- TemplateBeginBlock name="loginbox" -->
+		<div style="border:1px solid #000000; margin-left:10px; width:400px;">
+			<form method="post" action="@@{[main.login]}@@" name="login">
+
+				<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+					<tr>
+						<td align="right" nowrap width="110"><p>Username</p></td>
+						<td align="left" valign="middle" nowrap><input type="text" size="35" maxlength="20" name="username" class="formtext" style="width:250px;" /></td>
+					</tr>
+					<tr>
+						<td align="right" nowrap><p>Password</p></td>
+						<td align="left" valign="middle" nowrap><input type="password" size="35" maxlength="32" name="password" class="formtext" style="width:250px;" /></td>
+
+					</tr>
+					<tr>
+						<td align="left" nowrap>&nbsp;</td>
+						<td align="right" valign="middle" nowrap><input type="submit" name="login" value="Login" class="formbutton" /></td>
+					</tr>
+				</table>
+			</form>		
+		</div>
+	<!-- TemplateEndBlock -->
 	
+	<!-- TemplateBeginBlock name="logoutbox" -->
+		<div style="border:1px solid #000000; margin-left:10px; width:400px;">
+			<p>Hallo, du bist eingeloggt<br />
+			<a href="@@{[main.logout]}@@">Ausloggen</a></p>
+		</div>
+	<!-- TemplateEndBlock -->	
+
 <!-- InstanceBeginEditable name="body" -->
 
 <div spry:region="dsGamedata">

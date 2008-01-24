@@ -39,10 +39,7 @@
 	$configuration->loadConfiguration('lineracer', 'configuration/lineracer.ini');
 
 	// test if user is logged in
-	if(!$user->establishUserSession())
-	{
-		$user->loginUser('songuer', 'songuer');
-	}
+	$user->establishUserSession();
 
 	// set module
 	if (isset($_GET['module']))

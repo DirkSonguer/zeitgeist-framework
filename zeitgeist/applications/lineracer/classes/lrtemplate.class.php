@@ -68,6 +68,15 @@ class lrTemplate extends zgTemplate
 
 		parent::insertUsermessages();
 
+		if ($this->user->isLoggedIn())
+		{
+			parent::insertBlock('logoutbox');
+		}
+		else
+		{
+			parent::insertBlock('loginbox');
+		}
+
 		$ret = parent::show();
 
 		$this->debug->unguard($ret);
