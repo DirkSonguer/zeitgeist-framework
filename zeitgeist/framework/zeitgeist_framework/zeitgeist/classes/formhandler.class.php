@@ -143,6 +143,25 @@ class zgForm
 	}
 
 
+	public function validateElement($elementname, $validation=true)
+	{
+		$this->debug->guard();
+
+		if (!empty($this->formelements[$elementname]))
+		{
+			$this->formelements[$elementname]->valid = false;
+		}
+		else
+		{
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
 	protected function _setupForm()
 	{
 		$this->debug->guard();
@@ -172,7 +191,10 @@ class zgForm
 				if (!empty($elementdata['maxlength'])) $this->formelements[$elementname]->maxlength = $elementdata['maxlength'];
 				if (!empty($elementdata['expected'])) $this->formelements[$elementname]->expected = $elementdata['expected'];
 				if (!empty($elementdata['style'])) $this->formelements[$elementname]->style = $elementdata['style'];
-				if (!empty($elementdata['errormsg'])) $this->formelements[$elementname]->errormsg = $elementdata['errormsg'];
+				if (!empty($elementdata['errormsg']))
+				{
+					$this->formelements[$elementname]->errormsg = explode('||', $elementdata['errormsg']);
+				}
 			}
 			else
 			{
@@ -187,7 +209,7 @@ class zgForm
 	}
 
 
-	private function _validateElement($elementname, $elementdata, $formdata)
+	protected function _validateElement($elementname, $elementdata, $formdata)
 	{
 		$this->debug->guard(true);
 
@@ -227,7 +249,7 @@ class zgForm
 	}
 
 
-	private function _validateElements($formdata)
+	protected function _validateElements($formdata)
 	{
 		$this->debug->guard();
 
@@ -253,25 +275,7 @@ class zgForm
 	}
 
 
-	public function validateElement($elementname, $validation=true)
-	{
-		$this->debug->guard();
-
-		if (!empty($this->formelements[$elementname]))
-		{
-			$this->formelements[$elementname]->valid = false;
-		}
-		else
-		{
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-	private function _createTextelement($elementname, $elementdata)
+	protected function _createTextelement($elementname, $elementdata)
 	{
 		$this->debug->guard(true);
 		$elementstring = '';
@@ -289,7 +293,7 @@ class zgForm
 		$elementstring .= 'class="' . $elementdata->style . '"';
 		$elementstring .= " />\n";
 		if ($elementdata->posttext != '') $elementstring .= "\t\t\t<br />" . '<span class="small">' . $elementdata->posttext . "</span>\n";
-		if ( ($elementdata->valid == false) && ($elementdata->errormsg != '') ) $elementstring .= "\t\t\t<br />" . '<span class="formerrormsg">' . $elementdata->errormsg . "</span>\n";
+		if ( ($elementdata->valid == false) && ($this->_showError($elementdata) != '') ) $elementstring .= "\t\t\t<br />" . '<span class="formerrormsg">' . $this->_showError($elementdata) . "</span>\n";
 		$elementstring .= "\t\t\t</td>\n\t\t</tr>\n";
 
 		$this->debug->unguard(true);
@@ -297,7 +301,25 @@ class zgForm
 	}
 
 
-	private function _createPasswordelement($elementname, $elementdata)
+	protected function _showError($elementdata)
+	{
+		$this->debug->guard(true);
+
+		if (is_array($elementdata->errormsg))
+		{
+			$ret = $elementdata->errormsg[$elementdata->currentErrormsg];
+		}
+		else
+		{
+			$ret = $elementdata->errormsg;
+		}
+
+		$this->debug->unguard($ret);
+		return $ret;
+	}
+
+
+	protected function _createPasswordelement($elementname, $elementdata)
 	{
 		$this->debug->guard(true);
 		$elementstring = '';
@@ -315,7 +337,7 @@ class zgForm
 		$elementstring .= 'class="' . $elementdata->style . '"';
 		$elementstring .= " />\n";
 		if ($elementdata->posttext != '') $elementstring .= "\t\t\t<br />" . '<span class="small">' . $elementdata->posttext . "</span>\n";
-		if ( ($elementdata->valid == false) && ($elementdata->errormsg != '') ) $elementstring .= "\t\t\t<br />" . '<span class="formerrormsg">' . $elementdata->errormsg . "</span>\n";
+		if ( ($elementdata->valid == false) && ($this->_showError($elementdata) != '') ) $elementstring .= "\t\t\t<br />" . '<span class="formerrormsg">' . $this->_showError($elementdata) . "</span>\n";
 		$elementstring .= "\t\t\t</td>\n\t\t</tr>\n";
 
 		$this->debug->unguard(true);
@@ -323,7 +345,7 @@ class zgForm
 	}
 
 
-	private function _createSubmitelement($elementname, $elementdata)
+	protected function _createSubmitelement($elementname, $elementdata)
 	{
 		$this->debug->guard(true);
 		$elementstring = '';
@@ -354,6 +376,7 @@ class zgFormelement
 	public $expected;
 	public $style;
 	public $errormsg;
+	public $currentErrormsg;
 
 	public $valid;
 
@@ -369,6 +392,7 @@ class zgFormelement
 		$this->expected = '';
 		$this->style = '';
 		$this->errormsg = '';
+		$this->currentErrormsg = 0;
 
 		$this->valid = false;
 	}
