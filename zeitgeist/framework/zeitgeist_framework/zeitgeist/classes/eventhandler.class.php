@@ -169,7 +169,7 @@ class zgEventhandler
 
 		if ($this->user->isLoggedIn())
 		{
-			$ret = $this->user->userrights->hasUserright($actionData['action_id']);
+			$ret = $this->user->hasUserright($actionData['action_id']);
 
 			$this->debug->unguard($ret);
 			return $ret;

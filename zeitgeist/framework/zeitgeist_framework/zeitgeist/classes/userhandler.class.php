@@ -29,9 +29,12 @@ class zgUserhandler
 	protected $session;
 	protected $database;
 	protected $configuration;
+	protected $userrightsLoaded;
+	protected $userdataLoaded;
+	protected $userrolesLoaded;
 
-	public $userdata;
 	public $userrights;
+	public $userdata;
 	public $userroles;
 
 	protected $loggedIn;
@@ -53,9 +56,14 @@ class zgUserhandler
 		$this->session = zgSession::init();
 		$this->session->startSession();
 
-		$this->userdata = new zgUserdata();
-		$this->userrights = new zgUserrights();
-		$this->userroles = new zgUserroles();
+		$this->userrights = array();
+		$this->userrightsLoaded = false;
+
+		$this->userdata = array();
+		$this->userdataLoaded = false;
+
+		$this->userroles = array();
+		$this->userrolesLoaded = false;
 
 		$this->loggedIn = false;
 	}
@@ -245,9 +253,6 @@ class zgUserhandler
 	{
 		$this->debug->guard();
 
-		//		$this->userrights->reloadUserrights();
-		//		$this->userdata->reloadUserdata();
-
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -262,8 +267,8 @@ class zgUserhandler
 	{
 		$this->debug->guard();
 
-		$this->userrights->saveUserrights();
-		$this->userdata->saveUserdata();
+		$this->saveUserrights();
+		$this->saveUserdata();
 
 		$this->debug->unguard(true);
 		return true;
@@ -369,8 +374,6 @@ class zgUserhandler
 		srand(microtime()*1000000);
 		$key = rand(10000,1000000000);
 		$key = md5($key);
-		$second = rand(10000,1000000000);
-		$key .= md5($second);
 
 		$active = 0;
 		if ($this->configuration->getConfiguration('zeitgeist', 'userhandler', 'use_doubleoptin') == '1')
@@ -386,8 +389,6 @@ class zgUserhandler
 		// insert confirmation key
 		$confirmationkey = rand(10000,1000000000);
 		$confirmationkey = md5($confirmationkey);
-		$second = rand(10000,1000000000);
-		$confirmationkey .= md5($second);
 		$sqlUser = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','table_userconfirmation') . "(userconfirmation_user, userconfirmation_key) VALUES('" . $currentId . "', '" . $key . "')";
 		$resUser = $this->database->query($sqlUser);
 
@@ -536,6 +537,438 @@ class zgUserhandler
 
 		$this->debug->unguard(false);
 		return false;
+	}
+
+
+	/**
+	 * Load all userdata for a given user
+	 *
+	 * @param integer $userid id of the user
+	 *
+	 * @return boolean
+	 */
+	public function loadUserdata($userid)
+	{
+		$this->debug->guard();
+
+		$userdataTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userdata');
+		$sql = "SELECT * FROM " . $userdataTablename . " WHERE userdata_user = '" . $userid . "'";
+
+		if ($res = $this->database->query($sql))
+		{
+			$row = $this->database->fetchArray($res);
+
+			if (is_array($row))
+			{
+				$this->userdata = $row;
+			}
+			else
+			{
+				$this->debug->write('Possible problem getting userdata for a user: the user seems to habe no assigned data', 'warning');
+				$this->messages->setMessage('Possible problem getting userdata for a user: the user seems to habe no assigned data', 'warning');
+
+				$this->debug->unguard(false);
+				return false;
+			}
+
+			$this->userdataLoaded = true;
+			$this->debug->unguard(true);
+			return true;
+		}
+		else
+		{
+			$this->debug->write('Error getting userdata for a user: could not find the userdata', 'error');
+			$this->messages->setMessage('Error getting userdata for a user: could not find the userdata', 'error');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(false);
+		return false;
+	}
+
+
+	/**
+	 * Save all userrdata to the session for later use
+	 * Also updates the according userdata table with the current data
+	 *
+	 * @return boolean
+	 */
+	public function saveUserdata()
+	{
+		$this->debug->guard();
+
+		if ($this->userdataLoaded)
+		{
+			$userdataTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userdata');
+			$userid = $this->session->getSessionVariable('user_userid');
+
+			$sql = 'UPDATE ' . $userdataTablename . ' SET ';
+			$sqlupdate = '';
+
+			foreach ($this->userdata as $key => $value)
+			{
+				if ($sqlupdate != '') $sqlupdate .= ', ';
+				$sqlupdate .= $key . "='" . $value . "'";
+			}
+
+			$sql .= $sqlupdate . " WHERE userdata_user='" . $userid . "'";
+			$res = $this->database->query($sql);
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	/**
+	 * Gets userdata for the current user
+	 * Returns a given key or the whole array
+	 *
+	 * @param string $datakey key of the userdata to fetch
+	 *
+	 * @return boolean
+	 */
+	public function getUserdata($datakey='')
+	{
+		$this->debug->guard();
+
+		if (!$this->userdataLoaded)
+		{
+			$this->loadUserdata($this->session->getSessionVariable('user_userid'));
+		}
+
+		if ($datakey != '')
+		{
+			if (!empty($this->userdata[$datakey]))
+			{
+				$this->debug->unguard($this->userdata[$datakey]);
+				return $this->userdata[$datakey];
+			}
+			else
+			{
+				$this->debug->write('Problem getting selected userdata: userdata with given key (' . $datakey . ') not found', 'warning');
+				$this->messages->setMessage('Problem getting selected userdata: userdata with given key (' . $datakey . ') not found', 'warning');
+
+				$this->debug->unguard(false);
+				return false;
+			}
+		}
+		else
+		{
+			$this->debug->unguard('No key given, returning all userdata');
+			return $this->userdata;
+		}
+
+		$this->debug->unguard(false);
+		return false;
+	}
+
+
+	/**
+	 * Sets new value for a given userdata
+	 *
+	 * @param string $userdata key of the userdata to write
+	 * @param string $value content to write
+	 *
+	 * @return boolean
+	 */
+	public function setUserdata($userdata, $value)
+	{
+		$this->debug->guard();
+
+		if (!$this->userdataLoaded)
+		{
+			$this->loadUserdata($this->session->getSessionVariable('user_userid'));
+		}
+
+		if (isset($this->userdata[$userdata]))
+		{
+			$this->userdata[$userdata] = $value;
+			$this->saveUserdata();
+
+			$this->debug->unguard(true);
+			return true;
+		}
+
+		$this->debug->write('Error setting userdata: Userdata (' . $userdata . ') does not exist and could not be set.', 'error');
+		$this->messages->setMessage('Error setting userdata: Userdata (' . $userdata . ') does not exist and could not be set.', 'error');
+
+		$this->debug->unguard(false);
+		return false;
+	}
+
+
+	/**
+	 * Load all userrights for a given user
+	 *
+	 * @param integer $userid id of the user
+	 *
+	 * @return boolean
+	 */
+	public function loadUserrights($userid)
+	{
+		$this->debug->guard();
+
+		$userrightsTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userrights');
+		$sql = "SELECT * FROM " . $userrightsTablename . " WHERE userright_user = '" . $userid . "'";
+
+		if ($res = $this->database->query($sql))
+		{
+			while ($row = $this->database->fetchArray($res))
+			{
+				$this->userrights[$row['userright_action']] = true;
+			}
+
+			$this->_getUserrightsForRoles();
+
+			if (count($this->userrights) == 0)
+			{
+				$this->debug->write('Possible problem getting userrights for a user: the user seems to habe no assigned rights', 'warning');
+				$this->messages->setMessage('Possible problem getting userrights for a user: the user seems to habe no assigned rights', 'warning');
+
+				$this->debug->unguard(false);
+				return false;
+			}
+
+			$this->userrightsLoaded = true;
+			$this->debug->unguard(true);
+			return true;
+		}
+		else
+		{
+			$this->debug->write('Error getting userrights for a user: could not find the userrights', 'error');
+			$this->messages->setMessage('Error getting userrights for a user: could not find the userrights', 'error');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(false);
+		return false;
+	}
+
+
+	/**
+	 * Save all userrights to the session for later use
+	 * Also updates the according userright table with the current data
+	 *
+	 * @return boolean
+	 */
+	public function saveUserrights()
+	{
+		$this->debug->guard();
+
+		if ($this->userrightsLoaded)
+		{
+			$userrightsTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userrights');
+			$userid = $this->session->getSessionVariable('user_userid');
+
+			$sql = 'DELETE FROM ' . $userrightsTablename . " WHERE userright_user='" . $userid . "'";
+			$res = $this->database->query($sql);
+
+			foreach ($this->userrights as $key => $value)
+			{
+				$sql = 'INSERT INTO ' . $userrightsTablename . "(userright_action, userright_user) VALUES('" . $key . "', '" . $userid . "')";
+				$res = $this->database->query($sql);
+			}
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	/**
+	 * Check if the user has a given userright
+	 *
+	 * @param integer $actionid id of the action
+	 *
+	 * @return boolean
+	 */
+	public function hasUserright($actionid)
+	{
+		$this->debug->guard();
+
+		if (!$this->userrightsLoaded)
+		{
+			$this->loadUserrights($this->session->getSessionVariable('user_userid'));
+		}
+
+		if (!empty($this->userrights[$actionid]))
+		{
+			$this->debug->unguard(true);
+			return true;
+		}
+
+		$this->debug->write('User does not have the requested right for action (' . $actionid . ')', 'warning');
+		$this->messages->setMessage('User does not have the requested right for action (' . $actionid . ')', 'warning');
+
+		$this->debug->unguard(false);
+		return false;
+	}
+
+
+	/**
+	 * Adds rights for the user for a given action
+	 *
+	 * @param integer $userright id of the action to add rights to
+	 *
+	 * @return boolean
+	 */
+	public function addUserright($userright)
+	{
+		$this->debug->guard();
+
+		if (!$this->userrightsLoaded)
+		{
+			$this->loadUserrights($this->session->getSessionVariable('user_userid'));
+		}
+
+		$this->userrights[$userright] = true;
+		$this->saveUserrights();
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	/**
+	 * Deletes a userright for an action
+	 *
+	 * @param integer $userright id of the action to delete rights for
+	 *
+	 * @return boolean
+	 */
+	public function deleteUserright($userright)
+	{
+		$this->debug->guard();
+
+		if (isset($this->userrights[$userright]))
+		{
+			unset($this->userrights[$userright]);
+			$this->saveUserrights();
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	/**
+	 * Loads all userrights for the roles
+	 *
+	 * @return boolean
+	 */
+	private function _getUserrightsForRoles()
+	{
+		$this->debug->guard();
+
+		if (!$this->userrolesLoaded)
+		{
+			$this->loadUserroles($this->session->getSessionVariable('user_userid'));
+		}
+
+		foreach ($this->userroles as $roleId => $state)
+		{
+			$rolestoactionsTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userroles_to_actions');
+			$sql = "SELECT * FROM " . $rolestoactionsTablename . " WHERE userroleaction_userrole = '" . $roleId . "'";
+			$res = $this->database->query($sql);
+
+			if ($res = $this->database->query($sql))
+			{
+				while ($row = $this->database->fetchArray($res))
+				{
+					$this->userrights[$row['userroleaction_action']] = true;
+				}
+
+				if (count($this->userrights) == 0)
+				{
+					$this->debug->write('Possible problem getting the rights for the roles of a user: there seems to be no rights assigned with the roles', 'warning');
+					$this->messages->setMessage('Possible problem getting the rights for the roles of a user: there seems to be no rights assigned with the roles', 'warning');
+
+					$this->debug->unguard(false);
+					return false;
+				}
+
+				$this->debug->unguard(true);
+				return true;
+			}
+			else
+			{
+				$this->debug->write('Error getting userrole for a user: could not find the userrole', 'warning');
+				$this->messages->setMessage('Error getting userrole for a user: could not find the userrole', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	/**
+	 * Loads a userrole for a given user and prepares all userrights for the role
+	 *
+	 * @param integer $userid id of the user
+	 *
+	 * @return boolean
+	 */
+	public function loadUserroles($userid)
+	{
+		$this->debug->guard();
+
+		$userrolesTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userroles_to_users');
+		$sql = "SELECT * FROM " . $userrolesTablename . " WHERE userroleuser_user = '" . $userid . "'";
+
+		if ($res = $this->database->query($sql))
+		{
+			while ($row = $this->database->fetchArray($res))
+			{
+				$this->userroles[$row['userroleuser_userrole']] = true;
+			}
+
+			if (count($this->userroles) == 0)
+			{
+				$this->debug->write('Possible problem getting the role of a user: there seems to be no roles assigned to the user', 'warning');
+				$this->messages->setMessage('Possible problem getting the role of a user: there seems to be no roles assigned to the user', 'warning');
+
+				$this->debug->unguard(false);
+				return false;
+			}
+
+			$this->debug->unguard(true);
+			return true;
+		}
+		else
+		{
+			$this->debug->write('Error getting userrole for a user: could not find the userrole', 'warning');
+			$this->messages->setMessage('Error getting userrole for a user: could not find the userrole', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->userroleLoaded = true;
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function addUserrole()
+	{
+		// TODO: FUNCTION!
+	}
+
+
+	public function deleteUserrole()
+	{
+		// TODO: FUNCTION!
+	}
+
+
+	public function saveUserroles()
+	{
+		// TODO: FUNCTION!
 	}
 
 }
