@@ -47,47 +47,52 @@ class main
 		$registerForm->load('forms/register.form.ini');
 		$formprocess = $registerForm->process($parameters);
 
-
 		if ($formprocess)
 		{
+			$formValid = true;
 			if ($registerForm->formelements['user_password1']->value != $registerForm->formelements['user_password2']->value)
 			{
 				$registerForm->validateElement('user_password1', false);
 				$registerForm->validateElement('user_password2', false);
+				$formValid = false;
 			}
-			else
+
+			$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " WHERE user_username = '" . $registerForm->formelements['user_username']->value . "'";
+			$res = $this->database->query($sql);
+			if ($this->database->numRows($res) > 0)
 			{
-				echo "success!";
-				die();
+				$registerForm->validateElement('user_username', false);
+				$registerForm->formelements['user_username']->currentErrormsg = 1;
+				$formValid = false;
+			}
+
+			$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_userdata') . " WHERE userdata_email = '" . $registerForm->formelements['userdata_email']->value . "'";
+			$res = $this->database->query($sql);
+			if ($this->database->numRows($res) > 0)
+			{
+				$registerForm->validateElement('userdata_email', false);
+				$registerForm->formelements['userdata_email']->currentErrormsg = 1;
+				$formValid = false;
+			}
+
+			if($formValid)
+			{
+				// TODO: Set Userrole and Userdata
+				$userdata = array();
+				$userdata['userdata_email'] = $registerForm->formelements['userdata_email']->value;
+
+				if ($this->user->createUser($registerForm->formelements['user_username']->value, $registerForm->formelements['user_password1']->value, 1, $userdata))
+				{
+					unset($tpl);
+					$tpl = new lrTemplate();
+					$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_register_thankyou'));
+				}
 			}
 		}
 
 		$formstring = $registerForm->create();
 		$tpl->assign('registerform', $formstring);
 
-/*
-		if (!empty($parameters['submit']))
-		{
-			if ( (!empty($parameters['user_username'])) && (!empty($parameters['user_password1'])) && (!empty($parameters['user_password2'])) && (!empty($parameters['userdata_email'])) )
-			{
-				if ($parameters['user_password1'] == $parameters['user_password2'])
-				{
-					if ($this->user->createUser($parameters['user_username'], $parameters['user_password1']))
-					{
-						$this->messages->setMessage('Vielen Dank, Sie sind nun registriert. Sie werden in Kürze eine Mail erhalten blablabla.', 'usermessage');
-					}
-				}
-				else
-				{
-					$this->messages->setMessage('Bitte achten Sie darauf, dass die Passwörter identisch sind..', 'userwarning');
-				}
-			}
-			else
-			{
-				$this->messages->setMessage('Bitte füllen Sie alle Pflichtfelder aus (Name, Passwort und E-Mail).', 'userwarning');
-			}
-		}
-*/
 		$tpl->assignDataset($parameters);
 		$tpl->show();
 
@@ -101,7 +106,7 @@ class main
 		$this->debug->guard();
 
 		$tpl = new lrTemplate();
-		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_login'));
+		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_index'));
 
 		if ($this->user->isLoggedIn())
 		{
@@ -112,7 +117,7 @@ class main
 		{
 			if ( (!empty($parameters['username'])) && (!empty($parameters['password'])) )
 			{
-				if ($this->user->loginUser($parameters['username'], $parameters['password']))
+				if ($this->user->login($parameters['username'], $parameters['password']))
 				{
 					$tpl->redirect($tpl->createLink('main', 'index'));
 				}
@@ -138,7 +143,7 @@ class main
 	{
 		$this->debug->guard();
 
-		$this->user->logoutUser();
+		$this->user->logout();
 
 		$tpl = new lrTemplate();
 		$tpl->redirect($tpl->createLink('main', 'index'));
