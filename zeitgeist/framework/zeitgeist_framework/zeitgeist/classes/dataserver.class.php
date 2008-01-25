@@ -11,7 +11,7 @@
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
  *
  * @package ZEITGEIST
- * @subpackage ZEITGEIST MESSAGES
+ * @subpackage ZEITGEIST DATASERVER
  */
 
 defined('ZEITGEIST_ACTIVE') or die();
