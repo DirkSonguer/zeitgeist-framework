@@ -1,6 +1,6 @@
 <?php
 /**
- * Zeitgeist Browsergame Framework
+ * Zeitgeist Application Framework
  * http://www.zeitgeist-framework.com
  *
  * Userhandler class
@@ -119,14 +119,6 @@ class zgUserhandler
 			return false;
 		}
 
-		if (!$this->_reloginFromSession())
-		{
-			$this->debug->write('Could not relogin the user from the session', 'warning');
-			$this->messages->setMessage('Could not relogin the user from the session', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
 		$this->loggedIn = true;
 
 		$this->debug->unguard(true);
@@ -238,20 +230,6 @@ class zgUserhandler
 		}
 
 		$this->session->stopSession();
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-
-	/**
-	 * Reload all the user specific data from the session into the structures and classes
-	 *
-	 * @return boolean
-	 */
-	protected function _reloginFromSession()
-	{
-		$this->debug->guard();
 
 		$this->debug->unguard(true);
 		return true;
