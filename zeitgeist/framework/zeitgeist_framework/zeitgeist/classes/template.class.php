@@ -10,8 +10,6 @@
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
  *
- * $Rev$
- *
  * @package ZEITGEIST
  * @subpackage ZEITGEIST TEMPLATE
  */

@@ -3,7 +3,7 @@
  * Zeitgeist Application Framework
  * http://www.zeitgeist-framework.com
  *
- * Errorhandler class
+ * Trafficlogger class
  *
  * @author Dirk Songür <songuer@zeitgeist-framework.com>
  *
@@ -11,7 +11,7 @@
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
  *
  * @package ZEITGEIST
- * @subpackage ZEITGEIST ERRORHANDLER
+ * @subpackage ZEITGEIST TRAFFICLOGGER
  */
 
 defined('ZEITGEIST_ACTIVE') or die();
