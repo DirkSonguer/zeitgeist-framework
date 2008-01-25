@@ -1,6 +1,6 @@
 <?php
 /**
- * Zeitgeist Browsergame Framework
+ * Zeitgeist Application Framework
  * http://www.zeitgeist-framework.com
  *
  * Errorhandler class

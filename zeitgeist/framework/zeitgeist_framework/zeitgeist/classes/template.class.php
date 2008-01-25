@@ -1,6 +1,6 @@
 <?php
 /**
- * Zeitgeist Browsergame Framework
+ * Zeitgeist Application Framework
  * http://www.zeitgeist-framework.com
  *
  * Template class
@@ -9,6 +9,8 @@
  *
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
+ *
+ * $Rev$
  *
  * @package ZEITGEIST
  * @subpackage ZEITGEIST TEMPLATE
