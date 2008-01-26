@@ -14,6 +14,25 @@
 </script>
 
 <!-- InstanceBeginEditable name="head" -->
+
+	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/includes/Spry/SpryData.js"></script>
+	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/includes/Spry/xpath.js"></script>
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/includes/Spry/SpryNestedXMLDataSet.js"></script>
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/includes/Spry/SpryDOMUtils.js"></script>
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/js/SpryExtensions.js"></script>
+
+	<script type="text/javascript">
+
+		var dsLobbydata = new Spry.Data.XMLDataSet("@@{[dataserver.getlobbydata]}@@&lobbyid=@@{lobbyid}@@", "container/element");
+		dsLobbydata.setColumnType("lobby_id", "number");
+
+		function test(sText)
+		{
+			alert("hallo" + sText);
+		}
+
+	</script>
+
 <!-- InstanceEndEditable -->
 </head>
 
@@ -65,11 +84,39 @@
 
 <!-- InstanceBeginEditable name="body" -->
 
-<p>Neuen Benutzer erstellen</p>
+<p>Main Index</p>
 
-<p>Danke</p>
+<p><a href="@@{[pregame.creategame]}@@">Neues Spiel erstellen</a></p>
 
-<p><a href="@@{[main.index]}@@">Zurück</a></p>
+<p>Aktuelle Spiele:</p>
+<div class="textbox">
+	<div spry:region="dsLobbydata">
+    <div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
+
+	<div spry:state="ready" style="text-align:left;">
+	<p>Spieler1: {dsLobbydata::lobby_creator}</p>
+
+	<p>Spieler2: {dsLobbydata::lobby_player2}</p>
+
+	<p>Spieler3: {dsLobbydata::lobby_player3}</p>
+
+	<p>Spieler4: {dsLobbydata::lobby_player4}</p>
+
+	<p>Max Spieler: {dsLobbydata::lobby_maxplayers}</p>
+	<p>Strecke: {dsLobbydata::circuit_name}</p>
+
+		<div spry:choose="spry:choose">
+			<div spry:when="'{dsLobbydata::lobby_player2}' == ''"><script type="text/javascript">Spry.Utils.addLoadListener(test('{dsLobbydata::lobby_creator}'));</script></div>
+			<div spry:default="spry:default">
+				<p>+</p>
+			</div>
+		</div>
+	</div>
+	</div>
+</div>
+
+<p><a href="@@{[pregame.showlobby]}@@">Zurück zur Lobby</a></p>
+<p><a href="@@{[main.index]}@@">Zurück zur Hauptseite</a></p>
 
 <!-- InstanceEndEditable -->
 
