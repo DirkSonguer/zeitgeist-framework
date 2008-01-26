@@ -1,6 +1,6 @@
 <?php
 /**
- * Zeitgeist Browsergame Framework
+ * Zeitgeist Application Framework
  * http://www.zeitgeist-framework.com
  *
  * Template class
@@ -18,9 +18,10 @@ defined('LINERACER_ACTIVE') or die();
 
 class lrTemplate extends zgTemplate
 {
-	private $user;
-	private $basepath;
-	private $templatepath;
+	protected $user;
+	protected $basepath;
+	protected $templatepath;
+	protected $miscfunctions;
 
 	/**
 	 * Class constructor
@@ -30,6 +31,8 @@ class lrTemplate extends zgTemplate
 		$this->user = zgUserhandler::init();
 
 		parent::__construct();
+
+		$this->miscfunctions = lrMiscfunctions::init();
 
 		$this->basepath = $this->configuration->getConfiguration('lineracer', 'application', 'basepath');
 		$this->templatepath = $this->basepath . '/templates/' . $this->configuration->getConfiguration('lineracer', 'application', 'templatepath');
@@ -67,6 +70,11 @@ class lrTemplate extends zgTemplate
 		$this->debug->guard();
 
 		parent::insertUsermessages();
+
+		if ($this->miscfunctions->playerWaitingForGame())
+		{
+			parent::insertBlock('watingforgame');
+		}
 
 		if ($this->user->isLoggedIn())
 		{

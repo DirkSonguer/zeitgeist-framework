@@ -1,17 +1,17 @@
 <?php
 /**
- * Zeitgeist Browsergame Framework
- * http://www.zeitgeist-framework.com
+ * Lineracer
  *
- * Zeitgeist Administrator Tool
+ * Based on the Zeitgeist Application Framework
+ * http://www.zeitgeist-framework.com
  *
  * @author Dirk Songür <songuer@zeitgeist-framework.com>
  *
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
  *
- * @package ZEITGEIST
- * @subpackage ZEITGEIST ADMINISTRATOR
+ * @package LINERACER
+ * @subpackage LINERACER CORE
  */
 
 	define('LINERACER_ACTIVE', true);
@@ -19,6 +19,7 @@
 	include('zeitgeist/zeitgeist.php');
 
 	require_once('classes/lrtemplate.class.php');
+	require_once('classes/lrmiscfunctions.class.php');
 	require_once('classes/lrgamefunctions.class.php');
 
 	define(ZG_DB_DBSERVER, 'localhost');
@@ -34,9 +35,9 @@
 	$user = zgUserhandler::init();
 	$eventhandler = new zgEventhandler();
 
-
 	// load configuration
 	$configuration->loadConfiguration('lineracer', 'configuration/lineracer.ini');
+	$test = $configuration->getConfiguration('lineracer');
 
 	// test if user is logged in
 	$user->establishUserSession();
