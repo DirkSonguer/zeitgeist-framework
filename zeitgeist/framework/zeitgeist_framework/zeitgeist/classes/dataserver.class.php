@@ -148,7 +148,7 @@ class zgDataserver
 				}
 
 				$attribute = '';
-				if (preg_match("/^[0-9]\$/", $key))
+				if (preg_match("/^[0-9]*\$/", $key))
 				{
 					$attribute = ' id="' . $key . '"';
 					$key = 'element';
@@ -166,7 +166,7 @@ class zgDataserver
 				}
 
 				$attribute = '';
-				if (preg_match("/^[0-9]\$/", $key))
+				if (preg_match("/^[0-9]*\$/", $key))
 				{
 					$attribute = ' id="' . $key . '"';
 					$key = 'element';
