@@ -21,7 +21,6 @@ class lrTemplate extends zgTemplate
 	protected $user;
 	protected $basepath;
 	protected $templatepath;
-	protected $miscfunctions;
 
 	/**
 	 * Class constructor
@@ -31,8 +30,6 @@ class lrTemplate extends zgTemplate
 		$this->user = zgUserhandler::init();
 
 		parent::__construct();
-
-		$this->miscfunctions = lrMiscfunctions::init();
 
 		$this->basepath = $this->configuration->getConfiguration('lineracer', 'application', 'basepath');
 		$this->templatepath = $this->basepath . '/templates/' . $this->configuration->getConfiguration('lineracer', 'application', 'templatepath');
@@ -71,7 +68,8 @@ class lrTemplate extends zgTemplate
 
 		parent::insertUsermessages();
 
-		if ($this->miscfunctions->playerWaitingForGame())
+		$pregamefunctions = new lrPregamefunctions();
+		if ($pregamefunctions->playerWaitingForGame())
 		{
 			parent::insertBlock('watingforgame');
 		}

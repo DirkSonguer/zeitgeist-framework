@@ -12,7 +12,7 @@
 
 
 </script>
-
+	
 <!-- InstanceBeginEditable name="head" -->
 
 	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/includes/Spry/SpryData.js"></script>
@@ -22,7 +22,7 @@
 
 	<script type="text/javascript">
 
-		var dsLobbydata = new Spry.Data.XMLDataSet("@@{[dataserver.getlobbydata]}@@", "container/element");
+		var dsLobbydata = new Spry.Data.XMLDataSet("@@{[dataserver.getlobbydata]}@@", "container/element", { useCache:  false, loadInterval: 10000 });
 		dsLobbydata.setColumnType("lobby_id", "number");
 
 	</script>
@@ -47,7 +47,7 @@
 	<h1>Lineracer</h1>
 
 	<!-- TemplateBeginBlock name="loginbox" -->
-		<div style="border:1px solid #000000; margin-left:10px; width:400px;">
+		<div class="textbox" style="width:400px;">
 			<form method="post" action="@@{[main.login]}@@" name="login">
 
 				<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
@@ -65,16 +65,25 @@
 						<td align="right" valign="middle" nowrap><input type="submit" name="login" value="Login" class="formbutton" /></td>
 					</tr>
 				</table>
-			</form>
+				<p><a href="@@{[main.register]}@@">Neuen Nutzer erstellen</a></p>
+			</form>		
 		</div>
 	<!-- TemplateEndBlock -->
-
+	
 	<!-- TemplateBeginBlock name="logoutbox" -->
-		<div style="border:1px solid #000000; margin-left:10px; width:400px;">
+		<div class="textbox" style="width:400px;">
 			<p>Hallo, du bist eingeloggt<br />
 			<a href="@@{[main.logout]}@@">Ausloggen</a></p>
 		</div>
-	<!-- TemplateEndBlock -->
+	<!-- TemplateEndBlock -->	
+
+	<!-- TemplateBeginBlock name="watingforgame" -->
+		<div class="textbox" style="width:400px;">
+			<p>Du wartest gerade auf ein Spiel:<br />
+			<a href="@@{[pregame.showgameroom]}@@">Gameroom</a></p>
+		</div>
+	<!-- TemplateEndBlock -->	
+
 
 <!-- InstanceBeginEditable name="body" -->
 
@@ -91,41 +100,14 @@
 	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
 	        <tr class="tablehead">
 				<th><p><a onclick="dsLobbydata.sort('lobby_id');">ID</a></p></th>
-				<th><p>Spieler 1</p></th>
-				<th><p>Spieler 2</p></th>
-				<th><p>Spieler 3</p></th>
-				<th><p>Spieler 4</p></th>
+				<th><p><a onclick="dsLobbydata.sort('lobby_currentplayers');">aktuelle Spieler</a></p></th>
 				<th><p><a onclick="dsLobbydata.sort('lobby_maxplayers');">max Spieler</a></p></th>
 				<th><p><a onclick="dsLobbydata.sort('lobby_circuit');">Strecke</a></p></th>
 				<th><p>Aktion</p></th>
 	        </tr>
 	        <tr class="{ds_EvenOddRow}" spry:repeat="dsLobbydata">
 				<td><p>{dsLobbydata::lobby_id}</p></td>
-				<td><p>{dsLobbydata::lobby_creator}</p></td>
-				<td>
-					<div spry:choose="spry:choose">
-						<div spry:when="'{dsLobbydata::lobby_player2}' == ''"><p>-</p></div>
-						<div spry:default="spry:default">
-							<p>{dsLobbydata::lobby_player2}</p>
-						</div>
-					</div>
-				</td>
-				<td>
-					<div spry:choose="spry:choose">
-						<div spry:when="'{dsLobbydata::lobby_player3}' == ''"><p>-</p></div>
-						<div spry:default="spry:default">
-							<p>{dsLobbydata::lobby_player3}</p>
-						</div>
-					</div>
-				</td>
-				<td>
-					<div spry:choose="spry:choose">
-						<div spry:when="'{dsLobbydata::lobby_player4}' == ''"><p>-</p></div>
-						<div spry:default="spry:default">
-							<p>{dsLobbydata::lobby_player4}</p>
-						</div>
-					</div>
-				</td>
+				<td><p>{dsLobbydata::lobby_currentplayers}</p></td>
 				<td><p>{dsLobbydata::lobby_maxplayers}</p></td>
 				<td><p>{dsLobbydata::circuit_name}</p></td>
 				<td width="90"><p>
