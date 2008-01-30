@@ -9,7 +9,6 @@ class pregame
 	protected $database;
 	protected $configuration;
 	protected $user;
-	protected $miscfunctions;
 
 	public function __construct()
 	{
@@ -17,7 +16,6 @@ class pregame
 		$this->messages = zgMessages::init();
 		$this->configuration = zgConfiguration::init();
 		$this->user = zgUserhandler::init();
-		$this->miscfunctions = lrMiscfunctions::init();
 
 		$this->database = new zgDatabase();
 		$this->database->connect();
@@ -42,7 +40,8 @@ class pregame
 	{
 		$this->debug->guard();
 
-		if ($this->miscfunctions->playerWaitingForGame())
+		$pregamefunctions = new lrPregamefunctions();
+		if ($pregamefunctions->playerWaitingForGame())
 		{
 			$this->messages->setMessage('Wartest bereits', 'userwarning');
 			$ret = $this->showlobby($parameters);
@@ -57,7 +56,9 @@ class pregame
 			return true;
 		}
 
-		$sql = "SELECT l.*, c.* FROM lobby l LEFT JOIN circuits c ON l.lobby_circuit = c.circuit_id WHERE l.lobby_id='" . intval($parameters['lobbyid']) . "'";
+		$sql = 'SELECT l.lobby_id, l.lobby_maxplayers, COUNT(lu.lobbyuser_user) as lobby_currentplayers ';
+		$sql .= 'FROM lobby l LEFT JOIN circuits c ON l.lobby_circuit = c.circuit_id LEFT JOIN lobbyusers lu ON l.lobby_id = lu.Lobbyuser_lobby ';
+		$sql .= "WHERE l.lobby_id='" . intval($parameters['lobbyid']) . "' GROUP BY l.lobby_id";
 		$res = $this->database->query($sql);
 		$row = $this->database->fetchArray($res);
 		if (!$row)
@@ -67,26 +68,7 @@ class pregame
 			return $ret;
 		}
 
-		$maxPlayers = $row['lobby_maxplayers'];
-		$slotFree = false;
-
-		for ($i=2; $i<=$maxPlayers; $i++)
-		{
-			if ($row['lobby_player' . $i] == '')
-			{
-				$slotFree = true;
-			}
-		}
-
-		if ($slotFree)
-		{
-			$tpl = new lrTemplate();
-			$this->debug->unguard(true);
-			$linkparameters = array();
-			$tpl->redirect($tpl->createLink('pregame', 'showgameroom'));
-			return true;
-		}
-		else
+		if ($row['lobby_currentplayers'] >= $row['lobby_maxplayers'])
 		{
 			$this->messages->setMessage('Spiel belegt', 'userwarning');
 			$ret = $this->showlobby($parameters);
@@ -94,7 +76,14 @@ class pregame
 			return $ret;
 		}
 
+		$currentUserId = $this->user->getUserID();
+		$sql = "INSERT INTO lobbyusers(lobbyuser_lobby, lobbyuser_user) VALUES('" . $row['lobby_id'] . "', '" . $currentUserId . "')";
+		$res = $this->database->query($sql);
+
+		$tpl = new lrTemplate();
 		$this->debug->unguard(true);
+		$linkparameters = array();
+		$tpl->redirect($tpl->createLink('pregame', 'showgameroom'));
 		return true;
 	}
 
@@ -103,21 +92,44 @@ class pregame
 	{
 		$this->debug->guard();
 
-		$tpl = new lrTemplate();
-		$tpl->load($this->configuration->getConfiguration('pregame', 'templates', 'pregame_showgameroom'));
-
-		if (!$this->miscfunctions->playerWaitingForGame())
+		$pregamefunctions = new lrPregamefunctions();
+		if (!$pregamefunctions->playerWaitingForGame())
 		{
 			$ret = $this->showlobby($parameters);
-			$this->debug->unguard(true);
+			$this->debug->unguard($ret);
 			return $ret;
 		}
 
-		$tpl->assign('lobbyid', $row['lobby_id']);
+		$tpl = new lrTemplate();
+		$tpl->load($this->configuration->getConfiguration('pregame', 'templates', 'pregame_showgameroom'));
 
 		$tpl->show();
 
 		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function leavegameroom($parameters=array())
+	{
+		$this->debug->guard();
+
+		$pregamefunctions = new lrPregamefunctions();
+		if (!$pregamefunctions->playerWaitingForGame())
+		{
+			$tpl = new lrTemplate();
+			$this->debug->unguard(true);
+			$linkparameters = array();
+			$tpl->redirect($tpl->createLink('pregame', 'showlobby'));
+			return true;
+		}
+
+		$pregamefunctions->leaveGameroom();
+
+		$tpl = new lrTemplate();
+		$this->debug->unguard(true);
+		$linkparameters = array();
+		$tpl->redirect($tpl->createLink('pregame', 'showlobby'));
 		return true;
 	}
 

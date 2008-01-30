@@ -15,11 +15,12 @@
  */
 
 	define('LINERACER_ACTIVE', true);
+	define('DEBUGMODE', true);
 
 	include('zeitgeist/zeitgeist.php');
 
 	require_once('classes/lrtemplate.class.php');
-	require_once('classes/lrmiscfunctions.class.php');
+	require_once('classes/lrpregamefunctions.class.php');
 	require_once('classes/lrgamefunctions.class.php');
 
 	define(ZG_DB_DBSERVER, 'localhost');
