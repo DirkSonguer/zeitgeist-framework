@@ -289,8 +289,8 @@ class zgForm
 		$elementstring .= "\t\t\t<td><input type=\"text\"";
 		if ($elementdata->maxlength > 0) $elementstring .= ' maxlength="' . $elementdata->maxlength . '"';
 		$elementstring .= ' name="' . $this->name . '[' . $elementname . ']"';
-		$elementstring .= 'value="' . $elementdata->value . '"';
-		$elementstring .= 'class="' . $elementdata->style . '"';
+		$elementstring .= ' value="' . $elementdata->value . '"';
+		$elementstring .= ' class="' . $elementdata->style . '"';
 		$elementstring .= " />\n";
 		if ($elementdata->posttext != '') $elementstring .= "\t\t\t<br />" . '<span class="small">' . $elementdata->posttext . "</span>\n";
 		if ( ($elementdata->valid == false) && ($this->_showError($elementdata) != '') ) $elementstring .= "\t\t\t<br />" . '<span class="formerrormsg">' . $this->_showError($elementdata) . "</span>\n";
@@ -333,8 +333,8 @@ class zgForm
 		$elementstring .= "\t\t\t<td><input type=\"password\"";
 		if ($elementdata->maxlength > 0) $elementstring .= ' maxlength="' . $elementdata->maxlength . '"';
 		$elementstring .= ' name="' . $this->name . '[' . $elementname . ']"';
-		$elementstring .= 'value="' . $elementdata->value . '"';
-		$elementstring .= 'class="' . $elementdata->style . '"';
+		$elementstring .= ' value="' . $elementdata->value . '"';
+		$elementstring .= ' class="' . $elementdata->style . '"';
 		$elementstring .= " />\n";
 		if ($elementdata->posttext != '') $elementstring .= "\t\t\t<br />" . '<span class="small">' . $elementdata->posttext . "</span>\n";
 		if ( ($elementdata->valid == false) && ($this->_showError($elementdata) != '') ) $elementstring .= "\t\t\t<br />" . '<span class="formerrormsg">' . $this->_showError($elementdata) . "</span>\n";
@@ -353,8 +353,8 @@ class zgForm
 		$elementstring .= "\t\t<tr>\n\t\t\t<td>&nbsp;</td>\n";
 		$elementstring .= "\t\t\t<td><input type=\"submit\"";
 		$elementstring .= ' name="' . $this->name . '[' . $elementname . ']"';
-		$elementstring .= 'value="' . $elementdata->value . '"';
-		$elementstring .= 'class="' . $elementdata->style . '"';
+		$elementstring .= ' value="' . $elementdata->value . '"';
+		$elementstring .= ' class="' . $elementdata->style . '"';
 		$elementstring .= " />\n";
 		$elementstring .= "\t\t\t</td>\n\t\t</tr>\n";
 
