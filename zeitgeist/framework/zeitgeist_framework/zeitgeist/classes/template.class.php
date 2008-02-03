@@ -332,9 +332,15 @@ class zgTemplate
 			$url = 'http://' . $url;
 		}
 
-		//		if debug redirect to: $url
-
-		header('Location: ' . $url);
+		if (!defined('DEBUGMODE'))
+		{
+			$this->debug->unguard();
+			header('Location: ' . $url);
+		}
+		else
+		{
+			echo '<p style="background:#00ff00;">Should redirect now to: <a href="'.$url.'">'.$url.'</a>';
+		}
 
 		$this->debug->unguard(true);
 	}
