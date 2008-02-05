@@ -175,52 +175,51 @@ class main
 		$thankyou = false;
 		if ($formprocess)
 		{
-/*
 			$formValid = true;
-			if ($registerForm->formelements['user_password1']->value != $registerForm->formelements['user_password2']->value)
-			{
-				$registerForm->validateElement('user_password1', false);
-				$registerForm->validateElement('user_password2', false);
-				$formValid = false;
-			}
 
-			$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " WHERE user_username = '" . $registerForm->formelements['user_username']->value . "'";
-			$res = $this->database->query($sql);
-			if ($this->database->numRows($res) > 0)
+			if (!empty($parameters[$editaccountForm->name]['user_password1']) && (!empty($parameters[$editaccountForm->name]['user_password2'])) )
 			{
-				$registerForm->validateElement('user_username', false);
-				$registerForm->formelements['user_username']->currentErrormsg = 1;
-				$formValid = false;
-			}
-
-			$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_userdata') . " WHERE userdata_email = '" . $registerForm->formelements['userdata_email']->value . "'";
-			$res = $this->database->query($sql);
-			if ($this->database->numRows($res) > 0)
-			{
-				$registerForm->validateElement('userdata_email', false);
-				$registerForm->formelements['userdata_email']->currentErrormsg = 1;
-				$formValid = false;
+				if ($editaccountForm->formelements['user_password1']->value != $editaccountForm->formelements['user_password2']->value)
+				{
+					$editaccountForm->validateElement('user_password1', false);
+					$editaccountForm->validateElement('user_password2', false);
+					$formValid = false;
+				}
+				else
+				{
+					$this->user->changePassword($editaccountForm->formelements['user_password1']->value);
+				}
 			}
 
 			if($formValid)
 			{
-				// TODO: Set Userrole and Userdata
-				$userdata = array();
-				$userdata['userdata_email'] = $registerForm->formelements['userdata_email']->value;
-
-				if ($this->user->createUser($registerForm->formelements['user_username']->value, $registerForm->formelements['user_password1']->value, 1, $userdata))
+				$this->user->loadUserdata();
+				foreach($parameters[$editaccountForm->name] as $parametername => $parametervalue)
 				{
-					$thankyou = true;
+					if (strpos($parametername, 'userdata_') !== false)
+					{
+						if (!empty($this->user->userdata[$parametername]))
+						{
+							$this->user->userdata[$parametername] = $parametervalue;
+						}
+					}
 				}
+
+				$this->user->saveUserdata();
+				$thankyou = true;
 			}
-*/
-			$tpl->assignDataset($parameters);
+
+			$userdata = array();
+			$userdata['user_username'] = $this->user->getUsername();
+			$editaccountForm->assignDataset($userdata);
+			$editaccountForm->assignDataset($parameters);
 		}
 		else
 		{
-//			$parameters = ;
-
-			$tpl->assignDataset($parameters);
+			$userdata = array();
+			$userdata = $this->user->getUserdata();
+			$userdata['user_username'] = $this->user->getUsername();
+			$editaccountForm->assignDataset($userdata);
 		}
 
 		$formstring = $editaccountForm->create();

@@ -59,8 +59,9 @@
 	
 	<!-- TemplateBeginBlock name="logoutbox" -->
 		<div class="textbox" style="width:400px;">
-			<p>Hallo, du bist eingeloggt<br />
-			<a href="@@{[main.logout]}@@">Ausloggen</a></p>
+			<p>Hallo, du bist eingeloggt</p>
+			<p><a href="@@{[main.editaccount]}@@">Nutzerdaten ändern</a></p>
+			<p><a href="@@{[main.logout]}@@">Ausloggen</a></p>
 		</div>
 	<!-- TemplateEndBlock -->	
 
@@ -75,6 +76,10 @@
 <!-- InstanceBeginEditable name="body" -->
 
 <p>Edit Userdata</p>
+
+<!-- TemplateBeginBlock name="thankyou" -->
+<p>Danke</p>
+<!-- TemplateEndBlock -->
 
 <div class="textbox" style="width:600px;">
 @@{userdataform}@@
