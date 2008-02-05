@@ -35,6 +35,8 @@ class zgForm
 	protected $initial;
 	protected $width;
 
+	protected $groups;
+
 	/**
 	 * Class constructor
 	 *
@@ -67,6 +69,8 @@ class zgForm
 		$this->premessage = $this->configuration->getConfiguration($this->formid, 'form', 'premessage');
 		$this->postmessage = $this->configuration->getConfiguration($this->formid, 'form', 'postmessage');
 		$this->width = $this->configuration->getConfiguration($this->formid, 'form', 'width');
+
+		$this->groups = array();
 
 		if (!$this->_setupForm())
 		{
@@ -114,29 +118,39 @@ class zgForm
 
 		$formstring = '';
 		$formstring .= '<form method="' . $this->method . '" action="' . $link . '" name="' . $this->name . '" enctype="' . $this->enctype . "\">\n";
+
 		$formstring .= "\t<table class=\"formdata\" cellpadding=\"5\" cellspacing=\"0\" width=\"" . $this->width . "\" border=\"0\">\n";
 		$formstring .= 	"\t\t<tr>\n\t\t\t" . '<td colspan="2"><p>' . $this->premessage . '</p></td>' . "\n\t\t</tr>\n";
-
-		foreach ($this->formelements as $elementname => $elementdata)
+		$i = 1;
+		foreach ($this->groups as $group)
 		{
-			switch($elementdata->type)
+			foreach ($this->formelements as $elementname => $elementdata)
 			{
-				case 'text':
-					$formstring .= $this->_createTextelement($elementname, $elementdata);
-					break;
+				if ($elementdata->group == $group)
+				{
+					switch($elementdata->type)
+					{
+						case 'text':
+							$formstring .= $this->_createTextelement($elementname, $elementdata);
+							break;
 
-				case 'password':
-					$formstring .= $this->_createPasswordelement($elementname, $elementdata);
-					break;
+						case 'password':
+							$formstring .= $this->_createPasswordelement($elementname, $elementdata);
+							break;
 
-				case 'submit':
-					$formstring .= $this->_createSubmitelement($elementname, $elementdata);
-					break;
+						case 'submit':
+							$formstring .= $this->_createSubmitelement($elementname, $elementdata);
+							break;
+					}
+				}
 			}
-		}
 
+			if ($i < count($this->groups)) $formstring .= "<tr><td colspan=\"2\"><hr /></td></tr>";
+			$i++;
+		}
 		$formstring .= 	"\t\t<tr>\n\t\t\t" . '<td colspan="2"><p>' . $this->postmessage . '</p></td>' . "\n\t\t</tr>\n";
-		$formstring .= "\t</table>\n</form>\n";
+		$formstring .= "\t</table>\n";
+		$formstring .= "</form>\n";
 
 		$this->debug->unguard($formstring);
 		return $formstring;
@@ -191,6 +205,13 @@ class zgForm
 				if (!empty($elementdata['maxlength'])) $this->formelements[$elementname]->maxlength = $elementdata['maxlength'];
 				if (!empty($elementdata['expected'])) $this->formelements[$elementname]->expected = $elementdata['expected'];
 				if (!empty($elementdata['style'])) $this->formelements[$elementname]->style = $elementdata['style'];
+
+				if (!empty($elementdata['group']))
+				{
+					$this->formelements[$elementname]->group = $elementdata['group'];
+					$this->groups[$elementdata['group']] = $elementdata['group'];
+				}
+
 				if (!empty($elementdata['errormsg']))
 				{
 					$this->formelements[$elementname]->errormsg = explode('||', $elementdata['errormsg']);
@@ -201,7 +222,6 @@ class zgForm
 				$this->debug->write('Problem reading out elementin form defintion (' . $this->name . '->' . $elementname . ')', 'warning');
 				$this->messages->setMessage('Problem reading out elementin form defintion (' . $this->name . '->' . $elementname . ')', 'warning');
 			}
-
 		}
 
 		$this->debug->unguard(true);
@@ -282,7 +302,7 @@ class zgForm
 
 		$elementstring .= "\t\t<tr";
 		if ( ($elementdata->valid == false) && (!$this->initial) ) $elementstring .= ' class="formerror"';
-		$elementstring .= ">\n\t\t\t<td><p>";
+		$elementstring .= ">\n\t\t\t<td valign=\"top\"><p>";
 		$elementstring .= $elementdata->pretext;
 		if ($elementdata->required == 1) $elementstring .= ' *';
 		$elementstring .= "</p></td>\n";
@@ -326,7 +346,7 @@ class zgForm
 
 		$elementstring .= "\t\t<tr";
 		if ( ($elementdata->valid == false) && (!$this->initial) ) $elementstring .= ' class="formerror"';
-		$elementstring .= ">\n\t\t\t<td><p>";
+		$elementstring .= ">\n\t\t\t<td valign=\"top\"><p>";
 		$elementstring .= $elementdata->pretext;
 		if ($elementdata->required == 1) $elementstring .= ' *';
 		$elementstring .= "</p></td>\n";
@@ -376,6 +396,7 @@ class zgFormelement
 	public $expected;
 	public $style;
 	public $errormsg;
+	public $group;
 	public $currentErrormsg;
 
 	public $valid;
@@ -391,6 +412,7 @@ class zgFormelement
 		$this->maxlength = 0;
 		$this->expected = '';
 		$this->style = '';
+		$this->group = 0;
 		$this->errormsg = '';
 		$this->currentErrormsg = 0;
 
