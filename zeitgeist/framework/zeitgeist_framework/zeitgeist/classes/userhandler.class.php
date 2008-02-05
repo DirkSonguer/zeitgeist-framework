@@ -172,6 +172,7 @@ class zgUserhandler
 					$row = $this->database->fetchArray($res);
 					$this->session->setSessionVariable('user_userid', $row['user_id']);
 					$this->session->setSessionVariable('user_key', $row['user_key']);
+					$this->session->setSessionVariable('user_username', $row['user_username']);
 
 					$this->loggedIn = true;
 
@@ -290,6 +291,31 @@ class zgUserhandler
 			{
 				$this->debug->unguard($userid);
 				return $userid;
+			}
+		}
+
+		$this->debug->unguard(false);
+		return false;
+	}
+
+
+	/**
+	 * Returns the current Username
+	 *
+	 * @return string
+	 */
+	public function getUsername()
+	{
+		$this->debug->guard();
+
+		if ($this->loggedIn)
+		{
+			$username = $this->session->getSessionVariable('user_username');
+
+			if ($username)
+			{
+				$this->debug->unguard($username);
+				return $username;
 			}
 		}
 
@@ -427,6 +453,37 @@ class zgUserhandler
 	}
 
 
+
+	/**
+	 * Creates a new user with a given name and password
+	 * Optional a usergroup and userdata can be given
+	 *
+	 * @param string $name name of the user
+	 * @param string $password password of the user
+	 * @param integer $userrole id of the userrole
+	 * @param array $userdata array containing the userdata
+	 * 	 *
+	 * @return boolean
+	 */
+	public function changePassword($newPassword)
+	{
+		$this->debug->guard();
+
+		$sql = "UPDATE " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " SET user_password = '" . md5($newPassword) . "' WHERE user_id='" . $this->getUserID() . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem changing the password of a user', 'warning');
+			$this->messages->setMessage('Problem changing the password of a user', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
 	/**
 	 * Checks if the confirmation key exists
 	 * Returns the user id if the key is found or false
@@ -521,16 +578,14 @@ class zgUserhandler
 	/**
 	 * Load all userdata for a given user
 	 *
-	 * @param integer $userid id of the user
-	 *
 	 * @return boolean
 	 */
-	public function loadUserdata($userid)
+	public function loadUserdata()
 	{
 		$this->debug->guard();
 
 		$userdataTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userdata');
-		$sql = "SELECT * FROM " . $userdataTablename . " WHERE userdata_user = '" . $userid . "'";
+		$sql = "SELECT * FROM " . $userdataTablename . " WHERE userdata_user = '" . $this->getUserID() . "'";
 
 		if ($res = $this->database->query($sql))
 		{
@@ -613,7 +668,7 @@ class zgUserhandler
 
 		if (!$this->userdataLoaded)
 		{
-			$this->loadUserdata($this->session->getSessionVariable('user_userid'));
+			$this->loadUserdata();
 		}
 
 		if ($datakey != '')
@@ -657,7 +712,7 @@ class zgUserhandler
 
 		if (!$this->userdataLoaded)
 		{
-			$this->loadUserdata($this->session->getSessionVariable('user_userid'));
+			$this->loadUserdata();
 		}
 
 		if (isset($this->userdata[$userdata]))
@@ -684,12 +739,12 @@ class zgUserhandler
 	 *
 	 * @return boolean
 	 */
-	public function loadUserrights($userid)
+	public function loadUserrights()
 	{
 		$this->debug->guard();
 
 		$userrightsTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userrights');
-		$sql = "SELECT * FROM " . $userrightsTablename . " WHERE userright_user = '" . $userid . "'";
+		$sql = "SELECT * FROM " . $userrightsTablename . " WHERE userright_user = '" . $this->getUserID() . "'";
 
 		if ($res = $this->database->query($sql))
 		{
@@ -769,7 +824,7 @@ class zgUserhandler
 
 		if (!$this->userrightsLoaded)
 		{
-			$this->loadUserrights($this->session->getSessionVariable('user_userid'));
+			$this->loadUserrights();
 		}
 
 		if (!empty($this->userrights[$actionid]))
@@ -799,7 +854,7 @@ class zgUserhandler
 
 		if (!$this->userrightsLoaded)
 		{
-			$this->loadUserrights($this->session->getSessionVariable('user_userid'));
+			$this->loadUserrights();
 		}
 
 		$this->userrights[$userright] = true;

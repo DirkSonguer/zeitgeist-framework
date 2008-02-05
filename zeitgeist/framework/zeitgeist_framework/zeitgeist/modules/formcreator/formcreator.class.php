@@ -23,10 +23,6 @@ class zgForm
 	protected $database;
 	protected $configuration;
 
-	protected $formid;
-	public $formelements = array();
-
-	protected $name;
 	protected $method;
 	protected $enctype;
 	protected $action;
@@ -36,6 +32,10 @@ class zgForm
 	protected $width;
 
 	protected $groups;
+
+	public $formid;
+	public $name;
+	public $formelements = array();
 
 	/**
 	 * Class constructor
@@ -138,6 +138,10 @@ class zgForm
 							$formstring .= $this->_createPasswordelement($elementname, $elementdata);
 							break;
 
+						case 'static':
+							$formstring .= $this->_createStaticelement($elementname, $elementdata);
+							break;
+
 						case 'submit':
 							$formstring .= $this->_createSubmitelement($elementname, $elementdata);
 							break;
@@ -169,6 +173,32 @@ class zgForm
 		{
 			$this->debug->unguard(false);
 			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function assignDataset($dataset=array())
+	{
+		$this->debug->guard();
+
+		if (!is_array($dataset))
+		{
+			$this->debug->write('Problem assigning dataset to form: given dataset is not an array', 'warning');
+			$this->messages->setMessage('Problem assigning dataset to form: given dataset is not an array', 'warning');
+
+			$this->debug->unguard(true);
+			return true;
+		}
+
+		foreach ($dataset as $elementname => $elementvalue)
+		{
+			if (!empty($this->formelements[$elementname]))
+			{
+				$this->formelements[$elementname]->value = $elementvalue;
+			}
 		}
 
 		$this->debug->unguard(true);
@@ -276,17 +306,20 @@ class zgForm
 		$formvalid = true;
 		foreach ($this->formelements as $elementname => $elementdata)
 		{
-			$valid = $this->_validateElement($elementname, $elementdata, $formdata);
+			if ($elementdata->type != 'static')
+			{
+				$valid = $this->_validateElement($elementname, $elementdata, $formdata);
 
-			$elementdata->valid = $valid;
-			if ($valid)
-			{
-				$elementdata->value = $formdata[$elementname];
-			}
-			else
-			{
-				$formvalid = false;
-				$elementdata->value = '';
+				$elementdata->valid = $valid;
+				if ($valid)
+				{
+					$elementdata->value = $formdata[$elementname];
+				}
+				else
+				{
+					$formvalid = false;
+					$elementdata->value = '';
+				}
 			}
 		}
 
@@ -318,24 +351,6 @@ class zgForm
 
 		$this->debug->unguard(true);
 		return $elementstring;
-	}
-
-
-	protected function _showError($elementdata)
-	{
-		$this->debug->guard(true);
-
-		if (is_array($elementdata->errormsg))
-		{
-			$ret = $elementdata->errormsg[$elementdata->currentErrormsg];
-		}
-		else
-		{
-			$ret = $elementdata->errormsg;
-		}
-
-		$this->debug->unguard($ret);
-		return $ret;
 	}
 
 
@@ -380,6 +395,40 @@ class zgForm
 
 		$this->debug->unguard(true);
 		return $elementstring;
+	}
+
+
+	protected function _createStaticelement($elementname, $elementdata)
+	{
+		$this->debug->guard(true);
+		$elementstring = '';
+
+		$elementstring .= "\t\t<tr>\n\t\t\t<td valign=\"top\"><p>";
+		$elementstring .= $elementdata->pretext;
+		$elementstring .= "</p></td>\n";
+		$elementstring .= "\t\t\t<td><p class=\"" . $elementdata->style . "\">" . $elementdata->value;
+		if ($elementdata->posttext != '') $elementstring .= " " . '<span class="small">' . $elementdata->posttext . "</span></p></td>\n\t\t</tr>\n";
+
+		$this->debug->unguard(true);
+		return $elementstring;
+	}
+
+
+	protected function _showError($elementdata)
+	{
+		$this->debug->guard(true);
+
+		if (is_array($elementdata->errormsg))
+		{
+			$ret = $elementdata->errormsg[$elementdata->currentErrormsg];
+		}
+		else
+		{
+			$ret = $elementdata->errormsg;
+		}
+
+		$this->debug->unguard($ret);
+		return $ret;
 	}
 
 }
