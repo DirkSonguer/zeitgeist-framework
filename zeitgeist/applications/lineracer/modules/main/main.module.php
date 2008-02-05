@@ -47,6 +47,7 @@ class main
 		$registerForm->load('forms/register.form.ini');
 		$formprocess = $registerForm->process($parameters);
 
+		$thankyou = false;
 		if ($formprocess)
 		{
 			$formValid = true;
@@ -83,15 +84,22 @@ class main
 
 				if ($this->user->createUser($registerForm->formelements['user_username']->value, $registerForm->formelements['user_password1']->value, 1, $userdata))
 				{
-					unset($tpl);
-					$tpl = new lrTemplate();
-					$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_register_thankyou'));
+					$thankyou = true;
 				}
 			}
 		}
 
 		$formstring = $registerForm->create();
 		$tpl->assign('registerform', $formstring);
+
+		if (!$thankyou)
+		{
+			$tpl->insertBlock('register');
+		}
+		else
+		{
+			$tpl->insertBlock('thankyou');
+		}
 
 		$tpl->assignDataset($parameters);
 		$tpl->show();
@@ -106,13 +114,13 @@ class main
 		$this->debug->guard();
 
 		$tpl = new lrTemplate();
-		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_index'));
 
 		if ($this->user->isLoggedIn())
 		{
 			$tpl->redirect($tpl->createLink('main', 'index'));
 		}
 
+		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_index'));
 		if (!empty($parameters['login']))
 		{
 			if ( (!empty($parameters['username'])) && (!empty($parameters['password'])) )
@@ -147,6 +155,87 @@ class main
 
 		$tpl = new lrTemplate();
 		$tpl->redirect($tpl->createLink('main', 'index'));
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function editaccount($parameters=array())
+	{
+		$this->debug->guard();
+
+		$tpl = new lrTemplate();
+		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_editaccount'));
+
+		$editaccountForm = new zgForm();
+		$editaccountForm->load('forms/editaccount.form.ini');
+		$formprocess = $editaccountForm->process($parameters);
+
+		$thankyou = false;
+		if ($formprocess)
+		{
+/*
+			$formValid = true;
+			if ($registerForm->formelements['user_password1']->value != $registerForm->formelements['user_password2']->value)
+			{
+				$registerForm->validateElement('user_password1', false);
+				$registerForm->validateElement('user_password2', false);
+				$formValid = false;
+			}
+
+			$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " WHERE user_username = '" . $registerForm->formelements['user_username']->value . "'";
+			$res = $this->database->query($sql);
+			if ($this->database->numRows($res) > 0)
+			{
+				$registerForm->validateElement('user_username', false);
+				$registerForm->formelements['user_username']->currentErrormsg = 1;
+				$formValid = false;
+			}
+
+			$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_userdata') . " WHERE userdata_email = '" . $registerForm->formelements['userdata_email']->value . "'";
+			$res = $this->database->query($sql);
+			if ($this->database->numRows($res) > 0)
+			{
+				$registerForm->validateElement('userdata_email', false);
+				$registerForm->formelements['userdata_email']->currentErrormsg = 1;
+				$formValid = false;
+			}
+
+			if($formValid)
+			{
+				// TODO: Set Userrole and Userdata
+				$userdata = array();
+				$userdata['userdata_email'] = $registerForm->formelements['userdata_email']->value;
+
+				if ($this->user->createUser($registerForm->formelements['user_username']->value, $registerForm->formelements['user_password1']->value, 1, $userdata))
+				{
+					$thankyou = true;
+				}
+			}
+*/
+			$tpl->assignDataset($parameters);
+		}
+		else
+		{
+//			$parameters = ;
+
+			$tpl->assignDataset($parameters);
+		}
+
+		$formstring = $editaccountForm->create();
+		$tpl->assign('userdataform', $formstring);
+
+		if (!$thankyou)
+		{
+			$tpl->insertBlock('userdata');
+		}
+		else
+		{
+			$tpl->insertBlock('thankyou');
+		}
+
+		$tpl->show();
 
 		$this->debug->unguard(true);
 		return true;

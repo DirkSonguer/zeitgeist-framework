@@ -26,9 +26,9 @@
 		var dsLobbydata = new Spry.Data.XMLDataSet("@@{[dataserver.getgameroomdata]}@@", "container/element", { useCache:  false, loadInterval: 10000 });
 		dsLobbydata.setColumnType("lobby_id", "number");
 
-		function test(sText)
+		function startGame(sTrigger)
 		{
-			alert("hallo" + sText);
+//			alert("hallo" + sText);
 		}
 
 	</script>
@@ -115,7 +115,7 @@
 
 		<div spry:choose="spry:choose">
 			<div spry:when="'{dsLobbydata::circuit_name}' == ''"></div>
-			<div spry:default="spry:default"><script type="text/javascript">Spry.Utils.addLoadListener(test('{dsLobbydata::circuit_name}'));</script></div>
+			<div spry:default="spry:default"><script type="text/javascript">Spry.Utils.addLoadListener(startGame('{dsLobbydata::circuit_name}'));</script></div>
 		</div>
 	</div>
 	</div>
