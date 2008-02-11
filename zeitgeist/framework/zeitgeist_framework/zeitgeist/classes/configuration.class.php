@@ -5,8 +5,6 @@
  *
  * Configuration class
  *
- * @author Dirk Songür <songuer@zeitgeist-framework.com>
- *
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
  *
@@ -57,8 +55,12 @@ class zgConfiguration
 		if (self::$instance === false)
 		{
 			self::$instance = new zgConfiguration();
+
+			// try to load zeitgeist default configuration
 			self::$instance->loadConfiguration('zeitgeist', ZEITGEIST_ROOTDIRECTORY . 'configuration/zeitgeist.ini');
 
+			// try to load zeitgeist configuration in the application configuration directory
+			// the application configuration will overwrite the default values
 			if (file_exists('./configuration/zeitgeist.ini'))
 			{
 				self::$instance->loadConfiguration('zeitgeist', './configuration/zeitgeist.ini', true);
@@ -114,7 +116,7 @@ class zgConfiguration
 		}
 		else
 		{
-			// return setting value
+			// return configuration value
 			if (empty($this->configuration[$module][$section][$configuration]))
 			{
 				$this->debug->write('Problem reading the configuration: configuration not found', 'warning');
@@ -166,7 +168,7 @@ class zgConfiguration
 		if ($configuration !== false)
 		{
 			$this->debug->write('Configuration found and successfully loaded: ' . $filename);
-			if ($overwrite == false)
+			if (!$overwrite)
 			{
 				$this->configuration[$modulename] = $configuration;
 			}
@@ -178,7 +180,7 @@ class zgConfiguration
 		else
 		{
 			$configurationArray = $this->_readINIfile($filename);
-			if (!$configurationArray)
+			if (!is_array($configurationArray))
 			{
 				$this->debug->write('Error loading the configuration: no contents could be extracted', 'error');
 				$this->messages->setMessage('Error loading the configuration: no contents could be extracted', 'error');
@@ -205,6 +207,8 @@ class zgConfiguration
 
 	/**
 	 * Loads a configuration module from the database
+	 *
+	 * @access protected
 	 *
 	 * @param string $filename name of the file/ module to load
 	 *
@@ -259,6 +263,8 @@ class zgConfiguration
 	/**
 	 * Save a given configuration set into the database
 	 *
+	 * @access protected
+	 *
 	 * @param string $filename name of the file
 	 * @param string $configuration configuration content
 	 *
@@ -294,6 +300,8 @@ class zgConfiguration
 	/**
 	 * Replaces the references in a configuration array
 	 * This function is called recursively by walk_array_recursive in the getConfiguration method
+	 *
+	 * @access protected
 	 *
 	 * @param string $configurationValue value of the configuration
 	 * @param string $configurationKey key of the configuration
@@ -335,6 +343,8 @@ class zgConfiguration
 	/**
 	 * Reads out the contents of an ini file into an array
 	 * Also handles all references inside the configuration file
+	 *
+	 * @access protected
 	 *
 	 * @param string $filename name of the ini file to load
 	 *

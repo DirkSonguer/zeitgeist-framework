@@ -5,8 +5,6 @@
  *
  * Objectcache class
  *
- * @author Dirk Songür <songuer@zeitgeist-framework.com>
- *
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
  *
@@ -89,23 +87,23 @@ class zgObjectcache
 	/**
 	 * Reads out a stored object
 	 *
-	 * @param string $name name of the object
+	 * @param string $objectname name of the object
 	 *
 	 * @return object
 	 */
-	public function getObject($name)
+	public function getObject($objectname)
 	{
 		$this->debug->guard();
 
-		if (empty($this->objects[$name]))
+		if (empty($this->objects[$objectname]))
 		{
-			$this->debug->write('Object with name ' . $name . ' not found', 'error');
-			$this->messages->setMessage('Object with name ' . $name . ' not found', 'error');
+			$this->debug->write('Object with name ' . $objectname . ' not found', 'error');
+			$this->messages->setMessage('Object with name ' . $objectname . ' not found', 'error');
 			$this->debug->unguard(false);
 			return false;
 		}
 
-		$ret = $this->objects[$name];
+		$ret = $this->objects[$objectname];
 
 		$this->debug->unguard($ret);
 		return $ret;
@@ -115,18 +113,18 @@ class zgObjectcache
 	/**
 	 * Deletes an object from the cache
 	 *
-	 * @param string $name name of the object
+	 * @param string $objectname name of the object
 	 *
 	 * @return boolean
 	 */
-	public function deleteObject($name)
+	public function deleteObject($objectname)
 	{
 		$this->debug->guard();
 
-		if (empty($this->objects[$name]))
+		if (empty($this->objects[$objectname]))
 		{
-			$this->debug->write('Object with name ' . $name . ' not found', 'error');
-			$this->messages->setMessage('Object with name ' . $name . ' not found', 'error');
+			$this->debug->write('Object with name ' . $objectname . ' not found', 'error');
+			$this->messages->setMessage('Object with name ' . $objectname . ' not found', 'error');
 			$this->debug->unguard(false);
 			return false;
 		}

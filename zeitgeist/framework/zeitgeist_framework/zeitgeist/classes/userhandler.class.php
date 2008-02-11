@@ -5,8 +5,6 @@
  *
  * Userhandler class
  *
- * @author Dirk Songür <songuer@zeitgeist-framework.com>
- *
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
  *
@@ -152,18 +150,18 @@ class zgUserhandler
 	 * Login a user with username and password
 	 * If successfull it will gather the user specific data and tie it to the session
 	 *
-	 * @param string $name name of the user
+	 * @param string $username name of the user
 	 * @param string $password supposed password of the user
 	 *
 	 * @return boolean
 	 */
-	public function login($name, $password)
+	public function login($username, $password)
 	{
 		$this->debug->guard();
 
 		if (!$this->loggedIn)
 		{
-			$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " WHERE user_username = '" . $name . "' AND user_password = '". md5($password) . "' AND user_active='1'";
+			$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " WHERE user_username = '" . $username . "' AND user_password = '". md5($password) . "' AND user_active='1'";
 
 			if ($res = $this->database->query($sql))
 			{
@@ -357,7 +355,7 @@ class zgUserhandler
 	 * @param string $password password of the user
 	 * @param integer $userrole id of the userrole
 	 * @param array $userdata array containing the userdata
-	 * 	 *
+	 *
 	 * @return boolean
 	 */
 	public function createUser($name, $password, $userrole=1, $userdata=array())
@@ -453,23 +451,18 @@ class zgUserhandler
 	}
 
 
-
 	/**
-	 * Creates a new user with a given name and password
-	 * Optional a usergroup and userdata can be given
+	 * Changes the password of the user to a given one password
 	 *
-	 * @param string $name name of the user
 	 * @param string $password password of the user
-	 * @param integer $userrole id of the userrole
-	 * @param array $userdata array containing the userdata
-	 * 	 *
+	 *
 	 * @return boolean
 	 */
-	public function changePassword($newPassword)
+	public function changePassword($password)
 	{
 		$this->debug->guard();
 
-		$sql = "UPDATE " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " SET user_password = '" . md5($newPassword) . "' WHERE user_id='" . $this->getUserID() . "'";
+		$sql = "UPDATE " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " SET user_password = '" . md5($password) . "' WHERE user_id='" . $this->getUserID() . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{

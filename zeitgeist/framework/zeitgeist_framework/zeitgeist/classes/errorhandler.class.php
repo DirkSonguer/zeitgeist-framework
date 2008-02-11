@@ -5,8 +5,6 @@
  *
  * Errorhandler class
  *
- * @author Dirk Songür <songuer@zeitgeist-framework.com>
- *
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
  *
@@ -94,21 +92,21 @@ class zgErrorhandler
 	/**
 	 * Function that acts as hook for the thrown errors
 	 *
-	 * @param string $errno errornumber, errorid can be given as define
-	 * @param string $errstr actual errormessage
-	 * @param string $errfile file that threw the error
-	 * @param string $errline line that threw the error
-	 * @param string $errcontext full backtrace of the current objects
+	 * @param string $errorNo errornumber, errorid can be given as define
+	 * @param string $errorString actual errormessage
+	 * @param string $errorFile file that threw the error
+	 * @param string $errorLine line that threw the error
+	 * @param string $errorContext full backtrace of the current objects
 	 */
-	public function errorhandler($errno, $errstr, $errfile, $errline, $errcontext)
+	public function errorhandler($errorNo, $errorString, $errorFile, $errorLine, $errorContext)
 	{
-		if ( ($this->outputLevel > 0) && (array_key_exists($errno, $this->errornames)) )
+		if ( ($this->outputLevel > 0) && (array_key_exists($errorNo, $this->errornames)) )
 		{
 			echo '<p style="background-color:#ffff00;">An error occured: ';
-			echo "(" . $this->errornames[$errno] . ")";
-			echo "In file " . print_r($errfile, true);
-			echo " (line " . print_r( $errline, true) . ")\n";
-			echo "Message: " . print_r( $errstr, true) . '</p>';
+			echo "(" . $this->errornames[$errorNo] . ")";
+			echo "In file " . print_r($errorFile, true);
+			echo " (line " . print_r( $errorLine, true) . ")\n";
+			echo "Message: " . print_r( $errorString, true) . '</p>';
 
 			echo '<p style="background-color:#ffff00;">Backtrace:<br />';
 			$trace = debug_backtrace();
@@ -128,7 +126,7 @@ class zgErrorhandler
 			echo '</p>';
 		}
 
-		if ($this->outputLevel == 3) echo "\n\nContext:\n".print_r( $errcontext, true)."\n";
+		if ($this->outputLevel == 3) echo "\n\nContext:\n".print_r( $errorContext, true)."\n";
 	}
 
 }

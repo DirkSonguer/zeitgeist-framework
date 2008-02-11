@@ -5,8 +5,6 @@
  *
  * Dataserver class
  *
- * @author Dirk Songür <songuer@zeitgeist-framework.com>
- *
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
  *
@@ -122,12 +120,14 @@ class zgDataserver
 	/**
 	 * converts an array into xml
 	 *
+	 * @access protected
+	 *
 	 * @param array $array array to convert
 	 * @param boolean $recursive true if called recursively
 	 *
 	 * @return string
 	 */
-	private function _transformArrayRecursive($array, $recursive=false)
+	protected function _transformArrayRecursive($array, $recursive=false)
 	{
 		static $depth;
 		static $xmlData;

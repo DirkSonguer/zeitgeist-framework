@@ -5,8 +5,6 @@
  *
  * Template class
  *
- * @author Dirk Songür <songuer@zeitgeist-framework.com>
- *
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
  *
@@ -68,7 +66,8 @@ class zgTemplate
 
 		// try to load the template
 		$gotTemplateFromDatabase = false;
-		$template = $this->_loadTemplateFromDatabase($filename);
+		//		$template = $this->_loadTemplateFromDatabase($filename);
+		$template = false;
 		if ($template !== false)
 		{
 			$this->debug->write('Template found and successfully loaded: ' . $filename);
@@ -169,26 +168,99 @@ class zgTemplate
 
 
 	/**
-	 * Assigns a value to a template variable
+	 * Returns the template buffer as string
 	 *
-	 * @param string $name name of the template variable to fill
-	 * @param string $value value to fill the variable with
-	 *
-	 * @return boolean
+	 * @return string
 	 */
-	public function assign($name, $value)
+	public function getContent()
 	{
 		$this->debug->guard();
 
-		if (empty($this->variables[$name]))
+		if (!$this->_insertRootVariables())
 		{
-			$this->debug->write('Could not find the given variable: ' . $name, 'warning');
-			$this->messages->setMessage('Could not find the given variable: ' . $name, 'warning');
+			$this->debug->write('Problem inserting the root variables', 'warning');
+			$this->messages->setMessage('Problem inserting the root variables', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
 
-		$this->variables[$name]->currentContent = $value;
+		if (!$this->_filterTemplateCommands())
+		{
+			$this->debug->write('Problem filtering the template commands', 'warning');
+			$this->messages->setMessage('Problem filtering the template commands', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$ret = $this->content;
+
+		$this->debug->unguard(true);
+		return $ret;
+	}
+
+
+	/**
+	 * Get the contents of a block
+	 * The variables will be inserted and the blockdata will be cleared
+	 *
+	 * @param string $blockname name of the block to get the contents of
+	 * @param boolean $reset flag if the contents of the block and the variables should be reset
+	 *
+	 * @return string
+	 */
+	public function getBlockContent($blockname, $reset=true)
+	{
+		$this->debug->guard();
+
+		if (empty($this->blocks[$blockname]))
+		{
+			$this->debug->write('Could not find the given block: ' . $blockname, 'warning');
+			$this->messages->setMessage('Could not find the given block: ' . $blockname, 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		if (!$this->_insertVariablesIntoBlock($blockname))
+		{
+			$this->debug->write('Could not insert variables into the given block: ' . $blockname, 'error');
+			$this->messages->setMessage('Could not insert variables into the given block: ' . $blockname, 'error');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$ret = $this->blocks[$blockname]->currentContent;
+
+		if ($reset)
+		{
+			$this->_resetBlock($blockname);
+		}
+
+		$this->debug->unguard(true);
+		return $ret;
+	}
+
+
+	/**
+	 * Assigns a value to a template variable
+	 *
+	 * @param string $variablename name of the template variable to fill
+	 * @param string $value value to fill the variable with
+	 *
+	 * @return boolean
+	 */
+	public function assign($variablename, $value)
+	{
+		$this->debug->guard();
+
+		if (empty($this->variables[$variablename]))
+		{
+			$this->debug->write('Could not find the given variable: ' . $variablename, 'warning');
+			$this->messages->setMessage('Could not find the given variable: ' . $variablename, 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->variables[$variablename]->currentContent = $value;
 
 		$this->debug->unguard(true);
 		return true;
@@ -231,37 +303,44 @@ class zgTemplate
 	/**
 	 * Insert a block with its current content into the template buffer
 	 *
-	 * @param string $name name of the block to insert
+	 * @param string $blockname name of the block to insert
 	 * @param boolean $reset flag if the contents of the block and the variables should be reset
 	 *
 	 * @return boolean
 	 */
-	public function insertBlock($name, $reset=true)
+	public function insertBlock($blockname, $reset=true)
 	{
 		$this->debug->guard();
 
-		if (empty($this->blocks[$name]))
+		if (empty($this->blocks[$blockname]))
 		{
-			$this->debug->write('Could not find the given block: ' . $name, 'warning');
-			$this->messages->setMessage('Could not find the given block: ' . $name, 'warning');
+			$this->debug->write('Could not find the given block: ' . $blockname, 'warning');
+			$this->messages->setMessage('Could not find the given block: ' . $blockname, 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
 
-		if (!$this->_insertVariablesIntoBlock($name))
+		if (!$this->_insertVariablesIntoBlock($blockname))
 		{
-			$this->debug->write('Could not insert variables into the given block: ' . $name, 'error');
-			$this->messages->setMessage('Could not insert variables into the given block: ' . $name, 'error');
+			$this->debug->write('Could not insert variables into the given block: ' . $blockname, 'error');
+			$this->messages->setMessage('Could not insert variables into the given block: ' . $blockname, 'error');
 			$this->debug->unguard(false);
 			return false;
 		}
 
-		$blockID = $this->configuration->getConfiguration('zeitgeist','template', 'blockSubstBegin') . $name . $this->configuration->getConfiguration('zeitgeist','template', 'blockSubstEnd');
-		$this->content = str_replace($blockID, $this->blocks[$name]->currentContent . "\n" . $blockID, $this->content);
+		$blockID = $this->configuration->getConfiguration('zeitgeist','template', 'blockSubstBegin') . $blockname . $this->configuration->getConfiguration('zeitgeist','template', 'blockSubstEnd');
+		if (empty($this->blocks[$blockname]->blockParent))
+		{
+			$this->content = str_replace($blockID, $this->blocks[$blockname]->currentContent . "\n" . $blockID, $this->content);
+		}
+		else
+		{
+			$this->blocks[$this->blocks[$blockname]->blockParent]->currentContent = str_replace($blockID, $this->blocks[$blockname]->currentContent . "\n" . $blockID, $this->blocks[$this->blocks[$blockname]->blockParent]->currentContent);
+		}
 
 		if ($reset)
 		{
-			$this->_resetBlock($name);
+			$this->_resetBlock($blockname);
 		}
 
 		$this->debug->unguard(true);
@@ -384,6 +463,8 @@ class zgTemplate
 	/**
 	 * Loads the internal links of the template and converts them into real links
 	 *
+	 * @access protected
+	 *
 	 * @return boolean
 	 */
 	protected function _loadLinks()
@@ -423,6 +504,8 @@ class zgTemplate
 	/**
 	 * Load all the variables in a template and creates the objects for them
 	 *
+	 * @access protected
+	 *
 	 * @return boolean
 	 */
 	protected function _loadVariables()
@@ -461,6 +544,8 @@ class zgTemplate
 	/**
 	 * Load all the variables in the root segment of a template and creates the objects for them
 	 *
+	 * @access protected
+	 *
 	 * @return boolean
 	 */
 	protected function _loadRootVariables()
@@ -496,6 +581,8 @@ class zgTemplate
 
 	/**
 	 * Load all the blocks in a template and creates the objects for them
+	 *
+	 * @access protected
 	 *
 	 * @return boolean
 	 */
@@ -568,6 +655,8 @@ class zgTemplate
 	 * Create the tree of blocks
 	 * loops through all blocks in search of child blocks
 	 *
+	 * @access protected
+	 *
 	 * @return boolean
 	 */
 	protected function _getBlockParents()
@@ -600,9 +689,11 @@ class zgTemplate
 				}
 
 				$subblockName = substr($blockID, strlen($this->configuration->getConfiguration('zeitgeist','template', 'blockSubstBegin')), ($endPosition-strlen($this->configuration->getConfiguration('zeitgeist','template', 'blockSubstBegin'))));
-				$this->blocks[$subblockName]->parent = $parentName;
+				$this->blocks[$subblockName]->blockParent = $parentName;
 				$currentBlock = str_replace($blockID, '', $currentBlock);
 			}
+
+			$this->_resetBlock($parentName);
 		}
 
 		$this->debug->unguard(true);
@@ -612,6 +703,8 @@ class zgTemplate
 
 	/**
 	 * Inserts all variable contents in the given block
+	 *
+	 * @access protected
 	 *
 	 * @param string $blockname name of the block to insert the variables into
 	 *
@@ -645,6 +738,8 @@ class zgTemplate
 	/**
 	 * Inserts all variable contents in the the root element of the template
 	 *
+	 * @access protected
+	 *
 	 * @return boolean
 	 */
 	protected function _insertRootVariables()
@@ -674,6 +769,8 @@ class zgTemplate
 
 	/**
 	 * Resets a given block or all blocks if no blockname is given
+	 *
+	 * @access protected
 	 *
 	 * @param string $name name of the block to reset
 	 *
@@ -711,6 +808,8 @@ class zgTemplate
 	/**
 	 * Filter the template commands from the template buffer
 	 *
+	 * @access protected
+	 *
 	 * @return boolean
 	 */
 	protected function _filterTemplateCommands()
@@ -734,6 +833,8 @@ class zgTemplate
 
 	/**
 	 * Loads a template from the database
+	 *
+	 * @access protected
 	 *
 	 * @param string $filename name of the file/ template to load
 	 *
@@ -788,6 +889,8 @@ class zgTemplate
 
 	/**
 	 * Save a given template into the database
+	 *
+	 * @access protected
 	 *
 	 * @param string $filename name of the templatefile
 	 *

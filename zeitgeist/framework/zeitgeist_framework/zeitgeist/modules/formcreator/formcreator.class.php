@@ -5,8 +5,6 @@
  *
  * Formhandler class
  *
- * @author Dirk Songür <songuer@zeitgeist-framework.com>
- *
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
  *
@@ -32,6 +30,7 @@ class zgForm
 	protected $width;
 
 	protected $groups;
+	protected $formtemplate;
 
 	public $formid;
 	public $name;
@@ -51,11 +50,20 @@ class zgForm
 		$this->database = new zgDatabase();
 		$this->database->connect();
 
+		$this->formtemplate = new zgTemplate();
+
 		$this->formid = 'form_'.rand(10000,1000000000);
 		$this->initial = false;
 	}
 
 
+	/**
+	 * Loads a definition of a form
+	 *
+	 * @param string $filename filename of the configuration
+	 *
+	 * @return boolean
+	 */
 	public function load($filename)
 	{
 		$this->debug->guard();
@@ -83,11 +91,18 @@ class zgForm
 	}
 
 
+	/**
+	 * Processes a form, validating it and returns if it is valid
+	 *
+	 * @param array $parameters array with parameters of the call
+	 *
+	 * @return boolean
+	 */
 	public function process($parameters=array())
 	{
 		$this->debug->guard();
 
-		if ( (empty($parameters[$this->name])) || (!is_array($parameters[$this->name])) )
+		if ( (empty($parameters[$this->name])) || (count($parameters[$this->name]) < 1) )
 		{
 			$this->initial = true;
 
@@ -107,23 +122,35 @@ class zgForm
 	}
 
 
+	/**
+	 * Creates a form according to its configuration
+	 * Also handles error messages and validation errors of the processing
+	 *
+	 * @return string
+	 */
 	public function create()
 	{
 		$this->debug->guard();
 
 		$link = '';
 		$linksource = explode('.', $this->action);
-		$tpl = new zgTemplate();
-		$link = $tpl->createLink($linksource[0], $linksource[1]);
+		$link = $this->formtemplate->createLink($linksource[0], $linksource[1]);
 
-		$formstring = '';
-		$formstring .= '<form method="' . $this->method . '" action="' . $link . '" name="' . $this->name . '" enctype="' . $this->enctype . "\">\n";
+		$this->formtemplate->load('forms/tableforms.tpl.html');
 
-		$formstring .= "\t<table class=\"formdata\" cellpadding=\"5\" cellspacing=\"0\" width=\"" . $this->width . "\" border=\"0\">\n";
-		$formstring .= 	"\t\t<tr>\n\t\t\t" . '<td colspan="2"><p>' . $this->premessage . '</p></td>' . "\n\t\t</tr>\n";
-		$i = 1;
+		$formdata = array();
+
+		$formdata['form_name'] = $this->name;
+		$formdata['form_method'] = $this->method;
+		$formdata['form_enctype'] = $this->enctype;
+		$formdata['form_action'] = $this->action;
+		$formdata['form_premessage'] = $this->premessage;
+		$formdata['form_postmessage'] = $this->postmessage;
+		$formdata['form_width'] = $this->width;
+
 		foreach ($this->groups as $group)
 		{
+			$formstring = '';
 			foreach ($this->formelements as $elementname => $elementdata)
 			{
 				if ($elementdata->group == $group)
@@ -149,18 +176,28 @@ class zgForm
 				}
 			}
 
-			if ($i < count($this->groups)) $formstring .= "<tr><td colspan=\"2\"><hr /></td></tr>";
-			$i++;
+			$this->formtemplate->assign('form_formdata', $formstring);
+			$this->formtemplate->assignDataset($formdata);
+			$this->formtemplate->insertBlock('formdata');
 		}
-		$formstring .= 	"\t\t<tr>\n\t\t\t" . '<td colspan="2"><p>' . $this->postmessage . '</p></td>' . "\n\t\t</tr>\n";
-		$formstring .= "\t</table>\n";
-		$formstring .= "</form>\n";
 
-		$this->debug->unguard($formstring);
+		$this->formtemplate->insertBlock('formtemplate');
+
+		$formstring = $this->formtemplate->getContent();
+
+		$this->debug->unguard(true);
 		return $formstring;
 	}
 
 
+	/**
+	 * Validate a given element
+	 *
+	 * @param string $elementname name of the element to validate
+	 * @param boolean $validation state of validation
+	 *
+	 * @return boolean
+	 */
 	public function validateElement($elementname, $validation=true)
 	{
 		$this->debug->guard();
@@ -180,6 +217,16 @@ class zgForm
 	}
 
 
+	/**
+	 * Retrieves all parameters that are safe for the current module and action
+	 * Returns an array with all parameters found safe
+	 * Also creates an object in the objectcache with parameters found unsafe
+	 *
+	 * @param string $module name of the current module
+	 * @param string $action name of the current action
+	 *
+	 * @return array
+	 */
 	public function assignDataset($dataset=array())
 	{
 		$this->debug->guard();
@@ -206,6 +253,13 @@ class zgForm
 	}
 
 
+	/**
+	 * Setup the form, basically doing the initializing
+	 *
+	 * @access protected
+	 *
+	 * @return boolean
+	 */
 	protected function _setupForm()
 	{
 		$this->debug->guard();
@@ -259,6 +313,17 @@ class zgForm
 	}
 
 
+	/**
+	 * Validates a given element, checking the element against the expected value
+	 *
+	 * @access protected
+	 *
+	 * @param string $elementname name of the element to validate
+	 * @param array $elementdata data of the element
+	 * @param array $formdata data of the submitted form
+	 *
+	 * @return boolean
+	 */
 	protected function _validateElement($elementname, $elementdata, $formdata)
 	{
 		$this->debug->guard(true);
@@ -299,6 +364,15 @@ class zgForm
 	}
 
 
+	/**
+	 * Validates all elements of a form
+	 *
+	 * @access protected
+	 *
+	 * @param array $formdata data of the submitted form
+	 *
+	 * @return boolean
+	 */
 	protected function _validateElements($formdata)
 	{
 		$this->debug->guard();
@@ -328,92 +402,179 @@ class zgForm
 	}
 
 
+	/**
+	 * Creates a text element and returns the code to put into the template
+	 *
+	 * @access protected
+	 *
+	 * @param string $elementname name of the element to create
+	 * @param array $elementdata data of the element to create
+	 *
+	 * @return string
+	 */
 	protected function _createTextelement($elementname, $elementdata)
 	{
 		$this->debug->guard(true);
-		$elementstring = '';
 
-		$elementstring .= "\t\t<tr";
-		if ( ($elementdata->valid == false) && (!$this->initial) ) $elementstring .= ' class="formerror"';
-		$elementstring .= ">\n\t\t\t<td valign=\"top\"><p>";
-		$elementstring .= $elementdata->pretext;
-		if ($elementdata->required == 1) $elementstring .= ' *';
-		$elementstring .= "</p></td>\n";
-		$elementstring .= "\t\t\t<td><input type=\"text\"";
-		if ($elementdata->maxlength > 0) $elementstring .= ' maxlength="' . $elementdata->maxlength . '"';
-		$elementstring .= ' name="' . $this->name . '[' . $elementname . ']"';
-		$elementstring .= ' value="' . $elementdata->value . '"';
-		$elementstring .= ' class="' . $elementdata->style . '"';
-		$elementstring .= " />\n";
-		if ($elementdata->posttext != '') $elementstring .= "\t\t\t<br />" . '<span class="small">' . $elementdata->posttext . "</span>\n";
-		if ( ($elementdata->valid == false) && ($this->_showError($elementdata) != '') ) $elementstring .= "\t\t\t<br />" . '<span class="formerrormsg">' . $this->_showError($elementdata) . "</span>\n";
-		$elementstring .= "\t\t\t</td>\n\t\t</tr>\n";
+		$elementcontent = array();
+		$elementcontent['element_pretext'] = $elementdata->pretext;
+		if ($elementdata->required == 1) $elementcontent['element_required'] = ' *';
+		if ($elementdata->maxlength > 0) $elementcontent['element_maxlength='] = $elementdata->maxlength;
+		$elementcontent['element_name'] = $this->name . '[' . $elementname . ']';
+		$elementcontent['element_value'] = $elementdata->value;
+
+		$this->formtemplate->assignDataset($elementcontent);
+
+		if ($elementdata->posttext != '')
+		{
+			$this->formtemplate->assign('element_posttext', $elementdata->posttext);
+			$this->formtemplate->insertBlock('text_posttext');
+		}
+		else
+		{
+			$this->formtemplate->assign('element_posttext', '');
+		}
+
+		if ( ($elementdata->valid == false) && ($this->_showError($elementdata) != '') && (!$this->initial) )
+		{
+			$this->formtemplate->assign('element_formerror', ' class="formerror"');
+			$this->formtemplate->assign('element_errormsg', $this->_showError($elementdata));
+			$this->formtemplate->insertBlock('text_errormsg');
+		}
+		else
+		{
+			$this->formtemplate->assign('element_formerror', '');
+			$this->formtemplate->assign('element_errormsg', '');
+		}
+
+		$ret = $this->formtemplate->getBlockContent('textelement');
 
 		$this->debug->unguard(true);
-		return $elementstring;
+		return $ret;
 	}
 
 
+	/**
+	 * Creates a password element and returns the code to put into the template
+	 *
+	 * @access protected
+	 *
+	 * @param string $elementname name of the element to create
+	 * @param array $elementdata data of the element to create
+	 *
+	 * @return string
+	 */
 	protected function _createPasswordelement($elementname, $elementdata)
 	{
 		$this->debug->guard(true);
-		$elementstring = '';
 
-		$elementstring .= "\t\t<tr";
-		if ( ($elementdata->valid == false) && (!$this->initial) ) $elementstring .= ' class="formerror"';
-		$elementstring .= ">\n\t\t\t<td valign=\"top\"><p>";
-		$elementstring .= $elementdata->pretext;
-		if ($elementdata->required == 1) $elementstring .= ' *';
-		$elementstring .= "</p></td>\n";
-		$elementstring .= "\t\t\t<td><input type=\"password\"";
-		if ($elementdata->maxlength > 0) $elementstring .= ' maxlength="' . $elementdata->maxlength . '"';
-		$elementstring .= ' name="' . $this->name . '[' . $elementname . ']"';
-		$elementstring .= ' value="' . $elementdata->value . '"';
-		$elementstring .= ' class="' . $elementdata->style . '"';
-		$elementstring .= " />\n";
-		if ($elementdata->posttext != '') $elementstring .= "\t\t\t<br />" . '<span class="small">' . $elementdata->posttext . "</span>\n";
-		if ( ($elementdata->valid == false) && ($this->_showError($elementdata) != '') ) $elementstring .= "\t\t\t<br />" . '<span class="formerrormsg">' . $this->_showError($elementdata) . "</span>\n";
-		$elementstring .= "\t\t\t</td>\n\t\t</tr>\n";
+		$elementcontent = array();
+		$elementcontent['element_pretext'] = $elementdata->pretext;
+		if ($elementdata->required == 1) $elementcontent['element_required'] = ' *';
+		if ($elementdata->maxlength > 0) $elementcontent['element_maxlength='] = $elementdata->maxlength;
+		$elementcontent['element_name'] = $this->name . '[' . $elementname . ']';
+
+		$this->formtemplate->assignDataset($elementcontent);
+
+		if ($elementdata->posttext != '')
+		{
+			$this->formtemplate->assign('element_posttext', $elementdata->posttext);
+			$this->formtemplate->insertBlock('password_posttext');
+		}
+		else
+		{
+			$this->formtemplate->assign('element_posttext', '');
+		}
+
+		if ( ($elementdata->valid == false) && ($this->_showError($elementdata) != '') && (!$this->initial) )
+		{
+			$this->formtemplate->assign('element_formerror', ' class="formerror"');
+			$this->formtemplate->assign('element_errormsg', $this->_showError($elementdata));
+			$this->formtemplate->insertBlock('password_errormsg');
+		}
+		else
+		{
+			$this->formtemplate->assign('element_formerror', '');
+			$this->formtemplate->assign('element_errormsg', '');
+		}
+
+		$ret = $this->formtemplate->getBlockContent('passwordelement');
 
 		$this->debug->unguard(true);
-		return $elementstring;
+		return $ret;
 	}
 
 
+	/**
+	 * Creates a submit element and returns the code to put into the template
+	 *
+	 * @access protected
+	 *
+	 * @param string $elementname name of the element to create
+	 * @param array $elementdata data of the element to create
+	 *
+	 * @return string
+	 */
 	protected function _createSubmitelement($elementname, $elementdata)
 	{
 		$this->debug->guard(true);
-		$elementstring = '';
 
-		$elementstring .= "\t\t<tr>\n\t\t\t<td>&nbsp;</td>\n";
-		$elementstring .= "\t\t\t<td><input type=\"submit\"";
-		$elementstring .= ' name="' . $this->name . '[' . $elementname . ']"';
-		$elementstring .= ' value="' . $elementdata->value . '"';
-		$elementstring .= ' class="' . $elementdata->style . '"';
-		$elementstring .= " />\n";
-		$elementstring .= "\t\t\t</td>\n\t\t</tr>\n";
+		$elementcontent = array();
+		$elementcontent['element_name'] = $this->name . '[' . $elementname . ']';
+		$elementcontent['element_value'] = $elementdata->value;
+
+		$this->formtemplate->assignDataset($elementcontent);
+
+		$ret = $this->formtemplate->getBlockContent('submitelement');
 
 		$this->debug->unguard(true);
-		return $elementstring;
+		return $ret;
 	}
 
 
+	/**
+	 * Creates a static element and returns the code to put into the template
+	 *
+	 * @access protected
+	 *
+	 * @param string $elementname name of the element to create
+	 * @param array $elementdata data of the element to create
+	 *
+	 * @return string
+	 */
 	protected function _createStaticelement($elementname, $elementdata)
 	{
 		$this->debug->guard(true);
 		$elementstring = '';
 
-		$elementstring .= "\t\t<tr>\n\t\t\t<td valign=\"top\"><p>";
-		$elementstring .= $elementdata->pretext;
-		$elementstring .= "</p></td>\n";
-		$elementstring .= "\t\t\t<td><p class=\"" . $elementdata->style . "\">" . $elementdata->value;
-		if ($elementdata->posttext != '') $elementstring .= " " . '<span class="small">' . $elementdata->posttext . "</span></p></td>\n\t\t</tr>\n";
+		$elementcontent = array();
+		$elementcontent['element_pretext'] = $elementdata->pretext;
+		$elementcontent['element_name'] = $this->name . '[' . $elementname . ']';
+		$elementcontent['element_value'] = $elementdata->value;
+
+		$this->formtemplate->assignDataset($elementcontent);
+		if ($elementdata->posttext != '')
+		{
+			$this->formtemplate->assign('element_posttext', $elementdata->posttext);
+			$this->formtemplate->insertBlock('static_posttext');
+		}
+
+		$ret = $this->formtemplate->getBlockContent('staticelement');
 
 		$this->debug->unguard(true);
-		return $elementstring;
+		return $ret;
 	}
 
 
+	/**
+	 * Fill the data structure with an error message
+	 *
+	 * @access protected
+	 *
+	 * @param array $elementdata data of the element to create
+	 *
+	 * @return string
+	 */
 	protected function _showError($elementdata)
 	{
 		$this->debug->guard(true);
@@ -469,4 +630,5 @@ class zgFormelement
 	}
 
 }
+
 ?>

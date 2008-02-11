@@ -5,8 +5,6 @@
  *
  * Database class
  *
- * @author Dirk Songür <songuer@zeitgeist-framework.com>
- *
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
  *
@@ -50,8 +48,8 @@ class zgDatabase
 
 	/**
 	 * Connect to the database
-	 * If no connection info is given, the standard defines are used.
-	 * These should be defined in the application config.
+	 * If no connection info is given, the standard defines are used
+	 * These should be defined in the application config
 	 *
 	 * @param string $servername servername to connect to
 	 * @param string $username username to connect with
