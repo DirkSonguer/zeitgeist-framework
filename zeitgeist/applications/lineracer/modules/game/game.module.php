@@ -149,7 +149,7 @@ class game
 
 		$gamedata = array();
 
-///*
+/*
 	   $filename = "debug.txt";
 	   $handle = fopen($filename, "a");
 	   $newstring = "\r\nja: ".date("d.m.Y H:i:s");
