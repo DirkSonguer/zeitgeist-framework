@@ -5,9 +5,6 @@
  *
  * Main Zeitgeist file
  *
- * @author Dirk Songür <songuer@zeitgeist-framework.com>
- * @version 1.0.2 - 24.07.2007
- *
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
  *

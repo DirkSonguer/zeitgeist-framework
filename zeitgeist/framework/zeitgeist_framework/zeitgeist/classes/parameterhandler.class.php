@@ -5,8 +5,6 @@
  *
  * Parameterhandler class
  *
- * @author Dirk Songür <songuer@zeitgeist-framework.com>
- *
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
  *
@@ -43,7 +41,37 @@ class zgParameterhandler
 
 
 	/**
+	 * Retrieves all parameters that are safe for the current module and action
+	 * Returns an array with all parameters found safe
+	 * Also creates an object in the objectcache with parameters found unsafe
+	 *
+	 * @param string $module name of the current module
+	 * @param string $action name of the current action
+	 *
+	 * @return array
+	 */
+	public function getSafeParameters($module, $action)
+	{
+		$this->debug->guard();
+
+		$allowedParameters = array();
+		$allowedParameters = $this->_getAllowedParameters($module, $action);
+
+		$safeParameters = array();
+		if (count($allowedParameters) > 0)
+		{
+			$safeParameters = $this->_filterParameters($allowedParameters);
+		}
+
+		$this->debug->unguard($safeParameters);
+		return $safeParameters;
+	}
+
+
+	/**
 	 * Retrieves all allowed parameters for the current module and action
+	 *
+	 * @access protected
 	 *
 	 * @param string $module name of the current module
 	 * @param string $action name of the current action
@@ -75,6 +103,8 @@ class zgParameterhandler
 
 	/**
 	 * This does the actual testing of a parameter against the expected regexp
+	 *
+	 * @access protected
 	 *
 	 * @param string $parametername name of the parameter
 	 * @param array $parameterdefinition array with the definition of the parameter
@@ -144,6 +174,8 @@ class zgParameterhandler
 	/**
 	 * Filters all parameters against the expected parameter values and returns the safe ones
 	 *
+	 * @access protected
+	 *
 	 * @param array $allowedParameters array with allowed parameters
 	 *
 	 * @return array
@@ -177,34 +209,6 @@ class zgParameterhandler
 		}
 
 		$this->objects->storeObject('unsafeParameters', $unsafeParameters);
-
-		$this->debug->unguard($safeParameters);
-		return $safeParameters;
-	}
-
-
-	/**
-	 * Retrieves all parameters that are safe for the current module and action
-	 * Returns an array with all parameters found safe
-	 * Also creates an object in the objectcache with parameters found unsafe
-	 *
-	 * @param string $module name of the current module
-	 * @param string $action name of the current action
-	 *
-	 * @return array
-	 */
-	public function getSafeParameters($module, $action)
-	{
-		$this->debug->guard();
-
-		$allowedParameters = array();
-		$allowedParameters = $this->_getAllowedParameters($module, $action);
-
-		$safeParameters = array();
-		if (count($allowedParameters) > 0)
-		{
-			$safeParameters = $this->_filterParameters($allowedParameters);
-		}
 
 		$this->debug->unguard($safeParameters);
 		return $safeParameters;
