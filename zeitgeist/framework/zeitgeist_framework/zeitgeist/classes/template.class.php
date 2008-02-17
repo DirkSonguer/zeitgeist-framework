@@ -413,7 +413,7 @@ class zgTemplate
 
 		if (!defined('DEBUGMODE'))
 		{
-			$this->debug->unguard();
+			$this->debug->unguard(true);
 			header('Location: ' . $url);
 		}
 		else
