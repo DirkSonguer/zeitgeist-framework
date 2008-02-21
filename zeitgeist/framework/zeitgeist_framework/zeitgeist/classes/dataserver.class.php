@@ -118,6 +118,29 @@ class zgDataserver
 
 
 	/**
+	 * Streams a given xml dataset to the browser as xml content
+	 * Note: Headers should not be set at this point
+	 *
+	 * @param string $xmldata string containing the xml data
+	 *
+	 * @return boolean
+	 */
+	public function streamXMLDataset($xmldata)
+	{
+		$this->debug->guard();
+
+		header('Content-type: text/xml');
+		header('Pragma: public');
+		header('Cache-control: private');
+		header('Expires: -1');
+		echo $xmldata;
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	/**
 	 * converts an array into xml
 	 *
 	 * @access protected
@@ -184,29 +207,6 @@ class zgDataserver
 		}
 
 		return $xmlData;
-	}
-
-
-	/**
-	 * Streams a given xml dataset to the browser as xml content
-	 * Note: Headers should not be set at this point
-	 *
-	 * @param string $xmldata string containing the xml data
-	 *
-	 * @return boolean
-	 */
-	public function streamXMLDataset($xmldata)
-	{
-		$this->debug->guard();
-
-		header('Content-type: text/xml');
-		header('Pragma: public');
-		header('Cache-control: private');
-		header('Expires: -1');
-		echo $xmldata;
-
-		$this->debug->unguard(true);
-		return true;
 	}
 
 }

@@ -125,28 +125,6 @@ class zgUserhandler
 
 
 	/**
-	 * Validates the session, trying to make sure that it is really the right user calling it
-	 *
-	 * @return boolean
-	 */
-	protected function _validateUserSession()
-	{
-		$this->debug->guard();
-
-		if ($this->session->getBoundIP() != getenv('REMOTE_ADDR'))
-		{
-			$this->debug->write('Problem validating the user session: IP does not match the session', 'warning');
-			$this->messages->setMessage('Problem validating the user session: IP does not match the session', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-
-	/**
 	 * Login a user with username and password
 	 * If successfull it will gather the user specific data and tie it to the session
 	 *
@@ -344,6 +322,39 @@ class zgUserhandler
 
 		$this->debug->unguard(false);
 		return false;
+	}
+
+
+	/**
+	 * Checks if the user has a given userrole
+	 *
+	 * @param string $userrole name of the userrole
+	 *
+	 * @return boolean
+	 */
+	public function hasUserrole($userrole='')
+	{
+		$this->debug->guard();
+
+		if ($this->loggedIn)
+		{
+			$userid = $this->session->getSessionVariable('user_userid');
+
+			$sql = "SELECT * FROM userroles ur LEFT JOIN userroles_to_users u2u ON u2u.userroleuser_userrole = ur.userrole_id ";
+			$sql .= "WHERE userrole_name='" . $userrole . "' AND u2u.userroleuser_user = '" . $userid . "'";
+
+			if ($res = $this->database->query($sql))
+			{
+				if ($this->database->numRows($res) == 1)
+				{
+					$this->debug->unguard(true);
+					return true;
+				}
+			}
+
+			$this->debug->unguard(false);
+			return false;
+		}
 	}
 
 
@@ -995,6 +1006,28 @@ class zgUserhandler
 	public function saveUserroles()
 	{
 		// TODO: FUNCTION!
+	}
+
+
+	/**
+	 * Validates the session, trying to make sure that it is really the right user calling it
+	 *
+	 * @return boolean
+	 */
+	protected function _validateUserSession()
+	{
+		$this->debug->guard();
+
+		if ($this->session->getBoundIP() != getenv('REMOTE_ADDR'))
+		{
+			$this->debug->write('Problem validating the user session: IP does not match the session', 'warning');
+			$this->messages->setMessage('Problem validating the user session: IP does not match the session', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
 	}
 
 }
