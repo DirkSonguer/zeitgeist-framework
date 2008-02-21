@@ -52,5 +52,4 @@ require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/formcreator/formcreator.class.p
 // include misc functions
 require_once (ZEITGEIST_ROOTDIRECTORY . 'includes/autoloader.include.php');
 
-
 ?>
