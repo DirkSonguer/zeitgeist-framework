@@ -62,5 +62,21 @@ class dataserver
 		return true;
 	}
 
+
+	public function gettasklogs($parameters=array())
+	{
+		$this->debug->guard();
+
+		$sql = "SELECT t.*, u.user_username as tasklog_username FROM tasklogs t ";
+		$sql .= "LEFT JOIN users u ON t.tasklog_creator = u.user_id ";
+		$sql .= "WHERE t.tasklog_task='" . $parameters['id'] . "' ORDER BY t.tasklog_timestamp";
+
+		$xmlData = $this->dataserver->createXMLDatasetFromSQL($sql);
+		$this->dataserver->streamXMLDataset($xmlData);
+		die();
+
+		$this->debug->unguard(true);
+		return true;
+	}
 }
 ?>

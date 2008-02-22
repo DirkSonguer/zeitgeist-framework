@@ -45,12 +45,13 @@
 		var dsUserTasks = new Spry.Data.XMLDataSet("@@{[dataserver.getusertasks]}@@", "container/element");
 		dsUserTasks.setColumnType("task_id", "number");
 		dsUserTasks.setColumnType("task_hoursplanned", "number");
+		dsUserTasks.setColumnType("task_hoursworked", "number");
 
 		var dsGroupTasks = new Spry.Data.XMLDataSet("@@{[dataserver.getgrouptasks]}@@", "container/element");
 		dsGroupTasks.setColumnType("task_id", "number");
 		dsGroupTasks.setColumnType("task_hoursplanned", "number");
+		dsGroupTasks.setColumnType("task_hoursworked", "number");
 		
-
 		function insertData(dataElement, dataContent)
 		{
 			document.getElementById(dataElement).innerHTML = dataContent;
