@@ -35,7 +35,14 @@
 	
 <!-- InstanceBeginEditable name="head" -->
 
+	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryData.js"></script>
+	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/xpath.js"></script>
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryNestedXMLDataSet.js"></script>
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/js/SpryExtensions.js"></script>
+
 	<script language="javascript" type="text/javascript">
+
+	var dsTasklogs = new Spry.Data.XMLDataSet("@@{[dataserver.gettasklogs]}@@&id=@@{taskid}@@", "container/element");
 	
 		var bShowShortcuts = false;
 		shortcutUp = new Image();
@@ -118,118 +125,78 @@
 	
 <!-- InstanceBeginEditable name="body" -->
 
-<form method="post" action="http://127.0.0.1/zeitgeist_administrator/index.php?module=setup&amp;action=addmodule" name="addmodule" enctype="multipart/form-data; charset=utf-8">
-
 <div class="textbox">
-	<h2>Neue Aufgabe hinzufügen</h2>
-
-	<table width="100%" cellspacing="5" cellpadding="5" border="0">
-	<tr>
-	<td width="50%" valign="top">
-        <table style="margin-bottom: 10px;" border="0" cellpadding="0" cellspacing="0">
-            <tbody>
-			<tr>
-                <td nowrap="nowrap" valign="top" width="140"><p class="formlabel">Titel*</p></td>
-                <td nowrap="nowrap" valign="middle"><input maxlength="30" name="task_name" value="" class="formtext" type="text"></td>
-            </tr>
-            <tr>
-                <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Beschreibung*</p></td>
-                <td align="left" nowrap="nowrap" valign="middle"><textarea rows="5" name="task_description" class="formtext" style="height:175px;"></textarea></td>
-            </tr>
-		</tbody>
-		</table>
-	</td>
-	<td width="50%" valign="top">
-		<table style="margin-bottom: 10px;" border="0" cellpadding="0" cellspacing="0">
-		<tbody>
-			<tr>
-                <td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Stundenbudget</p></td>
-                <td align="left" nowrap="nowrap" valign="middle" colspan="2"><input maxlength="6" style="width:60px;" name="task_hours" value="" class="formtext" type="text"> (Angabe in Stunden)</td>
-            </tr>
-            <tr>
-                <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Aufgabentyp</p></td>
-                <td align="left" nowrap="nowrap" valign="middle" colspan="2">
-					<select name="module_active" class="formtext">
-						<option value="http://www.test.de">Test1</option>
-						<option value="http://www.test.de">Test Link 1</option>
-						<option value="http://www.test.de">Test Links 2</option>
-					</select>
-				</td>
-            </tr>
-            <tr>
-                <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Priorität</p></td>
-                <td align="left" nowrap="nowrap" valign="middle" colspan="2">
-					<select name="module_active" class="formtext">
-						<option value="http://www.test.de">Test1</option>
-						<option value="http://www.test.de">Test Link 1</option>
-						<option value="http://www.test.de">Test Links 2</option>
-					</select>
-				</td>
-            </tr>
-			<tr>
-                <td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Beginn</p></td>
-                <td align="left" nowrap="nowrap" valign="middle">
-				<input maxlength="30" name="task_begin" style="width:210px;" value="" class="formtext" type="text">
-				</td>
-                <td align="left" nowrap="nowrap" valign="middle">
-				<span style="margin-left:10px; margin-right:10px;"><a href="" alt=""><span onmousemove="showTooltip('Datum auswählen', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/apps/date.png" alt="" name="beginDate" border="0" /></span></a></span>
-				</td>
-            </tr>
-			<tr>
-                <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Fällig am</p></td>
-                <td align="left" nowrap="nowrap" valign="middle">
-				<input maxlength="30" name="task_end" style="width:210px;" value="" class="formtext" type="text">
-				</td>
-                <td align="left" nowrap="nowrap" valign="middle">
-				<span style="margin-left:10px; margin-right:10px;"><a href="" alt=""><span onmousemove="showTooltip('Datum auswählen', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/apps/date.png" alt="" name="endDate" border="0" /></span></a></span>
-				</td>
-            </tr>
-			
-		</tbody>
-		</table>
-	</td>
-	</tr>
-	<tr>
-	<td colspan="2">
-		<table style="margin-bottom: 10px;" border="0" cellpadding="0" cellspacing="0">
-		<tr>
-			<td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Tags*</p></td>
-			<td align="left" nowrap="nowrap" valign="middle"><input maxlength="3" style="width:750px; margin-top:10px;" name="task_tags" value="" class="formtext" type="text">
-			<p style="margin-left:0px;">(Mehrere Tags durch Komma trennen. Bitte <u>mindestens</u> Kunde und evtl. Projekt angeben)</p></td>
-		</tr>
-		</table>
-	</td>
-	</tr>
-	<tr>
-	<td colspan="2">
-            <p style="text-align:center;"><input name="submit" value="Aufgabe hinzufügen" class="formbutton" type="submit"></p>
-	</td>
-	</tr>
-	</table>
-
-</div>
-
-<div class="textbox">
-	<h2 style="text-align:left;">Weitere Angaben <span style="float:right; margin-top:-20px;"><a href="javascript:showShortcuts();" alt=""><span onmousemove="showTooltip('Weitere Angaben', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png" alt="" name="shortcutIcon" align="left" border="0" /></span></a></span></h2>
+	<h2 style="text-align:left;">Bisherige Tätigkeiten <span style="float:right; margin-top:-20px;"><a href="javascript:showShortcuts();" alt=""><span onmousemove="showTooltip('Bisherige Tätigkeiten', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png" alt="" name="shortcutIcon" align="left" border="0" /></span></a></span></h2>
 	<div style="clear:both"></div>
 	
 	<div id="Shortcuts" style="padding:5px; display:none;">
 
+	<div spry:region="dsTasklogs">
+    <div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
+
+	<div spry:state="ready">
+
+		
+	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
+	        <tr class="tablehead">
+				<th width="40"><p style="text-align:center;"><a onclick="dsTasklogs.sort('tasklog_id');">ID</a></p></th>
+				<th width="150"><p style="text-align:center;"><a onclick="dsTasklogs.sort('tasklog_username');">Bearbeitet von</a></p></th>
+				<th width="100"><p style="text-align:center;"><a onclick="dsTasklogs.sort('task_hoursworked');">Dauer</a></p></th>
+				<th><p><a onclick="dsTasklogs.sort('tasklog_description');">Tätigkeitbeshreibung</a></p></th>
+				<th><p>Aktionen</p></th>
+	        </tr>
+	        <tr class="{ds_EvenOddRow}" spry:repeat="dsTasklogs">
+				<td><p style="text-align:center;">{dsTasklogs::tasklog_id}</p></td>
+				<td><p style="text-align:center;">{dsTasklogs::tasklog_username}</p></td>
+				<td><p style="text-align:center;">{dsTasklogs::tasklog_hoursworked}</p></td>
+				<td><p>{dsTasklogs::tasklog_description}</p></td>
+				<td width="90"><p></p></td>
+	        </tr>
+	    </table>
+    </div>
+	</div>
+	</div>
+
+</div>
+
+
+<form method="post" action="http://127.0.0.1/zeitgeist_administrator/index.php?module=setup&amp;action=addmodule" name="addmodule" enctype="multipart/form-data; charset=utf-8">
+<div class="textbox">
+	<h2>Tätigkeit eintragen</h2>
+
 	<table width="100%" cellspacing="5" cellpadding="5" border="0">
 	<tbody>
-	<tr>
-		<td align="right" nowrap="nowrap" valign="top" width="120"><p class="formlabel">Anmerkungen</p></td>
-		<td align="left" nowrap="nowrap" valign="middle">
-			<textarea rows="5" name="task_notes" class="formtext" style="height:175px; width:750px;"></textarea>
+		<tr>
+			<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Tätigkeits-<br />beschreibung*</p></td>
+			<td align="left" nowrap="nowrap" valign="middle"><textarea rows="5" name="task_description" class="formtext" style="height:175px; width:750px;"></textarea></td>
+	
+		</tr>
+		<tr>
+			<td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Dauer</p></td>
+			<td align="left" nowrap="nowrap" valign="middle" colspan="2"><input maxlength="6" style="width:60px;" name="task_hours" value="" class="formtext" type="text"> (Angabe in Stunden. Dezimalstellen durch Punkt oder Komma)</td>
+		</tr>
+		<tr>
+		<td colspan="2">
+			<p style="text-align:center;"><input name="submit" value="Tätigkeit hinzufügen" class="formbutton" type="submit"></p>
 		</td>
-	</tr>
+		</tr>
 	</tbody>
-	</table>
-	
-	</div>
-	
+	</table>	
+</div>
+
+<div class="textbox">
+	<table width="100%" cellspacing="5" cellpadding="5" border="0">
+	<tbody>
+		<tr>
+		<td><p style="text-align:center;"><span onmousemove="showTooltip('Gibt die Aufgabe eine Ebene im Ablauf zurück, üblicherweise falls die Aufgabe noch nicht bearbeitet werden kann.', event)" onmouseout="hideTooltip()"><input name="submit" value="Aufgabe zurückgeben" class="formbutton" type="submit"></span></p></td>
+		<td><p style="text-align:center;"><span onmousemove="showTooltip('Markiert die Aufgabe als abgeschlossen und gibt die Aufgabe eine Ebene im Ablauf weiter.', event)" onmouseout="hideTooltip()"><input name="submit" value="Aufgabe abschließen" class="formbutton" type="submit"></span></p></td>
+		</tr>
+	</tbody>
+	</table>	
 </div>
 </form>	
+	
+</div>
 
 <!-- InstanceEndEditable -->
 

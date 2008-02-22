@@ -88,6 +88,22 @@ class tasks
 	}
 
 
+	public function processtask($parameters=array())
+	{
+		$this->debug->guard();
+
+		$tpl = new tkTemplate();
+		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_processtask'));
+
+		$tpl->assign('taskid', $parameters['id']);
+
+		$tpl->show();
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
 	public function addadhoc($parameters=array())
 	{
 		$this->debug->guard();
