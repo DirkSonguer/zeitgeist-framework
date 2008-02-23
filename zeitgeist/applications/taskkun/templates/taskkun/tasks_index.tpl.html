@@ -113,7 +113,7 @@
 
 <body>
 
-<div id="Tooltip" class="tooltip" style="display: none;"></div>
+<div id="Tooltip" class="tooltip" style="display:none; text-align:left;"></div>
 <div class="maincontent">
 <div class="headmenu">
 	<h1>Taskkun :)</h1>
@@ -138,6 +138,8 @@
 	<div class="textbox">
 		<div style="float:left; margin:10px;"><a href="@@{[tasks.addtask]}@@" alt=""><span onmousemove="showTooltip('Neue Aufgabe anlegen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kword.png" alt="" border="0" /></span></a></div>
+		<div style="float:left; margin:10px;"><a href="@@{[tasks.showalltasks]}@@" alt=""><span onmousemove="showTooltip('Alle aktiven Aufgaben anzeigen', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpager.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[tasks.searchtask]}@@" alt=""><span onmousemove="showTooltip('Aufgaben suchen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpdf.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[analyze.index]}@@" alt=""><span onmousemove="showTooltip('Statistiken anzeigen', event)" onmouseout="hideTooltip()">
@@ -184,6 +186,7 @@
 	        <tr class="tablehead">
 				<th><p><a onclick="dsUserTasks.sort('task_id');">ID</a></p></th>
 				<th><p><a onclick="dsUserTasks.sort('task_name');">Name</a></p></th>
+				<th><p><a onclick="dsUserTasks.sort('group_name');">Gruppe</a></p></th>
 				<th><p style="text-align:center;"><a onclick="dsUserTasks.sort('task_hoursplanned');">Stunden-<br />budget</a></p></th>
 				<th><p style="text-align:center;"><a onclick="dsUserTasks.sort('task_hoursworked');">Stunden<br />verbraucht</a></p></th>
 				<th><p><a onclick="dsUserTasks.sort('task_end');">Fällig am</a></p></th>
@@ -192,10 +195,18 @@
 	        <tr class="{ds_EvenOddRow}" spry:repeat="dsUserTasks">
 				<td><p>{dsUserTasks::task_id}</p></td>
 				<td><p><span onmousemove="showTooltip('{dsUserTasks::task_description}', event)" onmouseout="hideTooltip()">{dsUserTasks::task_name}</span></p></td>
+				<td><p>{dsUserTasks::group_name}</p></td>
 				<td><p style="text-align:center;">{dsUserTasks::task_hoursplanned}</p></td>
 				<td><p style="text-align:center;">{dsUserTasks::task_hoursworked}</p></td>
-				<td><p>{dsUserTasks::task_end}</p></td>
-				<td width="90"><p>
+				<td>
+					<div spry:choose="spry:choose">
+						<div spry:when="'{dsUserTasks::task_end}' == '0000-00-00'"><p style="text-align:center;">-</p></div>
+						<div spry:default="spry:default">
+							<p style="text-align:center;">{dsUserTasks::task_end}</p>
+						</div>
+					</div>
+				</td>
+				<td width="90"><p style="text-align:center;">
 				<span onmousemove="showTooltip('Aufgabe bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.processtask]}@@&id={dsUserTasks::task_id}" alt="Aufgabe bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="Aufgabe bearbeiten" border="0" /></a></span> &nbsp; 
 				<span onmousemove="showTooltip('Aufgabe ablehnen', event)" onmouseout="hideTooltip()"><a href="javascript:declineTask({dsUserTasks::task_id}, '{dsUserTasks::task_name}')" alt="Aufgabe ablehnen"><img src="@@{templatepath}@@/nuvola/22x22/actions/cancel.png" alt="Aufgabe ablehnen" border="0" /></a>
                 </p></td>
@@ -226,6 +237,7 @@
 	        <tr class="tablehead">
 				<th><p><a onclick="dsGroupTasks.sort('task_id');">ID</a></p></th>
 				<th><p><a onclick="dsGroupTasks.sort('task_name');">Name</a></p></th>
+				<th><p><a onclick="dsTasks.sort('group_name');">Gruppe</a></p></th>
 				<th><p style="text-align:center;"><a onclick="dsGroupTasks.sort('task_hoursplanned');">Stunden-<br />budget</a></p></th>
 				<th><p style="text-align:center;"><a onclick="dsUserTasks.sort('task_hoursworked');">Stunden<br />verbraucht</a></p></th>
 				<th><p><a onclick="dsGroupTasks.sort('task_end');">Fällig am</a></p></th>
@@ -233,11 +245,19 @@
 	        </tr>
 	        <tr class="{ds_EvenOddRow}" spry:repeat="dsGroupTasks">
 				<td><p>{dsGroupTasks::task_id}</p></td>
-				<td><p>{dsGroupTasks::task_name}</p></td>
+				<td><p><span onmousemove="showTooltip('{dsGroupTasks::task_description}', event)" onmouseout="hideTooltip()">{dsGroupTasks::task_name}</span></p></td>
+				<td><p>{dsGroupTasks::group_name}</p></td>
 				<td><p style="text-align:center;">{dsGroupTasks::task_hoursplanned}</p></td>
 				<td><p style="text-align:center;">{dsGroupTasks::task_hoursworked}</p></td>
-				<td><p>{dsGroupTasks::task_end}</p></td>
-				<td width="90"><p>
+				<td>
+					<div spry:choose="spry:choose">
+						<div spry:when="'{dsGroupTasks::task_end}' == '0000-00-00'"><p style="text-align:center;">-</p></div>
+						<div spry:default="spry:default">
+							<p style="text-align:center;">{dsGroupTasks::task_end}</p>
+						</div>
+					</div>
+				</td>
+				<td width="90"><p style="text-align:center;">
 				<span onmousemove="showTooltip('Aufgabe annehmen', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.accepttask]}@@&id={dsGroupTasks::task_id}" alt="Aufgabe annehmen"><img src="@@{templatepath}@@/nuvola/22x22/actions/button_accept.png" alt="Aufgabe annehmen" border="0" /></a></span>
                 </p></td>
 	        </tr>

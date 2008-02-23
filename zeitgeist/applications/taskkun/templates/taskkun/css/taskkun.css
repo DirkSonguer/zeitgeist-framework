@@ -13,7 +13,7 @@ body {
 }
 
 
-p, table {
+p, table, pre {
 	font-family: "Georgia",Serif;
 	font-size: 12pt;
 	letter-spacing:0.0pt;

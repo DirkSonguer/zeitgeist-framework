@@ -73,7 +73,7 @@
 
 <body>
 
-<div id="Tooltip" class="tooltip" style="display: none;"></div>
+<div id="Tooltip" class="tooltip" style="display:none; text-align:left;"></div>
 <div class="maincontent">
 <div class="headmenu">
 	<h1>Taskkun :)</h1>
@@ -98,6 +98,8 @@
 	<div class="textbox">
 		<div style="float:left; margin:10px;"><a href="@@{[tasks.addtask]}@@" alt=""><span onmousemove="showTooltip('Neue Aufgabe anlegen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kword.png" alt="" border="0" /></span></a></div>
+		<div style="float:left; margin:10px;"><a href="@@{[tasks.showalltasks]}@@" alt=""><span onmousemove="showTooltip('Alle aktiven Aufgaben anzeigen', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpager.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[tasks.searchtask]}@@" alt=""><span onmousemove="showTooltip('Aufgaben suchen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpdf.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[analyze.index]}@@" alt=""><span onmousemove="showTooltip('Statistiken anzeigen', event)" onmouseout="hideTooltip()">
@@ -129,14 +131,12 @@
 	<h2 style="text-align:left;">Bisherige Tätigkeiten <span style="float:right; margin-top:-20px;"><a href="javascript:showShortcuts();" alt=""><span onmousemove="showTooltip('Bisherige Tätigkeiten', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png" alt="" name="shortcutIcon" align="left" border="0" /></span></a></span></h2>
 	<div style="clear:both"></div>
 	
-	<div id="Shortcuts" style="padding:5px; display:none;">
+	<div id="Shortcuts" style="padding:0px; display:none;">
 
 	<div spry:region="dsTasklogs">
     <div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
 
 	<div spry:state="ready">
-
-		
 	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
 	        <tr class="tablehead">
 				<th width="40"><p style="text-align:center;"><a onclick="dsTasklogs.sort('tasklog_id');">ID</a></p></th>
@@ -146,38 +146,37 @@
 				<th><p>Aktionen</p></th>
 	        </tr>
 	        <tr class="{ds_EvenOddRow}" spry:repeat="dsTasklogs">
-				<td><p style="text-align:center;">{dsTasklogs::tasklog_id}</p></td>
-				<td><p style="text-align:center;">{dsTasklogs::tasklog_username}</p></td>
-				<td><p style="text-align:center;">{dsTasklogs::tasklog_hoursworked}</p></td>
-				<td><p>{dsTasklogs::tasklog_description}</p></td>
+				<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_id}</p></td>
+				<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_username}</p></td>
+				<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_hoursworked}</p></td>
+				<td valign="top"><pre>{dsTasklogs::tasklog_description}</pre></td>
 				<td width="90"><p></p></td>
 	        </tr>
 	    </table>
     </div>
 	</div>
 	</div>
-
 </div>
 
-
-<form method="post" action="http://127.0.0.1/zeitgeist_administrator/index.php?module=setup&amp;action=addmodule" name="addmodule" enctype="multipart/form-data; charset=utf-8">
+<form method="post" action="@@{tasks.processtask}@@" name="processtask" enctype="multipart/form-data; charset=utf-8">
 <div class="textbox">
+	<input type="hidden" name="taskid" value="@@{taskid}@@" />
 	<h2>Tätigkeit eintragen</h2>
 
 	<table width="100%" cellspacing="5" cellpadding="5" border="0">
 	<tbody>
 		<tr>
 			<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Tätigkeits-<br />beschreibung*</p></td>
-			<td align="left" nowrap="nowrap" valign="middle"><textarea rows="5" name="task_description" class="formtext" style="height:175px; width:750px;"></textarea></td>
-	
+			<td align="left" nowrap="nowrap" valign="middle"><textarea rows="5" name="tasklog_description" class="formtext" style="height:175px; width:750px;"></textarea></td>
 		</tr>
 		<tr>
 			<td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Dauer</p></td>
-			<td align="left" nowrap="nowrap" valign="middle" colspan="2"><input maxlength="6" style="width:60px;" name="task_hours" value="" class="formtext" type="text"> (Angabe in Stunden. Dezimalstellen durch Punkt oder Komma)</td>
+			<td align="left" nowrap="nowrap" valign="middle" colspan="2"><input maxlength="6" style="width:60px;" name="tasklog_hoursworked" value="" class="formtext" type="text"> (Angabe in Stunden. Dezimalstellen durch Punkt oder Komma)</td>
 		</tr>
 		<tr>
 		<td colspan="2">
-			<p style="text-align:center;"><input name="submit" value="Tätigkeit hinzufügen" class="formbutton" type="submit"></p>
+			<p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/apps/kate.png" alt="" border="0" align="top" />
+			<input name="submit" value="Tätigkeit hinzufügen" class="formbutton" type="submit" /></p>
 		</td>
 		</tr>
 	</tbody>
@@ -188,8 +187,10 @@
 	<table width="100%" cellspacing="5" cellpadding="5" border="0">
 	<tbody>
 		<tr>
-		<td><p style="text-align:center;"><span onmousemove="showTooltip('Gibt die Aufgabe eine Ebene im Ablauf zurück, üblicherweise falls die Aufgabe noch nicht bearbeitet werden kann.', event)" onmouseout="hideTooltip()"><input name="submit" value="Aufgabe zurückgeben" class="formbutton" type="submit"></span></p></td>
-		<td><p style="text-align:center;"><span onmousemove="showTooltip('Markiert die Aufgabe als abgeschlossen und gibt die Aufgabe eine Ebene im Ablauf weiter.', event)" onmouseout="hideTooltip()"><input name="submit" value="Aufgabe abschließen" class="formbutton" type="submit"></span></p></td>
+		<td><p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/actions/kaboodleloop.png" alt="" border="0" align="top" />
+		<span onmousemove="showTooltip('Gibt die Aufgabe eine Ebene im Ablauf zurück.<br />Dies kann der Fall sein, falls eine Aufgabe noch nicht<br />bearbeitet werden kann oder fehlerhaft ist.', event)" onmouseout="hideTooltip()"><input name="submit" value="Aufgabe zurückgeben" class="formbutton" type="submit" /></span></p></td>
+		<td><p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/actions/button_accept.png" alt="" border="0" align="top" />
+		<span onmousemove="showTooltip('Markiert die Aufgabe als abgeschlossen<br />und gibt die Aufgabe eine Ebene im Ablauf weiter.', event)" onmouseout="hideTooltip()"><input name="submit" value="Aufgabe abschließen" class="formbutton" type="submit" /></span></p></td>
 		</tr>
 	</tbody>
 	</table>	
