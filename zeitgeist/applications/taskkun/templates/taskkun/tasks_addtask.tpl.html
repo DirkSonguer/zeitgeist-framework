@@ -66,7 +66,7 @@
 
 <body>
 
-<div id="Tooltip" class="tooltip" style="display: none;"></div>
+<div id="Tooltip" class="tooltip" style="display:none; text-align:left;"></div>
 <div class="maincontent">
 <div class="headmenu">
 	<h1>Taskkun :)</h1>
@@ -91,6 +91,8 @@
 	<div class="textbox">
 		<div style="float:left; margin:10px;"><a href="@@{[tasks.addtask]}@@" alt=""><span onmousemove="showTooltip('Neue Aufgabe anlegen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kword.png" alt="" border="0" /></span></a></div>
+		<div style="float:left; margin:10px;"><a href="@@{[tasks.showalltasks]}@@" alt=""><span onmousemove="showTooltip('Alle aktiven Aufgaben anzeigen', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpager.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[tasks.searchtask]}@@" alt=""><span onmousemove="showTooltip('Aufgaben suchen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpdf.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[analyze.index]}@@" alt=""><span onmousemove="showTooltip('Statistiken anzeigen', event)" onmouseout="hideTooltip()">
@@ -118,7 +120,7 @@
 	
 <!-- InstanceBeginEditable name="body" -->
 
-<form method="post" action="http://127.0.0.1/zeitgeist_administrator/index.php?module=setup&amp;action=addmodule" name="addmodule" enctype="multipart/form-data; charset=utf-8">
+<form method="post" action="@@{[tasks.addtask]}@@" name="addtask" enctype="multipart/form-data; charset=utf-8">
 
 <div class="textbox">
 	<h2>Neue Aufgabe hinzufügen</h2>
@@ -130,11 +132,11 @@
             <tbody>
 			<tr>
                 <td nowrap="nowrap" valign="top" width="140"><p class="formlabel">Titel*</p></td>
-                <td nowrap="nowrap" valign="middle"><input maxlength="30" name="task_name" value="" class="formtext" type="text"></td>
+                <td nowrap="nowrap" valign="middle"><input maxlength="30" name="task_name" value="@@{task_name}@@" class="formtext" type="text"></td>
             </tr>
             <tr>
                 <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Beschreibung*</p></td>
-                <td align="left" nowrap="nowrap" valign="middle"><textarea rows="5" name="task_description" class="formtext" style="height:175px;"></textarea></td>
+                <td align="left" nowrap="nowrap" valign="middle"><textarea rows="5" name="task_description" class="formtext" style="height:175px;">@@{task_description}@@</textarea></td>
             </tr>
 		</tbody>
 		</table>
@@ -143,33 +145,33 @@
 		<table style="margin-bottom: 10px;" border="0" cellpadding="0" cellspacing="0">
 		<tbody>
 			<tr>
-                <td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Stundenbudget</p></td>
-                <td align="left" nowrap="nowrap" valign="middle" colspan="2"><input maxlength="6" style="width:60px;" name="task_hours" value="" class="formtext" type="text"> (Angabe in Stunden)</td>
+                <td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Stundenbudget*</p></td>
+                <td align="left" nowrap="nowrap" valign="middle" colspan="2"><input maxlength="6" style="width:60px;" name="task_hoursplanned" value="@@{task_hoursplanned}@@" class="formtext" type="text"> (Angabe in Stunden)</td>
             </tr>
             <tr>
                 <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Aufgabentyp</p></td>
                 <td align="left" nowrap="nowrap" valign="middle" colspan="2">
-					<select name="module_active" class="formtext">
-						<option value="http://www.test.de">Test1</option>
-						<option value="http://www.test.de">Test Link 1</option>
-						<option value="http://www.test.de">Test Links 2</option>
+					<select name="task_type" class="formtext">
+						<!-- TemplateBeginBlock name="tasktype_loop" -->
+							<option value="@@{tasktype_id}@@"@@{tasktype_selected}@@>@@{tasktype_name}@@</option>
+						<!-- TemplateEndBlock -->
 					</select>
 				</td>
             </tr>
             <tr>
                 <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Priorität</p></td>
                 <td align="left" nowrap="nowrap" valign="middle" colspan="2">
-					<select name="module_active" class="formtext">
-						<option value="http://www.test.de">Test1</option>
-						<option value="http://www.test.de">Test Link 1</option>
-						<option value="http://www.test.de">Test Links 2</option>
+					<select name="task_priority" class="formtext">
+						<!-- TemplateBeginBlock name="priority_loop" -->
+							<option value="@@{priority_id}@@"@@{priority_selected}@@>@@{priority_name}@@</option>
+						<!-- TemplateEndBlock -->
 					</select>
 				</td>
             </tr>
 			<tr>
                 <td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Beginn</p></td>
                 <td align="left" nowrap="nowrap" valign="middle">
-				<input maxlength="30" name="task_begin" style="width:210px;" value="" class="formtext" type="text">
+				<input maxlength="30" name="task_begin" style="width:210px;" value="@@{task_begin}@@" class="formtext" type="text">
 				</td>
                 <td align="left" nowrap="nowrap" valign="middle">
 				<span style="margin-left:10px; margin-right:10px;"><a href="" alt=""><span onmousemove="showTooltip('Datum auswählen', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/apps/date.png" alt="" name="beginDate" border="0" /></span></a></span>
@@ -178,7 +180,7 @@
 			<tr>
                 <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Fällig am</p></td>
                 <td align="left" nowrap="nowrap" valign="middle">
-				<input maxlength="30" name="task_end" style="width:210px;" value="" class="formtext" type="text">
+				<input maxlength="30" name="task_end" style="width:210px;" value="@@{task_end}@@" class="formtext" type="text">
 				</td>
                 <td align="left" nowrap="nowrap" valign="middle">
 				<span style="margin-left:10px; margin-right:10px;"><a href="" alt=""><span onmousemove="showTooltip('Datum auswählen', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/apps/date.png" alt="" name="endDate" border="0" /></span></a></span>
@@ -194,7 +196,7 @@
 		<table style="margin-bottom: 10px;" border="0" cellpadding="0" cellspacing="0">
 		<tr>
 			<td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Tags*</p></td>
-			<td align="left" nowrap="nowrap" valign="middle"><input maxlength="3" style="width:750px; margin-top:10px;" name="task_tags" value="" class="formtext" type="text">
+			<td align="left" nowrap="nowrap" valign="middle"><input maxlength="512" style="width:750px; margin-top:10px;" name="task_tags" value="@@{task_tags}@@" class="formtext" type="text">
 			<p style="margin-left:0px;">(Mehrere Tags durch Komma trennen. Bitte <u>mindestens</u> Kunde und evtl. Projekt angeben)</p></td>
 		</tr>
 		</table>
@@ -202,7 +204,8 @@
 	</tr>
 	<tr>
 	<td colspan="2">
-            <p style="text-align:center;"><input name="submit" value="Aufgabe hinzufügen" class="formbutton" type="submit"></p>
+           <p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/actions/filenew.png" alt="" border="0" align="top" />
+		   <input name="submit" value="Aufgabe hinzufügen" class="formbutton" type="submit"></p>
 	</td>
 	</tr>
 	</table>

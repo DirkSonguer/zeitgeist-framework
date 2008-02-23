@@ -35,31 +35,34 @@
 	
 <!-- InstanceBeginEditable name="head" -->
 
-<script language="javascript" type="text/javascript">
+	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryData.js"></script>
+	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/xpath.js"></script>
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryNestedXMLDataSet.js"></script>
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/js/SpryExtensions.js"></script>
 
-	var bShowShortcuts = false;
-	shortcutUp = new Image();
-	shortcutUp.src = "@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png";
-	shortcutDown = new Image();
-	shortcutDown.src = "@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png";
+	<script type="text/javascript">
 
-	function showShortcuts()
-	{
-		if (bShowShortcuts == false)
+		var dsTasks = new Spry.Data.XMLDataSet("@@{[dataserver.getalltasks]}@@", "container/element");
+		dsTasks.setColumnType("task_id", "number");
+		dsTasks.setColumnType("task_hoursplanned", "number");
+		dsTasks.setColumnType("task_hoursworked", "number");
+
+		function insertData(dataElement, dataContent)
 		{
-			bShowShortcuts = true;
-			document.getElementById('Shortcuts').style.display = "block";
-			document.images["shortcutIcon"].src = shortcutUp.src;
+			document.getElementById(dataElement).innerHTML = dataContent;
 		}
-		else
+	
+		function deleteTask(id, name)
 		{
-			bShowShortcuts = false;
-			document.getElementById('Shortcuts').style.display = "none";
-			document.images["shortcutIcon"].src = shortcutDown.src;
-		}
-	}	
+			var answer = window.confirm("Wollen Sie die Aufgabe '" + name + "' wirklich löschen?\nHinweis: Die Aufgabe wird unwiederbringlich aus dem System entfernt!");
 
-</script>
+			if (answer == true)
+			{
+			   window.location.href = "@@{[tasks.deletetask]}@@"+"&id="+id;
+			}
+		}
+
+	</script>
 
 <!-- InstanceEndEditable -->
 </head>
@@ -120,43 +123,57 @@
 	
 <!-- InstanceBeginEditable name="body" -->
 
-<form method="post" action="http://127.0.0.1/zeitgeist_administrator/index.php?module=setup&amp;action=addmodule" name="addmodule" enctype="multipart/form-data; charset=utf-8">
-
 <div class="textbox">
-	<h2>Ad-Hoc-Tätigkeit eintragen</h2>
+	<h2>Alle aktiven Aufgaben (<span id="groupRows">2</span>)</h2>
+	<div style="clear:both"></div>
 
-	<table width="100%" cellspacing="5" cellpadding="5" border="0">
-	<tbody>
-		<tr>
-			<td nowrap="nowrap" valign="top" width="140"><p class="formlabel">Titel*</p></td>
-			<td nowrap="nowrap" valign="middle"><input maxlength="30" name="task_name" value="" class="formtext" style="width:750px;" type="text"></td>
-		</tr>
-		<tr>
-			<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Beschreibung*</p></td>
-			<td align="left" nowrap="nowrap" valign="middle"><textarea rows="5" name="task_description" class="formtext" style="height:175px; width:750px;"></textarea></td>
-	
-		</tr>
-		<tr>
-			<td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Dauer</p></td>
-			<td align="left" nowrap="nowrap" valign="middle" colspan="2"><input maxlength="6" style="width:60px;" name="task_hours" value="" class="formtext" type="text"> (Angabe in Stunden. Dezimalstellen durch Punkt oder Komma)</td>
-		</tr>
-		<tr>
-			<td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Tags*</p></td>
-			<td align="left" nowrap="nowrap" valign="middle"><input maxlength="3" style="width:750px; margin-top:10px;" name="task_tags" value="" class="formtext" type="text">
-			<p style="margin-left:0px;">(Mehrere Tags durch Komma trennen. Bitte <u>mindestens</u> Kunde und evtl. Projekt angeben)</p></td>
-		</tr>
-		<tr>
-		<td colspan="2">
-			<p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/apps/kate.png" alt="" border="0" align="top" />
-			<input name="submit" value="Tätigkeit hinzufügen" class="formbutton" type="submit" /></p>
-		</td>
-		</tr>
-	</tbody>
-	</table>	
+	<div spry:region="dsTasks">
+    <div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
+
+	<div spry:state="ready">
+
+	<script type="text/javascript">
+		var numRows = dsTasks.getRowCount();
+		insertData('groupRows', numRows);
+	</script>
+
+	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
+	        <tr class="tablehead">
+				<th><p><a onclick="dsTasks.sort('task_id');">ID</a></p></th>
+				<th><p><a onclick="dsTasks.sort('task_name');">Name</a></p></th>
+				<th><p><a onclick="dsTasks.sort('tasktype_name');">Typ</a></p></th>
+				<th><p><a onclick="dsTasks.sort('group_name');">Verantwortlich</a></p></th>
+				<th><p style="text-align:center;"><a onclick="dsTasks.sort('task_hoursplanned');">Stunden-<br />budget</a></p></th>
+				<th><p style="text-align:center;"><a onclick="dsTasks.sort('task_hoursworked');">Stunden<br />verbraucht</a></p></th>
+				<th><p style="text-align:center;"><a onclick="dsTasks.sort('task_end');">Fällig am</a></p></th>
+				<th><p>Aktionen</p></th>
+	        </tr>
+	        <tr class="{ds_EvenOddRow}" spry:repeat="dsTasks">
+				<td><p>{dsTasks::task_id}</p></td>
+				<td><p><span onmousemove="showTooltip('{dsTasks::task_description}', event)" onmouseout="hideTooltip()">{dsTasks::task_name}</span></p></td>
+				<td><p>{dsTasks::tasktype_name}</p></td>
+				<td><p>{dsTasks::group_name}</p></td>
+				<td><p style="text-align:center;">{dsTasks::task_hoursplanned}</p></td>
+				<td><p style="text-align:center;">{dsTasks::task_hoursworked}</p></td>
+				<td>
+					<div spry:choose="spry:choose">
+						<div spry:when="'{dsTasks::task_end}' == '0000-00-00'"><p style="text-align:center;">-</p></div>
+						<div spry:default="spry:default">
+							<p style="text-align:center;">{dsTasks::task_end}</p>
+						</div>
+					</div>
+				</td>
+				<td width="90"><p style="text-align:center;">
+				<span onmousemove="showTooltip('Aufgabe bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.edittask]}@@&id={dsTasks::task_id}" alt="Aufgabe bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="Aufgabe bearbeiten" border="0" /></a></span> &nbsp; 
+				<span onmousemove="showTooltip('Aufgabe löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteTask({dsTasks::task_id}, '{dsTasks::task_name}')" alt="Aufgabe löschen"><img src="@@{templatepath}@@/nuvola/22x22/actions/cancel.png" alt="Aufgabe löschen" border="0" /></a>
+                </p></td>
+	        </tr>
+	    </table>
+    </div>
 	</div>
 	
 </div>
-</form>	
+
 
 <!-- InstanceEndEditable -->
 

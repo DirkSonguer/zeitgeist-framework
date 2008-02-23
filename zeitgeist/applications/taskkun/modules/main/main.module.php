@@ -42,7 +42,7 @@ class main
 			$tpl->assign('open_usertasks', 'keine');
 		}
 
-		$sql = "SELECT COUNT(t.task_id) as open_grouptasks FROM tasks t LEFT JOIN tasks_to_users tu ON t.task_id = tu.taskusers_id LEFT JOIN users u ON tu.taskusers_user = u.user_id WHERE taskusers_id is null";
+		$sql = "SELECT COUNT(t.task_id) as open_grouptasks FROM tasks t LEFT JOIN tasks_to_users tu ON t.task_id = tu.taskusers_task LEFT JOIN users u ON tu.taskusers_user = u.user_id WHERE taskusers_id is null";
 		$res = $this->database->query($sql);
 		$row = $this->database->fetchArray($res);
 		$tpl->assignDataset($row);

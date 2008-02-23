@@ -1,18 +1,4 @@
 <?php
-/**
- * Zeitgeist Browsergame Framework
- * http://www.zeitgeist-framework.com
- *
- * Template class
- *
- * @author Dirk Songür <songuer@zeitgeist-framework.com>
- *
- * @copyright http://www.zeitgeist-framework.com
- * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
- *
- * @package ZEITGEIST
- * @subpackage ZEITGEIST TEMPLATE
- */
 
 defined('TASKKUN_ACTIVE') or die();
 
