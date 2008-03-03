@@ -489,6 +489,43 @@ class zgUserhandler
 
 
 	/**
+	 * Changes the username of the user to a given one
+	 * Checks if the given username already exists
+	 *
+	 * @param string $username username of the user
+	 *
+	 * @return boolean
+	 */
+	public function changeUsername($username)
+	{
+		$this->debug->guard();
+
+		$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " WHERE user_username='" . $username . "'";
+		$res = $this->database->query($sql);
+		if ($this->database->numRows($res) > 0)
+		{
+			$this->debug->write('Problem changing username: username already exists', 'warning');
+			$this->messages->setMessage('Problem changing username: username already exists', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$sql = "UPDATE " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " SET user_username = '" . $username . "' WHERE user_id='" . $this->getUserID() . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem changing the username of a user', 'warning');
+			$this->messages->setMessage('Problem changing the username of a user', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	/**
 	 * Checks if the confirmation key exists
 	 * Returns the user id if the key is found or false
 	 *

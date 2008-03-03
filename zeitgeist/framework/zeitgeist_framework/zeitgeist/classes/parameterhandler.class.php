@@ -191,7 +191,7 @@ class zgParameterhandler
 		$unsafeParameters += $this->rawParameters['POST'];
 		$unsafeParameters += $this->rawParameters['COOKIE'];
 
-		foreach($allowedParameters as $parametername => $parameterdefinition)
+		foreach ($allowedParameters as $parametername => $parameterdefinition)
 		{
 			if ($this->_checkParameter($parametername, $parameterdefinition))
 			{

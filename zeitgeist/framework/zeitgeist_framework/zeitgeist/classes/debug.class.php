@@ -136,7 +136,7 @@ class zgDebug
 			$newGuardMessage['class'] = '';
 		}
 
-		foreach($backtrace['args'] as $parameter)
+		foreach ($backtrace['args'] as $parameter)
 		{
 			$newGuardMessage['args'][] = $parameter;
 		}
@@ -212,13 +212,13 @@ class zgDebug
 		echo '<div class="debug">';
 		echo '<h1>Misc Infomation</h1>';
 		echo '<h2>_GET:</h2>';
-		foreach($_GET as $key => $value)
+		foreach ($_GET as $key => $value)
 		{
 			echo '<p>' . $key . ' : ' . $value;
 		}
 
 		echo '<h2>_POST:</h2>';
-		foreach($_POST as $key => $value)
+		foreach ($_POST as $key => $value)
 		{
 			echo '<p>' . $key . ' : ' . $value;
 		}
