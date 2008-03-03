@@ -3,7 +3,7 @@
 		var paginationSize = 10;
 		var paginationStop = paginationOffset + paginationSize;
 
-		function filterSpryDataset(filterRow, filterParameter, spryDataset)
+		function filterSpryDataset(filterRow, filterParameter, spryDataset, exactMatch)
 		{
 			doFilterFunc = function(dataSet, row, rowNumber)
 			{
@@ -13,17 +13,26 @@
 				}
 				else
 				{
-					filterString = "^"+filterParameter+"";
+					if (exactMatch == true)
+					{
+						filterString = "^"+filterParameter+"";
+					}
+					else
+					{
+						filterString = ""+filterParameter+"";
+//						filterString = "^[test]";
+					}
+						
 					var regExp = new RegExp(filterString, "i");
 				}
 	
 				if (row[filterRow].search(regExp) != -1)
 				{
-					return row;                     // Return the row to keep it in the data set.
+					return row; // Return the row to keep it in the data set.
 				}
 				else
 				{
-					return null;                    // Return null to remove the row from the data set.
+					return null; // Return null to remove the row from the data set.
 				}
 			}
 			

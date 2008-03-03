@@ -42,7 +42,7 @@
 
 	<script language="javascript" type="text/javascript">
 
-	var dsTasklogs = new Spry.Data.XMLDataSet("@@{[dataserver.gettasklogs]}@@&id=@@{taskid}@@", "container/element");
+		var dsTasklogs = new Spry.Data.XMLDataSet("@@{[dataserver.gettasklogs]}@@&id=@@{taskid}@@", "container/element");
 	
 		var bShowShortcuts = false;
 		shortcutUp = new Image();
@@ -64,8 +64,14 @@
 				document.getElementById('Shortcuts').style.display = "none";
 				document.images["shortcutIcon"].src = shortcutDown.src;
 			}
-		}	
-	
+		}
+		
+		function submitForm(buttonid)
+		{
+			document.processTasklog.submitButton.value = buttonid;
+			document.processTasklog.submit();
+		}
+
 	</script>
 
 <!-- InstanceEndEditable -->
@@ -77,6 +83,9 @@
 <div class="maincontent">
 <div class="headmenu">
 	<h1>Taskkun :)</h1>
+	<div class="menuicon" style="float:right; margin-top:-40px;"><a href="@@{[main.logout]}@@" alt=""><span onmousemove="showTooltip('Logout', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/32x32/actions/exit.png" alt="" align="left" border="0" /></span></a></div>
+
 </div>
 
 <!-- TemplateBeginBlock name="navigation" -->
@@ -87,6 +96,8 @@
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/klipper.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[tasks.addadhoc]}@@" alt=""><span onmousemove="showTooltip('Ad-Hoc-Tätigkeit eintragen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/karm.png" alt="" border="0" /></span></a></div>
+		<div style="float:left; margin:10px;"><a href="@@{[config.self]}@@" alt=""><span onmousemove="showTooltip('Persönliche Einstellungen', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/kcmsystem.png" alt="" border="0" /></span></a></div>
 		<div style="float:right; margin:10px;"><a href="@@{[help.index]}@@" alt=""><span onmousemove="showTooltip('Hilfe!', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/filetypes.png" alt="" border="0" /></span></a></div>
 		
@@ -100,10 +111,21 @@
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kword.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[tasks.showalltasks]}@@" alt=""><span onmousemove="showTooltip('Alle aktiven Aufgaben anzeigen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpager.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[tasks.searchtask]}@@" alt=""><span onmousemove="showTooltip('Aufgaben suchen', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[search.index]}@@" alt=""><span onmousemove="showTooltip('Aufgaben suchen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpdf.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[analyze.index]}@@" alt=""><span onmousemove="showTooltip('Statistiken anzeigen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kchart.png" alt="" border="0" /></span></a></div>
+
+		<!-- TemplateBeginBlock name="adminnavigation" -->
+		<div style="float:right; margin:10px;"><a href="@@{[config.overviewpriorities]}@@" alt=""><span onmousemove="showTooltip('Prioritäten verwalten', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/ksysv.png" alt="" border="0" /></span></a></div>
+		<div style="float:right; margin:10px;"><a href="@@{[config.overviewtasktypes]}@@" alt=""><span onmousemove="showTooltip('Aufgabentypen verwalten', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/fsview.png" alt="" border="0" /></span></a></div>
+		<div style="float:right; margin:10px;"><a href="@@{[config.overviewusergroups]}@@" alt=""><span onmousemove="showTooltip('Benutzergruppen verwalten', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/kdmconfig.png" alt="" border="0" /></span></a></div>
+		<div style="float:right; margin:10px;"><a href="@@{[users.index]}@@" alt=""><span onmousemove="showTooltip('Benutzer verwalten', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/mimetypes/vcard.png" alt="" border="0" /></span></a></div>
+		<!-- TemplateEndBlock -->
 		
 		<div style="clear:both"></div>
 	</div>
@@ -142,14 +164,16 @@
 				<th width="40"><p style="text-align:center;"><a onclick="dsTasklogs.sort('tasklog_id');">ID</a></p></th>
 				<th width="150"><p style="text-align:center;"><a onclick="dsTasklogs.sort('tasklog_username');">Bearbeitet von</a></p></th>
 				<th width="100"><p style="text-align:center;"><a onclick="dsTasklogs.sort('task_hoursworked');">Dauer</a></p></th>
-				<th><p><a onclick="dsTasklogs.sort('tasklog_description');">Tätigkeitbeshreibung</a></p></th>
+				<th><p>Tätigkeitbeschreibung</p></th>
+				<th width="200"><p style="text-align:center;"><a onclick="dsTasklogs.sort('tasklog_timestamp');">Datum</a></p></th>
 				<th><p>Aktionen</p></th>
 	        </tr>
 	        <tr class="{ds_EvenOddRow}" spry:repeat="dsTasklogs">
 				<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_id}</p></td>
 				<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_username}</p></td>
 				<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_hoursworked}</p></td>
-				<td valign="top"><pre>{dsTasklogs::tasklog_description}</pre></td>
+				<td valign="top"><p>{dsTasklogs::tasklog_description}</p></td>
+				<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_timestamp}</p></td>
 				<td width="90"><p></p></td>
 	        </tr>
 	    </table>
@@ -158,10 +182,11 @@
 	</div>
 </div>
 
-<form method="post" action="@@{tasks.processtask}@@" name="processtask" enctype="multipart/form-data; charset=utf-8">
+<form method="post" action="@@{tasks.processtask}@@" name="processTasklog" enctype="multipart/form-data; charset=utf-8">
 <div class="textbox">
 	<input type="hidden" name="taskid" value="@@{taskid}@@" />
-	<h2>Tätigkeit eintragen</h2>
+	<input type="hidden" name="submitButton" value="0" />
+	<h2>Tätigkeit eintragen für: "@@{task_name}@@"</h2>
 
 	<table width="100%" cellspacing="5" cellpadding="5" border="0">
 	<tbody>
@@ -176,7 +201,7 @@
 		<tr>
 		<td colspan="2">
 			<p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/apps/kate.png" alt="" border="0" align="top" />
-			<input name="submit" value="Tätigkeit hinzufügen" class="formbutton" type="submit" /></p>
+			<button name="addTasklog" value="Tätigkeit hinzufügen" class="formbutton" type="button" onclick="submitForm('1');" />Tätigkeit hinzufügen</button></p>
 		</td>
 		</tr>
 	</tbody>
@@ -188,9 +213,9 @@
 	<tbody>
 		<tr>
 		<td><p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/actions/kaboodleloop.png" alt="" border="0" align="top" />
-		<span onmousemove="showTooltip('Gibt die Aufgabe eine Ebene im Ablauf zurück.<br />Dies kann der Fall sein, falls eine Aufgabe noch nicht<br />bearbeitet werden kann oder fehlerhaft ist.', event)" onmouseout="hideTooltip()"><input name="submit" value="Aufgabe zurückgeben" class="formbutton" type="submit" /></span></p></td>
-		<td><p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/actions/button_accept.png" alt="" border="0" align="top" />
-		<span onmousemove="showTooltip('Markiert die Aufgabe als abgeschlossen<br />und gibt die Aufgabe eine Ebene im Ablauf weiter.', event)" onmouseout="hideTooltip()"><input name="submit" value="Aufgabe abschließen" class="formbutton" type="submit" /></span></p></td>
+		<span onmousemove="showTooltip('Gibt die Aufgabe eine Ebene im Ablauf zurück.<br />Dies kann der Fall sein, falls eine Aufgabe noch nicht<br />bearbeitet werden kann oder fehlerhaft ist.', event)" onmouseout="hideTooltip()"><input name="returnTask" value="Aufgabe zurückgeben" class="formbutton" type="button" onclick="submitForm('2');" /></span></p></td>
+		<td><p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/apps/korganizer.png" alt="" border="0" align="top" />
+		<span onmousemove="showTooltip('Markiert die Aufgabe als abgeschlossen<br />und gibt die Aufgabe eine Ebene im Ablauf weiter.', event)" onmouseout="hideTooltip()"><input name="finishTask" value="Aufgabe abschließen" class="formbutton" type="button" onClick="submitForm('3');" /></span></p></td>
 		</tr>
 	</tbody>
 	</table>	

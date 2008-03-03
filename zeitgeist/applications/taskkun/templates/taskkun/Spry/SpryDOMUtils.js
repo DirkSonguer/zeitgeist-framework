@@ -1,4 +1,4 @@
-// SpryDOMUtils.js - version 0.6 - Spry Pre-Release 1.6
+// SpryDOMUtils.js - version 0.6 - Spry Pre-Release 1.6.1
 //
 // Copyright (c) 2007. Adobe Systems Incorporated.
 // All rights reserved.

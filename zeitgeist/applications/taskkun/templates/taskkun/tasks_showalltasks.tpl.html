@@ -73,6 +73,9 @@
 <div class="maincontent">
 <div class="headmenu">
 	<h1>Taskkun :)</h1>
+	<div class="menuicon" style="float:right; margin-top:-40px;"><a href="@@{[main.logout]}@@" alt=""><span onmousemove="showTooltip('Logout', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/32x32/actions/exit.png" alt="" align="left" border="0" /></span></a></div>
+
 </div>
 
 <!-- TemplateBeginBlock name="navigation" -->
@@ -83,6 +86,8 @@
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/klipper.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[tasks.addadhoc]}@@" alt=""><span onmousemove="showTooltip('Ad-Hoc-Tätigkeit eintragen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/karm.png" alt="" border="0" /></span></a></div>
+		<div style="float:left; margin:10px;"><a href="@@{[config.self]}@@" alt=""><span onmousemove="showTooltip('Persönliche Einstellungen', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/kcmsystem.png" alt="" border="0" /></span></a></div>
 		<div style="float:right; margin:10px;"><a href="@@{[help.index]}@@" alt=""><span onmousemove="showTooltip('Hilfe!', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/filetypes.png" alt="" border="0" /></span></a></div>
 		
@@ -96,10 +101,21 @@
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kword.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[tasks.showalltasks]}@@" alt=""><span onmousemove="showTooltip('Alle aktiven Aufgaben anzeigen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpager.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[tasks.searchtask]}@@" alt=""><span onmousemove="showTooltip('Aufgaben suchen', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[search.index]}@@" alt=""><span onmousemove="showTooltip('Aufgaben suchen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpdf.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[analyze.index]}@@" alt=""><span onmousemove="showTooltip('Statistiken anzeigen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kchart.png" alt="" border="0" /></span></a></div>
+
+		<!-- TemplateBeginBlock name="adminnavigation" -->
+		<div style="float:right; margin:10px;"><a href="@@{[config.overviewpriorities]}@@" alt=""><span onmousemove="showTooltip('Prioritäten verwalten', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/ksysv.png" alt="" border="0" /></span></a></div>
+		<div style="float:right; margin:10px;"><a href="@@{[config.overviewtasktypes]}@@" alt=""><span onmousemove="showTooltip('Aufgabentypen verwalten', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/fsview.png" alt="" border="0" /></span></a></div>
+		<div style="float:right; margin:10px;"><a href="@@{[config.overviewusergroups]}@@" alt=""><span onmousemove="showTooltip('Benutzergruppen verwalten', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/kdmconfig.png" alt="" border="0" /></span></a></div>
+		<div style="float:right; margin:10px;"><a href="@@{[users.index]}@@" alt=""><span onmousemove="showTooltip('Benutzer verwalten', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/mimetypes/vcard.png" alt="" border="0" /></span></a></div>
+		<!-- TemplateEndBlock -->
 		
 		<div style="clear:both"></div>
 	</div>
@@ -141,7 +157,6 @@
 	        <tr class="tablehead">
 				<th><p><a onclick="dsTasks.sort('task_id');">ID</a></p></th>
 				<th><p><a onclick="dsTasks.sort('task_name');">Name</a></p></th>
-				<th><p><a onclick="dsTasks.sort('tasktype_name');">Typ</a></p></th>
 				<th><p><a onclick="dsTasks.sort('group_name');">Verantwortlich</a></p></th>
 				<th><p style="text-align:center;"><a onclick="dsTasks.sort('task_hoursplanned');">Stunden-<br />budget</a></p></th>
 				<th><p style="text-align:center;"><a onclick="dsTasks.sort('task_hoursworked');">Stunden<br />verbraucht</a></p></th>
@@ -151,19 +166,29 @@
 	        <tr class="{ds_EvenOddRow}" spry:repeat="dsTasks">
 				<td><p>{dsTasks::task_id}</p></td>
 				<td><p><span onmousemove="showTooltip('{dsTasks::task_description}', event)" onmouseout="hideTooltip()">{dsTasks::task_name}</span></p></td>
-				<td><p>{dsTasks::tasktype_name}</p></td>
-				<td><p>{dsTasks::group_name}</p></td>
-				<td><p style="text-align:center;">{dsTasks::task_hoursplanned}</p></td>
-				<td><p style="text-align:center;">{dsTasks::task_hoursworked}</p></td>
 				<td>
 					<div spry:choose="spry:choose">
-						<div spry:when="'{dsTasks::task_end}' == '0000-00-00'"><p style="text-align:center;">-</p></div>
+						<div spry:when="'{dsTasks::user_username}' == ''"><p>{dsTasks::group_name}</p></div>
 						<div spry:default="spry:default">
-							<p style="text-align:center;">{dsTasks::task_end}</p>
+							<p>{dsTasks::user_username}</p>
 						</div>
 					</div>
 				</td>
-				<td width="90"><p style="text-align:center;">
+				<td><p style="text-align:center;">{dsTasks::task_hoursplanned}</p></td>
+				<td>
+					<p spry:if="{dsTasks::task_overdrawn} == '0'" style="text-align:center;">{dsTasks::task_hoursworked}</p>
+					<p spry:if="{dsTasks::task_overdrawn} == '1'" style="text-align:center; font-weight:bold; background:#aa0000; color:#ffffff; padding:10px;">{dsTasks::task_hoursworked}</p>
+				<td>
+					<div spry:choose="spry:choose">
+						<div spry:when="'{dsTasks::task_end}' == '00.00.0000'"><p style="text-align:center;">-</p></div>
+						<div spry:default="spry:default">
+							<p spry:if="{dsTasks::task_late} == '0'" style="text-align:center;">{dsTasks::task_end}</p>
+							<p spry:if="{dsTasks::task_late} == '1'" style="text-align:center; font-weight:bold; background:#aa0000; color:#ffffff; padding:10px;">{dsTasks::task_end}</p>
+						</div>
+					</div>
+				</td>
+				<td width="120"><p style="text-align:center;">
+				<span onmousemove="showTooltip('Details', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.taskdetails]}@@&id={dsTasks::task_id}" alt="Details"><img src="@@{templatepath}@@/nuvola/22x22/apps/kappfinder.png" alt="Details" border="0" /></a></span> &nbsp; 
 				<span onmousemove="showTooltip('Aufgabe bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.edittask]}@@&id={dsTasks::task_id}" alt="Aufgabe bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="Aufgabe bearbeiten" border="0" /></a></span> &nbsp; 
 				<span onmousemove="showTooltip('Aufgabe löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteTask({dsTasks::task_id}, '{dsTasks::task_name}')" alt="Aufgabe löschen"><img src="@@{templatepath}@@/nuvola/22x22/actions/cancel.png" alt="Aufgabe löschen" border="0" /></a>
                 </p></td>

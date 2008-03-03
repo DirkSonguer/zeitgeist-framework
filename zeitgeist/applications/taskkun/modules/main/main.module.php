@@ -29,28 +29,33 @@ class main
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_index'));
 
-		$sql = "SELECT COUNT(t.task_id) as open_usertasks FROM tasks_to_users tu LEFT JOIN tasks t ON tu.taskusers_task = t.task_id WHERE taskusers_user='" . $this->user->getUserID() . "'";
-		$res = $this->database->query($sql);
-		$row = $this->database->fetchArray($res);
+		$taskfunctions = new tkTaskfunctions();
 
-		if ($row['open_usertasks'] > 0)
+		$usertasks = $taskfunctions->getNumberofUsertasks();
+		if ($usertasks > 0)
 		{
-			$tpl->assignDataset($row);
+			$tpl->assign('open_usertasks', $usertasks);
 		}
 		else
 		{
 			$tpl->assign('open_usertasks', 'keine');
 		}
 
-		$sql = "SELECT COUNT(t.task_id) as open_grouptasks FROM tasks t LEFT JOIN tasks_to_users tu ON t.task_id = tu.taskusers_task LEFT JOIN users u ON tu.taskusers_user = u.user_id WHERE taskusers_id is null";
-		$res = $this->database->query($sql);
-		$row = $this->database->fetchArray($res);
-		$tpl->assignDataset($row);
+		$grouptasks = $taskfunctions->getNumberofGrouptasks();
+		if ($grouptasks > 0)
+		{
+			$tpl->assign('open_grouptasks', $grouptasks);
+		}
+		else
+		{
+			$tpl->assign('open_grouptasks', 'keine');
+		}
 
 		$tpl->assign('current_date', date('d.m.Y - H:i:s'));
 		$tpl->assign('taskkun_username', $this->user->getUsername());
 
-		if ($this->user->hasUserrole('Administrator')) $tpl->insertBlock('managermenu');
+		if ( ($this->user->hasUserrole('Administrator')) || ($this->user->hasUserrole('Manager')) ) $tpl->insertBlock('managermenu');
+		if ($this->user->hasUserrole('Administrator')) $tpl->insertBlock('adminmenu');
 
 		$tpl->show(false);
 

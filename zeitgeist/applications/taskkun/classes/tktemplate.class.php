@@ -58,9 +58,9 @@ class tkTemplate extends zgTemplate
 		if ( ($this->user->isLoggedIn()) && ($showmenu) )
 		{
 			$this->insertBlock('navigation');
-			if ($this->user->hasUserrole('Administrator')) $this->insertBlock('managernavigation');
+			if ($this->user->hasUserrole('Administrator')) $this->insertBlock('adminnavigation');
+			if ( ($this->user->hasUserrole('Administrator')) || ($this->user->hasUserrole('Manager')) ) $this->insertBlock('managernavigation');
 		}
-
 
 		$ret = parent::show();
 

@@ -1,4 +1,4 @@
-// xpath.js - version 0.7 - Spry Pre-Release 1.6
+// xpath.js - version 0.7 - Spry Pre-Release 1.6.1
 //
 // Copyright 2006 Google Inc.
 // All Rights Reserved

@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/admin.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>Taskkun</title>
+<!-- InstanceEndEditable -->
+
+<link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/taskkun.css" />
+
+<script language="javascript" type="text/javascript">
+
+	function showTooltip(text, event)
+	{
+		document.getElementById('Tooltip').innerHTML = text;
+
+		var topPixel = event.clientY + 10;
+		var leftPixel = event.clientX + 10;
+
+		document.getElementById('Tooltip').style.top = topPixel + "px";
+		document.getElementById('Tooltip').style.left = leftPixel + "px";
+		document.getElementById('Tooltip').style.display = "block";
+	}
+
+	function hideTooltip()
+	{
+		document.getElementById('Tooltip').innerHTML = "";
+
+		document.getElementById('Tooltip').style.top = "0px";
+		document.getElementById('Tooltip').style.left = "0px";
+		document.getElementById('Tooltip').style.display = "none";
+	}
+
+</script>
+	
+<!-- InstanceBeginEditable name="head" -->
+
+	<script type="text/javascript" src="@@{templatepath}@@/js/date-picker/js/datepicker.js"></script>
+	<link href="@@{templatepath}@@/js/date-picker/css/datepicker.css" rel="stylesheet" type="text/css" />
+
+	<script language="javascript" type="text/javascript">				
+
+		var bShowShortcuts = false;
+		shortcutUp = new Image();
+		shortcutUp.src = "@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png";
+		shortcutDown = new Image();
+		shortcutDown.src = "@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png";
+	
+		function showShortcuts()
+		{
+			if (bShowShortcuts == false)
+			{
+				bShowShortcuts = true;
+				document.getElementById('Shortcuts').style.display = "block";
+				document.images["shortcutIcon"].src = shortcutUp.src;
+			}
+			else
+			{
+				bShowShortcuts = false;
+				document.getElementById('Shortcuts').style.display = "none";
+				document.images["shortcutIcon"].src = shortcutDown.src;
+			}
+		}	
+	
+	</script>
+
+<!-- InstanceEndEditable -->
+</head>
+
+<body>
+
+<div id="Tooltip" class="tooltip" style="display:none; text-align:left;"></div>
+<div class="maincontent">
+<div class="headmenu">
+	<h1>Taskkun :)</h1>
+	<div class="menuicon" style="float:right; margin-top:-40px;"><a href="@@{[main.logout]}@@" alt=""><span onmousemove="showTooltip('Logout', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/32x32/actions/exit.png" alt="" align="left" border="0" /></span></a></div>
+
+</div>
+
+<!-- TemplateBeginBlock name="navigation" -->
+	<div class="textbox">
+		<div style="float:left; margin:10px;"><a href="@@{[main.index]}@@" alt=""><span onmousemove="showTooltip('Hauptseite', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/actions/gohome.png" alt="" border="0" /></span></a></div>
+		<div style="float:left; margin:10px;"><a href="@@{[tasks.index]}@@" alt=""><span onmousemove="showTooltip('Meine Aufgaben', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/klipper.png" alt="" border="0" /></span></a></div>
+		<div style="float:left; margin:10px;"><a href="@@{[tasks.addadhoc]}@@" alt=""><span onmousemove="showTooltip('Ad-Hoc-Tätigkeit eintragen', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/karm.png" alt="" border="0" /></span></a></div>
+		<div style="float:left; margin:10px;"><a href="@@{[config.self]}@@" alt=""><span onmousemove="showTooltip('Persönliche Einstellungen', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/kcmsystem.png" alt="" border="0" /></span></a></div>
+		<div style="float:right; margin:10px;"><a href="@@{[help.index]}@@" alt=""><span onmousemove="showTooltip('Hilfe!', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/filetypes.png" alt="" border="0" /></span></a></div>
+		
+		<div style="clear:both"></div>
+	</div>
+<!-- TemplateEndBlock -->
+
+<!-- TemplateBeginBlock name="managernavigation" -->
+	<div class="textbox">
+		<div style="float:left; margin:10px;"><a href="@@{[tasks.addtask]}@@" alt=""><span onmousemove="showTooltip('Neue Aufgabe anlegen', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/kword.png" alt="" border="0" /></span></a></div>
+		<div style="float:left; margin:10px;"><a href="@@{[tasks.showalltasks]}@@" alt=""><span onmousemove="showTooltip('Alle aktiven Aufgaben anzeigen', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpager.png" alt="" border="0" /></span></a></div>
+		<div style="float:left; margin:10px;"><a href="@@{[search.index]}@@" alt=""><span onmousemove="showTooltip('Aufgaben suchen', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpdf.png" alt="" border="0" /></span></a></div>
+		<div style="float:left; margin:10px;"><a href="@@{[analyze.index]}@@" alt=""><span onmousemove="showTooltip('Statistiken anzeigen', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/kchart.png" alt="" border="0" /></span></a></div>
+
+		<!-- TemplateBeginBlock name="adminnavigation" -->
+		<div style="float:right; margin:10px;"><a href="@@{[config.overviewpriorities]}@@" alt=""><span onmousemove="showTooltip('Prioritäten verwalten', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/ksysv.png" alt="" border="0" /></span></a></div>
+		<div style="float:right; margin:10px;"><a href="@@{[config.overviewtasktypes]}@@" alt=""><span onmousemove="showTooltip('Aufgabentypen verwalten', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/fsview.png" alt="" border="0" /></span></a></div>
+		<div style="float:right; margin:10px;"><a href="@@{[config.overviewusergroups]}@@" alt=""><span onmousemove="showTooltip('Benutzergruppen verwalten', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/kdmconfig.png" alt="" border="0" /></span></a></div>
+		<div style="float:right; margin:10px;"><a href="@@{[users.index]}@@" alt=""><span onmousemove="showTooltip('Benutzer verwalten', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/mimetypes/vcard.png" alt="" border="0" /></span></a></div>
+		<!-- TemplateEndBlock -->
+		
+		<div style="clear:both"></div>
+	</div>
+<!-- TemplateEndBlock -->
+
+<!-- InstanceBeginEditable name="pagetitle" -->
+
+<!-- InstanceEndEditable -->
+
+	<!-- TemplateBeginBlock name="usermessage" -->
+		<h3 class="usermessage"><img src="@@{templatepath}@@/nuvola/16x16/actions/ok.png" alt="" align="left" style="margin-right:5px;" /> @@{usermessage}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="userwarnings" -->
+		<h3 class="userwarning"><img src="@@{templatepath}@@/nuvola/16x16/actions/messagebox_info.png" alt="" align="left" style="margin-right:5px;" /> @@{userwarning}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="usererrors" -->
+		<h3 class="usererror"><img src="@@{templatepath}@@/nuvola/16x16/actions/no.png" alt="" align="left" style="margin-right:5px;" /> @@{usererror}@@</h3>
+	<!-- TemplateEndBlock -->
+	
+<!-- InstanceBeginEditable name="body" -->
+
+<form method="post" action="@@{[tasks.edittask]}@@" name="edittask" enctype="multipart/form-data; charset=utf-8">
+<input name="task_id" value="@@{task_id}@@" type="hidden">
+
+<div class="textbox">
+	<h2>Aufgabe bearbeiten</h2>
+
+	<table width="100%" cellspacing="5" cellpadding="5" border="0">
+	<tr>
+	<td width="50%" valign="top">
+        <table style="margin-bottom: 10px;" border="0" cellpadding="0" cellspacing="0">
+            <tbody>
+			<tr>
+                <td nowrap="nowrap" valign="top" width="140"><p class="formlabel">Titel*</p></td>
+                <td nowrap="nowrap" valign="middle"><input maxlength="128" name="task_name" value="@@{task_name}@@" class="formtext" type="text"></td>
+            </tr>
+            <tr>
+                <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Beschreibung*</p></td>
+                <td align="left" nowrap="nowrap" valign="middle"><textarea rows="5" name="task_description" class="formtext" style="height:175px;">@@{task_description}@@</textarea></td>
+            </tr>
+		</tbody>
+		</table>
+	</td>
+	<td width="50%" valign="top">
+		<table style="margin-bottom: 10px;" border="0" cellpadding="0" cellspacing="0">
+		<tbody>
+			<tr>
+                <td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Stundenbudget*</p></td>
+                <td align="left" nowrap="nowrap" valign="middle"><input maxlength="6" style="width:60px;" name="task_hoursplanned" value="@@{task_hoursplanned}@@" class="formtext" type="text"> (Angabe in Stunden)</td>
+            </tr>
+            <tr>
+                <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Aufgabentyp</p></td>
+                <td align="left" nowrap="nowrap" valign="middle">
+					<select name="task_type" class="formtext">
+						<!-- TemplateBeginBlock name="tasktype_loop" -->
+							<option value="@@{tasktype_id}@@"@@{tasktype_selected}@@>@@{tasktype_name}@@</option>
+						<!-- TemplateEndBlock -->
+					</select>
+				</td>
+            </tr>
+            <tr>
+                <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Priorität</p></td>
+                <td align="left" nowrap="nowrap" valign="middle">
+					<select name="task_priority" class="formtext">
+						<!-- TemplateBeginBlock name="priority_loop" -->
+							<option value="@@{priority_id}@@"@@{priority_selected}@@>@@{priority_name}@@</option>
+						<!-- TemplateEndBlock -->
+					</select>
+				</td>
+            </tr>
+			<tr>
+                <td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Beginn</p></td>
+                <td align="left" nowrap="nowrap" valign="middle">
+				<input maxlength="30" name="task_begin" class="w8em format-d-m-y divider-dot" id="task_begin" style="width:210px; border:solid 1px #777788; padding:3px; font-family: Osaka,verdana,Sans-Serif; font-size:12pt;" value="@@{task_begin}@@" type="text">
+				</td>
+            </tr>
+			<tr>
+                <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Fällig am</p></td>
+                <td align="left" nowrap="nowrap" valign="middle">
+				<input maxlength="30" name="task_end" class="w8em format-d-m-y divider-dot" id="task_end" style="width:210px; border:solid 1px #777788; padding:3px; font-family: Osaka,verdana,Sans-Serif; font-size:12pt;" value="@@{task_end}@@" type="text">
+				</td>
+            </tr>
+			
+		</tbody>
+		</table>
+	</td>
+	</tr>
+	<tr>
+	<td colspan="2">
+		<table style="margin-bottom: 10px;" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Tags*</p></td>
+			<td align="left" nowrap="nowrap" valign="middle"><input maxlength="512" style="width:750px; margin-top:10px;" name="task_tags" value="@@{task_tags}@@" class="formtext" type="text">
+			<p style="margin-left:0px;">(Mehrere Tags durch Komma trennen. Bitte <u>mindestens</u> Kunde und evtl. Projekt angeben)</p></td>
+		</tr>
+		</table>
+	</td>
+	</tr>
+	<tr>
+	<td colspan="2">
+           <p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/actions/pencil.png" alt="" border="0" align="top" />
+		   <input name="submit" value="Aufgabe speichern" class="formbutton" type="submit"></p>
+	</td>
+	</tr>
+	</table>
+
+</div>
+
+<div class="textbox">
+	<h2 style="text-align:left;">Weitere Angaben <span style="float:right; margin-top:-20px;"><a href="javascript:showShortcuts();" alt=""><span onmousemove="showTooltip('Weitere Angaben', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png" alt="" name="shortcutIcon" align="left" border="0" /></span></a></span></h2>
+	<div style="clear:both"></div>
+	
+	<div id="Shortcuts" style="padding:5px; display:none;">
+
+	<table width="100%" cellspacing="5" cellpadding="5" border="0">
+	<tbody>
+	<tr>
+		<td align="right" nowrap="nowrap" valign="top" width="120"><p class="formlabel">Anmerkungen</p></td>
+		<td align="left" nowrap="nowrap" valign="middle">
+			<textarea rows="5" name="task_notes" class="formtext" style="height:175px; width:750px;"></textarea>
+		</td>
+	</tr>
+	</tbody>
+	</table>
+	
+	</div>
+	
+</div>
+</form>	
+
+<!-- InstanceEndEditable -->
+
+</div>
+
+</body>
+<!-- InstanceEnd --></html>
