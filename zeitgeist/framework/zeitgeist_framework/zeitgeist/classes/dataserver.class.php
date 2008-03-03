@@ -69,7 +69,7 @@ class zgDataserver
 		{
 			$xmlDataset .= "\t<element id=\"" . $i . "\">\n";
 
-			foreach($row as $key => $value)
+			foreach ($row as $key => $value)
 			{
 				$value = htmlspecialchars($value);
 				$xmlDataset .= "\t\t<{$key}>{$value}</{$key}>\n";
@@ -160,7 +160,7 @@ class zgDataserver
 			$xmlData = '';
 		}
 
-		foreach($array as $key => $value)
+		foreach ($array as $key => $value)
 		{
 			if (!is_array($value))
 			{

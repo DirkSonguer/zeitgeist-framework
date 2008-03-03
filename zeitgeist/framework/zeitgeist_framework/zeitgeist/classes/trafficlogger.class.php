@@ -83,7 +83,7 @@ class zgTrafficlogger
 
 		$logId = $this->database->insertId();
 
-		foreach($parameters as $key => $value)
+		foreach ($parameters as $key => $value)
 		{
 			$sql = "INSERT INTO trafficlog_parameters(trafficparameters_trafficid, trafficparameters_key, trafficparameters_value) VALUES('" . $logId . "', '" . $key . "', '" . $value . "')";
 			if (!$res = $this->database->query($sql))
