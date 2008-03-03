@@ -70,6 +70,9 @@
 <div class="maincontent">
 <div class="headmenu">
 	<h1>Taskkun :)</h1>
+	<div class="menuicon" style="float:right; margin-top:-40px;"><a href="@@{[main.logout]}@@" alt=""><span onmousemove="showTooltip('Logout', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/32x32/actions/exit.png" alt="" align="left" border="0" /></span></a></div>
+
 </div>
 
 <!-- TemplateBeginBlock name="navigation" -->
@@ -80,6 +83,8 @@
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/klipper.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[tasks.addadhoc]}@@" alt=""><span onmousemove="showTooltip('Ad-Hoc-Tätigkeit eintragen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/karm.png" alt="" border="0" /></span></a></div>
+		<div style="float:left; margin:10px;"><a href="@@{[config.self]}@@" alt=""><span onmousemove="showTooltip('Persönliche Einstellungen', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/kcmsystem.png" alt="" border="0" /></span></a></div>
 		<div style="float:right; margin:10px;"><a href="@@{[help.index]}@@" alt=""><span onmousemove="showTooltip('Hilfe!', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/filetypes.png" alt="" border="0" /></span></a></div>
 		
@@ -93,10 +98,21 @@
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kword.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[tasks.showalltasks]}@@" alt=""><span onmousemove="showTooltip('Alle aktiven Aufgaben anzeigen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpager.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[tasks.searchtask]}@@" alt=""><span onmousemove="showTooltip('Aufgaben suchen', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[search.index]}@@" alt=""><span onmousemove="showTooltip('Aufgaben suchen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpdf.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[analyze.index]}@@" alt=""><span onmousemove="showTooltip('Statistiken anzeigen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kchart.png" alt="" border="0" /></span></a></div>
+
+		<!-- TemplateBeginBlock name="adminnavigation" -->
+		<div style="float:right; margin:10px;"><a href="@@{[config.overviewpriorities]}@@" alt=""><span onmousemove="showTooltip('Prioritäten verwalten', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/ksysv.png" alt="" border="0" /></span></a></div>
+		<div style="float:right; margin:10px;"><a href="@@{[config.overviewtasktypes]}@@" alt=""><span onmousemove="showTooltip('Aufgabentypen verwalten', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/fsview.png" alt="" border="0" /></span></a></div>
+		<div style="float:right; margin:10px;"><a href="@@{[config.overviewusergroups]}@@" alt=""><span onmousemove="showTooltip('Benutzergruppen verwalten', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/kdmconfig.png" alt="" border="0" /></span></a></div>
+		<div style="float:right; margin:10px;"><a href="@@{[users.index]}@@" alt=""><span onmousemove="showTooltip('Benutzer verwalten', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/mimetypes/vcard.png" alt="" border="0" /></span></a></div>
+		<!-- TemplateEndBlock -->
 		
 		<div style="clear:both"></div>
 	</div>

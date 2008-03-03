@@ -1,6 +1,6 @@
 <?php
 /**
- * Taskkun
+ * Taskkun - Agile Project Management Tool
  *
  * Based on the Zeitgeist Application Framework
  * http://www.zeitgeist-framework.com

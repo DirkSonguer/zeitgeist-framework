@@ -83,7 +83,165 @@ class tasks
 		foreach($priorities as $priority)
 		{
 			$tpl->assignDataset($priority);
+			if ($priority['priority_default'] == '1')
+			{
+				$tpl->assign('priority_selected', 'selected="selected"');
+			}
+			else
+			{
+				$tpl->assign('priority_selected', '');
+			}
 			$tpl->insertBlock('priority_loop');
+		}
+
+		if (empty($parameters['task_begin']))
+		{
+			$tpl->assign('task_begin', date('d.m.Y'));
+		}
+
+		$tpl->show();
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function edittask($parameters=array())
+	{
+		$this->debug->guard();
+
+		$tpl = new tkTemplate();
+		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_edittask'));
+
+		if (!empty($parameters['submit']))
+		{
+			if ( (!empty($parameters['task_name'])) && (!empty($parameters['task_description'])) && (!empty($parameters['task_hoursplanned'])) && (!empty($parameters['task_tags'])) )
+			{
+
+				$taskfunctions = new tkTaskfunctions();
+				if (!$taskfunctions->updateTask($parameters))
+				{
+					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator', 'usererror');
+
+					$tasktypes = $taskfunctions->getTaskTypes();
+					foreach($tasktypes as $tasktype)
+					{
+						$tpl->assignDataset($tasktype);
+						if ($parameters['task_type'] == $tasktype['tasktype_id'])
+						{
+							$tpl->assign('tasktype_selected', 'selected="selected"');
+						}
+						else
+						{
+							$tpl->assign('tasktype_selected', '');
+						}
+						$tpl->insertBlock('tasktype_loop');
+					}
+
+					$priorities = $taskfunctions->getTaskPriorities();
+					foreach($priorities as $priority)
+					{
+						$tpl->assignDataset($priority);
+						if ($parameters['task_priority'] == $priority['priority_id'])
+						{
+							$tpl->assign('priority_selected', 'selected="selected"');
+						}
+						else
+						{
+							$tpl->assign('priority_selected', '');
+						}
+						$tpl->insertBlock('priority_loop');
+					}
+
+					$tpl->assignDataset($parameters);
+				}
+				else
+				{
+					$this->messages->setMessage('Die Informtionen wurden gespeichert', 'usermessage');
+					unset($tpl);
+					$this->debug->unguard(true);
+					$ret = $this->showalltasks(array());
+					return($ret);
+				}
+			}
+			else
+			{
+				$this->messages->setMessage('Bitte füllen Sie alle Pflichtfelder aus', 'userwarning');
+
+				$taskfunctions = new tkTaskfunctions();
+				$tasktypes = $taskfunctions->getTaskTypes();
+				foreach($tasktypes as $tasktype)
+				{
+					$tpl->assignDataset($tasktype);
+					if ($parameters['task_type'] == $tasktype['tasktype_id'])
+					{
+						$tpl->assign('tasktype_selected', 'selected="selected"');
+					}
+					else
+					{
+						$tpl->assign('tasktype_selected', '');
+					}
+					$tpl->insertBlock('tasktype_loop');
+				}
+
+				$priorities = $taskfunctions->getTaskPriorities();
+				foreach($priorities as $priority)
+				{
+					$tpl->assignDataset($priority);
+					if ($parameters['task_priority'] == $priority['priority_id'])
+					{
+						$tpl->assign('priority_selected', 'selected="selected"');
+					}
+					else
+					{
+						$tpl->assign('priority_selected', '');
+					}
+					$tpl->insertBlock('priority_loop');
+				}
+
+				$tpl->assignDataset($parameters);
+			}
+		}
+
+		if(!empty($parameters['id']))
+		{
+			$taskfunctions = new tkTaskfunctions();
+			$taskinformation = $taskfunctions->getTaskInformation($parameters['id']);
+
+			if ($taskinformation['task_begin'] == '00.00.0000') $taskinformation['task_begin'] = '';
+			if ($taskinformation['task_end'] == '00.00.0000') $taskinformation['task_end'] = '';
+
+			$tasktypes = $taskfunctions->getTaskTypes();
+			foreach($tasktypes as $tasktype)
+			{
+				$tpl->assignDataset($tasktype);
+				if ($taskinformation['task_type'] == $tasktype['tasktype_id'])
+				{
+					$tpl->assign('tasktype_selected', 'selected="selected"');
+				}
+				else
+				{
+					$tpl->assign('tasktype_selected', '');
+				}
+				$tpl->insertBlock('tasktype_loop');
+			}
+
+			$priorities = $taskfunctions->getTaskPriorities();
+			foreach($priorities as $priority)
+			{
+				$tpl->assignDataset($priority);
+				if ($taskinformation['task_priority'] == $priority['priority_id'])
+				{
+					$tpl->assign('priority_selected', 'selected="selected"');
+				}
+				else
+				{
+					$tpl->assign('priority_selected', '');
+				}
+				$tpl->insertBlock('priority_loop');
+			}
+
+			$tpl->assignDataset($taskinformation);
 		}
 
 		$tpl->show();
@@ -135,25 +293,57 @@ class tasks
 	{
 		$this->debug->guard();
 
-		if (!empty($parameters['submit']))
+		$taskfunctions = new tkTaskfunctions();
+		$taskstored = false;
+
+		if ( (!empty($parameters['submitButton'])) && ($parameters['submitButton'] > 0) )
 		{
 			if (!empty($parameters['tasklog_description']))
 			{
 				if (empty($parameters['tasklog_hoursworked'])) $parameters['tasklog_hoursworked'] = '0';
 
-				$taskfunctions = new tkTaskfunctions();
-				if (!$taskfunctions->addTasklog($parameters['id'], $parameters['tasklog_description'], $parameters['tasklog_hoursworked']))
+				if (!$taskfunctions->addTasklog($parameters['taskid'], $parameters['tasklog_description'], $parameters['tasklog_hoursworked']))
 				{
 					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator', 'usererror');
 				}
 				else
 				{
-					$this->messages->setMessage('Die Informtionen wurden gespeichert', 'usermessage');
+					$this->messages->setMessage('Die Tätigkeitsbeschreibung wurde gespeichert', 'usermessage');
+					$taskstored = true;
 				}
 			}
 			else
 			{
 				$this->messages->setMessage('Bitte geben Sie eine Tätigkeitsbeschreibung an', 'userwarning');
+			}
+		}
+
+		if (!empty($parameters['submitButton']))
+		{
+			switch($parameters['submitButton'])
+			{
+				case 1:
+					$this->debug->unguard(true);
+					$ret = $this->index($parameters);
+					return $ret;
+				break;
+
+				case 2:
+					$taskfunctions->workflowDown($parameters['taskid']);
+					$this->debug->unguard(true);
+					$ret = $this->index($parameters);
+					return $ret;
+				break;
+
+				case 3:
+					$taskfunctions->workflowUp($parameters['taskid']);
+					$this->debug->unguard(true);
+					$ret = $this->index($parameters);
+					return $ret;
+				break;
+
+				default:
+				    break;
 			}
 		}
 
@@ -169,6 +359,10 @@ class tasks
 			$taskid = $parameters['taskid'];
 		}
 
+		$taskfunctions = new tkTaskfunctions();
+		$taskinformation = $taskfunctions->getTaskInformation($taskid);
+
+		$tpl->assign('task_name', $taskinformation['task_name']);
 		$tpl->assign('taskid', $taskid);
 
 		$tpl->show();
@@ -198,6 +392,28 @@ class tasks
 
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_showalltasks'));
+
+		$tpl->show();
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function taskdetails($parameters=array())
+	{
+		$this->debug->guard();
+
+		$tpl = new tkTemplate();
+		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_taskdetails'));
+
+
+		if (!empty($parameters['id']))
+		{
+			$taskid = $parameters['id'];
+		}
+
+		$tpl->assign('taskid', $taskid);
 
 		$tpl->show();
 

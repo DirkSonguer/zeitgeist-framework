@@ -1,4 +1,4 @@
-// SpryValidationCheckbox.js - version 0.10 - Spry Pre-Release 1.6
+// SpryValidationCheckbox.js - version 0.10 - Spry Pre-Release 1.6.1
 //
 // Copyright (c) 2007. Adobe Systems Incorporated.
 // All rights reserved.

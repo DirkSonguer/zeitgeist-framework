@@ -1,4 +1,4 @@
-// SpryHTMLPanel.js - version 0.4 - Spry Pre-Release 1.6
+// SpryHTMLPanel.js - version 0.4 - Spry Pre-Release 1.6.1
 //
 // Copyright (c) 2007. Adobe Systems Incorporated.
 // All rights reserved.
