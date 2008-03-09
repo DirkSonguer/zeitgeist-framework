@@ -57,10 +57,9 @@ class tasks
 				else
 				{
 					$this->messages->setMessage('Die Informtionen wurden gespeichert', 'usermessage');
-					unset($tpl);
 					$this->debug->unguard(true);
-					$ret = $this->showalltasks(array());
-					return($ret);
+					$tpl->redirect($tpl->createLink('tasks', 'showalltasks'));
+					return(true);
 				}
 			}
 			else
@@ -127,10 +126,9 @@ class tasks
 				}
 				else
 				{
-					$this->messages->setMessage('Die Informtionen wurden gespeichert', 'usermessage');
-					unset($tpl);
+					$this->messages->setMessage('Die Informationen wurden gespeichert', 'usermessage');
 					$this->debug->unguard(true);
-					$ret = $this->showalltasks(array());
+					$tpl->redirect($tpl->createLink('tasks', 'showalltasks'));
 					return($ret);
 				}
 			}
@@ -191,6 +189,31 @@ class tasks
 	}
 
 
+	public function deletetask($parameters=array())
+	{
+		$this->debug->guard();
+
+		$taskfunctions = new tkTaskfunctions();
+
+		if (!empty($parameters['id']))
+		{
+			if ($taskfunctions->deleteTask($parameters['id']))
+			{
+				$this->messages->setMessage('Die Aufgabe wurde erfolgreich gelöscht', 'usermessage');
+			}
+			else
+			{
+				$this->messages->setMessage('Die Aufgabe konnte nicht gelöscht werden. Bitte verständigen Sie einen Administrator', 'usererror');
+			}
+		}
+
+		$this->debug->unguard(true);
+		$tpl = new tkTemplate();
+		$tpl->redirect($tpl->createLink('tasks', 'showalltasks'));
+		return true;
+	}
+
+
 	public function accepttask($parameters=array())
 	{
 		$this->debug->guard();
@@ -229,9 +252,12 @@ class tasks
 	}
 
 
-	public function processtask($parameters=array())
+	public function addtasklog($parameters=array())
 	{
 		$this->debug->guard();
+
+		$tpl = new tkTemplate();
+		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_addtasklog'));
 
 		$taskfunctions = new tkTaskfunctions();
 		$taskstored = false;
@@ -242,7 +268,7 @@ class tasks
 			{
 				if (empty($parameters['tasklog_hoursworked'])) $parameters['tasklog_hoursworked'] = '0';
 
-				if (!$taskfunctions->addTasklog($parameters['taskid'], $parameters['tasklog_description'], $parameters['tasklog_hoursworked']))
+				if (!$taskfunctions->addTasklog($parameters))
 				{
 					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator', 'usererror');
 				}
@@ -267,31 +293,28 @@ class tasks
 			{
 				case 1:
 					$this->debug->unguard(true);
-					$ret = $this->index($parameters);
-					return $ret;
-				break;
+					$tpl->redirect($tpl->createLink('tasks', 'index'));
+					return true;
+					break;
 
 				case 2:
 					$taskfunctions->workflowDown($parameters['taskid']);
 					$this->debug->unguard(true);
-					$ret = $this->index($parameters);
-					return $ret;
-				break;
+					$tpl->redirect($tpl->createLink('tasks', 'index'));
+					return true;
+					break;
 
 				case 3:
 					$taskfunctions->workflowUp($parameters['taskid']);
 					$this->debug->unguard(true);
-					$ret = $this->index($parameters);
-					return $ret;
-				break;
+					$tpl->redirect($tpl->createLink('tasks', 'index'));
+					return true;
+					break;
 
 				default:
-				    break;
+					break;
 			}
 		}
-
-		$tpl = new tkTemplate();
-		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_processtask'));
 
 		if (!empty($parameters['id']))
 		{
@@ -333,14 +356,29 @@ class tasks
 			{
 				if (empty($parameters['tasklog_hoursworked'])) $parameters['tasklog_hoursworked'] = '0';
 
-				if (!$taskfunctions->addTasklog($parameters['taskid'], $parameters['tasklog_description'], $parameters['tasklog_hoursworked']))
+				if (!$taskfunctions->updateTasklog($parameters))
 				{
 					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator', 'usererror');
 				}
 				else
 				{
 					$this->messages->setMessage('Die Tätigkeitsbeschreibung wurde gespeichert', 'usermessage');
-					$taskstored = true;
+					$sql = "SELECT tl.* FROM tasklogs tl ";
+					$sql .= "WHERE tasklog_id='" . $parameters['tasklogid'] . "'";
+					$res = $this->database->query($sql);
+					if (!$res)
+					{
+						$this->debug->write('Problem getting tasklog information for tasklog: ' . $parameters['tasklogid'], 'warning');
+						$this->messages->setMessage('Problem getting tasklog information for tasklog: ' . $parameters['tasklogid'], 'warning');
+						$this->debug->unguard(false);
+						return false;
+					}
+					$taskloginformation = $this->database->fetchArray($res);
+					$parameters = array();
+					$parameters['id'] = $taskloginformation['tasklog_task'];
+					$tpl = new tkTemplate();
+					$tpl->redirect($tpl->createLink('tasks', 'addtasklog', $parameters));
+					return true;
 				}
 			}
 			else
@@ -352,61 +390,65 @@ class tasks
 			}
 		}
 
-		if (!empty($parameters['submitButton']))
-		{
-			switch($parameters['submitButton'])
-			{
-				case 1:
-					$this->debug->unguard(true);
-					$ret = $this->index($parameters);
-					return $ret;
-				break;
-
-				case 2:
-					$taskfunctions->workflowDown($parameters['taskid']);
-					$this->debug->unguard(true);
-					$ret = $this->index($parameters);
-					return $ret;
-				break;
-
-				case 3:
-					$taskfunctions->workflowUp($parameters['taskid']);
-					$this->debug->unguard(true);
-					$ret = $this->index($parameters);
-					return $ret;
-				break;
-
-				default:
-				    break;
-			}
-		}
-
 		$tpl = new tkTemplate();
-		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_processtask'));
+		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_edittasklog'));
 
 		if (!empty($parameters['id']))
 		{
-			$taskid = $parameters['id'];
+			$tasklogid = $parameters['id'];
 		}
-		elseif (!empty($parameters['taskid']))
+		elseif (!empty($parameters['tasklogid']))
 		{
-			$taskid = $parameters['taskid'];
+			$tasklogid = $parameters['tasklogid'];
 		}
 
 		$taskfunctions = new tkTaskfunctions();
-		$taskinformation = $taskfunctions->getTaskInformation($taskid);
+		$taskloginformation = $taskfunctions->getTasklog($tasklogid);
 
-		if (count($taskinformation['task_tasklogs']) > 0)
-		{
-			$tpl->insertBlock('tasklogs');
-		}
-
-		$tpl->assign('task_name', $taskinformation['task_name']);
-		$tpl->assign('taskid', $taskid);
+		$tpl->assign('tasklogid', $tasklogid);
+		$tpl->assignDataset($taskloginformation);
 
 		$tpl->show();
 
 		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function deletetasklog($parameters=array())
+	{
+		$this->debug->guard();
+
+		if (!empty($parameters['id']))
+		{
+			$sql = "SELECT * FROM tasklogs WHERE tasklog_id='" . $parameters['id'] . "'";
+			$res = $this->database->query($sql);
+			if (!$res)
+			{
+				$this->debug->write('Problem getting tasklog information for tasklog: ' . $parameters['id'], 'warning');
+				$this->messages->setMessage('Problem getting tasklog information for tasklog: ' . $parameters['id'], 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
+			$taskloginformation = $this->database->fetchArray($res);
+			$taskid = $taskloginformation['tasklog_task'];
+
+			$taskfunctions = new tkTaskfunctions();
+			if ($taskfunctions->deleteTasklog($parameters['id'], $taskid))
+			{
+				$this->messages->setMessage('Die Aufgabenbeschreibung wurde erfolgreich gelöscht', 'usermessage');
+			}
+			else
+			{
+				$this->messages->setMessage('Die Aufgabenbeschreibung konnte nicht gelöscht werden. Bitte verständigen Sie einen Administrator', 'usererror');
+			}
+		}
+
+		$this->debug->unguard(true);
+		$parameters = array();
+		$parameters['id'] = $taskid;
+		$tpl = new tkTemplate();
+		$tpl->redirect($tpl->createLink('tasks', 'addtasklog', $parameters));
 		return true;
 	}
 
@@ -458,30 +500,6 @@ class tasks
 
 		$this->debug->unguard(true);
 		return true;
-	}
-
-
-	public function deletetask($parameters=array())
-	{
-		$this->debug->guard();
-
-		$taskfunctions = new tkTaskfunctions();
-
-		if (!empty($parameters['id']))
-		{
-			if ($taskfunctions->deleteTask($parameters['id']))
-			{
-				$this->messages->setMessage('Die Aufgabe wurde erfolgreich gelöscht', 'usermessage');
-			}
-			else
-			{
-				$this->messages->setMessage('Die Aufgabe konnte nicht gelöscht werden. Bitte verständigen Sie einen Administrator', 'usererror');
-			}
-		}
-
-		$this->debug->unguard(true);
-		$ret = $this->showalltasks($parameters);
-		return $ret;
 	}
 
 }

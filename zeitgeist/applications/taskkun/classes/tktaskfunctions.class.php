@@ -146,94 +146,6 @@ class tkTaskfunctions
 	}
 
 
-	public function storeTags($tagstring, $taskid)
-	{
-		$this->debug->guard();
-
-		$userfunctions = new tkUserfunctions();
-		if (!$userfunctions->checkRightsForTask($taskid))
-		{
-			$this->debug->write('The task is out of bounds of the instance', 'warning');
-			$this->messages->setMessage('The task is out of bounds of the instance', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		if ($tagstring == '')
-		{
-			$this->debug->write('Tagstring is empty: no tags found', 'warning');
-			$this->messages->setMessage('Tagstring is empty: no tags found', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$tagarray = explode(',', $tagstring);
-		$sql = "DELETE FROM tags_to_tasks WHERE tagtasks_task='" . $taskid . "'";
-		$res = $this->database->query($sql);
-
-		foreach ($tagarray as $tagkey => $tagvalue)
-		{
-			$tagarray[$tagkey] = ltrim($tagvalue);
-			$tagarray[$tagkey] = rtrim($tagarray[$tagkey]);
-			$sql = "INSERT INTO tags(tag_text) VALUES('" . $tagarray[$tagkey] . "') ON DUPLICATE KEY UPDATE tag_id=LAST_INSERT_ID(tag_id), tag_text='" . $tagarray[$tagkey] . "'";
-			$res = $this->database->query($sql);
-			if (!$res)
-			{
-				$this->debug->write('Problem writing tags to the database', 'warning');
-				$this->messages->setMessage('Problem writing tags to the database', 'warning');
-				$this->debug->unguard(false);
-				return false;
-			}
-			$insertid = $this->database->insertId();
-
-			$sql = "INSERT INTO tags_to_tasks(tagtasks_tag, tagtasks_task) VALUES('" . $insertid . "', '" . $taskid . "')";
-			$res = $this->database->query($sql);
-			if (!$res)
-			{
-				$this->debug->write('Problem writing tags to the database', 'warning');
-				$this->messages->setMessage('Problem writing tags to the database', 'warning');
-				$this->debug->unguard(false);
-				return false;
-			}
-		}
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-
-	public function addTasklog($taskid, $tasklog_description, $tasklog_hoursworked)
-	{
-		$this->debug->guard();
-
-		$userfunctions = new tkUserfunctions();
-		if (!$userfunctions->checkRightsForTask($taskid))
-		{
-			$this->debug->write('The task is out of bounds of the instance', 'warning');
-			$this->messages->setMessage('The task is out of bounds of the instance', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		if (strpos($tasklog_hoursworked, ',') !== false) $tasklog_hoursworked = str_replace(',','.', $tasklog_hoursworked);
-
-		$sql = 'INSERT INTO tasklogs(tasklog_creator, tasklog_task, tasklog_description, tasklog_hoursworked) ';
-		$sql .= "VALUES('" . $this->user->getUserID() . "', '" . $taskid . "', '" . $tasklog_description . "', '" . $tasklog_hoursworked . "')";
-
-		$res = $this->database->query($sql);
-		if (!$res)
-		{
-			$this->debug->write('Problem deleting task from tasks_to_users: ' . $taskid, 'warning');
-			$this->messages->setMessage('Problem deleting task from tasks_to_users: ' . $taskid, 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-
 	public function deleteTask($taskid)
 	{
 		$this->debug->guard();
@@ -269,6 +181,140 @@ class tkTaskfunctions
 
 		$this->debug->unguard(true);
 		return true;
+	}
+
+
+	public function addTasklog($tasklogdata=array())
+	{
+		$this->debug->guard();
+
+		$userfunctions = new tkUserfunctions();
+		if (!$userfunctions->checkRightsForTask($tasklogdata['taskid']))
+		{
+			$this->debug->write('The task is out of bounds of the instance', 'warning');
+			$this->messages->setMessage('The task is out of bounds of the instance', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		if (strpos($tasklogdata['tasklog_hoursworked'], ',') !== false) $tasklogdata['tasklog_hoursworked'] = str_replace(',','.', $tasklogdata['tasklog_hoursworked']);
+
+		$sql = 'INSERT INTO tasklogs(tasklog_creator, tasklog_task, tasklog_description, tasklog_hoursworked) ';
+		$sql .= "VALUES('" . $this->user->getUserID() . "', '" . $tasklogdata['taskid'] . "', '" . $tasklogdata['tasklog_description'] . "', '" . $tasklogdata['tasklog_hoursworked'] . "')";
+
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem deleting task from tasks_to_users: ' . $tasklogdata['taskid'], 'warning');
+			$this->messages->setMessage('Problem deleting task from tasks_to_users: ' . $tasklogdata['taskid'], 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function updateTasklog($tasklogdata=array())
+	{
+		$this->debug->guard();
+
+		$sql = "SELECT * FROM tasklogs WHERE tasklog_id='" . $tasklogdata['tasklogid'] . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem getting tasklog information for tasklog: ' . $tasklogdata['tasklogid'], 'warning');
+			$this->messages->setMessage('Problem getting tasklog information for tasklog: ' . $tasklogdata['tasklogid'], 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		$taskloginformation = $this->database->fetchArray($res);
+
+		$userfunctions = new tkUserfunctions();
+		if (!$userfunctions->checkRightsForTask($taskloginformation['tasklog_task']))
+		{
+			$this->debug->write('The task is out of bounds of the instance', 'warning');
+			$this->messages->setMessage('The task is out of bounds of the instance', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		if (strpos($tasklogdata['tasklog_hoursworked'], ',') !== false) $tasklogdata['tasklog_hoursworked'] = str_replace(',','.', $tasklogdata['tasklog_hoursworked']);
+
+		$sql = "UPDATE tasklogs SET tasklog_description='" . $tasklogdata['tasklog_description'] . "', tasklog_hoursworked='" . $tasklogdata['tasklog_hoursworked'] . "'";
+		$sql .= "WHERE tasklog_id='" . $tasklogdata['tasklogid'] . "'";
+
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem updating tasklog: ' . $tasklogdata['tasklogid'], 'warning');
+			$this->messages->setMessage('Problem updating tasklog: ' . $tasklogdata['tasklogid'], 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function deleteTasklog($tasklogid, $taskid)
+	{
+		$this->debug->guard();
+
+		$userfunctions = new tkUserfunctions();
+		if (!$userfunctions->checkRightsForTask($taskid))
+		{
+			$this->debug->write('The task is out of bounds of the instance', 'warning');
+			$this->messages->setMessage('The task is out of bounds of the instance', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$sql = "DELETE FROM tasklogs WHERE tasklog_id='" . $tasklogid . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem deleting tasklog: ' . $tasklogid, 'warning');
+			$this->messages->setMessage('Problem deleting tasklog: ' . $tasklogid, 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function getTasklog($tasklogid)
+	{
+		$this->debug->guard();
+
+		$sql = "SELECT tl.* FROM tasklogs tl ";
+		$sql .= "WHERE tasklog_id='" . $tasklogid . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem getting tasklog information for tasklog: ' . $tasklogid, 'warning');
+			$this->messages->setMessage('Problem getting tasklog information for tasklog: ' . $tasklogid, 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		$taskloginformation = $this->database->fetchArray($res);
+
+		$userfunctions = new tkUserfunctions();
+		if (!$userfunctions->checkRightsForTask($taskloginformation['tasklog_task']))
+		{
+			$this->debug->write('The task is out of bounds of the instance', 'warning');
+			$this->messages->setMessage('The task is out of bounds of the instance', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+
+		$this->debug->unguard($taskloginformation);
+		return $taskloginformation;
 	}
 
 
@@ -404,6 +450,62 @@ class tkTaskfunctions
 
 		$this->debug->unguard($ret);
 		return $ret;
+	}
+
+
+	public function storeTags($tagstring, $taskid)
+	{
+		$this->debug->guard();
+
+		$userfunctions = new tkUserfunctions();
+		if (!$userfunctions->checkRightsForTask($taskid))
+		{
+			$this->debug->write('The task is out of bounds of the instance', 'warning');
+			$this->messages->setMessage('The task is out of bounds of the instance', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		if ($tagstring == '')
+		{
+			$this->debug->write('Tagstring is empty: no tags found', 'warning');
+			$this->messages->setMessage('Tagstring is empty: no tags found', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$tagarray = explode(',', $tagstring);
+		$sql = "DELETE FROM tags_to_tasks WHERE tagtasks_task='" . $taskid . "'";
+		$res = $this->database->query($sql);
+
+		foreach ($tagarray as $tagkey => $tagvalue)
+		{
+			$tagarray[$tagkey] = ltrim($tagvalue);
+			$tagarray[$tagkey] = rtrim($tagarray[$tagkey]);
+			$sql = "INSERT INTO tags(tag_text) VALUES('" . $tagarray[$tagkey] . "') ON DUPLICATE KEY UPDATE tag_id=LAST_INSERT_ID(tag_id), tag_text='" . $tagarray[$tagkey] . "'";
+			$res = $this->database->query($sql);
+			if (!$res)
+			{
+				$this->debug->write('Problem writing tags to the database', 'warning');
+				$this->messages->setMessage('Problem writing tags to the database', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
+			$insertid = $this->database->insertId();
+
+			$sql = "INSERT INTO tags_to_tasks(tagtasks_tag, tagtasks_task) VALUES('" . $insertid . "', '" . $taskid . "')";
+			$res = $this->database->query($sql);
+			if (!$res)
+			{
+				$this->debug->write('Problem writing tags to the database', 'warning');
+				$this->messages->setMessage('Problem writing tags to the database', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
+		}
+
+		$this->debug->unguard(true);
+		return true;
 	}
 
 
