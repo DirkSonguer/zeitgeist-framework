@@ -390,6 +390,8 @@ class zgTemplate
 			}
 		}
 
+		$this->messages->clearAllMessages();
+
 		$this->debug->unguard(true);
 		return true;
 	}
