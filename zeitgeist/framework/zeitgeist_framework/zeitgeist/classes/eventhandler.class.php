@@ -19,6 +19,7 @@ class zgEventhandler
 	protected $debug;
 	protected $messages;
 	protected $database;
+	protected $messagecache;
 	protected $configuration;
 	protected $user;
 	protected $traffic;
@@ -36,6 +37,7 @@ class zgEventhandler
 	{
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
+		$this->messagecache = zgMessagecache::init();
 		$this->configuration = zgConfiguration::init();
 		$this->user = zgUserhandler::init();
 		$this->traffic = zgTrafficlogger::init();
@@ -215,6 +217,12 @@ class zgEventhandler
 	{
 		$this->debug->guard();
 
+		// load message data for user
+		if ($this->configuration->getConfiguration('zeitgeist', 'messages', 'use_persistent_messages'))
+		{
+			$this->messagecache->loadMessagesFromDatabase();
+		}
+
 		// check if module is installed and get module data
 		if (!$moduleData = $this->_getModuleData($module))
 		{
@@ -301,6 +309,12 @@ class zgEventhandler
 
 		// execute post-snapins
 		if ($snapInsFound) $this->_executePostSnapIns($parameters);
+
+		// save message data for user
+		if ($this->configuration->getConfiguration('zeitgeist', 'messages', 'use_persistent_messages'))
+		{
+			$this->messagecache->saveMessagesToDatabase();
+		}
 
 		$this->debug->unguard(true);
 		return true;

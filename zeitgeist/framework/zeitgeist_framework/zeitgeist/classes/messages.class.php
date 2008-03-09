@@ -182,5 +182,30 @@ class zgMessages
 		return true;
 	}
 
+
+	/**
+	 * Imports messages and adds them to the current messages
+	 * Beware: the structures of the messages have to be correct!
+	 *
+	 * @param array $messagearray new messages
+	 *
+	 * @return boolean
+	 */
+	public function importMessages($messagearray=array())
+	{
+		$this->debug->guard();
+
+		if (!is_array($messagearray))
+		{
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->messages = array_merge($this->messages, $messagearray);
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
 }
 ?>
