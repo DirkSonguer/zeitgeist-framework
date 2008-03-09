@@ -2,7 +2,7 @@
 
 defined('TASKKUN_ACTIVE') or die();
 
-class search
+class configuration
 {
 	protected $debug;
 	protected $messages;
@@ -27,7 +27,7 @@ class search
 		$this->debug->guard();
 
 		$tpl = new tkTemplate();
-		$tpl->load($this->configuration->getConfiguration('search', 'templates', 'search_index'));
+		$tpl->load($this->configuration->getConfiguration('configuration', 'templates', 'configuration_index'));
 
 		$tpl->show();
 
