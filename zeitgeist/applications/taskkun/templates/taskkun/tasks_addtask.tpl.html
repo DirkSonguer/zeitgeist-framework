@@ -70,51 +70,48 @@
 <body>
 
 <div id="Tooltip" class="tooltip" style="display:none; text-align:left;"></div>
-<div class="maincontent">
-<div class="headmenu">
-	<h1>Taskkun :)</h1>
-	<div class="menuicon" style="float:right; margin-top:-40px;"><a href="@@{[main.logout]}@@" alt=""><span onmousemove="showTooltip('Logout', event)" onmouseout="hideTooltip()">
-	<img src="@@{templatepath}@@/nuvola/32x32/actions/exit.png" alt="" align="left" border="0" /></span></a></div>
 
+<div class="headmenu">
+	<!-- TemplateBeginBlock name="logoutbutton" -->
+	<div class="menuicon" style="float:right; margin-top:5px;"><a href="@@{[main.logout]}@@" alt=""><span onmousemove="showTooltip('Logout', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/48x48/actions/exit.png" alt="" align="left" border="0" /></span></a></div>
+	<!-- TemplateEndBlock -->
 </div>
 
+<div class="maincontent">
+
 <!-- TemplateBeginBlock name="navigation" -->
-	<div class="textbox">
+	<div class="headerbox">
 		<div style="float:left; margin:10px;"><a href="@@{[main.index]}@@" alt=""><span onmousemove="showTooltip('Hauptseite', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/actions/gohome.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[tasks.index]}@@" alt=""><span onmousemove="showTooltip('Meine Aufgaben', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[tasks.index]}@@" alt=""><span onmousemove="showTooltip('Eigene Aufgaben', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/klipper.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[tasks.addadhoc]}@@" alt=""><span onmousemove="showTooltip('Ad-Hoc-Tätigkeit eintragen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/karm.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[config.self]}@@" alt=""><span onmousemove="showTooltip('Persönliche Einstellungen', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[reports.index]}@@" alt=""><span onmousemove="showTooltip('Reports', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/kchart.png" alt="" border="0" /></span></a></div>
+		<div style="float:left; margin:10px;"><a href="@@{[configuration.index]}@@" alt=""><span onmousemove="showTooltip('Persönliche Einstellungen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kcmsystem.png" alt="" border="0" /></span></a></div>
 		<div style="float:right; margin:10px;"><a href="@@{[help.index]}@@" alt=""><span onmousemove="showTooltip('Hilfe!', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/filetypes.png" alt="" border="0" /></span></a></div>
 		
-		<div style="clear:both"></div>
-	</div>
-<!-- TemplateEndBlock -->
-
-<!-- TemplateBeginBlock name="managernavigation" -->
-	<div class="textbox">
-		<div style="float:left; margin:10px;"><a href="@@{[tasks.addtask]}@@" alt=""><span onmousemove="showTooltip('Neue Aufgabe anlegen', event)" onmouseout="hideTooltip()">
+		
+		<!-- TemplateBeginBlock name="managernavigation" -->
+		<div style="float:left; margin:10px; margin-left:40px;"><a href="@@{[tasks.addtask]}@@" alt=""><span onmousemove="showTooltip('Neue Aufgabe anlegen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kword.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[tasks.showalltasks]}@@" alt=""><span onmousemove="showTooltip('Alle aktiven Aufgaben anzeigen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpager.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[search.index]}@@" alt=""><span onmousemove="showTooltip('Aufgaben suchen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpdf.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[analyze.index]}@@" alt=""><span onmousemove="showTooltip('Statistiken anzeigen', event)" onmouseout="hideTooltip()">
-		<img src="@@{templatepath}@@/nuvola/48x48/apps/kchart.png" alt="" border="0" /></span></a></div>
+		<!-- TemplateEndBlock -->
 
 		<!-- TemplateBeginBlock name="adminnavigation" -->
-		<div style="float:right; margin:10px;"><a href="@@{[config.overviewpriorities]}@@" alt=""><span onmousemove="showTooltip('Prioritäten verwalten', event)" onmouseout="hideTooltip()">
-		<img src="@@{templatepath}@@/nuvola/48x48/apps/ksysv.png" alt="" border="0" /></span></a></div>
-		<div style="float:right; margin:10px;"><a href="@@{[config.overviewtasktypes]}@@" alt=""><span onmousemove="showTooltip('Aufgabentypen verwalten', event)" onmouseout="hideTooltip()">
-		<img src="@@{templatepath}@@/nuvola/48x48/apps/fsview.png" alt="" border="0" /></span></a></div>
-		<div style="float:right; margin:10px;"><a href="@@{[config.overviewusergroups]}@@" alt=""><span onmousemove="showTooltip('Benutzergruppen verwalten', event)" onmouseout="hideTooltip()">
-		<img src="@@{templatepath}@@/nuvola/48x48/apps/kdmconfig.png" alt="" border="0" /></span></a></div>
-		<div style="float:right; margin:10px;"><a href="@@{[users.index]}@@" alt=""><span onmousemove="showTooltip('Benutzer verwalten', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px; margin-left:40px;"><a href="@@{[users.index]}@@" alt=""><span onmousemove="showTooltip('Benutzer verwalten', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/mimetypes/vcard.png" alt="" border="0" /></span></a></div>
+		<div style="float:left; margin:10px;"><a href="@@{[config.overviewusergroups]}@@" alt=""><span onmousemove="showTooltip('Benutzergruppen verwalten', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/kdmconfig.png" alt="" border="0" /></span></a></div>
+		<div style="float:left; margin:10px;"><a href="@@{[config.overviewtasktypes]}@@" alt=""><span onmousemove="showTooltip('Aufgabentypen verwalten', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/fsview.png" alt="" border="0" /></span></a></div>
 		<!-- TemplateEndBlock -->
 		
 		<div style="clear:both"></div>
@@ -141,7 +138,7 @@
 
 <form method="post" action="@@{[tasks.addtask]}@@" name="addtask" enctype="multipart/form-data; charset=utf-8">
 
-<div class="textbox">
+<div class="textbox" style="background-image:url(@@{templatepath}@@/images/side_newtask.jpg); background-position:right bottom; background-repeat:no-repeat;">
 	<h2>Neue Aufgabe hinzufügen</h2>
 
 	<table width="100%" cellspacing="5" cellpadding="5" border="0">
@@ -181,9 +178,9 @@
                 <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Priorität</p></td>
                 <td align="left" nowrap="nowrap" valign="middle">
 					<select name="task_priority" class="formtext">
-						<!-- TemplateBeginBlock name="priority_loop" -->
-							<option value="@@{priority_id}@@"@@{priority_selected}@@>@@{priority_name}@@</option>
-						<!-- TemplateEndBlock -->
+						<option value="3">Hoch</option>
+						<option value="2" selected="selected">Normal</option>
+						<option value="1">Niedrig</option>
 					</select>
 				</td>
             </tr>
@@ -226,7 +223,7 @@
 </div>
 
 <div class="textbox">
-	<h2 style="text-align:left;">Weitere Angaben <span style="float:right; margin-top:-20px;"><a href="javascript:showShortcuts();" alt=""><span onmousemove="showTooltip('Weitere Angaben', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png" alt="" name="shortcutIcon" align="left" border="0" /></span></a></span></h2>
+	<h2 style="text-align:left; background:#B5BD82; padding:5px;">Weitere Angaben <span style="float:right; margin-top:-20px;"><a href="javascript:showShortcuts();" alt=""><span onmousemove="showTooltip('Weitere Angaben', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png" alt="" name="shortcutIcon" align="left" border="0" /></span></a></span></h2>
 	<div style="clear:both"></div>
 	
 	<div id="Shortcuts" style="padding:5px; display:none;">
@@ -245,11 +242,13 @@
 	</div>
 	
 </div>
+
 </form>	
 
 <!-- InstanceEndEditable -->
 
 </div>
+<div class="copyright">@@{versioninfo}@@</div>
 
 </body>
 <!-- InstanceEnd --></html>

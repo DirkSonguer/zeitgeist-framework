@@ -35,6 +35,7 @@
 	
 <!-- InstanceBeginEditable name="head" -->
 
+
 	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryData.js"></script>
 	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/xpath.js"></script>
 	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryNestedXMLDataSet.js"></script>
@@ -42,44 +43,21 @@
 
 	<script type="text/javascript">
 
-		var dsUserdata = new Spry.Data.XMLDataSet("@@{[dataserver.getuserinformation]}@@", "container/element");
-		dsUserdata.setColumnType("user_id", "number");
-
-		var dsUserroles = new Spry.Data.XMLDataSet("@@{[dataserver.getuserroles]}@@", "container/element");
-
-		var dsUsergroups = new Spry.Data.XMLDataSet("@@{[dataserver.getusergroups]}@@", "container/element");
-
-
-		function deleteUser(id, name)
-		{
-			var answer = window.confirm("Do you really want to delete the user '" + name + "'?");
-
-			/* Question icon, Yes/No button. */
-			/* 0 = error, 1 = OK, 2 = Cancel, 3 = No, 4 = Yes */
-
-			if (answer == true)
-			{
-			   window.location.href = "@@{[users.deleteuser]}@@"+"&id="+id;
-			}
-		}
-
+		var dsResults = new Spry.Data.XMLDataSet("@@{[dataserver.searchtasks]}@@", "container/element", { useCache: false });
+		dsResults.setColumnType("task_id", "number");
+		dsResults.setColumnType("task_hoursplanned", "number");
+		dsResults.setColumnType("task_hoursworked", "number");
+		
 		function updateSearch()
 		{
-			document.searchform.submit();
-		}
-
-
-		function filterUsergroup()
-		{
-			filterParameter = document.getElementById('filter_usergroup').value;
-			filterSpryDataset('group_name', filterParameter, dsUserdata, false);
-		}
-
-
-		function filterUserrole()
-		{
-			filterParameter = document.getElementById('filter_userrole').value;
-			filterSpryDataset('userrole_id', filterParameter, dsUserdata, true);
+			currentSearch = document.getElementById('searchinput').value;
+			var spryURL = "@@{[dataserver.searchtasks]}@@&searchterms="+currentSearch;
+			dsResults.url = spryURL;
+			dsResults.loadData();
+			
+//			dsResults.sort('score');
+			
+			return false;
 		}
 
 	</script>
@@ -155,83 +133,9 @@
 	
 <!-- InstanceBeginEditable name="body" -->
 
-<!--
 <div class="textbox">
-	<h3><img src="@@{templatepath}@@/nuvola/22x22/actions/view_bottom.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[users.adduser]}@@" alt="add new user">Add new user</a></h3>
-</div>
--->
-<form name="searchform" method="post" action="@@{[users.index]}@@">
-<div class="textbox">
-<!--  style="margin-bottom:0px; border-bottom:hidden;" -->
-<table border="0" cellpadding="0" cellspacing="0" cellpadding="0" cellspacing="0" style="margin-top:10px;">
-	<tr>
-		<td width="130" valign="top" rowspan="3">
-			<p><img src="@@{templatepath}@@/nuvola/128x128/apps/kghostview.png" alt="Filter users" border="0" /></p>
-		</td>
-		<td align="left" valign="middle">
-			<p class="formlabel">Benutzergruppen anzeigen</p>
-		</td>
-		<td align="left" valign="middle">
-			<div spry:region="dsUsergroups">
-			<select id="filter_usergroup" class="formtext" style="width:255px;" onchange="filterUsergroup()">
-				<option value="-1">Alle Gruppen</option>
-				<option spry:repeat="dsUsergroups" value="{group_name}">{group_name}</option>
-			</select>
-			</p>
-			</div>
-		</td>
-	</tr>
-	<tr>
-		<td align="left" valign="middle">
-			<p class="formlabel">Benutzerrollen anzeigen</p>
-		</td>
-		<td align="left" valign="middle">
-			<div spry:region="dsUserroles">
-			<select id="filter_userrole" class="formtext" style="width:255px;" onchange="filterUserrole()">
-				<option value="-1">Alle Rollen</option>
-				<option spry:repeat="dsUserroles" value="{userrole_id}">{userrole_name}</option>
-			</select>
-			</p>
-			</div>
-		</td>
-	</tr>
-	<tr>
-		<td align="left" valign="middle">&nbsp;</td>
-		<td align="left" valign="middle">&nbsp;</td>
-	</tr>
-</table>
-</div>
-</form>
+<h2>Reports</h2>
 
-<div class="textbox">
-<h2>Benutzerverwaltung</h2>
-
-	<div spry:region="dsUserdata">
-    <div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
-
-	<div spry:state="ready">
-	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
-	        <tr class="tablehead">
-				<th><p><a onclick="dsUserdata.sort('user_id');">ID</a></p></th>
-				<th><p><a onclick="dsUserdata.sort('user_username');">Benutzer</a></p></th>
-				<th><p><a onclick="dsUserdata.sort('userdata_firstname');">Name</a></p></th>
-				<th><p><a onclick="dsUserdata.sort('userrole_name');">Benutzerrolle</a></p></th>
-				<th><p><a onclick="dsUserdata.sort('group_name');">Benutzergruppe(n)</a></p></th>
-				<th><p>Action</p></th>
-	        </tr>
-	        <tr class="{ds_EvenOddRow}" spry:repeat="dsUserdata">
-				<td><p>{dsUserdata::user_id}</p></td>
-				<td><p>{dsUserdata::user_username}</p></td>
-				<td><p>{dsUserdata::userdata_firstname} {dsUserdata::userdata_lastname}</p></td>
-				<td><p>{dsUserdata::userrole_name}</p></td>
-				<td><p>{dsUserdata::group_name}</p></td>
-				<td width="90"><p>
-				<a href="@@{[users.edituser]}@@&id={dsUserdata::user_id}" alt="edit user"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="edit user" border="0" /></a> &nbsp; <a href="javascript:deleteUser({dsUserdata::user_id}, '{dsUserdata::user_username}')" alt="delete action"><img src="@@{templatepath}@@/nuvola/22x22/actions/cancel.png" alt="delete user" border="0" /></a>
-                </p></td>
-	        </tr>
-	    </table>
-    </div>
-	</div>
 </div>
 
 <!-- InstanceEndEditable -->

@@ -1,12 +1,8 @@
 @charset "utf-8";
-/* CSS Document */
 
 body {
-	background:#dddddd;
-	margin-left:0px;
-	margin-right:0px;
-	margin-top:0px;
-	margin-bottom:0px;
+	background:#ffffff;
+	margin:0px;
 	overflow-y: yes;
 	overflow: -moz-scrollbars-vertical;
 	text-align:center;
@@ -16,8 +12,6 @@ body {
 p, table, pre {
 	font-family: "Georgia",Serif;
 	font-size: 12pt;
-	letter-spacing:0.0pt;
-	word-spacing:0.2pt;
 	text-align:justify;
 	margin-left:10pt;
 	margin-right:10pt;
@@ -30,8 +24,6 @@ p, table, pre {
 li {
 	font-family: "Georgia",Serif;
 	font-size: 12pt;
-	letter-spacing:0.0pt;
-	word-spacing:0.2pt;
 	text-align:justify;
 	margin-left:0pt;
 	margin-right:0pt;
@@ -45,47 +37,41 @@ h1 {
 	font-family: "Georgia",Serif;
 	font-size:20pt;
 	font-weight:bold;
-	letter-spacing:0.0pt;
-	word-spacing:0.5pt;
 	text-align:justify;
 	margin-left:10pt;
 	margin-right:10pt;
 	margin-top:0pt;
 	margin-bottom:10pt;
-	color:#555555;
+	color:#444444;
 }
 
 h2 {
 	font-family: "Georgia",Serif;
 	font-size:16pt;
 	font-weight:bold;
-	letter-spacing:0.0pt;
-	word-spacing:0.5pt;
 	text-align:justify;
 	margin-left:10pt;
 	margin-right:10pt;
 	margin-top:10pt;
 	margin-bottom:10pt;
-	color:#555555;
+	color:#444444;
 }
 
 h3 {
 	font-family: "Georgia",Serif;
 	font-size:12pt;
 	font-weight:bold;
-	letter-spacing:0.0pt;
-	word-spacing:0.5pt;
 	text-align:justify;
 	margin-left:10pt;
 	margin-right:10pt;
 	margin-top:10pt;
 	margin-bottom:10pt;
-	color:#555555;
+	color:#444444;
 }
 
 strong {
 	font-weight:bold;
-	color:#555555;
+	color:#444444;
 }
 
 
@@ -101,7 +87,7 @@ a:link {
 	text-decoration:underline;
 	letter-spacing:0.6pt;
 	word-spacing:0.7pt;
-	color:#555555;
+	color:#444444;
 }
 
 
@@ -109,7 +95,7 @@ a:visited {
 	text-decoration:underline;
 	letter-spacing:0.6pt;
 	word-spacing:0.7pt;
-	color:#555555;
+	color:#444444;
 }
 
 
@@ -117,33 +103,35 @@ a:active {
 	text-decoration:underline;
 	letter-spacing:0.6pt;
 	word-spacing:0.7pt;
-	color:#555555;
+	color:#444444;
 }
 
 
 .maincontent {
-	background:#ccddcc;
+	background:#97AD8B;
 	margin-right: auto;
 	margin-left: auto;
 	margin-top: 0px;
 	margin-bottom:10pt;
 	width: 990px;
 	text-align: left;
-	border-left: 1px solid #000000;
-	border-right: 1px solid #000000;
-	border-bottom: 1px solid #000000;
+	border: 1px solid #000000;
+	padding-top:10px;
 }
 
 
 .headmenu {
 	background:#fafafa;
+	background-image:url(../images/top.jpg);
+	background-position:bottom;
+	background-repeat:no-repeat;
 	margin-right: auto;
 	margin-left: auto;
 	width: 990px;
+	height:50px;
 	text-align: left;
 	margin-top: 0px;
-	margin-bottom:10pt;
-	border-bottom: 1px solid #000000;
+	margin-bottom:0px;
 	padding-bottom:10px;
 	padding-top:10px;
 }
@@ -157,8 +145,19 @@ a:active {
 }
 
 
+.copyright {
+	font-family: "Georgia",Serif;
+	font-size: 8pt;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: -10px;
+	margin-bottom:10pt;
+	width: 990px;
+	text-align: right;
+}
+
 .tablehead {
-	background:#d0d0d0;
+	background:#6C704D;
 	border-bottom: 1px solid #000000;
 	padding-top:10px;
 	margin-left:10px;
@@ -169,13 +168,11 @@ td {
 	padding-top:5px;
 }
 
-.even
-{
-	background-color:#e0e0e0;
+.even {
+	background-color:#B5BD82;
 }
 
-.odd
-{
+.odd {
 	background-color:#fafafa;
 }
 
@@ -203,6 +200,16 @@ td {
 }
 
 
+.headerbox {
+	background:#54704D;
+	border:solid 1px #000000;
+	margin-left:10px;
+	margin-right:10px;
+	margin-bottom:10px;
+	vertical-align:middle;
+}
+
+
 .textbox {
 	background:#fafafa;
 	border:solid 1px #000000;
@@ -214,12 +221,12 @@ td {
 
 
 .textboxhalf {
-	background:#eaeaea;
+	background:#d5dDa2;
 	width: 450px;
 	border:solid 1px #000000;
 	margin-left:15px;
 	margin-right:15px;
-	margin-bottom:10px;
+	margin-bottom:15px;
 	vertical-align:middle;
 }
 
@@ -228,7 +235,7 @@ td {
 	font-size:12pt;
 	font-weight:bold;
 	color:#222222;
-	background:#bababa;
+	background:#8C906D;
 	padding:5px;
 	font-weight:bold;
 	margin-top:0px;
@@ -250,8 +257,7 @@ td {
 	margin-left:20px;
 }
 
-.formtext
-{
+.formtext {
 	border:solid 1px #777788;
 	padding: 3px;
 	width:280px;
@@ -259,8 +265,7 @@ td {
     font-size: 12pt;
 }
 
-.formbutton
-{
+.formbutton {
 	border:solid 1px #777788;
     font-family: Osaka,verdana,Sans-Serif;
     font-size: 12pt;
@@ -279,36 +284,46 @@ td {
 	margin-top:10pt;
 	margin-bottom:10pt;
 	font-weight:bold;
-	color:#555555;
+	color:#444444;
 }
 
+.targetwarning {
+	text-align:center;
+	background:#ec921a;
+	padding:10px;
+}
 
-.usermessage
-{
+.targeterror {
+	text-align:center;
+	font-weight:bold;
+	background:#aa0000;
+	color:#ffffff;
+	padding:10px;
+}
+
+.usermessage {
 	color:#333333;
 	font-weight:bold;
 	border:solid 1px #777788;
-	padding:5px;
-	background:#77ff77;
+	padding:10px;
+	background:#D9FAC8;
 	font-size:10pt;
 }
 
-.userwarning
-{
+.userwarning {
 	color:#333333;
 	font-weight:bold;
 	border:solid 1px #777788;
-	padding:5px;
+	padding:10px;
 	background:#ffbb00;
 	font-size:10pt;
 }
 
-.usererror
-{
-	color:#999999;
+.usererror {
+	color:#ffffff;
 	font-weight:bold;
 	border:solid 1px #777788;
-	padding:5px;
-	background:#990000;
+	padding:10px;
+	background:#aa0000;
 	font-size:10pt;
 }
