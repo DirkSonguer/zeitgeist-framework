@@ -42,35 +42,22 @@
 
 	<script type="text/javascript">
 
-		var dsTaskInformation = new Spry.Data.XMLDataSet("@@{[dataserver.gettaskinformation]}@@&id=@@{taskid}@@", "container/element");
-		dsTaskInformation.setColumnType("task_id", "number");
-		dsTaskInformation.setColumnType("task_hoursplanned", "number");
-		dsTaskInformation.setColumnType("task_hoursworked", "number");
-		
-		var dsTasklogs = new Spry.Data.XMLDataSet("@@{[dataserver.gettasklogs]}@@&id=@@{taskid}@@", "container/element");
-	
-		var bShowShortcuts = false;
-		shortcutUp = new Image();
-		shortcutUp.src = "@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png";
-		shortcutDown = new Image();
-		shortcutDown.src = "@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png";
-	
-		function showShortcuts()
+		var dsTasktypes = new Spry.Data.XMLDataSet("@@{[dataserver.gettasktypes]}@@", "container/element");
+		dsTasktypes.setColumnType("tasktype_id", "number");
+
+		function deleteTasktype(id, name)
 		{
-			if (bShowShortcuts == false)
+			var answer = window.confirm(" '" + name + "'?");
+
+			/* Question icon, Yes/No button. */
+			/* 0 = error, 1 = OK, 2 = Cancel, 3 = No, 4 = Yes */
+
+			if (answer == true)
 			{
-				bShowShortcuts = true;
-				document.getElementById('Shortcuts').style.display = "block";
-				document.images["shortcutIcon"].src = shortcutUp.src;
+			   window.location.href = "@@{[users.deleteuser]}@@"+"&id="+id;
 			}
-			else
-			{
-				bShowShortcuts = false;
-				document.getElementById('Shortcuts').style.display = "none";
-				document.images["shortcutIcon"].src = shortcutDown.src;
-			}
-		}	
-	
+		}
+
 	</script>
 
 <!-- InstanceEndEditable -->
@@ -130,7 +117,6 @@
 <!-- TemplateEndBlock -->
 
 <!-- InstanceBeginEditable name="pagetitle" -->
-
 <!-- InstanceEndEditable -->
 
 	<!-- TemplateBeginBlock name="usermessage" -->
@@ -147,114 +133,39 @@
 	
 <!-- InstanceBeginEditable name="body" -->
 
+<!--
 <div class="textbox">
-	<h2>Aufgabe bearbeiten</h2>
-
-	<div spry:region="dsTaskInformation">
-    <div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
-
-	<div spry:state="ready">
-	
-	<table width="100%" cellspacing="5" cellpadding="5" border="0">
-	<tr>
-	<td width="50%" valign="top">
-        <table style="margin-bottom: 10px;" border="0" cellpadding="0" cellspacing="0">
-            <tbody>
-			<tr>
-                <td valign="top" width="140"><p class="formlabel">Titel*</p></td>
-                <td valign="middle"><p>{dsTaskInformation::task_name}</p></td>
-            </tr>
-            <tr>
-                <td align="right" valign="top"><p class="formlabel">Beschreibung*</p></td>
-                <td align="left" valign="middle"><p>{dsTaskInformation::task_description}</p></td>
-            </tr>
-		</tbody>
-		</table>
-	</td>
-	<td width="50%" valign="top">
-		<table style="margin-bottom: 10px;" border="0" cellpadding="0" cellspacing="0">
-		<tbody>
-			<tr>
-                <td align="right" valign="top" width="140"><p class="formlabel">Stundenbudget*</p></td>
-                <td align="left" valign="middle"><p>{dsTaskInformation::task_hoursplanned} Stunden</p></td>
-            </tr>
-            <tr>
-                <td align="right" valign="top"><p class="formlabel">Aufgabentyp</p></td>
-                <td align="left" valign="middle"><p>{dsTaskInformation::tasktype_name}</p></td>
-            </tr>
-            <tr>
-                <td align="right" valign="top"><p class="formlabel">Priorität</p></td>
-                <td align="left" valign="middle"><p>{dsTaskInformation::priority_name}</p></td>
-            </tr>
-			<tr>
-                <td align="right" valign="top" width="140"><p class="formlabel">Beginn</p></td>
-                <td align="left" valign="middle"><p>{dsTaskInformation::task_begin}</p></td>
-            </tr>
-			<tr>
-                <td align="right" valign="top"><p class="formlabel">Fällig am</p></td>
-                <td align="left" valign="middle"><p>{dsTaskInformation::task_end}</p></td>
-            </tr>
-			
-		</tbody>
-		</table>
-	</td>
-	</tr>
-	<tr>
-	<td colspan="2">
-		<table style="margin-bottom: 10px;" border="0" cellpadding="0" cellspacing="0">
-		<tr>
-			<td align="right" valign="top" width="140"><p class="formlabel">Tags*</p></td>
-			<td align="left" valign="middle"><input maxlength="512" style="width:750px; margin-top:10px;" name="task_tags" value="@@{task_tags}@@" class="formtext" type="text">
-			<p style="margin-left:0px;">(Mehrere Tags durch Komma trennen. Bitte <u>mindestens</u> Kunde und evtl. Projekt angeben)</p></td>
-		</tr>
-		</table>
-	</td>
-	</tr>
-	<tr>
-	<td colspan="2">
-           <p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/actions/pencil.png" alt="" border="0" align="top" />
-		   <input name="submit" value="Aufgabe speichern" class="formbutton" type="submit"></p>
-	</td>
-	</tr>
-	</table>
-
-	</div>
-	</div>
+	<h3><img src="@@{templatepath}@@/nuvola/22x22/actions/view_bottom.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[users.adduser]}@@" alt="add new user">Add new user</a></h3>
 </div>
+-->
 
 <div class="textbox">
-	<h2 style="text-align:left;">Bisherige Tätigkeiten <span style="float:right; margin-top:-20px;"><a href="javascript:showShortcuts();" alt=""><span onmousemove="showTooltip('Bisherige Tätigkeiten', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png" alt="" name="shortcutIcon" align="left" border="0" /></span></a></span></h2>
-	<div style="clear:both"></div>
-	
-	<div id="Shortcuts" style="padding:0px; display:none;">
+<h2>Aufgabentypen</h2>
 
-	<div spry:region="dsTasklogs">
+	<div spry:region="dsTasktypes">
     <div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
 
 	<div spry:state="ready">
 	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
 	        <tr class="tablehead">
-				<th width="40"><p style="text-align:center;"><a onclick="dsTasklogs.sort('tasklog_id');">ID</a></p></th>
-				<th width="150"><p style="text-align:center;"><a onclick="dsTasklogs.sort('tasklog_username');">Bearbeitet von</a></p></th>
-				<th width="100"><p style="text-align:center;"><a onclick="dsTasklogs.sort('task_hoursworked');">Dauer</a></p></th>
-				<th><p>Tätigkeitbeschreibung</p></th>
-				<th width="200"><p style="text-align:center;"><a onclick="dsTasklogs.sort('tasklog_timestamp');">Datum</a></p></th>
-				<th><p>Aktionen</p></th>
+				<th><p><a onclick="dsTasktypes.sort('tasktype_id');">ID</a></p></th>
+				<th><p><a onclick="dsTasktypes.sort('tasktype_name');">Benutzer</a></p></th>
+				<th><p><a onclick="dsTasktypes.sort('tasktype_description');">Name</a></p></th>
+				<th><p>Action</p></th>
 	        </tr>
-	        <tr class="{ds_EvenOddRow}" spry:repeat="dsTasklogs">
-				<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_id}</p></td>
-				<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_username}</p></td>
-				<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_hoursworked}</p></td>
-				<td valign="top"><p>{dsTasklogs::tasklog_description}</p></td>
-				<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_timestamp}</p></td>
-				<td width="90"><p></p></td>
+	        <tr class="{ds_EvenOddRow}" spry:repeat="dsTasktypes">
+				<td><p>{dsTasktypes::tasktype_id}</p></td>
+				<td><p>{dsTasktypes::tasktype_name}</p></td>
+				<td><p>{dsTasktypes::tasktype_description}</p></td>
+				<td width="90"><p>
+				<span onmousemove="showTooltip('Aufgabentyp bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[tasktypes.edittasktype]}@@&id={dsTasktypes::tasktype_id}" alt="Aufgabentyp bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="Aufgabentyp bearbeiten" border="0" /></a></span> &nbsp; 
+				<span onmousemove="showTooltip('Aufgabentyp löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteTask({dsTasktypes::tasktype_id}, '{dsTasktypes::tasktype_name}')" alt="Aufgabentyp löschen"><img src="@@{templatepath}@@/nuvola/22x22/actions/cancel.png" alt="Aufgabentyp löschen" border="0" /></a>
+                </p></td>
 	        </tr>
 	    </table>
     </div>
 	</div>
-	</div>
 </div>
-</form>	
 
 <!-- InstanceEndEditable -->
 

@@ -58,7 +58,7 @@ class tasks
 				{
 					$this->messages->setMessage('Die Informtionen wurden gespeichert', 'usermessage');
 					$this->debug->unguard(true);
-					$tpl->redirect($tpl->createLink('tasks', 'showalltasks'));
+					$tpl->redirect($tpl->createLink('tasks', 'showactivetasks'));
 					return(true);
 				}
 			}
@@ -128,7 +128,7 @@ class tasks
 				{
 					$this->messages->setMessage('Die Informationen wurden gespeichert', 'usermessage');
 					$this->debug->unguard(true);
-					$tpl->redirect($tpl->createLink('tasks', 'showalltasks'));
+					$tpl->redirect($tpl->createLink('tasks', 'showactivetasks'));
 					return($ret);
 				}
 			}
@@ -209,7 +209,7 @@ class tasks
 
 		$this->debug->unguard(true);
 		$tpl = new tkTemplate();
-		$tpl->redirect($tpl->createLink('tasks', 'showalltasks'));
+		$tpl->redirect($tpl->createLink('tasks', 'showactivetasks'));
 		return true;
 	}
 
@@ -467,12 +467,12 @@ class tasks
 	}
 
 
-	public function showalltasks($parameters=array())
+	public function showactivetasks($parameters=array())
 	{
 		$this->debug->guard();
 
 		$tpl = new tkTemplate();
-		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_showalltasks'));
+		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_showactivetasks'));
 
 		$tpl->show();
 
