@@ -42,25 +42,9 @@
 
 	<script type="text/javascript">
 
-		var dsTasks = new Spry.Data.XMLDataSet("@@{[dataserver.getalltasks]}@@", "container/element");
-		dsTasks.setColumnType("task_id", "number");
-		dsTasks.setColumnType("task_hoursplanned", "number");
-		dsTasks.setColumnType("task_hoursworked", "number");
+		var dsTasktypeInformation = new Spry.Data.XMLDataSet("@@{[dataserver.gettasktypeinformation]}@@&id=@@{tasktype_id}@@", "container/element");
 
-		function insertData(dataElement, dataContent)
-		{
-			document.getElementById(dataElement).innerHTML = dataContent;
-		}
-	
-		function deleteTask(id, name)
-		{
-			var answer = window.confirm("Wollen Sie die Aufgabe '" + name + "' wirklich löschen?\nHinweis: Die Aufgabe wird unwiederbringlich aus dem System entfernt!");
-
-			if (answer == true)
-			{
-			   window.location.href = "@@{[tasks.deletetask]}@@"+"&id="+id;
-			}
-		}
+		var dsGroupInformation = new Spry.Data.XMLDataSet("@@{[dataserver.getusergroups]}@@", "container/element");
 
 	</script>
 
@@ -99,8 +83,10 @@
 		<!-- TemplateBeginBlock name="managernavigation" -->
 		<div style="float:left; margin:10px; margin-left:40px;"><a href="@@{[tasks.addtask]}@@" alt=""><span onmousemove="showTooltip('Neue Aufgabe anlegen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kword.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[tasks.showalltasks]}@@" alt=""><span onmousemove="showTooltip('Alle aktiven Aufgaben anzeigen', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[tasks.showactivetasks]}@@" alt=""><span onmousemove="showTooltip('Alle aktiven Aufgaben anzeigen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpager.png" alt="" border="0" /></span></a></div>
+		<div style="float:left; margin:10px;"><a href="@@{[tasks.showarchivedtasks]}@@" alt=""><span onmousemove="showTooltip('Alle archivierten Aufgaben anzeigen', event)" onmouseout="hideTooltip()">
+		<img src="@@{templatepath}@@/nuvola/48x48/filesystems/folder_tar.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[search.index]}@@" alt=""><span onmousemove="showTooltip('Aufgaben suchen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpdf.png" alt="" border="0" /></span></a></div>
 		<!-- TemplateEndBlock -->
@@ -110,7 +96,7 @@
 		<img src="@@{templatepath}@@/nuvola/48x48/mimetypes/vcard.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[config.overviewusergroups]}@@" alt=""><span onmousemove="showTooltip('Benutzergruppen verwalten', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kdmconfig.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[config.overviewtasktypes]}@@" alt=""><span onmousemove="showTooltip('Aufgabentypen verwalten', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[tasktypes.index]}@@" alt=""><span onmousemove="showTooltip('Aufgabentypen verwalten', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/fsview.png" alt="" border="0" /></span></a></div>
 		<!-- TemplateEndBlock -->
 		
@@ -119,7 +105,6 @@
 <!-- TemplateEndBlock -->
 
 <!-- InstanceBeginEditable name="pagetitle" -->
-
 <!-- InstanceEndEditable -->
 
 	<!-- TemplateBeginBlock name="usermessage" -->
@@ -136,74 +121,78 @@
 	
 <!-- InstanceBeginEditable name="body" -->
 
+<!--
 <div class="textbox">
-	<h2>Alle aktiven Aufgaben (<span id="groupRows">2</span>)</h2>
-	<div style="clear:both"></div>
-
-	<div spry:region="dsTasks">
-    <div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
-
-	<div spry:state="ready">
-
-	<script type="text/javascript">
-		var numRows = dsTasks.getRowCount();
-		insertData('groupRows', numRows);
-	</script>
-
-	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
-	        <tr class="tablehead">
-				<th><p><a onclick="dsTasks.sort('task_id');">ID</a></p></th>
-				<th><p><a onclick="dsTasks.sort('task_name');">Name</a></p></th>
-				<th><p><a onclick="dsTasks.sort('group_name');">Verantwortlich</a></p></th>
-				<th><p><a onclick="dsTasks.sort('task_priority');">Priorität</a></p></th>
-				<th><p style="text-align:center;"><a onclick="dsTasks.sort('task_hoursplanned');">Stunden-<br />budget</a></p></th>
-				<th><p style="text-align:center;"><a onclick="dsTasks.sort('task_hoursworked');">Stunden<br />verbraucht</a></p></th>
-				<th><p style="text-align:center;"><a onclick="dsTasks.sort('task_end');">Fällig am</a></p></th>
-				<th><p>Aktionen</p></th>
-	        </tr>
-	        <tr class="{ds_EvenOddRow}" spry:repeat="dsTasks">
-				<td><p>{dsTasks::task_id}</p></td>
-				<td><p><span onmousemove="showTooltip('{dsTasks::task_description}', event)" onmouseout="hideTooltip()">{dsTasks::task_name}</span></p></td>
-				<td>
-					<div spry:choose="spry:choose">
-						<div spry:when="'{dsTasks::user_username}' == ''"><p>{dsTasks::group_name}</p></div>
-						<div spry:default="spry:default">
-							<p>{dsTasks::user_username}</p>
-						</div>
-					</div>
-				</td>
-				<td><p>
-					<span spry:if="{dsTasks::task_priority} == '1'">Niedrig</span>
-					<span spry:if="{dsTasks::task_priority} == '2'">Normal</span>
-					<span spry:if="{dsTasks::task_priority} == '3'">Hoch</span>
-				</p></td>
-				<td><p style="text-align:center;">{dsTasks::task_hoursplanned}</p></td>
-				<td>
-					<p spry:if="{dsTasks::task_overdrawn} == '0'" style="text-align:center;">{dsTasks::task_hoursworked}</p>
-					<p spry:if="{dsTasks::task_overdrawn} == '1'" class="targetwarning">{dsTasks::task_hoursworked}</p>
-					<p spry:if="{dsTasks::task_overdrawn} == '2'" class="targeterror">{dsTasks::task_hoursworked}</p>
-				<td>
-					<div spry:choose="spry:choose">
-						<div spry:when="'{dsTasks::task_end}' == '00.00.0000'"><p style="text-align:center;">-</p></div>
-						<div spry:default="spry:default">
-							<p spry:if="{dsTasks::task_late} == '0'" style="text-align:center;">{dsTasks::task_end}</p>
-							<p spry:if="{dsTasks::task_late} == '1'" class="targetwarning">{dsTasks::task_end}</p>
-							<p spry:if="{dsTasks::task_late} == '2'" class="targeterror"">{dsTasks::task_end}</p>
-						</div>
-					</div>
-				</td>
-				<td width="120"><p style="text-align:center;">
-				<span onmousemove="showTooltip('Details', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.taskdetails]}@@&id={dsTasks::task_id}" alt="Details"><img src="@@{templatepath}@@/nuvola/22x22/apps/kappfinder.png" alt="Details" border="0" /></a></span> &nbsp; 
-				<span onmousemove="showTooltip('Aufgabe bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.edittask]}@@&id={dsTasks::task_id}" alt="Aufgabe bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="Aufgabe bearbeiten" border="0" /></a></span> &nbsp; 
-				<span onmousemove="showTooltip('Aufgabe löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteTask({dsTasks::task_id}, '{dsTasks::task_name}')" alt="Aufgabe löschen"><img src="@@{templatepath}@@/nuvola/22x22/actions/cancel.png" alt="Aufgabe löschen" border="0" /></a>
-                </p></td>
-	        </tr>
-	    </table>
-    </div>
-	</div>
-	
+	<h3><img src="@@{templatepath}@@/nuvola/22x22/actions/view_bottom.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[users.adduser]}@@" alt="add new user">Add new user</a></h3>
 </div>
+-->
 
+<div class="textbox">
+<form method="post" action="@@{[tasktypes.edittasktype]}@@" name="edittasktype" enctype="multipart/form-data; charset=utf-8">
+<input name="tasktypeid" value="@@{tasktype_id}@@" type="hidden">
+
+<h2>Aufgabentyp bearbeiten</h2>
+
+	<table width="100%" cellspacing="5" cellpadding="5" border="0">
+	<tr>
+	<td width="50%" valign="top">
+        <table style="margin-bottom: 10px;" border="0" cellpadding="0" cellspacing="0">
+            <tbody>
+			<tr>
+                <td nowrap="nowrap" valign="top" width="140"><p class="formlabel">Name*</p></td>
+                <td nowrap="nowrap" valign="middle"><input maxlength="128" name="tasktype_name" value="@@{tasktype_name}@@" class="formtext" type="text"></td>
+            </tr>
+            <tr>
+                <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Beschreibung*</p></td>
+                <td align="left" nowrap="nowrap" valign="middle"><textarea rows="5" name="tasktype_description" class="formtext" style="height:175px;">@@{tasktype_description}@@</textarea></td>
+            </tr>
+		</tbody>
+		</table>
+           <p style="text-align:center; margin-top:25px;"><img src="@@{templatepath}@@/nuvola/32x32/actions/pencil.png" alt="" border="0" align="top" />
+		   <input name="submit" value="Aufgabentyp speichern" class="formbutton" type="submit"></p>
+	</td>
+	<td width="50%" valign="top">
+		<div spry:region="dsTasktypeInformation dsGroupInformation">
+		<div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
+	
+		<div spry:state="ready">
+			<br />
+			<div spry:repeat="dsTasktypeInformation">
+				<div class="textboxhalf">
+					<p style="text-align:center; margin-top:15px; margin-left:10px;"><strong>Beschreibung:</strong> <input maxlength="256" name="taskworkflow_title[{dsTasktypeInformation::taskworkflow_id}]" value="{dsTasktypeInformation::taskworkflow_title}" class="formtext" type="text"></p>
+
+					<p style="text-align:center; margin-top:20px; margin-left:10px;"><strong>Zuständige Gruppe:</strong> 
+						<select name="taskworkflow_title[{dsTasktypeInformation::taskworkflow_id}]" class="formtext" spry:repeatChildren="dsGroupInformation">
+							<option spry:if="{dsGroupInformation::group_id} == {dsTasktypeInformation::taskworkflow_group}" value="{dsGroupInformation::group_id}" selected="selected">{dsGroupInformation::group_name}</option>
+							<option spry:if="{dsGroupInformation::group_id} != {dsTasktypeInformation::taskworkflow_group}" value="{dsGroupInformation::group_id}">{dsGroupInformation::group_name}</option>
+							
+						</select>
+					</p>
+
+					<p style="margin-top:10px; text-align:center;">
+						<span onmousemove="showTooltip('Im Aufgabenablauf nach oben', event)" onmouseout="hideTooltip()"><a href="@@{[tasktypes.workflowup]}@@&id={dsTasktypeInformation::taskworkflow_id}" alt="Im Aufgabenablauf nach oben"><img src="@@{templatepath}@@/nuvola/22x22/actions/up.png" alt="Im Aufgabenablauf nach oben" border="0" /></a></span>
+						<span style="margin-left:10px;" onmousemove="showTooltip('Im Aufgabenablauf nach unten', event)" onmouseout="hideTooltip()"><a href="@@{[tasktypes.workflowdown]}@@&id={dsTasktypeInformation::taskworkflow_id}" alt="Im Aufgabenablauf nach unten"><img src="@@{templatepath}@@/nuvola/22x22/actions/down.png" alt="Im Aufgabenablauf nach unten" border="0" /></a></span>
+						<span style="margin-left:10px;" onmousemove="showTooltip('Diesen Schritt löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteWorkflow({dsTasktypeInformation::taskworkflow_id}, '{dsTasktypeInformation::taskworkflow_title}')" alt="Diesen Schritt löschen"><img src="@@{templatepath}@@/nuvola/22x22/actions/cancel.png" alt="Diesen Schritt löschen" border="0" /></a></span>
+					</p>
+				</div>
+				<p style="margin-top:10px; margin-right:50px; text-align:center;">
+					<img src="@@{templatepath}@@/nuvola/48x48/apps/download_manager.png" alt="" border="0" align="top" />
+					<span style="margin-left:20px;" onmousemove="showTooltip('Weiteren Schritt hinzufügen', event)" onmouseout="hideTooltip()"><a href="@@{[tasktypes.addworkflow]}@@&id={dsTasktypeInformation::taskworkflow_id}" alt="Weiteren Schritt hinzufügen"><img src="@@{templatepath}@@/nuvola/22x22/actions/edit_add.png" alt="" border="0" align="top" /></a></span>
+					
+				</p>
+			</div>
+			<div class="textboxhalf">
+			<h2 style="text-align:center;">Archiv</h2>
+			</div>
+		</div>
+		</div>
+
+	</td>
+	</tr>
+	</table>
+
+</form>
+</div>
 
 <!-- InstanceEndEditable -->
 

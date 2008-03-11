@@ -416,6 +416,29 @@ class tkTaskfunctions
 	}
 
 
+	public function getTasktypeInformation($tasktypeid)
+	{
+		$this->debug->guard();
+
+		$userfunctions = new tkUserfunctions();
+
+		$sql = "SELECT * FROM tasktypes WHERE tasktype_id='" . $tasktypeid . "' AND tasktype_instance='" . $userfunctions->getUserInstance() . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem getting tasktype from database', 'warning');
+			$this->messages->setMessage('Problem getting tasktype from database' . $taskid, 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$row = $this->database->fetchArray($res);
+
+		$this->debug->unguard($row);
+		return $row;
+	}
+
+
 	public function getNumberofUsertasks()
 	{
 		$this->debug->guard();
@@ -606,7 +629,6 @@ class tkTaskfunctions
 		$this->debug->unguard(true);
 		return true;
 	}
-
 
 }
 ?>
