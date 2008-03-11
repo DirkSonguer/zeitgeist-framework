@@ -66,7 +66,7 @@ class zgTemplate
 
 		// try to load the template
 		$gotTemplateFromDatabase = false;
-		//		$template = $this->_loadTemplateFromDatabase($filename);
+		$template = $this->_loadTemplateFromDatabase($filename);
 		$template = false;
 		if ($template !== false)
 		{
