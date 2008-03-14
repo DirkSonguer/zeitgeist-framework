@@ -17,8 +17,10 @@
 		var topPixel = event.clientY + 10;
 		var leftPixel = event.clientX + 10;
 
-		document.getElementById('Tooltip').style.top = topPixel + "px";
-		document.getElementById('Tooltip').style.left = leftPixel + "px";
+		x = (document.all) ? window.event.x + document.body.scrollLeft + 180: event.pageX;
+		y = (document.all) ? window.event.y : event.pageY;
+		document.getElementById('Tooltip').style.left = (x + 20) + "px";
+		document.getElementById('Tooltip').style.top = (y + 20) + "px";
 		document.getElementById('Tooltip').style.display = "block";
 	}
 
@@ -156,7 +158,7 @@
 		<img src="@@{templatepath}@@/nuvola/48x48/mimetypes/vcard.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[config.overviewusergroups]}@@" alt=""><span onmousemove="showTooltip('Benutzergruppen verwalten', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kdmconfig.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[tasktypes.index]}@@" alt=""><span onmousemove="showTooltip('Aufgabentypen verwalten', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[tasktypes.index]}@@" alt=""><span onmousemove="showTooltip('Aufgabenabläufe verwalten', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/fsview.png" alt="" border="0" /></span></a></div>
 		<!-- TemplateEndBlock -->
 		
