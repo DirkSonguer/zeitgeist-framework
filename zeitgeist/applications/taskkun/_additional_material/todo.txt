@@ -1,0 +1,7 @@
+
+# TO DO
+
+- Anmelden mit Mail-Adresse + Passwort
+- Manager können nur Aufgaben mit ihren eigenen Gruppen erstellen
+- Prioritäten sollen in den eigenen Aufgaben farbig markiert sein
+- Daten sollen in den eigenen Aufgaben farbig markiert sien

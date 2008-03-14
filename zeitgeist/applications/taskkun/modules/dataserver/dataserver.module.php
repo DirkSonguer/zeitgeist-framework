@@ -227,27 +227,6 @@ class dataserver
 	}
 
 
-	public function gettasktypeinformation($parameters=array())
-	{
-		$this->debug->guard();
-
-		$taskfunctions = new tkTaskfunctions();
-		$tasktypeinformation = $taskfunctions->getTasktypeInformation($parameters['id']);
-		if ( (is_array($tasktypeinformation)) && (count($tasktypeinformation) > 0) )
-		{
-			$sql = "SELECT twf.*, g.group_name FROM taskworkflow twf ";
-			$sql .= "LEFT JOIN groups g ON twf.taskworkflow_group = g.group_id ";
-			$sql .= "WHERE taskworkflow_tasktype='" . $parameters['id'] . "' ORDER BY taskworkflow_order";
-			$xmlData = $this->dataserver->createXMLDatasetFromSQL($sql);
-			$this->dataserver->streamXMLDataset($xmlData);
-		}
-		die();
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-
 	public function getusergroups($parameters=array())
 	{
 		$this->debug->guard();
