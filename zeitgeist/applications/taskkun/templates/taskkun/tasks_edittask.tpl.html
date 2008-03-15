@@ -141,9 +141,11 @@
 <!-- InstanceBeginEditable name="body" -->
 
 <form method="post" action="@@{[tasks.edittask]}@@" name="edittask" enctype="multipart/form-data; charset=utf-8">
-<input name="task_id" value="@@{task_id}@@" type="hidden" />
 
-<div class="textbox">
+<!-- TemplateBeginBlock name="edittask" -->
+<input name="edittask[task_id]" value="@@{task_id:value}@@" type="hidden" />
+
+<div class="textbox" style="background-image:url(@@{templatepath}@@/images/side_newtask.jpg); background-position:right bottom; background-repeat:no-repeat;">
 	<h2>Aufgabe bearbeiten</h2>
 
 	<table width="100%" cellspacing="5" cellpadding="5" border="0">
@@ -151,13 +153,21 @@
 	<td width="50%" valign="top">
         <table style="margin-bottom: 10px;" border="0" cellpadding="0" cellspacing="0">
             <tbody>
-			<tr>
+			<tr@@{task_name:formerror}@@>
                 <td nowrap="nowrap" valign="top" width="140"><p class="formlabel">Titel*</p></td>
-                <td nowrap="nowrap" valign="middle"><input maxlength="128" name="task_name" value="@@{task_name}@@" class="formtext" type="text" /></td>
+                <td valign="middle"><input maxlength="128" name="edittask[task_name]" value="@@{task_name:value}@@" class="formtext" type="text" />
+				<!-- TemplateBeginBlock name="task_name:errormsg" -->
+					<br /><span class="formerrormsg">@@{task_name:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+				</td>
             </tr>
-            <tr>
+            <tr@@{task_description:formerror}@@>
                 <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Beschreibung*</p></td>
-                <td align="left" nowrap="nowrap" valign="middle"><textarea rows="5" name="task_description" class="formtext" style="height:175px;">@@{task_description}@@</textarea></td>
+                <td align="left" valign="middle"><textarea rows="5" name="edittask[task_description]" class="formtext" style="height:175px;">@@{task_description:value}@@</textarea>
+				<!-- TemplateBeginBlock name="task_description:errormsg" -->
+					<br /><span class="formerrormsg">@@{task_description:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+				</td>
             </tr>
 		</tbody>
 		</table>
@@ -165,43 +175,43 @@
 	<td width="50%" valign="top">
 		<table style="margin-bottom: 10px;" border="0" cellpadding="0" cellspacing="0">
 		<tbody>
-			<tr>
+			<tr@@{task_hoursplanned:formerror}@@>
                 <td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Stundenbudget*</p></td>
-                <td align="left" nowrap="nowrap" valign="middle"><input maxlength="6" style="width:60px;" name="task_hoursplanned" value="@@{task_hoursplanned}@@" class="formtext" type="text" /> (Angabe in Stunden)</td>
-            </tr>
-            <tr>
-                <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Aufgabenablauf</p></td>
-                <td align="left" nowrap="nowrap" valign="middle">
-					<select name="task_type" class="formtext">
-						<!-- TemplateBeginBlock name="tasktype_loop" -->
-							<option value="@@{tasktype_id}@@"@@{tasktype_selected}@@>@@{tasktype_name}@@</option>
-						<!-- TemplateEndBlock -->
-					</select>
+                <td align="left" valign="middle"><input maxlength="6" style="width:60px;" name="edittask[task_hoursplanned]" value="@@{task_hoursplanned:value}@@" class="formtext" type="text" /> (Angabe in Stunden)
+				<!-- TemplateBeginBlock name="task_hoursplanned:errormsg" -->
+					<br /><span class="formerrormsg">@@{task_hoursplanned:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
 				</td>
             </tr>
             <tr>
                 <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Priorität</p></td>
                 <td align="left" valign="middle">
-					<select name="task_priority" class="formtext">
+					<select name="edittask[task_priority]" class="formtext">
 						<option value="3"@@{priority_3}@@>Hoch</option>
 						<option value="2"@@{priority_2}@@>Normal</option>
 						<option value="1"@@{priority_1}@@>Niedrig</option>
 					</select>
 				</td>
-            </tr>			
-			<tr>
+            </tr>
+			<tr@@{task_begin:formerror}@@>
                 <td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Beginn</p></td>
-                <td align="left" nowrap="nowrap" valign="middle">
-				<input maxlength="30" name="task_begin" class="w8em format-d-m-y divider-dot" id="task_begin" style="width:210px; border:solid 1px #777788; padding:3px; font-family: Osaka,verdana,Sans-Serif; font-size:12pt;" value="@@{task_begin}@@" type="text" />
+                <td align="left" valign="middle">
+				<input maxlength="30" name="edittask[task_begin]" class="w8em format-d-m-y divider-dot" id="task_begin" style="width:210px; border:solid 1px #777788; padding:3px; font-family: Osaka,verdana,Sans-Serif; font-size:12pt;" value="@@{task_begin:value}@@" type="text" />
+				<!-- TemplateBeginBlock name="task_begin:errormsg" -->
+					<br /><span class="formerrormsg">@@{task_begin:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
 				</td>
             </tr>
-			<tr>
+			<tr@@{task_end:formerror}@@>
                 <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Fällig am</p></td>
-                <td align="left" nowrap="nowrap" valign="middle">
-				<input maxlength="30" name="task_end" class="w8em format-d-m-y divider-dot" id="task_end" style="width:210px; border:solid 1px #777788; padding:3px; font-family: Osaka,verdana,Sans-Serif; font-size:12pt;" value="@@{task_end}@@" type="text" />
+                <td align="left" valign="middle">
+				<input maxlength="30" name="edittask[task_end]" class="w8em format-d-m-y divider-dot" id="task_end" style="width:210px; border:solid 1px #777788; padding:3px; font-family: Osaka,verdana,Sans-Serif; font-size:12pt;" value="@@{task_end:value}@@" type="text" />
+				<!-- TemplateBeginBlock name="task_end:errormsg" -->
+					<br /><span class="formerrormsg">@@{task_end:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
 				</td>
             </tr>
-			
+
 		</tbody>
 		</table>
 	</td>
@@ -209,26 +219,31 @@
 	<tr>
 	<td colspan="2">
 		<table style="margin-bottom: 10px;" border="0" cellpadding="0" cellspacing="0">
-		<tr>
+		<tr@@{task_tags:formerror}@@>
 			<td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Tags*</p></td>
-			<td align="left" nowrap="nowrap" valign="middle"><input maxlength="512" style="width:750px; margin-top:10px;" name="task_tags" value="@@{task_tags}@@" class="formtext" type="text" />
-			<p style="margin-left:0px;">(Mehrere Tags durch Komma trennen. Bitte <u>mindestens</u> Kunde und evtl. Projekt angeben)</p></td>
+			<td align="left" valign="middle"><input maxlength="512" style="width:750px; margin-top:10px;" name="edittask[task_tags]" value="@@{task_tags:value}@@" class="formtext" type="text" />
+			<p style="margin-left:0px;">(Mehrere Tags durch Komma trennen. Bitte <u>mindestens</u> Kunde und evtl. Projekt angeben)
+			<!-- TemplateBeginBlock name="task_tags:errormsg" -->
+				<br /><span class="formerrormsg">@@{task_tags:errormsg}@@</span>
+			<!-- TemplateEndBlock -->
+			</p>
+			</td>
 		</tr>
 		</table>
 	</td>
 	</tr>
 	<tr>
-	<td colspan="2">
-           <p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/actions/pencil.png" alt="" border="0" align="top" />
+		<td colspan="2">
+		   <p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/actions/filenew.png" alt="" border="0" align="top" />
 		   <input name="submit" value="Aufgabe speichern" class="formbutton" type="submit" /></p>
-	</td>
+		</td>
 	</tr>
 	</table>
 
 </div>
 
 <div class="textbox">
-	<h2 style="text-align:left;">Weitere Angaben <span style="float:right; margin-top:-20px;"><a href="javascript:showShortcuts();" alt=""><span onmousemove="showTooltip('Weitere Angaben', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png" alt="" name="shortcutIcon" align="left" border="0" /></span></a></span></h2>
+	<h2 style="text-align:left; background:#B5BD82; padding:5px;">Weitere Angaben <span style="float:right; margin-top:-20px;"><a href="javascript:showShortcuts();" alt=""><span onmousemove="showTooltip('Weitere Angaben', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png" alt="" name="shortcutIcon" align="left" border="0" /></span></a></span></h2>
 	<div style="clear:both"></div>
 	
 	<div id="Shortcuts" style="padding:5px; display:none;">
@@ -237,8 +252,8 @@
 	<tbody>
 	<tr>
 		<td align="right" nowrap="nowrap" valign="top" width="120"><p class="formlabel">Anmerkungen</p></td>
-		<td align="left" nowrap="nowrap" valign="middle">
-			<textarea rows="5" name="task_notes" class="formtext" style="height:175px; width:750px;"></textarea>
+		<td align="left" valign="middle">
+			<textarea rows="5" name="edittask[task_notes]" class="formtext" style="height:175px; width:750px;"></textarea>
 		</td>
 	</tr>
 	</tbody>
@@ -247,6 +262,8 @@
 	</div>
 	
 </div>
+<!-- TemplateEndBlock -->
+
 </form>	
 
 <!-- InstanceEndEditable -->
