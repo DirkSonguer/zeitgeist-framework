@@ -202,6 +202,17 @@ class zgParameterhandler
 					{
 						$safeParameters[$parametername] = mysql_escape_string($safeParameters[$parametername]);
 					}
+
+					if (is_array($safeParameters[$parametername]))
+					{
+						foreach ($safeParameters[$parametername] as $key => $value)
+						{
+							if (is_string($value))
+							{
+								$safeParameters[$parametername][$key] = mysql_escape_string($value);
+							}
+						}
+					}
 				}
 
 				unset($unsafeParameters[$parametername]);
