@@ -12,7 +12,7 @@ body {
 p, table, pre {
 	font-family: "Georgia",Serif;
 	font-size: 12pt;
-	text-align:justify;
+	text-align:left;
 	margin-left:10pt;
 	margin-right:10pt;
 	margin-top:5pt;
@@ -287,6 +287,19 @@ td {
 	margin-bottom:10pt;
 	font-weight:bold;
 	color:#444444;
+}
+
+.formerror
+{
+	background:#ffbb00;
+	border:solid 1px #777788;
+	padding:10px;
+}
+
+.formerrormsg
+{
+	color:#880000;
+	font-size: 8pt;
 }
 
 .targetwarning {

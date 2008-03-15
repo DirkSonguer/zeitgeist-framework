@@ -82,17 +82,17 @@
 
 <!-- TemplateBeginBlock name="navigation" -->
 	<div class="headerbox">
-		<div style="float:left; margin:10px;"><a href="@@{[main.index]}@@" alt=""><span onmousemove="showTooltip('Hauptseite', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[main.index]}@@"><span onmousemove="showTooltip('Hauptseite', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/actions/gohome.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[tasks.index]}@@" alt=""><span onmousemove="showTooltip('Eigene Aufgaben', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[tasks.index]}@@"><span onmousemove="showTooltip('Eigene Aufgaben', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/klipper.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[tasks.addadhoc]}@@" alt=""><span onmousemove="showTooltip('Ad-Hoc-Tätigkeit eintragen', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[tasks.addadhoc]}@@"><span onmousemove="showTooltip('Ad-Hoc-Tätigkeit eintragen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/karm.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[reports.index]}@@" alt=""><span onmousemove="showTooltip('Reports', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[reports.index]}@@"><span onmousemove="showTooltip('Reports', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kchart.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[configuration.index]}@@" alt=""><span onmousemove="showTooltip('Persönliche Einstellungen', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[configuration.index]}@@"><span onmousemove="showTooltip('Persönliche Einstellungen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kcmsystem.png" alt="" border="0" /></span></a></div>
-		<div style="float:right; margin:10px;"><a href="@@{[help.index]}@@" alt=""><span onmousemove="showTooltip('Hilfe!', event)" onmouseout="hideTooltip()">
+		<div style="float:right; margin:10px;"><a href="@@{[help.index]}@@"><span onmousemove="showTooltip('Hilfe!', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/filetypes.png" alt="" border="0" /></span></a></div>
 		
 		
@@ -137,10 +137,76 @@
 	
 <!-- InstanceBeginEditable name="body" -->
 
-<div class="textbox">
-<h2>Persönliche Einstellungen</h2>
+<form method="post" action="@@{[configuration.index]}@@" name="edituserdata" enctype="multipart/form-data; charset=utf-8">
 
-</div>
+	<div class="textbox">
+	<h2>Passwort ändern</h2>
+	
+        <input type="hidden" value="@@{user_id}@@" name="user_id" />
+		<table width="100%" cellspacing="5" cellpadding="5" border="0">
+            <tr>
+                <td valign="top" nowrap width="200"><p class="formlabel">Neues Passwort</p></td>
+                <td valign="middle" nowrap><input type="password" maxlength="30" name="user_password" class="formtext" /></td>
+            </tr>
+            <tr>
+                <td valign="top" nowrap><p class="formlabel"> Passwort bestätigen</p></td>
+                <td valign="middle" nowrap><input type="password" maxlength="30" name="user_password2" class="formtext" /></td>
+            </tr>
+			<tr>
+				<td colspan="2">
+				   <p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/actions/pencil.png" alt="" border="0" align="top" />
+				   <input name="submit" value="Daten speichern" class="formbutton" type="submit" /></p>
+				</td>
+			</tr>
+        </table>
+		
+	</div>
+	
+	<div class="textbox">
+	<h2>Benutzerdaten ändern</h2>
+	
+        <input type="hidden" value="@@{user_id}@@" name="user_id" />
+		<table width="100%" cellspacing="5" cellpadding="5" border="0">
+            <tr>
+                <td valign="top" nowrap width="200"><p class="formlabel">E-Mail*</p></td>
+                <td valign="middle" nowrap><input type="text" maxlength="60" name="user_username" value="@@{user_username}@@" class="formtext" /></td>
+            </tr>
+            <tr>
+                <td valign="top" nowrap><p class="formlabel">Name</p></td>
+                <td valign="middle" nowrap><input type="text" maxlength="60" name="userdata_lastname" value="@@{userdata_lastname}@@" class="formtext" /></td>
+            </tr>
+            <tr>
+                <td valign="top" nowrap><p class="formlabel">Vorname</p></td>
+                <td valign="middle" nowrap><input type="text" maxlength="60" name="userdata_firstname" value="@@{userdata_firstname}@@" class="formtext" /></td>
+            </tr>
+            <tr>
+                <td valign="top" nowrap><p class="formlabel">Straße, Hausnummer</p></td>
+                <td valign="middle" nowrap><input type="text" maxlength="60" name="userdata_address1" value="@@{userdata_address1}@@" class="formtext" /></td>
+            </tr>
+            <tr>
+                <td valign="top" nowrap><p class="formlabel">Adresszusatz</p></td>
+                <td valign="middle" nowrap><input type="text" maxlength="60" name="userdata_address2" value="@@{userdata_address2}@@" class="formtext" /></td>
+            </tr>
+            <tr>
+                <td valign="top" nowrap><p class="formlabel">PLZ, Ort</p></td>
+                <td valign="middle" nowrap><input type="text" maxlength="6" name="userdata_zip" value="@@{userdata_zip}@@" class="formtext" style="width:55px;" />
+				<input type="text" maxlength="60" name="userdata_city" value="@@{userdata_city}@@" class="formtext" style="width:212px;" /></td>
+            </tr>
+            <tr>
+                <td valign="top" nowrap><p class="formlabel">URL</p></td>
+                <td valign="middle" nowrap><input type="text" maxlength="60" name="userdata_url" value="@@{userdata_url}@@" class="formtext" /></td>
+            </tr>
+			<tr>
+				<td colspan="2">
+				   <p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/actions/pencil.png" alt="" border="0" align="top" />
+				   <input name="submit" value="Daten speichern" class="formbutton" type="submit" /></p>
+				</td>
+			</tr>
+		</table>
+		
+	</div>
+	
+</form>
 
 <!-- InstanceEndEditable -->
 

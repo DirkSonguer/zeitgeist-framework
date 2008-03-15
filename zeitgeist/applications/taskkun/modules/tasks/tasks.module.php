@@ -43,20 +43,23 @@ class tasks
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_addtask'));
 
+		$addtaskForm = new zgStaticform();
+		$addtaskForm->load('forms/addtask.form.ini');
+		$formvalid = $addtaskForm->process($parameters);
+
+		$taskfunctions = new tkTaskfunctions();
 		if (!empty($parameters['submit']))
 		{
-			if ( (!empty($parameters['task_name'])) && (!empty($parameters['task_description'])) && (!empty($parameters['task_hoursplanned'])) && (!empty($parameters['task_tags'])) )
+			if ($formvalid)
 			{
-
-				$taskfunctions = new tkTaskfunctions();
-				if (!$taskfunctions->addTask($parameters))
+				if (!$taskfunctions->addTask($parameters['addtask']))
 				{
 					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator', 'usererror');
 					$tpl->assignDataset($parameters);
 				}
 				else
 				{
-					$this->messages->setMessage('Die Informtionen wurden gespeichert', 'usermessage');
+					$this->messages->setMessage('Die Informationen wurden gespeichert', 'usermessage');
 					$this->debug->unguard(true);
 					$tpl->redirect($tpl->createLink('tasks', 'showactivetasks'));
 					return(true);
@@ -64,14 +67,14 @@ class tasks
 			}
 			else
 			{
-				$this->messages->setMessage('Bitte füllen Sie alle Pflichtfelder aus', 'userwarning');
+				$this->messages->setMessage('Bitte füllen Sie alle Formularfelder korrekt aus', 'userwarning');
 				$tpl->assignDataset($parameters);
 			}
 		}
 
-		$taskfunctions = new tkTaskfunctions();
+		$formcreated = $addtaskForm->create($tpl);
 
-		$tasktypes = $taskfunctions->getTaskTypes();
+		$tasktypes = $taskfunctions->getTaskTypesForUser();
 		foreach ($tasktypes as $tasktype)
 		{
 			$tpl->assignDataset($tasktype);
@@ -80,8 +83,10 @@ class tasks
 
 		if (empty($parameters['task_begin']))
 		{
-			$tpl->assign('task_begin', date('d.m.Y'));
+			$tpl->assign('task_begin:value', date('d.m.Y'));
 		}
+
+		$tpl->insertBlock('addtask');
 
 		$tpl->show();
 
@@ -122,6 +127,8 @@ class tasks
 						$tpl->insertBlock('tasktype_loop');
 					}
 
+					$tpl->assign('priority_' . $parameters['task_priority'], 'selected="selected"');
+
 					$tpl->assignDataset($parameters);
 				}
 				else
@@ -129,7 +136,7 @@ class tasks
 					$this->messages->setMessage('Die Informationen wurden gespeichert', 'usermessage');
 					$this->debug->unguard(true);
 					$tpl->redirect($tpl->createLink('tasks', 'showactivetasks'));
-					return($ret);
+					return true;
 				}
 			}
 			else
@@ -152,6 +159,7 @@ class tasks
 					$tpl->insertBlock('tasktype_loop');
 				}
 
+				$tpl->assign('priority_' . $parameters['task_priority'], 'selected="selected"');
 				$tpl->assignDataset($parameters);
 			}
 		}
@@ -178,6 +186,8 @@ class tasks
 				}
 				$tpl->insertBlock('tasktype_loop');
 			}
+
+			$tpl->assign('priority_' . $taskinformation['task_priority'], 'selected="selected"');
 
 			$tpl->assignDataset($taskinformation);
 		}
