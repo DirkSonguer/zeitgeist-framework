@@ -55,7 +55,6 @@ class tasks
 				if (!$taskfunctions->addTask($parameters['addtask']))
 				{
 					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator', 'usererror');
-					$tpl->assignDataset($parameters);
 				}
 				else
 				{
@@ -68,7 +67,6 @@ class tasks
 			else
 			{
 				$this->messages->setMessage('Bitte füllen Sie alle Formularfelder korrekt aus', 'userwarning');
-				$tpl->assignDataset($parameters);
 			}
 		}
 
@@ -77,6 +75,7 @@ class tasks
 		$tasktypes = $taskfunctions->getTaskTypesForUser();
 		foreach ($tasktypes as $tasktype)
 		{
+			if (!empty($parameters['addtask']['task_type'])) $tpl->assign('tasktype_selected', 'selected="selected"');
 			$tpl->assignDataset($tasktype);
 			$tpl->insertBlock('tasktype_loop');
 		}
@@ -87,7 +86,6 @@ class tasks
 		}
 
 		$tpl->insertBlock('addtask');
-
 		$tpl->show();
 
 		$this->debug->unguard(true);
@@ -102,34 +100,20 @@ class tasks
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_edittask'));
 
+		$addtaskForm = new zgStaticform();
+		$addtaskForm->load('forms/edittask.form.ini');
+
+		$taskfunctions = new tkTaskfunctions();
+
 		if (!empty($parameters['submit']))
 		{
-			if ( (!empty($parameters['task_name'])) && (!empty($parameters['task_description'])) && (!empty($parameters['task_hoursplanned'])) && (!empty($parameters['task_tags'])) )
-			{
+			$formvalid = $addtaskForm->process($parameters);
 
-				$taskfunctions = new tkTaskfunctions();
-				if (!$taskfunctions->updateTask($parameters))
+			if ($formvalid)
+			{
+				if (!$taskfunctions->updateTask($parameters['edittask']))
 				{
 					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator', 'usererror');
-
-					$tasktypes = $taskfunctions->getTaskTypes();
-					foreach ($tasktypes as $tasktype)
-					{
-						$tpl->assignDataset($tasktype);
-						if ($parameters['task_type'] == $tasktype['tasktype_id'])
-						{
-							$tpl->assign('tasktype_selected', 'selected="selected"');
-						}
-						else
-						{
-							$tpl->assign('tasktype_selected', '');
-						}
-						$tpl->insertBlock('tasktype_loop');
-					}
-
-					$tpl->assign('priority_' . $parameters['task_priority'], 'selected="selected"');
-
-					$tpl->assignDataset($parameters);
 				}
 				else
 				{
@@ -141,32 +125,29 @@ class tasks
 			}
 			else
 			{
-				$this->messages->setMessage('Bitte füllen Sie alle Pflichtfelder aus', 'userwarning');
-
-				$taskfunctions = new tkTaskfunctions();
-				$tasktypes = $taskfunctions->getTaskTypes();
-				foreach ($tasktypes as $tasktype)
-				{
-					$tpl->assignDataset($tasktype);
-					if ($parameters['task_type'] == $tasktype['tasktype_id'])
-					{
-						$tpl->assign('tasktype_selected', 'selected="selected"');
-					}
-					else
-					{
-						$tpl->assign('tasktype_selected', '');
-					}
-					$tpl->insertBlock('tasktype_loop');
-				}
-
-				$tpl->assign('priority_' . $parameters['task_priority'], 'selected="selected"');
-				$tpl->assignDataset($parameters);
+				$this->messages->setMessage('Bitte füllen Sie alle Formularfelder korrekt aus', 'userwarning');
 			}
+
+			$tasktypes = $taskfunctions->getTaskTypes();
+			foreach ($tasktypes as $tasktype)
+			{
+				$tpl->assignDataset($tasktype);
+				if ($parameters['edittask']['task_type'] == $tasktype['tasktype_id'])
+				{
+					$tpl->assign('tasktype_selected', 'selected="selected"');
+				}
+				else
+				{
+					$tpl->assign('tasktype_selected', '');
+				}
+				$tpl->insertBlock('tasktype_loop');
+			}
+
+			$tpl->assign('priority_' . $parameters['edittask']['task_priority'], 'selected="selected"');
 		}
 
 		if(!empty($parameters['id']))
 		{
-			$taskfunctions = new tkTaskfunctions();
 			$taskinformation = $taskfunctions->getTaskInformation($parameters['id']);
 
 			if ($taskinformation['task_begin'] == '00.00.0000') $taskinformation['task_begin'] = '';
@@ -189,9 +170,14 @@ class tasks
 
 			$tpl->assign('priority_' . $taskinformation['task_priority'], 'selected="selected"');
 
-			$tpl->assignDataset($taskinformation);
+			$processData = array();
+			$processData['edittask'] = $taskinformation;
+			$formvalid = $addtaskForm->process($processData);
 		}
 
+		$formcreated = $addtaskForm->create($tpl);
+
+		$tpl->insertBlock('edittask');
 		$tpl->show();
 
 		$this->debug->unguard(true);

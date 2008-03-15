@@ -169,6 +169,16 @@ class tkTaskfunctions
 			return false;
 		}
 
+		$sql = "DELETE FROM tasklogs WHERE tasklog_task='" . $taskid . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem deleting tasklogs for task: ' . $taskid, 'warning');
+			$this->messages->setMessage('Problem deleting tasklogs for task: ' . $taskid, 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
 		$sql = "DELETE FROM tasks WHERE task_id='" . $taskid . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
