@@ -58,7 +58,7 @@ class tkTaskfunctions
 		if (!$res)
 		{
 			$this->debug->write('Problem getting tasktypes from database', 'warning');
-			$this->messages->setMessage('Problem getting tasktypes from database' . $taskid, 'warning');
+			$this->messages->setMessage('Problem getting tasktypes from database', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -417,6 +417,38 @@ class tkTaskfunctions
 	}
 
 
+	public function getTaskTypesForUser()
+	{
+		$this->debug->guard();
+
+		$userfunctions = new tkUserfunctions();
+
+		$sql = "SELECT * FROM tasktypes tt ";
+		$sql .= "LEFT JOIN taskworkflow twf ON tt.tasktype_id = twf.taskworkflow_tasktype ";
+		$sql .= "LEFT JOIN users_to_groups u2g ON twf.Taskworkflow_group = u2g.usergroup_group ";
+		$sql .= "WHERE tt.tasktype_instance='" . $userfunctions->getUserInstance() . "' ";
+		$sql .= "AND u2g.usergroup_user='" . $this->user->getUserID() . "' ";
+		$sql .= "GROUP BY tt.tasktype_id";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem getting tasktypes from database', 'warning');
+			$this->messages->setMessage('Problem getting tasktypes from database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$tasktypes = array();
+		while($row = $this->database->fetchArray($res))
+		{
+			$tasktypes[] = $row;
+		}
+
+		$this->debug->unguard($tasktypes);
+		return $tasktypes;
+	}
+
+
 	public function getTasktypeInformation($tasktypeid)
 	{
 		$this->debug->guard();
@@ -576,21 +608,46 @@ class tkTaskfunctions
 			return false;
 		}
 
-		$sql = "SELECT * FROM taskworkflow twf LEFT JOIN tasks t ON twf.taskworkflow_tasktype = t.task_type WHERE t.task_id='" . $taskid . "' ORDER BY twf.taskworkflow_order";
+		$sql = "SELECT twf.*, t.task_workflow FROM taskworkflow twf LEFT JOIN tasks t ON twf.taskworkflow_tasktype = t.task_type ";
+		$sql .= "WHERE t.task_id='" . $taskid . "' ORDER BY twf.taskworkflow_order";
 		$res = $this->database->query($sql);
 
 		$workflowOrder = array();
 		while ($row = $this->database->fetchArray($res))
 		{
-			$workflowOrder[] = $row['taskworkflow_id'];
+			$workflowOrder[$row['taskworkflow_order']] = $row['taskworkflow_id'];
+			$lastRow = $row;
 		}
 
-		$currentWorkflowId = array_search($row['task_workflow'], $workflowOrder);
-		if ($currentWorkflowId != $workflowOrder[count($workflowOrder)-1])
+		$currentWorkflowId = array_search($lastRow['task_workflow'], $workflowOrder);
+		if ($currentWorkflowId != $workflowOrder[count($workflowOrder)])
 		{
-			$row['task_workflow'] = $workflowOrder[$currentWorkflowId+1];
+			if (!empty($workflowOrder[$currentWorkflowId+1]))
+			{
+				$nextWorkflowId = $workflowOrder[$currentWorkflowId+1];
 
-			$sql = "UPDATE tasks SET task_workflow='" . $row['task_workflow'] . "' WHERE task_id='" . $taskid . "'";
+				$sql = "UPDATE tasks SET task_workflow='" . $nextWorkflowId . "' WHERE task_id='" . $taskid . "'";
+				$res = $this->database->query($sql);
+				if (!$res)
+				{
+					$this->debug->write('Problem writing the workflow update to the database', 'warning');
+					$this->messages->setMessage('Problem writing the workflow update to the database', 'warning');
+					$this->debug->unguard(false);
+					return false;
+				}
+			}
+			else
+			{
+				$this->debug->write('Problem defining the workflow', 'warning');
+				$this->messages->setMessage('Problem defining the workflow', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
+		}
+		else
+		{
+			// archive
+			$sql = "UPDATE tasks SET task_workflow='0' WHERE task_id='" . $taskid . "'";
 			$res = $this->database->query($sql);
 			if (!$res)
 			{
@@ -599,10 +656,6 @@ class tkTaskfunctions
 				$this->debug->unguard(false);
 				return false;
 			}
-		}
-		else
-		{
-			// TODO: ins archiv
 		}
 
 		$sql = "DELETE FROM tasks_to_users WHERE taskusers_task='" . $taskid . "'";
@@ -626,32 +679,45 @@ class tkTaskfunctions
 			return false;
 		}
 
-		$sql = "SELECT * FROM taskworkflow twf LEFT JOIN tasks t ON twf.taskworkflow_tasktype = t.task_type WHERE t.task_id='" . $taskid . "' ORDER BY twf.taskworkflow_order";
+		$sql = "SELECT twf.*, t.task_workflow FROM taskworkflow twf LEFT JOIN tasks t ON twf.taskworkflow_tasktype = t.task_type ";
+		$sql .= "WHERE t.task_id='" . $taskid . "' ORDER BY twf.taskworkflow_order";
 		$res = $this->database->query($sql);
-
-		$numWorkflowItems = $this->database->numRows($res);
-		$row = $this->database->fetchArray($res);
 
 		$workflowOrder = array();
 		while ($row = $this->database->fetchArray($res))
 		{
-			$workflowOrder[] = $row['taskworkflow_id'];
+			$workflowOrder[$row['taskworkflow_order']] = $row['taskworkflow_id'];
+			$lastRow = $row;
 		}
 
-		$currentWorkflowId = array_search($row['task_workflow'], $workflowOrder);
-		if ($currentWorkflowId > 0)
+		$currentWorkflowId = array_search($lastRow['task_workflow'], $workflowOrder);
+		if ($currentWorkflowId > 1)
 		{
-			$row['task_workflow'] = $workflowOrder[$currentWorkflowId-1];
-
-			$sql = "UPDATE tasks SET task_workflow='" . $row['task_workflow'] . "' WHERE task_id='" . $taskid . "'";
-			$res = $this->database->query($sql);
-			if (!$res)
+			if (!empty($workflowOrder[$currentWorkflowId+1]))
 			{
-				$this->debug->write('Problem writing the workflow update to the database', 'warning');
-				$this->messages->setMessage('Problem writing the workflow update to the database', 'warning');
+				$nextWorkflowId = $workflowOrder[$currentWorkflowId-1];
+
+				$sql = "UPDATE tasks SET task_workflow='" . $nextWorkflowId . "' WHERE task_id='" . $taskid . "'";
+				$res = $this->database->query($sql);
+				if (!$res)
+				{
+					$this->debug->write('Problem writing the workflow update to the database', 'warning');
+					$this->messages->setMessage('Problem writing the workflow update to the database', 'warning');
+					$this->debug->unguard(false);
+					return false;
+				}
+			}
+			else
+			{
+				$this->debug->write('Problem defining the workflow', 'warning');
+				$this->messages->setMessage('Problem defining the workflow', 'warning');
 				$this->debug->unguard(false);
 				return false;
 			}
+		}
+		else
+		{
+			// TODO: ins archiv
 		}
 
 		$sql = "DELETE FROM tasks_to_users WHERE taskusers_task='" . $taskid . "'";

@@ -84,17 +84,17 @@
 
 <!-- TemplateBeginBlock name="navigation" -->
 	<div class="headerbox">
-		<div style="float:left; margin:10px;"><a href="@@{[main.index]}@@" alt=""><span onmousemove="showTooltip('Hauptseite', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[main.index]}@@"><span onmousemove="showTooltip('Hauptseite', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/actions/gohome.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[tasks.index]}@@" alt=""><span onmousemove="showTooltip('Eigene Aufgaben', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[tasks.index]}@@"><span onmousemove="showTooltip('Eigene Aufgaben', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/klipper.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[tasks.addadhoc]}@@" alt=""><span onmousemove="showTooltip('Ad-Hoc-Tätigkeit eintragen', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[tasks.addadhoc]}@@"><span onmousemove="showTooltip('Ad-Hoc-Tätigkeit eintragen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/karm.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[reports.index]}@@" alt=""><span onmousemove="showTooltip('Reports', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[reports.index]}@@"><span onmousemove="showTooltip('Reports', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kchart.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[configuration.index]}@@" alt=""><span onmousemove="showTooltip('Persönliche Einstellungen', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[configuration.index]}@@"><span onmousemove="showTooltip('Persönliche Einstellungen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kcmsystem.png" alt="" border="0" /></span></a></div>
-		<div style="float:right; margin:10px;"><a href="@@{[help.index]}@@" alt=""><span onmousemove="showTooltip('Hilfe!', event)" onmouseout="hideTooltip()">
+		<div style="float:right; margin:10px;"><a href="@@{[help.index]}@@"><span onmousemove="showTooltip('Hilfe!', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/filetypes.png" alt="" border="0" /></span></a></div>
 		
 		
@@ -141,7 +141,7 @@
 <!-- InstanceBeginEditable name="body" -->
 
 <form method="post" action="@@{[tasks.edittask]}@@" name="edittask" enctype="multipart/form-data; charset=utf-8">
-<input name="task_id" value="@@{task_id}@@" type="hidden">
+<input name="task_id" value="@@{task_id}@@" type="hidden" />
 
 <div class="textbox">
 	<h2>Aufgabe bearbeiten</h2>
@@ -153,7 +153,7 @@
             <tbody>
 			<tr>
                 <td nowrap="nowrap" valign="top" width="140"><p class="formlabel">Titel*</p></td>
-                <td nowrap="nowrap" valign="middle"><input maxlength="128" name="task_name" value="@@{task_name}@@" class="formtext" type="text"></td>
+                <td nowrap="nowrap" valign="middle"><input maxlength="128" name="task_name" value="@@{task_name}@@" class="formtext" type="text" /></td>
             </tr>
             <tr>
                 <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Beschreibung*</p></td>
@@ -167,7 +167,7 @@
 		<tbody>
 			<tr>
                 <td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Stundenbudget*</p></td>
-                <td align="left" nowrap="nowrap" valign="middle"><input maxlength="6" style="width:60px;" name="task_hoursplanned" value="@@{task_hoursplanned}@@" class="formtext" type="text"> (Angabe in Stunden)</td>
+                <td align="left" nowrap="nowrap" valign="middle"><input maxlength="6" style="width:60px;" name="task_hoursplanned" value="@@{task_hoursplanned}@@" class="formtext" type="text" /> (Angabe in Stunden)</td>
             </tr>
             <tr>
                 <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Aufgabenablauf</p></td>
@@ -181,24 +181,24 @@
             </tr>
             <tr>
                 <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Priorität</p></td>
-                <td align="left" nowrap="nowrap" valign="middle">
+                <td align="left" valign="middle">
 					<select name="task_priority" class="formtext">
-						<!-- TemplateBeginBlock name="priority_loop" -->
-							<option value="@@{priority_id}@@"@@{priority_selected}@@>@@{priority_name}@@</option>
-						<!-- TemplateEndBlock -->
+						<option value="3"@@{priority_3}@@>Hoch</option>
+						<option value="2"@@{priority_2}@@>Normal</option>
+						<option value="1"@@{priority_1}@@>Niedrig</option>
 					</select>
 				</td>
-            </tr>
+            </tr>			
 			<tr>
                 <td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Beginn</p></td>
                 <td align="left" nowrap="nowrap" valign="middle">
-				<input maxlength="30" name="task_begin" class="w8em format-d-m-y divider-dot" id="task_begin" style="width:210px; border:solid 1px #777788; padding:3px; font-family: Osaka,verdana,Sans-Serif; font-size:12pt;" value="@@{task_begin}@@" type="text">
+				<input maxlength="30" name="task_begin" class="w8em format-d-m-y divider-dot" id="task_begin" style="width:210px; border:solid 1px #777788; padding:3px; font-family: Osaka,verdana,Sans-Serif; font-size:12pt;" value="@@{task_begin}@@" type="text" />
 				</td>
             </tr>
 			<tr>
                 <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Fällig am</p></td>
                 <td align="left" nowrap="nowrap" valign="middle">
-				<input maxlength="30" name="task_end" class="w8em format-d-m-y divider-dot" id="task_end" style="width:210px; border:solid 1px #777788; padding:3px; font-family: Osaka,verdana,Sans-Serif; font-size:12pt;" value="@@{task_end}@@" type="text">
+				<input maxlength="30" name="task_end" class="w8em format-d-m-y divider-dot" id="task_end" style="width:210px; border:solid 1px #777788; padding:3px; font-family: Osaka,verdana,Sans-Serif; font-size:12pt;" value="@@{task_end}@@" type="text" />
 				</td>
             </tr>
 			
@@ -211,7 +211,7 @@
 		<table style="margin-bottom: 10px;" border="0" cellpadding="0" cellspacing="0">
 		<tr>
 			<td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Tags*</p></td>
-			<td align="left" nowrap="nowrap" valign="middle"><input maxlength="512" style="width:750px; margin-top:10px;" name="task_tags" value="@@{task_tags}@@" class="formtext" type="text">
+			<td align="left" nowrap="nowrap" valign="middle"><input maxlength="512" style="width:750px; margin-top:10px;" name="task_tags" value="@@{task_tags}@@" class="formtext" type="text" />
 			<p style="margin-left:0px;">(Mehrere Tags durch Komma trennen. Bitte <u>mindestens</u> Kunde und evtl. Projekt angeben)</p></td>
 		</tr>
 		</table>
@@ -220,7 +220,7 @@
 	<tr>
 	<td colspan="2">
            <p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/actions/pencil.png" alt="" border="0" align="top" />
-		   <input name="submit" value="Aufgabe speichern" class="formbutton" type="submit"></p>
+		   <input name="submit" value="Aufgabe speichern" class="formbutton" type="submit" /></p>
 	</td>
 	</tr>
 	</table>
