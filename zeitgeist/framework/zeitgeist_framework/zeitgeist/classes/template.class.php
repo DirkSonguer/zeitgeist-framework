@@ -170,9 +170,11 @@ class zgTemplate
 	/**
 	 * Returns the template buffer as string
 	 *
+	 * @param boolean $filterTemplateCommands set false to leave template commands intact
+	 *
 	 * @return string
 	 */
-	public function getContent()
+	public function getContent($filterTemplateCommands=true)
 	{
 		$this->debug->guard();
 
@@ -184,12 +186,15 @@ class zgTemplate
 			return false;
 		}
 
-		if (!$this->_filterTemplateCommands())
+		if ($filterTemplateCommands)
 		{
-			$this->debug->write('Problem filtering the template commands', 'warning');
-			$this->messages->setMessage('Problem filtering the template commands', 'warning');
-			$this->debug->unguard(false);
-			return false;
+			if (!$this->_filterTemplateCommands())
+			{
+				$this->debug->write('Problem filtering the template commands', 'warning');
+				$this->messages->setMessage('Problem filtering the template commands', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
 		}
 
 		$ret = $this->content;
