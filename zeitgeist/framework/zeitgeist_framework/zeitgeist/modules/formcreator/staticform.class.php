@@ -282,20 +282,18 @@ class zgStaticform
 		$formvalid = true;
 		foreach ($this->formelements as $elementname => $elementdata)
 		{
-			if ($elementdata->type != 'static')
-			{
-				$valid = $this->_validateElement($elementname, $elementdata, $formdata);
+			$valid = $this->_validateElement($elementname, $elementdata, $formdata);
 
-				$elementdata->valid = $valid;
-				if ($valid)
-				{
-					$elementdata->value = $formdata[$elementname];
-				}
-				else
-				{
-					$formvalid = false;
-					$elementdata->value = '';
-				}
+			$elementdata->valid = $valid;
+			if ($valid)
+			{
+				if (empty($formdata[$elementname])) $formdata[$elementname] = '';
+				$elementdata->value = $formdata[$elementname];
+			}
+			else
+			{
+				$formvalid = false;
+				$elementdata->value = '';
 			}
 		}
 
