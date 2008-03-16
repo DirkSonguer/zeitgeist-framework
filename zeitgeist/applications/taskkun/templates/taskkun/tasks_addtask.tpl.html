@@ -146,22 +146,22 @@
 <div class="textbox" style="background-image:url(@@{templatepath}@@/images/side_newtask.jpg); background-position:right bottom; background-repeat:no-repeat;">
 	<h2>Neue Aufgabe hinzufügen</h2>
 
-	<table width="100%" cellspacing="5" cellpadding="5" border="0">
+	<table width="100%" cellspacing="0" cellpadding="0" border="0">
 	<tr>
 	<td width="50%" valign="top">
-        <table style="margin-bottom: 10px;" border="0" cellpadding="0" cellspacing="0">
+        <table style="margin-bottom: 10px;" border="0" cellpadding="5" cellspacing="5">
             <tbody>
-			<tr@@{task_name:formerror}@@>
+			<tr>
                 <td nowrap="nowrap" valign="top" width="140"><p class="formlabel">Titel*</p></td>
-                <td valign="middle"><input maxlength="128" name="addtask[task_name]" value="@@{task_name:value}@@" class="formtext" type="text" />
+                <td valign="middle"@@{task_name:formerror}@@><input maxlength="128" name="addtask[task_name]" value="@@{task_name:value}@@" class="formtext" type="text" />
 				<!-- TemplateBeginBlock name="task_name:errormsg" -->
 					<br /><span class="formerrormsg">@@{task_name:errormsg}@@</span>
 				<!-- TemplateEndBlock -->
 				</td>
             </tr>
-            <tr@@{task_description:formerror}@@>
+            <tr>
                 <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Beschreibung*</p></td>
-                <td align="left" valign="middle"><textarea rows="5" name="addtask[task_description]" class="formtext" style="height:175px;">@@{task_description:value}@@</textarea>
+                <td align="left" valign="middle"@@{task_description:formerror}@@><textarea rows="5" name="addtask[task_description]" class="formtext" style="height:175px;">@@{task_description:value}@@</textarea>
 				<!-- TemplateBeginBlock name="task_description:errormsg" -->
 					<br /><span class="formerrormsg">@@{task_description:errormsg}@@</span>
 				<!-- TemplateEndBlock -->
@@ -171,11 +171,11 @@
 		</table>
 	</td>
 	<td width="50%" valign="top">
-		<table style="margin-bottom: 10px;" border="0" cellpadding="0" cellspacing="0">
+		<table style="margin-bottom: 10px;" border="0" cellpadding="5" cellspacing="5">
 		<tbody>
-			<tr@@{task_hoursplanned:formerror}@@>
+			<tr>
                 <td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Stundenbudget*</p></td>
-                <td align="left" valign="middle"><input maxlength="6" style="width:60px;" name="addtask[task_hoursplanned]" value="@@{task_hoursplanned:value}@@" class="formtext" type="text" /> (Angabe in Stunden)
+                <td align="left" valign="middle"@@{task_hoursplanned:formerror}@@><input maxlength="6" style="width:60px;" name="addtask[task_hoursplanned]" value="@@{task_hoursplanned:value}@@" class="formtext" type="text" /> (Angabe in Stunden)
 				<!-- TemplateBeginBlock name="task_hoursplanned:errormsg" -->
 					<br /><span class="formerrormsg">@@{task_hoursplanned:errormsg}@@</span>
 				<!-- TemplateEndBlock -->
@@ -201,18 +201,18 @@
 					</select>
 				</td>
             </tr>
-			<tr@@{task_begin:formerror}@@>
+			<tr>
                 <td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Beginn</p></td>
-                <td align="left" valign="middle">
+                <td align="left" valign="middle"@@{task_begin:formerror}@@>
 				<input maxlength="30" name="addtask[task_begin]" class="w8em format-d-m-y divider-dot" id="task_begin" style="width:210px; border:solid 1px #777788; padding:3px; font-family: Osaka,verdana,Sans-Serif; font-size:12pt;" value="@@{task_begin:value}@@" type="text" />
 				<!-- TemplateBeginBlock name="task_begin:errormsg" -->
 					<br /><span class="formerrormsg">@@{task_begin:errormsg}@@</span>
 				<!-- TemplateEndBlock -->
 				</td>
             </tr>
-			<tr@@{task_end:formerror}@@>
+			<tr>
                 <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Fällig am</p></td>
-                <td align="left" valign="middle">
+                <td align="left" valign="middle"@@{task_end:formerror}@@>
 				<input maxlength="30" name="addtask[task_end]" class="w8em format-d-m-y divider-dot" id="task_end" style="width:210px; border:solid 1px #777788; padding:3px; font-family: Osaka,verdana,Sans-Serif; font-size:12pt;" value="@@{task_end:value}@@" type="text" />
 				<!-- TemplateBeginBlock name="task_end:errormsg" -->
 					<br /><span class="formerrormsg">@@{task_end:errormsg}@@</span>
@@ -226,10 +226,10 @@
 	</tr>
 	<tr>
 	<td colspan="2">
-		<table style="margin-bottom: 10px;" border="0" cellpadding="0" cellspacing="0">
-		<tr@@{task_tags:formerror}@@>
+		<table style="margin-bottom: 10px;" border="0" cellpadding="5" cellspacing="5">
+		<tr>
 			<td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Tags*</p></td>
-			<td align="left" valign="middle"><input maxlength="512" style="width:750px; margin-top:10px;" name="addtask[task_tags]" value="@@{task_tags:value}@@" class="formtext" type="text" />
+			<td align="left" valign="middle"@@{task_tags:formerror}@@><input maxlength="512" style="width:750px; margin-top:10px;" name="addtask[task_tags]" value="@@{task_tags:value}@@" class="formtext" type="text" />
 			<p style="margin-left:0px;">(Mehrere Tags durch Komma trennen. Bitte <u>mindestens</u> Kunde und evtl. Projekt angeben)
 			<!-- TemplateBeginBlock name="task_tags:errormsg" -->
 				<br /><span class="formerrormsg">@@{task_tags:errormsg}@@</span>
@@ -241,10 +241,10 @@
 	</td>
 	</tr>
 	<tr>
-	<td colspan="2">
+		<td colspan="2">
            <p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/actions/filenew.png" alt="" border="0" align="top" />
 		   <input name="submit" value="Aufgabe hinzufügen" class="formbutton" type="submit" /></p>
-	</td>
+		</td>
 	</tr>
 	</table>
 

@@ -128,21 +128,6 @@ class tasks
 				$this->messages->setMessage('Bitte füllen Sie alle Formularfelder korrekt aus', 'userwarning');
 			}
 
-			$tasktypes = $taskfunctions->getTaskTypes();
-			foreach ($tasktypes as $tasktype)
-			{
-				$tpl->assignDataset($tasktype);
-				if ($parameters['edittask']['task_type'] == $tasktype['tasktype_id'])
-				{
-					$tpl->assign('tasktype_selected', 'selected="selected"');
-				}
-				else
-				{
-					$tpl->assign('tasktype_selected', '');
-				}
-				$tpl->insertBlock('tasktype_loop');
-			}
-
 			$tpl->assign('priority_' . $parameters['edittask']['task_priority'], 'selected="selected"');
 		}
 
@@ -469,6 +454,20 @@ class tasks
 
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_showactivetasks'));
+
+		$tpl->show();
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function showarchivedtasks($parameters=array())
+	{
+		$this->debug->guard();
+
+		$tpl = new tkTemplate();
+		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_showarchivedtasks'));
 
 		$tpl->show();
 

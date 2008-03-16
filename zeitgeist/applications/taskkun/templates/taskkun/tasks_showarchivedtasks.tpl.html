@@ -44,19 +44,23 @@
 
 	<script type="text/javascript">
 
-		var dsTasktypes = new Spry.Data.XMLDataSet("@@{[dataserver.gettasktypes]}@@", "container/element");
-		dsTasktypes.setColumnType("tasktype_id", "number");
+		var dsTasks = new Spry.Data.XMLDataSet("@@{[dataserver.getalltasks]}@@", "container/element");
+		dsTasks.setColumnType("task_id", "number");
+		dsTasks.setColumnType("task_hoursplanned", "number");
+		dsTasks.setColumnType("task_hoursworked", "number");
 
-		function deleteTasktype(id, name)
+		function insertData(dataElement, dataContent)
 		{
-			var answer = window.confirm("Wollen Sie den Aufgabenablauf '" + name + "' wirklich löschen?");
-
-			/* Question icon, Yes/No button. */
-			/* 0 = error, 1 = OK, 2 = Cancel, 3 = No, 4 = Yes */
+			document.getElementById(dataElement).innerHTML = dataContent;
+		}
+	
+		function deleteTask(id, name)
+		{
+			var answer = window.confirm("Wollen Sie die Aufgabe '" + name + "' wirklich löschen?\nHinweis: Die Aufgabe wird unwiederbringlich aus dem System entfernt!");
 
 			if (answer == true)
 			{
-			   window.location.href = "@@{[tasktypes.deletetasktype]}@@"+"&id="+id;
+			   window.location.href = "@@{[tasks.deletetask]}@@"+"&id="+id;
 			}
 		}
 
@@ -119,6 +123,7 @@
 <!-- TemplateEndBlock -->
 
 <!-- InstanceBeginEditable name="pagetitle" -->
+
 <!-- InstanceEndEditable -->
 
 	<!-- TemplateBeginBlock name="usermessage" -->
@@ -135,39 +140,72 @@
 	
 <!-- InstanceBeginEditable name="body" -->
 
-<!--
 <div class="textbox">
-	<h3><img src="@@{templatepath}@@/nuvola/22x22/actions/view_bottom.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[users.adduser]}@@" alt="add new user">Add new user</a></h3>
-</div>
--->
+	<h2>Alle archivierten Aufgaben (<span id="groupRows">2</span>)</h2>
+	<div style="clear:both"></div>
 
-<div class="textbox">
-<h2>Aufgabenabläufe</h2>
-
-	<div spry:region="dsTasktypes">
+	<div spry:region="dsTasks">
     <div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
 
 	<div spry:state="ready">
+
+	<script type="text/javascript">
+		var numRows = dsTasks.getRowCount();
+		insertData('groupRows', numRows);
+	</script>
+
 	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
 	        <tr class="tablehead">
-				<th><p><a onclick="dsTasktypes.sort('tasktype_id');">ID</a></p></th>
-				<th><p><a onclick="dsTasktypes.sort('tasktype_name');">Benutzer</a></p></th>
-				<th><p><a onclick="dsTasktypes.sort('tasktype_description');">Name</a></p></th>
-				<th><p>Action</p></th>
+				<th><p><a onclick="dsTasks.sort('task_id');">ID</a></p></th>
+				<th><p><a onclick="dsTasks.sort('task_name');">Name</a></p></th>
+				<th><p><a onclick="dsTasks.sort('group_name');">Verantwortlich</a></p></th>
+				<th><p><a onclick="dsTasks.sort('task_priority');">Priorität</a></p></th>
+				<th><p style="text-align:center;"><a onclick="dsTasks.sort('task_hoursplanned');">Stundenbudget<br />(verbraucht)</a></p></th>
+				<th><p style="text-align:center;"><a onclick="dsTasks.sort('task_end');">Fällig am</a></p></th>
+				<th><p>Aktionen</p></th>
 	        </tr>
-	        <tr class="{ds_EvenOddRow}" spry:repeat="dsTasktypes">
-				<td><p>{dsTasktypes::tasktype_id}</p></td>
-				<td><p>{dsTasktypes::tasktype_name}</p></td>
-				<td><p>{dsTasktypes::tasktype_description}</p></td>
-				<td width="90"><p>
-				<span onmousemove="showTooltip('Aufgabenablauf bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[tasktypes.edittasktype]}@@&id={dsTasktypes::tasktype_id}" alt="Aufgabenablauf bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="Aufgabenablauf bearbeiten" border="0" /></a></span> &nbsp; 
-				<span onmousemove="showTooltip('Aufgabenablauf löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteTasktype({dsTasktypes::tasktype_id}, '{dsTasktypes::tasktype_name}')" alt="Aufgabenablauf löschen"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Aufgabenablauf löschen" border="0" /></a></span>
+	        <tr class="{ds_EvenOddRow}" spry:repeat="dsTasks">
+				<td><p>{dsTasks::task_id}</p></td>
+				<td><p><span onmousemove="showTooltip('{dsTasks::task_description}', event)" onmouseout="hideTooltip()">{dsTasks::task_name}</span></p></td>
+				<td>
+					<div spry:choose="spry:choose">
+						<div spry:when="'{dsTasks::user_username}' == ''"><p>{dsTasks::group_name}</p></div>
+						<div spry:default="spry:default">
+							<p>{dsTasks::user_username}</p>
+						</div>
+					</div>
+				</td>
+				<td><p>
+					<span spry:if="{dsTasks::task_priority} == '1'">Niedrig</span>
+					<span spry:if="{dsTasks::task_priority} == '2'">Normal</span>
+					<span spry:if="{dsTasks::task_priority} == '3'">Hoch</span>
+				</p></td>
+				<td>
+					<p spry:if="{dsTasks::task_overdrawn} == '0'" style="text-align:center;">{dsTasks::task_hoursplanned} ({dsTasks::task_hoursworked})</p>
+					<p spry:if="{dsTasks::task_overdrawn} == '1'" class="targetwarning">{dsTasks::task_hoursplanned} ({dsTasks::task_hoursworked})</p>
+					<p spry:if="{dsTasks::task_overdrawn} == '2'" class="targeterror">{dsTasks::task_hoursplanned} ({dsTasks::task_hoursworked})</p>
+				<td>
+					<div spry:choose="spry:choose">
+						<div spry:when="'{dsTasks::task_end}' == '00.00.0000'"><p style="text-align:center;">-</p></div>
+						<div spry:default="spry:default">
+							<p spry:if="{dsTasks::task_late} == '0'" style="text-align:center;">{dsTasks::task_end}</p>
+							<p spry:if="{dsTasks::task_late} == '1'" class="targetwarning">{dsTasks::task_end}</p>
+							<p spry:if="{dsTasks::task_late} == '2'" class="targeterror"">{dsTasks::task_end}</p>
+						</div>
+					</div>
+				</td>
+				<td width="120"><p style="text-align:center;">
+				<span onmousemove="showTooltip('Details', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.taskdetails]}@@&id={dsTasks::task_id}" alt="Details"><img src="@@{templatepath}@@/nuvola/22x22/apps/kappfinder.png" alt="Details" border="0" /></a></span> &nbsp; 
+				<span onmousemove="showTooltip('Aufgabe bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.edittask]}@@&id={dsTasks::task_id}" alt="Aufgabe bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="Aufgabe bearbeiten" border="0" /></a></span> &nbsp; 
+				<span onmousemove="showTooltip('Aufgabe löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteTask({dsTasks::task_id}, '{dsTasks::task_name}')" alt="Aufgabe löschen"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Aufgabe löschen" border="0" /></a></span>
                 </p></td>
 	        </tr>
 	    </table>
     </div>
 	</div>
+	
 </div>
+
 
 <!-- InstanceEndEditable -->
 

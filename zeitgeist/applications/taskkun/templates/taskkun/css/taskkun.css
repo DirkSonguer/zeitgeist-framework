@@ -2,6 +2,9 @@
 
 body {
 	background:#ffffff;
+	background-image:url(../images/background.jpg);
+	background-position:top;
+	background-repeat:repeat-x;
 	margin:0px;
 	overflow-y: yes;
 	overflow: -moz-scrollbars-vertical;
