@@ -520,6 +520,8 @@ class zgUserhandler
 			return false;
 		}
 
+		$this->session->setSessionVariable('user_username', $username);
+
 		$this->debug->unguard(true);
 		return true;
 	}
