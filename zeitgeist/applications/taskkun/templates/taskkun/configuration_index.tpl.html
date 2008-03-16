@@ -137,24 +137,32 @@
 	
 <!-- InstanceBeginEditable name="body" -->
 
-<form method="post" action="@@{[configuration.index]}@@" name="edituserdata" enctype="multipart/form-data; charset=utf-8">
+<form method="post" action="@@{[configuration.index]}@@" name="configuration" enctype="multipart/form-data; charset=utf-8">
 
-	<div class="textbox">
+	<!-- TemplateBeginBlock name="configuration" -->
+	<div class="textbox" style="background-image:url(@@{templatepath}@@/images/side_configuration.jpg); background-position:right bottom; background-repeat:no-repeat;">
 	<h2>Passwort ändern</h2>
 	
-        <input type="hidden" value="@@{user_id}@@" name="user_id" />
-		<table width="100%" cellspacing="5" cellpadding="5" border="0">
+		<table cellspacing="5" cellpadding="5" border="0">
             <tr>
                 <td valign="top" nowrap width="200"><p class="formlabel">Neues Passwort</p></td>
-                <td valign="middle" nowrap><input type="password" maxlength="30" name="user_password" class="formtext" /></td>
+                <td valign="middle" @@{user_password:formerror}@@><input type="password" maxlength="30" name="configuration[user_password]" class="formtext" />
+				<!-- TemplateBeginBlock name="user_password:errormsg" -->
+					<br /><span class="formerrormsg">@@{user_password:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
             </tr>
             <tr>
                 <td valign="top" nowrap><p class="formlabel"> Passwort bestätigen</p></td>
-                <td valign="middle" nowrap><input type="password" maxlength="30" name="user_password2" class="formtext" /></td>
+                <td valign="middle" @@{user_password2:formerror}@@><input type="password" maxlength="30" name="configuration[user_password2]" class="formtext" />
+				<!-- TemplateBeginBlock name="user_password2:errormsg" -->
+					<br /><span class="formerrormsg">@@{user_password2:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
             </tr>
 			<tr>
 				<td colspan="2">
-				   <p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/actions/pencil.png" alt="" border="0" align="top" />
+				   <p style="text-align:right; margin-right:0px;"><img src="@@{templatepath}@@/nuvola/32x32/actions/pencil.png" alt="" border="0" align="top" />
 				   <input name="submit" value="Daten speichern" class="formbutton" type="submit" /></p>
 				</td>
 			</tr>
@@ -162,50 +170,81 @@
 		
 	</div>
 	
-	<div class="textbox">
+	<div class="textbox" style="background-image:url(@@{templatepath}@@/images/side_configuration.jpg); background-position:right bottom; background-repeat:no-repeat;">
 	<h2>Benutzerdaten ändern</h2>
 	
-        <input type="hidden" value="@@{user_id}@@" name="user_id" />
-		<table width="100%" cellspacing="5" cellpadding="5" border="0">
+		<table cellspacing="5" cellpadding="5" border="0">
             <tr>
                 <td valign="top" nowrap width="200"><p class="formlabel">E-Mail*</p></td>
-                <td valign="middle" nowrap><input type="text" maxlength="60" name="user_username" value="@@{user_username}@@" class="formtext" /></td>
+                <td valign="middle" @@{user_username:formerror}@@><input type="text" maxlength="60" name="configuration[user_username]" value="@@{user_username:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="user_username:errormsg" -->
+					<br /><span class="formerrormsg">@@{user_username:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
             </tr>
             <tr>
-                <td valign="top" nowrap><p class="formlabel">Name</p></td>
-                <td valign="middle" nowrap><input type="text" maxlength="60" name="userdata_lastname" value="@@{userdata_lastname}@@" class="formtext" /></td>
+                <td valign="top" nowrap><p class="formlabel">Name*</p></td>
+                <td valign="middle" @@{userdata_lastname:formerror}@@><input type="text" maxlength="60" name="configuration[userdata_lastname]" value="@@{userdata_lastname:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="userdata_lastname:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_lastname:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
             </tr>
             <tr>
-                <td valign="top" nowrap><p class="formlabel">Vorname</p></td>
-                <td valign="middle" nowrap><input type="text" maxlength="60" name="userdata_firstname" value="@@{userdata_firstname}@@" class="formtext" /></td>
+                <td valign="top" nowrap><p class="formlabel">Vorname*</p></td>
+                <td valign="middle" @@{userdata_firstname:formerror}@@><input type="text" maxlength="60" name="configuration[userdata_firstname]" value="@@{userdata_firstname:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="userdata_firstname:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_firstname:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
             </tr>
             <tr>
                 <td valign="top" nowrap><p class="formlabel">Straße, Hausnummer</p></td>
-                <td valign="middle" nowrap><input type="text" maxlength="60" name="userdata_address1" value="@@{userdata_address1}@@" class="formtext" /></td>
+                <td valign="middle" @@{userdata_address1:formerror}@@><input type="text" maxlength="60" name="configuration[userdata_address1]" value="@@{userdata_address1:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="userdata_address1:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_address1:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
             </tr>
             <tr>
                 <td valign="top" nowrap><p class="formlabel">Adresszusatz</p></td>
-                <td valign="middle" nowrap><input type="text" maxlength="60" name="userdata_address2" value="@@{userdata_address2}@@" class="formtext" /></td>
+                <td valign="middle" @@{userdata_address2:formerror}@@><input type="text" maxlength="60" name="configuration[userdata_address2]" value="@@{userdata_address2:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="userdata_address2:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_address2:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
             </tr>
             <tr>
                 <td valign="top" nowrap><p class="formlabel">PLZ, Ort</p></td>
-                <td valign="middle" nowrap><input type="text" maxlength="6" name="userdata_zip" value="@@{userdata_zip}@@" class="formtext" style="width:55px;" />
-				<input type="text" maxlength="60" name="userdata_city" value="@@{userdata_city}@@" class="formtext" style="width:212px;" /></td>
+                <td valign="middle" @@{userdata_zip:formerror}@@@@{userdata_city:formerror}@@><input type="text" maxlength="6" name="configuration[userdata_zip]" value="@@{userdata_zip:value}@@" class="formtext" style="width:55px;" />
+				<input type="text" maxlength="60" name="configuration[userdata_city]" value="@@{userdata_city:value}@@" class="formtext" style="width:212px;" />
+				<!-- TemplateBeginBlock name="userdata_zip:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_zip:errormsg}@@</span>
+				<!-- TemplateEndBlock -->				
+				<!-- TemplateBeginBlock name="userdata_city:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_city:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
             </tr>
             <tr>
                 <td valign="top" nowrap><p class="formlabel">URL</p></td>
-                <td valign="middle" nowrap><input type="text" maxlength="60" name="userdata_url" value="@@{userdata_url}@@" class="formtext" /></td>
+                <td valign="middle" @@{userdata_url:userdata_zip}@@><input type="text" maxlength="60" name="configuration[userdata_url]" value="@@{userdata_url:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="userdata_url:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_url:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
             </tr>
 			<tr>
 				<td colspan="2">
-				   <p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/actions/pencil.png" alt="" border="0" align="top" />
+				   <p style="text-align:right; margin-right:0px;"><img src="@@{templatepath}@@/nuvola/32x32/actions/pencil.png" alt="" border="0" align="top" />
 				   <input name="submit" value="Daten speichern" class="formbutton" type="submit" /></p>
 				</td>
 			</tr>
 		</table>
 		
 	</div>
-	
+	<!-- TemplateEndBlock -->
+
 </form>
 
 <!-- InstanceEndEditable -->
