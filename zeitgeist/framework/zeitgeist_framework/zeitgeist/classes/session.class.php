@@ -289,7 +289,7 @@ class zgSession
 			{
 				$row = $this->database->fetchArray($res);
 				$sessiondata = $row['sessiondata_content'];
-				$this->boundIP = $row['sessiondata_ip'];
+				$this->boundIP = long2ip($row['sessiondata_ip']);
 
 				$this->newSession = false;
 
@@ -334,7 +334,7 @@ class zgSession
 		if ($this->newSession)
 		{
 			$startTime = time();
-			$sql = "INSERT INTO " . $sessionTablename . " VALUES  ('" . $id . "', '" . $startTime . "', '" . $currentTime . "', '" . $data . "', '" . getenv('REMOTE_ADDR') . "')";
+			$sql = "INSERT INTO " . $sessionTablename . " VALUES  ('" . $id . "', '" . $startTime . "', '" . $currentTime . "', '" . $data . "', INET_ATON('" . getenv('REMOTE_ADDR') . "'))";
 		}
 		else
 		{

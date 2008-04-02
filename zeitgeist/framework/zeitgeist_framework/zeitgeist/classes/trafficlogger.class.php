@@ -83,9 +83,18 @@ class zgTrafficlogger
 
 		$logId = $this->database->insertId();
 
-		foreach ($parameters as $key => $value)
+		if (count($parameters) > 0)
 		{
-			$sql = "INSERT INTO trafficlog_parameters(trafficparameters_trafficid, trafficparameters_key, trafficparameters_value) VALUES('" . $logId . "', '" . $key . "', '" . $value . "')";
+			$sql = "INSERT INTO trafficlog_parameters(trafficparameters_trafficid, trafficparameters_key, trafficparameters_value) VALUES";
+			$sqlinserts = '';
+			foreach ($parameters as $key => $value)
+			{
+				if ($sqlinserts != '') $sqlinserts .= ',';
+				$sqlinserts .= "('" . $logId . "', '" . $key . "', '" . $value . "')";
+			}
+
+			$sql .= $sqlinserts;
+
 			if (!$res = $this->database->query($sql))
 			{
 				$this->debug->write('Problem logging the pageview: could not write parameter to log table', 'warning');
