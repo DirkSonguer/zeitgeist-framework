@@ -71,7 +71,7 @@ class zgTrafficlogger
 	{
 		$this->debug->guard();
 
-		$sql = "INSERT INTO trafficlog(trafficlog_module, trafficlog_action, trafficlog_user, trafficlog_ip) VALUES('" . $module . "', '" . $action . "', '" . $user . "', '" . getenv('REMOTE_ADDR') . "')";
+		$sql = "INSERT INTO trafficlog(trafficlog_module, trafficlog_action, trafficlog_user, trafficlog_ip) VALUES('" . $module . "', '" . $action . "', '" . $user . "', INET_ATON('" . getenv('REMOTE_ADDR') . "'))";
 		if (!$res = $this->database->query($sql))
 		{
 			$this->debug->write('Problem logging the pageview: could not write to log table', 'warning');

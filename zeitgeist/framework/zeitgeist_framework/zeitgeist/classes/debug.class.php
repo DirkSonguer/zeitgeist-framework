@@ -23,10 +23,12 @@ class zgDebug
 	private static $instance = false;
 
 	protected $startTime;
+	protected $queryStart;
 
 	protected $debugMessages;
 	protected $guardMessages;
 	protected $guardStack;
+	protected $queryStack;
 
 	public $showInnerLoops;	// Set this to true to show inner loops in the guard-output
 
@@ -40,6 +42,7 @@ class zgDebug
 		$this->debugMessages = array();
 		$this->guardMessages = array();
 		$this->guardStack = array();
+		$this->queryStack = array();
 
 		$this->showInnerLoops = false;
 
@@ -65,9 +68,10 @@ class zgDebug
 
 	/**
 	 * Write a debug message to the cache
+	 * The types can be grouped according to their string, so just think "tags"
 	 *
 	 * @param string $message debug message to print
-	 * @param integer $level level of the message. 0 = important,.. , 3 = unimportant
+	 * @param string $type type of the message.
 	 */
 	public function write($message, $type='message')
 	{
@@ -87,16 +91,45 @@ class zgDebug
 
 
 	/**
+	 * Starts the timer for the sql execution timer
+	 */
+	public function beginSQLStatement()
+	{
+		list($usec, $sec) = explode(" ", microtime());
+		$this->queryStart = (float)$usec + (float)$sec;
+	}
+
+
+	/**
+	 * Write an sql query message to the cache
+	 *
+	 * @param string $query original query
+	 * @param resource $result result
+	 */
+	public function storeSQLStatement($query, $result)
+	{
+		$newQueryMessage = array();
+
+		list($usec, $sec) = explode(" ", microtime());
+		$newQueryMessage['executionTime'] = ((float)$usec + (float)$sec) - $this->queryStart;
+		$newQueryMessage['query'] = $query;
+		$newQueryMessage['type'] = substr($query, 0, strpos($query, ' '));
+		if (!$result)
+		{
+			$newQueryMessage['success'] = false;
+		}
+		else
+		{
+			$newQueryMessage['success'] = true;
+		}
+
+		$this->queryStack[] = $newQueryMessage;
+	}
+
+
+	/**
 	 * Starts guarding a function
 	 * In Zeitgeist (and its applications), every function should guard/ unguard itself to get a complete image of the construction of a page.
-	 *
-	 * There are somewhat 4 levels of importance:
-	 * 0 = core
-	 * 1 = public module/ class function
-	 * 2 = private/ protected module/ class function
-	 * 3 = inner loop function
-	 *
-	 * This is by no means the only way to describe the levels, but we found it worked.
 	 *
 	 * @param boolean $innerLoop set true if the calling function is an inner loop
 	 */
@@ -255,6 +288,40 @@ class zgDebug
 			$currentDebugLine .= '<td class="debugMessageLine">' . $debugMessage['message'] . '</td>';
 
 			echo($currentDebugLine);
+			echo '</tr>';
+		}
+
+		echo '</table></div>';
+	}
+
+
+	/**
+	 * Shows all the query messages as a table
+	 */
+	public function showQueryMessages()
+	{
+		echo '<div class="debug">';
+		echo '<h1>Querylog</h1>';
+		echo '<table border="1" class="debugMessages">';
+		echo '<tr><th>ID</th><th>Execution Time</th><th>Query</th></tr>';
+
+		foreach ($this->queryStack as $queryID => $queryMessage)
+		{
+			if ($queryMessage['success'])
+			{
+				echo '<tr class="message">';
+			}
+			else
+			{
+				echo '<tr class="error">';
+			}
+			$currentQueryLine = '';
+
+			$currentQueryLine .= '<td class="debugMessageLine">' . $queryID . '</td>';
+			$currentQueryLine .= '<td class="debugMessageLine">' . $queryMessage['executionTime'] . '</td>';
+			$currentQueryLine .= '<td class="debugMessageLine"><strong>' . $queryMessage['query'] . '</strong></td>';
+
+			echo($currentQueryLine);
 			echo '</tr>';
 		}
 
