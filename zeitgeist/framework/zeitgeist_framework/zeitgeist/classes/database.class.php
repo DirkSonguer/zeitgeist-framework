@@ -175,7 +175,9 @@ class zgDatabase
 	{
 		$this->debug->guard();
 
+		$this->debug->beginSQLStatement();
 		$result = mysql_query($query, $this->dblink);
+		$this->debug->storeSQLStatement($query, $result);
 
 		if (!$result)
 		{

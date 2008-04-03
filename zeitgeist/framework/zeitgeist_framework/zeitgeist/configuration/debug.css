@@ -1,6 +1,7 @@
 <style type="text/css">
 
 .debug { font-family:'Verdana'; color: black; background-color: #FFFFFF; vertical-align: top; text-align: left; clear: both; }
+.debug h1 { margin-top:15pt; }
 .debug table { border-collapse: collapse; width: 100%; border: 1px; border-style: solid; border-color: #A0A0A0; }
 .debug tr.guardLine { background-color: #DAEFDA; }
 .debug tr.unguardLine { background-color: #fcd4be;}

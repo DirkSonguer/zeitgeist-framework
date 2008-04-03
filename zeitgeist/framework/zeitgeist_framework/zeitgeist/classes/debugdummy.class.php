@@ -62,6 +62,25 @@ class zgDebug
 
 
 	/**
+	 * Starts the timer for the sql execution timer
+	 */
+	public function beginSQLStatement()
+	{
+	}
+
+
+	/**
+	 * Write an sql query message to the cache
+	 *
+	 * @param string $query original query
+	 * @param resource $result result
+	 */
+	public function storeSQLStatement($query, $result)
+	{
+	}
+
+
+	/**
 	 * Starts guarding a function
 	 * In Zeitgeist (and its applications), every function should guard/ unguard itself to get a complete image of the construction of a page.
 	 *
@@ -103,6 +122,14 @@ class zgDebug
 	 * Shows all the debug messages as a table
 	 */
 	public function showDebugMessages()
+	{
+	}
+
+
+	/**
+	 * Shows all the query messages as a table
+	 */
+	public function showQueryMessages()
 	{
 	}
 
