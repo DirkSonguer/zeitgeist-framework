@@ -73,7 +73,7 @@ class zgMessagecache
 		$this->debug->guard();
 
 		$messagecacheTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_messagecache');
-		$res = $this->database->query("SELECT * FROM " . $messagecacheTablename . " WHERE messagecache_user = '" . $this->user->getUserID() . "'");
+		$res = $this->database->query("SELECT messagecache_content FROM " . $messagecacheTablename . " WHERE messagecache_user = '" . $this->user->getUserID() . "'");
 
 		if ($this->database->numRows($res) == 1)
 		{
@@ -132,8 +132,16 @@ class zgMessagecache
 			return false;
 		}
 
-		$sql = "REPLACE INTO " . $messagecacheTablename . "(messagecache_user, messagecache_content) ";
-		$sql .= "VALUES('" . $this->user->getUserID() . "', '" . $serializedMessages . "')";
+/*
+ INSERT INTO FOO
+(ID, BAR)
+VALUES(1,2),(3,4)
+ON DUPLICATE KEY UPDATE BAR=VALUES(BAR)
+*/
+
+		$sql = "INSERT INTO " . $messagecacheTablename . "(messagecache_user, messagecache_content) ";
+		$sql .= "VALUES('" . $this->user->getUserID() . "', '" . $serializedMessages . "') ";
+		$sql .= "ON DUPLICATE KEY UPDATE messagecache_content='" . $serializedMessages . "'";
 		$res = $this->database->query($sql);
 
 		$this->debug->unguard(true);
