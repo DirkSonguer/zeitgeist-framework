@@ -851,7 +851,7 @@ class zgTemplate
 		$this->debug->guard();
 
 		$templatecacheTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_templatecache');
-		$res = $this->database->query("SELECT * FROM " . $templatecacheTablename . " WHERE templatecache_name = '".$filename."'");
+		$res = $this->database->query("SELECT templatecache_content, templatecache_timestamp FROM " . $templatecacheTablename . " WHERE templatecache_name = '".$filename."'");
 
 		if ($this->database->numRows($res) == 1)
 		{

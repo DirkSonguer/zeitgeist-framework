@@ -305,25 +305,55 @@ class zgDebug
 		echo '<table border="1" class="debugMessages">';
 		echo '<tr><th>ID</th><th>Execution Time</th><th>Query</th></tr>';
 
+		$totalExecutionTime = 0;
+		$numberOfQueries = 0;
 		foreach ($this->queryStack as $queryID => $queryMessage)
 		{
 			if ($queryMessage['success'])
 			{
-				echo '<tr class="message">';
+				if ($queryMessage['executionTime'] < 0.01)
+				{
+					echo '<tr class="sqlmessage">';
+				}
+				else
+				{
+					echo '<tr class="sqlwarning">';
+				}
 			}
 			else
 			{
-				echo '<tr class="error">';
+				echo '<tr class="sqlerror">';
 			}
+
+			$numberOfQueries++;
 			$currentQueryLine = '';
 
 			$currentQueryLine .= '<td class="debugMessageLine">' . $queryID . '</td>';
 			$currentQueryLine .= '<td class="debugMessageLine">' . $queryMessage['executionTime'] . '</td>';
+			$totalExecutionTime += $queryMessage['executionTime'];
 			$currentQueryLine .= '<td class="debugMessageLine"><strong>' . $queryMessage['query'] . '</strong></td>';
 
 			echo($currentQueryLine);
 			echo '</tr>';
 		}
+
+		$currentQueryLine = '<tr>';
+
+		$currentQueryLine .= '<td class="debugMessageLine"></td>';
+		$currentQueryLine .= '<td class="debugMessageLine" colspan="2">Number of Queries: <strong>' . $numberOfQueries . '</strong><br />';
+		$currentQueryLine .= 'Total execution time: <strong>';
+		if ($totalExecutionTime < 0.1)
+		{
+			$currentQueryLine .= $totalExecutionTime;
+		}
+		else
+		{
+			$currentQueryLine .= '<span class="sqlproblem">' . $totalExecutionTime. '</span>';
+		}
+		$currentQueryLine .= '</strong></td>';
+
+		echo($currentQueryLine);
+		echo '</tr>';
 
 		echo '</table></div>';
 	}

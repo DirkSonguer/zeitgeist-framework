@@ -340,7 +340,7 @@ class zgUserhandler
 		{
 			$userid = $this->session->getSessionVariable('user_userid');
 
-			$sql = "SELECT * FROM userroles ur LEFT JOIN userroles_to_users u2u ON u2u.userroleuser_userrole = ur.userrole_id ";
+			$sql = "SELECT userrole_id FROM userroles ur LEFT JOIN userroles_to_users u2u ON u2u.userroleuser_userrole = ur.userrole_id ";
 			$sql .= "WHERE userrole_name='" . $userrole . "' AND u2u.userroleuser_user = '" . $userid . "'";
 
 			if ($res = $this->database->query($sql))
@@ -948,7 +948,6 @@ class zgUserhandler
 		{
 			$rolestoactionsTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userroles_to_actions');
 			$sql = "SELECT * FROM " . $rolestoactionsTablename . " WHERE userroleaction_userrole = '" . $roleId . "'";
-			$res = $this->database->query($sql);
 
 			if ($res = $this->database->query($sql))
 			{

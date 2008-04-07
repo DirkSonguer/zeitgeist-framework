@@ -218,7 +218,7 @@ class zgConfiguration
 	{
 		$this->debug->guard();
 
-		$res = $this->database->query("SELECT * FROM " . ZG_DB_CONFIGURATIONCACHE . " WHERE configurationcache_name = '".$filename."'");
+		$res = $this->database->query("SELECT configurationcache_content, configurationcache_timestamp FROM " . ZG_DB_CONFIGURATIONCACHE . " WHERE configurationcache_name = '".$filename."'");
 
 		if ($this->database->numRows($res) == 1)
 		{

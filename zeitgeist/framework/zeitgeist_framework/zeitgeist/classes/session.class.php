@@ -281,7 +281,7 @@ class zgSession
 		$id = mysql_real_escape_string($id);
 
 		$sessionTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_sessiondata');
-		$sql = "SELECT * FROM " . $sessionTablename . " WHERE sessiondata_id = '" . $id . "'";
+		$sql = "SELECT sessiondata_content, sessiondata_ip FROM " . $sessionTablename . " WHERE sessiondata_id = '" . $id . "'";
 
 		if ($res = $this->database->query($sql))
 		{
