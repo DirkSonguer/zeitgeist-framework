@@ -77,6 +77,8 @@ class tasktypes
 		$taskfunctions = new tkTaskfunctions();
 		$tasktypeinformation = $taskfunctions->getTasktypeInformation($parameters['id']);
 
+		$userfunctions = new tkUserfunctions();
+
 		if ( (is_array($tasktypeinformation)) && (count($tasktypeinformation) > 0) )
 		{
 			if (!empty($parameters['formaction']))
@@ -148,11 +150,16 @@ class tasktypes
 					$res = $this->database->query($sql);
 				}
 
+				// TODO: INSTANCING!!!!!
+
 			}
+
+			$userfunctions = new tkUserfunctions();
+			$currentInstance = $userfunctions->getUserInstance($this->user->getUserId());
 
 			$sql = "SELECT twf.*, g.group_name FROM taskworkflow twf ";
 			$sql .= "LEFT JOIN groups g ON twf.taskworkflow_group = g.group_id ";
-			$sql .= "WHERE taskworkflow_tasktype='" . $parameters['id'] . "' ORDER BY taskworkflow_order";
+			$sql .= "WHERE taskworkflow_tasktype='" . $parameters['id'] . "' AND g.group_instance=' . $currentInstance . ' ORDER BY taskworkflow_order";
 			$xmlData = $this->dataserver->createXMLDatasetFromSQL($sql);
 			$this->dataserver->streamXMLDataset($xmlData);
 		}

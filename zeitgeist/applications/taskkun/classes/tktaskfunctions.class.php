@@ -53,7 +53,7 @@ class tkTaskfunctions
 		if (strpos($taskdata['task_hoursplanned'], ',') !== false) $taskdata['task_hoursplanned'] = str_replace(',','.', $taskdata['task_hoursplanned']);
 
 		// get initial task workflow status
-		$sql = "SELECT * FROM taskworkflow WHERE taskworkflow_tasktype='" . $taskdata['task_type'] . "' ORDER BY taskworkflow_order LIMIT 1";
+		$sql = "SELECT taskworkflow_id FROM taskworkflow WHERE taskworkflow_tasktype='" . $taskdata['task_type'] . "' ORDER BY taskworkflow_order LIMIT 1";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -69,7 +69,7 @@ class tkTaskfunctions
 		$sql = 'INSERT INTO tasks(task_creator, task_name, task_description, task_hoursplanned, task_type, task_workflow, task_priority, task_begin, task_end, task_notes, task_instance) ';
 		$sql .= "VALUES('" . $this->user->getUserID() . "', ";
 		$sql .= "'" . $taskdata['task_name'] . "', '" . $taskdata['task_description'] . "', '" . $taskdata['task_hoursplanned'] . "', '" . $taskdata['task_type'] . "', ";
-		$sql .= "'" . $initialstatus . "', '" . $taskdata['task_priority'] . "', '" . $taskdata['task_begin'] . "', '" . $taskdata['task_end'] . "', '" . $taskdata['task_notes'] . "', '" . $userfunctions->getUserInstance() . "')";
+		$sql .= "'" . $initialstatus . "', '" . $taskdata['task_priority'] . "', '" . $taskdata['task_begin'] . "', '" . $taskdata['task_end'] . "', '" . $taskdata['task_notes'] . "', '" . $userfunctions->getUserInstance($this->user->getUserID()) . "')";
 
 		$res = $this->database->query($sql);
 		if (!$res)
@@ -199,7 +199,7 @@ class tkTaskfunctions
 		$this->debug->guard();
 
 		$userfunctions = new tkUserfunctions();
-		if (!$userfunctions->checkRightsForTask($tasklogdata['taskid']))
+		if (!$userfunctions->checkRightsForTask($tasklogdata['tasklog_task']))
 		{
 			$this->debug->write('The task is out of bounds of the instance', 'warning');
 			$this->messages->setMessage('The task is out of bounds of the instance', 'warning');
@@ -207,10 +207,20 @@ class tkTaskfunctions
 			return false;
 		}
 
+		if (empty($tasklogdata['tasklog_date']))
+		{
+			$tasklogdata['tasklog_date'] = '';
+		}
+		else
+		{
+			$dateArray = explode('.', $tasklogdata['tasklog_date']);
+			$tasklogdata['tasklog_date'] = $dateArray[2] . '-' . $dateArray[1] . '-' . $dateArray[0];
+		}
+
 		if (strpos($tasklogdata['tasklog_hoursworked'], ',') !== false) $tasklogdata['tasklog_hoursworked'] = str_replace(',','.', $tasklogdata['tasklog_hoursworked']);
 
-		$sql = 'INSERT INTO tasklogs(tasklog_creator, tasklog_task, tasklog_description, tasklog_hoursworked) ';
-		$sql .= "VALUES('" . $this->user->getUserID() . "', '" . $tasklogdata['taskid'] . "', '" . $tasklogdata['tasklog_description'] . "', '" . $tasklogdata['tasklog_hoursworked'] . "')";
+		$sql = 'INSERT INTO tasklogs(tasklog_creator, tasklog_task, tasklog_description, tasklog_hoursworked, tasklog_date) ';
+		$sql .= "VALUES('" . $this->user->getUserID() . "', '" . $tasklogdata['tasklog_task'] . "', '" . $tasklogdata['tasklog_description'] . "', '" . $tasklogdata['tasklog_hoursworked'] . "', '" . $tasklogdata['tasklog_date'] . "')";
 
 		$res = $this->database->query($sql);
 		if (!$res)
@@ -230,12 +240,12 @@ class tkTaskfunctions
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT * FROM tasklogs WHERE tasklog_id='" . $tasklogdata['tasklogid'] . "'";
+		$sql = "SELECT * FROM tasklogs WHERE tasklog_id='" . $tasklogdata['tasklog_id'] . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
-			$this->debug->write('Problem getting tasklog information for tasklog: ' . $tasklogdata['tasklogid'], 'warning');
-			$this->messages->setMessage('Problem getting tasklog information for tasklog: ' . $tasklogdata['tasklogid'], 'warning');
+			$this->debug->write('Problem getting tasklog information for tasklog: ' . $tasklogdata['tasklog_id'], 'warning');
+			$this->messages->setMessage('Problem getting tasklog information for tasklog: ' . $tasklogdata['tasklog_id'], 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -250,16 +260,26 @@ class tkTaskfunctions
 			return false;
 		}
 
+		if (empty($tasklogdata['tasklog_date']))
+		{
+			$tasklogdata['tasklog_date'] = '';
+		}
+		else
+		{
+			$dateArray = explode('.', $tasklogdata['tasklog_date']);
+			$tasklogdata['tasklog_date'] = $dateArray[2] . '-' . $dateArray[1] . '-' . $dateArray[0];
+		}
+
 		if (strpos($tasklogdata['tasklog_hoursworked'], ',') !== false) $tasklogdata['tasklog_hoursworked'] = str_replace(',','.', $tasklogdata['tasklog_hoursworked']);
 
-		$sql = "UPDATE tasklogs SET tasklog_description='" . $tasklogdata['tasklog_description'] . "', tasklog_hoursworked='" . $tasklogdata['tasklog_hoursworked'] . "'";
-		$sql .= "WHERE tasklog_id='" . $tasklogdata['tasklogid'] . "'";
+		$sql = "UPDATE tasklogs SET tasklog_description='" . $tasklogdata['tasklog_description'] . "', tasklog_hoursworked='" . $tasklogdata['tasklog_hoursworked'] . "', ";
+		$sql .= "tasklog_date='" . $tasklogdata['tasklog_date'] . "' WHERE tasklog_id='" . $tasklogdata['tasklog_id'] . "'";
 
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
-			$this->debug->write('Problem updating tasklog: ' . $tasklogdata['tasklogid'], 'warning');
-			$this->messages->setMessage('Problem updating tasklog: ' . $tasklogdata['tasklogid'], 'warning');
+			$this->debug->write('Problem updating tasklog: ' . $tasklogdata['tasklog_id'], 'warning');
+			$this->messages->setMessage('Problem updating tasklog: ' . $tasklogdata['tasklog_id'], 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -301,7 +321,9 @@ class tkTaskfunctions
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT tl.* FROM tasklogs tl ";
+		$sql = "SELECT tl.*, ";
+		$sql .= "DATE_FORMAT(tl.tasklog_date, '%d.%m.%Y') as tasklog_date ";
+		$sql .= " FROM tasklogs tl ";
 		$sql .= "WHERE tasklog_id='" . $tasklogid . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
@@ -321,7 +343,6 @@ class tkTaskfunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-
 
 		$this->debug->unguard($taskloginformation);
 		return $taskloginformation;
@@ -405,7 +426,7 @@ class tkTaskfunctions
 
 		$userfunctions = new tkUserfunctions();
 
-		$sql = "SELECT * FROM tasktypes WHERE tasktype_instance='" . $userfunctions->getUserInstance() . "'";
+		$sql = "SELECT * FROM tasktypes WHERE tasktype_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -414,7 +435,6 @@ class tkTaskfunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-
 
 		$tasktypes = array();
 		while($row = $this->database->fetchArray($res))
@@ -436,7 +456,7 @@ class tkTaskfunctions
 		$sql = "SELECT * FROM tasktypes tt ";
 		$sql .= "LEFT JOIN taskworkflow twf ON tt.tasktype_id = twf.taskworkflow_tasktype ";
 		$sql .= "LEFT JOIN users_to_groups u2g ON twf.Taskworkflow_group = u2g.usergroup_group ";
-		$sql .= "WHERE tt.tasktype_instance='" . $userfunctions->getUserInstance() . "' ";
+		$sql .= "WHERE tt.tasktype_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
 		$sql .= "AND u2g.usergroup_user='" . $this->user->getUserID() . "' ";
 		$sql .= "GROUP BY tt.tasktype_id";
 		$res = $this->database->query($sql);
@@ -466,7 +486,7 @@ class tkTaskfunctions
 		$userfunctions = new tkUserfunctions();
 
 		$sql = "SELECT tt.*, COUNT(t.task_id) as tasktype_count FROM tasktypes tt LEFT JOIN tasks t ON tt.tasktype_id = t.task_type ";
-		$sql .= "WHERE tt.tasktype_id='" . $tasktypeid . "' AND tt.tasktype_instance='" . $userfunctions->getUserInstance() . "' ";
+		$sql .= "WHERE tt.tasktype_id='" . $tasktypeid . "' AND tt.tasktype_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
 		$sql .= "GROUP BY tt.tasktype_id;";
 		$res = $this->database->query($sql);
 		if (!$res)
@@ -490,8 +510,7 @@ class tkTaskfunctions
 
 		$userfunctions = new tkUserfunctions();
 
-		$sql = "SELECT * FROM taskworkflow t ";
-		$sql .= "WHERE taskworkflow_tasktype='" . $tasktypeid . "'";
+		$sql = "SELECT * FROM taskworkflow t WHERE taskworkflow_tasktype='" . $tasktypeid . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -519,7 +538,7 @@ class tkTaskfunctions
 		$userfunctions = new tkUserfunctions();
 
 		$sql = "SELECT COUNT(t.task_id) as open_usertasks FROM tasks_to_users tu LEFT JOIN tasks t ON tu.taskusers_task = t.task_id ";
-		$sql .= "WHERE tu.taskusers_user='" . $this->user->getUserID() . "' AND t.task_instance='" . $userfunctions->getUserInstance() . "'";
+		$sql .= "WHERE tu.taskusers_user='" . $this->user->getUserID() . "' AND t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "'";
 		$res = $this->database->query($sql);
 		$row = $this->database->fetchArray($res);
 
@@ -538,7 +557,7 @@ class tkTaskfunctions
 
 		$sql = "SELECT COUNT(t.task_id) as open_grouptasks FROM tasks t ";
 		$sql .= "LEFT JOIN tasks_to_users tu ON t.task_id = tu.taskusers_task LEFT JOIN users u ON tu.taskusers_user = u.user_id ";
-		$sql .= "WHERE taskusers_user is null AND t.task_instance='" . $userfunctions->getUserInstance() . "'";
+		$sql .= "WHERE taskusers_user is null AND t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "'";
 		$res = $this->database->query($sql);
 		$row = $this->database->fetchArray($res);
 
@@ -732,6 +751,104 @@ class tkTaskfunctions
 
 		$sql = "DELETE FROM tasks_to_users WHERE taskusers_task='" . $taskid . "'";
 		$res = $this->database->query($sql);
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function acceptTask($taskid)
+	{
+		$this->debug->guard();
+
+		$userfunctions = new tkUserfunctions();
+		if (!$userfunctions->checkRightsForTask($taskid))
+		{
+			$this->debug->write('The task is out of bounds of the instance', 'warning');
+			$this->messages->setMessage('The task is out of bounds of the instance', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$sql = "INSERT INTO tasks_to_users(taskusers_task, taskusers_user) VALUES ('" . $taskid . "', '" . $this->user->getUserID() . "')";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not accept the task woth taskid: ' . $taskid, 'warning');
+			$this->messages->setMessage('Could not accept the task woth taskid: ' . $taskid, 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function declineTask($taskid)
+	{
+		$this->debug->guard();
+
+		$userfunctions = new tkUserfunctions();
+		if (!$userfunctions->checkRightsForTask($taskid))
+		{
+			$this->debug->write('The task is out of bounds of the instance', 'warning');
+			$this->messages->setMessage('The task is out of bounds of the instance', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$sql = "DELETE FROM tasks_to_users WHERE taskusers_task='" . $taskid . "' AND taskusers_user='" . $this->user->getUserID() . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not accept the task woth taskid: ' . $taskid, 'warning');
+			$this->messages->setMessage('Could not accept the task woth taskid: ' . $taskid, 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function addAdhoc($adhocdata=array())
+	{
+		$this->debug->guard();
+
+		$userfunctions = new tkUserfunctions();
+		if (!$userfunctions->checkRightsForTask($tasklogdata['tasklog_task']))
+		{
+			$this->debug->write('The task is out of bounds of the instance', 'warning');
+			$this->messages->setMessage('The task is out of bounds of the instance', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		if (empty($tasklogdata['tasklog_date']))
+		{
+			$tasklogdata['tasklog_date'] = '';
+		}
+		else
+		{
+			$dateArray = explode('.', $tasklogdata['tasklog_date']);
+			$tasklogdata['tasklog_date'] = $dateArray[2] . '-' . $dateArray[1] . '-' . $dateArray[0];
+		}
+
+		if (strpos($tasklogdata['tasklog_hoursworked'], ',') !== false) $tasklogdata['tasklog_hoursworked'] = str_replace(',','.', $tasklogdata['tasklog_hoursworked']);
+
+		$sql = 'INSERT INTO tasklogs(tasklog_creator, tasklog_task, tasklog_description, tasklog_hoursworked, tasklog_date) ';
+		$sql .= "VALUES('" . $this->user->getUserID() . "', '" . $tasklogdata['tasklog_task'] . "', '" . $tasklogdata['tasklog_description'] . "', '" . $tasklogdata['tasklog_hoursworked'] . "', '" . $tasklogdata['tasklog_date'] . "')";
+
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem deleting task from tasks_to_users: ' . $tasklogdata['taskid'], 'warning');
+			$this->messages->setMessage('Problem deleting task from tasks_to_users: ' . $tasklogdata['taskid'], 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
 
 		$this->debug->unguard(true);
 		return true;

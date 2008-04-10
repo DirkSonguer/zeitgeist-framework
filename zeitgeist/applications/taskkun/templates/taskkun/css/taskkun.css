@@ -110,6 +110,16 @@ a:active {
 }
 
 
+.sortlink {
+	text-decoration:underline;
+	color:#fafafa;
+}
+
+
+.thtext {
+	color:#fafafa;
+}
+
 .maincontent {
 	background:#97AD8B;
 	margin-right: auto;
@@ -203,6 +213,48 @@ td {
 }
 
 
+.tag1 {
+	font-size: 100%;
+	margin-left:5px;
+	margin-right:5px;"
+}
+
+
+.tag2 {
+	font-size: 110%;
+	margin-left:5px;
+	margin-right:5px;"
+}
+
+
+.tag3 {
+	font-size: 125%;
+	margin-left:5px;
+	margin-right:5px;"
+}
+
+
+.tag4 {
+	font-size: 145%;
+	margin-left:5px;
+	margin-right:5px;"
+}
+
+
+.tag5 {
+	font-size: 160%;
+	margin-left:5px;
+	margin-right:5px;"
+}
+
+
+.tagcloud {
+	line-height: 2em;
+	margin-left:10px;
+	margin-right:10px;
+	text-align:center;
+}
+
 .headerbox {
 	background:#54704D;
 	border:solid 1px #000000;
@@ -237,7 +289,7 @@ td {
 	font-family: "Georgia",Serif;
 	font-size:12pt;
 	font-weight:bold;
-	color:#222222;
+	color:#fafafa;
 	background:#8C906D;
 	padding:5px;
 	font-weight:bold;

@@ -83,7 +83,7 @@
 		<img src="@@{templatepath}@@/nuvola/48x48/actions/gohome.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[tasks.index]}@@"><span onmousemove="showTooltip('Eigene Aufgaben', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/klipper.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[tasks.addadhoc]}@@"><span onmousemove="showTooltip('Ad-Hoc-Tätigkeit eintragen', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[adhoc.addadhoc]}@@"><span onmousemove="showTooltip('Ad-Hoc-Tätigkeit eintragen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/karm.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[reports.index]}@@"><span onmousemove="showTooltip('Reports', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kchart.png" alt="" border="0" /></span></a></div>
@@ -98,8 +98,6 @@
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kword.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[tasks.showactivetasks]}@@" alt=""><span onmousemove="showTooltip('Alle aktiven Aufgaben anzeigen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpager.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[tasks.showarchivedtasks]}@@" alt=""><span onmousemove="showTooltip('Alle archivierten Aufgaben anzeigen', event)" onmouseout="hideTooltip()">
-		<img src="@@{templatepath}@@/nuvola/48x48/filesystems/folder_tar.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[search.index]}@@" alt=""><span onmousemove="showTooltip('Aufgaben suchen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpdf.png" alt="" border="0" /></span></a></div>
 		<!-- TemplateEndBlock -->
@@ -135,84 +133,144 @@
 	
 <!-- InstanceBeginEditable name="body" -->
 
-<form method="post" action="@@{[users.adduser]}@@" name="editaction" enctype="multipart/form-data; charset=utf-8">
+<form method="post" action="@@{[users.adduser]}@@" name="adduser" enctype="multipart/form-data; charset=utf-8">
+<input type="hidden" name="adduser[user_id]" value="@@{user_id:value}@@" />
 
 	<div class="textbox">
-	<h2><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="" align="left" style="margin-right:10px;" /> Edit user</h2>
-        <input type="hidden" value="@@{user_id}@@" name="user_id" />
-        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;" width="95%">
-            <tr>
-                <td align="right" valign="top" nowrap width="150"><p>Username*</p></td>
-                <td align="left" valign="middle" nowrap><input type="text" maxlength="20" name="user_username" value="@@{user_username}@@" class="formtext" /></td>
-            </tr>
-            <tr>
-                <td align="left" nowrap>&nbsp;</td>
-                <td align="right" valign="middle" nowrap><input type="submit" name="submit" value="Add user" class="formbutton" /></td>
-            </tr>
-        </table>
-	</div>
+	<h2>Benutzerdaten</h2>
+
+	<table width="100%" cellspacing="5" cellpadding="5" border="0">
+		<tr>
+			<td valign="top" nowrap="nowrap" width="200"><p class="formlabel">Anmeldung/E-Mail*</p></td>
+			<td valign="middle" @@{user_username:formerror}@@><input type="text" maxlength="60" name="adduser[user_username]" value="@@{user_username:value}@@" class="formtext" />
+			<!-- TemplateBeginBlock name="user_username:errormsg" -->
+				<br /><span class="formerrormsg">@@{user_username:errormsg}@@</span>
+			<!-- TemplateEndBlock -->
+		</td>
+		</tr>
+		<tr>
+			<td valign="top" nowrap="nowrap"><p class="formlabel">Name*</p></td>
+			<td valign="middle" @@{userdata_lastname:formerror}@@><input type="text" maxlength="60" name="adduser[userdata_lastname]" value="@@{userdata_lastname:value}@@" class="formtext" />
+			<!-- TemplateBeginBlock name="userdata_lastname:errormsg" -->
+				<br /><span class="formerrormsg">@@{userdata_lastname:errormsg}@@</span>
+			<!-- TemplateEndBlock -->
+		</td>
+		</tr>
+		<tr>
+			<td valign="top" nowrap="nowrap"><p class="formlabel">Vorname*</p></td>
+			<td valign="middle" @@{userdata_firstname:formerror}@@><input type="text" maxlength="60" name="adduser[userdata_firstname]" value="@@{userdata_firstname:value}@@" class="formtext" />
+			<!-- TemplateBeginBlock name="userdata_firstname:errormsg" -->
+				<br /><span class="formerrormsg">@@{userdata_firstname:errormsg}@@</span>
+			<!-- TemplateEndBlock -->
+		</td>
+		</tr>
+		<tr>
+			<td valign="top" nowrap="nowrap"><p class="formlabel">Straße, Hausnummer</p></td>
+			<td valign="middle" @@{userdata_address1:formerror}@@><input type="text" maxlength="60" name="adduser[userdata_address1]" value="@@{userdata_address1:value}@@" class="formtext" />
+			<!-- TemplateBeginBlock name="userdata_address1:errormsg" -->
+				<br /><span class="formerrormsg">@@{userdata_address1:errormsg}@@</span>
+			<!-- TemplateEndBlock -->
+		</td>
+		</tr>
+		<tr>
+			<td valign="top" nowrap="nowrap"><p class="formlabel">Adresszusatz</p></td>
+			<td valign="middle" @@{userdata_address2:formerror}@@><input type="text" maxlength="60" name="adduser[userdata_address2]" value="@@{userdata_address2:value}@@" class="formtext" />
+			<!-- TemplateBeginBlock name="userdata_address2:errormsg" -->
+				<br /><span class="formerrormsg">@@{userdata_address2:errormsg}@@</span>
+			<!-- TemplateEndBlock -->
+		</td>
+		</tr>
+		<tr>
+			<td valign="top" nowrap="nowrap"><p class="formlabel">PLZ, Ort</p></td>
+			<td valign="middle" @@{userdata_zip:formerror}@@@@{userdata_city:formerror}@@><input type="text" maxlength="6" name="adduser[userdata_zip]" value="@@{userdata_zip:value}@@" class="formtext" style="width:55px;" />
+			<input type="text" maxlength="60" name="adduser[userdata_city]" value="@@{userdata_city:value}@@" class="formtext" style="width:212px;" />
+			<!-- TemplateBeginBlock name="userdata_zip:errormsg" -->
+				<br /><span class="formerrormsg">@@{userdata_zip:errormsg}@@</span>
+			<!-- TemplateEndBlock -->				
+			<!-- TemplateBeginBlock name="userdata_city:errormsg" -->
+				<br /><span class="formerrormsg">@@{userdata_city:errormsg}@@</span>
+			<!-- TemplateEndBlock -->
+		</td>
+		</tr>
+		<tr>
+			<td valign="top" nowrap="nowrap"><p class="formlabel">URL</p></td>
+			<td valign="middle" @@{userdata_url:userdata_zip}@@><input type="text" maxlength="60" name="adduser[userdata_url]" value="@@{userdata_url:value}@@" class="formtext" />
+			<!-- TemplateBeginBlock name="userdata_url:errormsg" -->
+				<br /><span class="formerrormsg">@@{userdata_url:errormsg}@@</span>
+			<!-- TemplateEndBlock -->
+		</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/actions/pencil.png" alt="" border="0" align="top" />
+				<input name="submit" value="Daten speichern" class="formbutton" type="submit" /></p>
+			</td>
+		</tr>
+	</table>
+</div>
 
 	<div class="textbox">
-	<h2>Change password</h2>
-        <input type="hidden" value="@@{user_id}@@" name="user_id" />
-        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;" width="95%">
-            <tr>
-                <td align="right" valign="top" nowrap width="150"><p> New Password</p></td>
-                <td align="left" valign="middle" nowrap><input type="password" maxlength="30" name="user_password" class="formtext" /></td>
-            </tr>
-            <tr>
-                <td align="right" valign="top" nowrap width="150"><p> Confirm Password</p></td>
-                <td align="left" valign="middle" nowrap><input type="password" maxlength="30" name="user_password2" class="formtext" /></td>
-            </tr>
-            <tr>
-                <td align="left" nowrap>&nbsp;</td>
-                <td align="right" valign="middle" nowrap><input type="submit" name="submit" value="Add user" class="formbutton" /></td>
-            </tr>
-        </table>
-	</div>
-
-	<div class="textbox">
-	<h2>Userrole</h2>
-        <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;" width="95%">
-            <tr>
-                <td align="right" valign="top" nowrap width="120"><p>Userrole</p></td>
-                <td align="left" valign="top" nowrap>
-				<!-- TemplateBeginBlock name="userroleloop" -->
-				<input type="radio" @@{userrolecheck}@@ name="userroleuser_id" value="@@{userrolevalue}@@" /> @@{userroletext}@@<br />
+	<h2>Benutzereigenschaften</h2>
+	
+		<table width="100%" cellspacing="5" cellpadding="5" border="0">
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">Benutzerrolle</p></td>
+				<td valign="top" nowrap="nowrap">
+				<!-- TemplateBeginBlock name="userrole_loop" -->
+					<p style="margin-bottom:5px; margin-left:0px;"><input type="radio" @@{userrole_check}@@ name="adduser[userroleuser_userrole]" value="@@{userrole_value}@@" /> @@{userrole_text}@@</p>
 				<!-- TemplateEndBlock -->
 				</td>
-            </tr>
-            <tr>
-                <td align="left" nowrap>&nbsp;</td>
-                <td align="right" valign="middle" nowrap><input type="submit" name="submit" value="Add user" class="formbutton" /></td>
-            </tr>
-        </table>
-	</div>
-
-	<div class="textbox">
-	<h2>Userdata</h2>
-	
-		<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;" width="95%">
-			<!-- TemplateBeginBlock name="userdataloop" -->
+			</tr>
 			<tr>
-				<td align="right" valign="top" nowrap width="170"><p>@@{userdatakey}@@</p></td>
-				<td align="left" valign="top" nowrap>
-				@@{userdatavalue}@@
+				<td valign="top" nowrap="nowrap"><p class="formlabel">Benutzergruppen</p></td>
+				<td valign="top" nowrap="nowrap">
+				<select name="usergroups[]" size="5" class="formtext" multiple="multiple">
+				<!-- TemplateBeginBlock name="usergroup_loop" -->
+					<option @@{usergroup_check}@@ value="@@{usergroup_value}@@">@@{usergroup_text}@@</option>
+				<!-- TemplateEndBlock -->
+				</select>
 				</td>
 			</tr>
-			<!-- TemplateEndBlock -->
 			<tr>
-				<td align="left" nowrap>&nbsp;</td>
-				<td align="right" valign="middle" nowrap><input type="submit" name="submit" value="Add user" class="formbutton" /></td>
+				<td colspan="2">
+				   <p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/actions/pencil.png" alt="" border="0" align="top" />
+				   <input name="submit" value="Daten speichern" class="formbutton" type="submit" /></p>
+				</td>
 			</tr>
 		</table>
 	</div>
 
-</form>
+	<div class="textbox">
+	<h2>Passwort</h2>
+	
+		<table width="100%" cellspacing="5" cellpadding="5" border="0">
+            <tr>
+                <td valign="top" nowrap="nowrap" width="200"><p class="formlabel">Passwort</p></td>
+                <td valign="middle" @@{user_password:formerror}@@><input type="password" maxlength="30" name="adduser[user_password]" class="formtext" />
+				<!-- TemplateBeginBlock name="user_password:errormsg" -->
+					<br /><span class="formerrormsg">@@{user_password:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+            </tr>
+            <tr>
+                <td valign="top" nowrap="nowrap"><p class="formlabel">Passwort bestätigen</p></td>
+                <td valign="middle" @@{user_password2:formerror}@@><input type="password" maxlength="30" name="adduser[user_password2]" class="formtext" />
+				<!-- TemplateBeginBlock name="user_password2:errormsg" -->
+					<br /><span class="formerrormsg">@@{user_password2:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+            </tr>
+			<tr>
+				<td colspan="2">
+				   <p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/actions/pencil.png" alt="" border="0" align="top" />
+				   <input name="submit" value="Daten speichern" class="formbutton" type="submit" /></p>
+				</td>
+			</tr>
+        </table>
+		
+	</div>
 
-<div class="textbox">
-	<h3><img src="@@{templatepath}@@/nuvola/22x22/actions/2leftarrow.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[users.index]}@@" alt="Back to user overview">Back to user overview</a> (changes will not be saved)</h3>
-</div>
+</form>
 
 <!-- InstanceEndEditable -->
 
