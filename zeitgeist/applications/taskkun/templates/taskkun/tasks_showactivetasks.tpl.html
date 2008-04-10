@@ -44,7 +44,7 @@
 
 	<script type="text/javascript">
 
-		var dsTasks = new Spry.Data.XMLDataSet("@@{[dataserver.getalltasks]}@@", "container/element");
+		var dsTasks = new Spry.Data.XMLDataSet("@@{[dataserver.getactivetasks]}@@", "container/element");
 		dsTasks.setColumnType("task_id", "number");
 		dsTasks.setColumnType("task_hoursplanned", "number");
 		dsTasks.setColumnType("task_hoursworked", "number");
@@ -64,6 +64,46 @@
 			}
 		}
 
+		var bShowShortcuts = false;
+		shortcutUp = new Image();
+		shortcutUp.src = "@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png";
+		shortcutDown = new Image();
+		shortcutDown.src = "@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png";
+	
+		function showShortcuts()
+		{
+			if (bShowShortcuts == false)
+			{
+				bShowShortcuts = true;
+				document.getElementById('Shortcuts').style.display = "block";
+				document.images["shortcutIcon"].src = shortcutUp.src;
+			}
+			else
+			{
+				bShowShortcuts = false;
+				document.getElementById('Shortcuts').style.display = "none";
+				document.images["shortcutIcon"].src = shortcutDown.src;
+			}
+		}
+		
+		function filterPriority()
+		{
+			filterParameter = document.getElementById('filter_priority').value;
+			filterSpryDataset('task_priority', filterParameter, dsTasks, false);
+		}
+
+		function filterHours()
+		{
+			filterParameter = document.getElementById('filter_hours').value;
+			filterSpryDataset('task_overdrawn', filterParameter, dsTasks, false);
+		}
+
+		function filterDate()
+		{
+			filterParameter = document.getElementById('filter_date').value;
+			filterSpryDataset('task_late', filterParameter, dsTasks, false);
+		}
+		
 	</script>
 
 <!-- InstanceEndEditable -->
@@ -88,7 +128,7 @@
 		<img src="@@{templatepath}@@/nuvola/48x48/actions/gohome.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[tasks.index]}@@"><span onmousemove="showTooltip('Eigene Aufgaben', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/klipper.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[tasks.addadhoc]}@@"><span onmousemove="showTooltip('Ad-Hoc-Tätigkeit eintragen', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[adhoc.addadhoc]}@@"><span onmousemove="showTooltip('Ad-Hoc-Tätigkeit eintragen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/karm.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[reports.index]}@@"><span onmousemove="showTooltip('Reports', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kchart.png" alt="" border="0" /></span></a></div>
@@ -103,8 +143,6 @@
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kword.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[tasks.showactivetasks]}@@" alt=""><span onmousemove="showTooltip('Alle aktiven Aufgaben anzeigen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpager.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[tasks.showarchivedtasks]}@@" alt=""><span onmousemove="showTooltip('Alle archivierten Aufgaben anzeigen', event)" onmouseout="hideTooltip()">
-		<img src="@@{templatepath}@@/nuvola/48x48/filesystems/folder_tar.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[search.index]}@@" alt=""><span onmousemove="showTooltip('Aufgaben suchen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpdf.png" alt="" border="0" /></span></a></div>
 		<!-- TemplateEndBlock -->
@@ -141,6 +179,60 @@
 <!-- InstanceBeginEditable name="body" -->
 
 <div class="textbox">
+	<h2 style="text-align:left; background:#B5BD82; padding:5px;">Filter anwenden <span style="float:right; margin-top:-20px;"><a href="javascript:showShortcuts();" alt=""><span onmousemove="showTooltip('Weitere Angaben', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png" alt="" name="shortcutIcon" align="left" border="0" /></span></a></span></h2>
+	<div style="clear:both"></div>
+	<div id="Shortcuts" style="padding:5px; display:none;">
+
+	<form name="formFilter" method="post" action="#">
+	<table border="0" cellpadding="0" cellspacing="0" cellpadding="0" cellspacing="0" style="margin-top:0px;">
+		<tr>
+			<td width="130" valign="top" rowspan="3">
+				<p><img src="@@{templatepath}@@/nuvola/128x128/apps/kghostview.png" alt="Filter users" border="0" /></p>
+			</td>
+			<td align="left" valign="middle">
+				<p class="formlabel">Priorität</p>
+			</td>
+			<td align="left" valign="middle">
+				<select id="filter_priority" class="formtext" style="width:300px;" onchange="filterPriority()">
+					<option value="-1">Alle anzeigen</option>
+					<option value="1">Niedrig</option>
+					<option value="2">Normal</option>
+					<option value="3">Hoch</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td align="left" valign="middle">
+				<p class="formlabel">Stundenlimit</p>
+			</td>
+			<td align="left" valign="middle">
+				<select id="filter_hours" class="formtext" style="width:300px;" onchange="filterHours()">
+					<option value="">Alle anzeigen</option>
+					<option value="0">Aufgaben im Stundenlimit</option>
+					<option value="2">Aufgaben über dem Stundenlimit</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td align="left" valign="middle">
+				<p class="formlabel">Zeitlimit</p>
+			</td>
+			<td align="left" valign="middle">
+				<select id="filter_date" class="formtext" style="width:300px;" onchange="filterDate()">
+					<option value="">Alle anzeigen</option>
+					<option value="0">Aufgaben im Zeitlimit</option>
+					<option value="1">Heute fällige Aufgaben</option>
+					<option value="2">Aufgaben über dem Zeitlimit</option>
+				</select>
+			</td>
+		</tr>
+	</table>
+	</form>
+
+	</div>
+</div>
+
+<div class="textbox">
 	<h2>Alle aktiven Aufgaben (<span id="groupRows">2</span>)</h2>
 	<div style="clear:both"></div>
 
@@ -156,13 +248,13 @@
 
 	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
 	        <tr class="tablehead">
-				<th><p><a onclick="dsTasks.sort('task_id');">ID</a></p></th>
-				<th><p><a onclick="dsTasks.sort('task_name');">Name</a></p></th>
-				<th><p><a onclick="dsTasks.sort('group_name');">Verantwortlich</a></p></th>
-				<th><p><a onclick="dsTasks.sort('task_priority');">Priorität</a></p></th>
-				<th><p style="text-align:center;"><a onclick="dsTasks.sort('task_hoursplanned');">Stundenbudget<br />(verbraucht)</a></p></th>
-				<th><p style="text-align:center;"><a onclick="dsTasks.sort('task_end');">Fällig am</a></p></th>
-				<th><p>Aktionen</p></th>
+				<th><p><a onclick="dsTasks.sort('task_id');" class="sortlink">ID</a></p></th>
+				<th><p><a onclick="dsTasks.sort('task_name');" class="sortlink">Name</a></p></th>
+				<th><p><a onclick="dsTasks.sort('group_name');" class="sortlink">Verantwortlich</a></p></th>
+				<th><p><a onclick="dsTasks.sort('task_priority');" class="sortlink">Priorität</a></p></th>
+				<th><p style="text-align:center;"><a onclick="dsTasks.sort('task_hoursplanned');" class="sortlink">Stundenbudget<br />(verbraucht)</a></p></th>
+				<th><p style="text-align:center;"><a onclick="dsTasks.sort('task_end');" class="sortlink">Fällig am</a></p></th>
+				<th><p class="thtext">Aktionen</p></th>
 	        </tr>
 	        <tr class="{ds_EvenOddRow}" spry:repeat="dsTasks">
 				<td><p>{dsTasks::task_id}</p></td>
@@ -194,7 +286,7 @@
 						</div>
 					</div>
 				</td>
-				<td width="120"><p style="text-align:center;">
+				<td width="120" nowrap="nowrap"><p style="text-align:center;">
 				<span onmousemove="showTooltip('Details', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.taskdetails]}@@&id={dsTasks::task_id}" alt="Details"><img src="@@{templatepath}@@/nuvola/22x22/apps/kappfinder.png" alt="Details" border="0" /></a></span> &nbsp; 
 				<span onmousemove="showTooltip('Aufgabe bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.edittask]}@@&id={dsTasks::task_id}" alt="Aufgabe bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="Aufgabe bearbeiten" border="0" /></a></span> &nbsp; 
 				<span onmousemove="showTooltip('Aufgabe löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteTask({dsTasks::task_id}, '{dsTasks::task_name}')" alt="Aufgabe löschen"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Aufgabe löschen" border="0" /></a></span>
@@ -205,7 +297,6 @@
 	</div>
 	
 </div>
-
 
 <!-- InstanceEndEditable -->
 

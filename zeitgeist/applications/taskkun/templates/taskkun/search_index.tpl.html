@@ -49,15 +49,62 @@
 		dsResults.setColumnType("task_id", "number");
 		dsResults.setColumnType("task_hoursplanned", "number");
 		dsResults.setColumnType("task_hoursworked", "number");
+
+		var dsTags = new Spry.Data.XMLDataSet("@@{[dataserver.getalltags]}@@", "container/element", { useCache: false });
+		dsTags.setColumnType("tag_id", "number");
+		dsTags.setColumnType("tag_count", "number");
 		
 		function updateSearch()
 		{
 			currentSearch = document.getElementById('searchinput').value;
-			var spryURL = "@@{[dataserver.searchtasks]}@@&searchterms="+currentSearch;
+			useArchived = document.getElementById('usearchived').checked;
+			archiveString = '';
+			if (useArchived == true)
+			{
+				archiveString = '&usearchived=1';
+			}
+			
+			var spryURL = "@@{[dataserver.searchtasks]}@@&searchterms="+currentSearch+archiveString;
 			dsResults.url = spryURL;
 			dsResults.loadData();
 			
 			return false;
+		}
+
+		var bShowShortcuts = false;
+		shortcutUp = new Image();
+		shortcutUp.src = "@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png";
+		shortcutDown = new Image();
+		shortcutDown.src = "@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png";
+	
+		function showShortcuts()
+		{
+			if (bShowShortcuts == false)
+			{
+				bShowShortcuts = true;
+				document.getElementById('Shortcuts').style.display = "block";
+				document.images["shortcutIcon"].src = shortcutUp.src;
+			}
+			else
+			{
+				bShowShortcuts = false;
+				document.getElementById('Shortcuts').style.display = "none";
+				document.images["shortcutIcon"].src = shortcutDown.src;
+			}
+		}
+		
+		function addTag(tagText)
+		{
+			currentSearch = document.getElementById('searchinput').value;
+			
+			if (currentSearch != '')
+			{
+				currentSearch += ' ';
+			}
+			
+			currentSearch += tagText;
+			
+			document.getElementById('searchinput').value = currentSearch;
 		}
 
 	</script>
@@ -84,7 +131,7 @@
 		<img src="@@{templatepath}@@/nuvola/48x48/actions/gohome.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[tasks.index]}@@"><span onmousemove="showTooltip('Eigene Aufgaben', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/klipper.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[tasks.addadhoc]}@@"><span onmousemove="showTooltip('Ad-Hoc-Tätigkeit eintragen', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[adhoc.addadhoc]}@@"><span onmousemove="showTooltip('Ad-Hoc-Tätigkeit eintragen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/karm.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[reports.index]}@@"><span onmousemove="showTooltip('Reports', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kchart.png" alt="" border="0" /></span></a></div>
@@ -99,8 +146,6 @@
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kword.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[tasks.showactivetasks]}@@" alt=""><span onmousemove="showTooltip('Alle aktiven Aufgaben anzeigen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpager.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[tasks.showarchivedtasks]}@@" alt=""><span onmousemove="showTooltip('Alle archivierten Aufgaben anzeigen', event)" onmouseout="hideTooltip()">
-		<img src="@@{templatepath}@@/nuvola/48x48/filesystems/folder_tar.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[search.index]}@@" alt=""><span onmousemove="showTooltip('Aufgaben suchen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpdf.png" alt="" border="0" /></span></a></div>
 		<!-- TemplateEndBlock -->
@@ -135,15 +180,16 @@
 	
 <!-- InstanceBeginEditable name="body" -->
 
+<form action="#" onsubmit="return updateSearch()">
 <div class="textbox" style="background-image:url(@@{templatepath}@@/images/side_search.jpg); background-position:right bottom; background-repeat:no-repeat;">
 <h2>Aufgaben suchen</h2>
 
-<form action="#" onsubmit="return updateSearch()">
 <table border="0" cellpadding="0" cellspacing="10">
 	<tr>
 		<td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Suchbegriffe</p></td>
 		<td align="left" nowrap="nowrap" valign="middle"><input maxlength="512" style="width:750px; margin-top:10px;" name="searchinput" id="searchinput" value="@@{searchterms}@@" class="formtext" type="text" />
-		<p style="margin-left:0px;">(Durchsucht werden <i>Tags</i>, <i>Titel</i> und <i>Beschreibungen</i>)</p></td>
+		<p style="margin-left:0px; font-size:10pt;"><input type="checkbox" id="usearchived" name="usearchived" value="true">Archivierte Aufgaben mit in die Suche einbeziehen</p
+		></td>
 	</tr>
 	<tr>
 	<td colspan="2">
@@ -152,10 +198,30 @@
 	</td>
 	</tr>
 </table>
-</form>
 
 </div>
 
+<div class="textbox">
+	<h2 style="text-align:left; background:#B5BD82; padding:5px;">Suche mit Tags <span style="float:right; margin-top:-20px;"><a href="javascript:showShortcuts();" alt=""><span onmousemove="showTooltip('Weitere Angaben', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png" alt="" name="shortcutIcon" align="left" border="0" /></span></a></span></h2>
+	<div style="clear:both"></div>
+	<div id="Shortcuts" style="padding:5px; display:none;">
+	
+		<div spry:region="dsTags">
+		<div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
+	
+		<div spry:state="ready">
+		<p class="tagcloud">
+			<a spry:repeat="dsTags" href="javascript:addTag('{dsTags::tag_text}')" class='tag{dsTags::tag_score}'>{dsTags::tag_text}</a>
+		</p>
+		<div style="clear:both;"></div>
+	
+		</div>
+		</div>
+
+	</div>
+</div>
+
+</form>
 
 <div class="textbox">
 	<h2>Suchergebnisse</h2>
@@ -167,11 +233,11 @@
 	<div spry:state="ready">
 	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
 	        <tr class="tablehead">
-				<th><p><a onclick="dsResults.sort('task_id');">ID</a></p></th>
-				<th><p><a onclick="dsResults.sort('task_name');">Name</a></p></th>
-				<th><p><a onclick="dsResults.sort('group_name');">Verantwortlich</a></p></th>
-				<th><p style="text-align:center;"><a onclick="dsResults.sort('task_end');">Fällig am</a></p></th>
-				<th><p>Aktionen</p></th>
+				<th><p><a onclick="dsResults.sort('task_id');" class="sortlink">ID</a></p></th>
+				<th><p><a onclick="dsResults.sort('task_name');" class="sortlink">Name</a></p></th>
+				<th><p><a onclick="dsResults.sort('group_name');" class="sortlink">Verantwortlich</a></p></th>
+				<th><p style="text-align:center;"><a onclick="dsResults.sort('task_end');" class="sortlink">Fällig am</a></p></th>
+				<th><p class="thtext">Aktionen</p></th>
 	        </tr>
 	        <tr class="{ds_EvenOddRow}" spry:repeat="dsResults">
 				<td><p>{dsResults::task_id}</p></td>

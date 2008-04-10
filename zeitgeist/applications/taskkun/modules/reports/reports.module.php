@@ -35,5 +35,19 @@ class reports
 		return true;
 	}
 
+
+	public function showactivities($parameters=array())
+	{
+		$this->debug->guard();
+
+		$tpl = new tkTemplate();
+		$tpl->load($this->configuration->getConfiguration('reports', 'templates', 'reports_showactivities'));
+
+		$tpl->show();
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
 }
 ?>

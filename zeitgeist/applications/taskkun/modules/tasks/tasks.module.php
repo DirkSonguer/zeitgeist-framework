@@ -80,7 +80,7 @@ class tasks
 			$tpl->insertBlock('tasktype_loop');
 		}
 
-		if (empty($parameters['task_begin']))
+		if (empty($parameters['addtask']['task_begin']))
 		{
 			$tpl->assign('task_begin:value', date('d.m.Y'));
 		}
@@ -162,7 +162,6 @@ class tasks
 
 		$formcreated = $addtaskForm->create($tpl);
 
-		$tpl->insertBlock('edittask');
 		$tpl->show();
 
 		$this->debug->unguard(true);
@@ -201,8 +200,8 @@ class tasks
 
 		if (!empty($parameters['id']))
 		{
-			$sql = "INSERT INTO tasks_to_users(taskusers_task, taskusers_user) VALUES ('" . $parameters['id'] . "', '" . $this->user->getUserID() . "')";
-			$res = $this->database->query($sql);
+			$taskfunctions = new tkTaskfunctions();
+			$taskfunctions->acceptTask($parameters['id']);
 		}
 
 		$tpl = new tkTemplate();
@@ -220,8 +219,8 @@ class tasks
 
 		if (!empty($parameters['id']))
 		{
-			$sql = "DELETE FROM tasks_to_users WHERE taskusers_task='" . $parameters['id'] . "' AND taskusers_user='" . $this->user->getUserID() . "'";
-			$res = $this->database->query($sql);
+			$taskfunctions = new tkTaskfunctions();
+			$taskfunctions->declineTask($parameters['id']);
 		}
 
 		$tpl = new tkTemplate();
@@ -240,53 +239,63 @@ class tasks
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_addtasklog'));
 
+		$addtasklogForm = new zgStaticform();
+		$addtasklogForm->load('forms/addtasklog.form.ini');
+
 		$taskfunctions = new tkTaskfunctions();
-		$taskstored = false;
+		$formvalid = $addtasklogForm->process($parameters);
 
-		if ( (!empty($parameters['submitButton'])) && ($parameters['submitButton'] > 0) )
+		if (!empty($parameters['submitButton']))
 		{
-			if (!empty($parameters['tasklog_description']))
-			{
-				if (empty($parameters['tasklog_hoursworked'])) $parameters['tasklog_hoursworked'] = '0';
+			$formcontent = $parameters['addtasklog'];
 
-				if (!$taskfunctions->addTasklog($parameters))
+			if ($formvalid)
+			{
+				if (empty($formcontent['tasklog_hoursworked'])) $formcontent['tasklog_hoursworked'] = '0';
+
+				if (!$taskfunctions->addTasklog($formcontent))
 				{
 					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator', 'usererror');
 				}
 				else
 				{
 					$this->messages->setMessage('Die Tätigkeitsbeschreibung wurde gespeichert', 'usermessage');
-					$taskstored = true;
 				}
-			}
-			else
-			{
-				if ($parameters['submitButton'] == 1)
-				{
-					$this->messages->setMessage('Bitte geben Sie eine Tätigkeitsbeschreibung an', 'userwarning');
-				}
-			}
-		}
 
-		if (!empty($parameters['submitButton']))
-		{
+				switch($parameters['submitButton'])
+				{
+					case 2:
+						$taskfunctions->workflowDown($formcontent['tasklog_task']);
+						$this->messages->setMessage('Die Aufgabe wurde zurückgegeben', 'usermessage');
+						break;
+
+					case 3:
+						$taskfunctions->workflowUp($formcontent['tasklog_task']);
+						$this->messages->setMessage('Die Aufgabe wurde abgeschlossen', 'usermessage');
+						break;
+
+					default:
+						break;
+				}
+
+				$this->debug->unguard(true);
+				$tpl->redirect($tpl->createLink('tasks', 'index'));
+				return true;
+			}
+
 			switch($parameters['submitButton'])
 			{
-				case 1:
-					$this->debug->unguard(true);
-					$tpl->redirect($tpl->createLink('tasks', 'index'));
-					return true;
-					break;
-
 				case 2:
-					$taskfunctions->workflowDown($parameters['taskid']);
+					$taskfunctions->workflowDown($formcontent['tasklog_task']);
+					$this->messages->setMessage('Die Aufgabe wurde zurückgegeben', 'usermessage');
 					$this->debug->unguard(true);
 					$tpl->redirect($tpl->createLink('tasks', 'index'));
 					return true;
 					break;
 
 				case 3:
-					$taskfunctions->workflowUp($parameters['taskid']);
+					$taskfunctions->workflowUp($formcontent['tasklog_task']);
+					$this->messages->setMessage('Die Aufgabe wurde abgeschlossen', 'usermessage');
 					$this->debug->unguard(true);
 					$tpl->redirect($tpl->createLink('tasks', 'index'));
 					return true;
@@ -297,16 +306,22 @@ class tasks
 			}
 		}
 
+		$formcreated = $addtasklogForm->create($tpl);
+
 		if (!empty($parameters['id']))
 		{
 			$taskid = $parameters['id'];
 		}
-		elseif (!empty($parameters['taskid']))
+		elseif (!empty($parameters['addtasklog']['tasklog_task']))
 		{
-			$taskid = $parameters['taskid'];
+			$taskid = $parameters['addtasklog']['tasklog_task'];
 		}
 
-		$taskfunctions = new tkTaskfunctions();
+		if (empty($parameters['addtasklog']['tasklog_date']))
+		{
+			$tpl->assign('tasklog_date:value', date('d.m.Y'));
+		}
+
 		$taskinformation = $taskfunctions->getTaskInformation($taskid);
 
 		if (count($taskinformation['task_tasklogs']) > 0)
@@ -315,7 +330,7 @@ class tasks
 		}
 
 		$tpl->assign('task_name', $taskinformation['task_name']);
-		$tpl->assign('taskid', $taskid);
+		$tpl->assign('tasklog_task:value', $taskid);
 
 		$tpl->show();
 
@@ -328,67 +343,65 @@ class tasks
 	{
 		$this->debug->guard();
 
+		$tpl = new tkTemplate();
+		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_edittasklog'));
+
+		$edittasklogForm = new zgStaticform();
+		$edittasklogForm->load('forms/edittasklog.form.ini');
+
 		$taskfunctions = new tkTaskfunctions();
-		$taskstored = false;
 
-		if ( (!empty($parameters['submitButton'])) && ($parameters['submitButton'] > 0) )
+		if (!empty($parameters['submitButton']))
 		{
-			if (!empty($parameters['tasklog_description']))
-			{
-				if (empty($parameters['tasklog_hoursworked'])) $parameters['tasklog_hoursworked'] = '0';
+			$formvalid = $edittasklogForm->process($parameters);
 
-				if (!$taskfunctions->updateTasklog($parameters))
-				{
-					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator', 'usererror');
-				}
-				else
+			if ($formvalid)
+			{
+				$formcontent = $parameters['edittasklog'];
+
+				if (empty($formcontent['tasklog_hoursworked'])) $formcontent['tasklog_hoursworked'] = '0';
+
+				if ($taskfunctions->updateTasklog($formcontent))
 				{
 					$this->messages->setMessage('Die Tätigkeitsbeschreibung wurde gespeichert', 'usermessage');
-					$sql = "SELECT tl.* FROM tasklogs tl ";
-					$sql .= "WHERE tasklog_id='" . $parameters['tasklogid'] . "'";
-					$res = $this->database->query($sql);
-					if (!$res)
-					{
-						$this->debug->write('Problem getting tasklog information for tasklog: ' . $parameters['tasklogid'], 'warning');
-						$this->messages->setMessage('Problem getting tasklog information for tasklog: ' . $parameters['tasklogid'], 'warning');
-						$this->debug->unguard(false);
-						return false;
-					}
-					$taskloginformation = $this->database->fetchArray($res);
+					$taskloginformation = $taskfunctions->getTasklog($parameters['id']);
 					$parameters = array();
 					$parameters['id'] = $taskloginformation['tasklog_task'];
 					$tpl = new tkTemplate();
 					$tpl->redirect($tpl->createLink('tasks', 'addtasklog', $parameters));
 					return true;
 				}
+				else
+				{
+					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator', 'usererror');
+				}
 			}
 			else
 			{
-				if ($parameters['submitButton'] == 1)
-				{
-					$this->messages->setMessage('Bitte geben Sie eine Tätigkeitsbeschreibung an', 'userwarning');
-				}
+				$this->messages->setMessage('Bitte füllen Sie alle Formularfelder korrekt aus', 'userwarning');
 			}
 		}
 
-		$tpl = new tkTemplate();
-		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_edittasklog'));
+		if(!empty($parameters['id']))
+		{
+			$taskloginformation = $taskfunctions->getTasklog($parameters['id']);
+			$processData = array();
+			$processData['edittasklog'] = $taskloginformation;
+			$formvalid = $edittasklogForm->process($processData);
+		}
 
 		if (!empty($parameters['id']))
 		{
-			$tasklogid = $parameters['id'];
+			$taskid = $parameters['id'];
 		}
-		elseif (!empty($parameters['tasklogid']))
+		elseif (!empty($parameters['edittasklog']['tasklog_task']))
 		{
-			$tasklogid = $parameters['tasklogid'];
+			$taskid = $parameters['edittasklog']['tasklog_task'];
 		}
 
-		$taskfunctions = new tkTaskfunctions();
-		$taskloginformation = $taskfunctions->getTasklog($tasklogid);
+		$formcreated = $edittasklogForm->create($tpl);
 
-		$tpl->assign('tasklogid', $tasklogid);
-		$tpl->assignDataset($taskloginformation);
-
+		$tpl->assign('tasklog_task:value', $taskid);
 		$tpl->show();
 
 		$this->debug->unguard(true);
@@ -402,7 +415,7 @@ class tasks
 
 		if (!empty($parameters['id']))
 		{
-			$sql = "SELECT * FROM tasklogs WHERE tasklog_id='" . $parameters['id'] . "'";
+			$sql = "SELECT tasklog_task FROM tasklogs WHERE tasklog_id='" . $parameters['id'] . "'";
 			$res = $this->database->query($sql);
 			if (!$res)
 			{
@@ -434,40 +447,12 @@ class tasks
 	}
 
 
-	public function addadhoc($parameters=array())
-	{
-		$this->debug->guard();
-
-		$tpl = new tkTemplate();
-		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_addadhoc'));
-
-		$tpl->show();
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-
 	public function showactivetasks($parameters=array())
 	{
 		$this->debug->guard();
 
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_showactivetasks'));
-
-		$tpl->show();
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-
-	public function showarchivedtasks($parameters=array())
-	{
-		$this->debug->guard();
-
-		$tpl = new tkTemplate();
-		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_showarchivedtasks'));
 
 		$tpl->show();
 

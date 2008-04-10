@@ -40,7 +40,7 @@ class dataserver
 		$sql .= "LEFT JOIN groups g ON u2g.usergroup_group = g.group_id ";
 		$sql .= "WHERE taskusers_user='" . $this->user->getUserID() . "' ";
 		$sql .= "AND u2g.usergroup_user = '" . $this->user->getUserID() . "' ";
-		$sql .= "AND t.task_instance='" . $userfunctions->getUserInstance() . "' ";
+		$sql .= "AND t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
 		$sql .= "GROUP BY t.task_id";
 
 		$xmlData = $this->dataserver->createXMLDatasetFromSQL($sql);
@@ -69,7 +69,7 @@ class dataserver
 		$sql .= "LEFT JOIN groups g ON u2g.usergroup_group = g.group_id ";
 		$sql .= "WHERE tu.taskusers_user is null ";
 		$sql .= "AND u2g.usergroup_user = '" . $this->user->getUserID() . "' ";
-		$sql .= "AND t.task_instance='" . $userfunctions->getUserInstance() . "' ";
+		$sql .= "AND t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
 		$sql .= "GROUP BY t.task_id";
 
 		$xmlData = $this->dataserver->createXMLDatasetFromSQL($sql);
@@ -81,7 +81,7 @@ class dataserver
 	}
 
 
-	public function getalltasks($parameters=array())
+	public function getactivetasks($parameters=array())
 	{
 		$this->debug->guard();
 
@@ -93,7 +93,7 @@ class dataserver
 		$sql .= "WHEN ((t.task_end = CURDATE()) && (t.task_end != '00.00.0000'))  THEN '1' ";
 		$sql .= "ELSE '0' END as task_late, ";
 		$sql .= "CASE WHEN (SUM(tl.tasklog_hoursworked) > task_hoursplanned) THEN '2' ";
-		$sql .= "WHEN ((SUM(tl.tasklog_hoursworked) <= task_hoursplanned) AND (SUM(tl.tasklog_hoursworked) >= task_hoursplanned-1) )  THEN '1' ";
+		$sql .= "WHEN ((SUM(tl.tasklog_hoursworked) <= task_hoursplanned) AND (SUM(tl.tasklog_hoursworked) >= task_hoursplanned) )  THEN '1' ";
 		$sql .= "ELSE '0' END as task_overdrawn ";
 		$sql .= "FROM tasks t ";
 		$sql .= "LEFT JOIN tasks_to_users tu ON t.task_id = tu.taskusers_task ";
@@ -102,7 +102,42 @@ class dataserver
 		$sql .= "LEFT JOIN tasktypes tt ON t.task_type = tt.tasktype_id ";
 		$sql .= "LEFT JOIN taskworkflow twf ON t.task_workflow = twf.taskworkflow_id ";
 		$sql .= "LEFT JOIN groups g ON twf.taskworkflow_group = g.group_id ";
-		$sql .= "WHERE t.task_instance='" . $userfunctions->getUserInstance() . "' ";
+		$sql .= "WHERE t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
+		$sql .= "AND t.task_workflow>'0' ";
+		$sql .= "GROUP BY t.task_id";
+
+		$xmlData = $this->dataserver->createXMLDatasetFromSQL($sql);
+		$this->dataserver->streamXMLDataset($xmlData);
+		die();
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function getarchivedtasks($parameters=array())
+	{
+		$this->debug->guard();
+
+		$userfunctions = new tkUserfunctions();
+
+		$sql = "SELECT SUM(tl.tasklog_hoursworked) as task_hoursworked, t.*, u.user_username, tt.tasktype_name, g.group_name, ";
+		$sql .= "DATE_FORMAT(t.task_end, '%d.%m.%Y') as task_end, DATE_FORMAT(t.task_begin, '%d.%m.%Y') as task_begin, ";
+		$sql .= "CASE WHEN ((t.task_end < CURDATE()) && (t.task_end != '00.00.0000')) THEN '2' ";
+		$sql .= "WHEN ((t.task_end = CURDATE()) && (t.task_end != '00.00.0000'))  THEN '1' ";
+		$sql .= "ELSE '0' END as task_late, ";
+		$sql .= "CASE WHEN (SUM(tl.tasklog_hoursworked) > task_hoursplanned) THEN '2' ";
+		$sql .= "WHEN ((SUM(tl.tasklog_hoursworked) <= task_hoursplanned) AND (SUM(tl.tasklog_hoursworked) >= task_hoursplanned) )  THEN '1' ";
+		$sql .= "ELSE '0' END as task_overdrawn ";
+		$sql .= "FROM tasks t ";
+		$sql .= "LEFT JOIN tasks_to_users tu ON t.task_id = tu.taskusers_task ";
+		$sql .= "LEFT JOIN users u ON tu.taskusers_user = u.user_id ";
+		$sql .= "LEFT JOIN tasklogs tl ON t.task_id = tl.tasklog_task ";
+		$sql .= "LEFT JOIN tasktypes tt ON t.task_type = tt.tasktype_id ";
+		$sql .= "LEFT JOIN taskworkflow twf ON t.task_workflow = twf.taskworkflow_id ";
+		$sql .= "LEFT JOIN groups g ON twf.taskworkflow_group = g.group_id ";
+		$sql .= "WHERE t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
+		$sql .= "AND t.task_workflow='0' ";
 		$sql .= "GROUP BY t.task_id";
 
 		$xmlData = $this->dataserver->createXMLDatasetFromSQL($sql);
@@ -127,7 +162,9 @@ class dataserver
 			return false;
 		}
 
-		$sql = "SELECT t.*, u.user_username as tasklog_username, DATE_FORMAT(t.tasklog_timestamp, '%H:%i:%s, %d.%m.%Y') as tasklog_timestamp, ";
+		$sql = "SELECT t.*, u.user_username as tasklog_username, ";
+		$sql .= "DATE_FORMAT(t.tasklog_timestamp, '%H:%i:%s, %d.%m.%Y') as tasklog_timestamp, ";
+		$sql .= "DATE_FORMAT(t.tasklog_date, '%d.%m.%Y') as tasklog_date, ";
 		$sql .= "IF (t.tasklog_creator='" . $this->user->getUserID() . "', '1', '0') as tasklog_editdelete ";
 		$sql .= "FROM tasklogs t ";
 		$sql .= "LEFT JOIN users u ON t.tasklog_creator = u.user_id ";
@@ -150,7 +187,7 @@ class dataserver
 		$userfunctions = new tkUserfunctions();
 
 		$sql = "SELECT * FROM tasks t WHERE t.task_id='" . $parameters['id'] . "' ";
-		$sql .= "AND t.task_instance='" . $userfunctions->getUserInstance() . "' ";
+		$sql .= "AND t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
 
 		$xmlData = $this->dataserver->createXMLDatasetFromSQL($sql);
 		$this->dataserver->streamXMLDataset($xmlData);
@@ -244,6 +281,52 @@ class dataserver
 	}
 
 
+	public function getalltags($parameters=array())
+	{
+		$this->debug->guard();
+
+		$userfunctions = new tkUserfunctions();
+
+		$sql = 'SELECT ta.*, COUNT(ta.tag_id) as tag_count FROM taskkun.tasks t ';
+		$sql .= 'LEFT JOIN tags_to_tasks t2t ON t.task_id = t2t.tagtasks_task ';
+		$sql .= 'LEFT JOIN tags ta ON t2t.tagtasks_tag = ta.tag_id ';
+		$sql .= "AND t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
+		$sql .= 'GROUP BY ta.tag_id ';
+		$sql .= 'ORDER BY tag_text';
+
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem getting search results from database', 'warning');
+			$this->messages->setMessage('Problem getting search results from database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		// store result and add score
+		$tags = array();
+		$tagvalues = array();
+		while($row = $this->database->fetchArray($res))
+		{
+			$tags[] = $row;
+			$tagvalues[$row['tag_id']] = $row['tag_count'];
+		}
+
+		$maxvalue = max($tagvalues);
+		foreach($tags as $tagkey => $tagvalue)
+		{
+			$tags[$tagkey]['tag_score'] = floor(($tagvalue['tag_count']/$maxvalue)*5);
+		}
+
+		$xmlData = $this->dataserver->createXMLDatasetFromArray($tags);
+		$this->dataserver->streamXMLDataset($xmlData);
+		die();
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
 	public function searchtasks($parameters=array())
 	{
 		$this->debug->guard();
@@ -271,7 +354,13 @@ class dataserver
 				$sql .= "LEFT JOIN taskworkflow twf ON t.task_workflow = twf.taskworkflow_id ";
 				$sql .= "LEFT JOIN groups g ON twf.taskworkflow_group = g.group_id ";
 				$sql .= "WHERE t.task_name LIKE '%" . $term . "%' OR t.task_description LIKE '%" . $term . "%' OR ta.tag_text LIKE '%" . $term . "%'";
-				$sql .= "AND t.task_instance='" . $userfunctions->getUserInstance() . "' ";
+				$sql .= "AND t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
+
+				if (empty($parameters['usearchived']))
+				{
+					$sql .= "AND t.task_workflow > '0' ";
+				}
+
 				$res = $this->database->query($sql);
 				if (!$res)
 				{

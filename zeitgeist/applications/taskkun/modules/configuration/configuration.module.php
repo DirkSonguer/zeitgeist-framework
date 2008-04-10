@@ -26,12 +26,12 @@ class configuration
 	{
 		$this->debug->guard();
 
-		$currentId = 1;
-		if (!empty($parameters['id'])) $currentId = $parameters['id'];
-		if (!empty($parameters['user_id'])) $currentId = $parameters['user_id'];
+		$currentId = $this->user->getUserId();
 
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('configuration', 'templates', 'configuration_index'));
+
+		$userfunctions = new tkUserfunctions();
 
 		$configurationForm = new zgStaticform();
 		$configurationForm->load('forms/configuration.form.ini');
@@ -57,13 +57,8 @@ class configuration
 					}
 				}
 
-				if (!empty($newUserdata['userdata_lastname'])) $this->user->setUserdata('userdata_lastname', $newUserdata['userdata_lastname']);
-				if (!empty($newUserdata['userdata_firstname'])) $this->user->setUserdata('userdata_firstname', $newUserdata['userdata_firstname']);
-				if (!empty($newUserdata['userdata_address1'])) $this->user->setUserdata('userdata_address1', $newUserdata['userdata_address1']);
-				if (!empty($newUserdata['userdata_address2'])) $this->user->setUserdata('userdata_address2', $newUserdata['userdata_address2']);
-				if (!empty($newUserdata['userdata_zip'])) $this->user->setUserdata('userdata_zip', $newUserdata['userdata_zip']);
-				if (!empty($newUserdata['userdata_city'])) $this->user->setUserdata('userdata_city', $newUserdata['userdata_city']);
-				if (!empty($newUserdata['userdata_url'])) $this->user->setUserdata('userdata_url', $newUserdata['userdata_url']);
+				// userdata
+				$userfunctions->changeUserdata($newUserdata, $currentId);
 
 				// check and update password
 				if ( (!empty($newUserdata['user_password'])) || (!empty($newUserdata['user_password2'])) )
@@ -93,20 +88,17 @@ class configuration
 		}
 		else
 		{
-			$sqlUser = "SELECT u.user_username, ud.* FROM users AS u LEFT JOIN userdata ud ON u.user_id = ud.userdata_user WHERE u.user_id = '" . $currentId . "'";
-			$resUser = $this->database->query($sqlUser);
-			$rowUser = $this->database->fetchArray($resUser);
+			$userdata = $userfunctions->getUserdata($currentId);
 
-			$rowUser['user_password'] = '';
+			$userdata['user_password'] = '';
 
 			$processData = array();
-			$processData['configuration'] = $rowUser;
+			$processData['configuration'] = $userdata;
 			$formvalid = $configurationForm->process($processData);
 		}
 
 		$formcreated = $configurationForm->create($tpl);
 
-		$tpl->insertBlock('configuration');
 		$tpl->show();
 
 		$this->debug->unguard(true);

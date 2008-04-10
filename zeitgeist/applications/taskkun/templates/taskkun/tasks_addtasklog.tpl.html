@@ -42,9 +42,12 @@
 	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryNestedXMLDataSet.js"></script>
 	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/js/SpryExtensions.js"></script>
 
+	<script type="text/javascript" src="@@{templatepath}@@/js/date-picker/js/datepicker.js"></script>
+	<link href="@@{templatepath}@@/js/date-picker/css/datepicker.css" rel="stylesheet" type="text/css" />
+
 	<script language="javascript" type="text/javascript">
 
-		var dsTasklogs = new Spry.Data.XMLDataSet("@@{[dataserver.gettasklogs]}@@&id=@@{taskid}@@", "container/element");
+		var dsTasklogs = new Spry.Data.XMLDataSet("@@{[dataserver.gettasklogs]}@@&id=@@{tasklog_task:value}@@", "container/element");
 
 		var bShowTasklogs = false;
 		var bShowAdditional = false;
@@ -125,7 +128,7 @@
 		<img src="@@{templatepath}@@/nuvola/48x48/actions/gohome.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[tasks.index]}@@"><span onmousemove="showTooltip('Eigene Aufgaben', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/klipper.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[tasks.addadhoc]}@@"><span onmousemove="showTooltip('Ad-Hoc-Tätigkeit eintragen', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[adhoc.addadhoc]}@@"><span onmousemove="showTooltip('Ad-Hoc-Tätigkeit eintragen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/karm.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[reports.index]}@@"><span onmousemove="showTooltip('Reports', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kchart.png" alt="" border="0" /></span></a></div>
@@ -140,8 +143,6 @@
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kword.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[tasks.showactivetasks]}@@" alt=""><span onmousemove="showTooltip('Alle aktiven Aufgaben anzeigen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpager.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[tasks.showarchivedtasks]}@@" alt=""><span onmousemove="showTooltip('Alle archivierten Aufgaben anzeigen', event)" onmouseout="hideTooltip()">
-		<img src="@@{templatepath}@@/nuvola/48x48/filesystems/folder_tar.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[search.index]}@@" alt=""><span onmousemove="showTooltip('Aufgaben suchen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpdf.png" alt="" border="0" /></span></a></div>
 		<!-- TemplateEndBlock -->
@@ -202,7 +203,7 @@
 				<td valign="top"><p>{dsTasklogs::tasklog_username}</p></td>
 				<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_hoursworked}</p></td>
 				<td valign="top"><p>{dsTasklogs::tasklog_description}</p></td>
-				<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_timestamp}</p></td>
+				<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_date}</p></td>
 				<td width="90">
 					<div spry:choose="spry:choose">
 						<div spry:when="'{dsTasklogs::tasklog_editdelete}' == '0'"><p style="text-align:center;">-</p></div>
@@ -224,7 +225,7 @@
 
 <form method="post" action="@@{tasks.addtasklog}@@" name="addTasklog" enctype="multipart/form-data; charset=utf-8">
 	<div class="textbox" style="background-image:url(@@{templatepath}@@/images/side_newtasklog.jpg); background-position:right bottom; background-repeat:no-repeat;">
-		<input type="hidden" name="taskid" value="@@{taskid}@@" />
+		<input type="hidden" name="addtasklog[tasklog_task]" value="@@{tasklog_task:value}@@" />
 		<input type="hidden" name="submitButton" value="0" />
 		<h2>Tätigkeit eintragen für "@@{task_name}@@"</h2>
 
@@ -232,11 +233,30 @@
 		<tbody>
 			<tr>
 				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Tätigkeits-<br />beschreibung*</p></td>
-				<td align="left" nowrap="nowrap" valign="middle"><textarea rows="5" name="tasklog_description" class="formtext" style="height:175px; width:750px;"></textarea></td>
+				<td align="left" valign="middle"@@{tasklog_description:formerror}@@>
+					<textarea rows="5" name="addtasklog[tasklog_description]" class="formtext" style="height:175px; width:750px;">@@{tasklog_description:value}@@</textarea>
+					<!-- TemplateBeginBlock name="tasklog_description:errormsg" -->
+						<br /><span class="formerrormsg">@@{tasklog_description:errormsg}@@</span>
+					<!-- TemplateEndBlock -->				
+				</td>
 			</tr>
 			<tr>
+				<td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Datum</p></td>
+				<td align="left" valign="middle"@@{tasklog_date:formerror}@@>
+					<input maxlength="30" name="addtasklog[tasklog_date]" class="w8em format-d-m-y divider-dot" id="tasklog_date" style="width:210px; border:solid 1px #777788; padding:3px; font-family: Osaka,verdana,Sans-Serif; font-size:12pt;" value="@@{tasklog_date:value}@@" type="text" />
+					<!-- TemplateBeginBlock name="tasklog_date:errormsg" -->
+						<br /><span class="formerrormsg">@@{tasklog_date:errormsg}@@</span>
+					<!-- TemplateEndBlock -->					
+				</td>
+			</tr>			
+			<tr>
 				<td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Dauer</p></td>
-				<td align="left" nowrap="nowrap" valign="middle" colspan="2"><input maxlength="6" style="width:60px;" name="tasklog_hoursworked" value="" class="formtext" type="text" /> (Angabe in Stunden. Dezimalstellen durch Punkt oder Komma)</td>
+				<td align="left" valign="middle"@@{tasklog_hoursworked:formerror}@@>
+					<input maxlength="6" style="width:60px;" name="addtasklog[tasklog_hoursworked]" value="@@{tasklog_hoursworked:value}@@" class="formtext" type="text" /> (Angabe in Stunden. Dezimalstellen durch Punkt oder Komma)
+					<!-- TemplateBeginBlock name="tasklog_hoursworked:errormsg" -->
+						<br /><span class="formerrormsg">@@{tasklog_hoursworked:errormsg}@@</span>
+					<!-- TemplateEndBlock -->
+				</td>
 			</tr>
 			<tr>
 			<td colspan="2">
@@ -246,15 +266,7 @@
 			</tr>
 		</tbody>
 		</table>
-	</div>
 
-	<div class="textbox">
-		<h2 style="text-align:left; background:#B5BD82; padding:5px;">Weitere Angaben <span style="float:right; margin-top:-20px;"><a href="javascript:showAdditional();" alt=""><span onmousemove="showTooltip('Bisherige Tätigkeiten', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png" alt="" name="additionalIcon" align="left" border="0" /></span></a></span></h2>
-		<div style="clear:both"></div>
-
-		<div id="Additional" style="padding:0px; display:none;">	
-	
-		</div>
 	</div>
 
 	<div class="textbox">
