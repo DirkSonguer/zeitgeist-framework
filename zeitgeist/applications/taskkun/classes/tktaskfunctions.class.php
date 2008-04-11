@@ -818,34 +818,34 @@ class tkTaskfunctions
 		$this->debug->guard();
 
 		$userfunctions = new tkUserfunctions();
-		if (!$userfunctions->checkRightsForTask($tasklogdata['tasklog_task']))
+
+		$dateArray = explode('.', $adhocdata['task_date']);
+		$adhocdata['task_date'] = $dateArray[2] . '-' . $dateArray[1] . '-' . $dateArray[0];
+
+		if (strpos($adhocdata['task_hoursworked'], ',') !== false) $adhocdata['task_hoursworked'] = str_replace(',','.', $adhocdata['task_hoursworked']);
+
+		$sql = 'INSERT INTO tasks(task_creator, task_name, task_description, task_hoursplanned, task_type, task_workflow, task_priority, task_begin, task_end, task_notes, task_instance) ';
+		$sql .= "VALUES('" . $this->user->getUserID() . "', ";
+		$sql .= "'" . $adhocdata['task_name'] . "', '" . $adhocdata['task_description'] . "', '" . $adhocdata['task_hoursworked'] . "', '0', ";
+		$sql .= "'0', '2', '" . $adhocdata['task_date'] . "', '" . $adhocdata['task_date'] . "', '', '" . $userfunctions->getUserInstance($this->user->getUserID()) . "')";
+		$res = $this->database->query($sql);
+		if (!$res)
 		{
-			$this->debug->write('The task is out of bounds of the instance', 'warning');
-			$this->messages->setMessage('The task is out of bounds of the instance', 'warning');
+			$this->debug->write('Problem adding task to database', 'warning');
+			$this->messages->setMessage('Problem adding task to database', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
 
-		if (empty($tasklogdata['tasklog_date']))
-		{
-			$tasklogdata['tasklog_date'] = '';
-		}
-		else
-		{
-			$dateArray = explode('.', $tasklogdata['tasklog_date']);
-			$tasklogdata['tasklog_date'] = $dateArray[2] . '-' . $dateArray[1] . '-' . $dateArray[0];
-		}
-
-		if (strpos($tasklogdata['tasklog_hoursworked'], ',') !== false) $tasklogdata['tasklog_hoursworked'] = str_replace(',','.', $tasklogdata['tasklog_hoursworked']);
+		$insertid = $this->database->insertId();
 
 		$sql = 'INSERT INTO tasklogs(tasklog_creator, tasklog_task, tasklog_description, tasklog_hoursworked, tasklog_date) ';
-		$sql .= "VALUES('" . $this->user->getUserID() . "', '" . $tasklogdata['tasklog_task'] . "', '" . $tasklogdata['tasklog_description'] . "', '" . $tasklogdata['tasklog_hoursworked'] . "', '" . $tasklogdata['tasklog_date'] . "')";
-
+		$sql .= "VALUES('" . $this->user->getUserID() . "', '" . $insertid . "', '" . $adhocdata['task_description'] . "', '" . $adhocdata['task_hoursworked'] . "', '" . $adhocdata['task_date'] . "')";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
-			$this->debug->write('Problem deleting task from tasks_to_users: ' . $tasklogdata['taskid'], 'warning');
-			$this->messages->setMessage('Problem deleting task from tasks_to_users: ' . $tasklogdata['taskid'], 'warning');
+			$this->debug->write('Problem adding tasklog to database', 'warning');
+			$this->messages->setMessage('Problem adding tasklog to database', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
