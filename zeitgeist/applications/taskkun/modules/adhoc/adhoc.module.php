@@ -36,7 +36,6 @@ class adhoc
 		$taskfunctions = new tkTaskfunctions();
 		if (!empty($parameters['submit']))
 		{
-			die("hm?");
 			$formcontent = $parameters['addadhoc'];
 
 			if ($formvalid)
@@ -49,7 +48,7 @@ class adhoc
 				}
 				else
 				{
-					$this->messages->setMessage('Die Tätigkeitsbeschreibung wurde gespeichert', 'usermessage');
+					$this->messages->setMessage('Die Ad-Hoc-Tätigkeitsbeschreibung wurde gespeichert', 'usermessage');
 				}
 
 				$this->debug->unguard(true);

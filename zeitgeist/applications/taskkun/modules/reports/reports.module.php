@@ -36,12 +36,12 @@ class reports
 	}
 
 
-	public function showactivities($parameters=array())
+	public function showarchivedtasks($parameters=array())
 	{
 		$this->debug->guard();
 
 		$tpl = new tkTemplate();
-		$tpl->load($this->configuration->getConfiguration('reports', 'templates', 'reports_showactivities'));
+		$tpl->load($this->configuration->getConfiguration('reports', 'templates', 'reports_showarchivedtasks'));
 
 		$tpl->show();
 
