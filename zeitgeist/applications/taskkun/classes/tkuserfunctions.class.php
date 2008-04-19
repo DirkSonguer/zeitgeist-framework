@@ -24,6 +24,7 @@ class tkUserfunctions
 	}
 
 
+	// instance-safe
 	public function getUserInstance($userid)
 	{
 		$this->debug->guard();
@@ -52,6 +53,38 @@ class tkUserfunctions
 	}
 
 
+	// instance-safe
+	public function createUser($name, $password, $userrole=1, $usergroups=array(), $userdata=array())
+	{
+		$this->debug->guard();
+
+		if (!$this->user->createUser($name, $password, $userrole, $userdata))
+		{
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$lastinsert = $this->database->insertId();
+		$sql = "SELECT * FROM userdata WHERE userdata_id='" . $lastinsert . "'";
+		$res = $this->database->query($sql);
+		$row = $this->database->fetchArray($res);
+
+		$userid = $row['userdata_user'];
+		$sql = "UPDATE users SET user_instance='" . $this->getUserInstance($this->user->getUserID()) . "' WHERE user_id='" . $userid . "'";
+		$res = $this->database->query($sql);
+
+		if (!$this->changeUsergroups($usergroups, $userid))
+		{
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	// instance-safe
 	public function checkRightsForTask($taskid)
 	{
 		$this->debug->guard();
@@ -61,6 +94,29 @@ class tkUserfunctions
 		$numTasks = $this->database->numRows($res);
 
 		if ($numTasks == 0)
+		{
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	// instance-safe
+	public function checkRightsForUser($userid)
+	{
+		$this->debug->guard();
+
+		$currentUser = $this->user->getUserID();
+		if ($userid == $currentUser)
+		{
+			$this->debug->unguard(true);
+			return true;
+		}
+
+		if ($this->getUserInstance($userid) != $this->getUserInstance($currentUser))
 		{
 			$this->debug->unguard(false);
 			return false;
@@ -192,9 +248,18 @@ class tkUserfunctions
 	}
 
 
+	// instance-safe
 	public function changeUserrole($userrole, $userid)
 	{
 		$this->debug->guard();
+
+		if (!$this->checkRightsForUser($userid))
+		{
+			$this->debug->write('The user is out of bounds of the instance', 'warning');
+			$this->messages->setMessage('The user is out of bounds of the instance', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
 
 		$sql = "UPDATE userroles_to_users SET userroleuser_userrole = '" . $userrole . "' WHERE userroleuser_user='" . $userid . "'";
 		$res = $this->database->query($sql);
@@ -211,11 +276,41 @@ class tkUserfunctions
 	}
 
 
-	public function getUserrole($userid)
+	// instance-safe
+	public function getUserroles()
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT userroleuser_userrole FROM userroles_to_users WHERE userroleuser_user='" . $userid . "'";
+		$sql = "SELECT * FROM userroles";
+		$res = $this->database->query($sql);
+
+		$userroles = array();
+		while ($row = $this->database->fetchArray($res))
+		{
+			$userroles[] = $row;
+		}
+
+		$this->debug->unguard($userroles);
+		return $userroles;
+	}
+
+
+	// instance-safe
+	public function getUserroleForUser($userid)
+	{
+		$this->debug->guard();
+
+		if (!$this->checkRightsForUser($userid))
+		{
+			$this->debug->write('The user is out of bounds of the instance', 'warning');
+			$this->messages->setMessage('The user is out of bounds of the instance', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$sql = "SELECT userroleuser_userrole FROM userroles_to_users uru ";
+		$sql .= "LEFT JOIN users u ON uru.userroleuser_user = u.user_id ";
+		$sql .= "WHERE uru.userroleuser_user='" . $userid . "'";
 		$res = $this->database->query($sql);
 		$row = $this->database->fetchArray($res);
 
@@ -226,18 +321,114 @@ class tkUserfunctions
 	}
 
 
-	public function changeGroups($groups, $userid)
+	// instance-safe
+	public function getUsergroups()
 	{
 		$this->debug->guard();
 
-		$sql = "UPDATE users SET user_password = '" . md5($password) . "' WHERE user_id='" . $userid . "'";
+		$sql = "SELECT * FROM groups g ";
+		$sql .= "WHERE g.group_instance='" . $this->getUserInstance($this->user->getUserID()) . "' ";
 		$res = $this->database->query($sql);
-		if (!$res)
+
+		$usergroups = array();
+		while ($row = $this->database->fetchArray($res))
 		{
-			$this->debug->write('Problem changing the password of user ' . $userid, 'warning');
-			$this->messages->setMessage('Problem changing the password of user ' . $userid, 'warning');
+			$usergroups[] = $row;
+		}
+
+		$this->debug->unguard($usergroups);
+		return $usergroups;
+	}
+
+
+	// instance-safe
+	public function getUsergroupsForUser($userid)
+	{
+		$this->debug->guard();
+
+		$sql = "SELECT * FROM groups g LEFT JOIN users_to_groups u2g ON g.group_id = u2g.usergroup_group ";
+		$sql .= "WHERE g.group_instance='" . $this->getUserInstance($this->user->getUserID()) . "' AND u2g.usergroup_user='" . $userid . "' ";
+		$sql .= "GROUP BY g.group_name";
+		$res = $this->database->query($sql);
+
+		$usergroups = array();
+		while ($row = $this->database->fetchArray($res))
+		{
+			$usergroups[] = $row;
+		}
+
+		$this->debug->unguard($usergroups);
+		return $usergroups;
+	}
+
+
+	// instance-safe
+	public function changeUsergroups($groups, $userid)
+	{
+		$this->debug->guard();
+
+		if (!$this->checkRightsForUser($userid))
+		{
+			$this->debug->write('The user is out of bounds of the instance', 'warning');
+			$this->messages->setMessage('The user is out of bounds of the instance', 'warning');
 			$this->debug->unguard(false);
 			return false;
+		}
+
+		if ( (!is_array($groups)) || (count($groups) == 0) )
+		{
+			$this->debug->write('Error reading groups: group structure is not an array', 'warning');
+			$this->messages->setMessage('Error reading groups: group structure is not an array', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$sql = "SELECT * FROM users_to_groups WHERE usergroup_user='" . $userid . "'";
+		$res = $this->database->query($sql);
+		$usergroups = array();
+		while ($row = $this->database->fetchArray($res))
+		{
+			$usergroups[$row['usergroup_group']] = $row['usergroup_user'];
+		}
+
+		$usergroupsChanged = false;
+		foreach ($groups as $group)
+		{
+			if (!empty($usergroups[$group]))
+			{
+				unset($usergroups[$group]);
+			}
+			else
+			{
+				$usergroupsChanged = true;
+			}
+		}
+
+		if (count($usergroups) > 0)
+		{
+			$usergroupsChanged = true;
+		}
+
+		if ($usergroupsChanged)
+		{
+			$sql = "DELETE FROM users_to_groups WHERE usergroup_user='" . $userid . "'";
+			$res = $this->database->query($sql);
+
+			$sql = 'INSERT INTO users_to_groups(usergroup_group, usergroup_user) VALUES';
+			foreach ($groups as $group)
+			{
+				$sql .= "('". $group ."','". $userid ."'),";
+			}
+
+			$sql = substr($sql, 0, -1);
+			$res = $this->database->query($sql);
+			if (!$res)
+			{
+				$this->debug->write('Problem changing the usergroups of a user: could not insert groups', 'warning');
+				$this->messages->setMessage('Problem changing the usergroups of a user: could not insert groups', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
 		}
 
 		$this->debug->unguard(true);
@@ -245,11 +436,13 @@ class tkUserfunctions
 	}
 
 
+	// instance-safe
 	public function getUserdata($userid)
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT u.user_username, ud.* FROM users AS u LEFT JOIN userdata ud ON u.user_id = ud.userdata_user WHERE u.user_id = '" . $userid . "' AND u.user_instance='" . $this->getUserInstance($this->user->getUserID()) . "'";
+		$sql = "SELECT u.user_username, ud.* FROM users AS u LEFT JOIN userdata ud ON u.user_id = ud.userdata_user ";
+		$sql .= "WHERE u.user_id = '" . $userid . "' AND u.user_instance='" . $this->getUserInstance($this->user->getUserID()) . "'";
 		$res = $this->database->query($sql);
 		$row = $this->database->fetchArray($res);
 

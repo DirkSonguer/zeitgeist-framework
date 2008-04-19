@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Zeitgeist Administrator</title>
+<title>Taskkun - @@{documenttitle}@@</title>
 <!-- InstanceEndEditable -->
 
 <link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/taskkun.css" />
@@ -36,31 +36,9 @@
 </script>
 	
 <!-- InstanceBeginEditable name="head" -->
-<script language="javascript" type="text/javascript">
 
-	var bShowUserdata = false;
-	userdataUp = new Image();
-	userdataUp.src = "@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png";
-	userdataDown = new Image();
-	userdataDown.src = "@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png";
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryCollapsiblePanel.js"></script>
 
-	function showUserdata()
-	{
-		if (bShowUserdata == false)
-		{
-			bShowUserdata = true;
-			document.getElementById('Userdata').style.display = "block";
-			document.images["userdataIcon"].src = userdataUp.src;
-		}
-		else
-		{
-			bShowUserdata = false;
-			document.getElementById('Userdata').style.display = "none";
-			document.images["userdataIcon"].src = userdataDown.src;
-		}
-	}
-
-</script>
 <!-- InstanceEndEditable -->
 </head>
 
@@ -134,101 +112,120 @@
 <!-- InstanceBeginEditable name="body" -->
 
 <form method="post" action="@@{[users.adduser]}@@" name="adduser" enctype="multipart/form-data; charset=utf-8">
-<input type="hidden" name="adduser[user_id]" value="@@{user_id:value}@@" />
 
-	<div class="textbox">
-	<h2>Benutzerdaten</h2>
+<div id="Userdata" class="CollapsiblePanel, textbox">
+	<div class="CollapsiblePanelTab">
+		<h2>Benutzerdaten
+		<span style="float:right; margin-top:-20px;"><img src="@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png" alt="" name="groupIcon" align="left" border="0" /><img src="@@{templatepath}@@/nuvola/22x22/actions/1downarrow.png" alt="" name="groupIcon" align="left" border="0" /></span>
+		</h2>
+	</div>
 
-	<table width="100%" cellspacing="5" cellpadding="5" border="0">
-		<tr>
-			<td valign="top" nowrap="nowrap" width="200"><p class="formlabel">Anmeldung/E-Mail*</p></td>
-			<td valign="middle" @@{user_username:formerror}@@><input type="text" maxlength="60" name="adduser[user_username]" value="@@{user_username:value}@@" class="formtext" />
-			<!-- TemplateBeginBlock name="user_username:errormsg" -->
-				<br /><span class="formerrormsg">@@{user_username:errormsg}@@</span>
-			<!-- TemplateEndBlock -->
-		</td>
-		</tr>
-		<tr>
-			<td valign="top" nowrap="nowrap"><p class="formlabel">Name*</p></td>
-			<td valign="middle" @@{userdata_lastname:formerror}@@><input type="text" maxlength="60" name="adduser[userdata_lastname]" value="@@{userdata_lastname:value}@@" class="formtext" />
-			<!-- TemplateBeginBlock name="userdata_lastname:errormsg" -->
-				<br /><span class="formerrormsg">@@{userdata_lastname:errormsg}@@</span>
-			<!-- TemplateEndBlock -->
-		</td>
-		</tr>
-		<tr>
-			<td valign="top" nowrap="nowrap"><p class="formlabel">Vorname*</p></td>
-			<td valign="middle" @@{userdata_firstname:formerror}@@><input type="text" maxlength="60" name="adduser[userdata_firstname]" value="@@{userdata_firstname:value}@@" class="formtext" />
-			<!-- TemplateBeginBlock name="userdata_firstname:errormsg" -->
-				<br /><span class="formerrormsg">@@{userdata_firstname:errormsg}@@</span>
-			<!-- TemplateEndBlock -->
-		</td>
-		</tr>
-		<tr>
-			<td valign="top" nowrap="nowrap"><p class="formlabel">Straße, Hausnummer</p></td>
-			<td valign="middle" @@{userdata_address1:formerror}@@><input type="text" maxlength="60" name="adduser[userdata_address1]" value="@@{userdata_address1:value}@@" class="formtext" />
-			<!-- TemplateBeginBlock name="userdata_address1:errormsg" -->
-				<br /><span class="formerrormsg">@@{userdata_address1:errormsg}@@</span>
-			<!-- TemplateEndBlock -->
-		</td>
-		</tr>
-		<tr>
-			<td valign="top" nowrap="nowrap"><p class="formlabel">Adresszusatz</p></td>
-			<td valign="middle" @@{userdata_address2:formerror}@@><input type="text" maxlength="60" name="adduser[userdata_address2]" value="@@{userdata_address2:value}@@" class="formtext" />
-			<!-- TemplateBeginBlock name="userdata_address2:errormsg" -->
-				<br /><span class="formerrormsg">@@{userdata_address2:errormsg}@@</span>
-			<!-- TemplateEndBlock -->
-		</td>
-		</tr>
-		<tr>
-			<td valign="top" nowrap="nowrap"><p class="formlabel">PLZ, Ort</p></td>
-			<td valign="middle" @@{userdata_zip:formerror}@@@@{userdata_city:formerror}@@><input type="text" maxlength="6" name="adduser[userdata_zip]" value="@@{userdata_zip:value}@@" class="formtext" style="width:55px;" />
-			<input type="text" maxlength="60" name="adduser[userdata_city]" value="@@{userdata_city:value}@@" class="formtext" style="width:212px;" />
-			<!-- TemplateBeginBlock name="userdata_zip:errormsg" -->
-				<br /><span class="formerrormsg">@@{userdata_zip:errormsg}@@</span>
-			<!-- TemplateEndBlock -->				
-			<!-- TemplateBeginBlock name="userdata_city:errormsg" -->
-				<br /><span class="formerrormsg">@@{userdata_city:errormsg}@@</span>
-			<!-- TemplateEndBlock -->
-		</td>
-		</tr>
-		<tr>
-			<td valign="top" nowrap="nowrap"><p class="formlabel">URL</p></td>
-			<td valign="middle" @@{userdata_url:userdata_zip}@@><input type="text" maxlength="60" name="adduser[userdata_url]" value="@@{userdata_url:value}@@" class="formtext" />
-			<!-- TemplateBeginBlock name="userdata_url:errormsg" -->
-				<br /><span class="formerrormsg">@@{userdata_url:errormsg}@@</span>
-			<!-- TemplateEndBlock -->
-		</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-				<p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/actions/pencil.png" alt="" border="0" align="top" />
-				<input name="submit" value="Daten speichern" class="formbutton" type="submit" /></p>
+	<div class="CollapsiblePanelContent">
+	
+		<table width="100%" cellspacing="5" cellpadding="5" border="0">
+			<tr>
+				<td valign="top" nowrap="nowrap" width="200"><p class="formlabel">Anmeldung/E-Mail*</p></td>
+				<td valign="middle" @@{user_username:formerror}@@><input type="text" maxlength="60" name="adduser[user_username]" value="@@{user_username:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="user_username:errormsg" -->
+					<br /><span class="formerrormsg">@@{user_username:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
 			</td>
-		</tr>
-	</table>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">Name*</p></td>
+				<td valign="middle" @@{userdata_lastname:formerror}@@><input type="text" maxlength="60" name="adduser[userdata_lastname]" value="@@{userdata_lastname:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="userdata_lastname:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_lastname:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">Vorname*</p></td>
+				<td valign="middle" @@{userdata_firstname:formerror}@@><input type="text" maxlength="60" name="adduser[userdata_firstname]" value="@@{userdata_firstname:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="userdata_firstname:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_firstname:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">Straße, Hausnummer</p></td>
+				<td valign="middle" @@{userdata_address1:formerror}@@><input type="text" maxlength="60" name="adduser[userdata_address1]" value="@@{userdata_address1:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="userdata_address1:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_address1:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">Adresszusatz</p></td>
+				<td valign="middle" @@{userdata_address2:formerror}@@><input type="text" maxlength="60" name="adduser[userdata_address2]" value="@@{userdata_address2:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="userdata_address2:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_address2:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">PLZ, Ort</p></td>
+				<td valign="middle" @@{userdata_zip:formerror}@@@@{userdata_city:formerror}@@><input type="text" maxlength="6" name="adduser[userdata_zip]" value="@@{userdata_zip:value}@@" class="formtext" style="width:55px;" />
+				<input type="text" maxlength="60" name="adduser[userdata_city]" value="@@{userdata_city:value}@@" class="formtext" style="width:212px;" />
+				<!-- TemplateBeginBlock name="userdata_zip:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_zip:errormsg}@@</span>
+				<!-- TemplateEndBlock -->				
+				<!-- TemplateBeginBlock name="userdata_city:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_city:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">URL</p></td>
+				<td valign="middle" @@{userdata_url:userdata_zip}@@><input type="text" maxlength="60" name="adduser[userdata_url]" value="@@{userdata_url:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="userdata_url:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_url:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/actions/pencil.png" alt="" border="0" align="top" />
+					<input name="submit" value="Daten speichern" class="formbutton" type="submit" /></p>
+				</td>
+			</tr>
+		</table>
+		
+	</div>
 </div>
 
-	<div class="textbox">
-	<h2>Benutzereigenschaften</h2>
+<div id="Userattributes" class="CollapsiblePanel, textbox">
+	<div class="CollapsiblePanelTab">
+		<h2>Benutzereigenschaften
+		<span style="float:right; margin-top:-20px;"><img src="@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png" alt="" name="groupIcon" align="left" border="0" /><img src="@@{templatepath}@@/nuvola/22x22/actions/1downarrow.png" alt="" name="groupIcon" align="left" border="0" /></span>
+		</h2>
+	</div>
+
+	<div class="CollapsiblePanelContent">
 	
 		<table width="100%" cellspacing="5" cellpadding="5" border="0">
 			<tr>
 				<td valign="top" nowrap="nowrap"><p class="formlabel">Benutzerrolle</p></td>
-				<td valign="top" nowrap="nowrap">
+				<td valign="top" @@{userroleuser_userrole:formerror}@@>
 				<!-- TemplateBeginBlock name="userrole_loop" -->
 					<p style="margin-bottom:5px; margin-left:0px;"><input type="radio" @@{userrole_check}@@ name="adduser[userroleuser_userrole]" value="@@{userrole_value}@@" /> @@{userrole_text}@@</p>
 				<!-- TemplateEndBlock -->
+				<!-- TemplateBeginBlock name="userroleuser_userrole:errormsg" -->
+					<br /><span class="formerrormsg">@@{userroleuser_userrole:errormsg}@@</span>
+				<!-- TemplateEndBlock -->				
 				</td>
 			</tr>
 			<tr>
 				<td valign="top" nowrap="nowrap"><p class="formlabel">Benutzergruppen</p></td>
-				<td valign="top" nowrap="nowrap">
-				<select name="usergroups[]" size="5" class="formtext" multiple="multiple">
+				<td valign="top" @@{userroleuser_usergroups:formerror}@@>
+				<select name="adduser[userroleuser_usergroups][]" size="5" class="formtext" multiple="multiple">
 				<!-- TemplateBeginBlock name="usergroup_loop" -->
 					<option @@{usergroup_check}@@ value="@@{usergroup_value}@@">@@{usergroup_text}@@</option>
 				<!-- TemplateEndBlock -->
 				</select>
+				<!-- TemplateBeginBlock name="userroleuser_usergroups:errormsg" -->
+					<br /><span class="formerrormsg">@@{userroleuser_usergroups:errormsg}@@</span>
+				<!-- TemplateEndBlock -->				
 				</td>
 			</tr>
 			<tr>
@@ -239,9 +236,16 @@
 			</tr>
 		</table>
 	</div>
+</div>
 
-	<div class="textbox">
-	<h2>Passwort</h2>
+<div id="Userpassword" class="CollapsiblePanel, textbox">
+	<div class="CollapsiblePanelTab">
+		<h2>Passwort
+		<span style="float:right; margin-top:-20px;"><img src="@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png" alt="" name="groupIcon" align="left" border="0" /><img src="@@{templatepath}@@/nuvola/22x22/actions/1downarrow.png" alt="" name="groupIcon" align="left" border="0" /></span>
+		</h2>
+	</div>
+
+	<div class="CollapsiblePanelContent">
 	
 		<table width="100%" cellspacing="5" cellpadding="5" border="0">
             <tr>
@@ -269,8 +273,15 @@
         </table>
 		
 	</div>
+</div>
 
 </form>
+
+<script type="text/javascript">
+	var Userdata = new Spry.Widget.CollapsiblePanel("Userdata");
+	var Userattributes = new Spry.Widget.CollapsiblePanel("Userattributes");
+	var Userpassword = new Spry.Widget.CollapsiblePanel("Userpassword");
+</script> 
 
 <!-- InstanceEndEditable -->
 

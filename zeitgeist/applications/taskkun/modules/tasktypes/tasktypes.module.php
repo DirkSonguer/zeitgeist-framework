@@ -44,6 +44,7 @@ class tasktypes
 
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('tasktypes', 'templates', 'tasktypes_edittasktype'));
+		$tpl->assign('documenttitle', 'Aufgabenablauf bearbeiten');
 
 		if (!empty($parameters['id']))
 		{
@@ -54,8 +55,8 @@ class tasktypes
 			$tasktypeid = $parameters['tasktypeid'];
 		}
 
-		$taskfunctions = new tkTaskfunctions();
-		$tasktypeInformation = $taskfunctions->getTasktypeInformation($tasktypeid);
+		$tasktypefunctions = new tkTasktypefunctions();
+		$tasktypeInformation = $tasktypefunctions->getTasktypeInformation($tasktypeid);
 
 		$tpl->assignDataset($tasktypeInformation);
 		if ($tasktypeInformation['tasktype_count'] > 0)
@@ -75,7 +76,9 @@ class tasktypes
 		$this->debug->guard();
 
 		$taskfunctions = new tkTaskfunctions();
-		$tasktypeinformation = $taskfunctions->getTasktypeInformation($parameters['id']);
+		$tasktypefunctions = new tkTasktypefunctions();
+
+		$tasktypeinformation = $tasktypefunctions->getTasktypeInformation($parameters['id']);
 
 		$userfunctions = new tkUserfunctions();
 
@@ -83,7 +86,7 @@ class tasktypes
 		{
 			if (!empty($parameters['formaction']))
 			{
-				$workflowinformation = $taskfunctions->getWorkflowInformation($parameters['id']);
+				$workflowinformation = $tasktypefunctions->getWorkflowInformation($parameters['id']);
 
 				if (($parameters['formaction'] == 'stepdown') && ($parameters['formvalue'] < (count($workflowinformation))) )
 				{
@@ -159,7 +162,7 @@ class tasktypes
 
 			$sql = "SELECT twf.*, g.group_name FROM taskworkflow twf ";
 			$sql .= "LEFT JOIN groups g ON twf.taskworkflow_group = g.group_id ";
-			$sql .= "WHERE taskworkflow_tasktype='" . $parameters['id'] . "' AND g.group_instance=' . $currentInstance . ' ORDER BY taskworkflow_order";
+			$sql .= "WHERE taskworkflow_tasktype='" . $parameters['id'] . "' AND g.group_instance='" . $currentInstance . "' ORDER BY taskworkflow_order";
 			$xmlData = $this->dataserver->createXMLDatasetFromSQL($sql);
 			$this->dataserver->streamXMLDataset($xmlData);
 		}

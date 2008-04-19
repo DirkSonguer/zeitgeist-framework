@@ -28,6 +28,7 @@ class main
 
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_index'));
+		$tpl->assign('documenttitle', 'Willkommen bei Taskkun');
 
 		$taskfunctions = new tkTaskfunctions();
 
@@ -70,6 +71,7 @@ class main
 
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_login'));
+		$tpl->assign('documenttitle', 'Login');
 
 		if ($this->user->isLoggedIn())
 		{

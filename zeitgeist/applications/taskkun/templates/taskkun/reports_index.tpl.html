@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Taskkun</title>
+<title>Taskkun - @@{documenttitle}@@</title>
 <!-- InstanceEndEditable -->
 
 <link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/taskkun.css" />
@@ -143,15 +143,17 @@
 	</ul>
 </div>
 
-<div class="textbox">
-	<div style="float:left; margin:10px;"><a href="@@{[tasks.index]}@@" alt=""><span onmousemove="showTooltip('Abgeschlossene Aufgaben', event)" onmouseout="hideTooltip()">
-	<img src="@@{templatepath}@@/nuvola/128x128/filesystems/folder_tar.png" alt="" border="0" /></span></a></div>
-	<div style="float:left; margin:10px;"><a href="@@{[adhoc.index]}@@" alt=""><span onmousemove="showTooltip('Stundenübersicht', event)" onmouseout="hideTooltip()">
-	<img src="@@{templatepath}@@/nuvola/128x128/apps/ktimer.png" alt="" border="0" /></span></a></div>
-	<div style="float:left; margin:10px;"><a href="@@{[reports.showarchivedtasks]}@@" alt=""><span onmousemove="showTooltip('Suche in archivierten Aufgaben', event)" onmouseout="hideTooltip()">
-	<img src="@@{templatepath}@@/nuvola/128x128/apps/kdf.png" alt="" border="0" /></span></a></div>	
-	<div style="clear:both"></div>
-</div>
+	<div class="textbox">
+		<h3><img src="@@{templatepath}@@/nuvola/22x22/filesystems/folder_tar.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[usergroups.addusergroup]}@@" alt="Abgeschlossene Aufgaben">Abgeschlossene Aufgaben</a></h3>
+	</div>
+	
+	<div class="textbox">
+		<h3><img src="@@{templatepath}@@/nuvola/22x22/apps/ktimer.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[usergroups.addusergroup]}@@" alt="Stundenübersicht"> Stundenübersicht</a></h3>
+	</div>
+	
+	<div class="textbox">
+		<h3><img src="@@{templatepath}@@/nuvola/22x22/apps/kghostview.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[reports.showarchivedtasks]}@@" alt="Suche in archivierten Aufgaben">Suche in archivierten Aufgaben</a></h3>
+	</div>
 
 <!-- InstanceEndEditable -->
 

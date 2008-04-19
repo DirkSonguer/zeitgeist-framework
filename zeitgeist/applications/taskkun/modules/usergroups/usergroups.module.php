@@ -31,6 +31,7 @@ class usergroups
 
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('usergroups', 'templates', 'usergroups_index'));
+		$tpl->assign('documenttitle', 'Benutrzergruppen anzeigen');
 
 		$tpl->show();
 
@@ -45,6 +46,7 @@ class usergroups
 
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('users', 'templates', 'users_adduser'));
+		$tpl->assign('documenttitle', 'Benutzergruppe hinzufügen');
 
 		$adduserForm = new zgStaticform();
 		$adduserForm->load('forms/adduser.form.ini');
@@ -92,7 +94,7 @@ class usergroups
 				}
 
 				// userroles
-				if ( (!empty($newUserdata['userroleuser_userrole'])) && ($newUserdata['userroleuser_userrole'] != $userfunctions->getUserrole($currentId)) )
+				if ( (!empty($newUserdata['userroleuser_userrole'])) && ($newUserdata['userroleuser_userrole'] != $userfunctions->getUserroleForUser($currentId)) )
 				{
 					if (!$userfunctions->changeUserrole($newUserdata['userroleuser_userrole'], $currentId))
 					{
@@ -179,6 +181,7 @@ class usergroups
 
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('users', 'templates', 'users_edituser'));
+		$tpl->assign('documenttitle', 'Benutzergruppe bearbeiten');
 
 		$edituserForm = new zgStaticform();
 		$edituserForm->load('forms/edituser.form.ini');
@@ -226,7 +229,7 @@ class usergroups
 				}
 
 				// userroles
-				if ( (!empty($newUserdata['userroleuser_userrole'])) && ($newUserdata['userroleuser_userrole'] != $userfunctions->getUserrole($currentId)) )
+				if ( (!empty($newUserdata['userroleuser_userrole'])) && ($newUserdata['userroleuser_userrole'] != $userfunctions->getUserroleForUser($currentId)) )
 				{
 					if (!$userfunctions->changeUserrole($newUserdata['userroleuser_userrole'], $currentId))
 					{

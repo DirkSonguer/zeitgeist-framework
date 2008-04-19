@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Taskkun</title>
+<title>Taskkun - @@{documenttitle}@@</title>
 <!-- InstanceEndEditable -->
 
 <link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/taskkun.css" />
@@ -37,31 +37,8 @@
 	
 <!-- InstanceBeginEditable name="head" -->
 
-<script language="javascript" type="text/javascript">
-
-	var bShowShortcuts = false;
-	shortcutUp = new Image();
-	shortcutUp.src = "@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png";
-	shortcutDown = new Image();
-	shortcutDown.src = "@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png";
-
-	function showShortcuts()
-	{
-		if (bShowShortcuts == false)
-		{
-			bShowShortcuts = true;
-			document.getElementById('Shortcuts').style.display = "block";
-			document.images["shortcutIcon"].src = shortcutUp.src;
-		}
-		else
-		{
-			bShowShortcuts = false;
-			document.getElementById('Shortcuts').style.display = "none";
-			document.images["shortcutIcon"].src = shortcutDown.src;
-		}
-	}	
-
-</script>
+	<script type="text/javascript" src="@@{templatepath}@@/js/date-picker/js/datepicker.js"></script>
+	<link href="@@{templatepath}@@/js/date-picker/css/datepicker.css" rel="stylesheet" type="text/css" />
 
 <!-- InstanceEndEditable -->
 </head>
@@ -145,7 +122,7 @@
 		<tr>
 			<td nowrap="nowrap" valign="top" width="140"><p class="formlabel">Titel*</p></td>
 			<td nowrap="nowrap" valign="middle"@@{task_name:formerror}@@>
-				<input maxlength="30" name="addadhoc[task_name]"  value="@@{task_name:value}@@" class="formtext" style="width:750px;" type="text" />
+				<input maxlength="128" name="addadhoc[task_name]"  value="@@{task_name:value}@@" class="formtext" style="width:750px;" type="text" />
 				<!-- TemplateBeginBlock name="task_name:errormsg" -->
 					<br /><span class="formerrormsg">@@{task_name:errormsg}@@</span>
 				<!-- TemplateEndBlock -->
@@ -162,13 +139,13 @@
 		</tr>
 		<tr>
 			<td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Datum*</p></td>
-			<td align="left" valign="middle"@@{task_date:formerror}@@>
+			<td align="left" valign="middle"@@{task_date:formerror}@@>			
 				<input maxlength="30" name="addadhoc[task_date]" class="w8em format-d-m-y divider-dot" style="width:210px; border:solid 1px #777788; padding:3px; font-family: Osaka,verdana,Sans-Serif; font-size:12pt;" value="@@{task_date:value}@@" type="text" />
 				<!-- TemplateBeginBlock name="task_date:errormsg" -->
 					<br /><span class="formerrormsg">@@{task_date:errormsg}@@</span>
 				<!-- TemplateEndBlock -->					
 			</td>
-		</tr>			
+		</tr>
 		<tr>
 			<td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Dauer*</p></td>
 			<td align="left" nowrap="nowrap" valign="middle" colspan="2"@@{task_hoursworked:formerror}@@>

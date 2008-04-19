@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Taskkun</title>
+<title>Taskkun - @@{documenttitle}@@</title>
 <!-- InstanceEndEditable -->
 
 <link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/taskkun.css" />
@@ -36,6 +36,8 @@
 </script>
 	
 <!-- InstanceBeginEditable name="head" -->
+
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryCollapsiblePanel.js"></script>
 
 <!-- InstanceEndEditable -->
 </head>
@@ -112,81 +114,94 @@
 <form method="post" action="@@{[users.edituser]}@@" name="edituser" enctype="multipart/form-data; charset=utf-8">
 <input type="hidden" name="edituser[user_id]" value="@@{user_id:value}@@" />
 
-	<div class="textbox">
-	<h2>Benutzerdaten ändern</h2>
+<div id="Userdata" class="CollapsiblePanel, textbox">
+	<div class="CollapsiblePanelTab">
+		<h2>Benutzerdaten ändern
+		<span style="float:right; margin-top:-20px;"><img src="@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png" alt="" name="groupIcon" align="left" border="0" /><img src="@@{templatepath}@@/nuvola/22x22/actions/1downarrow.png" alt="" name="groupIcon" align="left" border="0" /></span>
+		</h2>
+	</div>
 
-	<table width="100%" cellspacing="5" cellpadding="5" border="0">
-		<tr>
-			<td valign="top" nowrap="nowrap" width="200"><p class="formlabel">Anmeldung/E-Mail*</p></td>
-			<td valign="middle" @@{user_username:formerror}@@><input type="text" maxlength="60" name="edituser[user_username]" value="@@{user_username:value}@@" class="formtext" />
-			<!-- TemplateBeginBlock name="user_username:errormsg" -->
-				<br /><span class="formerrormsg">@@{user_username:errormsg}@@</span>
-			<!-- TemplateEndBlock -->
-		</td>
-		</tr>
-		<tr>
-			<td valign="top" nowrap="nowrap"><p class="formlabel">Name*</p></td>
-			<td valign="middle" @@{userdata_lastname:formerror}@@><input type="text" maxlength="60" name="edituser[userdata_lastname]" value="@@{userdata_lastname:value}@@" class="formtext" />
-			<!-- TemplateBeginBlock name="userdata_lastname:errormsg" -->
-				<br /><span class="formerrormsg">@@{userdata_lastname:errormsg}@@</span>
-			<!-- TemplateEndBlock -->
-		</td>
-		</tr>
-		<tr>
-			<td valign="top" nowrap="nowrap"><p class="formlabel">Vorname*</p></td>
-			<td valign="middle" @@{userdata_firstname:formerror}@@><input type="text" maxlength="60" name="edituser[userdata_firstname]" value="@@{userdata_firstname:value}@@" class="formtext" />
-			<!-- TemplateBeginBlock name="userdata_firstname:errormsg" -->
-				<br /><span class="formerrormsg">@@{userdata_firstname:errormsg}@@</span>
-			<!-- TemplateEndBlock -->
-		</td>
-		</tr>
-		<tr>
-			<td valign="top" nowrap="nowrap"><p class="formlabel">Straße, Hausnummer</p></td>
-			<td valign="middle" @@{userdata_address1:formerror}@@><input type="text" maxlength="60" name="edituser[userdata_address1]" value="@@{userdata_address1:value}@@" class="formtext" />
-			<!-- TemplateBeginBlock name="userdata_address1:errormsg" -->
-				<br /><span class="formerrormsg">@@{userdata_address1:errormsg}@@</span>
-			<!-- TemplateEndBlock -->
-		</td>
-		</tr>
-		<tr>
-			<td valign="top" nowrap="nowrap"><p class="formlabel">Adresszusatz</p></td>
-			<td valign="middle" @@{userdata_address2:formerror}@@><input type="text" maxlength="60" name="edituser[userdata_address2]" value="@@{userdata_address2:value}@@" class="formtext" />
-			<!-- TemplateBeginBlock name="userdata_address2:errormsg" -->
-				<br /><span class="formerrormsg">@@{userdata_address2:errormsg}@@</span>
-			<!-- TemplateEndBlock -->
-		</td>
-		</tr>
-		<tr>
-			<td valign="top" nowrap="nowrap"><p class="formlabel">PLZ, Ort</p></td>
-			<td valign="middle" @@{userdata_zip:formerror}@@@@{userdata_city:formerror}@@><input type="text" maxlength="6" name="edituser[userdata_zip]" value="@@{userdata_zip:value}@@" class="formtext" style="width:55px;" />
-			<input type="text" maxlength="60" name="edituser[userdata_city]" value="@@{userdata_city:value}@@" class="formtext" style="width:212px;" />
-			<!-- TemplateBeginBlock name="userdata_zip:errormsg" -->
-				<br /><span class="formerrormsg">@@{userdata_zip:errormsg}@@</span>
-			<!-- TemplateEndBlock -->				
-			<!-- TemplateBeginBlock name="userdata_city:errormsg" -->
-				<br /><span class="formerrormsg">@@{userdata_city:errormsg}@@</span>
-			<!-- TemplateEndBlock -->
-		</td>
-		</tr>
-		<tr>
-			<td valign="top" nowrap="nowrap"><p class="formlabel">URL</p></td>
-			<td valign="middle" @@{userdata_url:userdata_zip}@@><input type="text" maxlength="60" name="edituser[userdata_url]" value="@@{userdata_url:value}@@" class="formtext" />
-			<!-- TemplateBeginBlock name="userdata_url:errormsg" -->
-				<br /><span class="formerrormsg">@@{userdata_url:errormsg}@@</span>
-			<!-- TemplateEndBlock -->
-		</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-				<p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/actions/pencil.png" alt="" border="0" align="top" />
-				<input name="submit" value="Daten speichern" class="formbutton" type="submit" /></p>
+	<div class="CollapsiblePanelContent">
+	
+		<table width="100%" cellspacing="5" cellpadding="5" border="0">
+			<tr>
+				<td valign="top" nowrap="nowrap" width="200"><p class="formlabel">Anmeldung/E-Mail*</p></td>
+				<td valign="middle" @@{user_username:formerror}@@><input type="text" maxlength="60" name="edituser[user_username]" value="@@{user_username:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="user_username:errormsg" -->
+					<br /><span class="formerrormsg">@@{user_username:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
 			</td>
-		</tr>
-	</table>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">Name*</p></td>
+				<td valign="middle" @@{userdata_lastname:formerror}@@><input type="text" maxlength="60" name="edituser[userdata_lastname]" value="@@{userdata_lastname:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="userdata_lastname:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_lastname:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">Vorname*</p></td>
+				<td valign="middle" @@{userdata_firstname:formerror}@@><input type="text" maxlength="60" name="edituser[userdata_firstname]" value="@@{userdata_firstname:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="userdata_firstname:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_firstname:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">Straße, Hausnummer</p></td>
+				<td valign="middle" @@{userdata_address1:formerror}@@><input type="text" maxlength="60" name="edituser[userdata_address1]" value="@@{userdata_address1:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="userdata_address1:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_address1:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">Adresszusatz</p></td>
+				<td valign="middle" @@{userdata_address2:formerror}@@><input type="text" maxlength="60" name="edituser[userdata_address2]" value="@@{userdata_address2:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="userdata_address2:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_address2:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">PLZ, Ort</p></td>
+				<td valign="middle" @@{userdata_zip:formerror}@@@@{userdata_city:formerror}@@><input type="text" maxlength="6" name="edituser[userdata_zip]" value="@@{userdata_zip:value}@@" class="formtext" style="width:55px;" />
+				<input type="text" maxlength="60" name="edituser[userdata_city]" value="@@{userdata_city:value}@@" class="formtext" style="width:212px;" />
+				<!-- TemplateBeginBlock name="userdata_zip:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_zip:errormsg}@@</span>
+				<!-- TemplateEndBlock -->				
+				<!-- TemplateBeginBlock name="userdata_city:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_city:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">URL</p></td>
+				<td valign="middle" @@{userdata_url:userdata_zip}@@><input type="text" maxlength="60" name="edituser[userdata_url]" value="@@{userdata_url:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="userdata_url:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_url:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/actions/pencil.png" alt="" border="0" align="top" />
+					<input name="submit" value="Daten speichern" class="formbutton" type="submit" /></p>
+				</td>
+			</tr>
+		</table>
+	</div>
 </div>
 
-	<div class="textbox">
-	<h2>Benutzereigenschaften ändern</h2>
+<div id="Userattributes" class="CollapsiblePanel, textbox">
+	<div class="CollapsiblePanelTab">
+		<h2>Benutzereigenschaften ändern
+		<span style="float:right; margin-top:-20px;"><img src="@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png" alt="" name="groupIcon" align="left" border="0" /><img src="@@{templatepath}@@/nuvola/22x22/actions/1downarrow.png" alt="" name="groupIcon" align="left" border="0" /></span>
+		</h2>
+	</div>
+
+	<div class="CollapsiblePanelContent">
 	
 		<table width="100%" cellspacing="5" cellpadding="5" border="0">
 			<tr>
@@ -200,7 +215,7 @@
 			<tr>
 				<td valign="top" nowrap="nowrap"><p class="formlabel">Benutzergruppen</p></td>
 				<td valign="top" nowrap="nowrap">
-				<select name="usergroups[]" size="5" class="formtext" multiple="multiple">
+				<select name="edituser[userroleuser_usergroups][]" size="5" class="formtext" multiple="multiple">
 				<!-- TemplateBeginBlock name="usergroup_loop" -->
 					<option @@{usergroup_check}@@ value="@@{usergroup_value}@@">@@{usergroup_text}@@</option>
 				<!-- TemplateEndBlock -->
@@ -215,9 +230,16 @@
 			</tr>
 		</table>
 	</div>
+</div>
 
-	<div class="textbox">
-	<h2>Passwort ändern</h2>
+<div id="Userpassword" class="CollapsiblePanel, textbox">
+	<div class="CollapsiblePanelTab">
+		<h2>Passwort ändern
+		<span style="float:right; margin-top:-20px;"><img src="@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png" alt="" name="groupIcon" align="left" border="0" /><img src="@@{templatepath}@@/nuvola/22x22/actions/1downarrow.png" alt="" name="groupIcon" align="left" border="0" /></span>
+		</h2>
+	</div>
+
+	<div class="CollapsiblePanelContent">
 	
 		<table width="100%" cellspacing="5" cellpadding="5" border="0">
             <tr>
@@ -245,8 +267,16 @@
         </table>
 		
 	</div>
-	
+</div>
+
 </form>
+
+<script type="text/javascript">
+	var Userdata = new Spry.Widget.CollapsiblePanel("Userdata");
+	var Userattributes = new Spry.Widget.CollapsiblePanel("Userattributes");
+	var Userpassword = new Spry.Widget.CollapsiblePanel("Userpassword");
+</script> 
+
 <!-- InstanceEndEditable -->
 
 </div>

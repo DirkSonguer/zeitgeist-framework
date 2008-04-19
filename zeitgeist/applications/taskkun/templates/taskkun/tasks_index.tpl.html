@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Taskkun</title>
+<title>Taskkun - @@{documenttitle}@@</title>
 <!-- InstanceEndEditable -->
 
 <link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/taskkun.css" />
@@ -40,6 +40,7 @@
 	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryData.js"></script>
 	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/xpath.js"></script>
 	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryNestedXMLDataSet.js"></script>
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryCollapsiblePanel.js"></script>
 	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/js/SpryExtensions.js"></script>
 
 	<script type="text/javascript">
@@ -66,45 +67,6 @@
 			if (answer == true)
 			{
 			   window.location.href = "@@{[tasks.declinetask]}@@"+"&id="+id;
-			}
-		}
-
-		var bShowGroups = true;
-		var bShowUsers = true;
-		iconUp = new Image();
-		iconUp.src = "@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png";
-		iconDown = new Image();
-		iconDown.src = "@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png";
-
-		function showUsers()
-		{
-			if (bShowUsers == false)
-			{
-				bShowUsers = true;
-				document.getElementById('userTasks').style.display = "block";
-				document.images["usersIcon"].src = iconUp.src;
-			}
-			else
-			{
-				bShowUsers = false;
-				document.getElementById('userTasks').style.display = "none";
-				document.images["usersIcon"].src = iconDown.src;
-			}
-		}
-
-		function showGroups()
-		{
-			if (bShowGroups == false)
-			{
-				bShowGroups = true;
-				document.getElementById('groupTasks').style.display = "block";
-				document.images["groupIcon"].src = iconUp.src;
-			}
-			else
-			{
-				bShowGroups = false;
-				document.getElementById('groupTasks').style.display = "none";
-				document.images["groupIcon"].src = iconDown.src;
 			}
 		}
 
@@ -182,11 +144,14 @@
 	
 <!-- InstanceBeginEditable name="body" -->
 
-<div class="textbox" style="background-image:url(@@{templatepath}@@/images/side_mytasks.jpg); background-position:right bottom; background-repeat:no-repeat;">
-	<h2>Eigene Aufgaben (<span id="userRows"></span>) <span style="float:right; margin-top:-20px;"><a href="javascript:showUsers();" alt=""><span onmousemove="showTooltip('Eigene Aufgaben', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png" alt="" name="usersIcon" align="left" border="0" /></span></a></span></h2>
-	<div style="clear:both"></div>
+<div id="MyTasks" class="CollapsiblePanel, textbox" style="background-image:url(@@{templatepath}@@/images/side_mytasks.jpg); background-position:right bottom; background-repeat:no-repeat;" >
+	<div class="CollapsiblePanelTab">
+		<h2>Eigene Aufgaben (<span id="userRows"></span>)
+		<span style="float:right; margin-top:-20px;"><img src="@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png" alt="" name="groupIcon" align="left" border="0" /><img src="@@{templatepath}@@/nuvola/22x22/actions/1downarrow.png" alt="" name="groupIcon" align="left" border="0" /></span>
+		</h2>
+	</div>
 
-	<div id="userTasks" style="display:block;">
+	<div class="CollapsiblePanelContent">
 		<div spry:region="dsUserTasks">
 			<div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
 			<div spry:state="ready">
@@ -223,58 +188,65 @@
 	</div>
 </div>
 
-<div class="textbox">
-	<h2>Aufgaben meiner Gruppen (<span id="groupRows">2</span>) <span style="float:right; margin-top:-20px;"><a href="javascript:showGroups();" alt=""><span onmousemove="showTooltip('Aufgaben meiner Gruppen', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png" alt="" name="groupIcon" align="left" border="0" /></span></a></span></h2>
-	<div style="clear:both"></div>
 
-	<div id="groupTasks" style="display:block;">
-	<div spry:region="dsGroupTasks">
-    <div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
-
-	<div spry:state="ready">
-
-	<script type="text/javascript">
-		var numRows = dsGroupTasks.getRowCount();
-		insertData('groupRows', numRows);
-	</script>
-
-	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
-	        <tr class="tablehead">
-				<th><p><a onclick="dsGroupTasks.sort('task_id');" class="sortlink">ID</a></p></th>
-				<th><p><a onclick="dsGroupTasks.sort('task_name');" class="sortlink">Name</a></p></th>
-				<th><p><a onclick="dsGroupTasks.sort('group_name');" class="sortlink">Gruppe</a></p></th>
-				<th><p style="text-align:center;"><a onclick="dsGroupTasks.sort('task_priority');" class="sortlink">Priorität</a></p></th>
-				<th><p style="text-align:center;"><a onclick="dsGroupTasks.sort('task_end');" class="sortlink">Fällig am</a></p></th>
-				<th><p class="thtext">Aktionen</p></th>
-	        </tr>
-	        <tr class="{ds_EvenOddRow}" spry:repeat="dsGroupTasks">
-				<td><p>{dsGroupTasks::task_id}</p></td>
-				<td><p><span onmousemove="showTooltip('{dsGroupTasks::task_description}', event)" onmouseout="hideTooltip()">{dsGroupTasks::task_name}</span></p></td>
-				<td><p>{dsGroupTasks::group_name}</p></td>
-				<td><p style="text-align:center;">
-					<span spry:if="{dsGroupTasks::task_priority} == '1'">Niedrig</span>
-					<span spry:if="{dsGroupTasks::task_priority} == '2'">Normal</span>
-					<span spry:if="{dsGroupTasks::task_priority} == '3'">Hoch</span>
-				</p></td>
-				<td>
-					<div spry:choose="spry:choose">
-						<div spry:when="'{dsGroupTasks::task_end}' == '00.00.0000'"><p style="text-align:center;">-</p></div>
-						<div spry:default="spry:default">
-							<p style="text-align:center;">{dsGroupTasks::task_end}</p>
-						</div>
-					</div>
-				</td>
-				<td width="90"><p style="text-align:center;">
-				<span onmousemove="showTooltip('Aufgabe annehmen', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.accepttask]}@@&id={dsGroupTasks::task_id}" alt="Aufgabe annehmen"><img src="@@{templatepath}@@/nuvola/22x22/actions/button_accept.png" alt="Aufgabe annehmen" border="0" /></a></span>
-                </p></td>
-	        </tr>
-	    </table>
-    </div>
-	</div>
+<div id="GroupTasks" class="CollapsiblePanel, textbox">
+	<div class="CollapsiblePanelTab">
+		<h2>Aufgaben meiner Gruppen (<span id="groupRows"></span>)
+		<span style="float:right; margin-top:-20px;"><img src="@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png" alt="" name="groupIcon" align="left" border="0" /><img src="@@{templatepath}@@/nuvola/22x22/actions/1downarrow.png" alt="" name="groupIcon" align="left" border="0" /></span>
+		</h2>
 	</div>
 
+	<div class="CollapsiblePanelContent">
+		<div spry:region="dsGroupTasks">
+			<div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
+		
+			<div spry:state="ready">
+			
+				<script type="text/javascript">
+					var numRows = dsGroupTasks.getRowCount();
+					insertData('groupRows', numRows);
+				</script>
+			
+				<table border="0" cellspacing="0" cellpadding="0" width=100%">
+					<tr class="tablehead">
+						<th><p><a onclick="dsGroupTasks.sort('task_id');" class="sortlink">ID</a></p></th>
+						<th><p><a onclick="dsGroupTasks.sort('task_name');" class="sortlink">Name</a></p></th>
+						<th><p><a onclick="dsGroupTasks.sort('group_name');" class="sortlink">Gruppe</a></p></th>
+						<th><p style="text-align:center;"><a onclick="dsGroupTasks.sort('task_priority');" class="sortlink">Priorität</a></p></th>
+						<th><p style="text-align:center;"><a onclick="dsGroupTasks.sort('task_end');" class="sortlink">Fällig am</a></p></th>
+						<th><p class="thtext">Aktionen</p></th>
+					</tr>
+					<tr class="{ds_EvenOddRow}" spry:repeat="dsGroupTasks">
+						<td><p>{dsGroupTasks::task_id}</p></td>
+						<td><p><span onmousemove="showTooltip('{dsGroupTasks::task_description}', event)" onmouseout="hideTooltip()">{dsGroupTasks::task_name}</span></p></td>
+						<td><p>{dsGroupTasks::group_name}</p></td>
+						<td><p style="text-align:center;">
+							<span spry:if="{dsGroupTasks::task_priority} == '1'">Niedrig</span>
+							<span spry:if="{dsGroupTasks::task_priority} == '2'">Normal</span>
+							<span spry:if="{dsGroupTasks::task_priority} == '3'">Hoch</span>
+						</p></td>
+						<td>
+							<div spry:choose="spry:choose">
+								<div spry:when="'{dsGroupTasks::task_end}' == '00.00.0000'"><p style="text-align:center;">-</p></div>
+								<div spry:default="spry:default">
+									<p style="text-align:center;">{dsGroupTasks::task_end}</p>
+								</div>
+							</div>
+						</td>
+						<td width="90"><p style="text-align:center;">
+						<span onmousemove="showTooltip('Aufgabe annehmen', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.accepttask]}@@&id={dsGroupTasks::task_id}" alt="Aufgabe annehmen"><img src="@@{templatepath}@@/nuvola/22x22/actions/button_accept.png" alt="Aufgabe annehmen" border="0" /></a></span>
+						</p></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
 </div>
 
+<script type="text/javascript">
+	var MyTasks = new Spry.Widget.CollapsiblePanel("MyTasks");
+	var GroupTasks = new Spry.Widget.CollapsiblePanel("GroupTasks");
+</script> 
 
 <!-- InstanceEndEditable -->
 
