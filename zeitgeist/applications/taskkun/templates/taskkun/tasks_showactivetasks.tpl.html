@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Taskkun</title>
+<title>Taskkun - @@{documenttitle}@@</title>
 <!-- InstanceEndEditable -->
 
 <link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/taskkun.css" />
@@ -40,6 +40,7 @@
 	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryData.js"></script>
 	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/xpath.js"></script>
 	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryNestedXMLDataSet.js"></script>
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryCollapsiblePanel.js"></script>
 	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/js/SpryExtensions.js"></script>
 
 	<script type="text/javascript">
@@ -64,28 +65,6 @@
 			}
 		}
 
-		var bShowShortcuts = false;
-		shortcutUp = new Image();
-		shortcutUp.src = "@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png";
-		shortcutDown = new Image();
-		shortcutDown.src = "@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png";
-	
-		function showShortcuts()
-		{
-			if (bShowShortcuts == false)
-			{
-				bShowShortcuts = true;
-				document.getElementById('Shortcuts').style.display = "block";
-				document.images["shortcutIcon"].src = shortcutUp.src;
-			}
-			else
-			{
-				bShowShortcuts = false;
-				document.getElementById('Shortcuts').style.display = "none";
-				document.images["shortcutIcon"].src = shortcutDown.src;
-			}
-		}
-		
 		function filterPriority()
 		{
 			filterParameter = document.getElementById('filter_priority').value;
@@ -178,59 +157,63 @@
 	
 <!-- InstanceBeginEditable name="body" -->
 
-<div class="textbox">
-	<h2 style="text-align:left; background:#B5BD82; padding:5px;">Filter anwenden <span style="float:right; margin-top:-20px;"><a href="javascript:showShortcuts();" alt=""><span onmousemove="showTooltip('Weitere Angaben', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png" alt="" name="shortcutIcon" align="left" border="0" /></span></a></span></h2>
-	<div style="clear:both"></div>
-	<div id="Shortcuts" style="padding:5px; display:none;">
 
-	<form name="formFilter" method="post" action="#">
-	<table border="0" cellpadding="0" cellspacing="0" cellpadding="0" cellspacing="0" style="margin-top:0px;">
-		<tr>
-			<td width="130" valign="top" rowspan="3">
-				<p><img src="@@{templatepath}@@/nuvola/128x128/apps/kghostview.png" alt="Filter users" border="0" /></p>
-			</td>
-			<td align="left" valign="middle">
-				<p class="formlabel">Priorität</p>
-			</td>
-			<td align="left" valign="middle">
-				<select id="filter_priority" class="formtext" style="width:300px;" onchange="filterPriority()">
-					<option value="-1">Alle anzeigen</option>
-					<option value="1">Niedrig</option>
-					<option value="2">Normal</option>
-					<option value="3">Hoch</option>
-				</select>
-			</td>
-		</tr>
-		<tr>
-			<td align="left" valign="middle">
-				<p class="formlabel">Stundenlimit</p>
-			</td>
-			<td align="left" valign="middle">
-				<select id="filter_hours" class="formtext" style="width:300px;" onchange="filterHours()">
-					<option value="">Alle anzeigen</option>
-					<option value="0">Aufgaben im Stundenlimit</option>
-					<option value="2">Aufgaben über dem Stundenlimit</option>
-				</select>
-			</td>
-		</tr>
-		<tr>
-			<td align="left" valign="middle">
-				<p class="formlabel">Zeitlimit</p>
-			</td>
-			<td align="left" valign="middle">
-				<select id="filter_date" class="formtext" style="width:300px;" onchange="filterDate()">
-					<option value="">Alle anzeigen</option>
-					<option value="0">Aufgaben im Zeitlimit</option>
-					<option value="1">Heute fällige Aufgaben</option>
-					<option value="2">Aufgaben über dem Zeitlimit</option>
-				</select>
-			</td>
-		</tr>
-	</table>
-	</form>
+<div id="OutputFilter" class="CollapsiblePanel, textbox">
+	<div class="CollapsiblePanelTab">
+		<h2 style="text-align:left; background:#B5BD82; padding:5px;">Filter anwenden
+		<span style="float:right; margin-top:-20px;"><img src="@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png" alt="" name="groupIcon" align="left" border="0" /><img src="@@{templatepath}@@/nuvola/22x22/actions/1downarrow.png" alt="" name="groupIcon" align="left" border="0" /></span>
+		</h2>
+	</div>
 
+	<div class="CollapsiblePanelContent">
+		<form name="formFilter" method="post" action="#">
+		<table border="0" cellpadding="0" cellspacing="0" cellpadding="0" cellspacing="0" style="margin-top:0px;">
+			<tr>
+				<td width="130" valign="top" rowspan="3">
+					<p><img src="@@{templatepath}@@/nuvola/128x128/apps/kghostview.png" alt="Filter users" border="0" /></p>
+				</td>
+				<td align="left" valign="middle">
+					<p class="formlabel">Priorität</p>
+				</td>
+				<td align="left" valign="middle">
+					<select id="filter_priority" class="formtext" style="width:300px;" onchange="filterPriority()">
+						<option value="-1">Alle anzeigen</option>
+						<option value="1">Niedrig</option>
+						<option value="2">Normal</option>
+						<option value="3">Hoch</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td align="left" valign="middle">
+					<p class="formlabel">Stundenlimit</p>
+				</td>
+				<td align="left" valign="middle">
+					<select id="filter_hours" class="formtext" style="width:300px;" onchange="filterHours()">
+						<option value="">Alle anzeigen</option>
+						<option value="0">Aufgaben im Stundenlimit</option>
+						<option value="2">Aufgaben über dem Stundenlimit</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td align="left" valign="middle">
+					<p class="formlabel">Zeitlimit</p>
+				</td>
+				<td align="left" valign="middle">
+					<select id="filter_date" class="formtext" style="width:300px;" onchange="filterDate()">
+						<option value="">Alle anzeigen</option>
+						<option value="0">Aufgaben im Zeitlimit</option>
+						<option value="1">Heute fällige Aufgaben</option>
+						<option value="2">Aufgaben über dem Zeitlimit</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+		</form>
 	</div>
 </div>
+
 
 <div class="textbox">
 	<h2>Alle aktiven Aufgaben (<span id="groupRows">2</span>)</h2>
@@ -248,7 +231,6 @@
 
 	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
 	        <tr class="tablehead">
-				<th><p><a onclick="dsTasks.sort('task_id');" class="sortlink">ID</a></p></th>
 				<th><p><a onclick="dsTasks.sort('task_name');" class="sortlink">Name</a></p></th>
 				<th><p><a onclick="dsTasks.sort('group_name');" class="sortlink">Verantwortlich</a></p></th>
 				<th><p><a onclick="dsTasks.sort('task_priority');" class="sortlink">Priorität</a></p></th>
@@ -257,7 +239,6 @@
 				<th><p class="thtext">Aktionen</p></th>
 	        </tr>
 	        <tr class="{ds_EvenOddRow}" spry:repeat="dsTasks">
-				<td><p>{dsTasks::task_id}</p></td>
 				<td><p><span onmousemove="showTooltip('{dsTasks::task_description}', event)" onmouseout="hideTooltip()">{dsTasks::task_name}</span></p></td>
 				<td>
 					<div spry:choose="spry:choose">
@@ -297,6 +278,10 @@
 	</div>
 	
 </div>
+
+<script type="text/javascript">
+	var OutputFilter = new Spry.Widget.CollapsiblePanel("OutputFilter", {contentIsOpen:false});
+</script> 
 
 <!-- InstanceEndEditable -->
 

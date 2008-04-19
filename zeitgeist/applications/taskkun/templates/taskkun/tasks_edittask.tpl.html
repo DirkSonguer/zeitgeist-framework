@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Taskkun</title>
+<title>Taskkun - @@{documenttitle}@@</title>
 <!-- InstanceEndEditable -->
 
 <link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/taskkun.css" />
@@ -37,34 +37,9 @@
 	
 <!-- InstanceBeginEditable name="head" -->
 
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryCollapsiblePanel.js"></script>
 	<script type="text/javascript" src="@@{templatepath}@@/js/date-picker/js/datepicker.js"></script>
 	<link href="@@{templatepath}@@/js/date-picker/css/datepicker.css" rel="stylesheet" type="text/css" />
-
-	<script language="javascript" type="text/javascript">				
-
-		var bShowShortcuts = false;
-		shortcutUp = new Image();
-		shortcutUp.src = "@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png";
-		shortcutDown = new Image();
-		shortcutDown.src = "@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png";
-	
-		function showShortcuts()
-		{
-			if (bShowShortcuts == false)
-			{
-				bShowShortcuts = true;
-				document.getElementById('Shortcuts').style.display = "block";
-				document.images["shortcutIcon"].src = shortcutUp.src;
-			}
-			else
-			{
-				bShowShortcuts = false;
-				document.getElementById('Shortcuts').style.display = "none";
-				document.images["shortcutIcon"].src = shortcutDown.src;
-			}
-		}	
-	
-	</script>
 
 <!-- InstanceEndEditable -->
 </head>
@@ -141,7 +116,7 @@
 <form method="post" action="@@{[tasks.edittask]}@@" name="edittask" enctype="multipart/form-data; charset=utf-8">
 <input type="hidden" name="edittask[task_id]" value="@@{task_id:value}@@" />
 
-<div class="textbox" style="background-image:url(@@{templatepath}@@/images/side_newtask.jpg); background-position:right bottom; background-repeat:no-repeat;">
+<div class="textbox">
 	<h2>Aufgabe bearbeiten</h2>
 
 	<table width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -238,28 +213,35 @@
 
 </div>
 
-<div class="textbox">
-	<h2 style="text-align:left; background:#B5BD82; padding:5px;">Weitere Angaben <span style="float:right; margin-top:-20px;"><a href="javascript:showShortcuts();" alt=""><span onmousemove="showTooltip('Weitere Angaben', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png" alt="" name="shortcutIcon" align="left" border="0" /></span></a></span></h2>
-	<div style="clear:both"></div>
-	
-	<div id="Shortcuts" style="padding:5px; display:none;">
+<div id="AdditionalInformation" class="CollapsiblePanel, textbox">
+	<div class="CollapsiblePanelTab">
+		<h2 style="text-align:left; background:#B5BD82; padding:5px;">Weitere Angaben
+		<span style="float:right; margin-top:-20px;"><img src="@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png" alt="" name="groupIcon" align="left" border="0" /><img src="@@{templatepath}@@/nuvola/22x22/actions/1downarrow.png" alt="" name="groupIcon" align="left" border="0" /></span>
+		</h2>
+	</div>
 
-	<table width="100%" cellspacing="5" cellpadding="5" border="0">
-	<tbody>
-	<tr>
-		<td align="right" nowrap="nowrap" valign="top" width="120"><p class="formlabel">Anmerkungen</p></td>
-		<td align="left" valign="middle">
-			<textarea rows="5" name="edittask[task_notes]" class="formtext" style="height:175px; width:750px;"></textarea>
-		</td>
-	</tr>
-	</tbody>
-	</table>
+	<div class="CollapsiblePanelContent">
+	
+		<table width="100%" cellspacing="5" cellpadding="5" border="0">
+		<tbody>
+		<tr>
+			<td align="right" nowrap="nowrap" valign="top" width="120"><p class="formlabel">Anmerkungen</p></td>
+			<td align="left" valign="middle">
+				<textarea rows="5" name="edittask[task_notes]" class="formtext" style="height:175px; width:750px;"></textarea>
+			</td>
+		</tr>
+		</tbody>
+		</table>
 	
 	</div>
 	
 </div>
 
 </form>	
+
+<script type="text/javascript">
+	var AdditionalInformation = new Spry.Widget.CollapsiblePanel("AdditionalInformation", {contentIsOpen:false});
+</script> 
 
 <!-- InstanceEndEditable -->
 

@@ -28,6 +28,7 @@ class tasks
 
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_index'));
+		$tpl->assign('documenttitle', 'Aufgabenübersicht');
 
 		$tpl->show();
 
@@ -42,12 +43,15 @@ class tasks
 
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_addtask'));
+		$tpl->assign('documenttitle', 'Aufgabe hinzufügen');
 
 		$addtaskForm = new zgStaticform();
 		$addtaskForm->load('forms/addtask.form.ini');
 		$formvalid = $addtaskForm->process($parameters);
 
 		$taskfunctions = new tkTaskfunctions();
+		$tasktypefunctions = new tkTasktypefunctions();
+
 		if (!empty($parameters['submit']))
 		{
 			if ($formvalid)
@@ -72,7 +76,7 @@ class tasks
 
 		$formcreated = $addtaskForm->create($tpl);
 
-		$tasktypes = $taskfunctions->getTaskTypesForUser();
+		$tasktypes = $tasktypefunctions->getTaskTypesForUser();
 		foreach ($tasktypes as $tasktype)
 		{
 			if (!empty($parameters['addtask']['task_type'])) $tpl->assign('tasktype_selected', 'selected="selected"');
@@ -85,7 +89,6 @@ class tasks
 			$tpl->assign('task_begin:value', date('d.m.Y'));
 		}
 
-		$tpl->insertBlock('addtask');
 		$tpl->show();
 
 		$this->debug->unguard(true);
@@ -99,11 +102,13 @@ class tasks
 
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_edittask'));
+		$tpl->assign('documenttitle', 'Aufgabe bearbeiten');
 
 		$addtaskForm = new zgStaticform();
 		$addtaskForm->load('forms/edittask.form.ini');
 
 		$taskfunctions = new tkTaskfunctions();
+		$tasktypefunctions = new tkTasktypefunctions();
 
 		if (!empty($parameters['submit']))
 		{
@@ -138,7 +143,7 @@ class tasks
 			if ($taskinformation['task_begin'] == '00.00.0000') $taskinformation['task_begin'] = '';
 			if ($taskinformation['task_end'] == '00.00.0000') $taskinformation['task_end'] = '';
 
-			$tasktypes = $taskfunctions->getTaskTypes();
+			$tasktypes = $tasktypefunctions->getTaskTypes();
 			foreach ($tasktypes as $tasktype)
 			{
 				$tpl->assignDataset($tasktype);
@@ -238,11 +243,15 @@ class tasks
 
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_addtasklog'));
+		$tpl->assign('documenttitle', 'Aufgabenbeschreibung hinzufügen');
 
 		$addtasklogForm = new zgStaticform();
 		$addtasklogForm->load('forms/addtasklog.form.ini');
 
 		$taskfunctions = new tkTaskfunctions();
+		$tasklogfunctions = new tkTasklogfunctions();
+		$tasktypefunctions = new tkTasktypefunctions();
+
 		$formvalid = $addtasklogForm->process($parameters);
 
 		if (!empty($parameters['submitButton']))
@@ -253,7 +262,7 @@ class tasks
 			{
 				if (empty($formcontent['tasklog_hoursworked'])) $formcontent['tasklog_hoursworked'] = '0';
 
-				if (!$taskfunctions->addTasklog($formcontent))
+				if (!$tasklogfunctions->addTasklog($formcontent))
 				{
 					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator', 'usererror');
 				}
@@ -265,12 +274,12 @@ class tasks
 				switch($parameters['submitButton'])
 				{
 					case 2:
-						$taskfunctions->workflowDown($formcontent['tasklog_task']);
+						$tasktypefunctions->workflowDown($formcontent['tasklog_task']);
 						$this->messages->setMessage('Die Aufgabe wurde zurückgegeben', 'usermessage');
 						break;
 
 					case 3:
-						$taskfunctions->workflowUp($formcontent['tasklog_task']);
+						$tasktypefunctions->workflowUp($formcontent['tasklog_task']);
 						$this->messages->setMessage('Die Aufgabe wurde abgeschlossen', 'usermessage');
 						break;
 
@@ -286,7 +295,7 @@ class tasks
 			switch($parameters['submitButton'])
 			{
 				case 2:
-					$taskfunctions->workflowDown($formcontent['tasklog_task']);
+					$tasktypefunctions->workflowDown($formcontent['tasklog_task']);
 					$this->messages->setMessage('Die Aufgabe wurde zurückgegeben', 'usermessage');
 					$this->debug->unguard(true);
 					$tpl->redirect($tpl->createLink('tasks', 'index'));
@@ -294,7 +303,7 @@ class tasks
 					break;
 
 				case 3:
-					$taskfunctions->workflowUp($formcontent['tasklog_task']);
+					$tasktypefunctions->workflowUp($formcontent['tasklog_task']);
 					$this->messages->setMessage('Die Aufgabe wurde abgeschlossen', 'usermessage');
 					$this->debug->unguard(true);
 					$tpl->redirect($tpl->createLink('tasks', 'index'));
@@ -345,11 +354,13 @@ class tasks
 
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_edittasklog'));
+		$tpl->assign('documenttitle', 'Aufgabenbeschreibung bearbeiten');
 
 		$edittasklogForm = new zgStaticform();
 		$edittasklogForm->load('forms/edittasklog.form.ini');
 
 		$taskfunctions = new tkTaskfunctions();
+		$tasklogfunctions = new tkTasklogfunctions();
 
 		if (!empty($parameters['submitButton']))
 		{
@@ -361,10 +372,10 @@ class tasks
 
 				if (empty($formcontent['tasklog_hoursworked'])) $formcontent['tasklog_hoursworked'] = '0';
 
-				if ($taskfunctions->updateTasklog($formcontent))
+				if ($tasklogfunctions->updateTasklog($formcontent))
 				{
 					$this->messages->setMessage('Die Tätigkeitsbeschreibung wurde gespeichert', 'usermessage');
-					$taskloginformation = $taskfunctions->getTasklog($parameters['id']);
+					$taskloginformation = $tasklogfunctions->getTasklog($parameters['id']);
 					$parameters = array();
 					$parameters['id'] = $taskloginformation['tasklog_task'];
 					$tpl = new tkTemplate();
@@ -384,7 +395,7 @@ class tasks
 
 		if(!empty($parameters['id']))
 		{
-			$taskloginformation = $taskfunctions->getTasklog($parameters['id']);
+			$taskloginformation = $tasklogfunctions->getTasklog($parameters['id']);
 			$processData = array();
 			$processData['edittasklog'] = $taskloginformation;
 			$formvalid = $edittasklogForm->process($processData);
@@ -428,7 +439,9 @@ class tasks
 			$taskid = $taskloginformation['tasklog_task'];
 
 			$taskfunctions = new tkTaskfunctions();
-			if ($taskfunctions->deleteTasklog($parameters['id'], $taskid))
+			$tasklogfunctions = new tkTasklogfunctions();
+
+			if ($tasklogfunctions->deleteTasklog($parameters['id'], $taskid))
 			{
 				$this->messages->setMessage('Die Aufgabenbeschreibung wurde erfolgreich gelöscht', 'usermessage');
 			}
@@ -453,6 +466,7 @@ class tasks
 
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_showactivetasks'));
+		$tpl->assign('documenttitle', 'Aufgabenübersicht');
 
 		$tpl->show();
 
@@ -467,13 +481,32 @@ class tasks
 
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_taskdetails'));
+		$tpl->assign('documenttitle', 'Aufgabendetails');
 
+		$addtaskForm = new zgStaticform();
+		$addtaskForm->load('forms/edittask.form.ini');
+
+		$taskfunctions = new tkTaskfunctions();
+		$tasktypefunctions = new tkTasktypefunctions();
 
 		if (!empty($parameters['id']))
 		{
 			$taskid = $parameters['id'];
+
+			$taskinformation = $taskfunctions->getTaskInformation($taskid);
+
+			if ($taskinformation['task_begin'] == '00.00.0000') $taskinformation['task_begin'] = '';
+			if ($taskinformation['task_end'] == '00.00.0000') $taskinformation['task_end'] = '';
+
+			$tpl->assign('priority_' . $taskinformation['task_priority'], 'selected="selected"');
+			$tpl->assign('tasktype_name', $taskinformation['tasktype_name']);
+
+			$processData = array();
+			$processData['edittask'] = $taskinformation;
+			$formvalid = $addtaskForm->process($processData);
 		}
 
+		$formcreated = $addtaskForm->create($tpl);
 		$tpl->assign('taskid', $taskid);
 
 		$tpl->show();

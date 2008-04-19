@@ -104,7 +104,7 @@ class dataserver
 		$sql .= "LEFT JOIN groups g ON twf.taskworkflow_group = g.group_id ";
 		$sql .= "WHERE t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
 		$sql .= "AND t.task_workflow>'0' ";
-		$sql .= "GROUP BY t.task_id";
+		$sql .= "GROUP BY t.task_id ORDER BY t.task_priority DESC";
 
 		$xmlData = $this->dataserver->createXMLDatasetFromSQL($sql);
 		$this->dataserver->streamXMLDataset($xmlData);
@@ -252,8 +252,8 @@ class dataserver
 	{
 		$this->debug->guard();
 
-		$taskfunctions = new tkTaskfunctions();
-		$tasktypes = $taskfunctions->getTaskTypes();
+		$tasktypefunctions = new tkTasktypefunctions();
+		$tasktypes = $tasktypefunctions->getTaskTypes();
 
 		$xmlData = $this->dataserver->createXMLDatasetFromArray($tasktypes);
 		$this->dataserver->streamXMLDataset($xmlData);
@@ -268,8 +268,8 @@ class dataserver
 	{
 		$this->debug->guard();
 
-		$sql = 'SELECT g.*, COUNT(g.group_id) as group_groupcount FROM groups g ';
-		$sql .= 'LEFT JOIN users_to_groups u2g ON g.group_id = u2g.usergroup_group ';
+		$sql = 'SELECT g.*, COUNT(g.group_id) as group_tasktypecount FROM groups g ';
+		$sql .= 'LEFT JOIN taskworkflow twf ON g.group_id = twf.taskworkflow_group ';
 		$sql .= 'GROUP BY g.group_id';
 
 		$xmlData = $this->dataserver->createXMLDatasetFromSQL($sql, $this->database);

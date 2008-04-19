@@ -21,6 +21,8 @@
 
 	require_once('classes/tktemplate.class.php');
 	require_once('classes/tktaskfunctions.class.php');
+	require_once('classes/tktasklogfunctions.class.php');
+	require_once('classes/tktasktypefunctions.class.php');
 	require_once('classes/tkuserfunctions.class.php');
 
 	define('ZG_DB_DBSERVER', 'localhost');

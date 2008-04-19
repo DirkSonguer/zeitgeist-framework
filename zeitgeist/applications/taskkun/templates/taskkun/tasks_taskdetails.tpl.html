@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Taskkun</title>
+<title>Taskkun - @@{documenttitle}@@</title>
 <!-- InstanceEndEditable -->
 
 <link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/taskkun.css" />
@@ -40,38 +40,12 @@
 	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryData.js"></script>
 	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/xpath.js"></script>
 	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryNestedXMLDataSet.js"></script>
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryCollapsiblePanel.js"></script>
 	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/js/SpryExtensions.js"></script>
 
 	<script type="text/javascript">
 
-		var dsTaskInformation = new Spry.Data.XMLDataSet("@@{[dataserver.gettaskinformation]}@@&id=@@{taskid}@@", "container/element");
-		dsTaskInformation.setColumnType("task_id", "number");
-		dsTaskInformation.setColumnType("task_hoursplanned", "number");
-		dsTaskInformation.setColumnType("task_hoursworked", "number");
-		
 		var dsTasklogs = new Spry.Data.XMLDataSet("@@{[dataserver.gettasklogs]}@@&id=@@{taskid}@@", "container/element");
-	
-		var bShowShortcuts = false;
-		shortcutUp = new Image();
-		shortcutUp.src = "@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png";
-		shortcutDown = new Image();
-		shortcutDown.src = "@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png";
-	
-		function showShortcuts()
-		{
-			if (bShowShortcuts == false)
-			{
-				bShowShortcuts = true;
-				document.getElementById('Shortcuts').style.display = "block";
-				document.images["shortcutIcon"].src = shortcutUp.src;
-			}
-			else
-			{
-				bShowShortcuts = false;
-				document.getElementById('Shortcuts').style.display = "none";
-				document.images["shortcutIcon"].src = shortcutDown.src;
-			}
-		}	
 	
 	</script>
 
@@ -147,113 +121,132 @@
 	
 <!-- InstanceBeginEditable name="body" -->
 
-<div class="textbox">
-	<h2>Aufgabe bearbeiten</h2>
+<div id="TaskDetails" class="CollapsiblePanel, textbox">
+	<div class="CollapsiblePanelTab">
+		<h2>Aufgabendetails
+		<span style="float:right; margin-top:-20px;"><img src="@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png" alt="" name="groupIcon" align="left" border="0" /><img src="@@{templatepath}@@/nuvola/22x22/actions/1downarrow.png" alt="" name="groupIcon" align="left" border="0" /></span>
+		</h2>
+	</div>
 
-	<div spry:region="dsTaskInformation">
-    <div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
-
-	<div spry:state="ready">
+	<div class="CollapsiblePanelContent">
 	
-	<table width="100%" cellspacing="5" cellpadding="5" border="0">
-	<tr>
-	<td width="50%" valign="top">
-        <table style="margin-bottom: 10px;" border="0" cellpadding="0" cellspacing="0">
-            <tbody>
-			<tr>
-                <td valign="top" width="140"><p class="formlabel">Titel*</p></td>
-                <td valign="middle"><p>{dsTaskInformation::task_name}</p></td>
-            </tr>
-            <tr>
-                <td align="right" valign="top"><p class="formlabel">Beschreibung*</p></td>
-                <td align="left" valign="middle"><p>{dsTaskInformation::task_description}</p></td>
-            </tr>
-		</tbody>
-		</table>
-	</td>
-	<td width="50%" valign="top">
-		<table style="margin-bottom: 10px;" border="0" cellpadding="0" cellspacing="0">
-		<tbody>
-			<tr>
-                <td align="right" valign="top" width="140"><p class="formlabel">Stundenbudget*</p></td>
-                <td align="left" valign="middle"><p>{dsTaskInformation::task_hoursplanned} Stunden</p></td>
-            </tr>
-            <tr>
-                <td align="right" valign="top"><p class="formlabel">Aufgabenablauf</p></td>
-                <td align="left" valign="middle"><p>{dsTaskInformation::tasktype_name}</p></td>
-            </tr>
-            <tr>
-                <td align="right" valign="top"><p class="formlabel">Priorität</p></td>
-                <td align="left" valign="middle"><p>{dsTaskInformation::priority_name}</p></td>
-            </tr>
-			<tr>
-                <td align="right" valign="top" width="140"><p class="formlabel">Beginn</p></td>
-                <td align="left" valign="middle"><p>{dsTaskInformation::task_begin}</p></td>
-            </tr>
-			<tr>
-                <td align="right" valign="top"><p class="formlabel">Fällig am</p></td>
-                <td align="left" valign="middle"><p>{dsTaskInformation::task_end}</p></td>
-            </tr>
-			
-		</tbody>
-		</table>
-	</td>
-	</tr>
-	<tr>
-	<td colspan="2">
-		<table style="margin-bottom: 10px;" border="0" cellpadding="0" cellspacing="0">
+		<table width="100%" cellspacing="0" cellpadding="0" border="0">
 		<tr>
-			<td align="right" valign="top" width="140"><p class="formlabel">Tags*</p></td>
-			<td align="left" valign="middle"><input maxlength="512" style="width:750px; margin-top:10px;" name="task_tags" value="@@{task_tags}@@" class="formtext" type="text" />
-			<p style="margin-left:0px;">(Mehrere Tags durch Komma trennen. Bitte <u>mindestens</u> Kunde und evtl. Projekt angeben)</p></td>
+		<td width="50%" valign="top">
+			<table style="margin-bottom: 10px;" border="0" cellpadding="5" cellspacing="5">
+				<tbody>
+				<tr>
+					<td nowrap="nowrap" valign="top" width="140"><p class="formlabel">Titel</p></td>
+					<td valign="middle"><input maxlength="128" name="edittask[task_name]" value="@@{task_name:value}@@" class="disabledformtext" type="text" disabled="disabled" />
+					</td>
+				</tr>
+				<tr>
+					<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Beschreibung</p></td>
+					<td align="left" valign="middle"><textarea rows="5" name="edittask[task_description]" class="disabledformtext" style="height:175px;" disabled="disabled">@@{task_description:value}@@</textarea>
+					</td>
+				</tr>
+			</tbody>
+			</table>
+		</td>
+		<td width="50%" valign="top">
+			<table style="margin-bottom: 10px;" border="0" cellpadding="5" cellspacing="5">
+			<tbody>
+				<tr>
+					<td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Stundenbudget</p></td>
+					<td align="left" valign="middle"><input maxlength="6" style="width:60px;" name="edittask[task_hoursplanned]" value="@@{task_hoursplanned:value}@@" class="disabledformtext" type="text" disabled="disabled" /> (Angabe in Stunden)
+					</td>
+				</tr>
+				<tr>
+					<td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Aufgabentyp</p></td>
+					<td align="left" valign="middle">
+					<input maxlength="30" name="tasktype_name" class="disabledformtext" value="@@{tasktype_name}@@" type="text" disabled="disabled" />
+					</td>
+				</tr>
+				<tr>
+					<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Priorität</p></td>
+					<td align="left" valign="middle">
+						<select name="edittask[task_priority]" class="disabledformtext" disabled="disabled">
+							<option value="3"@@{priority_3}@@>Hoch</option>
+							<option value="2"@@{priority_2}@@>Normal</option>
+							<option value="1"@@{priority_1}@@>Niedrig</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Beginn</p></td>
+					<td align="left" valign="middle">
+					<input maxlength="30" name="edittask[task_begin]" class="disabledformtext" value="@@{task_begin:value}@@" type="text" disabled="disabled" />
+					</td>
+				</tr>
+				<tr>
+					<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Fällig am</p></td>
+					<td align="left" valign="middle">
+					<input maxlength="30" name="edittask[task_end]" class="disabledformtext" value="@@{task_end:value}@@" type="text" disabled="disabled" />
+					</td>
+				</tr>
+	
+			</tbody>
+			</table>
+		</td>
+		</tr>
+		<tr>
+		<td colspan="2">
+			<table style="margin-bottom: 10px;" border="0" cellpadding="5" cellspacing="5">
+			<tr>
+				<td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Tags*</p></td>
+				<td align="left" valign="middle"><input maxlength="512" style="width:750px; margin-top:10px;" name="edittask[task_tags]" value="@@{task_tags:value}@@" class="disabledformtext" type="text" disabled="disabled" />
+				</p>
+				</td>
+			</tr>
+			</table>
+		</td>
 		</tr>
 		</table>
-	</td>
-	</tr>
-	<tr>
-	<td colspan="2">
-           <p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/actions/pencil.png" alt="" border="0" align="top" />
-		   <input name="submit" value="Aufgabe speichern" class="formbutton" type="submit" /></p>
-	</td>
-	</tr>
-	</table>
 
-	</div>
 	</div>
 </div>
 
-<div class="textbox">
-	<h2 style="text-align:left;">Bisherige Tätigkeiten <span style="float:right; margin-top:-20px;"><a href="javascript:showShortcuts();" alt=""><span onmousemove="showTooltip('Bisherige Tätigkeiten', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png" alt="" name="shortcutIcon" align="left" border="0" /></span></a></span></h2>
-	<div style="clear:both"></div>
+<div id="Tasklogs" class="CollapsiblePanel, textbox">
+	<div class="CollapsiblePanelTab">
+		<h2>Durchgeführte Tätigkeiten
+		<span style="float:right; margin-top:-20px;"><img src="@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png" alt="" name="groupIcon" align="left" border="0" /><img src="@@{templatepath}@@/nuvola/22x22/actions/1downarrow.png" alt="" name="groupIcon" align="left" border="0" /></span>
+		</h2>
+	</div>
 	
-	<div id="Shortcuts" style="padding:0px; display:none;">
-
-	<div spry:region="dsTasklogs">
-    <div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
-
-	<div spry:state="ready">
-	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
-	        <tr class="tablehead">
-				<th width="40"><p style="text-align:center;"><a onclick="dsTasklogs.sort('tasklog_id');">ID</a></p></th>
-				<th width="150"><p style="text-align:center;"><a onclick="dsTasklogs.sort('tasklog_username');">Bearbeitet von</a></p></th>
-				<th width="100"><p style="text-align:center;"><a onclick="dsTasklogs.sort('task_hoursworked');">Dauer</a></p></th>
-				<th><p>Tätigkeitbeschreibung</p></th>
-				<th width="200"><p style="text-align:center;"><a onclick="dsTasklogs.sort('tasklog_timestamp');">Datum</a></p></th>
-				<th><p>Aktionen</p></th>
-	        </tr>
-	        <tr class="{ds_EvenOddRow}" spry:repeat="dsTasklogs">
-				<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_id}</p></td>
-				<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_username}</p></td>
-				<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_hoursworked}</p></td>
-				<td valign="top"><p>{dsTasklogs::tasklog_description}</p></td>
-				<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_timestamp}</p></td>
-				<td width="90"><p></p></td>
-	        </tr>
-	    </table>
-    </div>
-	</div>
+	<div class="CollapsiblePanelContent">
+		
+		<div spry:region="dsTasklogs">
+		<div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
+	
+		<div spry:state="ready">
+			<table border="0" cellspacing="0" cellpadding="0" width=100%">
+				<tr class="tablehead">
+					<th width="40"><p style="text-align:center;"><a onclick="dsTasklogs.sort('tasklog_id');">ID</a></p></th>
+					<th width="150"><p style="text-align:center;"><a onclick="dsTasklogs.sort('tasklog_username');">Bearbeitet von</a></p></th>
+					<th width="100"><p style="text-align:center;"><a onclick="dsTasklogs.sort('task_hoursworked');">Dauer</a></p></th>
+					<th><p>Tätigkeitbeschreibung</p></th>
+					<th width="200"><p style="text-align:center;"><a onclick="dsTasklogs.sort('tasklog_timestamp');">Datum</a></p></th>
+					<th><p>Aktionen</p></th>
+				</tr>
+				<tr class="{ds_EvenOddRow}" spry:repeat="dsTasklogs">
+					<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_id}</p></td>
+					<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_username}</p></td>
+					<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_hoursworked}</p></td>
+					<td valign="top"><p>{dsTasklogs::tasklog_description}</p></td>
+					<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_timestamp}</p></td>
+					<td width="90"><p></p></td>
+				</tr>
+			</table>
+		</div>
+		</div>
 	</div>
 </div>
+
+<script type="text/javascript">
+	var TaskDetails = new Spry.Widget.CollapsiblePanel("TaskDetails");
+	var Tasklogs = new Spry.Widget.CollapsiblePanel("Tasklogs");
+</script> 
+
 
 <!-- InstanceEndEditable -->
 

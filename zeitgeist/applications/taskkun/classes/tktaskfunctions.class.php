@@ -22,6 +22,7 @@ class tkTaskfunctions
 	}
 
 
+	// instance-safe
 	public function addTask($taskdata=array())
 	{
 		$this->debug->guard();
@@ -88,6 +89,7 @@ class tkTaskfunctions
 	}
 
 
+	// instance-safe
 	public function updateTask($taskdata=array())
 	{
 		$this->debug->guard();
@@ -146,6 +148,7 @@ class tkTaskfunctions
 	}
 
 
+	// instance-safe
 	public function deleteTask($taskid)
 	{
 		$this->debug->guard();
@@ -194,161 +197,7 @@ class tkTaskfunctions
 	}
 
 
-	public function addTasklog($tasklogdata=array())
-	{
-		$this->debug->guard();
-
-		$userfunctions = new tkUserfunctions();
-		if (!$userfunctions->checkRightsForTask($tasklogdata['tasklog_task']))
-		{
-			$this->debug->write('The task is out of bounds of the instance', 'warning');
-			$this->messages->setMessage('The task is out of bounds of the instance', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		if (empty($tasklogdata['tasklog_date']))
-		{
-			$tasklogdata['tasklog_date'] = '';
-		}
-		else
-		{
-			$dateArray = explode('.', $tasklogdata['tasklog_date']);
-			$tasklogdata['tasklog_date'] = $dateArray[2] . '-' . $dateArray[1] . '-' . $dateArray[0];
-		}
-
-		if (strpos($tasklogdata['tasklog_hoursworked'], ',') !== false) $tasklogdata['tasklog_hoursworked'] = str_replace(',','.', $tasklogdata['tasklog_hoursworked']);
-
-		$sql = 'INSERT INTO tasklogs(tasklog_creator, tasklog_task, tasklog_description, tasklog_hoursworked, tasklog_date) ';
-		$sql .= "VALUES('" . $this->user->getUserID() . "', '" . $tasklogdata['tasklog_task'] . "', '" . $tasklogdata['tasklog_description'] . "', '" . $tasklogdata['tasklog_hoursworked'] . "', '" . $tasklogdata['tasklog_date'] . "')";
-
-		$res = $this->database->query($sql);
-		if (!$res)
-		{
-			$this->debug->write('Problem deleting task from tasks_to_users: ' . $tasklogdata['taskid'], 'warning');
-			$this->messages->setMessage('Problem deleting task from tasks_to_users: ' . $tasklogdata['taskid'], 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-
-	public function updateTasklog($tasklogdata=array())
-	{
-		$this->debug->guard();
-
-		$sql = "SELECT * FROM tasklogs WHERE tasklog_id='" . $tasklogdata['tasklog_id'] . "'";
-		$res = $this->database->query($sql);
-		if (!$res)
-		{
-			$this->debug->write('Problem getting tasklog information for tasklog: ' . $tasklogdata['tasklog_id'], 'warning');
-			$this->messages->setMessage('Problem getting tasklog information for tasklog: ' . $tasklogdata['tasklog_id'], 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-		$taskloginformation = $this->database->fetchArray($res);
-
-		$userfunctions = new tkUserfunctions();
-		if (!$userfunctions->checkRightsForTask($taskloginformation['tasklog_task']))
-		{
-			$this->debug->write('The task is out of bounds of the instance', 'warning');
-			$this->messages->setMessage('The task is out of bounds of the instance', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		if (empty($tasklogdata['tasklog_date']))
-		{
-			$tasklogdata['tasklog_date'] = '';
-		}
-		else
-		{
-			$dateArray = explode('.', $tasklogdata['tasklog_date']);
-			$tasklogdata['tasklog_date'] = $dateArray[2] . '-' . $dateArray[1] . '-' . $dateArray[0];
-		}
-
-		if (strpos($tasklogdata['tasklog_hoursworked'], ',') !== false) $tasklogdata['tasklog_hoursworked'] = str_replace(',','.', $tasklogdata['tasklog_hoursworked']);
-
-		$sql = "UPDATE tasklogs SET tasklog_description='" . $tasklogdata['tasklog_description'] . "', tasklog_hoursworked='" . $tasklogdata['tasklog_hoursworked'] . "', ";
-		$sql .= "tasklog_date='" . $tasklogdata['tasklog_date'] . "' WHERE tasklog_id='" . $tasklogdata['tasklog_id'] . "'";
-
-		$res = $this->database->query($sql);
-		if (!$res)
-		{
-			$this->debug->write('Problem updating tasklog: ' . $tasklogdata['tasklog_id'], 'warning');
-			$this->messages->setMessage('Problem updating tasklog: ' . $tasklogdata['tasklog_id'], 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-
-	public function deleteTasklog($tasklogid, $taskid)
-	{
-		$this->debug->guard();
-
-		$userfunctions = new tkUserfunctions();
-		if (!$userfunctions->checkRightsForTask($taskid))
-		{
-			$this->debug->write('The task is out of bounds of the instance', 'warning');
-			$this->messages->setMessage('The task is out of bounds of the instance', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$sql = "DELETE FROM tasklogs WHERE tasklog_id='" . $tasklogid . "'";
-		$res = $this->database->query($sql);
-		if (!$res)
-		{
-			$this->debug->write('Problem deleting tasklog: ' . $tasklogid, 'warning');
-			$this->messages->setMessage('Problem deleting tasklog: ' . $tasklogid, 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-
-	public function getTasklog($tasklogid)
-	{
-		$this->debug->guard();
-
-		$sql = "SELECT tl.*, ";
-		$sql .= "DATE_FORMAT(tl.tasklog_date, '%d.%m.%Y') as tasklog_date ";
-		$sql .= " FROM tasklogs tl ";
-		$sql .= "WHERE tasklog_id='" . $tasklogid . "'";
-		$res = $this->database->query($sql);
-		if (!$res)
-		{
-			$this->debug->write('Problem getting tasklog information for tasklog: ' . $tasklogid, 'warning');
-			$this->messages->setMessage('Problem getting tasklog information for tasklog: ' . $tasklogid, 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-		$taskloginformation = $this->database->fetchArray($res);
-
-		$userfunctions = new tkUserfunctions();
-		if (!$userfunctions->checkRightsForTask($taskloginformation['tasklog_task']))
-		{
-			$this->debug->write('The task is out of bounds of the instance', 'warning');
-			$this->messages->setMessage('The task is out of bounds of the instance', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$this->debug->unguard($taskloginformation);
-		return $taskloginformation;
-	}
-
-
+	// instance-safe
 	public function getTaskInformation($taskid)
 	{
 		$this->debug->guard();
@@ -363,9 +212,11 @@ class tkTaskfunctions
 		}
 
 		// task information
-		$sql = "SELECT t.*, ";
+		$sql = "SELECT t.*, twf.taskworkflow_title, tt.tasktype_name, ";
 		$sql .= "DATE_FORMAT(t.task_end, '%d.%m.%Y') as task_end, DATE_FORMAT(t.task_begin, '%d.%m.%Y') as task_begin ";
 		$sql .= "FROM tasks t ";
+		$sql .= "LEFT JOIN taskworkflow twf ON t.task_workflow = twf.taskworkflow_id ";
+		$sql .= "LEFT JOIN tasktypes tt ON t.task_type = tt.tasktype_id ";
 		$sql .= "WHERE task_id='" . $taskid . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
@@ -420,117 +271,7 @@ class tkTaskfunctions
 	}
 
 
-	public function getTaskTypes()
-	{
-		$this->debug->guard();
-
-		$userfunctions = new tkUserfunctions();
-
-		$sql = "SELECT * FROM tasktypes WHERE tasktype_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "'";
-		$res = $this->database->query($sql);
-		if (!$res)
-		{
-			$this->debug->write('Problem getting tasktypes from database', 'warning');
-			$this->messages->setMessage('Problem getting tasktypes from database' . $taskid, 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$tasktypes = array();
-		while($row = $this->database->fetchArray($res))
-		{
-			$tasktypes[] = $row;
-		}
-
-		$this->debug->unguard($tasktypes);
-		return $tasktypes;
-	}
-
-
-	public function getTaskTypesForUser()
-	{
-		$this->debug->guard();
-
-		$userfunctions = new tkUserfunctions();
-
-		$sql = "SELECT * FROM tasktypes tt ";
-		$sql .= "LEFT JOIN taskworkflow twf ON tt.tasktype_id = twf.taskworkflow_tasktype ";
-		$sql .= "LEFT JOIN users_to_groups u2g ON twf.Taskworkflow_group = u2g.usergroup_group ";
-		$sql .= "WHERE tt.tasktype_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
-		$sql .= "AND u2g.usergroup_user='" . $this->user->getUserID() . "' ";
-		$sql .= "GROUP BY tt.tasktype_id";
-		$res = $this->database->query($sql);
-		if (!$res)
-		{
-			$this->debug->write('Problem getting tasktypes from database', 'warning');
-			$this->messages->setMessage('Problem getting tasktypes from database', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$tasktypes = array();
-		while($row = $this->database->fetchArray($res))
-		{
-			$tasktypes[] = $row;
-		}
-
-		$this->debug->unguard($tasktypes);
-		return $tasktypes;
-	}
-
-
-	public function getTasktypeInformation($tasktypeid)
-	{
-		$this->debug->guard();
-
-		$userfunctions = new tkUserfunctions();
-
-		$sql = "SELECT tt.*, COUNT(t.task_id) as tasktype_count FROM tasktypes tt LEFT JOIN tasks t ON tt.tasktype_id = t.task_type ";
-		$sql .= "WHERE tt.tasktype_id='" . $tasktypeid . "' AND tt.tasktype_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
-		$sql .= "GROUP BY tt.tasktype_id;";
-		$res = $this->database->query($sql);
-		if (!$res)
-		{
-			$this->debug->write('Problem getting tasktype information from database: '. $tasktypeid, 'warning');
-			$this->messages->setMessage('Problem getting tasktype information from database: ' . $tasktypeid, 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$row = $this->database->fetchArray($res);
-
-		$this->debug->unguard($row);
-		return $row;
-	}
-
-
-	public function getWorkflowInformation($tasktypeid)
-	{
-		$this->debug->guard();
-
-		$userfunctions = new tkUserfunctions();
-
-		$sql = "SELECT * FROM taskworkflow t WHERE taskworkflow_tasktype='" . $tasktypeid . "'";
-		$res = $this->database->query($sql);
-		if (!$res)
-		{
-			$this->debug->write('Problem getting workflow for tasktype from database: '. $tasktypeid, 'warning');
-			$this->messages->setMessage('Problem getting workflow for tasktype from database: ' . $tasktypeid, 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$workflow = array();
-		while ($row = $this->database->fetchArray($res))
-		{
-			$workflow[] = $row;
-		}
-
-		$this->debug->unguard($workflow);
-		return $workflow;
-	}
-
-
+	// instance-safe
 	public function getNumberofUsertasks()
 	{
 		$this->debug->guard();
@@ -549,6 +290,7 @@ class tkTaskfunctions
 	}
 
 
+	// instance-safe
 	public function getNumberofGrouptasks()
 	{
 		$this->debug->guard();
@@ -568,6 +310,7 @@ class tkTaskfunctions
 	}
 
 
+	// instance-safe
 	public function storeTags($tagstring, $taskid)
 	{
 		$this->debug->guard();
@@ -624,139 +367,7 @@ class tkTaskfunctions
 	}
 
 
-	public function workflowUp($taskid)
-	{
-		$this->debug->guard();
-
-		$userfunctions = new tkUserfunctions();
-		if (!$userfunctions->checkRightsForTask($taskid))
-		{
-			$this->debug->write('The task is out of bounds of the instance', 'warning');
-			$this->messages->setMessage('The task is out of bounds of the instance', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$sql = "SELECT twf.*, t.task_workflow FROM taskworkflow twf LEFT JOIN tasks t ON twf.taskworkflow_tasktype = t.task_type ";
-		$sql .= "WHERE t.task_id='" . $taskid . "' ORDER BY twf.taskworkflow_order";
-		$res = $this->database->query($sql);
-
-		$workflowOrder = array();
-		while ($row = $this->database->fetchArray($res))
-		{
-			$workflowOrder[$row['taskworkflow_order']] = $row['taskworkflow_id'];
-			$lastRow = $row;
-		}
-
-		$currentWorkflowId = array_search($lastRow['task_workflow'], $workflowOrder);
-		if ($currentWorkflowId != $workflowOrder[count($workflowOrder)])
-		{
-			if (!empty($workflowOrder[$currentWorkflowId+1]))
-			{
-				$nextWorkflowId = $workflowOrder[$currentWorkflowId+1];
-
-				$sql = "UPDATE tasks SET task_workflow='" . $nextWorkflowId . "' WHERE task_id='" . $taskid . "'";
-				$res = $this->database->query($sql);
-				if (!$res)
-				{
-					$this->debug->write('Problem writing the workflow update to the database', 'warning');
-					$this->messages->setMessage('Problem writing the workflow update to the database', 'warning');
-					$this->debug->unguard(false);
-					return false;
-				}
-			}
-			else
-			{
-				$this->debug->write('Problem defining the workflow', 'warning');
-				$this->messages->setMessage('Problem defining the workflow', 'warning');
-				$this->debug->unguard(false);
-				return false;
-			}
-		}
-		else
-		{
-			// archive
-			$sql = "UPDATE tasks SET task_workflow='0' WHERE task_id='" . $taskid . "'";
-			$res = $this->database->query($sql);
-			if (!$res)
-			{
-				$this->debug->write('Problem writing the workflow update to the database', 'warning');
-				$this->messages->setMessage('Problem writing the workflow update to the database', 'warning');
-				$this->debug->unguard(false);
-				return false;
-			}
-		}
-
-		$sql = "DELETE FROM tasks_to_users WHERE taskusers_task='" . $taskid . "'";
-		$res = $this->database->query($sql);
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-
-	public function workflowDown($taskid)
-	{
-		$this->debug->guard();
-
-		$userfunctions = new tkUserfunctions();
-		if (!$userfunctions->checkRightsForTask($taskid))
-		{
-			$this->debug->write('The task is out of bounds of the instance', 'warning');
-			$this->messages->setMessage('The task is out of bounds of the instance', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$sql = "SELECT twf.*, t.task_workflow FROM taskworkflow twf LEFT JOIN tasks t ON twf.taskworkflow_tasktype = t.task_type ";
-		$sql .= "WHERE t.task_id='" . $taskid . "' ORDER BY twf.taskworkflow_order";
-		$res = $this->database->query($sql);
-
-		$workflowOrder = array();
-		while ($row = $this->database->fetchArray($res))
-		{
-			$workflowOrder[$row['taskworkflow_order']] = $row['taskworkflow_id'];
-			$lastRow = $row;
-		}
-
-		$currentWorkflowId = array_search($lastRow['task_workflow'], $workflowOrder);
-		if ($currentWorkflowId > 1)
-		{
-			if (!empty($workflowOrder[$currentWorkflowId+1]))
-			{
-				$nextWorkflowId = $workflowOrder[$currentWorkflowId-1];
-
-				$sql = "UPDATE tasks SET task_workflow='" . $nextWorkflowId . "' WHERE task_id='" . $taskid . "'";
-				$res = $this->database->query($sql);
-				if (!$res)
-				{
-					$this->debug->write('Problem writing the workflow update to the database', 'warning');
-					$this->messages->setMessage('Problem writing the workflow update to the database', 'warning');
-					$this->debug->unguard(false);
-					return false;
-				}
-			}
-			else
-			{
-				$this->debug->write('Problem defining the workflow', 'warning');
-				$this->messages->setMessage('Problem defining the workflow', 'warning');
-				$this->debug->unguard(false);
-				return false;
-			}
-		}
-		else
-		{
-			// TODO: ins archiv
-		}
-
-		$sql = "DELETE FROM tasks_to_users WHERE taskusers_task='" . $taskid . "'";
-		$res = $this->database->query($sql);
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-
+	// instance-safe
 	public function acceptTask($taskid)
 	{
 		$this->debug->guard();
@@ -785,6 +396,7 @@ class tkTaskfunctions
 	}
 
 
+	// instance-safe
 	public function declineTask($taskid)
 	{
 		$this->debug->guard();
@@ -813,6 +425,7 @@ class tkTaskfunctions
 	}
 
 
+	// instance-safe
 	public function addAdhoc($adhocdata=array())
 	{
 		$this->debug->guard();

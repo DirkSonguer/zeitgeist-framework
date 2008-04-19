@@ -322,6 +322,15 @@ td {
     font-size: 12pt;
 }
 
+.disabledformtext {
+	color:#000000;
+	border:solid 1px #777788;
+	padding: 3px;
+	width:280px;
+    font-family: Osaka,verdana,Sans-Serif;
+    font-size: 12pt;
+}
+
 .formbutton {
 	border:solid 1px #777788;
     font-family: Osaka,verdana,Sans-Serif;

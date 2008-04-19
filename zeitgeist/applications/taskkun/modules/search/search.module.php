@@ -28,6 +28,7 @@ class search
 
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('search', 'templates', 'search_index'));
+		$tpl->assign('documenttitle', 'Suche in Aufgaben');
 
 		$tpl->show();
 

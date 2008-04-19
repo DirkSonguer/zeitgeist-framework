@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Taskkun</title>
+<title>Taskkun - @@{documenttitle}@@</title>
 <!-- InstanceEndEditable -->
 
 <link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/taskkun.css" />
@@ -44,65 +44,24 @@
 
 	<script type="text/javascript">
 
-		var dsUserdata = new Spry.Data.XMLDataSet("@@{[dataserver.getuserinformation]}@@", "container/element");
-		dsUserdata.setColumnType("user_id", "number");
-
-		var dsUserroles = new Spry.Data.XMLDataSet("@@{[dataserver.getuserroles]}@@", "container/element");
-
 		var dsUsergroups = new Spry.Data.XMLDataSet("@@{[dataserver.getusergroups]}@@", "container/element");
-
-		var bShowShortcuts = false;
-		shortcutUp = new Image();
-		shortcutUp.src = "@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png";
-		shortcutDown = new Image();
-		shortcutDown.src = "@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png";
-	
-		function showShortcuts()
-		{
-			if (bShowShortcuts == false)
-			{
-				bShowShortcuts = true;
-				document.getElementById('Shortcuts').style.display = "block";
-				document.images["shortcutIcon"].src = shortcutUp.src;
-			}
-			else
-			{
-				bShowShortcuts = false;
-				document.getElementById('Shortcuts').style.display = "none";
-				document.images["shortcutIcon"].src = shortcutDown.src;
-			}
-		}
 		
-		function deleteUser(id, name)
+		function deleteUsergroup(id, count, name)
 		{
-			var answer = window.confirm("Do you really want to delete the user '" + name + "'?");
+			if (count > 0)
+			{
+				alert("Sie können keine Benutzergruppe löschen, die noch aktiv in Aufgabenabläufen genutzt wird.\nBitte entfernen Sie zunächst die Benutzergruppe aus allen Aufgabenabläufen.");
+				return;
+			}
+			
+			var answer = window.confirm("Wollen Sie die Benutzergruppe '" + name + "' wirklich löschen?");
 
 			/* Question icon, Yes/No button. */
 			/* 0 = error, 1 = OK, 2 = Cancel, 3 = No, 4 = Yes */
-
 			if (answer == true)
 			{
 			   window.location.href = "@@{[users.deleteuser]}@@"+"&id="+id;
 			}
-		}
-
-		function updateSearch()
-		{
-			document.searchform.submit();
-		}
-
-
-		function filterUsergroup()
-		{
-			filterParameter = document.getElementById('filter_usergroup').value;
-			filterSpryDataset('group_name', filterParameter, dsUserdata, false);
-		}
-
-
-		function filterUserrole()
-		{
-			filterParameter = document.getElementById('filter_userrole').value;
-			filterSpryDataset('userrole_id', filterParameter, dsUserdata, true);
 		}
 
 	</script>
@@ -185,77 +144,30 @@
 -->
 
 	<div class="textbox">
-		<h2 style="text-align:left; background:#B5BD82; padding:5px;">Filter anwenden <span style="float:right; margin-top:-20px;"><a href="javascript:showShortcuts();" alt=""><span onmousemove="showTooltip('Weitere Angaben', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png" alt="" name="shortcutIcon" align="left" border="0" /></span></a></span></h2>
-		<div style="clear:both"></div>
-		<div id="Shortcuts" style="padding:5px; display:none;">
-		
-		<form name="searchform" method="post" action="@@{[users.index]}@@">
-		<table border="0" cellpadding="0" cellspacing="0" cellpadding="0" cellspacing="0" style="margin-top:10px;">
-			<tr>
-				<td width="130" valign="top" rowspan="3">
-					<p><img src="@@{templatepath}@@/nuvola/128x128/apps/kghostview.png" alt="Filter users" border="0" /></p>
-				</td>
-				<td align="left" valign="middle">
-					<p class="formlabel">Benutzergruppen anzeigen</p>
-				</td>
-				<td align="left" valign="middle">
-					<div spry:region="dsUsergroups">
-					<select id="filter_usergroup" class="formtext" style="width:255px;" onchange="filterUsergroup()">
-						<option value="-1">Alle Gruppen</option>
-						<option spry:repeat="dsUsergroups" value="{group_name}">{group_name}</option>
-					</select>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td align="left" valign="middle">
-					<p class="formlabel">Benutzerrollen anzeigen</p>
-				</td>
-				<td align="left" valign="middle">
-					<div spry:region="dsUserroles">
-					<select id="filter_userrole" class="formtext" style="width:255px;" onchange="filterUserrole()">
-						<option value="-1">Alle Rollen</option>
-						<option spry:repeat="dsUserroles" value="{userrole_id}">{userrole_name}</option>
-					</select>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td align="left" valign="middle">&nbsp;</td>
-				<td align="left" valign="middle">&nbsp;</td>
-			</tr>
-		</table>
-		</form>
-	
-		</div>
-	</div>
-
-	<div class="textbox">
-		<h3><img src="@@{templatepath}@@/nuvola/22x22/actions/view_bottom.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[users.adduser]}@@" alt="Neuen Benutzer hinzufügen">Neuen Benutzer hinzufügen</a></h3>
+		<h3><img src="@@{templatepath}@@/nuvola/22x22/actions/view_bottom.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[usergroups.addusergroup]}@@" alt="Neue Benutzergruppe hinzufügen">Neue Benutzergruppe hinzufügen</a></h3>
 	</div>
 	
 	<div class="textbox">
-	<h2>Benutzerverwaltung</h2>
+	<h2>Benutzergruppen verwalten</h2>
 	
-		<div spry:region="dsUserdata">
+		<div spry:region="dsUsergroups">
 		<div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
 	
 		<div spry:state="ready">
 			<table border="0" cellspacing="0" cellpadding="0" width=100%">
 				<tr class="tablehead">
-					<th><p><a onclick="dsUserdata.sort('user_username');" class="sortlink">Anmeldung/E-Mail</a></p></th>
-					<th><p><a onclick="dsUserdata.sort('userdata_firstname');" class="sortlink">Name</a></p></th>
-					<th><p><a onclick="dsUserdata.sort('userrole_name');" class="sortlink">Benutzerrolle</a></p></th>
-					<th><p><a onclick="dsUserdata.sort('group_name');" class="sortlink">Benutzergruppen</a></p></th>
+					<th><p><a onclick="dsUsergroups.sort('group_name');" class="sortlink">Name</a></p></th>
+					<th><p><a onclick="dsUsergroups.sort('group_description');" class="sortlink">Beschreibung</a></p></th>
+					<th><p style="text-align:center;"><a onclick="dsUsergroups.sort('group_tasktypecount');" class="sortlink">Aufgabenabläufe<br />mit dieser Gruppe</a></p></th>
 					<th><p class="thtext">Aktion</p></th>
 				</tr>
-				<tr class="{ds_EvenOddRow}" spry:repeat="dsUserdata">
-					<td><p>{dsUserdata::user_username}</p></td>
-					<td><p style="white-space:nowrap;">{dsUserdata::userdata_firstname} {dsUserdata::userdata_lastname}</p></td>
-					<td><p>{dsUserdata::userrole_name}</p></td>
-					<td><p>{dsUserdata::group_name}</p></td>
+				<tr class="{ds_EvenOddRow}" spry:repeat="dsUsergroups">
+					<td><p>{dsUsergroups::group_name}</p></td>
+					<td><p>{dsUsergroups::group_description}</p></td>
+					<td><p style="text-align:center;">{dsUsergroups::group_tasktypecount}</p></td>
 					<td width="90"><p>
-					<a href="@@{[users.edituser]}@@&id={dsUserdata::user_id}" alt="edit user"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="edit user" border="0" /></a> &nbsp; <a href="javascript:deleteUser({dsUserdata::user_id}, '{dsUserdata::user_username}')" alt="delete action"><img src="@@{templatepath}@@/nuvola/22x22/actions/cancel.png" alt="delete user" border="0" /></a>
+					<span onmousemove="showTooltip('Benutzergruppe bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[dsUsergroups.editusergroup]}@@&id={dsUsergroups::user_id}" alt="Benutzergruppe bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="Benutzergruppe bearbeiten" border="0" /></a></span> &nbsp; 
+					<span onmousemove="showTooltip('Benutzergruppe löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteUsergroup({dsUsergroups::group_id}, {dsUsergroups::group_tasktypecount}, '{dsUsergroups::group_name}')" alt="Benutzergruppe löschen"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Benutzergruppe löschen" border="0" /></a></span>
 					</p></td>
 				</tr>
 			</table>

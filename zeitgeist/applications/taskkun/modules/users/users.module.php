@@ -31,6 +31,7 @@ class users
 
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('users', 'templates', 'users_index'));
+		$tpl->assign('documenttitle', 'Benutzerübersicht');
 
 		$tpl->show();
 
@@ -41,69 +42,57 @@ class users
 
 	public function adduser($parameters=array())
 	{
+
 		$this->debug->guard();
 
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('users', 'templates', 'users_adduser'));
+		$tpl->assign('documenttitle', 'Benutzer hinzufügen');
 
 		$adduserForm = new zgStaticform();
 		$adduserForm->load('forms/adduser.form.ini');
 
 		$userfunctions = new tkUserfunctions();
 
+		$formvalid = $adduserForm->process($parameters);
+
 		if (!empty($parameters['submit']))
 		{
-			$formvalid = $adduserForm->process($parameters);
-
 			if ($formvalid)
 			{
-				$updateProblems = false;
+				$insertProblems = false;
 				$newUserdata = $parameters['adduser'];
 
-				// check and update username
-				if ($newUserdata['user_username'] != $userfunctions->getUsername($currentId))
+				if ($newUserdata['user_password'] != $newUserdata['user_password2'])
 				{
-					if (!$userfunctions->changeUsername($newUserdata['user_username'], $currentId))
-					{
-						$adduserForm->validateElement('user_username', false);
-						$this->debug->write('Der Benutzername existiert bereits. Bitte wählen Sie einen anderen Benutzernamen aus.', 'warning');
-						$this->messages->setMessage('Der Benutzername existiert bereits. Bitte wählen Sie einen anderen Benutzernamen aus.', 'userwarning');
-						$updateProblems= true;
-					}
+					$edituserForm->validateElement('user_password', false);
+					$edituserForm->validateElement('user_password2', false);
+					$this->messages->setMessage('Die Bestätigung stimmt nicht mit dem gewählten Passwort überein. Das Passwort wurde nicht geändert.', 'userwarning');
+					$insertProblems = true;
 				}
 
-				// userdata
-				$userfunctions->changeUserdata($newUserdata, $currentId);
+				$userdata = array();
+				if (!empty($newUserdata['userdata_lastname'])) $userdata['userdata_lastname'] = $newUserdata['userdata_lastname'];
+				if (!empty($newUserdata['userdata_firstname'])) $userdata['userdata_firstname'] = $newUserdata['userdata_firstname'];
+				if (!empty($newUserdata['userdata_address1'])) $userdata['userdata_address1'] = $newUserdata['userdata_address1'];
+				if (!empty($newUserdata['userdata_address2'])) $userdata['userdata_address2'] = $newUserdata['userdata_address2'];
+				if (!empty($newUserdata['userdata_zip'])) $userdata['userdata_zip'] = $newUserdata['userdata_zip'];
+				if (!empty($newUserdata['userdata_city'])) $userdata['userdata_city'] = $newUserdata['userdata_city'];
+				if (!empty($newUserdata['userdata_url'])) $userdata['userdata_url'] = $newUserdata['userdata_url'];
 
-				// check and update password
-				if ( (!empty($newUserdata['user_password'])) || (!empty($newUserdata['user_password2'])) )
+				if (!$insertProblems)
 				{
-					if ($newUserdata['user_password'] == $newUserdata['user_password2'])
+					if (!$userfunctions->createUser($newUserdata['user_username'], $newUserdata['user_password'], $newUserdata['userroleuser_userrole'], $newUserdata['userroleuser_usergroups'], $userdata))
 					{
-						$userfunctions->changePassword($newUserdata['user_password'], $currentId);
+						$this->messages->setMessage('Die Benutzerdaten konnte nicht gespeichert werden.', 'userwarning');
 					}
 					else
 					{
-						$adduserForm->validateElement('user_password', false);
-						$adduserForm->validateElement('user_password2', false);
-						$this->messages->setMessage('Die Bestätigung stimmt nicht mit dem gewählten Passwort überein. Das Passwort wurde nicht geändert.', 'userwarning');
-						$updateProblems = true;
+						$this->messages->setMessage('Die Daten wurden erfolgreich gespeichert.', 'usermessage');
+						$this->debug->unguard(true);
+						$tpl->redirect($tpl->createLink('users', 'index'));
+						return true;
 					}
-				}
-
-				// userroles
-				if ( (!empty($newUserdata['userroleuser_userrole'])) && ($newUserdata['userroleuser_userrole'] != $userfunctions->getUserrole($currentId)) )
-				{
-					if (!$userfunctions->changeUserrole($newUserdata['userroleuser_userrole'], $currentId))
-					{
-						$this->messages->setMessage('Die Nutzerrolle konnte nicht gespeichert werden.', 'userwarning');
-						$updateProblems = true;
-					}
-				}
-
-				if (!$updateProblems)
-				{
-					$this->messages->setMessage('Die Daten wurden erfolgreich gespeichert.', 'usermessage');
 				}
 			}
 			else
@@ -111,26 +100,22 @@ class users
 				$this->messages->setMessage('Fehler bei der Eingabe. Bitte überprüfen Sie Ihre Angaben sorgfältig.', 'userwarning');
 			}
 		}
-		else
-		{
-			$processData = array();
-			$formvalid = $adduserForm->process($processData);
-		}
 
 		$formcreated = $adduserForm->create($tpl);
 
 		// show userroles
-		$sqlUser = "SELECT u.*, ur.* FROM users AS u, userroles_to_users AS uru LEFT JOIN userroles ur ON ur.userrole_id = uru.userroleuser_userrole WHERE u.user_id = uru.userroleuser_user AND u.user_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "'";
-		$resUser = $this->database->query($sqlUser);
-		$rowUser = $this->database->fetchArray($resUser);
-
-		$sqlUserroles = "SELECT * FROM userroles";
-		$resUserroles = $this->database->query($sqlUserroles);
-		while ($rowUserroles = $this->database->fetchArray($resUserroles))
+		$currentUserrole = 0;
+		if (!empty($parameters['adduser']['userroleuser_userrole']))
 		{
-			$tpl->assign('userrole_value', $rowUserroles['userrole_id']);
-			$tpl->assign('userrole_text', $rowUserroles['userrole_name']);
-			if ($rowUserroles['userrole_id'] == $rowUser['userrole_id'])
+			$currentUserrole = $parameters['adduser']['userroleuser_userrole'];
+		}
+
+		$userroles = $userfunctions->getUserroles();
+		foreach ($userroles as $rowUserrole)
+		{
+			$tpl->assign('userrole_value', $rowUserrole['userrole_id']);
+			$tpl->assign('userrole_text', $rowUserrole['userrole_name']);
+			if ($rowUserrole['userrole_id'] == $currentUserrole)
 			{
 				$tpl->assign('userrole_check', 'checked="checked"');
 			}
@@ -142,14 +127,22 @@ class users
 			$tpl->insertBlock('userrole_loop');
 		}
 
-		$sqlUsergroups = "SELECT group_id, group_name, IF(u2g.usergroup_user='" . $currentId . "', '1','0') as group_selected ";
-		$sqlUsergroups .= "FROM groups g LEFT JOIN users_to_groups u2g ON g.group_id = u2g.usergroup_group GROUP BY g.group_id";
-		$resUsergroups = $this->database->query($sqlUsergroups);
-		while ($rowUsergroups = $this->database->fetchArray($resUsergroups))
+		// show usergroups
+		$currentUsergroups = array();
+		if (!empty($parameters['adduser']['userroleuser_usergroups']))
 		{
-			$tpl->assign('usergroup_value', $rowUsergroups['group_id']);
-			$tpl->assign('usergroup_text', $rowUsergroups['group_name']);
-			if ($rowUsergroups['group_id'] == '1')
+			foreach ($parameters['adduser']['userroleuser_usergroups'] as $tempUsergroup)
+			{
+				$currentUsergroups[$tempUsergroup[0]] = 1;
+			}
+		}
+
+		$usergroups = $userfunctions->getUsergroups();
+		foreach ($usergroups as $rowUsergroup)
+		{
+			$tpl->assign('usergroup_value', $rowUsergroup['group_id']);
+			$tpl->assign('usergroup_text', $rowUsergroup['group_name']);
+			if (!empty($currentUsergroups[$rowUsergroup['group_id']]))
 			{
 				$tpl->assign('usergroup_check', 'selected="selected"');
 			}
@@ -161,7 +154,6 @@ class users
 			$tpl->insertBlock('usergroup_loop');
 		}
 
-		$tpl->assign('user_id:value', $currentId);
 		$tpl->show();
 
 		$this->debug->unguard(true);
@@ -179,6 +171,7 @@ class users
 
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('users', 'templates', 'users_edituser'));
+		$tpl->assign('documenttitle', 'Benutzer bearbeiten');
 
 		$edituserForm = new zgStaticform();
 		$edituserForm->load('forms/edituser.form.ini');
@@ -226,11 +219,21 @@ class users
 				}
 
 				// userroles
-				if ( (!empty($newUserdata['userroleuser_userrole'])) && ($newUserdata['userroleuser_userrole'] != $userfunctions->getUserrole($currentId)) )
+				if ( (!empty($newUserdata['userroleuser_userrole'])) && ($newUserdata['userroleuser_userrole'] != $userfunctions->getUserroleForUser($currentId)) )
 				{
 					if (!$userfunctions->changeUserrole($newUserdata['userroleuser_userrole'], $currentId))
 					{
 						$this->messages->setMessage('Die Nutzerrolle konnte nicht gespeichert werden.', 'userwarning');
+						$updateProblems = true;
+					}
+				}
+
+				// usergroups
+				if (!empty($newUserdata['userroleuser_usergroups']))
+				{
+					if (!$userfunctions->changeUsergroups($newUserdata['userroleuser_usergroups'], $currentId))
+					{
+						$this->messages->setMessage('Die Nutzergruppen konnten nicht gespeichert werden.', 'userwarning');
 						$updateProblems = true;
 					}
 				}
@@ -247,31 +250,25 @@ class users
 		}
 		else
 		{
-			$sqlUser = "SELECT u.user_username, ud.* FROM users AS u LEFT JOIN userdata ud ON u.user_id = ud.userdata_user WHERE u.user_id = '" . $currentId . "'";
-			$resUser = $this->database->query($sqlUser);
-			$rowUser = $this->database->fetchArray($resUser);
-
-			$rowUser['user_password'] = '';
+			$userinformation = $userfunctions->getUserdata($currentId);
+			$userinformation['user_password'] = '';
 
 			$processData = array();
-			$processData['edituser'] = $rowUser;
+			$processData['edituser'] = $userinformation;
 			$formvalid = $edituserForm->process($processData);
 		}
 
 		$formcreated = $edituserForm->create($tpl);
 
 		// show userroles
-		$sqlUser = "SELECT u.*, ur.* FROM users AS u, userroles_to_users AS uru LEFT JOIN userroles ur ON ur.userrole_id = uru.userroleuser_userrole WHERE u.user_id = uru.userroleuser_user AND u.user_id = '" . $currentId . "'";
-		$resUser = $this->database->query($sqlUser);
-		$rowUser = $this->database->fetchArray($resUser);
+		$currentUserrole = $userfunctions->getUserroleForUser($currentId);
+		$userroles = $userfunctions->getUserroles();
 
-		$sqlUserroles = "SELECT * FROM userroles";
-		$resUserroles = $this->database->query($sqlUserroles);
-		while ($rowUserroles = $this->database->fetchArray($resUserroles))
+		foreach ($userroles as $rowUserrole)
 		{
-			$tpl->assign('userrole_value', $rowUserroles['userrole_id']);
-			$tpl->assign('userrole_text', $rowUserroles['userrole_name']);
-			if ($rowUserroles['userrole_id'] == $rowUser['userrole_id'])
+			$tpl->assign('userrole_value', $rowUserrole['userrole_id']);
+			$tpl->assign('userrole_text', $rowUserrole['userrole_name']);
+			if ($rowUserrole['userrole_id'] == $currentUserrole)
 			{
 				$tpl->assign('userrole_check', 'checked="checked"');
 			}
@@ -283,14 +280,20 @@ class users
 			$tpl->insertBlock('userrole_loop');
 		}
 
-		$sqlUsergroups = "SELECT group_id, group_name, IF(u2g.usergroup_user='" . $currentId . "', '1','0') as group_selected ";
-		$sqlUsergroups .= "FROM groups g LEFT JOIN users_to_groups u2g ON g.group_id = u2g.usergroup_group GROUP BY g.group_id";
-		$resUsergroups = $this->database->query($sqlUsergroups);
-		while ($rowUsergroups = $this->database->fetchArray($resUsergroups))
+		// show usergroups
+		$tempUsergroups = $userfunctions->getUsergroupsForUser($currentId);
+		$currentUsergroups = array();
+		foreach ($tempUsergroups as $tempUsergroup)
 		{
-			$tpl->assign('usergroup_value', $rowUsergroups['group_id']);
-			$tpl->assign('usergroup_text', $rowUsergroups['group_name']);
-			if ($rowUsergroups['group_id'] == '1')
+			$currentUsergroups[$tempUsergroup['group_id']] = 1;
+		}
+
+		$usergroups = $userfunctions->getUsergroups();
+		foreach ($usergroups as $rowUsergroup)
+		{
+			$tpl->assign('usergroup_value', $rowUsergroup['group_id']);
+			$tpl->assign('usergroup_text', $rowUsergroup['group_name']);
+			if (!empty($currentUsergroups[$rowUsergroup['group_id']]))
 			{
 				$tpl->assign('usergroup_check', 'selected="selected"');
 			}

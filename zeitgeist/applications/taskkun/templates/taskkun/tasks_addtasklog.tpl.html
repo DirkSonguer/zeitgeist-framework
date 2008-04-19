@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Taskkun</title>
+<title>Taskkun - @@{documenttitle}@@</title>
 <!-- InstanceEndEditable -->
 
 <link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/taskkun.css" />
@@ -40,6 +40,7 @@
 	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryData.js"></script>
 	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/xpath.js"></script>
 	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryNestedXMLDataSet.js"></script>
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryCollapsiblePanel.js"></script>
 	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/js/SpryExtensions.js"></script>
 
 	<script type="text/javascript" src="@@{templatepath}@@/js/date-picker/js/datepicker.js"></script>
@@ -48,45 +49,6 @@
 	<script language="javascript" type="text/javascript">
 
 		var dsTasklogs = new Spry.Data.XMLDataSet("@@{[dataserver.gettasklogs]}@@&id=@@{tasklog_task:value}@@", "container/element");
-
-		var bShowTasklogs = false;
-		var bShowAdditional = false;
-		iconUp = new Image();
-		iconUp.src = "@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png";
-		iconDown = new Image();
-		iconDown.src = "@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png";
-
-		function showTasklogs()
-		{
-			if (bShowTasklogs == false)
-			{
-				bShowTasklogs = true;
-				document.getElementById('Tasklogs').style.display = "block";
-				document.images["tasklogIcon"].src = iconUp.src;
-			}
-			else
-			{
-				bShowTasklogs = false;
-				document.getElementById('Tasklogs').style.display = "none";
-				document.images["tasklogIcon"].src = iconDown.src;
-			}
-		}
-
-		function showAdditional()
-		{
-			if (bShowAdditional == false)
-			{
-				bShowAdditional = true;
-				document.getElementById('Additional').style.display = "block";
-				document.images["additionalIcon"].src = iconUp.src;
-			}
-			else
-			{
-				bShowAdditional = false;
-				document.getElementById('Additional').style.display = "none";
-				document.images["additionalIcon"].src = iconDown.src;
-			}
-		}
 
 		function submitForm(buttonid)
 		{
@@ -179,46 +141,49 @@
 <!-- InstanceBeginEditable name="body" -->
 
 <!-- TemplateBeginBlock name="tasklogs" -->
-<div class="textbox">
-	<h2 style="text-align:left; background:#B5BD82; padding:5px;">Bisherige Tätigkeiten <span style="float:right; margin-top:-20px;"><a href="javascript:showTasklogs();" alt=""><span onmousemove="showTooltip('Bisherige Tätigkeiten', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png" alt="" name="tasklogIcon" align="left" border="0" /></span></a></span></h2>
-	<div style="clear:both"></div>
-
-	<div id="Tasklogs" style="padding:0px; display:none;">
-
-	<div spry:region="dsTasklogs">
-    <div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
-
-	<div spry:state="ready">
-	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
-	        <tr class="tablehead">
-				<th width="40"><p style="text-align:center;"><a onclick="dsTasklogs.sort('tasklog_id');">ID</a></p></th>
-				<th width="150"><p><a onclick="dsTasklogs.sort('tasklog_username');">Bearbeitet von</a></p></th>
-				<th width="100"><p style="text-align:center;"><a onclick="dsTasklogs.sort('task_hoursworked');">Dauer</a></p></th>
-				<th><p>Tätigkeitbeschreibung</p></th>
-				<th width="200"><p style="text-align:center;"><a onclick="dsTasklogs.sort('tasklog_timestamp');">Datum</a></p></th>
-				<th><p>Aktionen</p></th>
-	        </tr>
-	        <tr class="{ds_EvenOddRow}" spry:repeat="dsTasklogs">
-				<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_id}</p></td>
-				<td valign="top"><p>{dsTasklogs::tasklog_username}</p></td>
-				<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_hoursworked}</p></td>
-				<td valign="top"><p>{dsTasklogs::tasklog_description}</p></td>
-				<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_date}</p></td>
-				<td width="90">
-					<div spry:choose="spry:choose">
-						<div spry:when="'{dsTasklogs::tasklog_editdelete}' == '0'"><p style="text-align:center;">-</p></div>
-						<div spry:default="spry:default">
-							<p style="text-align:center;">
-							<span onmousemove="showTooltip('Tätigkeitsbeschreibung bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.edittasklog]}@@&id={dsTasklogs::tasklog_id}" alt="Tätigkeitsbeschreibung bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="Tätigkeitsbeschreibung bearbeiten" border="0" /></a></span> &nbsp;
-							<span onmousemove="showTooltip('Tätigkeitsbeschreibung löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteTasklog({dsTasklogs::tasklog_id})" alt="Tätigkeitsbeschreibung löschen"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Tätigkeitsbeschreibung löschen" border="0" /></a></span>
-							</p>
-						</div>
-					</div>
-				</td>
-	        </tr>
-	    </table>
-    </div>
+<div id="Tasklogs" class="CollapsiblePanel, textbox">
+	<div class="CollapsiblePanelTab">
+		<h2 style="text-align:left; background:#B5BD82; padding:5px;">Bisherige Tätigkeiten
+		<span style="float:right; margin-top:-20px;"><img src="@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png" alt="" name="groupIcon" align="left" border="0" /><img src="@@{templatepath}@@/nuvola/22x22/actions/1downarrow.png" alt="" name="groupIcon" align="left" border="0" /></span>
+		</h2>
 	</div>
+
+	<div class="CollapsiblePanelContent">
+
+		<div spry:region="dsTasklogs">
+		<div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
+	
+		<div spry:state="ready">
+			<table border="0" cellspacing="0" cellpadding="0" width=100%">
+				<tr class="tablehead">
+					<th width="40"><p style="text-align:center;"><a onclick="dsTasklogs.sort('tasklog_id');">ID</a></p></th>
+					<th width="150"><p><a onclick="dsTasklogs.sort('tasklog_username');">Bearbeitet von</a></p></th>
+					<th width="100"><p style="text-align:center;"><a onclick="dsTasklogs.sort('task_hoursworked');">Dauer</a></p></th>
+					<th><p>Tätigkeitbeschreibung</p></th>
+					<th width="200"><p style="text-align:center;"><a onclick="dsTasklogs.sort('tasklog_timestamp');">Datum</a></p></th>
+					<th><p>Aktionen</p></th>
+				</tr>
+				<tr class="{ds_EvenOddRow}" spry:repeat="dsTasklogs">
+					<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_id}</p></td>
+					<td valign="top"><p>{dsTasklogs::tasklog_username}</p></td>
+					<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_hoursworked}</p></td>
+					<td valign="top"><p>{dsTasklogs::tasklog_description}</p></td>
+					<td valign="top"><p style="text-align:center;">{dsTasklogs::tasklog_date}</p></td>
+					<td width="90">
+						<div spry:choose="spry:choose">
+							<div spry:when="'{dsTasklogs::tasklog_editdelete}' == '0'"><p style="text-align:center;">-</p></div>
+							<div spry:default="spry:default">
+								<p style="text-align:center;">
+								<span onmousemove="showTooltip('Tätigkeitsbeschreibung bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.edittasklog]}@@&id={dsTasklogs::tasklog_id}" alt="Tätigkeitsbeschreibung bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="Tätigkeitsbeschreibung bearbeiten" border="0" /></a></span> &nbsp;
+								<span onmousemove="showTooltip('Tätigkeitsbeschreibung löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteTasklog({dsTasklogs::tasklog_id})" alt="Tätigkeitsbeschreibung löschen"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Tätigkeitsbeschreibung löschen" border="0" /></a></span>
+								</p>
+							</div>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		</div>
 	</div>
 </div>
 <!-- TemplateEndBlock -->
@@ -282,6 +247,10 @@
 		</table>
 	</div>
 </form>
+
+<script type="text/javascript">
+	var Tasklogs = new Spry.Widget.CollapsiblePanel("Tasklogs", {contentIsOpen:false});
+</script> 
 
 <!-- InstanceEndEditable -->
 

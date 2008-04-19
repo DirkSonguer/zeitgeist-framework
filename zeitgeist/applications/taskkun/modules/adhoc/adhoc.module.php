@@ -28,6 +28,7 @@ class adhoc
 
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('adhoc', 'templates', 'adhoc_index'));
+		$tpl->assign('documenttitle', 'Ad-Hoc-Tätigkeit eintragen');
 
 		$addadhocForm = new zgStaticform();
 		$addadhocForm->load('forms/addadhoc.form.ini');
