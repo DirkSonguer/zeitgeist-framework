@@ -208,14 +208,12 @@
 	<div spry:state="ready">
 	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
 	        <tr class="tablehead">
-				<th><p><a onclick="dsResults.sort('task_id');" class="sortlink">ID</a></p></th>
-				<th><p><a onclick="dsResults.sort('task_name');" class="sortlink">Name</a></p></th>
+				<th><p><a onclick="dsResults.sort('task_name');" class="sortlink">Aufgabe</a></p></th>
 				<th><p><a onclick="dsResults.sort('group_name');" class="sortlink">Verantwortlich</a></p></th>
 				<th><p style="text-align:center;"><a onclick="dsResults.sort('task_end');" class="sortlink">Fällig am</a></p></th>
 				<th><p class="thtext">Aktionen</p></th>
 	        </tr>
 	        <tr class="{ds_EvenOddRow}" spry:repeat="dsResults">
-				<td><p>{dsResults::task_id}</p></td>
 				<td><p><span onmousemove="showTooltip('{dsResults::task_description}', event)" onmouseout="hideTooltip()">{dsResults::task_name}</span></p></td>
 				<td>
 					<div spry:choose="spry:choose">
@@ -236,7 +234,7 @@
 				<td width="120"><p style="text-align:center;">
 				<span onmousemove="showTooltip('Details', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.taskdetails]}@@&id={dsResults::task_id}" alt="Details"><img src="@@{templatepath}@@/nuvola/22x22/apps/kappfinder.png" alt="Details" border="0" /></a></span> &nbsp; 
 				<span onmousemove="showTooltip('Aufgabe bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.edittask]}@@&id={dsResults::task_id}" alt="Aufgabe bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="Aufgabe bearbeiten" border="0" /></a></span> &nbsp; 
-				<span onmousemove="showTooltip('Aufgabe löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteTask({dsResults::task_id}, '{dsResults::task_name}')" alt="Aufgabe löschen"><img src="@@{templatepath}@@/nuvola/22x22/actions/cancel.png" alt="Aufgabe löschen" border="0" /></a></span>
+				<span onmousemove="showTooltip('Aufgabe löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteTask({dsResults::task_id}, '{dsResults::task_name}')" alt="Aufgabe löschen"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Aufgabe löschen" border="0" /></a></span>
                 </p></td>
 	        </tr>
 	    </table>

@@ -86,6 +86,27 @@ table {
 }
 
 
+table.activetasks {
+	margin-left:0pt;
+	margin-right:0pt;
+	margin-top:0pt;
+	margin-bottom:0pt;
+	table-layout:fixed;
+	padding:0px;
+	width:100%;
+}
+
+p.ptable {
+	font-family: "Georgia",Serif;
+	font-size: 12pt;
+	text-align:left;
+	margin-left:5pt;
+	margin-right:5pt;
+	margin-top:2pt;
+	margin-bottom:5pt;
+	color:#000000;
+}
+
 a:link {
 	text-decoration:underline;
 	letter-spacing:0.6pt;
@@ -369,7 +390,7 @@ td {
 .targetwarning {
 	text-align:center;
 	background:#ec921a;
-	padding:10px;
+	padding:5px;
 }
 
 .targeterror {
@@ -377,7 +398,7 @@ td {
 	font-weight:bold;
 	background:#aa0000;
 	color:#ffffff;
-	padding:10px;
+	padding:5px;
 }
 
 .usermessage {

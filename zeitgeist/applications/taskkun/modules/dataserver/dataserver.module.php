@@ -87,7 +87,7 @@ class dataserver
 
 		$userfunctions = new tkUserfunctions();
 
-		$sql = "SELECT SUM(tl.tasklog_hoursworked) as task_hoursworked, t.*, u.user_username, tt.tasktype_name, g.group_name, ";
+		$sql = "SELECT SUM(tl.tasklog_hoursworked) as task_hoursworked, t.*, u.user_username, tt.tasktype_name, g.group_name, g.group_id, ";
 		$sql .= "DATE_FORMAT(t.task_end, '%d.%m.%Y') as task_end, DATE_FORMAT(t.task_begin, '%d.%m.%Y') as task_begin, ";
 		$sql .= "CASE WHEN ((t.task_end < CURDATE()) && (t.task_end != '00.00.0000')) THEN '2' ";
 		$sql .= "WHEN ((t.task_end = CURDATE()) && (t.task_end != '00.00.0000'))  THEN '1' ";
@@ -104,7 +104,7 @@ class dataserver
 		$sql .= "LEFT JOIN groups g ON twf.taskworkflow_group = g.group_id ";
 		$sql .= "WHERE t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
 		$sql .= "AND t.task_workflow>'0' ";
-		$sql .= "GROUP BY t.task_id ORDER BY t.task_priority DESC";
+		$sql .= "GROUP BY t.task_id ORDER BY t.task_end";
 
 		$xmlData = $this->dataserver->createXMLDatasetFromSQL($sql);
 		$this->dataserver->streamXMLDataset($xmlData);
@@ -180,6 +180,7 @@ class dataserver
 	}
 
 
+	// instance-safe
 	public function gettaskinformation($parameters=array())
 	{
 		$this->debug->guard();
@@ -198,16 +199,24 @@ class dataserver
 	}
 
 
+	// instance-safe
 	public function getuserinformation($parameters=array())
 	{
 		$this->debug->guard();
 
-		$sql = 'SELECT u.user_id, u.user_username, ud.*, ur.userrole_id, ur.userrole_name, g.group_name FROM users u ';
+		$userfunctions = new tkUserfunctions();
+
+		$sql = 'SELECT COUNT(ttu.taskusers_task) as user_taskcount, u.user_id, u.user_username, ud.*, ur.userrole_id, ur.userrole_name, g.group_name ';
+		$sql .= 'FROM users u ';
 		$sql .= 'LEFT JOIN userdata ud ON u.user_id = ud.userdata_user ';
 		$sql .= 'LEFT JOIN userroles_to_users u2u ON u2u.userroleuser_user = u.user_id ';
 		$sql .= 'LEFT JOIN userroles ur ON u2u.userroleuser_userrole = ur.userrole_id ';
 		$sql .= 'LEFT JOIN users_to_groups u2g ON u.user_id = u2g.usergroup_user ';
-		$sql .= 'LEFT JOIN groups g ON u2g.usergroup_group = g.group_id';
+		$sql .= 'LEFT JOIN groups g ON u2g.usergroup_group = g.group_id ';
+		$sql .= 'LEFT JOIN tasks_to_users ttu ON u.user_id = ttu.taskusers_user ';
+		$sql .= "WHERE u.user_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
+		$sql .= 'GROUP BY g.group_name, u.user_id ';
+		$sql .= 'ORDER BY u.user_id';
 
 		$res = $this->database->query($sql);
 		$userinformation = array();
@@ -248,14 +257,19 @@ class dataserver
 	}
 
 
+	// instance-safe
 	public function gettasktypes($parameters=array())
 	{
 		$this->debug->guard();
 
-		$tasktypefunctions = new tkTasktypefunctions();
-		$tasktypes = $tasktypefunctions->getTaskTypes();
+		$userfunctions = new tkUserfunctions();
 
-		$xmlData = $this->dataserver->createXMLDatasetFromArray($tasktypes);
+		$sql = "SELECT tt.*, COUNT(twf.taskworkflow_tasktype) as tasktype_count FROM tasktypes tt ";
+		$sql .= "LEFT JOIN taskworkflow twf ON tt.tasktype_id = twf.taskworkflow_tasktype ";
+		$sql .= "WHERE tasktype_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
+		$sql .= "GROUP BY twf.taskworkflow_tasktype";
+
+		$xmlData = $this->dataserver->createXMLDatasetFromSQL($sql, $this->database);
 		$this->dataserver->streamXMLDataset($xmlData);
 		die();
 
@@ -281,6 +295,7 @@ class dataserver
 	}
 
 
+	// instance-safe
 	public function getalltags($parameters=array())
 	{
 		$this->debug->guard();
@@ -327,6 +342,7 @@ class dataserver
 	}
 
 
+	// instance-safe
 	public function searchtasks($parameters=array())
 	{
 		$this->debug->guard();

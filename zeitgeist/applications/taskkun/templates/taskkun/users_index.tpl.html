@@ -41,6 +41,7 @@
 	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/xpath.js"></script>
 	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryNestedXMLDataSet.js"></script>
 	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryCollapsiblePanel.js"></script>
+	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryAccordion.js"></script>
 	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/js/SpryExtensions.js"></script>
 
 	<script type="text/javascript">
@@ -219,29 +220,60 @@
 	<h2>Benutzerverwaltung</h2>
 	
 		<div spry:region="dsUserdata">
-		<div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
+			<div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
+		
+			<div spry:state="ready">
+				<table border="0" cellspacing="0" cellpadding="0" class="activetasks">
+					<tr class="tablehead">
+						<th><p><a onclick="dsUserdata.sort('user_username');" class="sortlink">Anmeldung/E-Mail</a></p></th>
+						<th style="width:280px;"><p><a onclick="dsUserdata.sort('userdata_firstname');" class="sortlink">Name</a></p></th>
+						<th style="width:200px;"><p style="text-align:center;"><a onclick="dsUsergroups.sort('user_taskcount');" class="sortlink">Aktive Aufgaben<br />des Benutzers</a></p></th>
+						<th style="width:90px;"><p class="thtext">Aktion</p></th>
+					</tr>
+				</table>
+				
+				<div id="UserOverview" class="Accordion" tabindex="0">
+					<div spry:repeat="dsUserdata" class="{ds_EvenOddRow}">
+						<div class="AccordionPanelTab">
 	
-		<div spry:state="ready">
-			<table border="0" cellspacing="0" cellpadding="0" width=100%">
-				<tr class="tablehead">
-					<th><p><a onclick="dsUserdata.sort('user_username');" class="sortlink">Anmeldung/E-Mail</a></p></th>
-					<th><p><a onclick="dsUserdata.sort('userdata_firstname');" class="sortlink">Name</a></p></th>
-					<th><p><a onclick="dsUserdata.sort('userrole_name');" class="sortlink">Benutzerrolle</a></p></th>
-					<th><p><a onclick="dsUserdata.sort('group_name');" class="sortlink">Benutzergruppen</a></p></th>
-					<th><p class="thtext">Aktion</p></th>
-				</tr>
-				<tr class="{ds_EvenOddRow}" spry:repeat="dsUserdata">
-					<td><p>{dsUserdata::user_username}</p></td>
-					<td><p style="white-space:nowrap;">{dsUserdata::userdata_firstname} {dsUserdata::userdata_lastname}</p></td>
-					<td><p>{dsUserdata::userrole_name}</p></td>
-					<td><p>{dsUserdata::group_name}</p></td>
-					<td width="90"><p>
-					<span onmousemove="showTooltip('Benutzer bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[users.edituser]}@@&id={dsUserdata::user_id}" alt="Benutzer bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="Benutzer bearbeiten" border="0" /></a></span> &nbsp; 
-					<span onmousemove="showTooltip('Benutzer löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteUser({dsUserdata::user_id}, '{dsUserdata::user_username}')" alt="Benutzer löschen"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Benutzer löschen" border="0" /></a></span>
-					</p></td>
-				</tr>
-			</table>
-		</div>
+							<table border="0" cellspacing="0" cellpadding="0" class="activetasks">
+								<tr>
+									<td><p>{dsUserdata::user_username}</p></td>
+									<td style="width:350px;"><p style="white-space:nowrap;">{dsUserdata::userdata_firstname} {dsUserdata::userdata_lastname}</p></td>
+									<td style="width:70px;"><p style="text-align:center;">{dsUserdata::user_taskcount}</p></td>
+									<td style="width:150px;"><p style="text-align:right;">
+									<span onmousemove="showTooltip('Benutzer bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[users.edituser]}@@&id={dsUserdata::user_id}" alt="Benutzer bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="Benutzer bearbeiten" border="0" /></a></span> &nbsp; 
+									<span onmousemove="showTooltip('Benutzer löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteUser({dsUserdata::user_id}, '{dsUserdata::user_username}')" alt="Benutzer löschen"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Benutzer löschen" border="0" /></a></span>
+									</p></td>
+								</tr>
+							</table>
+							
+						</div>
+						
+						<div class="AccordionPanelContent">
+						
+							<table border="0" cellspacing="0" cellpadding="0" class="activetasks" style="margin-bottom:10px;">
+							<tr>
+								<td valign="top">
+									<p class="ptable"><strong>Benutzerrolle:</strong> {dsUserdata::userrole_name}</p>
+								</td>
+							</tr>
+							<tr>
+								<td valign="top">
+									<p class="ptable"><strong>Benutzergruppen:</strong> {dsUserdata::group_name}</p>
+								</td>
+							</tr>
+							</table>
+							
+						</div>
+					</div>
+				</div>
+	
+				<script type="text/javascript">
+					var a1 = new Spry.Widget.Accordion("UserOverview", { useFixedPanelHeights: false, defaultPanel: -1, enableAnimation:false });
+				</script>
+	
+			</div>
 		</div>
 	</div>
 

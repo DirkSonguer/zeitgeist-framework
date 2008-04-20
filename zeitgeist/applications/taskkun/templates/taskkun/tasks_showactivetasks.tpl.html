@@ -41,6 +41,7 @@
 	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/xpath.js"></script>
 	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryNestedXMLDataSet.js"></script>
 	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryCollapsiblePanel.js"></script>
+	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryAccordion.js"></script>
 	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/js/SpryExtensions.js"></script>
 
 	<script type="text/javascript">
@@ -50,11 +51,23 @@
 		dsTasks.setColumnType("task_hoursplanned", "number");
 		dsTasks.setColumnType("task_hoursworked", "number");
 
+		var dsUsergroups = new Spry.Data.XMLDataSet("@@{[dataserver.getusergroups]}@@", "container/element");
+
 		function insertData(dataElement, dataContent)
 		{
 			document.getElementById(dataElement).innerHTML = dataContent;
 		}
 	
+		function taskDetails(id, name)
+		{
+		   window.location.href = "@@{[tasks.taskdetails]}@@"+"&id="+id;
+		}
+		
+		function editTask(id)
+		{
+		   window.location.href = "@@{[tasks.edittask]}@@"+"&id="+id;
+		}
+					
 		function deleteTask(id, name)
 		{
 			var answer = window.confirm("Wollen Sie die Aufgabe '" + name + "' wirklich löschen?\nHinweis: Die Aufgabe wird unwiederbringlich aus dem System entfernt!");
@@ -65,6 +78,12 @@
 			}
 		}
 
+		function filterGroup()
+		{
+			filterParameter = document.getElementById('filter_group').value;
+			filterSpryDataset('group_id', filterParameter, dsTasks, false);
+		}
+		
 		function filterPriority()
 		{
 			filterParameter = document.getElementById('filter_priority').value;
@@ -169,9 +188,23 @@
 		<form name="formFilter" method="post" action="#">
 		<table border="0" cellpadding="0" cellspacing="0" cellpadding="0" cellspacing="0" style="margin-top:0px;">
 			<tr>
-				<td width="130" valign="top" rowspan="3">
-					<p><img src="@@{templatepath}@@/nuvola/128x128/apps/kghostview.png" alt="Filter users" border="0" /></p>
+				<td width="130" valign="top" rowspan="4">
+					<p><img src="@@{templatepath}@@/nuvola/128x128/apps/kghostview.png" alt="Aufgaben filtern" border="0" /></p>
 				</td>
+				<td align="left" valign="middle">
+					<p class="formlabel">Zuständigkeit</p>
+				</td>
+				<td align="left" valign="middle">
+					<div spry:region="dsUsergroups">
+					<select id="filter_group" class="formtext" style="width:300px;" onchange="filterGroup()">
+							<option value="-1">Alle anzeigen</option>
+						<option spry:repeat="dsUsergroups" value="{group_id}">{group_name}</option>
+						</select>
+					</select>
+					</div>					
+				</td>
+			</tr>
+			<tr>
 				<td align="left" valign="middle">
 					<p class="formlabel">Priorität</p>
 				</td>
@@ -217,64 +250,95 @@
 
 <div class="textbox">
 	<h2>Alle aktiven Aufgaben (<span id="groupRows">2</span>)</h2>
-	<div style="clear:both"></div>
 
 	<div spry:region="dsTasks">
-    <div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
+		<div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
+	
+		<div spry:state="ready">
+	
+			<script type="text/javascript">
+				var numRows = dsTasks.getRowCount();
+				insertData('groupRows', numRows);
+			</script>
+			
+			<table border="0" cellspacing="0" cellpadding="0" class="activetasks">
+				<tr class="tablehead">
+					<th style="width:30px;"><p><a onclick="dsTasks.sort('task_priority');" class="sortlink">P</a></p></th>
+					<th><p><a onclick="dsTasks.sort('task_name');" class="sortlink">Aufgabe</a></p></th>
+					<th style="width:150px;"><p style="text-align:center;"><a onclick="dsTasks.sort('task_hoursplanned');" class="sortlink">Stundenbudget<br />(verbraucht)</a></p></th>
+					<th style="width:150px;"><p style="text-align:center;"><a onclick="dsTasks.sort('task_end');" class="sortlink">Fällig am</a></p></th>
+					<th style="width:120px;"><p class="thtext">Aktionen</p></th>
+				</tr>
+			</table>
+			
+			<div id="TaskOverview" class="Accordion" tabindex="0">
+				<div spry:repeat="dsTasks" class="{ds_EvenOddRow}">
+					<div class="AccordionPanelTab">
 
-	<div spry:state="ready">
-
-	<script type="text/javascript">
-		var numRows = dsTasks.getRowCount();
-		insertData('groupRows', numRows);
-	</script>
-
-	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
-	        <tr class="tablehead">
-				<th><p><a onclick="dsTasks.sort('task_name');" class="sortlink">Name</a></p></th>
-				<th><p><a onclick="dsTasks.sort('group_name');" class="sortlink">Verantwortlich</a></p></th>
-				<th><p><a onclick="dsTasks.sort('task_priority');" class="sortlink">Priorität</a></p></th>
-				<th><p style="text-align:center;"><a onclick="dsTasks.sort('task_hoursplanned');" class="sortlink">Stundenbudget<br />(verbraucht)</a></p></th>
-				<th><p style="text-align:center;"><a onclick="dsTasks.sort('task_end');" class="sortlink">Fällig am</a></p></th>
-				<th><p class="thtext">Aktionen</p></th>
-	        </tr>
-	        <tr class="{ds_EvenOddRow}" spry:repeat="dsTasks">
-				<td><p><span onmousemove="showTooltip('{dsTasks::task_description}', event)" onmouseout="hideTooltip()">{dsTasks::task_name}</span></p></td>
-				<td>
-					<div spry:choose="spry:choose">
-						<div spry:when="'{dsTasks::user_username}' == ''"><p>{dsTasks::group_name}</p></div>
-						<div spry:default="spry:default">
-							<p>{dsTasks::user_username}</p>
-						</div>
+						<table border="0" cellspacing="0" cellpadding="0" class="activetasks">
+						<tr>
+							<td style="width:30px;"><p class="ptable">
+								<span spry:if="{dsTasks::task_priority} == '1'"><span onmousemove="showTooltip('Niedrige Priorität', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/down.png" alt="Niedrige Priorität" border="0" /></span></span>
+								<span spry:if="{dsTasks::task_priority} == '2'"></span>
+								<span spry:if="{dsTasks::task_priority} == '3'"><span onmousemove="showTooltip('Hohe Priorität', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/up.png" alt="Hohe Priorität" border="0" /></span></span>
+							</p></td>		
+							<td><p class="ptable">{dsTasks::task_name}</p></td>
+							<td style="width:150px;">
+								<p spry:if="{dsTasks::task_overdrawn} == '0'" class="ptable" style="text-align:center;">{dsTasks::task_hoursplanned} ({dsTasks::task_hoursworked})</p>
+								<p spry:if="{dsTasks::task_overdrawn} == '1'" class="ptable, targetwarning" style="text-align:center;">{dsTasks::task_hoursplanned} ({dsTasks::task_hoursworked})</p>
+								<p spry:if="{dsTasks::task_overdrawn} == '2'" class="ptable, targeterror" style="text-align:center;">{dsTasks::task_hoursplanned} ({dsTasks::task_hoursworked})</p>
+							</td>
+							<td style="width:150px;">
+								<div spry:choose="spry:choose">
+									<div spry:when="'{dsTasks::task_end}' == '00.00.0000'"><p class="ptable" style="text-align:center;">-</p></div>
+									<div spry:default="spry:default">
+										<p spry:if="{dsTasks::task_late} == '0'" class="ptable" style="text-align:center;">{dsTasks::task_end}</p>
+										<p spry:if="{dsTasks::task_late} == '1'" class="ptable, targetwarning" style="text-align:center;">{dsTasks::task_end}</p>
+										<p spry:if="{dsTasks::task_late} == '2'" class="ptable, targeterror" style="text-align:center;">{dsTasks::task_end}</p>
+									</div>
+								</div>
+							</td>
+							<td width="120" nowrap="nowrap"><p class="ptable" style="text-align:center;">
+							<span onmousemove="showTooltip('Details', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.taskdetails]}@@&id={dsTasks::task_id}" alt="Details"><img src="@@{templatepath}@@/nuvola/22x22/apps/kappfinder.png" onclick="taskDetails({dsTasks::task_id});" alt="Details" border="0" /></a></span> &nbsp; 
+							<span onmousemove="showTooltip('Aufgabe bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.edittask]}@@&id={dsTasks::task_id}" alt="Aufgabe bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" onclick="editTask({dsTasks::task_id});" alt="Aufgabe bearbeiten" border="0" /></a></span> &nbsp; 
+							<span onmousemove="showTooltip('Aufgabe löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteTask({dsTasks::task_id}, '{dsTasks::task_name}')" alt="Aufgabe löschen"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" onclick="deleteTask({dsTasks::task_id}, '{dsTasks::task_name}');" alt="Aufgabe löschen" border="0" /></a></span>
+							</p></td>
+						</tr>
+						</table>				
+					
 					</div>
-				</td>
-				<td><p>
-					<span spry:if="{dsTasks::task_priority} == '1'">Niedrig</span>
-					<span spry:if="{dsTasks::task_priority} == '2'">Normal</span>
-					<span spry:if="{dsTasks::task_priority} == '3'">Hoch</span>
-				</p></td>
-				<td>
-					<p spry:if="{dsTasks::task_overdrawn} == '0'" style="text-align:center;">{dsTasks::task_hoursplanned} ({dsTasks::task_hoursworked})</p>
-					<p spry:if="{dsTasks::task_overdrawn} == '1'" class="targetwarning">{dsTasks::task_hoursplanned} ({dsTasks::task_hoursworked})</p>
-					<p spry:if="{dsTasks::task_overdrawn} == '2'" class="targeterror">{dsTasks::task_hoursplanned} ({dsTasks::task_hoursworked})</p>
-				<td>
-					<div spry:choose="spry:choose">
-						<div spry:when="'{dsTasks::task_end}' == '00.00.0000'"><p style="text-align:center;">-</p></div>
-						<div spry:default="spry:default">
-							<p spry:if="{dsTasks::task_late} == '0'" style="text-align:center;">{dsTasks::task_end}</p>
-							<p spry:if="{dsTasks::task_late} == '1'" class="targetwarning">{dsTasks::task_end}</p>
-							<p spry:if="{dsTasks::task_late} == '2'" class="targeterror"">{dsTasks::task_end}</p>
-						</div>
+					
+					<div class="AccordionPanelContent">
+					
+						<table border="0" cellspacing="0" cellpadding="0" class="activetasks" style="margin-bottom:10px;">
+						<tr>
+							<td style="width:30px;">&nbsp;</td>
+							<td valign="top">							
+								<div spry:choose="spry:choose">
+									<div spry:when="'{dsTasks::user_username}' == ''"><p class="ptable"><strong>Zuständige Gruppe:</strong> {dsTasks::group_name}</p></div>
+									<div spry:default="spry:default">
+										<p class="ptable"><strong>Zuständig:</strong> {dsTasks::user_username}</p>
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td style="width:30px;">&nbsp;</td>
+							<td valign="top">							
+								<p class="ptable"><strong>Beschreibung:</strong> {dsTasks::task_description}</p>
+							</td>
+						</tr>
+						</table>
+						
 					</div>
-				</td>
-				<td width="120" nowrap="nowrap"><p style="text-align:center;">
-				<span onmousemove="showTooltip('Details', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.taskdetails]}@@&id={dsTasks::task_id}" alt="Details"><img src="@@{templatepath}@@/nuvola/22x22/apps/kappfinder.png" alt="Details" border="0" /></a></span> &nbsp; 
-				<span onmousemove="showTooltip('Aufgabe bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.edittask]}@@&id={dsTasks::task_id}" alt="Aufgabe bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="Aufgabe bearbeiten" border="0" /></a></span> &nbsp; 
-				<span onmousemove="showTooltip('Aufgabe löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteTask({dsTasks::task_id}, '{dsTasks::task_name}')" alt="Aufgabe löschen"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Aufgabe löschen" border="0" /></a></span>
-                </p></td>
-	        </tr>
-	    </table>
-    </div>
+				</div>
+			</div>
+	
+			<script type="text/javascript">
+				var a1 = new Spry.Widget.Accordion("TaskOverview", { useFixedPanelHeights: false, defaultPanel: -1, enableAnimation:false });
+			</script>
+	
+		</div>
 	</div>
 	
 </div>
