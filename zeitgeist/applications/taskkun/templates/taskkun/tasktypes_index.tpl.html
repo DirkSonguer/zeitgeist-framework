@@ -47,12 +47,15 @@
 		var dsTasktypes = new Spry.Data.XMLDataSet("@@{[dataserver.gettasktypes]}@@", "container/element");
 		dsTasktypes.setColumnType("tasktype_id", "number");
 
-		function deleteTasktype(id, name)
+		function deleteTasktype(id, count, name)
 		{
+			if (count > 0)
+			{
+				alert("Sie können keinen Aufgabenablauf löschen, der noch in aktiven Aufgaben benutzt wird.\nBitte bearbeiten oder entfernen Sie zunächst die entsprechenden Aufgaben.");
+				return;
+			}
+		
 			var answer = window.confirm("Wollen Sie den Aufgabenablauf '" + name + "' wirklich löschen?");
-
-			/* Question icon, Yes/No button. */
-			/* 0 = error, 1 = OK, 2 = Cancel, 3 = No, 4 = Yes */
 
 			if (answer == true)
 			{
@@ -152,16 +155,18 @@
 	<div spry:state="ready">
 	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
 	        <tr class="tablehead">
-				<th><p><a onclick="dsTasktypes.sort('tasktype_name');">Benutzer</a></p></th>
-				<th><p><a onclick="dsTasktypes.sort('tasktype_description');">Name</a></p></th>
-				<th><p>Aktion</p></th>
+				<th><p><a onclick="dsTasktypes.sort('tasktype_name');" class="sortlink">Aufgabenablauf</a></p></th>
+				<th><p><a onclick="dsTasktypes.sort('tasktype_description');" class="sortlink">Beschreibung</a></p></th>
+				<th><p style="text-align:center;"><a onclick="dsUsergroups.sort('group_tasktypecount');" class="sortlink">Aktive Aufgaben<br />mit diesem Ablauf</a></p></th>
+				<th><p class="thtext">Aktion</p></th>
 	        </tr>
 	        <tr class="{ds_EvenOddRow}" spry:repeat="dsTasktypes">
 				<td><p>{dsTasktypes::tasktype_name}</p></td>
 				<td><p>{dsTasktypes::tasktype_description}</p></td>
+				<td><p style="text-align:center;">{dsTasktypes::tasktype_count}</p></td>
 				<td width="90"><p>
 				<span onmousemove="showTooltip('Aufgabenablauf bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[tasktypes.edittasktype]}@@&id={dsTasktypes::tasktype_id}" alt="Aufgabenablauf bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="Aufgabenablauf bearbeiten" border="0" /></a></span> &nbsp; 
-				<span onmousemove="showTooltip('Aufgabenablauf löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteTasktype({dsTasktypes::tasktype_id}, '{dsTasktypes::tasktype_name}')" alt="Aufgabenablauf löschen"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Aufgabenablauf löschen" border="0" /></a></span>
+				<span onmousemove="showTooltip('Aufgabenablauf löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteTasktype({dsTasktypes::tasktype_id}, {dsTasktypes::tasktype_count}, '{dsTasktypes::tasktype_name}')" alt="Aufgabenablauf löschen"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Aufgabenablauf löschen" border="0" /></a></span>
                 </p></td>
 	        </tr>
 	    </table>
