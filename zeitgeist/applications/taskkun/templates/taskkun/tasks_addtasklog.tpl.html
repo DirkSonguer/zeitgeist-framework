@@ -77,8 +77,18 @@
 
 <div class="headmenu">
 	<!-- TemplateBeginBlock name="logoutbutton" -->
-	<div class="menuicon" style="float:right; margin-top:5px;"><a href="@@{[main.logout]}@@" alt=""><span onmousemove="showTooltip('Logout', event)" onmouseout="hideTooltip()">
-	<img src="@@{templatepath}@@/nuvola/48x48/actions/exit.png" alt="" align="left" border="0" /></span></a></div>
+	<div class="menuicon" style="float:right; margin-top:5px;">
+	
+	<a href="@@{[configuration.index]}@@" alt=""><span onmousemove="showTooltip('Persönliche Einstellungen', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/48x48/apps/kcmsystem.png" alt="" border="0" /></span></a>
+	
+	<a href="@@{[help.index]}@@" alt=""><span onmousemove="showTooltip('Hilfe!', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/48x48/apps/filetypes.png" alt="" border="0" /></span></a>	
+
+	<a href="@@{[main.logout]}@@" alt=""><span onmousemove="showTooltip('Logout', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/48x48/actions/exit.png" alt="" border="0" /></span></a>
+	
+	</div>
 	<!-- TemplateEndBlock -->
 </div>
 
@@ -154,7 +164,7 @@
 		<div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
 	
 		<div spry:state="ready">
-			<table border="0" cellspacing="0" cellpadding="0" width=100%">
+			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr class="tablehead">
 					<th width="40"><p style="text-align:center;"><a onclick="dsTasklogs.sort('tasklog_id');">ID</a></p></th>
 					<th width="150"><p><a onclick="dsTasklogs.sort('tasklog_username');">Bearbeitet von</a></p></th>
@@ -174,7 +184,7 @@
 							<div spry:when="'{dsTasklogs::tasklog_editdelete}' == '0'"><p style="text-align:center;">-</p></div>
 							<div spry:default="spry:default">
 								<p style="text-align:center;">
-								<span onmousemove="showTooltip('Tätigkeitsbeschreibung bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.edittasklog]}@@&id={dsTasklogs::tasklog_id}" alt="Tätigkeitsbeschreibung bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="Tätigkeitsbeschreibung bearbeiten" border="0" /></a></span> &nbsp;
+								<span onmousemove="showTooltip('Tätigkeitsbeschreibung bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.edittasklog]}@@&id={dsTasklogs::tasklog_id}" alt="Tätigkeitsbeschreibung bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/apps/kate.png" alt="Tätigkeitsbeschreibung bearbeiten" border="0" /></a></span> &nbsp;
 								<span onmousemove="showTooltip('Tätigkeitsbeschreibung löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteTasklog({dsTasklogs::tasklog_id})" alt="Tätigkeitsbeschreibung löschen"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Tätigkeitsbeschreibung löschen" border="0" /></a></span>
 								</p>
 							</div>
@@ -188,7 +198,7 @@
 </div>
 <!-- TemplateEndBlock -->
 
-<form method="post" action="@@{tasks.addtasklog}@@" name="addTasklog" enctype="multipart/form-data; charset=utf-8">
+<form method="post" action="@@{[tasks.addtasklog]}@@" name="addTasklog" enctype="multipart/form-data; charset=utf-8">
 	<div class="textbox" style="background-image:url(@@{templatepath}@@/images/side_newtasklog.jpg); background-position:right bottom; background-repeat:no-repeat;">
 		<input type="hidden" name="addtasklog[tasklog_task]" value="@@{tasklog_task:value}@@" />
 		<input type="hidden" name="submitButton" value="0" />

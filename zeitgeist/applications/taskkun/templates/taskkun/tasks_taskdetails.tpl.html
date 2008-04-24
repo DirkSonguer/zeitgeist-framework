@@ -58,8 +58,18 @@
 
 <div class="headmenu">
 	<!-- TemplateBeginBlock name="logoutbutton" -->
-	<div class="menuicon" style="float:right; margin-top:5px;"><a href="@@{[main.logout]}@@" alt=""><span onmousemove="showTooltip('Logout', event)" onmouseout="hideTooltip()">
-	<img src="@@{templatepath}@@/nuvola/48x48/actions/exit.png" alt="" align="left" border="0" /></span></a></div>
+	<div class="menuicon" style="float:right; margin-top:5px;">
+	
+	<a href="@@{[configuration.index]}@@" alt=""><span onmousemove="showTooltip('Persönliche Einstellungen', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/48x48/apps/kcmsystem.png" alt="" border="0" /></span></a>
+	
+	<a href="@@{[help.index]}@@" alt=""><span onmousemove="showTooltip('Hilfe!', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/48x48/apps/filetypes.png" alt="" border="0" /></span></a>	
+
+	<a href="@@{[main.logout]}@@" alt=""><span onmousemove="showTooltip('Logout', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/48x48/actions/exit.png" alt="" border="0" /></span></a>
+	
+	</div>
 	<!-- TemplateEndBlock -->
 </div>
 
@@ -219,7 +229,7 @@
 		<div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
 	
 		<div spry:state="ready">
-			<table border="0" cellspacing="0" cellpadding="0" width=100%">
+			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr class="tablehead">
 					<th width="40"><p style="text-align:center;"><a onclick="dsTasklogs.sort('tasklog_id');">ID</a></p></th>
 					<th width="150"><p style="text-align:center;"><a onclick="dsTasklogs.sort('tasklog_username');">Bearbeitet von</a></p></th>

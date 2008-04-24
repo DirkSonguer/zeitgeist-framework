@@ -45,8 +45,18 @@
 
 <div class="headmenu">
 	<!-- TemplateBeginBlock name="logoutbutton" -->
-	<div class="menuicon" style="float:right; margin-top:5px;"><a href="@@{[main.logout]}@@" alt=""><span onmousemove="showTooltip('Logout', event)" onmouseout="hideTooltip()">
-	<img src="@@{templatepath}@@/nuvola/48x48/actions/exit.png" alt="" align="left" border="0" /></span></a></div>
+	<div class="menuicon" style="float:right; margin-top:5px;">
+	
+	<a href="@@{[configuration.index]}@@" alt=""><span onmousemove="showTooltip('Persönliche Einstellungen', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/48x48/apps/kcmsystem.png" alt="" border="0" /></span></a>
+	
+	<a href="@@{[help.index]}@@" alt=""><span onmousemove="showTooltip('Hilfe!', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/48x48/apps/filetypes.png" alt="" border="0" /></span></a>	
+
+	<a href="@@{[main.logout]}@@" alt=""><span onmousemove="showTooltip('Logout', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/48x48/actions/exit.png" alt="" border="0" /></span></a>
+	
+	</div>
 	<!-- TemplateEndBlock -->
 </div>
 
@@ -108,35 +118,34 @@
 <!-- InstanceBeginEditable name="body" -->
 
 <div class="textbox">
-<table border="0" cellpadding="0" cellspacing="5" width="950">
-	<tr>
-		<td width="140">
-			<p><img src="@@{templatepath}@@/nuvola/128x128/apps/important.png" alt="Authentication required" border="0" /></p>
-
-		</td>
-		<td valign="middle">
-			<h2 style="margin-bottom:0px;">Taskkun - Login</h2>
-            <p>Bitte geben Sie Ihre Zugangsdaten ein, um Taskkun benutzen zu können.</p>
-
-			<form method="post" action="@@{[main.login]}@@" name="login">
-				<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px; margin-left:15px;">
-					<tr>
-						<td align="right" nowrap="nowrap" width="110"><p class="formlabel">E-Mail</p></td>
-						<td align="left" valign="middle" nowrap="nowrap"><input type="text" size="60" maxlength="20" name="username" class="formtext" style="width:250px;" /></td>
-					</tr>
-					<tr>
-						<td align="right" nowrap="nowrap"><p class="formlabel">Passwort</p></td>
-						<td align="left" valign="middle" nowrap="nowrap"><input type="password" size="32" maxlength="32" name="password" class="formtext" style="width:250px;" /></td>
-					</tr>
-					<tr>
-						<td align="left" nowrap="nowrap">&nbsp;</td>
-						<td align="right" valign="middle" nowrap="nowrap"><input type="submit" name="login" value="Login" class="formbutton" /></td>
-					</tr>
-				</table>
-			</form>
-		</td>
-	</tr>
-</table>
+	<table border="0" cellpadding="0" cellspacing="5" width="950">
+		<tr>
+			<td width="140">
+				<p><img src="@@{templatepath}@@/nuvola/128x128/apps/important.png" alt="Authentication required" border="0" /></p>
+			</td>
+			<td valign="middle">
+				<h2 style="margin-bottom:0px;">Taskkun - Login</h2>
+				<p>Bitte geben Sie Ihre Zugangsdaten ein, um Taskkun benutzen zu können.</p>
+	
+				<form method="post" action="@@{[main.login]}@@" name="login">
+					<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px; margin-left:15px;">
+						<tr>
+							<td align="right" nowrap="nowrap" width="110"><p class="formlabel">E-Mail</p></td>
+							<td align="left" valign="middle" nowrap="nowrap"><input type="text" size="60" maxlength="60" name="username" class="formtext" style="width:250px;" /></td>
+						</tr>
+						<tr>
+							<td align="right" nowrap="nowrap"><p class="formlabel">Passwort</p></td>
+							<td align="left" valign="middle" nowrap="nowrap"><input type="password" size="32" maxlength="60" name="password" class="formtext" style="width:250px;" /></td>
+						</tr>
+						<tr>
+							<td align="left" nowrap="nowrap">&nbsp;</td>
+							<td align="right" valign="middle" nowrap="nowrap"><input type="submit" name="login" value="Login" class="formbutton" /></td>
+						</tr>
+					</table>
+				</form>
+			</td>
+		</tr>
+	</table>
 </div>
 	
 

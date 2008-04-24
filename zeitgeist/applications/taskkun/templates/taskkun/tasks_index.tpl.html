@@ -50,6 +50,8 @@
 		dsUserTasks.setColumnType("task_hoursplanned", "number");
 		dsUserTasks.setColumnType("task_hoursworked", "number");
 
+		var dsTasklogs = new Spry.Data.NestedXMLDataSet(dsUserTasks, "task_tasklogs/element");
+
 		var dsGroupTasks = new Spry.Data.XMLDataSet("@@{[dataserver.getgrouptasks]}@@", "container/element");
 		dsGroupTasks.setColumnType("task_id", "number");
 		dsGroupTasks.setColumnType("task_hoursplanned", "number");
@@ -69,7 +71,7 @@
 			   window.location.href = "@@{[tasks.declinetask]}@@"+"&id="+id;
 			}
 		}
-
+		
 	</script>
 
 <!-- InstanceEndEditable -->
@@ -81,8 +83,18 @@
 
 <div class="headmenu">
 	<!-- TemplateBeginBlock name="logoutbutton" -->
-	<div class="menuicon" style="float:right; margin-top:5px;"><a href="@@{[main.logout]}@@" alt=""><span onmousemove="showTooltip('Logout', event)" onmouseout="hideTooltip()">
-	<img src="@@{templatepath}@@/nuvola/48x48/actions/exit.png" alt="" align="left" border="0" /></span></a></div>
+	<div class="menuicon" style="float:right; margin-top:5px;">
+	
+	<a href="@@{[configuration.index]}@@" alt=""><span onmousemove="showTooltip('Persönliche Einstellungen', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/48x48/apps/kcmsystem.png" alt="" border="0" /></span></a>
+	
+	<a href="@@{[help.index]}@@" alt=""><span onmousemove="showTooltip('Hilfe!', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/48x48/apps/filetypes.png" alt="" border="0" /></span></a>	
+
+	<a href="@@{[main.logout]}@@" alt=""><span onmousemove="showTooltip('Logout', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/48x48/actions/exit.png" alt="" border="0" /></span></a>
+	
+	</div>
 	<!-- TemplateEndBlock -->
 </div>
 
@@ -152,7 +164,7 @@
 	</div>
 
 	<div class="CollapsiblePanelContent">
-		<div spry:region="dsUserTasks">
+		<div spry:region="dsUserTasks dsTasklogs">
 			<div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
 			<div spry:state="ready">
 				<script type="text/javascript">
@@ -160,29 +172,108 @@
 					insertData('userRows', numRows);
 				</script>
 
-				<div class="textboxhalf {ds_EvenOddRow}" spry:repeat="dsUserTasks">
-					<p class="textboxheader">{dsUserTasks::task_name}</p>
-					<p><strong>Beschreibung:</strong> {dsUserTasks::task_description}</p>
-					<p><strong>Priorität:</strong>
-						<span spry:if="{dsUserTasks::task_priority} == '1'">Niedrig</span>
-						<span spry:if="{dsUserTasks::task_priority} == '2'">Normal</span>
-						<span spry:if="{dsUserTasks::task_priority} == '3'">Hoch</span>
-					</p>
-					<p><strong>Betrifft Gruppe:</strong> {dsUserTasks::group_name}</p>
-					<p><strong>Stundenbudget:</strong> {dsUserTasks::task_hoursplanned}</p>
-					<p><strong>Bereits investierte Stunden:</strong> {dsUserTasks::task_hoursworked}</p>
-					<div spry:choose="spry:choose">
-						<div spry:when="'{dsUserTasks::task_end}' == '00.00.0000'"><p><strong>Fällig am:</strong> -</p></div>
-						<div spry:default="spry:default">
-							<p><strong>Fällig am:</strong> {dsUserTasks::task_end}</p>
+				<div id="Usertasks" tabindex="0">
+
+					<div spry:repeat="dsUserTasks" class="textboxtask">
+						<div class="textboxheader">
+							<table cellpadding="0" cellspacing="0" border="0" class="activetasks">
+							<tr>
+								<td style="width:25px;">
+									<p class="textboxheader">
+										<span spry:if="{dsUserTasks::task_priority} == '1'"><span onmousemove="showTooltip('Niedrige Priorität', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/down.png" alt="Niedrige Priorität" border="0" /></span></span>
+										<span spry:if="{dsUserTasks::task_priority} == '2'"></span>
+										<span spry:if="{dsUserTasks::task_priority} == '3'"><span onmousemove="showTooltip('Hohe Priorität', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/up.png" alt="Hohe Priorität" border="0" /></span></span>
+									</p>
+								</td>
+								<td style="width:30px;">
+									<p spry:if="{dsUserTasks::task_overdrawn} == '0'" class="ptable">
+										<span onmousemove="showTooltip('Aufgabe im Stundenlimit: {dsUserTasks::task_hoursworked}/{dsUserTasks::task_hoursplanned} Stunden verbraucht', event)" onmouseout="hideTooltip()">
+										<img src="@@{templatepath}@@/nuvola/22x22/actions/ledgreen.png" alt="" border="0" align="top" />
+										</span>
+									</p>
+									<p spry:if="{dsUserTasks::task_overdrawn} == '1'" class="ptable">
+										<span onmousemove="showTooltip('Stundenlimit für Aufgabe erreicht: {dsUserTasks::task_hoursworked}/{dsUserTasks::task_hoursplanned} Stunden verbraucht', event)" onmouseout="hideTooltip()">
+										<img src="@@{templatepath}@@/nuvola/22x22/actions/ledorange.png" alt="" border="0" align="top" />
+										</span>
+									</p>
+									<p spry:if="{dsUserTasks::task_overdrawn} == '2'" class="ptable">
+										<span onmousemove="showTooltip('Aufgabe hat das Stundenlimit überschritten: {dsUserTasks::task_hoursworked}/{dsUserTasks::task_hoursplanned} Stunden verbraucht', event)" onmouseout="hideTooltip()">
+										<img src="@@{templatepath}@@/nuvola/22x22/actions/ledred.png" alt="" border="0" align="top" />
+										</span>
+									</p>
+								</td>
+								<td style="width:50px;">
+									<div spry:choose="spry:choose">
+										<div spry:when="'{dsUserTasks::task_end}' == '00.00.0000'">
+											<p class="ptable">
+												<span onmousemove="showTooltip('Aufgabe hat kein Zeitlimit', event)" onmouseout="hideTooltip()">
+												<img src="@@{templatepath}@@/nuvola/22x22/actions/ledlightgreen.png" alt="" border="0" align="top" />
+												</span>
+											</p>
+										</div>
+										<div spry:default="spry:default">
+											<p spry:if="{dsUserTasks::task_late} == '0'" class="ptable">
+												<span onmousemove="showTooltip('Aufgabe im Zeitlimit. Fällig am {dsUserTasks::task_end}', event)" onmouseout="hideTooltip()">
+												<img src="@@{templatepath}@@/nuvola/22x22/actions/ledgreen.png" alt="" border="0" align="top" />
+												</span>
+											</p>
+											<p spry:if="{dsUserTasks::task_late} == '1'" class="ptable">
+												<span onmousemove="showTooltip('Zeitlimit für Aufgabe erreicht. Fällig am {dsUserTasks::task_end}', event)" onmouseout="hideTooltip()">
+												<img src="@@{templatepath}@@/nuvola/22x22/actions/ledorange.png" alt="" border="0" align="top" />
+												</span>
+											</p>
+											<p spry:if="{dsUserTasks::task_late} == '2'" class="ptable">
+												<span onmousemove="showTooltip('Aufgabe hat das Zeitlimit überschritten. Fällig am {dsUserTasks::task_end}', event)" onmouseout="hideTooltip()">
+												<img src="@@{templatepath}@@/nuvola/22x22/actions/ledred.png" alt="" border="0" align="top" />
+												</span>
+											</p>
+										</div>
+									</div>							
+								</td>
+	
+								<td><p class="textboxheader">{dsUserTasks::task_name}</p></td>
+								<td style="width:100px;">
+									<p class="ptable" style="text-align:right;">
+										<span onmousemove="showTooltip('Tätigkeit eintragen', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.addtasklog]}@@&id={dsUserTasks::task_id}" alt="Tätigkeit eintragen"><img src="@@{templatepath}@@/nuvola/32x32/apps/kate.png" alt="Tätigkeit eintragen" border="0" /></a></span> &nbsp;
+										<span onmousemove="showTooltip('Aufgabe an Gruppe abgeben', event)" onmouseout="hideTooltip()"><a href="javascript:declineTask({dsUserTasks::task_id}, '{dsUserTasks::task_name}')" alt="Aufgabe an Gruppe abgeben"><img src="@@{templatepath}@@/nuvola/32x32/actions/cancel.png" alt="Aufgabe an Gruppe abgeben" border="0" /></a></span>
+									</p>
+								</td>
+							</tr>
+							</table>
+						</div>
+						
+						<div class="Usertasks">
+
+							<table cellpadding="0" cellspacing="0" border="0" class="activetasks">
+							<tr>
+							<td>
+								<p><strong>Beschreibung:</strong> {dsUserTasks::task_description}</p>
+								<p><strong>Priorität:</strong>
+									<span spry:if="{dsUserTasks::task_priority} == '1'">Niedrig</span>
+									<span spry:if="{dsUserTasks::task_priority} == '2'">Normal</span>
+									<span spry:if="{dsUserTasks::task_priority} == '3'">Hoch</span>
+								</p>
+								<p><strong>Betrifft Gruppe:</strong> {dsUserTasks::group_name}</p>
+							</td>
+							<td style="width:350px;">
+								<p><strong>Stundenbudget:</strong> {dsUserTasks::task_hoursplanned}</p>
+								<p><strong>Bereits investierte Stunden:</strong> {dsUserTasks::task_hoursworked}</p>
+								<div spry:choose="spry:choose">
+									<div spry:when="'{dsUserTasks::task_end}' == '00.00.0000'"><p><strong>Fällig am:</strong> -</p></div>
+									<div spry:default="spry:default">
+										<p><strong>Fällig am:</strong> {dsUserTasks::task_end}</p>
+									</div>
+								</div>
+							</td>
+							</tr>
+							</table>
+
 						</div>
 					</div>
-					<p style="text-align:center;">
-							<span onmousemove="showTooltip('Tätigkeit eintragen', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.addtasklog]}@@&id={dsUserTasks::task_id}" alt="Tätigkeit eintragen"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="Tätigkeit eintragen" border="0" /></a></span> &nbsp;
-							<span onmousemove="showTooltip('Aufgabe an Gruppe abgeben', event)" onmouseout="hideTooltip()"><a href="javascript:declineTask({dsUserTasks::task_id}, '{dsUserTasks::task_name}')" alt="Aufgabe an Gruppe abgeben"><img src="@@{templatepath}@@/nuvola/22x22/actions/cancel.png" alt="Aufgabe an Gruppe abgeben" border="0" /></a></span>
-					</p>
+
+				<br  />
 				</div>
-				<div style="clear:both;"></div>
+	
 			</div>
 		</div>
 	</div>
@@ -207,24 +298,24 @@
 					insertData('groupRows', numRows);
 				</script>
 			
-				<table border="0" cellspacing="0" cellpadding="0" width=100%">
+				<table border="0" cellspacing="0" cellpadding="0" width="100%">
 					<tr class="tablehead">
-						<th><p><a onclick="dsGroupTasks.sort('task_id');" class="sortlink">ID</a></p></th>
+					<th style="width:30px;"><p><a onclick="dsGroupTasks.sort('task_priority');" class="sortlink">P</a></p></th>
 						<th><p><a onclick="dsGroupTasks.sort('task_name');" class="sortlink">Name</a></p></th>
 						<th><p><a onclick="dsGroupTasks.sort('group_name');" class="sortlink">Gruppe</a></p></th>
-						<th><p style="text-align:center;"><a onclick="dsGroupTasks.sort('task_priority');" class="sortlink">Priorität</a></p></th>
 						<th><p style="text-align:center;"><a onclick="dsGroupTasks.sort('task_end');" class="sortlink">Fällig am</a></p></th>
 						<th><p class="thtext">Aktionen</p></th>
 					</tr>
 					<tr class="{ds_EvenOddRow}" spry:repeat="dsGroupTasks">
-						<td><p>{dsGroupTasks::task_id}</p></td>
+						<td style="width:30px;">
+							<p class="ptable">
+								<span spry:if="{dsGroupTasks::task_priority} == '1'"><span onmousemove="showTooltip('Niedrige Priorität', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/down.png" alt="Niedrige Priorität" border="0" /></span></span>
+								<span spry:if="{dsGroupTasks::task_priority} == '2'"></span>
+								<span spry:if="{dsGroupTasks::task_priority} == '3'"><span onmousemove="showTooltip('Hohe Priorität', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/up.png" alt="Hohe Priorität" border="0" /></span></span>
+							</p>
+						</td>		
 						<td><p><span onmousemove="showTooltip('{dsGroupTasks::task_description}', event)" onmouseout="hideTooltip()">{dsGroupTasks::task_name}</span></p></td>
 						<td><p>{dsGroupTasks::group_name}</p></td>
-						<td><p style="text-align:center;">
-							<span spry:if="{dsGroupTasks::task_priority} == '1'">Niedrig</span>
-							<span spry:if="{dsGroupTasks::task_priority} == '2'">Normal</span>
-							<span spry:if="{dsGroupTasks::task_priority} == '3'">Hoch</span>
-						</p></td>
 						<td>
 							<div spry:choose="spry:choose">
 								<div spry:when="'{dsGroupTasks::task_end}' == '00.00.0000'"><p style="text-align:center;">-</p></div>
@@ -238,7 +329,8 @@
 						</p></td>
 					</tr>
 				</table>
-			</div>
+				
+			</div>					
 		</div>
 	</div>
 </div>
