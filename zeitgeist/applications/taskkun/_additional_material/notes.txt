@@ -1,0 +1,25 @@
+Mögliche Reports:
+
+Benutzer:
+
+Anzeige der eigenen abgeschlossenen Aufgaben
+- Filtern nach Aufgabe und Ad-Hoc
+- Datumsbereich
+
+Suche in eigenen abgeschlossenen Aufgaben
+- Stichwortsuche
+- mit Ad-Hoc
+- Tags
+
+
+Manager:
+
+Anzeige aller abgeschlossenen Aufgaben
+- Datumsbereich
+- Personen
+- Gruppen
+
+Suche in allen abgeschlossenen Aufgaben
+- Stichwortsuche
+- mit Ad-Hoc
+- Tags
