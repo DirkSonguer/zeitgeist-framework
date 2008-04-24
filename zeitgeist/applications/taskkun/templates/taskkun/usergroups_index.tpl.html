@@ -56,8 +56,6 @@
 			
 			var answer = window.confirm("Wollen Sie die Benutzergruppe '" + name + "' wirklich löschen?");
 
-			/* Question icon, Yes/No button. */
-			/* 0 = error, 1 = OK, 2 = Cancel, 3 = No, 4 = Yes */
 			if (answer == true)
 			{
 			   window.location.href = "@@{[users.deleteuser]}@@"+"&id="+id;
@@ -75,8 +73,18 @@
 
 <div class="headmenu">
 	<!-- TemplateBeginBlock name="logoutbutton" -->
-	<div class="menuicon" style="float:right; margin-top:5px;"><a href="@@{[main.logout]}@@" alt=""><span onmousemove="showTooltip('Logout', event)" onmouseout="hideTooltip()">
-	<img src="@@{templatepath}@@/nuvola/48x48/actions/exit.png" alt="" align="left" border="0" /></span></a></div>
+	<div class="menuicon" style="float:right; margin-top:5px;">
+	
+	<a href="@@{[configuration.index]}@@" alt=""><span onmousemove="showTooltip('Persönliche Einstellungen', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/48x48/apps/kcmsystem.png" alt="" border="0" /></span></a>
+	
+	<a href="@@{[help.index]}@@" alt=""><span onmousemove="showTooltip('Hilfe!', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/48x48/apps/filetypes.png" alt="" border="0" /></span></a>	
+
+	<a href="@@{[main.logout]}@@" alt=""><span onmousemove="showTooltip('Logout', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/48x48/actions/exit.png" alt="" border="0" /></span></a>
+	
+	</div>
 	<!-- TemplateEndBlock -->
 </div>
 
@@ -154,7 +162,7 @@
 		<div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
 	
 		<div spry:state="ready">
-			<table border="0" cellspacing="0" cellpadding="0" width=100%">
+			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr class="tablehead">
 					<th><p><a onclick="dsUsergroups.sort('group_name');" class="sortlink">Name</a></p></th>
 					<th><p><a onclick="dsUsergroups.sort('group_description');" class="sortlink">Beschreibung</a></p></th>
@@ -166,7 +174,7 @@
 					<td><p>{dsUsergroups::group_description}</p></td>
 					<td><p style="text-align:center;">{dsUsergroups::group_tasktypecount}</p></td>
 					<td width="90"><p>
-					<span onmousemove="showTooltip('Benutzergruppe bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[dsUsergroups.editusergroup]}@@&id={dsUsergroups::user_id}" alt="Benutzergruppe bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/actions/pencil.png" alt="Benutzergruppe bearbeiten" border="0" /></a></span> &nbsp; 
+					<span onmousemove="showTooltip('Benutzergruppe bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[dsUsergroups.editusergroup]}@@&id={dsUsergroups::user_id}" alt="Benutzergruppe bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/apps/kate.png" alt="Benutzergruppe bearbeiten" border="0" /></a></span> &nbsp; 
 					<span onmousemove="showTooltip('Benutzergruppe löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteUsergroup({dsUsergroups::group_id}, {dsUsergroups::group_tasktypecount}, '{dsUsergroups::group_name}')" alt="Benutzergruppe löschen"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Benutzergruppe löschen" border="0" /></a></span>
 					</p></td>
 				</tr>

@@ -86,8 +86,18 @@
 
 <div class="headmenu">
 	<!-- TemplateBeginBlock name="logoutbutton" -->
-	<div class="menuicon" style="float:right; margin-top:5px;"><a href="@@{[main.logout]}@@" alt=""><span onmousemove="showTooltip('Logout', event)" onmouseout="hideTooltip()">
-	<img src="@@{templatepath}@@/nuvola/48x48/actions/exit.png" alt="" align="left" border="0" /></span></a></div>
+	<div class="menuicon" style="float:right; margin-top:5px;">
+	
+	<a href="@@{[configuration.index]}@@" alt=""><span onmousemove="showTooltip('Persönliche Einstellungen', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/48x48/apps/kcmsystem.png" alt="" border="0" /></span></a>
+	
+	<a href="@@{[help.index]}@@" alt=""><span onmousemove="showTooltip('Hilfe!', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/48x48/apps/filetypes.png" alt="" border="0" /></span></a>	
+
+	<a href="@@{[main.logout]}@@" alt=""><span onmousemove="showTooltip('Logout', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/48x48/actions/exit.png" alt="" border="0" /></span></a>
+	
+	</div>
 	<!-- TemplateEndBlock -->
 </div>
 
@@ -175,7 +185,7 @@
             </tr>
 		</tbody>
 		</table>
-           <p style="text-align:center; margin-top:25px;"><img src="@@{templatepath}@@/nuvola/32x32/actions/pencil.png" alt="" border="0" align="top" />
+           <p style="text-align:center; margin-top:25px;"><img src="@@{templatepath}@@/nuvola/32x32/apps/kate.png" alt="" border="0" align="top" />
 		   <input name="submit" value="Aufgabenablauf speichern" class="formbutton" type="submit" /></p>
 		   <!-- TemplateBeginBlock name="warningactivetasks" -->
 		   <h2 style="margin-top:50px;">Anmerkung:</h2>

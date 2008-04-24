@@ -32,7 +32,13 @@ class dataserver
 		$userfunctions = new tkUserfunctions();
 
 		$sql = "SELECT SUM(tl.tasklog_hoursworked) as task_hoursworked, t.*, tu.*, g.group_name, ";
-		$sql .= "DATE_FORMAT(t.task_end, '%d.%m.%Y') as task_end, DATE_FORMAT(t.task_begin, '%d.%m.%Y') as task_begin ";
+		$sql .= "DATE_FORMAT(t.task_end, '%d.%m.%Y') as task_end, DATE_FORMAT(t.task_begin, '%d.%m.%Y') as task_begin, ";
+		$sql .= "CASE WHEN ((t.task_end < CURDATE()) && (t.task_end != '00.00.0000')) THEN '2' ";
+		$sql .= "WHEN ((t.task_end = CURDATE()) && (t.task_end != '00.00.0000'))  THEN '1' ";
+		$sql .= "ELSE '0' END as task_late, ";
+		$sql .= "CASE WHEN (SUM(tl.tasklog_hoursworked) > t.task_hoursplanned) THEN '2' ";
+		$sql .= "WHEN ((SUM(tl.tasklog_hoursworked) <= task_hoursplanned) AND (SUM(tl.tasklog_hoursworked) >= t.task_hoursplanned) )  THEN '1' ";
+		$sql .= "ELSE '0' END as task_overdrawn ";
 		$sql .= "FROM tasks_to_users tu ";
 		$sql .= "LEFT JOIN tasks t ON tu.taskusers_task = t.task_id LEFT JOIN tasklogs tl ON t.task_id = tl.tasklog_task ";
 		$sql .= "LEFT JOIN taskworkflow twf ON t.task_workflow = twf.taskworkflow_id ";
@@ -41,9 +47,34 @@ class dataserver
 		$sql .= "WHERE taskusers_user='" . $this->user->getUserID() . "' ";
 		$sql .= "AND u2g.usergroup_user = '" . $this->user->getUserID() . "' ";
 		$sql .= "AND t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
-		$sql .= "GROUP BY t.task_id";
+		$sql .= "GROUP BY t.task_id ORDER BY t.task_end";
 
-		$xmlData = $this->dataserver->createXMLDatasetFromSQL($sql);
+		$taskinformation = array();
+
+		$res = $this->database->query($sql);
+		while($row = $this->database->fetchArray($res))
+		{
+			$taskinformation[$row['task_id']] = $row;
+		}
+
+		$sql = "SELECT t.task_id, u.user_username as tasklog_username, tl.*, DATE_FORMAT(tl.tasklog_date, '%d.%m.%Y') as tasklog_date, ";
+		$sql .= "IF (tl.tasklog_creator='" . $this->user->getUserID() . "', '1', '0') as tasklog_editdelete ";
+		$sql .= "FROM tasks_to_users tu ";
+		$sql .= "LEFT JOIN tasklogs tl ON tu.taskusers_task = tl.tasklog_task ";
+		$sql .= "LEFT JOIN users u ON tu.taskusers_user = user_id ";
+		$sql .= "LEFT JOIN tasks t ON tl.tasklog_task = t.task_id ";
+		$sql .= "WHERE t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "'";
+
+		$res = $this->database->query($sql);
+		while($row = $this->database->fetchArray($res))
+		{
+			if (!empty($taskinformation[$row['task_id']]))
+			{
+				$taskinformation[$row['task_id']]['task_tasklogs'][] = $row;
+			}
+		}
+
+		$xmlData = $this->dataserver->createXMLDatasetFromArray($taskinformation);
 		$this->dataserver->streamXMLDataset($xmlData);
 		die();
 
@@ -70,7 +101,7 @@ class dataserver
 		$sql .= "WHERE tu.taskusers_user is null ";
 		$sql .= "AND u2g.usergroup_user = '" . $this->user->getUserID() . "' ";
 		$sql .= "AND t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
-		$sql .= "GROUP BY t.task_id";
+		$sql .= "GROUP BY t.task_id ORDER BY t.task_end";
 
 		$xmlData = $this->dataserver->createXMLDatasetFromSQL($sql);
 		$this->dataserver->streamXMLDataset($xmlData);
@@ -81,6 +112,7 @@ class dataserver
 	}
 
 
+	// instance-safe
 	public function getactivetasks($parameters=array())
 	{
 		$this->debug->guard();
@@ -103,10 +135,55 @@ class dataserver
 		$sql .= "LEFT JOIN taskworkflow twf ON t.task_workflow = twf.taskworkflow_id ";
 		$sql .= "LEFT JOIN groups g ON twf.taskworkflow_group = g.group_id ";
 		$sql .= "WHERE t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
-		$sql .= "AND t.task_workflow>'0' ";
+		$sql .= "AND t.task_workflow > '0' ";
 		$sql .= "GROUP BY t.task_id ORDER BY t.task_end";
 
-		$xmlData = $this->dataserver->createXMLDatasetFromSQL($sql);
+		$taskinformation = array();
+
+		$res = $this->database->query($sql);
+		while($row = $this->database->fetchArray($res))
+		{
+			$taskinformation[$row['task_id']] = $row;
+		}
+
+		$sql = "SELECT t.task_id, ta.tag_text FROM tasks t ";
+		$sql .= "LEFT JOIN tags_to_tasks t2t ON t.task_id = tagtasks_task ";
+		$sql .= "LEFT JOIN tags ta ON t2t.tagtasks_tag = ta.tag_id ";
+		$sql .= "WHERE t.task_workflow > '0' AND t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "'";
+
+		$res = $this->database->query($sql);
+		while($row = $this->database->fetchArray($res))
+		{
+			if (!empty($taskinformation[$row['task_id']]))
+			{
+				if (!empty($taskinformation[$row['task_id']]['task_tags']))
+				{
+					$taskinformation[$row['task_id']]['task_tags'] .= ', ' . $row['tag_text'];
+				}
+				else
+				{
+					$taskinformation[$row['task_id']]['task_tags'] = $row['tag_text'];
+				}
+			}
+		}
+
+		$sql = "SELECT t.task_id, u.user_username as tasklog_username, tl.tasklog_description, tl.tasklog_hoursworked, ";
+		$sql .= "DATE_FORMAT(tl.tasklog_date, '%d.%m.%Y') as tasklog_date ";
+		$sql .= "FROM tasks t ";
+		$sql .= "LEFT JOIN tasklogs tl ON t.task_id = tl.tasklog_task ";
+		$sql .= "LEFT JOIN users u ON tl.tasklog_creator = u.user_id ";
+		$sql .= "WHERE tl.tasklog_id is not null AND t.task_workflow > '0' AND t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "'";
+
+		$res = $this->database->query($sql);
+		while($row = $this->database->fetchArray($res))
+		{
+			if (!empty($taskinformation[$row['task_id']]))
+			{
+				$taskinformation[$row['task_id']]['task_tasklogs'][] = $row;
+			}
+		}
+
+		$xmlData = $this->dataserver->createXMLDatasetFromArray($taskinformation);
 		$this->dataserver->streamXMLDataset($xmlData);
 		die();
 
@@ -115,6 +192,7 @@ class dataserver
 	}
 
 
+	// instance-safe
 	public function getarchivedtasks($parameters=array())
 	{
 		$this->debug->guard();

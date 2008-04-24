@@ -29,6 +29,7 @@ class tasks
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_index'));
 		$tpl->assign('documenttitle', 'Aufgabenübersicht');
+		$tpl->assign('tasklog_date:value', date('d.m.Y'));
 
 		$tpl->show();
 
