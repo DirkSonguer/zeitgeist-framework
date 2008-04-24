@@ -684,8 +684,11 @@ class zgUserhandler
 
 			foreach ($this->userdata as $key => $value)
 			{
-				if ($sqlupdate != '') $sqlupdate .= ', ';
-				$sqlupdate .= $key . "='" . $value . "'";
+				if (strpos($key, 'userdata_timestamp') === false)
+				{
+					if ($sqlupdate != '') $sqlupdate .= ', ';
+					$sqlupdate .= $key . "='" . $value . "'";
+				}
 			}
 
 			$sql .= $sqlupdate . " WHERE userdata_user='" . $userid . "'";
@@ -749,7 +752,7 @@ class zgUserhandler
 	 *
 	 * @return boolean
 	 */
-	public function setUserdata($userdata, $value)
+	public function setUserdata($userdata, $value, $saveuserdata=true)
 	{
 		$this->debug->guard();
 
@@ -761,7 +764,7 @@ class zgUserhandler
 		if (isset($this->userdata[$userdata]))
 		{
 			$this->userdata[$userdata] = $value;
-			$this->saveUserdata();
+			if ($saveuserdata) $this->saveUserdata();
 
 			$this->debug->unguard(true);
 			return true;
