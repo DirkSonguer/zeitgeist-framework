@@ -162,7 +162,7 @@ class tkTasktypefunctions
 		}
 
 		$currentWorkflowId = array_search($lastRow['task_workflow'], $workflowOrder);
-		if ($currentWorkflowId != $workflowOrder[count($workflowOrder)])
+		if ($currentWorkflowId != count($workflowOrder))
 		{
 			if (!empty($workflowOrder[$currentWorkflowId+1]))
 			{
