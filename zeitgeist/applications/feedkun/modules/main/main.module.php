@@ -1,6 +1,6 @@
 <?php
 
-defined('PROJECT_ACTIVE') or die();
+defined('FEEDKUN_ACTIVE') or die();
 
 class main
 {
@@ -25,6 +25,18 @@ class main
 	public function index($parameters=array())
 	{
 		$this->debug->guard();
+
+		echo "starting import<br />";
+		$feed = new fkFeed();
+		$feed->updateFeed(1);
+		$articles = $feed->getFeedContent(1);
+
+		foreach($articles as $article)
+		{
+			echo $article['article_title']."<br />";
+		}
+
+		echo "done<br />";
 
 		$this->debug->unguard(true);
 		return true;
