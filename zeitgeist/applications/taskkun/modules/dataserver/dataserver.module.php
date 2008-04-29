@@ -447,13 +447,8 @@ class dataserver
 				$sql .= "LEFT JOIN tasktypes tt ON t.task_type = tt.tasktype_id ";
 				$sql .= "LEFT JOIN taskworkflow twf ON t.task_workflow = twf.taskworkflow_id ";
 				$sql .= "LEFT JOIN groups g ON twf.taskworkflow_group = g.group_id ";
-				$sql .= "WHERE t.task_name LIKE '%" . $term . "%' OR t.task_description LIKE '%" . $term . "%' OR ta.tag_text LIKE '%" . $term . "%'";
-				$sql .= "AND t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
-
-				if (empty($parameters['usearchived']))
-				{
-					$sql .= "AND t.task_workflow > '0' ";
-				}
+				$sql .= "WHERE (t.task_name LIKE '%" . $term . "%' OR t.task_description LIKE '%" . $term . "%' OR ta.tag_text LIKE '%" . $term . "%') ";
+				$sql .= "AND t.task_workflow > 0 AND t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
 
 				$res = $this->database->query($sql);
 				if (!$res)

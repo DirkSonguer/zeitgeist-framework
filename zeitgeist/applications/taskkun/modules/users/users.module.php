@@ -32,6 +32,7 @@ class users
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('users', 'templates', 'users_index'));
 		$tpl->assign('documenttitle', 'Benutzerübersicht');
+		$tpl->assign('helptopic', '&topic=users');
 
 		$tpl->show();
 
@@ -48,6 +49,7 @@ class users
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('users', 'templates', 'users_adduser'));
 		$tpl->assign('documenttitle', 'Benutzer hinzufügen');
+		$tpl->assign('helptopic', '&topic=adduser');
 
 		$adduserForm = new zgStaticform();
 		$adduserForm->load('forms/adduser.form.ini');
@@ -172,6 +174,7 @@ class users
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('users', 'templates', 'users_edituser'));
 		$tpl->assign('documenttitle', 'Benutzer bearbeiten');
+		$tpl->assign('helptopic', '&topic=edituser');
 
 		$edituserForm = new zgStaticform();
 		$edituserForm->load('forms/edituser.form.ini');

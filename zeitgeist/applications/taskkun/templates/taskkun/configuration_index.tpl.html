@@ -78,7 +78,7 @@
 	<a href="@@{[configuration.index]}@@" alt=""><span onmousemove="showTooltip('Persönliche Einstellungen', event)" onmouseout="hideTooltip()">
 	<img src="@@{templatepath}@@/nuvola/48x48/apps/kcmsystem.png" alt="" border="0" /></span></a>
 	
-	<a href="@@{[help.index]}@@" alt=""><span onmousemove="showTooltip('Hilfe!', event)" onmouseout="hideTooltip()">
+	<a href="@@{[help.index]}@@@@{helptopic}@@" alt="" target="_blank"><span onmousemove="showTooltip('Hilfe!', event)" onmouseout="hideTooltip()">
 	<img src="@@{templatepath}@@/nuvola/48x48/apps/filetypes.png" alt="" border="0" /></span></a>	
 
 	<a href="@@{[main.logout]}@@" alt=""><span onmousemove="showTooltip('Logout', event)" onmouseout="hideTooltip()">
@@ -142,7 +142,7 @@
 
 <form method="post" action="@@{[configuration.index]}@@" name="configuration" enctype="multipart/form-data; charset=utf-8">
 	
-	<div class="textbox" style="background-image:url(@@{templatepath}@@/images/side_configuration.jpg); background-position:right bottom; background-repeat:no-repeat;">
+	<div class="textbox">
 	<h2>Benutzerdaten ändern</h2>
 	
 		<table cellspacing="5" cellpadding="5" border="0">
@@ -215,7 +215,7 @@
 		</table>
 	</div>
 
-	<div class="textbox" style="background-image:url(@@{templatepath}@@/images/side_configuration.jpg); background-position:right bottom; background-repeat:no-repeat;">
+	<div class="textbox">
 	<h2>Passwort ändern</h2>
 	
 		<table cellspacing="5" cellpadding="5" border="0">
