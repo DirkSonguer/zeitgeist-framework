@@ -75,8 +75,9 @@
 			}
 			
 			currentSearch += tagText;
-			
 			document.getElementById('searchinput').value = currentSearch;
+			
+			updateSearch();
 		}
 
 	</script>
@@ -95,7 +96,7 @@
 	<a href="@@{[configuration.index]}@@" alt=""><span onmousemove="showTooltip('Persönliche Einstellungen', event)" onmouseout="hideTooltip()">
 	<img src="@@{templatepath}@@/nuvola/48x48/apps/kcmsystem.png" alt="" border="0" /></span></a>
 	
-	<a href="@@{[help.index]}@@" alt=""><span onmousemove="showTooltip('Hilfe!', event)" onmouseout="hideTooltip()">
+	<a href="@@{[help.index]}@@@@{helptopic}@@" alt="" target="_blank"><span onmousemove="showTooltip('Hilfe!', event)" onmouseout="hideTooltip()">
 	<img src="@@{templatepath}@@/nuvola/48x48/apps/filetypes.png" alt="" border="0" /></span></a>	
 
 	<a href="@@{[main.logout]}@@" alt=""><span onmousemove="showTooltip('Logout', event)" onmouseout="hideTooltip()">
@@ -158,7 +159,7 @@
 <!-- InstanceBeginEditable name="body" -->
 
 <form action="#" onsubmit="return updateSearch()">
-<div class="textbox" style="background-image:url(@@{templatepath}@@/images/side_search.jpg); background-position:right bottom; background-repeat:no-repeat;">
+<div class="textbox">
 <h2>Aufgaben suchen</h2>
 
 <table border="0" cellpadding="0" cellspacing="10">
@@ -191,8 +192,8 @@
 			<div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
 		
 			<div spry:state="ready">
-			<p class="tagcloud">
-				<a spry:repeat="dsTags" href="javascript:addTag('{dsTags::tag_text}')" class='tag{dsTags::tag_score}'>{dsTags::tag_text}</a>
+			<p style="text-align:center;">
+				<a spry:repeat="dsTags" href="javascript:addTag('{dsTags::tag_text}')" style="margin-left:5px; margin-right:5px;" class='tag{dsTags::tag_score}'>{dsTags::tag_text}</a>
 			</p>
 			<div style="clear:both;"></div>
 			</div>

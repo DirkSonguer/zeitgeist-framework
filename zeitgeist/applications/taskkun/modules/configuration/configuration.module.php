@@ -31,6 +31,7 @@ class configuration
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('configuration', 'templates', 'configuration_index'));
 		$tpl->assign('documenttitle', 'Benutzerdaten ändern');
+		$tpl->assign('helptopic', '&topic=configuration');
 
 		$userfunctions = new tkUserfunctions();
 

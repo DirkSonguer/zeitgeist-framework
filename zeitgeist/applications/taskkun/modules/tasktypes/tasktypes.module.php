@@ -45,6 +45,7 @@ class tasktypes
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('tasktypes', 'templates', 'tasktypes_edittasktype'));
 		$tpl->assign('documenttitle', 'Aufgabenablauf bearbeiten');
+		$tpl->assign('helptopic', '&topic=edittasktype');
 
 		if (!empty($parameters['id']))
 		{

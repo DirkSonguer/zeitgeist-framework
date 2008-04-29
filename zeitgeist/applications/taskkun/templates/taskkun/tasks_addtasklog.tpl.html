@@ -82,7 +82,7 @@
 	<a href="@@{[configuration.index]}@@" alt=""><span onmousemove="showTooltip('Persönliche Einstellungen', event)" onmouseout="hideTooltip()">
 	<img src="@@{templatepath}@@/nuvola/48x48/apps/kcmsystem.png" alt="" border="0" /></span></a>
 	
-	<a href="@@{[help.index]}@@" alt=""><span onmousemove="showTooltip('Hilfe!', event)" onmouseout="hideTooltip()">
+	<a href="@@{[help.index]}@@@@{helptopic}@@" alt="" target="_blank"><span onmousemove="showTooltip('Hilfe!', event)" onmouseout="hideTooltip()">
 	<img src="@@{templatepath}@@/nuvola/48x48/apps/filetypes.png" alt="" border="0" /></span></a>	
 
 	<a href="@@{[main.logout]}@@" alt=""><span onmousemove="showTooltip('Logout', event)" onmouseout="hideTooltip()">
@@ -194,7 +194,7 @@
 <!-- TemplateEndBlock -->
 
 <form method="post" action="@@{[tasks.addtasklog]}@@" name="addTasklog" enctype="multipart/form-data; charset=utf-8">
-	<div class="textbox" style="background-image:url(@@{templatepath}@@/images/side_newtasklog.jpg); background-position:right bottom; background-repeat:no-repeat;">
+	<div class="textbox">
 		<input type="hidden" name="addtasklog[tasklog_task]" value="@@{tasklog_task:value}@@" />
 		<input type="hidden" name="submitButton" value="0" />
 		<h2>Tätigkeit eintragen für "@@{task_name}@@"</h2>

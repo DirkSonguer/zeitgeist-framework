@@ -29,7 +29,7 @@ class tasks
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_index'));
 		$tpl->assign('documenttitle', 'Aufgabenübersicht');
-		$tpl->assign('tasklog_date:value', date('d.m.Y'));
+		$tpl->assign('helptopic', '&topic=tasks');
 
 		$tpl->show();
 
@@ -45,6 +45,7 @@ class tasks
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_addtask'));
 		$tpl->assign('documenttitle', 'Aufgabe hinzufügen');
+		$tpl->assign('helptopic', '&topic=addtask');
 
 		$addtaskForm = new zgStaticform();
 		$addtaskForm->load('forms/addtask.form.ini');
@@ -104,6 +105,7 @@ class tasks
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_edittask'));
 		$tpl->assign('documenttitle', 'Aufgabe bearbeiten');
+		$tpl->assign('helptopic', '&topic=edittask');
 
 		$addtaskForm = new zgStaticform();
 		$addtaskForm->load('forms/edittask.form.ini');
@@ -245,6 +247,7 @@ class tasks
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_addtasklog'));
 		$tpl->assign('documenttitle', 'Aufgabenbeschreibung hinzufügen');
+		$tpl->assign('helptopic', '&topic=addtasklog');
 
 		$addtasklogForm = new zgStaticform();
 		$addtasklogForm->load('forms/addtasklog.form.ini');
@@ -356,6 +359,7 @@ class tasks
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_edittasklog'));
 		$tpl->assign('documenttitle', 'Aufgabenbeschreibung bearbeiten');
+		$tpl->assign('helptopic', '&topic=edittasklog');
 
 		$edittasklogForm = new zgStaticform();
 		$edittasklogForm->load('forms/edittasklog.form.ini');
@@ -468,6 +472,7 @@ class tasks
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_showactivetasks'));
 		$tpl->assign('documenttitle', 'Aufgabenübersicht');
+		$tpl->assign('helptopic', '&topic=activetasks');
 
 		$tpl->show();
 
@@ -483,6 +488,7 @@ class tasks
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_taskdetails'));
 		$tpl->assign('documenttitle', 'Aufgabendetails');
+		$tpl->assign('helptopic', '&topic=taskdetails');
 
 		$addtaskForm = new zgStaticform();
 		$addtaskForm->load('forms/edittask.form.ini');
