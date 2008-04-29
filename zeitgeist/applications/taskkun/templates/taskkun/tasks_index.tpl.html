@@ -173,11 +173,11 @@
 						<div class="textboxheader">
 							<table cellpadding="0" cellspacing="0" border="0" class="activetasks">
 							<tr>
-								<td style="width:25px;">
+								<td style="width:20px;">
 									<p class="textboxheader">
-										<span spry:if="{dsUserTasks::task_priority} == '1'"><span onmousemove="showTooltip('Niedrige Priorität', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/down.png" alt="Niedrige Priorität" border="0" /></span></span>
+										<span spry:if="{dsUserTasks::task_priority} == '1'"><span onmousemove="showTooltip('Niedrige Priorität', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/down_green.png" alt="Niedrige Priorität" border="0" /></span></span>
 										<span spry:if="{dsUserTasks::task_priority} == '2'"></span>
-										<span spry:if="{dsUserTasks::task_priority} == '3'"><span onmousemove="showTooltip('Hohe Priorität', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/up.png" alt="Hohe Priorität" border="0" /></span></span>
+										<span spry:if="{dsUserTasks::task_priority} == '3'"><span onmousemove="showTooltip('Hohe Priorität', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/up_red.png" alt="Hohe Priorität" border="0" /></span></span>
 									</p>
 								</td>
 								<td style="width:30px;">
@@ -304,9 +304,9 @@
 					<tr class="{ds_EvenOddRow}" spry:repeat="dsGroupTasks">
 						<td style="width:30px;">
 							<p class="ptable">
-								<span spry:if="{dsGroupTasks::task_priority} == '1'"><span onmousemove="showTooltip('Niedrige Priorität', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/down.png" alt="Niedrige Priorität" border="0" /></span></span>
+								<span spry:if="{dsGroupTasks::task_priority} == '1'"><span onmousemove="showTooltip('Niedrige Priorität', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/down_green.png" alt="Niedrige Priorität" border="0" /></span></span>
 								<span spry:if="{dsGroupTasks::task_priority} == '2'"></span>
-								<span spry:if="{dsGroupTasks::task_priority} == '3'"><span onmousemove="showTooltip('Hohe Priorität', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/up.png" alt="Hohe Priorität" border="0" /></span></span>
+								<span spry:if="{dsGroupTasks::task_priority} == '3'"><span onmousemove="showTooltip('Hohe Priorität', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/up_red.png" alt="Hohe Priorität" border="0" /></span></span>
 							</p>
 						</td>		
 						<td><p><span onmousemove="showTooltip('{dsGroupTasks::task_description}', event)" onmouseout="hideTooltip()">{dsGroupTasks::task_name}</span></p></td>
