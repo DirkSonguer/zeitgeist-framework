@@ -37,10 +37,37 @@
 	
 <!-- InstanceBeginEditable name="head" -->
 
+	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryData.js"></script>
+	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/xpath.js"></script>
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryNestedXMLDataSet.js"></script>
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/js/SpryExtensions.js"></script>
 	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryCollapsiblePanel.js"></script>
 	<script type="text/javascript" src="@@{templatepath}@@/js/date-picker/js/datepicker.js"></script>
 	<link href="@@{templatepath}@@/js/date-picker/css/datepicker.css" rel="stylesheet" type="text/css" />
 
+	<script type="text/javascript">
+
+		var dsTags = new Spry.Data.XMLDataSet("@@{[dataserver.getalltags]}@@", "container/element", { useCache: false });
+		dsTags.setColumnType("tag_id", "number");
+		dsTags.setColumnType("tag_count", "number");
+
+		function addTag(tagText)
+		{
+			currentSearch = document.getElementById('taginput').value;
+			
+			if (currentSearch != '')
+			{
+				currentSearch += ' ';
+			}
+			
+			currentSearch += tagText;
+			document.getElementById('taginput').value = currentSearch;
+			
+			updateSearch();
+		}
+		
+	</script>
+	
 <!-- InstanceEndEditable -->
 </head>
 
@@ -126,9 +153,9 @@
 	<table width="100%" cellspacing="5" cellpadding="5" border="0">
 	<tbody>
 		<tr>
-			<td nowrap="nowrap" valign="top" width="145"><p class="formlabel">Titel*</p></td>
+			<td nowrap="nowrap" valign="top" width="160"><p class="formlabel">Titel*</p></td>
 			<td valign="middle"@@{task_name:formerror}@@>
-				<input maxlength="128" name="addtask[task_name]" value="@@{task_name:value}@@" class="formtext" style="width:750px;" type="text" />
+				<input maxlength="128" name="addtask[task_name]" value="@@{task_name:value}@@" class="formtext" style="width:700px;" type="text" />
 				<!-- TemplateBeginBlock name="task_name:errormsg" -->
 					<br /><span class="formerrormsg">@@{task_name:errormsg}@@</span>
 				<!-- TemplateEndBlock -->
@@ -137,24 +164,76 @@
 		<tr>
 			<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Beschreibung*</p></td>
 			<td align="left" valign="middle"@@{task_description:formerror}@@>
-				<textarea rows="5" name="addtask[task_description]" class="formtext" style="height:175px;width:750px;">@@{task_description:value}@@</textarea>
+				<textarea rows="5" name="addtask[task_description]" class="formtext" style="height:175px;width:700px;">@@{task_description:value}@@</textarea>
 				<!-- TemplateBeginBlock name="task_description:errormsg" -->
 					<br /><span class="formerrormsg">@@{task_description:errormsg}@@</span>
 				<!-- TemplateEndBlock -->
 			</td>
 		</tr>
+		</tbody>
+		</table>
+		
+	<table width="100%" cellspacing="5" cellpadding="5" border="0">
+	<tbody>
 		<tr>
-			<td align="right" nowrap="nowrap" valign="top" width="135"><p class="formlabel">Aufgabenablauf*</p></td>
-			<td align="left" valign="middle">
-				<select name="addtask[task_type]" class="formtext">
-					<!-- TemplateBeginBlock name="tasktype_loop" -->
-						<option value="@@{tasktype_id}@@"@@{tasktype_selected}@@>@@{tasktype_name}@@</option>
-					<!-- TemplateEndBlock -->
-				</select>
+			<td width="50%" valign="top">
+				<table border="0" cellpadding="0" cellspacing="2">
+					<tbody>
+					<tr>
+						<td align="right" nowrap="nowrap" valign="top" width="170"><p class="formlabel">Aufgabenablauf*</p></td>
+						<td align="left" valign="middle">
+							<select name="addtask[task_type]" class="formtext">
+								<!-- TemplateBeginBlock name="tasktype_loop" -->
+									<option value="@@{tasktype_id}@@"@@{tasktype_selected}@@>@@{tasktype_name}@@</option>
+								<!-- TemplateEndBlock -->
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Priorität</p></td>
+						<td align="left" valign="middle">
+							<select name="addtask[task_priority]" class="formtext">
+								<option value="3">Hoch</option>
+								<option value="2" selected="selected">Normal</option>
+								<option value="1">Niedrig</option>
+							</select>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</td>
+			<td width="50%" valign="top">
+				<table border="0" cellpadding="5" cellspacing="2">
+				<tbody>
+					<tr>
+						<td align="right" nowrap="nowrap" valign="top" width="100"><p class="formlabel">Beginn</p></td>
+						<td align="left" valign="middle"@@{task_begin:formerror}@@>
+						<input maxlength="30" name="addtask[task_begin]" class="w8em format-d-m-y divider-dot" id="task_begin" style="width:210px; border:solid 1px #777788; padding:3px; font-family: Osaka,verdana,Sans-Serif; font-size:12pt;" value="@@{task_begin:value}@@" type="text" />
+						<!-- TemplateBeginBlock name="task_begin:errormsg" -->
+							<br /><span class="formerrormsg">@@{task_begin:errormsg}@@</span>
+						<!-- TemplateEndBlock -->
+						</td>
+					</tr>
+					<tr>
+						<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Fällig am</p></td>
+						<td align="left" valign="middle"@@{task_end:formerror}@@>
+						<input maxlength="30" name="addtask[task_end]" class="w8em format-d-m-y divider-dot" id="task_end" style="width:210px; border:solid 1px #777788; padding:3px; font-family: Osaka,verdana,Sans-Serif; font-size:12pt;" value="@@{task_end:value}@@" type="text" />
+						<!-- TemplateBeginBlock name="task_end:errormsg" -->
+							<br /><span class="formerrormsg">@@{task_end:errormsg}@@</span>
+						<!-- TemplateEndBlock -->
+						</td>
+					</tr>
+				</tbody>
+				</table>
 			</td>
 		</tr>
+	</tbody>
+	</table>
+							
+	<table width="100%" cellspacing="5" cellpadding="5" border="0">
+	<tbody>
 		<tr>
-			<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Stundenbudget*</p></td>
+			<td align="right" nowrap="nowrap" width="160" valign="top"><p class="formlabel">Stundenbudget*</p></td>
 			<td align="left" valign="middle"@@{task_hoursplanned:formerror}@@><input maxlength="6" style="width:60px;" name="addtask[task_hoursplanned]" value="@@{task_hoursplanned:value}@@" class="formtext" type="text" /> (Angabe in Stunden. Dezimalstellen durch Punkt oder Komma)
 			<!-- TemplateBeginBlock name="task_hoursplanned:errormsg" -->
 				<br /><span class="formerrormsg">@@{task_hoursplanned:errormsg}@@</span>
@@ -164,12 +243,36 @@
 		<tr>
 			<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Tags*</p></td>
 			<td align="left" valign="middle"@@{task_tags:formerror}@@>
-				<input maxlength="512" style="width:750px; margin-top:10px;" name="addtask[task_tags]" value="@@{task_tags:value}@@" class="formtext" type="text" />
+				<input maxlength="512" style="width:650px; margin-top:10px;" id="taginput" name="addtask[task_tags]" value="@@{task_tags:value}@@" class="formtext" type="text" />
+				<span onmousemove="showTooltip('Alle Tags anzeigen', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/1downarrow.png" alt="" onclick="AdditionalInformation.open();" name="groupIcon" border="0" /></span>
 				<p style="margin-left:0px;">(Mehrere Tags durch Komma trennen. Bitte <u>mindestens</u> Kunde und evtl. Projekt angeben)
 				<!-- TemplateBeginBlock name="task_tags:errormsg" -->
 					<br /><span class="formerrormsg">@@{task_tags:errormsg}@@</span>
 				<!-- TemplateEndBlock -->
 				</p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<div id="AdditionalInformation" class="CollapsiblePanel">
+					<div class="CollapsiblePanelTab">
+					</div>
+				
+					<div class="CollapsiblePanelContent">
+						<div spry:region="dsTags">
+							<div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
+						
+							<div spry:state="ready">
+							<p style="text-align:center;">
+								<a spry:repeat="dsTags" href="javascript:addTag('{dsTags::tag_text}')" style="margin-left:5px; margin-right:5px;" class='tag{dsTags::tag_score}'>{dsTags::tag_text}</a>
+							</p>
+							<div style="clear:both;"></div>
+							</div>
+							<br />
+						</div>
+					</div>
+
+				</div>
 			</td>
 		</tr>
 		<tr>
@@ -181,55 +284,6 @@
 	</tbody>
 	</table>
 
-</div>
-
-<div id="AdditionalInformation" class="CollapsiblePanel, textbox">
-	<div class="CollapsiblePanelTab">
-		<h2 style="text-align:left; background:#B5BD82; padding:5px;">Weitere Angaben
-		<span style="float:right; margin-top:-20px;"><img src="@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png" alt="" name="groupIcon" align="left" border="0" /><img src="@@{templatepath}@@/nuvola/22x22/actions/1downarrow.png" alt="" name="groupIcon" align="left" border="0" /></span>
-		</h2>
-	</div>
-
-	<div class="CollapsiblePanelContent">
-		<table width="100%" cellspacing="5" cellpadding="5" border="0">
-		<tbody>
-			<tr>
-				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Priorität</p></td>
-				<td align="left" valign="middle">
-					<select name="addtask[task_priority]" class="formtext">
-						<option value="3">Hoch</option>
-						<option value="2" selected="selected">Normal</option>
-						<option value="1">Niedrig</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Beginn</p></td>
-				<td align="left" valign="middle"@@{task_begin:formerror}@@>
-				<input maxlength="30" name="addtask[task_begin]" class="w8em format-d-m-y divider-dot" id="task_begin" style="width:210px; border:solid 1px #777788; padding:3px; font-family: Osaka,verdana,Sans-Serif; font-size:12pt;" value="@@{task_begin:value}@@" type="text" />
-				<!-- TemplateBeginBlock name="task_begin:errormsg" -->
-					<br /><span class="formerrormsg">@@{task_begin:errormsg}@@</span>
-				<!-- TemplateEndBlock -->
-				</td>
-			</tr>
-			<tr>
-				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Fällig am</p></td>
-				<td align="left" valign="middle"@@{task_end:formerror}@@>
-				<input maxlength="30" name="addtask[task_end]" class="w8em format-d-m-y divider-dot" id="task_end" style="width:210px; border:solid 1px #777788; padding:3px; font-family: Osaka,verdana,Sans-Serif; font-size:12pt;" value="@@{task_end:value}@@" type="text" />
-				<!-- TemplateBeginBlock name="task_end:errormsg" -->
-					<br /><span class="formerrormsg">@@{task_end:errormsg}@@</span>
-				<!-- TemplateEndBlock -->
-				</td>
-			</tr>	
-		<tr>
-			<td align="right" nowrap="nowrap" valign="top" width="120"><p class="formlabel">Anmerkungen</p></td>
-			<td align="left" valign="middle">
-				<textarea rows="5" name="addtask[task_notes]" class="formtext" style="height:175px; width:750px;"></textarea>
-			</td>
-		</tr>
-		</tbody>
-		</table>
-	</div>
 </div>
 
 </form>	
