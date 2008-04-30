@@ -299,7 +299,7 @@
 						<th><p><a onclick="dsGroupTasks.sort('task_name');" class="sortlink">Name</a></p></th>
 						<th><p><a onclick="dsGroupTasks.sort('group_name');" class="sortlink">Gruppe</a></p></th>
 						<th><p style="text-align:center;"><a onclick="dsGroupTasks.sort('task_end');" class="sortlink">Fällig am</a></p></th>
-						<th><p class="thtext">Aktionen</p></th>
+						<th><p class="thtext">Übernehmen</p></th>
 					</tr>
 					<tr class="{ds_EvenOddRow}" spry:repeat="dsGroupTasks">
 						<td style="width:30px;">
@@ -320,7 +320,7 @@
 							</div>
 						</td>
 						<td width="90"><p style="text-align:center;">
-						<span onmousemove="showTooltip('Aufgabe annehmen', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.accepttask]}@@&id={dsGroupTasks::task_id}" alt="Aufgabe annehmen"><img src="@@{templatepath}@@/nuvola/22x22/actions/button_accept.png" alt="Aufgabe annehmen" border="0" /></a></span>
+						<span onmousemove="showTooltip('Aufgabe übernehmen', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.accepttask]}@@&id={dsGroupTasks::task_id}" alt="Aufgabe annehmen"><img src="@@{templatepath}@@/nuvola/22x22/actions/button_accept.png" alt="Aufgabe übernehmen" border="0" /></a></span>
 						</p></td>
 					</tr>
 				</table>
