@@ -88,7 +88,7 @@
 		<!-- TemplateBeginBlock name="adminnavigation" -->
 		<div style="float:left; margin:10px; margin-left:40px;"><a href="@@{[users.index]}@@" alt=""><span onmousemove="showTooltip('Benutzer verwalten', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/mimetypes/vcard.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[usergroups.index]}@@" alt=""><span onmousemove="showTooltip('Benutzergruppen verwalten', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[groups.index]}@@" alt=""><span onmousemove="showTooltip('Gruppen verwalten', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kdmconfig.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[tasktypes.index]}@@" alt=""><span onmousemove="showTooltip('Aufgabenabläufe verwalten', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/fsview.png" alt="" border="0" /></span></a></div>
@@ -138,18 +138,18 @@
 			</td>
 			</tr>
 			<tr>
-				<td valign="top" nowrap="nowrap"><p class="formlabel">Name*</p></td>
-				<td valign="middle" @@{userdata_lastname:formerror}@@><input type="text" maxlength="60" name="edituser[userdata_lastname]" value="@@{userdata_lastname:value}@@" class="formtext" />
-				<!-- TemplateBeginBlock name="userdata_lastname:errormsg" -->
-					<br /><span class="formerrormsg">@@{userdata_lastname:errormsg}@@</span>
-				<!-- TemplateEndBlock -->
-			</td>
-			</tr>
-			<tr>
 				<td valign="top" nowrap="nowrap"><p class="formlabel">Vorname*</p></td>
 				<td valign="middle" @@{userdata_firstname:formerror}@@><input type="text" maxlength="60" name="edituser[userdata_firstname]" value="@@{userdata_firstname:value}@@" class="formtext" />
 				<!-- TemplateBeginBlock name="userdata_firstname:errormsg" -->
 					<br /><span class="formerrormsg">@@{userdata_firstname:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">Name*</p></td>
+				<td valign="middle" @@{userdata_lastname:formerror}@@><input type="text" maxlength="60" name="edituser[userdata_lastname]" value="@@{userdata_lastname:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="userdata_lastname:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_lastname:errormsg}@@</span>
 				<!-- TemplateEndBlock -->
 			</td>
 			</tr>
@@ -218,7 +218,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td valign="top" nowrap="nowrap"><p class="formlabel">Benutzergruppen</p></td>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">Gruppen</p></td>
 				<td valign="top" nowrap="nowrap">
 				<select name="edituser[userroleuser_usergroups][]" size="5" class="formtext" multiple="multiple">
 				<!-- TemplateBeginBlock name="usergroup_loop" -->

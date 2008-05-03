@@ -56,7 +56,7 @@
 
 		var dsTasklogs = new Spry.Data.NestedXMLDataSet(dsTasks, "task_tasklogs/element");
 
-		var dsUsergroups = new Spry.Data.XMLDataSet("@@{[dataserver.getusergroups]}@@", "container/element");
+		var dsGroups = new Spry.Data.XMLDataSet("@@{[dataserver.getgroups]}@@", "container/element");
 
 		function insertData(dataElement, dataContent)
 		{
@@ -158,7 +158,7 @@
 		<!-- TemplateBeginBlock name="adminnavigation" -->
 		<div style="float:left; margin:10px; margin-left:40px;"><a href="@@{[users.index]}@@" alt=""><span onmousemove="showTooltip('Benutzer verwalten', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/mimetypes/vcard.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[usergroups.index]}@@" alt=""><span onmousemove="showTooltip('Benutzergruppen verwalten', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[groups.index]}@@" alt=""><span onmousemove="showTooltip('Gruppen verwalten', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kdmconfig.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[tasktypes.index]}@@" alt=""><span onmousemove="showTooltip('Aufgabenabläufe verwalten', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/fsview.png" alt="" border="0" /></span></a></div>
@@ -205,10 +205,10 @@
 					<p class="formlabel">Zuständigkeit</p>
 				</td>
 				<td align="left" valign="middle">
-					<div spry:region="dsUsergroups">
+					<div spry:region="dsGroups">
 					<select id="filter_group" class="formtext" style="width:300px;" onchange="filterGroup()">
 							<option value="-1">Alle anzeigen</option>
-						<option spry:repeat="dsUsergroups" value="{group_id}">{group_name}</option>
+						<option spry:repeat="dsGroups" value="{group_id}">{group_name}</option>
 						</select>
 					</select>
 					</div>					

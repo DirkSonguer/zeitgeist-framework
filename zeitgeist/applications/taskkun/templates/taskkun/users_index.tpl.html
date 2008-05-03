@@ -49,10 +49,16 @@
 		dsUserdata.setColumnType("user_id", "number");
 
 		var dsUserroles = new Spry.Data.XMLDataSet("@@{[dataserver.getuserroles]}@@", "container/element");
-		var dsUsergroups = new Spry.Data.XMLDataSet("@@{[dataserver.getusergroups]}@@", "container/element");
+		var dsGroups = new Spry.Data.XMLDataSet("@@{[dataserver.getusergroups]}@@", "container/element");
 
-		function deleteUser(id, name)
-		{
+		function deleteUser(id, count, name)
+		{		
+			if (count > 0)
+			{
+				alert("Sie können keinen Benutzer löschen, der noch aktiv Aufgaben bearbeitet.\nBitte sorgen Sie dafür, dass der Benutzer seine Aufgaben beendet, bevor Sie ihn löschen.");
+				return;
+			}
+		
 			var answer = window.confirm("Wollen Sie den Benutzer '" + name + "' wirklich löschen?");
 
 			if (answer == true)
@@ -67,9 +73,9 @@
 		}
 
 
-		function filterUsergroup()
+		function filterGroup()
 		{
-			filterParameter = document.getElementById('filter_usergroup').value;
+			filterParameter = document.getElementById('filter_group').value;
 			filterSpryDataset('group_name', filterParameter, dsUserdata, false);
 		}
 
@@ -131,7 +137,7 @@
 		<!-- TemplateBeginBlock name="adminnavigation" -->
 		<div style="float:left; margin:10px; margin-left:40px;"><a href="@@{[users.index]}@@" alt=""><span onmousemove="showTooltip('Benutzer verwalten', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/mimetypes/vcard.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[usergroups.index]}@@" alt=""><span onmousemove="showTooltip('Benutzergruppen verwalten', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[groups.index]}@@" alt=""><span onmousemove="showTooltip('Gruppen verwalten', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kdmconfig.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[tasktypes.index]}@@" alt=""><span onmousemove="showTooltip('Aufgabenabläufe verwalten', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/fsview.png" alt="" border="0" /></span></a></div>
@@ -180,13 +186,13 @@
 						<p><img src="@@{templatepath}@@/nuvola/128x128/apps/kghostview.png" alt="Filter users" border="0" /></p>
 					</td>
 					<td align="left" valign="middle">
-						<p class="formlabel">Benutzergruppen anzeigen</p>
+						<p class="formlabel">Gruppe anzeigen</p>
 					</td>
 					<td align="left" valign="middle">
-						<div spry:region="dsUsergroups">
-						<select id="filter_usergroup" class="formtext" style="width:255px;" onchange="filterUsergroup()">
+						<div spry:region="dsGroups">
+						<select id="filter_group" class="formtext" style="width:255px;" onchange="filterGroup()">
 							<option value="-1">Alle Gruppen</option>
-							<option spry:repeat="dsUsergroups" value="{group_name}">{group_name}</option>
+							<option spry:repeat="dsGroups" value="{group_name}">{group_name}</option>
 						</select>
 						</div>
 					</td>
@@ -229,7 +235,7 @@
 					<tr class="tablehead">
 						<th><p><a onclick="dsUserdata.sort('user_username');" class="sortlink">Name/Anmeldung</a></p></th>
 						<th><p><a onclick="dsUserdata.sort('user_username');" class="sortlink">Benutzerrolle</a></p></th>
-						<th><p style="text-align:center;"><a onclick="dsUsergroups.sort('user_taskcount');" class="sortlink">Aktive Aufgaben<br />des Benutzers</a></p></th>
+						<th><p style="text-align:center;"><a onclick="dsGroups.sort('user_taskcount');" class="sortlink">Aktive Aufgaben<br />des Benutzers</a></p></th>
 						<th style="width:90px;"><p class="thtext">Aktion</p></th>
 					</tr>
 	
@@ -239,7 +245,7 @@
 						<td><p style="text-align:center;">{dsUserdata::user_taskcount}</p></td>
 						<td><p style="text-align:right;">
 						<span onmousemove="showTooltip('Benutzer bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[users.edituser]}@@&id={dsUserdata::user_id}" alt="Benutzer bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/apps/kate.png" alt="Benutzer bearbeiten" border="0" /></a></span> &nbsp; 
-						<span onmousemove="showTooltip('Benutzer löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteUser({dsUserdata::user_id}, '{dsUserdata::user_username}')" alt="Benutzer löschen"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Benutzer löschen" border="0" /></a></span>
+						<span onmousemove="showTooltip('Benutzer löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteUser({dsUserdata::user_id}, {dsUserdata::user_taskcount}, '{dsUserdata::user_username}')" alt="Benutzer löschen"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Benutzer löschen" border="0" /></a></span>
 						</p></td>
 					</tr>
 				</table>

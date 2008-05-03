@@ -37,32 +37,7 @@
 	
 <!-- InstanceBeginEditable name="head" -->
 
-
-	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryData.js"></script>
-	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/xpath.js"></script>
-	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryNestedXMLDataSet.js"></script>
-	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/js/SpryExtensions.js"></script>
-
-	<script type="text/javascript">
-
-		var dsResults = new Spry.Data.XMLDataSet("@@{[dataserver.searchtasks]}@@", "container/element", { useCache: false });
-		dsResults.setColumnType("task_id", "number");
-		dsResults.setColumnType("task_hoursplanned", "number");
-		dsResults.setColumnType("task_hoursworked", "number");
-		
-		function updateSearch()
-		{
-			currentSearch = document.getElementById('searchinput').value;
-			var spryURL = "@@{[dataserver.searchtasks]}@@&searchterms="+currentSearch;
-			dsResults.url = spryURL;
-			dsResults.loadData();
-			
-//			dsResults.sort('score');
-			
-			return false;
-		}
-
-	</script>
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryCollapsiblePanel.js"></script>
 
 <!-- InstanceEndEditable -->
 </head>
@@ -113,7 +88,7 @@
 		<!-- TemplateBeginBlock name="adminnavigation" -->
 		<div style="float:left; margin:10px; margin-left:40px;"><a href="@@{[users.index]}@@" alt=""><span onmousemove="showTooltip('Benutzer verwalten', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/mimetypes/vcard.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[usergroups.index]}@@" alt=""><span onmousemove="showTooltip('Benutzergruppen verwalten', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[groups.index]}@@" alt=""><span onmousemove="showTooltip('Gruppen verwalten', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kdmconfig.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[tasktypes.index]}@@" alt=""><span onmousemove="showTooltip('Aufgabenabläufe verwalten', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/fsview.png" alt="" border="0" /></span></a></div>
@@ -142,109 +117,128 @@
 
 <form method="post" action="@@{[configuration.index]}@@" name="configuration" enctype="multipart/form-data; charset=utf-8">
 	
-	<div class="textbox">
-	<h2>Benutzerdaten ändern</h2>
+	<div id="Userdata" class="CollapsiblePanel, textbox">
+		<div class="CollapsiblePanelTab">
+			<h2>Benutzerdaten ändern
+			<span style="float:right; margin-top:-20px;"><img src="@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png" alt="" name="groupIcon" align="left" border="0" /><img src="@@{templatepath}@@/nuvola/22x22/actions/1downarrow.png" alt="" name="groupIcon" align="left" border="0" /></span>
+			</h2>
+		</div>
 	
-		<table cellspacing="5" cellpadding="5" border="0">
-            <tr>
-                <td valign="top" nowrap="nowrap" width="200"><p class="formlabel">Anmeldung/E-Mail*</p></td>
-                <td valign="middle" @@{user_username:formerror}@@><input type="text" maxlength="60" name="configuration[user_username]" value="@@{user_username:value}@@" class="formtext" />
-				<!-- TemplateBeginBlock name="user_username:errormsg" -->
-					<br /><span class="formerrormsg">@@{user_username:errormsg}@@</span>
-				<!-- TemplateEndBlock -->
-			</td>
-            </tr>
-            <tr>
-                <td valign="top" nowrap="nowrap"><p class="formlabel">Vorname*</p></td>
-                <td valign="middle" @@{userdata_firstname:formerror}@@><input type="text" maxlength="60" name="configuration[userdata_firstname]" value="@@{userdata_firstname:value}@@" class="formtext" />
-				<!-- TemplateBeginBlock name="userdata_firstname:errormsg" -->
-					<br /><span class="formerrormsg">@@{userdata_firstname:errormsg}@@</span>
-				<!-- TemplateEndBlock -->
-			</td>
-            </tr>
-            <tr>
-                <td valign="top" nowrap="nowrap"><p class="formlabel">Name*</p></td>
-                <td valign="middle" @@{userdata_lastname:formerror}@@><input type="text" maxlength="60" name="configuration[userdata_lastname]" value="@@{userdata_lastname:value}@@" class="formtext" />
-				<!-- TemplateBeginBlock name="userdata_lastname:errormsg" -->
-					<br /><span class="formerrormsg">@@{userdata_lastname:errormsg}@@</span>
-				<!-- TemplateEndBlock -->
-			</td>
-            </tr>
-            <tr>
-                <td valign="top" nowrap="nowrap"><p class="formlabel">Straße, Hausnummer</p></td>
-                <td valign="middle" @@{userdata_address1:formerror}@@><input type="text" maxlength="60" name="configuration[userdata_address1]" value="@@{userdata_address1:value}@@" class="formtext" />
-				<!-- TemplateBeginBlock name="userdata_address1:errormsg" -->
-					<br /><span class="formerrormsg">@@{userdata_address1:errormsg}@@</span>
-				<!-- TemplateEndBlock -->
-			</td>
-            </tr>
-            <tr>
-                <td valign="top" nowrap="nowrap"><p class="formlabel">Adresszusatz</p></td>
-                <td valign="middle" @@{userdata_address2:formerror}@@><input type="text" maxlength="60" name="configuration[userdata_address2]" value="@@{userdata_address2:value}@@" class="formtext" />
-				<!-- TemplateBeginBlock name="userdata_address2:errormsg" -->
-					<br /><span class="formerrormsg">@@{userdata_address2:errormsg}@@</span>
-				<!-- TemplateEndBlock -->
-			</td>
-            </tr>
-            <tr>
-                <td valign="top" nowrap="nowrap"><p class="formlabel">PLZ, Ort</p></td>
-                <td valign="middle" @@{userdata_zip:formerror}@@@@{userdata_city:formerror}@@><input type="text" maxlength="6" name="configuration[userdata_zip]" value="@@{userdata_zip:value}@@" class="formtext" style="width:55px;" />
-				<input type="text" maxlength="60" name="configuration[userdata_city]" value="@@{userdata_city:value}@@" class="formtext" style="width:212px;" />
-				<!-- TemplateBeginBlock name="userdata_zip:errormsg" -->
-					<br /><span class="formerrormsg">@@{userdata_zip:errormsg}@@</span>
-				<!-- TemplateEndBlock -->				
-				<!-- TemplateBeginBlock name="userdata_city:errormsg" -->
-					<br /><span class="formerrormsg">@@{userdata_city:errormsg}@@</span>
-				<!-- TemplateEndBlock -->
-			</td>
-            </tr>
-            <tr>
-                <td valign="top" nowrap="nowrap"><p class="formlabel">URL</p></td>
-                <td valign="middle" @@{userdata_url:userdata_zip}@@><input type="text" maxlength="60" name="configuration[userdata_url]" value="@@{userdata_url:value}@@" class="formtext" />
-				<!-- TemplateBeginBlock name="userdata_url:errormsg" -->
-					<br /><span class="formerrormsg">@@{userdata_url:errormsg}@@</span>
-				<!-- TemplateEndBlock -->
-			</td>
-            </tr>
-			<tr>
-				<td colspan="2">
-				   <p style="text-align:right; margin-right:0px;"><img src="@@{templatepath}@@/nuvola/32x32/apps/kate.png" alt="" border="0" align="top" />
-				   <input name="submit" value="Daten speichern" class="formbutton" type="submit" /></p>
+		<div class="CollapsiblePanelContent">
+		
+			<table cellspacing="5" cellpadding="5" border="0">
+				<tr>
+					<td valign="top" nowrap="nowrap" width="200"><p class="formlabel">Anmeldung/E-Mail*</p></td>
+					<td valign="middle" @@{user_username:formerror}@@><input type="text" maxlength="60" name="configuration[user_username]" value="@@{user_username:value}@@" class="formtext" />
+					<!-- TemplateBeginBlock name="user_username:errormsg" -->
+						<br /><span class="formerrormsg">@@{user_username:errormsg}@@</span>
+					<!-- TemplateEndBlock -->
 				</td>
-			</tr>
-		</table>
+				</tr>
+				<tr>
+					<td valign="top" nowrap="nowrap"><p class="formlabel">Vorname*</p></td>
+					<td valign="middle" @@{userdata_firstname:formerror}@@><input type="text" maxlength="60" name="configuration[userdata_firstname]" value="@@{userdata_firstname:value}@@" class="formtext" />
+					<!-- TemplateBeginBlock name="userdata_firstname:errormsg" -->
+						<br /><span class="formerrormsg">@@{userdata_firstname:errormsg}@@</span>
+					<!-- TemplateEndBlock -->
+				</td>
+				</tr>
+				<tr>
+					<td valign="top" nowrap="nowrap"><p class="formlabel">Name*</p></td>
+					<td valign="middle" @@{userdata_lastname:formerror}@@><input type="text" maxlength="60" name="configuration[userdata_lastname]" value="@@{userdata_lastname:value}@@" class="formtext" />
+					<!-- TemplateBeginBlock name="userdata_lastname:errormsg" -->
+						<br /><span class="formerrormsg">@@{userdata_lastname:errormsg}@@</span>
+					<!-- TemplateEndBlock -->
+				</td>
+				</tr>
+				<tr>
+					<td valign="top" nowrap="nowrap"><p class="formlabel">Straße, Hausnummer</p></td>
+					<td valign="middle" @@{userdata_address1:formerror}@@><input type="text" maxlength="60" name="configuration[userdata_address1]" value="@@{userdata_address1:value}@@" class="formtext" />
+					<!-- TemplateBeginBlock name="userdata_address1:errormsg" -->
+						<br /><span class="formerrormsg">@@{userdata_address1:errormsg}@@</span>
+					<!-- TemplateEndBlock -->
+				</td>
+				</tr>
+				<tr>
+					<td valign="top" nowrap="nowrap"><p class="formlabel">Adresszusatz</p></td>
+					<td valign="middle" @@{userdata_address2:formerror}@@><input type="text" maxlength="60" name="configuration[userdata_address2]" value="@@{userdata_address2:value}@@" class="formtext" />
+					<!-- TemplateBeginBlock name="userdata_address2:errormsg" -->
+						<br /><span class="formerrormsg">@@{userdata_address2:errormsg}@@</span>
+					<!-- TemplateEndBlock -->
+				</td>
+				</tr>
+				<tr>
+					<td valign="top" nowrap="nowrap"><p class="formlabel">PLZ, Ort</p></td>
+					<td valign="middle" @@{userdata_zip:formerror}@@@@{userdata_city:formerror}@@><input type="text" maxlength="6" name="configuration[userdata_zip]" value="@@{userdata_zip:value}@@" class="formtext" style="width:55px;" />
+					<input type="text" maxlength="60" name="configuration[userdata_city]" value="@@{userdata_city:value}@@" class="formtext" style="width:212px;" />
+					<!-- TemplateBeginBlock name="userdata_zip:errormsg" -->
+						<br /><span class="formerrormsg">@@{userdata_zip:errormsg}@@</span>
+					<!-- TemplateEndBlock -->				
+					<!-- TemplateBeginBlock name="userdata_city:errormsg" -->
+						<br /><span class="formerrormsg">@@{userdata_city:errormsg}@@</span>
+					<!-- TemplateEndBlock -->
+				</td>
+				</tr>
+				<tr>
+					<td valign="top" nowrap="nowrap"><p class="formlabel">URL</p></td>
+					<td valign="middle" @@{userdata_url:userdata_zip}@@><input type="text" maxlength="60" name="configuration[userdata_url]" value="@@{userdata_url:value}@@" class="formtext" />
+					<!-- TemplateBeginBlock name="userdata_url:errormsg" -->
+						<br /><span class="formerrormsg">@@{userdata_url:errormsg}@@</span>
+					<!-- TemplateEndBlock -->
+				</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+					   <p style="text-align:right; margin-right:0px;"><img src="@@{templatepath}@@/nuvola/32x32/apps/kate.png" alt="" border="0" align="top" />
+					   <input name="submit" value="Daten speichern" class="formbutton" type="submit" /></p>
+					</td>
+				</tr>
+			</table>
+		</div>
 	</div>
 
-	<div class="textbox">
-	<h2>Passwort ändern</h2>
+	<div id="Userpassword" class="CollapsiblePanel, textbox">
+		<div class="CollapsiblePanelTab">
+			<h2>Passwort ändern
+			<span style="float:right; margin-top:-20px;"><img src="@@{templatepath}@@/nuvola/22x22/actions/1uparrow.png" alt="" name="groupIcon" align="left" border="0" /><img src="@@{templatepath}@@/nuvola/22x22/actions/1downarrow.png" alt="" name="groupIcon" align="left" border="0" /></span>
+			</h2>
+		</div>
 	
-		<table cellspacing="5" cellpadding="5" border="0">
-            <tr>
-                <td valign="top" nowrap="nowrap" width="200"><p class="formlabel">Neues Passwort</p></td>
-                <td valign="middle" @@{user_password:formerror}@@><input type="password" maxlength="30" name="configuration[user_password]" class="formtext" />
-				<!-- TemplateBeginBlock name="user_password:errormsg" -->
-					<br /><span class="formerrormsg">@@{user_password:errormsg}@@</span>
-				<!-- TemplateEndBlock -->
-			</td>
-            </tr>
-            <tr>
-                <td valign="top" nowrap="nowrap"><p class="formlabel"> Passwort bestätigen</p></td>
-                <td valign="middle" @@{user_password2:formerror}@@><input type="password" maxlength="30" name="configuration[user_password2]" class="formtext" />
-				<!-- TemplateBeginBlock name="user_password2:errormsg" -->
-					<br /><span class="formerrormsg">@@{user_password2:errormsg}@@</span>
-				<!-- TemplateEndBlock -->
-			</td>
-            </tr>
-			<tr>
-				<td colspan="2">
-				   <p style="text-align:right; margin-right:0px;"><img src="@@{templatepath}@@/nuvola/32x32/apps/kate.png" alt="" border="0" align="top" />
-				   <input name="submit" value="Daten speichern" class="formbutton" type="submit" /></p>
+		<div class="CollapsiblePanelContent">
+		
+			<table cellspacing="5" cellpadding="5" border="0">
+				<tr>
+					<td valign="top" nowrap="nowrap" width="200"><p class="formlabel">Neues Passwort</p></td>
+					<td valign="middle" @@{user_password:formerror}@@><input type="password" maxlength="30" name="configuration[user_password]" class="formtext" />
+					<!-- TemplateBeginBlock name="user_password:errormsg" -->
+						<br /><span class="formerrormsg">@@{user_password:errormsg}@@</span>
+					<!-- TemplateEndBlock -->
 				</td>
-			</tr>
-        </table>
+				</tr>
+				<tr>
+					<td valign="top" nowrap="nowrap"><p class="formlabel"> Passwort bestätigen</p></td>
+					<td valign="middle" @@{user_password2:formerror}@@><input type="password" maxlength="30" name="configuration[user_password2]" class="formtext" />
+					<!-- TemplateBeginBlock name="user_password2:errormsg" -->
+						<br /><span class="formerrormsg">@@{user_password2:errormsg}@@</span>
+					<!-- TemplateEndBlock -->
+				</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+					   <p style="text-align:right; margin-right:0px;"><img src="@@{templatepath}@@/nuvola/32x32/apps/kate.png" alt="" border="0" align="top" />
+					   <input name="submit" value="Daten speichern" class="formbutton" type="submit" /></p>
+					</td>
+				</tr>
+			</table>
+		</div>
 	</div>
 	
 </form>
+
+<script type="text/javascript">
+	var Userdata = new Spry.Widget.CollapsiblePanel("Userdata");
+	var Userpassword = new Spry.Widget.CollapsiblePanel("Userpassword");
+</script> 
 
 <!-- InstanceEndEditable -->
 

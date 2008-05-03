@@ -236,7 +236,7 @@ class users
 				{
 					if (!$userfunctions->changeUsergroups($newUserdata['userroleuser_usergroups'], $currentId))
 					{
-						$this->messages->setMessage('Die Nutzergruppen konnten nicht gespeichert werden.', 'userwarning');
+						$this->messages->setMessage('Die Gruppen konnten nicht gespeichert werden.', 'userwarning');
 						$updateProblems = true;
 					}
 				}
