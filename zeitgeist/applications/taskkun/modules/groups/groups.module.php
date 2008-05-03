@@ -3,7 +3,7 @@
 
 defined('TASKKUN_ACTIVE') or die();
 
-class usergroups
+class groups
 {
 	protected $debug;
 	protected $messages;
@@ -30,8 +30,8 @@ class usergroups
 		$this->debug->guard();
 
 		$tpl = new tkTemplate();
-		$tpl->load($this->configuration->getConfiguration('usergroups', 'templates', 'usergroups_index'));
-		$tpl->assign('documenttitle', 'Benutrzergruppen anzeigen');
+		$tpl->load($this->configuration->getConfiguration('groups', 'templates', 'groups_index'));
+		$tpl->assign('documenttitle', 'Gruppen anzeigen');
 
 		$tpl->show();
 
@@ -39,7 +39,7 @@ class usergroups
 		return true;
 	}
 
-
+/*
 	public function adduser($parameters=array())
 	{
 		$this->debug->guard();
@@ -170,19 +170,19 @@ class usergroups
 		return true;
 	}
 
-
-	public function edituser($parameters=array())
+ */
+	public function editgroup($parameters=array())
 	{
 		$this->debug->guard();
 
 		$currentId = 1;
 		if (!empty($parameters['id'])) $currentId = $parameters['id'];
-		if (!empty($parameters['edituser']['user_id'])) $currentId = $parameters['edituser']['user_id'];
+		if (!empty($parameters['editusergroup']['usergroup_id'])) $currentId = $parameters['editusergroup']['usergroup_id'];
 
 		$tpl = new tkTemplate();
-		$tpl->load($this->configuration->getConfiguration('users', 'templates', 'users_edituser'));
+		$tpl->load($this->configuration->getConfiguration('usergroups', 'templates', 'usergroups_editusergroup'));
 		$tpl->assign('documenttitle', 'Benutzergruppe bearbeiten');
-
+/*
 		$edituserForm = new zgStaticform();
 		$edituserForm->load('forms/edituser.form.ini');
 
@@ -260,7 +260,9 @@ class usergroups
 			$processData['edituser'] = $rowUser;
 			$formvalid = $edituserForm->process($processData);
 		}
+*/
 
+/*
 		$formcreated = $edituserForm->create($tpl);
 
 		// show userroles
@@ -306,6 +308,7 @@ class usergroups
 		}
 
 		$tpl->assign('user_id:value', $currentId);
+*/
 		$tpl->show();
 
 		$this->debug->unguard(true);

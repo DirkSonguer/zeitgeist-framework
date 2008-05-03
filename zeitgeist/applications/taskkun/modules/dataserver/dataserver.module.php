@@ -356,15 +356,44 @@ class dataserver
 	}
 
 
-	public function getusergroups($parameters=array())
+	// instance-safe
+	public function getgroups($parameters=array())
 	{
 		$this->debug->guard();
 
-		$sql = 'SELECT g.*, COUNT(g.group_id) as group_tasktypecount FROM groups g ';
-		$sql .= 'LEFT JOIN taskworkflow twf ON g.group_id = twf.taskworkflow_group ';
-		$sql .= 'GROUP BY g.group_id';
+		$userfunctions = new tkUserfunctions();
 
-		$xmlData = $this->dataserver->createXMLDatasetFromSQL($sql, $this->database);
+		$sql = 'SELECT g.group_id, g.group_name, g.group_description, u2g.usergroup_user, twf.taskworkflow_tasktype, ';
+		$sql .= 'COUNT(g.group_id) as group_tasktypecount ';
+		$sql .= 'FROM groups g ';
+		$sql .= 'LEFT JOIN taskworkflow twf ON g.group_id = twf.taskworkflow_group ';
+		$sql .= 'LEFT JOIN users_to_groups u2g ON g.group_id = u2g.usergroup_group ';
+		$sql .= "WHERE g.group_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
+		$sql .= 'GROUP BY u2g.usergroup_user, group_id ';
+
+		$res = $this->database->query($sql);
+		$groupinformation = array();
+		while($row = $this->database->fetchArray($res))
+		{
+			if (empty($groupinformation[$row['group_id']]))
+			{
+				$groupinformation[$row['group_id']] = $row;
+				if (!empty($row['usergroup_user']))
+				{
+					$groupinformation[$row['group_id']]['group_usercount'] = 1;
+				}
+				else
+				{
+					$groupinformation[$row['group_id']]['group_usercount'] = 0;
+				}
+			}
+			else
+			{
+				$groupinformation[$row['group_id']]['group_usercount'] += 1;
+			}
+		}
+
+		$xmlData = $this->dataserver->createXMLDatasetFromArray($groupinformation);
 		$this->dataserver->streamXMLDataset($xmlData);
 		die();
 

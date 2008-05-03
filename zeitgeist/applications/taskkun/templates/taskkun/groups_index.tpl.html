@@ -40,21 +40,23 @@
 	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryData.js"></script>
 	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/xpath.js"></script>
 	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryNestedXMLDataSet.js"></script>
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryCollapsiblePanel.js"></script>
+	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryAccordion.js"></script>
 	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/js/SpryExtensions.js"></script>
 
 	<script type="text/javascript">
 
-		var dsUsergroups = new Spry.Data.XMLDataSet("@@{[dataserver.getusergroups]}@@", "container/element");
+		var dsGroups = new Spry.Data.XMLDataSet("@@{[dataserver.getgroups]}@@", "container/element");
 		
-		function deleteUsergroup(id, count, name)
+		function deleteGroup(id, count, name)
 		{
 			if (count > 0)
 			{
-				alert("Sie können keine Benutzergruppe löschen, die noch aktiv in Aufgabenabläufen genutzt wird.\nBitte entfernen Sie zunächst die Benutzergruppe aus allen Aufgabenabläufen.");
+				alert("Sie können keine Gruppe löschen, die noch aktiv in Aufgabenabläufen genutzt wird.\nBitte entfernen Sie zunächst die Gruppe aus allen Aufgabenabläufen.");
 				return;
 			}
 			
-			var answer = window.confirm("Wollen Sie die Benutzergruppe '" + name + "' wirklich löschen?");
+			var answer = window.confirm("Wollen Sie die Gruppe '" + name + "' wirklich löschen?");
 
 			if (answer == true)
 			{
@@ -113,7 +115,7 @@
 		<!-- TemplateBeginBlock name="adminnavigation" -->
 		<div style="float:left; margin:10px; margin-left:40px;"><a href="@@{[users.index]}@@" alt=""><span onmousemove="showTooltip('Benutzer verwalten', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/mimetypes/vcard.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[usergroups.index]}@@" alt=""><span onmousemove="showTooltip('Benutzergruppen verwalten', event)" onmouseout="hideTooltip()">
+		<div style="float:left; margin:10px;"><a href="@@{[groups.index]}@@" alt=""><span onmousemove="showTooltip('Gruppen verwalten', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kdmconfig.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[tasktypes.index]}@@" alt=""><span onmousemove="showTooltip('Aufgabenabläufe verwalten', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/fsview.png" alt="" border="0" /></span></a></div>
@@ -147,34 +149,94 @@
 -->
 
 	<div class="textbox">
-		<h3><img src="@@{templatepath}@@/nuvola/22x22/actions/view_bottom.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[usergroups.addusergroup]}@@" alt="Neue Benutzergruppe hinzufügen">Neue Benutzergruppe hinzufügen</a></h3>
+		<h3><img src="@@{templatepath}@@/nuvola/22x22/actions/view_bottom.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[groups.addgroup]}@@" alt="Neue Gruppe hinzufügen">Neue Gruppe hinzufügen</a></h3>
 	</div>
 	
 	<div class="textbox">
-	<h2>Benutzergruppen verwalten</h2>
+	<h2>Gruppen verwalten</h2>
 	
-		<div spry:region="dsUsergroups">
+		<div spry:region="dsGroups">
 		<div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
 	
 		<div spry:state="ready">
-			<table border="0" cellspacing="0" cellpadding="0" width="100%">
+
+			<table border="0" cellspacing="0" cellpadding="0" width="100%" class="activetasks">
 				<tr class="tablehead">
-					<th><p><a onclick="dsUsergroups.sort('group_name');" class="sortlink">Name</a></p></th>
-					<th><p><a onclick="dsUsergroups.sort('group_description');" class="sortlink">Beschreibung</a></p></th>
-					<th><p style="text-align:center;"><a onclick="dsUsergroups.sort('group_tasktypecount');" class="sortlink">Aufgabenabläufe<br />mit dieser Gruppe</a></p></th>
-					<th><p class="thtext">Aktion</p></th>
-				</tr>
-				<tr class="{ds_EvenOddRow}" spry:repeat="dsUsergroups">
-					<td><p>{dsUsergroups::group_name}</p></td>
-					<td><p>{dsUsergroups::group_description}</p></td>
-					<td><p style="text-align:center;">{dsUsergroups::group_tasktypecount}</p></td>
-					<td width="90"><p>
-					<span onmousemove="showTooltip('Benutzergruppe bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[dsUsergroups.editusergroup]}@@&id={dsUsergroups::user_id}" alt="Benutzergruppe bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/apps/kate.png" alt="Benutzergruppe bearbeiten" border="0" /></a></span> &nbsp; 
-					<span onmousemove="showTooltip('Benutzergruppe löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteUsergroup({dsUsergroups::group_id}, {dsUsergroups::group_tasktypecount}, '{dsUsergroups::group_name}')" alt="Benutzergruppe löschen"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Benutzergruppe löschen" border="0" /></a></span>
-					</p></td>
+					<th width="300"><p><a onclick="dsGroups.sort('group_name');" class="sortlink">Name</a></p></th>
+					<th><p><a onclick="dsGroups.sort('group_description');" class="sortlink">Beschreibung</a></p></th>
+					<th width="180"><p style="text-align:center;"><a onclick="dsGroups.sort('group_usercount');" class="sortlink">Benutzer in<br />dieser Gruppe</a></p></th>
+					<th width="180"><p style="text-align:center;"><a onclick="dsGroups.sort('group_tasktypecount');" class="sortlink">Aufgabenabläufe<br />mit dieser Gruppe</a></p></th>
 				</tr>
 			</table>
-		</div>
+		
+			<div id="TaskOverview" class="Accordion" tabindex="0">
+				<div spry:repeat="dsGroups" class="{ds_EvenOddRow}">
+					<div class="AccordionPanelTab">
+		
+						<table border="0" cellspacing="0" cellpadding="0" width="100%" class="activetasks">
+							<tr>
+								<td width="300"><p>{dsGroups::group_name}</p></td>
+								<td><p>{dsGroups::group_description}</p></td>
+								<td width="180"><p style="text-align:center;">{dsGroups::group_usercount}</p></td>
+								<td width="180"><p style="text-align:center;">{dsGroups::group_tasktypecount}</p></td>
+							</tr>
+						</table>
+					</div>
+					
+					<div class="AccordionPanelContent">
+						<form method="post" action="@@{[groups.editgroup]}@@" name="edittask" enctype="multipart/form-data; charset=utf-8">
+						<input type="hidden" name="editgroup[group_id]" value="{dsGroups::group_id}" />
+
+						<br />
+						<div class="textbox">
+							<table width="100%" cellspacing="5" cellpadding="5" border="0">
+							<tbody>
+								<tr>
+									<td nowrap="nowrap" valign="top" width="160"><p class="formlabel">Name*</p></td>
+									<td valign="middle"@@{group_name:formerror}@@>
+										<input maxlength="128" name="addtask[group_name]" value="{dsGroups::group_name}" class="formtext" style="width:700px;" type="text" />
+										<!-- TemplateBeginBlock name="group_name:errormsg" -->
+											<br /><span class="formerrormsg">@@{group_name:errormsg}@@</span>
+										<!-- TemplateEndBlock -->
+									</td>
+								</tr>
+								<tr>
+									<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Beschreibung*</p></td>
+									<td align="left" valign="middle"@@{group_description:formerror}@@>
+										<textarea rows="5" name="addtask[group_description]" class="formtext" style="height:175px;width:700px;">{dsGroups::group_description}</textarea>
+										<!-- TemplateBeginBlock name="task_description:errormsg" -->
+											<br /><span class="formerrormsg">@@{group_description:errormsg}@@</span>
+										<!-- TemplateEndBlock -->
+									</td>
+								</tr>
+							</tbody>
+							</table>
+
+							<table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-left:30px; margin-right:30px; margin-bottom:10px;">
+							<tr>
+								<td>
+								   <p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/filesystems/trashcan_full.png" alt="" border="0" align="top" />
+								   <input value="Gruppe löschen" class="formbutton" type="button" onclick="deleteGroup({dsGroups::group_id}, {dsGroups::group_tasktypecount}, '{dsGroups::group_name}');" /></p>
+								</td>
+								<td>
+								   <p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/apps/kate.png" alt="" border="0" align="top" />
+								   <input name="submit" value="Gruppe speichern" class="formbutton" type="submit" /></p>
+								</td>
+							</tr>
+							</table>
+
+						</div>
+						<br />
+						
+						</form>
+
+					</div>
+				</div>							
+			</div>
+
+			<script type="text/javascript">
+				var a1 = new Spry.Widget.Accordion("TaskOverview", { useFixedPanelHeights: false, defaultPanel: -1, enableAnimation:false });
+			</script>			
 		</div>
 	</div>
 
