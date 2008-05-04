@@ -60,7 +60,7 @@
 
 			if (answer == true)
 			{
-			   window.location.href = "@@{[users.deleteuser]}@@"+"&id="+id;
+			   window.location.href = "@@{[groups.deletegroup]}@@"+"&id="+id;
 			}
 		}
 
@@ -189,12 +189,13 @@
 
 						<br />
 						<div class="textbox">
+							<h2>Gruppe bearbeiten</h2>
 							<table width="100%" cellspacing="5" cellpadding="5" border="0">
 							<tbody>
 								<tr>
 									<td nowrap="nowrap" valign="top" width="160"><p class="formlabel">Name*</p></td>
 									<td valign="middle"@@{group_name:formerror}@@>
-										<input maxlength="128" name="addtask[group_name]" value="{dsGroups::group_name}" class="formtext" style="width:700px;" type="text" />
+										<input maxlength="128" name="editgroup[group_name]" value="{dsGroups::group_name}" class="formtext" style="width:700px;" type="text" />
 										<!-- TemplateBeginBlock name="group_name:errormsg" -->
 											<br /><span class="formerrormsg">@@{group_name:errormsg}@@</span>
 										<!-- TemplateEndBlock -->
@@ -203,7 +204,7 @@
 								<tr>
 									<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Beschreibung*</p></td>
 									<td align="left" valign="middle"@@{group_description:formerror}@@>
-										<textarea rows="5" name="addtask[group_description]" class="formtext" style="height:175px;width:700px;">{dsGroups::group_description}</textarea>
+										<textarea rows="5" name="editgroup[group_description]" class="formtext" style="height:175px;width:700px;">{dsGroups::group_description}</textarea>
 										<!-- TemplateBeginBlock name="task_description:errormsg" -->
 											<br /><span class="formerrormsg">@@{group_description:errormsg}@@</span>
 										<!-- TemplateEndBlock -->
@@ -220,7 +221,7 @@
 								</td>
 								<td>
 								   <p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/apps/kate.png" alt="" border="0" align="top" />
-								   <input name="submit" value="Gruppe speichern" class="formbutton" type="submit" /></p>
+								   <input name="submit" value="Änderungen speichern" class="formbutton" type="submit" /></p>
 								</td>
 							</tr>
 							</table>
@@ -237,6 +238,7 @@
 			<script type="text/javascript">
 				var a1 = new Spry.Widget.Accordion("TaskOverview", { useFixedPanelHeights: false, defaultPanel: -1, enableAnimation:false });
 			</script>			
+		</div>
 		</div>
 	</div>
 

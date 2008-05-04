@@ -369,7 +369,7 @@ class dataserver
 		$sql .= 'LEFT JOIN taskworkflow twf ON g.group_id = twf.taskworkflow_group ';
 		$sql .= 'LEFT JOIN users_to_groups u2g ON g.group_id = u2g.usergroup_group ';
 		$sql .= "WHERE g.group_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
-		$sql .= 'GROUP BY u2g.usergroup_user, group_id ';
+		$sql .= 'GROUP BY u2g.usergroup_user, group_id ORDER BY g.group_name';
 
 		$res = $this->database->query($sql);
 		$groupinformation = array();
@@ -385,6 +385,11 @@ class dataserver
 				else
 				{
 					$groupinformation[$row['group_id']]['group_usercount'] = 0;
+				}
+
+				if (empty($row['taskworkflow_tasktype']))
+				{
+					$groupinformation[$row['group_id']]['group_tasktypecount'] = 0;
 				}
 			}
 			else
