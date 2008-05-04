@@ -114,144 +114,44 @@
 	
 <!-- InstanceBeginEditable name="body" -->
 
-<form method="post" action="@@{[users.edituser]}@@" name="edituser" enctype="multipart/form-data; charset=utf-8">
-<input type="hidden" name="edituser[user_id]" value="@@{user_id:value}@@" />
+	<form method="post" action="@@{[groups.editgroup]}@@" name="edittask" enctype="multipart/form-data; charset=utf-8">
+	<input type="hidden" name="editgroup[group_id]" value="@@{group_id:value}@@" />
 
 	<div class="textbox">
-	<h2>Benutzerdaten ändern</h2>
-
-	<table width="100%" cellspacing="5" cellpadding="5" border="0">
-		<tr>
-			<td valign="top" nowrap="nowrap" width="200"><p class="formlabel">Anmeldung/E-Mail*</p></td>
-			<td valign="middle" @@{user_username:formerror}@@><input type="text" maxlength="60" name="edituser[user_username]" value="@@{user_username:value}@@" class="formtext" />
-			<!-- TemplateBeginBlock name="user_username:errormsg" -->
-				<br /><span class="formerrormsg">@@{user_username:errormsg}@@</span>
-			<!-- TemplateEndBlock -->
-		</td>
-		</tr>
-		<tr>
-			<td valign="top" nowrap="nowrap"><p class="formlabel">Name*</p></td>
-			<td valign="middle" @@{userdata_lastname:formerror}@@><input type="text" maxlength="60" name="edituser[userdata_lastname]" value="@@{userdata_lastname:value}@@" class="formtext" />
-			<!-- TemplateBeginBlock name="userdata_lastname:errormsg" -->
-				<br /><span class="formerrormsg">@@{userdata_lastname:errormsg}@@</span>
-			<!-- TemplateEndBlock -->
-		</td>
-		</tr>
-		<tr>
-			<td valign="top" nowrap="nowrap"><p class="formlabel">Vorname*</p></td>
-			<td valign="middle" @@{userdata_firstname:formerror}@@><input type="text" maxlength="60" name="edituser[userdata_firstname]" value="@@{userdata_firstname:value}@@" class="formtext" />
-			<!-- TemplateBeginBlock name="userdata_firstname:errormsg" -->
-				<br /><span class="formerrormsg">@@{userdata_firstname:errormsg}@@</span>
-			<!-- TemplateEndBlock -->
-		</td>
-		</tr>
-		<tr>
-			<td valign="top" nowrap="nowrap"><p class="formlabel">Straße, Hausnummer</p></td>
-			<td valign="middle" @@{userdata_address1:formerror}@@><input type="text" maxlength="60" name="edituser[userdata_address1]" value="@@{userdata_address1:value}@@" class="formtext" />
-			<!-- TemplateBeginBlock name="userdata_address1:errormsg" -->
-				<br /><span class="formerrormsg">@@{userdata_address1:errormsg}@@</span>
-			<!-- TemplateEndBlock -->
-		</td>
-		</tr>
-		<tr>
-			<td valign="top" nowrap="nowrap"><p class="formlabel">Adresszusatz</p></td>
-			<td valign="middle" @@{userdata_address2:formerror}@@><input type="text" maxlength="60" name="edituser[userdata_address2]" value="@@{userdata_address2:value}@@" class="formtext" />
-			<!-- TemplateBeginBlock name="userdata_address2:errormsg" -->
-				<br /><span class="formerrormsg">@@{userdata_address2:errormsg}@@</span>
-			<!-- TemplateEndBlock -->
-		</td>
-		</tr>
-		<tr>
-			<td valign="top" nowrap="nowrap"><p class="formlabel">PLZ, Ort</p></td>
-			<td valign="middle" @@{userdata_zip:formerror}@@@@{userdata_city:formerror}@@><input type="text" maxlength="6" name="edituser[userdata_zip]" value="@@{userdata_zip:value}@@" class="formtext" style="width:55px;" />
-			<input type="text" maxlength="60" name="edituser[userdata_city]" value="@@{userdata_city:value}@@" class="formtext" style="width:212px;" />
-			<!-- TemplateBeginBlock name="userdata_zip:errormsg" -->
-				<br /><span class="formerrormsg">@@{userdata_zip:errormsg}@@</span>
-			<!-- TemplateEndBlock -->				
-			<!-- TemplateBeginBlock name="userdata_city:errormsg" -->
-				<br /><span class="formerrormsg">@@{userdata_city:errormsg}@@</span>
-			<!-- TemplateEndBlock -->
-		</td>
-		</tr>
-		<tr>
-			<td valign="top" nowrap="nowrap"><p class="formlabel">URL</p></td>
-			<td valign="middle" @@{userdata_url:userdata_zip}@@><input type="text" maxlength="60" name="edituser[userdata_url]" value="@@{userdata_url:value}@@" class="formtext" />
-			<!-- TemplateBeginBlock name="userdata_url:errormsg" -->
-				<br /><span class="formerrormsg">@@{userdata_url:errormsg}@@</span>
-			<!-- TemplateEndBlock -->
-		</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-				<p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/apps/kate.png" alt="" border="0" align="top" />
-				<input name="submit" value="Daten speichern" class="formbutton" type="submit" /></p>
-			</td>
-		</tr>
-	</table>
-</div>
-
-	<div class="textbox">
-	<h2>Benutzereigenschaften ändern</h2>
+	<h2>Gruppe bearbeiten</h2>
 	
 		<table width="100%" cellspacing="5" cellpadding="5" border="0">
+		<tbody>
 			<tr>
-				<td valign="top" nowrap="nowrap"><p class="formlabel">Benutzerrolle</p></td>
-				<td valign="top" nowrap="nowrap">
-				<!-- TemplateBeginBlock name="userrole_loop" -->
-					<p style="margin-bottom:5px; margin-left:0px;"><input type="radio" @@{userrole_check}@@ name="edituser[userroleuser_userrole]" value="@@{userrole_value}@@" /> @@{userrole_text}@@</p>
-				<!-- TemplateEndBlock -->
+				<td nowrap="nowrap" valign="top" width="160"><p class="formlabel">Name*</p></td>
+				<td valign="middle"@@{group_name:formerror}@@>
+					<input maxlength="128" name="editgroup[group_name]" value="@@{group_name:value}@@" class="formtext" style="width:700px;" type="text" />
+					<!-- TemplateBeginBlock name="group_name:errormsg" -->
+						<br /><span class="formerrormsg">@@{group_name:errormsg}@@</span>
+					<!-- TemplateEndBlock -->
 				</td>
 			</tr>
 			<tr>
-				<td valign="top" nowrap="nowrap"><p class="formlabel">Gruppen</p></td>
-				<td valign="top" nowrap="nowrap">
-				<select name="usergroups[]" size="5" class="formtext" multiple="multiple">
-				<!-- TemplateBeginBlock name="usergroup_loop" -->
-					<option @@{usergroup_check}@@ value="@@{usergroup_value}@@">@@{usergroup_text}@@</option>
-				<!-- TemplateEndBlock -->
-				</select>
+				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Beschreibung*</p></td>
+				<td align="left" valign="middle"@@{group_description:formerror}@@>
+					<textarea rows="5" name="editgroup[group_description]" class="formtext" style="height:175px;width:700px;">@@{group_description:value}@@</textarea>
+					<!-- TemplateBeginBlock name="group_description:errormsg" -->
+						<br /><span class="formerrormsg">@@{group_description:errormsg}@@</span>
+					<!-- TemplateEndBlock -->
 				</td>
 			</tr>
 			<tr>
 				<td colspan="2">
-				   <p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/apps/kate.png" alt="" border="0" align="top" />
-				   <input name="submit" value="Daten speichern" class="formbutton" type="submit" /></p>
+				   <p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/actions/filenew.png" alt="" border="0" align="top" />
+				   <input name="submit" value="Änderungen speichern" class="formbutton" type="submit" /></p>
 				</td>
 			</tr>
+		</tbody>
 		</table>
-	</div>
-
-	<div class="textbox">
-	<h2>Passwort ändern</h2>
-	
-		<table width="100%" cellspacing="5" cellpadding="5" border="0">
-            <tr>
-                <td valign="top" nowrap="nowrap" width="200"><p class="formlabel">Neues Passwort</p></td>
-                <td valign="middle" @@{user_password:formerror}@@><input type="password" maxlength="30" name="edituser[user_password]" class="formtext" />
-				<!-- TemplateBeginBlock name="user_password:errormsg" -->
-					<br /><span class="formerrormsg">@@{user_password:errormsg}@@</span>
-				<!-- TemplateEndBlock -->
-			</td>
-            </tr>
-            <tr>
-                <td valign="top" nowrap="nowrap"><p class="formlabel"> Passwort bestätigen</p></td>
-                <td valign="middle" @@{user_password2:formerror}@@><input type="password" maxlength="30" name="edituser[user_password2]" class="formtext" />
-				<!-- TemplateBeginBlock name="user_password2:errormsg" -->
-					<br /><span class="formerrormsg">@@{user_password2:errormsg}@@</span>
-				<!-- TemplateEndBlock -->
-			</td>
-            </tr>
-			<tr>
-				<td colspan="2">
-				   <p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/apps/kate.png" alt="" border="0" align="top" />
-				   <input name="submit" value="Daten speichern" class="formbutton" type="submit" /></p>
-				</td>
-			</tr>
-        </table>
 		
 	</div>
 	
-</form>
+	</form>
 <!-- InstanceEndEditable -->
 
 </div>

@@ -24,6 +24,7 @@
 	require_once('classes/tktasklogfunctions.class.php');
 	require_once('classes/tktasktypefunctions.class.php');
 	require_once('classes/tkuserfunctions.class.php');
+	require_once('classes/tkgroupfunctions.class.php');
 
 	define('ZG_DB_DBSERVER', 'localhost');
 	define('ZG_DB_USERNAME', 'taskkun');
