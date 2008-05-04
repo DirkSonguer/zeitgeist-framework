@@ -37,9 +37,37 @@
 	
 <!-- InstanceBeginEditable name="head" -->
 
+	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryData.js"></script>
+	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/xpath.js"></script>
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryNestedXMLDataSet.js"></script>
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/js/SpryExtensions.js"></script>
+	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryCollapsiblePanel.js"></script>
 	<script type="text/javascript" src="@@{templatepath}@@/js/date-picker/js/datepicker.js"></script>
 	<link href="@@{templatepath}@@/js/date-picker/css/datepicker.css" rel="stylesheet" type="text/css" />
 
+	<script type="text/javascript">
+
+		var dsTags = new Spry.Data.XMLDataSet("@@{[dataserver.getalltags]}@@", "container/element", { useCache: false });
+		dsTags.setColumnType("tag_id", "number");
+		dsTags.setColumnType("tag_count", "number");
+
+		function addTag(tagText)
+		{
+			currentSearch = document.getElementById('taginput').value;
+			
+			if (currentSearch != '')
+			{
+				currentSearch += ' ';
+			}
+			
+			currentSearch += tagText;
+			document.getElementById('taginput').value = currentSearch;
+			
+			updateSearch();
+		}
+		
+	</script>
+	
 <!-- InstanceEndEditable -->
 </head>
 
@@ -127,7 +155,7 @@
 		<tr>
 			<td nowrap="nowrap" valign="top" width="140"><p class="formlabel">Titel*</p></td>
 			<td nowrap="nowrap" valign="middle"@@{task_name:formerror}@@>
-				<input maxlength="128" name="addadhoc[task_name]"  value="@@{task_name:value}@@" class="formtext" style="width:750px;" type="text" />
+				<input maxlength="128" name="addadhoc[task_name]"  value="@@{task_name:value}@@" class="formtext" style="width:700px;" type="text" />
 				<!-- TemplateBeginBlock name="task_name:errormsg" -->
 					<br /><span class="formerrormsg">@@{task_name:errormsg}@@</span>
 				<!-- TemplateEndBlock -->
@@ -136,7 +164,7 @@
 		<tr>
 			<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Beschreibung*</p></td>
 			<td align="left" nowrap="nowrap" valign="middle"@@{task_description:formerror}@@>
-				<textarea rows="5" name="addadhoc[task_description]" class="formtext" style="height:175px; width:750px;">@@{task_description:value}@@</textarea>
+				<textarea rows="5" name="addadhoc[task_description]" class="formtext" style="height:175px; width:700px;">@@{task_description:value}@@</textarea>
 				<!-- TemplateBeginBlock name="task_description:errormsg" -->
 					<br /><span class="formerrormsg">@@{task_description:errormsg}@@</span>
 				<!-- TemplateEndBlock -->
@@ -163,7 +191,8 @@
 		<tr>
 			<td align="right" nowrap="nowrap" valign="top" width="140"><p class="formlabel">Tags*</p></td>
 			<td align="left" nowrap="nowrap" valign="middle"@@{task_tags:formerror}@@>
-				<input maxlength="512" style="width:750px; margin-top:10px;" name="addadhoc[task_tags]" value="@@{task_tags:value}@@" class="formtext" type="text" />
+				<input maxlength="512" style="width:650px; margin-top:10px;" id="taginput" name="addadhoc[task_tags]" value="@@{task_tags:value}@@" class="formtext" type="text" />
+				<span onmousemove="showTooltip('Alle Tags anzeigen', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/1downarrow.png" alt="" onclick="AdditionalInformation.open();" name="groupIcon" border="0" /></span>
 				<p style="margin-left:0px;">(Mehrere Tags durch Komma trennen. Bitte <u>mindestens</u> Kunde und evtl. Projekt angeben)</p>
 				<!-- TemplateBeginBlock name="task_tags:errormsg" -->
 					<br /><span class="formerrormsg">@@{task_tags:errormsg}@@</span>
@@ -171,10 +200,33 @@
 			</td>
 		</tr>
 		<tr>
-		<td colspan="2">
-			<p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/apps/kate.png" alt="" border="0" align="top" />
-			<input name="submit" value="Tätigkeit hinzufügen" class="formbutton" type="submit" /></p>
-		</td>
+			<td colspan="2">
+				<div id="AdditionalInformation" class="CollapsiblePanel">
+					<div class="CollapsiblePanelTab">
+					</div>
+				
+					<div class="CollapsiblePanelContent">
+						<div spry:region="dsTags">
+							<div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
+						
+							<div spry:state="ready">
+							<p style="text-align:center;">
+								<a spry:repeat="dsTags" href="javascript:addTag('{dsTags::tag_text}')" style="margin-left:5px; margin-right:5px;" class='tag{dsTags::tag_score}'>{dsTags::tag_text}</a>
+							</p>
+							<div style="clear:both;"></div>
+							</div>
+							<br />
+						</div>
+					</div>
+
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/apps/kate.png" alt="" border="0" align="top" />
+				<input name="submit" value="Tätigkeit hinzufügen" class="formbutton" type="submit" /></p>
+			</td>
 		</tr>
 	</tbody>
 	</table>	
@@ -182,6 +234,10 @@
 </div>
 
 </form>	
+
+<script type="text/javascript">
+	var AdditionalInformation = new Spry.Widget.CollapsiblePanel("AdditionalInformation", {contentIsOpen:false});
+</script>
 
 <!-- InstanceEndEditable -->
 

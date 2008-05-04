@@ -160,84 +160,27 @@
 	
 		<div spry:state="ready">
 
-			<table border="0" cellspacing="0" cellpadding="0" width="100%" class="activetasks">
+			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr class="tablehead">
-					<th width="300"><p><a onclick="dsGroups.sort('group_name');" class="sortlink">Name</a></p></th>
+					<th><p><a onclick="dsGroups.sort('group_name');" class="sortlink">Name</a></p></th>
 					<th><p><a onclick="dsGroups.sort('group_description');" class="sortlink">Beschreibung</a></p></th>
 					<th width="180"><p style="text-align:center;"><a onclick="dsGroups.sort('group_usercount');" class="sortlink">Benutzer in<br />dieser Gruppe</a></p></th>
 					<th width="180"><p style="text-align:center;"><a onclick="dsGroups.sort('group_tasktypecount');" class="sortlink">Aufgabenabläufe<br />mit dieser Gruppe</a></p></th>
+					<th style="width:90px;"><p class="thtext">Aktion</p></th>
+				</tr>
+
+				<tr class="{ds_EvenOddRow}" spry:repeat="dsGroups">
+					<td><p>{dsGroups::group_name}</p></td>
+					<td><p>{dsGroups::group_description}</p></td>
+					<td width="180"><p style="text-align:center;">{dsGroups::group_usercount}</p></td>
+					<td width="180"><p style="text-align:center;">{dsGroups::group_tasktypecount}</p></td>
+					<td><p style="text-align:right;">
+					<span onmousemove="showTooltip('Gruppe bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[groups.editgroup]}@@&id={dsGroups::group_id}" alt="Gruppe bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/apps/kate.png" alt="Gruppe bearbeiten" border="0" /></a></span> &nbsp; 
+					<span onmousemove="showTooltip('Gruppe löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteGroup({dsGroups::group_id}, {dsGroups::group_tasktypecount}, '{dsGroups::group_name}');" alt="Gruppe löschen"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Gruppe löschen" border="0" /></a></span>
+					</p></td>
 				</tr>
 			</table>
-		
-			<div id="TaskOverview" class="Accordion" tabindex="0">
-				<div spry:repeat="dsGroups" class="{ds_EvenOddRow}">
-					<div class="AccordionPanelTab">
-		
-						<table border="0" cellspacing="0" cellpadding="0" width="100%" class="activetasks">
-							<tr>
-								<td width="300"><p>{dsGroups::group_name}</p></td>
-								<td><p>{dsGroups::group_description}</p></td>
-								<td width="180"><p style="text-align:center;">{dsGroups::group_usercount}</p></td>
-								<td width="180"><p style="text-align:center;">{dsGroups::group_tasktypecount}</p></td>
-							</tr>
-						</table>
-					</div>
-					
-					<div class="AccordionPanelContent">
-						<form method="post" action="@@{[groups.editgroup]}@@" name="edittask" enctype="multipart/form-data; charset=utf-8">
-						<input type="hidden" name="editgroup[group_id]" value="{dsGroups::group_id}" />
 
-						<br />
-						<div class="textbox">
-							<h2>Gruppe bearbeiten</h2>
-							<table width="100%" cellspacing="5" cellpadding="5" border="0">
-							<tbody>
-								<tr>
-									<td nowrap="nowrap" valign="top" width="160"><p class="formlabel">Name*</p></td>
-									<td valign="middle"@@{group_name:formerror}@@>
-										<input maxlength="128" name="editgroup[group_name]" value="{dsGroups::group_name}" class="formtext" style="width:700px;" type="text" />
-										<!-- TemplateBeginBlock name="group_name:errormsg" -->
-											<br /><span class="formerrormsg">@@{group_name:errormsg}@@</span>
-										<!-- TemplateEndBlock -->
-									</td>
-								</tr>
-								<tr>
-									<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Beschreibung*</p></td>
-									<td align="left" valign="middle"@@{group_description:formerror}@@>
-										<textarea rows="5" name="editgroup[group_description]" class="formtext" style="height:175px;width:700px;">{dsGroups::group_description}</textarea>
-										<!-- TemplateBeginBlock name="task_description:errormsg" -->
-											<br /><span class="formerrormsg">@@{group_description:errormsg}@@</span>
-										<!-- TemplateEndBlock -->
-									</td>
-								</tr>
-							</tbody>
-							</table>
-
-							<table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-left:30px; margin-right:30px; margin-bottom:10px;">
-							<tr>
-								<td>
-								   <p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/filesystems/trashcan_full.png" alt="" border="0" align="top" />
-								   <input value="Gruppe löschen" class="formbutton" type="button" onclick="deleteGroup({dsGroups::group_id}, {dsGroups::group_tasktypecount}, '{dsGroups::group_name}');" /></p>
-								</td>
-								<td>
-								   <p style="text-align:center;"><img src="@@{templatepath}@@/nuvola/32x32/apps/kate.png" alt="" border="0" align="top" />
-								   <input name="submit" value="Änderungen speichern" class="formbutton" type="submit" /></p>
-								</td>
-							</tr>
-							</table>
-
-						</div>
-						<br />
-						
-						</form>
-
-					</div>
-				</div>							
-			</div>
-
-			<script type="text/javascript">
-				var a1 = new Spry.Widget.Accordion("TaskOverview", { useFixedPanelHeights: false, defaultPanel: -1, enableAnimation:false });
-			</script>			
 		</div>
 		</div>
 	</div>

@@ -113,5 +113,29 @@ class tkGroupfunctions
 		return true;
 	}
 
+
+	// instance-safe
+	public function getGroupdata($groupid)
+	{
+		$this->debug->guard();
+
+		$userfunctions = new tkUserfunctions();
+
+		$sql = "SELECT * FROM groups WHERE group_id='" . $groupid . "' AND group_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem getting data for group: ' . $groupid, 'warning');
+			$this->messages->setMessage('Problem getting data for group: ' . $groupid, 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$row = $this->database->fetchArray($res);
+
+		$this->debug->unguard($row);
+		return $row;
+	}
+
 }
 ?>

@@ -129,6 +129,14 @@ class groups
 				$this->messages->setMessage('Fehler bei der Eingabe. Bitte überprüfen Sie Ihre Angaben sorgfältig.', 'userwarning');
 			}
 		}
+		else
+		{
+			$userinformation = $groupfunctions->getGroupdata($currentId);
+
+			$processData = array();
+			$processData['editgroup'] = $userinformation;
+			$formvalid = $editgroupForm->process($processData);
+		}
 
 		$formcreated = $editgroupForm->create($tpl);
 		$tpl->show();
