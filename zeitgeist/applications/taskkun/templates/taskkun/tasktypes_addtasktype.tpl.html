@@ -44,22 +44,34 @@
 
 	<script type="text/javascript">
 
-		var dsTasktypes = new Spry.Data.XMLDataSet("@@{[dataserver.gettasktypes]}@@", "container/element");
-		dsTasktypes.setColumnType("tasktype_id", "number");
+		var dsTasktypeInformation = new Spry.Data.XMLDataSet("@@{[tasktypes.edittasktypeinformation]}@@&id=@@{tasktype_id}@@", "container/element", {useCache: false });
+		var dsGroupInformation = new Spry.Data.XMLDataSet("@@{[dataserver.getgroups]}@@", "container/element");
 
-		function deleteTasktype(id, count, name)
+		function updateWorkflow(formaction, formvalue)
 		{
-			if (count > 0)
+			var formdata = '';
+			
+			if (formaction == 'storedata')
 			{
-				alert("Sie können keinen Aufgabenablauf löschen, der noch in aktiven Aufgaben benutzt wird.\nBitte bearbeiten oder entfernen Sie zunächst die entsprechenden Aufgaben.");
-				return;
+				var inputdata = document.getElementById('inputfield_'+formvalue).value;
+				var dropdowndata = document.getElementById('dropdownfield_'+formvalue).value;
+				formdata = "&inputdata=" + inputdata + "&dropdowndata=" + dropdowndata;
 			}
-		
-			var answer = window.confirm("Wollen Sie den Aufgabenablauf '" + name + "' wirklich löschen?");
+			
+			var spryURL = "@@{[tasktypes.edittasktypeinformation]}@@&id=@@{tasktype_id}@@&formaction=" + formaction + "&formvalue=" + formvalue + formdata;
+			dsTasktypeInformation.url = spryURL;
+			dsTasktypeInformation.loadData();
+
+			return true;
+		}
+
+		function deleteStep(id, name)
+		{
+			var answer = window.confirm("Wollen Sie den Aufgabenschritt " + id + " ('" + name + "') wirklich löschen?");
 
 			if (answer == true)
 			{
-			   window.location.href = "@@{[tasktypes.deletetasktype]}@@"+"&id="+id;
+				updateWorkflow('deletestep', id);
 			}
 		}
 
@@ -148,35 +160,76 @@
 -->
 
 <div class="textbox">
-	<h3><img src="@@{templatepath}@@/nuvola/22x22/actions/view_bottom.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[tasktypes.addtasktype]}@@">Neuen Aufgabenablauf hinzufügen</a></h3>
-</div>
+
+<h2>Aufgabenablauf bearbeiten</h2>
+
+	<table width="100%" cellspacing="5" cellpadding="5" border="0">
+	<tr>
+	<td width="50%" valign="top">
+		<form method="post" action="@@{[tasktypes.edittasktype]}@@" name="edittasktype" enctype="multipart/form-data; charset=utf-8">
+		<input name="tasktypeid" value="@@{tasktype_id}@@" type="hidden" />
+        <table style="margin-bottom: 10px;" border="0" cellpadding="0" cellspacing="0">
+            <tbody>
+			<tr>
+                <td nowrap="nowrap" valign="top" width="140"><p class="formlabel">Name*</p></td>
+                <td nowrap="nowrap" valign="middle"><input maxlength="128" name="tasktype_name" value="@@{tasktype_name}@@" class="formtext" type="text" /></td>
+            </tr>
+            <tr>
+                <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Beschreibung*</p></td>
+                <td align="left" nowrap="nowrap" valign="middle"><textarea rows="5" name="tasktype_description" class="formtext" style="height:175px;">@@{tasktype_description}@@</textarea></td>
+            </tr>
+		</tbody>
+		</table>
+           <p style="text-align:center; margin-top:25px;"><img src="@@{templatepath}@@/nuvola/32x32/apps/kate.png" alt="" border="0" align="top" />
+		   <input name="submit" value="Aufgabenablauf speichern" class="formbutton" type="submit" /></p>
+		   <!-- TemplateBeginBlock name="warningactivetasks" -->
+		   <h2 style="margin-top:50px;">Anmerkung:</h2>
+		   <p>Achten Sie bitte darauf, dass Änderungen des Aufgabenablaufs direkte Auswirkungen auf noch aktive Aufgaben mit diesem Ablauf haben. Falls Sie Probleme vermeiden wollen, stellen Sie sicher, dass zuvor alle Aufgaben mit diesem Ablauf abgeschlossen wurden.</p>
+		   <p class="targetwarning"><strong>Zur Zeit noch aktive Aufgaben mit diesem Aufgabenablauf: @@{tasktype_count}@@</strong></p>
+		   <!-- TemplateEndBlock -->
+	   </form>
+	</td>
+	<td width="50%" valign="top">
+		<div spry:region="dsTasktypeInformation dsGroupInformation">
+		<div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
 	
-<div class="textbox">
-<h2>Aufgabenabläufe</h2>
+		<div spry:state="ready">
+			<br />
+			<div spry:repeat="dsTasktypeInformation">
+				<div class="textboxhalf">
+					<p style="text-align:center; margin-top:15px; margin-left:10px;">
+						<strong>Beschreibung:</strong> <input maxlength="256" id="inputfield_{dsTasktypeInformation::taskworkflow_order}" value="{dsTasktypeInformation::taskworkflow_title}" class="formtext" type="text" onchange="updateWorkflow('storedata', '{dsTasktypeInformation::taskworkflow_order}')" />
+					</p>
 
-	<div spry:region="dsTasktypes">
-    <div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
+					<p style="text-align:center; margin-top:20px; margin-left:10px;"><strong>Zuständige Gruppe:</strong>
+						<select id="dropdownfield_{dsTasktypeInformation::taskworkflow_order}" name="dropdownfield_{dsTasktypeInformation::taskworkflow_order}" class="formtext" spry:repeatChildren="dsGroupInformation" onchange="updateWorkflow('storedata', '{dsTasktypeInformation::taskworkflow_order}')">
+							<option spry:if="{dsGroupInformation::group_id} == {dsTasktypeInformation::taskworkflow_group}" value="{dsGroupInformation::group_id}" selected="selected">{dsGroupInformation::group_name}</option>
+							<option spry:if="{dsGroupInformation::group_id} != {dsTasktypeInformation::taskworkflow_group}" value="{dsGroupInformation::group_id}">{dsGroupInformation::group_name}</option>
+						</select>
+					</p>
 
-	<div spry:state="ready">
-	    <table border="0" cellspacing="0" cellpadding="0" width="100%">
-	        <tr class="tablehead">
-				<th><p><a onclick="dsTasktypes.sort('tasktype_name');" class="sortlink">Aufgabenablauf</a></p></th>
-				<th><p><a onclick="dsTasktypes.sort('tasktype_description');" class="sortlink">Beschreibung</a></p></th>
-				<th width="180"><p style="text-align:center;"><a onclick="dsGroups.sort('task_count');" class="sortlink">Aktive Aufgaben<br />mit diesem Ablauf</a></p></th>
-				<th><p class="thtext">Aktion</p></th>
-	        </tr>
-	        <tr class="{ds_EvenOddRow}" spry:repeat="dsTasktypes">
-				<td><p>{dsTasktypes::tasktype_name}</p></td>
-				<td><p>{dsTasktypes::tasktype_description}</p></td>
-				<td><p style="text-align:center;">{dsTasktypes::task_count}</p></td>
-				<td width="90"><p>
-				<span onmousemove="showTooltip('Aufgabenablauf bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[tasktypes.edittasktype]}@@&id={dsTasktypes::tasktype_id}"><img src="@@{templatepath}@@/nuvola/22x22/apps/kate.png" alt="Aufgabenablauf bearbeiten" border="0" /></a></span> &nbsp; 
-				<span onmousemove="showTooltip('Aufgabenablauf löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteTasktype({dsTasktypes::tasktype_id}, {dsTasktypes::task_count}, '{dsTasktypes::tasktype_name}')"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Aufgabenablauf löschen" border="0" /></a></span>
-                </p></td>
-	        </tr>
-	    </table>
-    </div>
-	</div>
+					<p style="margin-top:10px; text-align:center;">
+						<span onmousemove="showTooltip('Im Aufgabenablauf nach oben', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/up.png" alt="Im Aufgabenablauf nach oben" border="0" onclick="updateWorkflow('stepup', '{dsTasktypeInformation::taskworkflow_order}')" /></span>
+						<span style="margin-left:10px;" onmousemove="showTooltip('Im Aufgabenablauf nach unten', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/down.png" alt="Im Aufgabenablauf nach unten" border="0" onclick="updateWorkflow('stepdown', '{dsTasktypeInformation::taskworkflow_order}')" /></span>
+						<span style="margin-left:10px;" onmousemove="showTooltip('Diesen Schritt löschen', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Diesen Schritt löschen" border="0" onclick="deleteStep('{dsTasktypeInformation::taskworkflow_order}', '{dsTasktypeInformation::taskworkflow_title}')" /></span>
+					</p>
+				</div>
+				<p style="margin-top:10px; margin-right:50px; text-align:center;">
+					<img src="@@{templatepath}@@/nuvola/48x48/apps/download_manager.png" alt="" border="0" align="top" />
+					<span style="margin-left:20px;" onmousemove="showTooltip('Weiteren Schritt hinzufügen', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/edit_add.png" alt="" border="0" align="top" onclick="updateWorkflow('newstep', '{dsTasktypeInformation::taskworkflow_order}')" /></span>
+					
+				</p>
+			</div>
+			<div class="textboxhalf">
+			<h2 style="text-align:center;">Archiv</h2>
+			</div>
+		</div>
+		</div>
+
+	</td>
+	</tr>
+	</table>
+
 </div>
 
 <!-- InstanceEndEditable -->
