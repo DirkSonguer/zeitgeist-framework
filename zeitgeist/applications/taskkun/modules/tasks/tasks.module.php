@@ -78,7 +78,7 @@ class tasks
 
 		$formcreated = $addtaskForm->create($tpl);
 
-		$tasktypes = $tasktypefunctions->getTaskTypesForUser();
+		$tasktypes = $tasktypefunctions->getTasktypesForUser();
 		foreach ($tasktypes as $tasktype)
 		{
 			if (!empty($parameters['addtask']['task_type'])) $tpl->assign('tasktype_selected', 'selected="selected"');

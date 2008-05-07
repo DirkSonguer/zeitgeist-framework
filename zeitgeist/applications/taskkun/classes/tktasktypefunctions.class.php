@@ -51,7 +51,7 @@ class tkTasktypefunctions
 
 
 	// instance-safe
-	public function getTaskTypesForUser()
+	public function getTasktypesForUser()
 	{
 		$this->debug->guard();
 
@@ -109,13 +109,133 @@ class tkTasktypefunctions
 	}
 
 
+	// instance-safe
+	public function createTasktype()
+	{
+		$this->debug->guard();
+
+		$userfunctions = new tkUserfunctions();
+
+		$sql = "INSERT INTO tasktypes(tasktype_name, tasktype_description, tasktype_instance) VALUES ";
+		$sql .= "('Neuer Aufgabentyp', 'Dies ist ein neuer Aufgabentyp. Bitte ändern Sie den Titel und diese Beschreibung gemäß Ihren Angaben', '" . $userfunctions->getUserInstance($this->user->getUserID()) . "')";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem inserting tasktype information into database', 'warning');
+			$this->messages->setMessage('Problem inserting tasktype information into database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$tasktypeid = $this->database->insertId();
+
+		$sql = "INSERT INTO taskworkflow(taskworkflow_title, taskworkflow_tasktype, taskworkflow_group, taskworkflow_order) ";
+		$sql .= "VALUES ('Neuer Aufgabenablauf', '" . $tasktypeid . "', '1', '1')";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem inserting workflow for tasktype into database', 'warning');
+			$this->messages->setMessage('Problem inserting workflow for tasktype into database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard($tasktypeid);
+		return $tasktypeid;
+	}
+
+
+	// instance-safe
+	public function updateTasktype($tasktypedata = array())
+	{
+		$this->debug->guard();
+
+		$userfunctions = new tkUserfunctions();
+
+		$sql = "UPDATE tasktypes SET tasktype_name='" . $tasktypedata['tasktype_name'] . "', tasktype_description='" . $tasktypedata['tasktype_description'] . "' ";
+		$sql .= "WHERE tasktype_id='" . $tasktypedata['tasktype_id'] . "' ";
+		$sql .= "AND tasktype_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "'";
+
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem writing tasktypedata to the database', 'warning');
+			$this->messages->setMessage('Problem writing tasktypedata to the database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	// instance-safe
+	public function deleteTasktype($tasktypeid)
+	{
+		$this->debug->guard();
+
+		$userfunctions = new tkUserfunctions();
+
+		$sql = "SELECT tt.*, COUNT(t.task_id) as task_count FROM tasktypes tt ";
+		$sql .= "LEFT JOIN tasks t ON tt.tasktype_id = t.task_type ";
+		$sql .= "WHERE tt.tasktype_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
+		$sql .= "AND tt.tasktype_id='" . $tasktypeid . "' ";
+		$sql .= "GROUP BY tt.tasktype_id";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem getting tasktype information from database: '. $tasktypeid, 'warning');
+			$this->messages->setMessage('Problem getting tasktype information from database: ' . $tasktypeid, 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$row = $this->database->fetchArray($res);
+
+		if ( (!isset($row['task_count'])) || ($row['task_count'] > 0) )
+		{
+			$this->debug->write('Tasktype does not exist, is out of bounds or has children: '. $tasktypeid, 'warning');
+			$this->messages->setMessage('Tasktype does not exist, is out of bounds or has children: ' . $tasktypeid, 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$sql = "DELETE FROM tasktypes WHERE tasktype_id='" . $tasktypeid . "' AND tasktype_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem deleting tasktype information from database', 'warning');
+			$this->messages->setMessage('Problem deleting tasktype information from database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$sql = "DELETE FROM taskworkflow WHERE taskworkflow_tasktype='" . $tasktypeid . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem deleting taskworkflow information from database', 'warning');
+			$this->messages->setMessage('Problem deleting taskworkflow information from database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard($tasktypeid);
+		return $tasktypeid;
+	}
+
+
+	// instance-safe
 	public function getWorkflowInformation($tasktypeid)
 	{
 		$this->debug->guard();
 
 		$userfunctions = new tkUserfunctions();
 
-		$sql = "SELECT * FROM taskworkflow t WHERE taskworkflow_tasktype='" . $tasktypeid . "'";
+		$sql = "SELECT t.* FROM taskworkflow t ";
+		$sql .= "LEFT JOIN tasktypes tt ON t.taskworkflow_tasktype = tt.tasktype_id ";
+		$sql .= "WHERE taskworkflow_tasktype='" . $tasktypeid . "' AND tt.tasktype_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -260,7 +380,7 @@ class tkTasktypefunctions
 		}
 		else
 		{
-			// TODO: ins archiv
+			// task cannot go further down
 		}
 
 		$sql = "DELETE FROM tasks_to_users WHERE taskusers_task='" . $taskid . "'";

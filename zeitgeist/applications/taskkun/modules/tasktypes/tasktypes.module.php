@@ -47,6 +47,77 @@ class tasktypes
 		$tpl->assign('documenttitle', 'Aufgabenablauf bearbeiten');
 		$tpl->assign('helptopic', '&topic=edittasktype');
 
+		$edittasktypeForm = new zgStaticform();
+		$edittasktypeForm->load('forms/edittasktype.form.ini');
+
+		$tasktypefunctions = new tkTasktypefunctions();
+
+		if (!empty($parameters['id']))
+		{
+			$tasktypeid = $parameters['id'];
+		}
+		elseif (!empty($parameters['edittasktype']['tasktype_id']))
+		{
+			$tasktypeid = $parameters['edittasktype']['tasktype_id'];
+		}
+
+		$tasktypeInformation = $tasktypefunctions->getTasktypeInformation($tasktypeid);
+
+		if (!empty($parameters['submit']))
+		{
+			$formvalid = $edittasktypeForm->process($parameters);
+
+			if ($formvalid)
+			{
+				$tasktypeParameters = $parameters['edittasktype'];
+				if ($tasktypefunctions->updateTasktype($tasktypeParameters))
+			{
+				$this->messages->setMessage('Der Aufgabenablauf wurde erfolgreich geändert.', 'usermessage');
+			}
+			else
+			{
+				$this->messages->setMessage('Der Aufgabenablauf konnte nicht gespeichert werden. Bitte verständigen Sie einen Administrator.', 'usererror');
+			}
+
+				$tpl->redirect($tpl->createLink('tasktypes', 'index'));
+				$this->debug->unguard(true);
+				return true;
+			}
+		}
+		else
+		{
+			$processData = array();
+			$processData['edittasktype'] = $tasktypeInformation;
+			$formvalid = $edittasktypeForm->process($processData);
+		}
+
+		$formcreated = $edittasktypeForm->create($tpl);
+
+		$tpl->assignDataset($tasktypeInformation);
+		if ($tasktypeInformation['tasktype_count'] > 0)
+		{
+			$tpl->insertBlock('warningactivetasks');
+		}
+
+		$tpl->show();
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function addtasktype($parameters=array())
+	{
+		$this->debug->guard();
+
+		$tpl = new tkTemplate();
+		$tpl->load($this->configuration->getConfiguration('tasktypes', 'templates', 'tasktypes_edittasktype'));
+		$tpl->assign('documenttitle', 'Aufgabenablauf bearbeiten');
+		$tpl->assign('helptopic', '&topic=addtasktype');
+
+		$tasktypefunctions = new tkTasktypefunctions();
+
+		$tasktypeid = false;
 		if (!empty($parameters['id']))
 		{
 			$tasktypeid = $parameters['id'];
@@ -55,8 +126,18 @@ class tasktypes
 		{
 			$tasktypeid = $parameters['tasktypeid'];
 		}
+		else
+		{
+			$tasktypeid = $tasktypefunctions->createTasktype();
+		}
 
-		$tasktypefunctions = new tkTasktypefunctions();
+		if (!$tasktypeid)
+		{
+			$tpl->redirect($tpl->createLink('tasktypes', 'index'));
+			$this->debug->unguard(true);
+			return true;
+		}
+
 		$tasktypeInformation = $tasktypefunctions->getTasktypeInformation($tasktypeid);
 
 		$tpl->assignDataset($tasktypeInformation);
@@ -66,6 +147,34 @@ class tasktypes
 		}
 
 		$tpl->show();
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function deletetasktype($parameters=array())
+	{
+		$this->debug->guard();
+
+		$tasktypefunctions = new tkTasktypefunctions();
+
+		if (!empty($parameters['id']))
+		{
+			if ($tasktypefunctions->deleteTasktype($parameters['id']))
+			{
+				$this->messages->setMessage('Der Aufgabenablauf wurde erfolgreich gelöscht', 'usermessage');
+			}
+			else
+			{
+				$this->messages->setMessage('Sie können diesen Aufgabenablauf nicht löschen. Bitte achten Sie darauf, dass der Ablauf keine aktiven Aufgaben mehr hat.', 'usererror');
+			}
+		}
+
+		$this->debug->unguard(true);
+		$tpl = new tkTemplate();
+		$tpl->redirect($tpl->createLink('tasktypes', 'index'));
+		return true;
 
 		$this->debug->unguard(true);
 		return true;

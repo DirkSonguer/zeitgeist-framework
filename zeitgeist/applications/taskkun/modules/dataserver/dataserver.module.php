@@ -342,10 +342,10 @@ class dataserver
 
 		$userfunctions = new tkUserfunctions();
 
-		$sql = "SELECT tt.*, COUNT(twf.taskworkflow_tasktype) as tasktype_count FROM tasktypes tt ";
-		$sql .= "LEFT JOIN taskworkflow twf ON tt.tasktype_id = twf.taskworkflow_tasktype ";
-		$sql .= "WHERE tasktype_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
-		$sql .= "GROUP BY twf.taskworkflow_tasktype";
+		$sql = "SELECT tt.*, COUNT(t.task_id) as task_count FROM tasktypes tt ";
+		$sql .= "LEFT JOIN tasks t ON tt.tasktype_id = t.task_type ";
+		$sql .= "WHERE tt.tasktype_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
+		$sql .= "GROUP BY tt.tasktype_id";
 
 		$xmlData = $this->dataserver->createXMLDatasetFromSQL($sql, $this->database);
 		$this->dataserver->streamXMLDataset($xmlData);

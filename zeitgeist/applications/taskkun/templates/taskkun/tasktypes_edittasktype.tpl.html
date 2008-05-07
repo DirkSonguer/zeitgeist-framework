@@ -167,16 +167,25 @@
 	<tr>
 	<td width="50%" valign="top">
 		<form method="post" action="@@{[tasktypes.edittasktype]}@@" name="edittasktype" enctype="multipart/form-data; charset=utf-8">
-		<input name="tasktypeid" value="@@{tasktype_id}@@" type="hidden" />
+		<input type="hidden" name="edittasktype[tasktype_id]" value="@@{tasktype_id:value}@@" />
+		
         <table style="margin-bottom: 10px;" border="0" cellpadding="0" cellspacing="0">
             <tbody>
 			<tr>
-                <td nowrap="nowrap" valign="top" width="140"><p class="formlabel">Name*</p></td>
-                <td nowrap="nowrap" valign="middle"><input maxlength="128" name="tasktype_name" value="@@{tasktype_name}@@" class="formtext" type="text" /></td>
+                <td nowrap="nowrap" valign="top" width="140"><p class="formlabel">Titel*</p></td>
+                <td valign="middle"@@{tasktype_name:formerror}@@><input maxlength="128" name="edittasktype[tasktype_name]" value="@@{tasktype_name:value}@@" class="formtext" type="text" />
+				<!-- TemplateBeginBlock name="tasktype_name:errormsg" -->
+					<br /><span class="formerrormsg">@@{tasktype_name:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+				</td>
             </tr>
             <tr>
                 <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Beschreibung*</p></td>
-                <td align="left" nowrap="nowrap" valign="middle"><textarea rows="5" name="tasktype_description" class="formtext" style="height:175px;">@@{tasktype_description}@@</textarea></td>
+                <td align="left" valign="middle"@@{tasktype_description:formerror}@@><textarea rows="5" name="edittasktype[tasktype_description]" class="formtext" style="height:175px;">@@{tasktype_description:value}@@</textarea>
+				<!-- TemplateBeginBlock name="tasktype_description:errormsg" -->
+					<br /><span class="formerrormsg">@@{tasktype_description:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+				</td>
             </tr>
 		</tbody>
 		</table>
@@ -195,6 +204,11 @@
 	
 		<div spry:state="ready">
 			<br />
+
+			<p spry:if="dsTasktypeInformation.getRowCount() == '0'" style="margin-top:10px; margin-right:50px; text-align:center;">
+				<span style="margin-left:20px;" onmousemove="showTooltip('Weiteren Schritt hinzufügen', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/32x32/actions/edit_add.png" alt="" border="0" align="top" onclick="updateWorkflow('newstep', '0')" /></span>					
+			</p>
+			
 			<div spry:repeat="dsTasktypeInformation">
 				<div class="textboxhalf">
 					<p style="text-align:center; margin-top:15px; margin-left:10px;">
@@ -216,8 +230,7 @@
 				</div>
 				<p style="margin-top:10px; margin-right:50px; text-align:center;">
 					<img src="@@{templatepath}@@/nuvola/48x48/apps/download_manager.png" alt="" border="0" align="top" />
-					<span style="margin-left:20px;" onmousemove="showTooltip('Weiteren Schritt hinzufügen', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/edit_add.png" alt="" border="0" align="top" onclick="updateWorkflow('newstep', '{dsTasktypeInformation::taskworkflow_order}')" /></span>
-					
+					<span style="margin-left:20px;" onmousemove="showTooltip('Weiteren Schritt hinzufügen', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/edit_add.png" alt="" border="0" align="top" onclick="updateWorkflow('newstep', '{dsTasktypeInformation::taskworkflow_order}')" /></span>					
 				</p>
 			</div>
 			<div class="textboxhalf">

@@ -127,11 +127,12 @@ class tkUserfunctions
 	}
 
 
+	// instance-safe
 	public function getUsername($userid)
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT user_username FROM users WHERE user_id='" . $userid . "'";
+		$sql = "SELECT user_username FROM users WHERE user_id='" . $userid . "' AND user_instance='" . $this->getUserInstance($this->user->getUserID()) . "'";
 		$res = $this->database->query($sql);
 		$row = $this->database->fetchArray($res);
 
@@ -142,6 +143,7 @@ class tkUserfunctions
 	}
 
 
+	// instance-safe
 	public function changeUsername($username, $userid)
 	{
 		$this->debug->guard();
@@ -156,7 +158,7 @@ class tkUserfunctions
 			return false;
 		}
 
-		$sql = "UPDATE users SET user_username = '" . $username . "' WHERE user_id='" . $userid . "'";
+		$sql = "UPDATE users SET user_username = '" . $username . "' WHERE user_id='" . $userid . "' AND user_instance='" . $this->getUserInstance($this->user->getUserID()) . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -176,11 +178,13 @@ class tkUserfunctions
 	}
 
 
+	// instance-safe
 	public function changePassword($password, $userid)
 	{
 		$this->debug->guard();
 
-		$sql = "UPDATE users SET user_password = '" . md5($password) . "' WHERE user_id='" . $userid . "'";
+		$sql = "UPDATE users SET user_password = '" . md5($password) . "' ";
+		$sql .= "WHERE user_id='" . $userid . "' AND user_instance='" . $this->getUserInstance($this->user->getUserID()) . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -195,9 +199,20 @@ class tkUserfunctions
 	}
 
 
+	// instance-safe
 	public function changeUserdata($userdata, $userid)
 	{
 		$this->debug->guard();
+
+		$sql = "SELECT * FROM users WHERE user_id='" . $username . "' AND user_instance='" . $this->getUserInstance($this->user->getUserID()) . "'";
+		$res = $this->database->query($sql);
+		if (!$this->database->numRows($res) > 0)
+		{
+			$this->debug->write('The user is out of bounds of the instance', 'warning');
+			$this->messages->setMessage('The user is out of bounds of the instance', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
 
 		if ($userid != $this->user->getUserID())
 		{
