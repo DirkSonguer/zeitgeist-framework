@@ -329,16 +329,17 @@ class zgUserhandler
 	 * Checks if the user has a given userrole
 	 *
 	 * @param string $userrole name of the userrole
+	 * @param integer $userid id of the user to chek the userrole for. if 0 the current user is used
 	 *
 	 * @return boolean
 	 */
-	public function hasUserrole($userrole='')
+	public function hasUserrole($userrole='', $userid=0)
 	{
 		$this->debug->guard();
 
 		if ($this->loggedIn)
 		{
-			$userid = $this->session->getSessionVariable('user_userid');
+			if ($userid == 0) $userid = $this->getUserID();
 
 			$sql = "SELECT userrole_id FROM userroles ur LEFT JOIN userroles_to_users u2u ON u2u.userroleuser_userrole = ur.userrole_id ";
 			$sql .= "WHERE userrole_name='" . $userrole . "' AND u2u.userroleuser_user = '" . $userid . "'";
@@ -402,7 +403,7 @@ class zgUserhandler
 		// insert confirmation key
 		$confirmationkey = rand(10000,1000000000);
 		$confirmationkey = md5($confirmationkey);
-		$sqlUser = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','table_userconfirmation') . "(userconfirmation_user, userconfirmation_key) VALUES('" . $currentId . "', '" . $key . "')";
+		$sqlUser = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','table_userconfirmation') . "(userconfirmation_user, userconfirmation_key) VALUES('" . $currentId . "', '" . $confirmationkey . "')";
 		$resUser = $this->database->query($sqlUser);
 
 		//userrole
@@ -466,12 +467,15 @@ class zgUserhandler
 	 * Changes the password of the user to a given one password
 	 *
 	 * @param string $password password of the user
+	 * @param integer $userid id of the user to chek the userrole for. if 0 the current user is used
 	 *
 	 * @return boolean
 	 */
-	public function changePassword($password)
+	public function changePassword($password, $userid=0)
 	{
 		$this->debug->guard();
+
+		if ($userid == 0) $userid = $this->getUserID();
 
 		$sql = "UPDATE " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " SET user_password = '" . md5($password) . "' WHERE user_id='" . $this->getUserID() . "'";
 		$res = $this->database->query($sql);
@@ -493,12 +497,15 @@ class zgUserhandler
 	 * Checks if the given username already exists
 	 *
 	 * @param string $username username of the user
+	 * @param integer $userid id of the user to chek the userrole for. if 0 the current user is used
 	 *
 	 * @return boolean
 	 */
-	public function changeUsername($username)
+	public function changeUsername($username, $userid=0)
 	{
 		$this->debug->guard();
+
+		if ($userid == 0) $userid = $this->getUserID();
 
 		$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " WHERE user_username='" . $username . "'";
 		$res = $this->database->query($sql);
@@ -532,15 +539,17 @@ class zgUserhandler
 	 * Returns the user id if the key is found or false
 	 *
 	 * @param string $confirmationkey key to confirm
+	 * @param integer $userid id of the user to chek the userrole for. if 0 the current user is used
 	 *
 	 * @return integer
 	 */
-	public function checkConfirmation($confirmationkey)
+	public function checkConfirmation($confirmationkey, $userid=0)
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_userconfirmation') . " WHERE userconfirmation_key = '" . $confirmationkey . "'";
+		if ($userid == 0) $userid = $this->getUserID();
 
+		$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_userconfirmation') . " WHERE userconfirmation_key = '" . $confirmationkey . "' AND userconfirmation_user='" . $userid . "'";
 		if ($res = $this->database->query($sql))
 		{
 			if ($this->database->numRows($res))
@@ -550,8 +559,8 @@ class zgUserhandler
 			}
 			else
 			{
-				$this->debug->write('Problem confirming a user: key not found', 'warning');
-				$this->messages->setMessage('Problem confirming a user: key not found', 'warning');
+				$this->debug->write('Problem confirming a user: key not found for given user', 'warning');
+				$this->messages->setMessage('Problem confirming a user: key not found for given user', 'warning');
 				$this->debug->unguard(false);
 				return false;
 			}
@@ -616,6 +625,58 @@ class zgUserhandler
 		$this->debug->unguard(false);
 		return false;
 	}
+
+
+	/**
+	 * Deactivates a user
+	 *
+	 * @param integer $userid id of the user to deactivate
+	 *
+	 * @return boolean
+	 */
+	public function deactivateUser($userid)
+	{
+		$this->debug->guard();
+
+		$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " WHERE user_id = '" . $userid . "' AND user_active='1'";
+
+		if ($res = $this->database->query($sql))
+		{
+			if ($this->database->numRows($res))
+			{
+				// activate user
+				$sql = "UPDATE " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " SET user_active='0' WHERE user_id='" . $userid . "'";
+				$res = $this->database->query($sql);
+
+				// insert confirmation key
+				$confirmationkey = rand(10000,1000000000);
+				$confirmationkey = md5($confirmationkey);
+				$sqlUser = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','table_userconfirmation') . "(userconfirmation_user, userconfirmation_key) VALUES('" . $userid . "', '" . $confirmationkey . "')";
+				$resUser = $this->database->query($sqlUser);
+
+				$this->debug->unguard(true);
+				return true;
+			}
+			else
+			{
+				$this->debug->write('Problem deactivating user: user not found or is already deactivated', 'warning');
+				$this->messages->setMessage('Problem deactivating user: user not found or is already deactivated', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
+		}
+		else
+		{
+			$this->debug->write('Error searching a user: could not read the user table', 'error');
+			$this->messages->setMessage('Error searching a user: could not read the user table', 'error');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(false);
+		return false;
+	}
+
 
 
 	/**
