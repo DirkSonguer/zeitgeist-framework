@@ -187,6 +187,17 @@ class tasktypes
 
 		$taskfunctions = new tkTaskfunctions();
 		$tasktypefunctions = new tkTasktypefunctions();
+		$userfunctions = new tkUserfunctions();
+
+		$sql = "SELECT * FROM tasktypes WHERE tasktype_id='" . $parameters['id'] . "' AND tasktype_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "'";
+		$res = $this->database->query($sql);
+		if (!$this->database->numRows($res) > 0)
+		{
+			$this->debug->write('The tasktypes is out of bounds of the instance', 'warning');
+			$this->messages->setMessage('The tasktypes is out of bounds of the instance', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
 
 		$tasktypeinformation = $tasktypefunctions->getTasktypeInformation($parameters['id']);
 
@@ -262,9 +273,6 @@ class tasktypes
 					$sql .= "WHERE taskworkflow_tasktype='" . $parameters['id'] . "' AND taskworkflow_order='" . $parameters['formvalue'] . "'";
 					$res = $this->database->query($sql);
 				}
-
-				// TODO: INSTANCING!!!!!
-
 			}
 
 			$userfunctions = new tkUserfunctions();

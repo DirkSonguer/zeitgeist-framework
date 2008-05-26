@@ -3,6 +3,8 @@
 
 defined('TASKKUN_ACTIVE') or die();
 
+// TODO: Deactivate Users
+
 class users
 {
 	protected $debug;
@@ -323,21 +325,83 @@ class users
 		$tpl = new tkTemplate();
 		if (!empty($parameters['id']))
 		{
-			// user account
-			$sql = "DELETE FROM users WHERE user_id='" . $parameters['id'] . "'";
-			$res = $this->database->query($sql);
+			$userfunctions = new tkUserfunctions();
+			if ($userfunctions->deleteuser($parameters['id']))
+			{
+				$this->messages->setMessage('Der Benutzer wurde gelöscht', 'usermessage');
+			}
+			else
+			{
+				$this->messages->setMessage('Der Benutzer konnte nicht gelöscht werden. Bitte verständigen Sie einen Administrator', 'usererror');
+			}
+		}
 
-			// userdata
-			$sql = "DELETE FROM userdata WHERE userdata_user='" . $parameters['id'] . "'";
-			$res = $this->database->query($sql);
+		$this->debug->unguard(true);
+		$tpl->redirect($tpl->createLink('users', 'index'));
 
-			// userrights
-			$sql = "DELETE FROM userrights WHERE userright_user='" . $parameters['id'] . "'";
-			$res = $this->database->query($sql);
+		$this->debug->unguard(true);
+		return true;
+	}
 
-			// userrole
-			$sql = "DELETE FROM userroles_to_users WHERE userroleuser_user='" . $parameters['id'] . "'";
-			$res = $this->database->query($sql);
+
+	public function activateuser($parameters=array())
+	{
+		$this->debug->guard();
+
+		$tpl = new tkTemplate();
+		if (!empty($parameters['id']))
+		{
+			$userfunctions = new tkUserfunctions();
+
+			if ($parameters['id'] != $this->user->getUserId())
+			{
+				if ($userfunctions->activateuser($parameters['id']))
+				{
+					$this->messages->setMessage('Das Benutzerkonto wurde aktiviert', 'usermessage');
+				}
+				else
+				{
+					$this->messages->setMessage('Das Benutzerkonto konnte nicht aktiviert werden. Bitte verständigen Sie einen Administrator', 'usererror');
+				}
+			}
+			else
+			{
+				$this->messages->setMessage('Es ist nicht möglich das eigene Benutzerkonto zu deaktivieren', 'userwarning');
+			}
+		}
+
+		$this->debug->unguard(true);
+		$tpl->redirect($tpl->createLink('users', 'index'));
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function deactivateuser($parameters=array())
+	{
+		$this->debug->guard();
+
+		$tpl = new tkTemplate();
+		if (!empty($parameters['id']))
+		{
+			$userfunctions = new tkUserfunctions();
+
+			if ($parameters['id'] != $this->user->getUserId())
+			{
+				if ($userfunctions->deactivateuser($parameters['id']))
+				{
+					$this->messages->setMessage('Das Benutzerkonto wurde deaktiviert', 'usermessage');
+				}
+				else
+				{
+					$this->messages->setMessage('Das Benutzerkonto konnte nicht deaktiviert werden. Bitte verständigen Sie einen Administrator', 'usererror');
+				}
+			}
+			else
+			{
+				$this->messages->setMessage('Es ist nicht möglich das eigene Benutzerkonto zu deaktivieren', 'userwarning');
+			}
 		}
 
 		$this->debug->unguard(true);

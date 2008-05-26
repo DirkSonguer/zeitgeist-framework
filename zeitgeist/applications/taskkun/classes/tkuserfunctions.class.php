@@ -24,7 +24,14 @@ class tkUserfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * gets the instance of a given userid
+	 * the function acts as check for the user instance
+	 *
+	 * @param integer $userid id of a user
+	 *
+	 * @return boolean
+	 */
 	public function getUserInstance($userid)
 	{
 		$this->debug->guard();
@@ -204,7 +211,7 @@ class tkUserfunctions
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT * FROM users WHERE user_id='" . $username . "' AND user_instance='" . $this->getUserInstance($this->user->getUserID()) . "'";
+		$sql = "SELECT * FROM users WHERE user_id='" . $userid . "' AND user_instance='" . $this->getUserInstance($this->user->getUserID()) . "'";
 		$res = $this->database->query($sql);
 		if (!$this->database->numRows($res) > 0)
 		{
@@ -465,6 +472,96 @@ class tkUserfunctions
 
 		$this->debug->unguard($row );
 		return $row ;
+	}
+
+
+	// instance-safe
+	public function deleteuser($userid)
+	{
+		$this->debug->guard();
+
+		if (!$this->checkRightsForUser($userid))
+		{
+			$this->debug->write('The user is out of bounds of the instance', 'warning');
+			$this->messages->setMessage('The user is out of bounds of the instance', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		// user account
+		$sql = "DELETE FROM users WHERE user_id='" . $userid . "'";
+		$res = $this->database->query($sql);
+
+		// userdata
+		$sql = "DELETE FROM userdata WHERE userdata_user='" . $userid . "'";
+		$res = $this->database->query($sql);
+
+		// userrights
+		$sql = "DELETE FROM userrights WHERE userright_user='" . $userid . "'";
+		$res = $this->database->query($sql);
+
+		// userrole
+		$sql = "DELETE FROM userroles_to_users WHERE userroleuser_user='" . $userid . "'";
+		$res = $this->database->query($sql);
+
+		// user tasklogs
+		$sql = "DELETE FROM tasklogs WHERE tasklog_creator='" . $userid . "'";
+		$res = $this->database->query($sql);
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	// instance-safe
+	public function activateuser($userid)
+	{
+		$this->debug->guard();
+
+		if (!$this->checkRightsForUser($userid))
+		{
+			$this->debug->write('The user is out of bounds of the instance', 'warning');
+			$this->messages->setMessage('The user is out of bounds of the instance', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		if (!$this->user->activateUser($userid))
+		{
+			$this->debug->write('Problem activating a user: userhandler returned false', 'warning');
+			$this->messages->setMessage('Problem activating a user: userhandler returned false', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	// instance-safe
+	public function deactivateuser($userid)
+	{
+		$this->debug->guard();
+
+		if (!$this->checkRightsForUser($userid))
+		{
+			$this->debug->write('The user is out of bounds of the instance', 'warning');
+			$this->messages->setMessage('The user is out of bounds of the instance', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		if (!$this->user->deactivateUser($userid))
+		{
+			$this->debug->write('Problem deactivating a user: userhandler returned false', 'warning');
+			$this->messages->setMessage('Problem deactivating a user: userhandler returned false', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
 	}
 
 }

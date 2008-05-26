@@ -22,7 +22,15 @@ class tkGroupfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * updates a group with given data
+	 *
+	 * instance-safe!
+	 *
+	 * @param array $groupdata array with the group data
+	 *
+	 * @return boolean
+	 */
 	public function updateGroup($groupdata=array())
 	{
 		$this->debug->guard();
@@ -46,7 +54,15 @@ class tkGroupfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * adds a group with given group data
+	 *
+	 * instance-safe!
+	 *
+	 * @param array $groupdata array with group data
+	 *
+	 * @return return
+	 */
 	public function addGroup($groupdata=array())
 	{
 		$this->debug->guard();
@@ -70,7 +86,15 @@ class tkGroupfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * deletes a group with a given id
+	 *
+	 * instance-safe!
+	 *
+	 * @param integer $groupid id of the group to be deleted
+	 *
+	 * @return boolean
+	 */
 	public function deleteGroup($groupid)
 	{
 		$this->debug->guard();
@@ -114,7 +138,15 @@ class tkGroupfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * gets data of a given group
+	 *
+	 * instance-safe!
+	 *
+	 * @param integer $groupid
+	 *
+	 * @return boolean
+	 */
 	public function getGroupdata($groupid)
 	{
 		$this->debug->guard();
