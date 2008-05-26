@@ -49,7 +49,7 @@
 		dsUserdata.setColumnType("user_id", "number");
 
 		var dsUserroles = new Spry.Data.XMLDataSet("@@{[dataserver.getuserroles]}@@", "container/element");
-		var dsGroups = new Spry.Data.XMLDataSet("@@{[dataserver.getusergroups]}@@", "container/element");
+		var dsGroups = new Spry.Data.XMLDataSet("@@{[dataserver.getgroups]}@@", "container/element");
 
 		function deleteUser(id, count, name)
 		{		
@@ -59,11 +59,31 @@
 				return;
 			}
 		
-			var answer = window.confirm("Wollen Sie den Benutzer '" + name + "' wirklich löschen?");
+			var answer = window.confirm("Wollen Sie den Benutzer '" + name + "' wirklich löschen?\n\nWARNUNG: Alle Aufgaben- und Tätigkeitsbeschreibungen\ndes Benutzers werden ebenfalls aus dem System entfernt!\n\nFalls Sie dem Benutzer nur den Zugang zum System verwehren,\naber seine Aufgaben- und Tätigkeitsbeschreibungen behalten wollen,\ndeaktivieren Sie bitte seinen Konto.");
 
 			if (answer == true)
 			{
 			   window.location.href = "@@{[users.deleteuser]}@@"+"&id="+id;
+			}
+		}
+
+		function activateUser(id, status, name)
+		{		
+			if (status > 0)
+			{
+				var answer = window.confirm("Wollen Sie das Benutzerkonto '" + name + "' wirklich deaktivieren?");
+				if (answer == true)
+				{
+				   window.location.href = "@@{[users.deactivateuser]}@@"+"&id="+id;
+				}
+			}
+			else
+			{
+				var answer = window.confirm("Wollen Sie den Benutzerkonto '" + name + "' wirklich aktivieren?");
+				if (answer == true)
+				{
+				   window.location.href = "@@{[users.activateuser]}@@"+"&id="+id;
+				}
 			}
 		}
 
@@ -233,6 +253,7 @@
 			<div spry:state="ready">
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 					<tr class="tablehead">
+						<th><p style="text-align:center;"><a onclick="dsUserdata.sort('user_active');" class="sortlink">A</a></p></th>
 						<th><p><a onclick="dsUserdata.sort('user_username');" class="sortlink">Name/Anmeldung</a></p></th>
 						<th><p><a onclick="dsUserdata.sort('user_username');" class="sortlink">Benutzerrolle</a></p></th>
 						<th><p style="text-align:center;"><a onclick="dsGroups.sort('user_taskcount');" class="sortlink">Aktive Aufgaben<br />des Benutzers</a></p></th>
@@ -240,6 +261,14 @@
 					</tr>
 	
 					<tr class="{ds_EvenOddRow}" spry:repeat="dsUserdata">
+						<td><p style="text-align:center;">
+						<span spry:if="{dsUserdata::user_active} == '0'"><span onmousemove="showTooltip('Benutzerkonto ist deaktiviert', event)" onmouseout="hideTooltip()">
+							<a href="javascript:activateUser({dsUserdata::user_id}, {dsUserdata::user_active}, '{dsUserdata::user_username}')"><img src="@@{templatepath}@@/nuvola/16x16/actions/ledred.png" alt="Benutzerkonto ist deaktiviert" border="0" /></a>
+						</span></span>
+						<span spry:if="{dsUserdata::user_active} == '1'"><span onmousemove="showTooltip('Benutzerkonto ist aktiv', event)" onmouseout="hideTooltip()">
+							<a href="javascript:activateUser({dsUserdata::user_id}, {dsUserdata::user_active}, '{dsUserdata::user_username}')"><img src="@@{templatepath}@@/nuvola/16x16/actions/ledgreen.png" alt="Benutzerkonto ist aktiv" border="0" /></a>
+						</span></span>
+						</p></td>
 						<td><p>{dsUserdata::userdata_firstname} {dsUserdata::userdata_lastname} (<a href="mailto:{dsUserdata::user_username}">{dsUserdata::user_username}</a>)</p></td>
 						<td><p>{dsUserdata::userrole_name}</p></td>
 						<td><p style="text-align:center;">{dsUserdata::user_taskcount}</p></td>

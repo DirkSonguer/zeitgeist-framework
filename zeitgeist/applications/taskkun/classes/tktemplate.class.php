@@ -46,6 +46,8 @@ class tkTemplate extends zgTemplate
 	/**
 	 * Shows the template buffer
 	 *
+	 * @param boolean $showmenu flag if the menu should be shown
+	 *
 	 * @return boolean
 	 */
 	public function show($showmenu=true)

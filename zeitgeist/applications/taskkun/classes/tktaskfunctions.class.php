@@ -22,7 +22,15 @@ class tkTaskfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * adds a task with given taskdata
+	 *
+	 * instance-safe!
+	 *
+	 * @param array $taskdata array with taskdata
+	 *
+	 * @return boolean
+	 */
 	public function addTask($taskdata=array())
 	{
 		$this->debug->guard();
@@ -89,7 +97,15 @@ class tkTaskfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * updates a task with given data
+	 *
+	 * instance-safe!
+	 *
+	 * @param array $taskdata array with taskdata
+	 *
+	 * @return boolean
+	 */
 	public function updateTask($taskdata=array())
 	{
 		$this->debug->guard();
@@ -148,7 +164,15 @@ class tkTaskfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * deletes a task with the given id and all its tasklogs
+	 *
+	 * instance-safe!
+	 *
+	 * @param integer $taskid id of the task to be deleted
+	 *
+	 * @return boolean
+	 */
 	public function deleteTask($taskid)
 	{
 		$this->debug->guard();
@@ -197,7 +221,17 @@ class tkTaskfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * gets all information about a task
+	 * returns an array with all relevant information
+	 * if the user has no rights for the task, it will return false
+	 *
+	 * instance-safe!
+	 *
+	 * @param integer $taskid
+	 *
+	 * @return boolean|array
+	 */
 	public function getTaskInformation($taskid)
 	{
 		$this->debug->guard();
@@ -271,7 +305,13 @@ class tkTaskfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * gets the number of tasks for the current user
+	 *
+	 * instance-safe!
+	 *
+	 * @return integer
+	 */
 	public function getNumberofUsertasks()
 	{
 		$this->debug->guard();
@@ -290,7 +330,13 @@ class tkTaskfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * gets the number of tasks for the current instance
+	 *
+	 * instance-safe!
+	 *
+	 * @return integer
+	 */
 	public function getNumberofGrouptasks()
 	{
 		$this->debug->guard();
@@ -310,7 +356,17 @@ class tkTaskfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * stores a given string of tags into the database
+	 * tags will be separated and stored individually
+	 *
+	 * instance-safe!
+	 *
+	 * @param string $tagstring string containing all tags to store
+	 * @param integer $taskid id of the task to associate the tags with
+	 *
+	 * @return boolean
+	 */
 	public function storeTags($tagstring, $taskid)
 	{
 		$this->debug->guard();
@@ -367,7 +423,15 @@ class tkTaskfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * accepts a task and binds it to the current user
+	 *
+	 * instance-safe!
+	 *
+	 * @param integer $taskid id of the task
+	 *
+	 * @return boolean
+	 */
 	public function acceptTask($taskid)
 	{
 		$this->debug->guard();
@@ -396,7 +460,15 @@ class tkTaskfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * declines an active task and send it back to the group
+	 *
+	 * instance-safe!
+	 *
+	 * @param integer $taskid id of the task
+	 *
+	 * @return boolean
+	 */
 	public function declineTask($taskid)
 	{
 		$this->debug->guard();
@@ -425,7 +497,15 @@ class tkTaskfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * adds an ad-hoc task and tasklog for the current user
+	 *
+	 * instance-safe!
+	 *
+	 * @param array $adhocdata array containing all the tskdata
+	 *
+	 * @return boolean
+	 */
 	public function addAdhoc($adhocdata=array())
 	{
 		$this->debug->guard();

@@ -25,6 +25,15 @@ class dataserver
 	}
 
 
+	/**
+	 * gets all tasks for the current user
+	 *
+	 * instance-safe!
+	 *
+	 * @param array $parameters contains the parameters of the call. none are used
+	 *
+	 * @return boolean
+	 */
 	public function getusertasks($parameters=array())
 	{
 		$this->debug->guard();
@@ -83,6 +92,15 @@ class dataserver
 	}
 
 
+	/**
+	 * gets all tasks for all groups of the the current user
+	 *
+	 * instance-safe!
+	 *
+	 * @param array $parameters contains the parameters of the call. none are used
+	 *
+	 * @return boolean
+	 */
 	public function getgrouptasks($parameters=array())
 	{
 		$this->debug->guard();
@@ -113,7 +131,15 @@ class dataserver
 	}
 
 
-	// instance-safe
+	/**
+	 * gets all active tasks for the current instance
+	 *
+	 * instance-safe!
+	 *
+	 * @param array $parameters contains the parameters of the call. none are used
+	 *
+	 * @return boolean
+	 */
 	public function getactivetasks($parameters=array())
 	{
 		$this->debug->guard();
@@ -194,7 +220,15 @@ class dataserver
 	}
 
 
-	// instance-safe
+	/**
+	 * gets all archived tasks for the current instance
+	 *
+	 * instance-safe!
+	 *
+	 * @param array $parameters contains the parameters of the call. none are used
+	 *
+	 * @return boolean
+	 */
 	public function getarchivedtasks($parameters=array())
 	{
 		$this->debug->guard();
@@ -229,6 +263,15 @@ class dataserver
 	}
 
 
+	/**
+	 * gets all tasklogs for a given task
+	 *
+	 * instance-safe!
+	 *
+	 * @param array $parameters contains the parameters of the call. the id of the task is given
+	 *
+	 * @return boolean
+	 */
 	public function gettasklogs($parameters=array())
 	{
 		$this->debug->guard();
@@ -279,14 +322,22 @@ class dataserver
 	}
 
 
-	// instance-safe
+	/**
+	 * gets all information about the current user
+	 *
+	 * instance-safe!
+	 *
+	 * @param array $parameters contains the parameters of the call. none are used
+	 *
+	 * @return boolean
+	 */
 	public function getuserinformation($parameters=array())
 	{
 		$this->debug->guard();
 
 		$userfunctions = new tkUserfunctions();
 
-		$sql = 'SELECT COUNT(ttu.taskusers_task) as user_taskcount, u.user_id, u.user_username, ud.*, ur.userrole_id, ur.userrole_name, g.group_name ';
+		$sql = 'SELECT COUNT(ttu.taskusers_task) as user_taskcount, u.user_id, u.user_active, u.user_username, ud.*, ur.userrole_id, ur.userrole_name, g.group_name ';
 		$sql .= 'FROM users u ';
 		$sql .= 'LEFT JOIN userdata ud ON u.user_id = ud.userdata_user ';
 		$sql .= 'LEFT JOIN userroles_to_users u2u ON u2u.userroleuser_user = u.user_id ';
@@ -321,6 +372,15 @@ class dataserver
 	}
 
 
+	/**
+	 * gets all userroles for the current instance
+	 *
+	 * the userroles are global for the application, so we don't need to check the instance
+	 *
+	 * @param array $parameters contains the parameters of the call. none are used
+	 *
+	 * @return boolean
+	 */
 	public function getuserroles($parameters=array())
 	{
 		$this->debug->guard();
@@ -337,7 +397,15 @@ class dataserver
 	}
 
 
-	// instance-safe
+	/**
+	 * gets all the tasktypes for the current instance
+	 *
+	 * instance-safe!
+	 *
+	 * @param array $parameters contains the parameters of the call. none are used
+	 *
+	 * @return boolean
+	 */
 	public function gettasktypes($parameters=array())
 	{
 		$this->debug->guard();
@@ -358,7 +426,15 @@ class dataserver
 	}
 
 
-	// instance-safe
+	/**
+	 * gets all the groups for the current instance
+	 *
+	 * instance-safe!
+	 *
+	 * @param array $parameters contains the parameters of the call. none are used
+	 *
+	 * @return boolean
+	 */
 	public function getgroups($parameters=array())
 	{
 		$this->debug->guard();
@@ -409,7 +485,15 @@ class dataserver
 	}
 
 
-	// instance-safe
+	/**
+	 * gets all tags for the current instance
+	 *
+	 * instance-safe!
+	 *
+	 * @param array $parameters contains the parameters of the call. none are used
+	 *
+	 * @return boolean
+	 */
 	public function getalltags($parameters=array())
 	{
 		$this->debug->guard();
@@ -456,7 +540,15 @@ class dataserver
 	}
 
 
-	// instance-safe
+	/**
+	 * searches all data in the current instance
+	 *
+	 * instance-safe!
+	 *
+	 * @param array $parameters contains the parameters of the call. $searchterms contains a string with the user search
+	 *
+	 * @return boolean
+	 */
 	public function searchtasks($parameters=array())
 	{
 		$this->debug->guard();
