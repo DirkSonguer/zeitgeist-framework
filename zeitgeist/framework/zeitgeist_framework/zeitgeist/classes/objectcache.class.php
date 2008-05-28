@@ -62,6 +62,7 @@ class zgObjectcache
 	 *
 	 * @param string $name name of the object to store
 	 * @param object $object whatever to store into the cache
+	 * @param boolean $overwrite flag if an existing module with that name should be ignored and replaced
 	 *
 	 * @return boolean
 	 */

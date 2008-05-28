@@ -14,10 +14,10 @@
 
 defined('ZEITGEIST_ACTIVE') or die();
 
-/**
- * NOTE: This class is a singleton.
- * Other classes or files may initialize it with zgShop::init();
- */
+require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/shop/zgsproductfunctions.class.php');
+require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/shop/zgscategoryfunctions.class.php');
+require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/shop/zgscartfunctions.class.php');
+
 class zgShop
 {
 	protected $debug;
@@ -25,6 +25,10 @@ class zgShop
 	protected $objects;
 	protected $configuration;
 	protected $database;
+
+	protected $categoryfunctions;
+	protected $cartfunctions;
+	protected $productfunctions;
 
 	private function __construct()
 	{
@@ -35,6 +39,10 @@ class zgShop
 
 		$this->database = new zgDatabase();
 		$this->database->connect();
+
+		$this->cartfunctions = new zgsCartfunctions();
+		$this->categoryfunctions = new zgsCategoryfunctions();
+		$this->productfunctions = new zgsProductfunctions();
 	}
 
 
@@ -42,9 +50,10 @@ class zgShop
 	{
 		$this->debug->guard(true);
 
+		$ret = $this->cartfunctions->addToCart($productid, $quantity=1);
 
-		$this->debug->unguard(true);
-		return true;
+		$this->debug->unguard($ret);
+		return $ret;
 	}
 
 
@@ -52,9 +61,32 @@ class zgShop
 	{
 		$this->debug->guard(true);
 
+		$ret = $this->cartfunctions->deleteFromCart($productid, $quantity=1);
 
-		$this->debug->unguard(true);
-		return true;
+		$this->debug->unguard($ret);
+		return $ret;
+	}
+
+
+	public function clearCart()
+	{
+		$this->debug->guard(true);
+
+		$ret = $this->cartfunctions->clearCart();
+
+		$this->debug->unguard($ret);
+		return $ret;
+	}
+
+
+	public function getCartContent()
+	{
+		$this->debug->guard(true);
+
+		$cartcontent = $this->cartfunctions->getCartContent();
+
+		$this->debug->unguard($cartcontent);
+		return $cartcontent;
 	}
 
 
@@ -62,9 +94,10 @@ class zgShop
 	{
 		$this->debug->guard(true);
 
+		$productdata = $this->productfunctions->getProductData($productid);
 
-		$this->debug->unguard(true);
-		return true;
+		$this->debug->unguard($productdata);
+		return $productdata;
 	}
 
 
@@ -72,30 +105,33 @@ class zgShop
 	{
 		$this->debug->guard(true);
 
+		$products = $this->categoryfunctions->getProductsInCategory($categoryid);
 
 		$this->debug->unguard(true);
 		return true;
 	}
-	
-	
+
+
 	public function getCategoryData($categoryid)
 	{
 		$this->debug->guard(true);
 
+		$categorydata = $this->categoryfunctions->getCategoryData($categoryid);
 
-		$this->debug->unguard(true);
-		return true;
+		$this->debug->unguard($categorydata);
+		return $categorydata;
 	}
-	
+
 
 	public function getAllCategories()
 	{
 		$this->debug->guard(true);
 
+		$categories = $this->categoryfunctions->getAllCategories();
 
-		$this->debug->unguard(true);
-		return true;
-	}	
+		$this->debug->unguard($categories);
+		return $categories;
+	}
 
 }
 ?>

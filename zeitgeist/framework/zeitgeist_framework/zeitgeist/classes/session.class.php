@@ -32,6 +32,7 @@ class zgSession
 	protected $boundIP;
 	protected $lifetime;
 	protected $sessionName;
+	protected $sessionStarted;
 
 
 	/**
@@ -53,6 +54,8 @@ class zgSession
 		$this->storageMode = $this->configuration->getConfiguration('zeitgeist','session','session_storage');
 		$this->lifetime = $this->configuration->getConfiguration('zeitgeist','session','session_lifetime');
 		$this->sessionName = $this->configuration->getConfiguration('zeitgeist','session','session_name');
+
+		$this->sessionStarted = false;
 	}
 
 
@@ -81,25 +84,30 @@ class zgSession
 	{
 		$this->debug->guard();
 
-		if ($this->storageMode == 'database')
+		if (!$this->sessionStarted)
 		{
-			$ret = session_set_save_handler(	array(&$this, '_openSession'),
-			array(&$this, '_closeSession'),
-			array(&$this, '_readSession'),
-			array(&$this, '_writeSession'),
-			array(&$this, '_destroySession'),
-			array(&$this, '_cleanSession') );
-			if (!$ret)
+			if ($this->storageMode == 'database')
 			{
-				$this->debug->write('Could not register session save handlers!', 'error');
-				$this->messages->setMessage('Could not register session save handlers!', 'error');
+				$ret = session_set_save_handler(	array(&$this, '_openSession'),
+				array(&$this, '_closeSession'),
+				array(&$this, '_readSession'),
+				array(&$this, '_writeSession'),
+				array(&$this, '_destroySession'),
+				array(&$this, '_cleanSession') );
+				if (!$ret)
+				{
+					$this->debug->write('Could not register session save handlers!', 'error');
+					$this->messages->setMessage('Could not register session save handlers!', 'error');
+				}
 			}
+
+			ini_set('session.cookie_lifetime', $this->lifetime);
+			ini_set('session.name', $this->sessionName);
+
+			session_start();
+
+			$this->sessionStarted = true;
 		}
-
-		ini_set('session.cookie_lifetime', $this->lifetime);
-		ini_set('session.name', $this->sessionName);
-
-		session_start();
 
 		$this->debug->unguard(true);
 		return true;
