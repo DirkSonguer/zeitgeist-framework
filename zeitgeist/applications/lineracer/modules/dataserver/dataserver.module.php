@@ -27,6 +27,7 @@ class dataserver
 	}
 
 
+// TODO: alt
 	public function getlobbydata($parameters=array())
 	{
 		$this->debug->guard();
@@ -44,6 +45,7 @@ class dataserver
 	}
 
 
+// TODO: alt
 	public function getgameroomdata($parameters=array())
 	{
 		$this->debug->guard();

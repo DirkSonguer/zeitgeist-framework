@@ -25,6 +25,7 @@ class game
 		$this->database->connect();
 	}
 
+// TODO: alt
 	public function index($parameters=array())
 	{
 		$this->debug->guard();
@@ -33,13 +34,13 @@ class game
 
 		$tpl = new lrTemplate();
 		$tpl->load($this->configuration->getConfiguration('game', 'templates', 'game_index'));
-/*
-		$userid = $this->user->getUserId();
-		$tpl->assign('playerid', $userid);
+		/*
+		 $userid = $this->user->getUserId();
+		 $tpl->assign('playerid', $userid);
 
-		$userkey = $this->user->getUserKey();
-		$tpl->assign('playerkey', $userkey);
-*/
+		 $userkey = $this->user->getUserKey();
+		 $tpl->assign('playerkey', $userkey);
+		 */
 
 		$tpl->show();
 
@@ -47,7 +48,9 @@ class game
 		return true;
 	}
 
-	private function _oldWay($parameters)
+
+// TODO: alt
+	public function _oldWay($parameters)
 	{
 		$circuit = imagecreatefromjpeg('testdata/circuit1.jpg');
 		if (!$circuit) die('1');
@@ -101,6 +104,8 @@ class game
 		imagedestroy($circuit);
 	}
 
+
+// TODO: alt
 	public function reset($parameters=array())
 	{
 		$this->debug->guard();
@@ -109,13 +114,14 @@ class game
 		$res = $this->database->query($sql);
 
 		$tpl = new lrTemplate();
-//		$tpl->redirect($tpl->createLink('game', 'index'));
+		//		$tpl->redirect($tpl->createLink('game', 'index'));
 
 		$this->debug->unguard(true);
 		return true;
 	}
 
 
+// TODO: alt
 	public function update($parameters=array())
 	{
 		$this->debug->guard();
@@ -134,6 +140,7 @@ class game
 	}
 
 
+// TODO: alt
 	public function playbooster($parameters=array())
 	{
 		$this->debug->guard();
@@ -143,24 +150,26 @@ class game
 	}
 
 
+// TODO: alt
 	public function move($parameters=array())
 	{
 		$this->debug->guard();
 
 		$gamedata = array();
 
-/*
-	   $filename = "debug.txt";
-	   $handle = fopen($filename, "a");
-	   $newstring = "\r\nja: ".date("d.m.Y H:i:s");
+		/*
+		 $filename = "debug.txt";
+		 $handle = fopen($filename, "a");
+		 $newstring = "\r\nja: ".date("d.m.Y H:i:s");
 
-		foreach($_GET as $k => $v)
-		{
+		 foreach($_GET as $k => $v)
+		 {
 			$newstring .= " - k: $k, v: $v - ";
-		}
-	   $numbytes = fwrite($handle, $newstring);
-	   fclose($handle);
-//*/
+			}
+			$numbytes = fwrite($handle, $newstring);
+			fclose($handle);
+			//*/
+
 		if ( (empty($parameters['position_x'])) || (empty($parameters['position_y'])) )
 		{
 			$this->debug->unguard(false);
@@ -198,6 +207,7 @@ class game
 	}
 
 
+// TODO: alt
 	public function abortgame($parameters=array())
 	{
 		$this->debug->guard();
@@ -207,6 +217,7 @@ class game
 	}
 
 
+// TODO: alt
 	public function done($parameters=array())
 	{
 		$this->debug->guard();
