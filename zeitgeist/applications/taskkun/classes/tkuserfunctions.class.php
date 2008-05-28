@@ -28,6 +28,8 @@ class tkUserfunctions
 	 * gets the instance of a given userid
 	 * the function acts as check for the user instance
 	 *
+	 * instance-safe!
+	 *
 	 * @param integer $userid id of a user
 	 *
 	 * @return boolean
@@ -36,15 +38,16 @@ class tkUserfunctions
 	{
 		$this->debug->guard();
 
+		$userinstance = false;
 		if ($userid == $this->user->getUserID())
 		{
-			if (!$ret = $this->session->getSessionVariable('user_instance'))
+			if (!$userinstance = $this->session->getSessionVariable('user_instance'))
 			{
 				$sql = "SELECT user_instance FROM users WHERE user_id='" . $userid . "'";
 				$res = $this->database->query($sql);
 				$row = $this->database->fetchArray($res);
 				$this->session->setSessionVariable('user_instance', $row['user_instance']);
-				$ret = $row['user_instance'];
+				$userinstance = $row['user_instance'];
 			}
 		}
 		else
@@ -52,15 +55,28 @@ class tkUserfunctions
 			$sql = "SELECT user_instance FROM users WHERE user_id='" . $userid . "'";
 			$res = $this->database->query($sql);
 			$row = $this->database->fetchArray($res);
-			$ret = $row['user_instance'];
+			$userinstance = $row['user_instance'];
 		}
 
-		$this->debug->unguard($ret);
-		return $ret;
+		$this->debug->unguard($userinstance);
+		return $userinstance;
 	}
 
 
-	// instance-safe
+	/**
+	 * Creates a new user with a given name and password
+	 * Optional a usergroup and userdata can be given
+	 *
+	 * instance-safe!
+	 *
+	 * @param string $name name of the user
+	 * @param string $password password of the user
+	 * @param integer $userrole id of the userrole
+	 * @param array $usergroups array containing the groups of the user
+	 * @param array $userdata array containing the userdata
+	 *
+	 * @return boolean
+	 */
 	public function createUser($name, $password, $userrole=1, $usergroups=array(), $userdata=array())
 	{
 		$this->debug->guard();
@@ -91,7 +107,15 @@ class tkUserfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * checks if the given task is in the current instance
+	 *
+	 * instance-safe!
+	 *
+	 * @param integer $taskid id of the task to check
+	 *
+	 * @return boolean
+	 */
 	public function checkRightsForTask($taskid)
 	{
 		$this->debug->guard();
@@ -111,7 +135,15 @@ class tkUserfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * checks if the given user is in the current instance
+	 *
+	 * instance-safe!
+	 *
+	 * @param integer $userid id of the user to check
+	 *
+	 * @return boolean
+	 */
 	public function checkRightsForUser($userid)
 	{
 		$this->debug->guard();
@@ -134,23 +166,47 @@ class tkUserfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * gets the username for a given userid
+	 *
+	 * instance-safe!
+	 *
+	 * @param integer $userid userid to get the name for
+	 *
+	 * @return string
+	 */
 	public function getUsername($userid)
 	{
 		$this->debug->guard();
 
 		$sql = "SELECT user_username FROM users WHERE user_id='" . $userid . "' AND user_instance='" . $this->getUserInstance($this->user->getUserID()) . "'";
 		$res = $this->database->query($sql);
+		if ($this->database->numRows($res) > 0)
+		{
+			$this->debug->write('Problem reading out username: user not found', 'warning');
+			$this->messages->setMessage('Problem reading out username: user not found', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
 		$row = $this->database->fetchArray($res);
+		$username = $row['user_username'];
 
-		$ret = $row['user_username'];
-
-		$this->debug->unguard($ret);
-		return $ret;
+		$this->debug->unguard($username);
+		return $username;
 	}
 
 
-	// instance-safe
+	/**
+	 * changes the username for a given userid
+	 *
+	 * instance-safe!
+	 *
+	 * @param string $username new username for the user
+	 * @param integer $userid id of the user to change the name for
+	 *
+	 * @return boolean
+	 */
 	public function changeUsername($username, $userid)
 	{
 		$this->debug->guard();
@@ -185,7 +241,16 @@ class tkUserfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * changes the password for a given userid
+	 *
+	 * instance-safe!
+	 *
+	 * @param string $password new password for the user
+	 * @param integer $userid id of the user to change the password for
+	 *
+	 * @return boolean
+	 */
 	public function changePassword($password, $userid)
 	{
 		$this->debug->guard();
@@ -206,7 +271,16 @@ class tkUserfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * changes the userdata for a given userid
+	 *
+	 * instance-safe!
+	 *
+	 * @param array $userdata array that contains all userdata fields as array fields
+	 * @param integer $userid id of the user to change the password for
+	 *
+	 * @return boolean
+	 */
 	public function changeUserdata($userdata, $userid)
 	{
 		$this->debug->guard();
@@ -272,7 +346,16 @@ class tkUserfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * changes the userroles for a given userid
+	 *
+	 * instance-safe!
+	 *
+	 * @param integer $userrole id of the new userrole
+	 * @param integer $userid id of the user to change the password for
+	 *
+	 * @return boolean
+	 */
 	public function changeUserrole($userrole, $userid)
 	{
 		$this->debug->guard();
@@ -300,7 +383,14 @@ class tkUserfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * gets all userroles
+	 * userroles are global so we don't need any instance-checking
+	 *
+	 * instance-safe!
+	 *
+	 * @return array
+	 */
 	public function getUserroles()
 	{
 		$this->debug->guard();
@@ -319,7 +409,15 @@ class tkUserfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * gets the userrole for a given user
+	 *
+	 * instance-safe!
+	 *
+	 * @param integer $userid id of the user
+	 *
+	 * @return integer
+	 */
 	public function getUserroleForUser($userid)
 	{
 		$this->debug->guard();
@@ -338,14 +436,20 @@ class tkUserfunctions
 		$res = $this->database->query($sql);
 		$row = $this->database->fetchArray($res);
 
-		$ret = $row['userroleuser_userrole'];
+		$userrole = $row['userroleuser_userrole'];
 
-		$this->debug->unguard($ret);
-		return $ret;
+		$this->debug->unguard($userrole);
+		return $userrole;
 	}
 
 
-	// instance-safe
+	/**
+	 * gets all usergroups for th current instance
+	 *
+	 * instance-safe!
+	 *
+	 * @return array
+	 */
 	public function getUsergroups()
 	{
 		$this->debug->guard();
@@ -365,7 +469,15 @@ class tkUserfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * gets the usergroup for a given user
+	 *
+	 * instance-safe!
+	 *
+	 * @param integer $userid id of the user
+	 *
+	 * @return array
+	 */
 	public function getUsergroupsForUser($userid)
 	{
 		$this->debug->guard();
@@ -386,7 +498,16 @@ class tkUserfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * changes the usergroups for a given user
+	 *
+	 * instance-safe!
+	 *
+	 * @param array $groups array that contains the ids of the new groups
+	 * @param integer $userid id of the user
+	 *
+	 * @return
+	 */
 	public function changeUsergroups($groups, $userid)
 	{
 		$this->debug->guard();
@@ -460,7 +581,15 @@ class tkUserfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * gets all userdata for a given user
+	 *
+	 * instance-safe!
+	 *
+	 * @param integer $userid id of the user
+	 *
+	 * @return array
+	 */
 	public function getUserdata($userid)
 	{
 		$this->debug->guard();
@@ -468,14 +597,22 @@ class tkUserfunctions
 		$sql = "SELECT u.user_username, ud.* FROM users AS u LEFT JOIN userdata ud ON u.user_id = ud.userdata_user ";
 		$sql .= "WHERE u.user_id = '" . $userid . "' AND u.user_instance='" . $this->getUserInstance($this->user->getUserID()) . "'";
 		$res = $this->database->query($sql);
-		$row = $this->database->fetchArray($res);
+		$userdata= $this->database->fetchArray($res);
 
-		$this->debug->unguard($row );
-		return $row ;
+		$this->debug->unguard($userdata);
+		return $userdata;
 	}
 
 
-	// instance-safe
+	/**
+	 * deletes a given user
+	 *
+	 * instance-safe!
+	 *
+	 * @param integer $userid id of the user
+	 *
+	 * @return boolean
+	 */
 	public function deleteuser($userid)
 	{
 		$this->debug->guard();
@@ -484,6 +621,14 @@ class tkUserfunctions
 		{
 			$this->debug->write('The user is out of bounds of the instance', 'warning');
 			$this->messages->setMessage('The user is out of bounds of the instance', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		if ($userid == $this->user->getUserId())
+		{
+			$this->debug->write('Problem deleting the user: a user can not delete himself', 'warning');
+			$this->messages->setMessage('Problem deleting the user: a user can not delete himself', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -513,7 +658,15 @@ class tkUserfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * activates the account of a given user
+	 *
+	 * instance-safe!
+	 *
+	 * @param integer $userid id of the user
+	 *
+	 * @return boolean
+	 */
 	public function activateuser($userid)
 	{
 		$this->debug->guard();
@@ -539,7 +692,15 @@ class tkUserfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * deactivates the account of a given user
+	 *
+	 * instance-safe!
+	 *
+	 * @param integer $userid id of the user
+	 *
+	 * @return boolean
+	 */
 	public function deactivateuser($userid)
 	{
 		$this->debug->guard();

@@ -77,6 +77,6 @@
 	$debug->showMiscInformation();
 	$debug->showDebugMessages();
 	$debug->showQueryMessages();
-	$debug->showGuardMessages();
+//	$debug->showGuardMessages();
 
 ?>
