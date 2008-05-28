@@ -24,9 +24,6 @@ class zgEventhandler
 	protected $user;
 	protected $traffic;
 
-	protected $preSnapInList;
-	protected $postSnapInList;
-
 
 	/**
 	 * Class constructor
@@ -44,9 +41,6 @@ class zgEventhandler
 
 		$this->database = new zgDatabase();
 		$this->database->connect();
-
-		$this->preSnapInList = array();
-		$this->postSnapInList = array();
 	}
 
 
@@ -116,46 +110,6 @@ class zgEventhandler
 
 
 	/**
-	 * Extracts pre- and post-snapins
-	 *
-	 * @param array $snapinList array containing all snapin definiitons
-	 *
-	 * @return boolean
-	 */
-	protected function _loadSnapIns($snapinList)
-	{
-		$this->debug->guard();
-
-		$ret = false;
-		if (is_array($snapinList))
-		{
-			if ( (!empty($snapinList['PreSnapIn'])) && (is_array($snapinList['PreSnapIn'])) )
-			{
-				foreach ($snapinList['PreSnapIn'] as $v)
-				{
-					$this->preSnapInList[] = $v;
-				}
-
-				$ret = true;
-			}
-
-			if ( (!empty($snapinList['PostSnapIn'])) && (is_array($snapinList['PostSnapIn'])) )
-			{
-				foreach ($snapinList['PostSnapIn'] as $v)
-				{
-					$this->postSnapInList[] = $v;
-				}
-
-				$ret = true;
-			}
-		}
-
-		$this->debug->unguard($ret);
-		return $ret;
-	}
-
-
-	/**
 	 * Checks if the user has the right for a given action
 	 *
 	 * @param array $moduleData data of the module to load
@@ -177,28 +131,6 @@ class zgEventhandler
 
 		$this->debug->unguard(false);
 		return false;
-	}
-
-
-	protected function _executePreSnapIns($parameters)
-	{
-		$this->debug->guard();
-
-
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-
-	protected function _executePostSnapIns($parameters)
-	{
-		$this->debug->guard();
-
-
-
-		$this->debug->unguard(true);
-		return true;
 	}
 
 
@@ -287,12 +219,6 @@ class zgEventhandler
 		$parameterhandler = new zgParameterhandler();
 		$parameters = $parameterhandler->getSafeParameters($module, $action);
 
-		// load snapins in the configuration
-		$snapInsFound = $this->_loadSnapIns($this->configuration->getConfiguration($module, $action));
-
-		// execute pre-snapins
-		if ($snapInsFound) $this->_executePreSnapIns($parameters);
-
 		// log the pageview if logging is active
 		if ($this->configuration->getConfiguration('zeitgeist','trafficlogger','trafficlogger_active') == '1')
 		{
@@ -306,9 +232,6 @@ class zgEventhandler
 			$this->debug->unguard($ret);
 			return $ret;
 		}
-
-		// execute post-snapins
-		if ($snapInsFound) $this->_executePostSnapIns($parameters);
 
 		// save message data for user
 		if ($this->configuration->getConfiguration('zeitgeist', 'messages', 'use_persistent_messages'))

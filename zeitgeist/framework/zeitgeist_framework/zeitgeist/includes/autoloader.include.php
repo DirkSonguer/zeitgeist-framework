@@ -17,7 +17,7 @@ defined('ZEITGEIST_ACTIVE') or die();
 	/**
 	 * This is an autoloader superfunction
 	 * It tries to catch unknown classes that are called and tries to load them
-	 * It is used by the eventhandler to load snapins and modules
+	 * It is used by the eventhandler to load modules
 	 *
 	 * Note that if this function fails, a fatal error will occur!
 	 *
@@ -36,13 +36,6 @@ defined('ZEITGEIST_ACTIVE') or die();
 		{
 			require_once(APPLICATION_ROOTDIRECTORY . 'modules/' . $class . '/' . $class . '.module.php');
 			$debug->unguard('Class '.APPLICATION_ROOTDIRECTORY . 'modules/' . $class . '/' . $class . '.module.php loaded');
-			return;
-		}
-
-		if (file_exists(APPLICATION_ROOTDIRECTORY . 'snapins/' . $class . '.snapin.php'))
-		{
-			require_once(APPLICATION_ROOTDIRECTORY . 'snapins/' . $class . '.snapin.php');
-			$debug->unguard('Class '.APPLICATION_ROOTDIRECTORY . 'snapins/' . $class . '.snapin.php loaded');
 			return;
 		}
 
