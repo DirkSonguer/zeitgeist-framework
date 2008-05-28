@@ -146,6 +146,7 @@ class zgConfiguration
 	 *
 	 * @param string $modulename name of the module container
 	 * @param string $filename name of the ini file to load
+	 * @param boolean $overwrite flag if an existing module with that name should be ignored and replaced
 	 *
 	 * @return boolean
 	 */
@@ -261,7 +262,7 @@ class zgConfiguration
 
 
 	/**
-	 * Save a given configuration set into the database
+	 * Saves a given configuration set into the database
 	 *
 	 * @access protected
 	 *
