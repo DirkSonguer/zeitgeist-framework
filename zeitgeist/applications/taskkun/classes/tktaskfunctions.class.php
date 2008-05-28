@@ -323,10 +323,10 @@ class tkTaskfunctions
 		$res = $this->database->query($sql);
 		$row = $this->database->fetchArray($res);
 
-		$ret = $row['open_usertasks'];
+		$usertasks = $row['open_usertasks'];
 
-		$this->debug->unguard($ret);
-		return $ret;
+		$this->debug->unguard($usertasks);
+		return $usertasks;
 	}
 
 
@@ -349,10 +349,10 @@ class tkTaskfunctions
 		$res = $this->database->query($sql);
 		$row = $this->database->fetchArray($res);
 
-		$ret = $row['open_grouptasks'];
+		$grouptasks = $row['open_grouptasks'];
 
-		$this->debug->unguard($ret);
-		return $ret;
+		$this->debug->unguard($grouptasks);
+		return $grouptasks;
 	}
 
 

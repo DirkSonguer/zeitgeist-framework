@@ -22,8 +22,14 @@ class tkTasktypefunctions
 	}
 
 
-	// instance-safe
-	public function getTaskTypes()
+	/**
+	 * gets all tasktype for the current instance
+	 *
+	 * instance-safe!
+	 *
+	 * @return array
+	 */
+	public function getTasktypes()
 	{
 		$this->debug->guard();
 
@@ -50,7 +56,13 @@ class tkTasktypefunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * gets all tasktypes for the current user
+	 *
+	 * instance-safe!
+	 *
+	 * @return array
+	 */
 	public function getTasktypesForUser()
 	{
 		$this->debug->guard();
@@ -83,7 +95,15 @@ class tkTasktypefunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * gets all information for a given tasktype
+	 *
+	 * instance-safe!
+	 *
+	 * @param integer $tasktypeid id of the tasktype
+	 *
+	 * @return array
+	 */
 	public function getTasktypeInformation($tasktypeid)
 	{
 		$this->debug->guard();
@@ -102,14 +122,21 @@ class tkTasktypefunctions
 			return false;
 		}
 
-		$row = $this->database->fetchArray($res);
+		$tasktypeinformation = $this->database->fetchArray($res);
 
-		$this->debug->unguard($row);
-		return $row;
+		$this->debug->unguard($tasktypeinformation);
+		return $tasktypeinformation;
 	}
 
 
-	// instance-safe
+	/**
+	 * creates a new tasktype
+	 * the new tasktype is created with default values
+	 *
+	 * instance-safe!
+	 *
+	 * @return array
+	 */
 	public function createTasktype()
 	{
 		$this->debug->guard();
@@ -145,7 +172,15 @@ class tkTasktypefunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * updates a tasktype with the given data
+	 *
+	 * instance-safe!
+	 *
+	 * @param array $tasktypedata array with the tasktype data
+	 *
+	 * @return boolean
+	 */
 	public function updateTasktype($tasktypedata = array())
 	{
 		$this->debug->guard();
@@ -170,7 +205,15 @@ class tkTasktypefunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * deletes a given tasktype
+	 *
+	 * instance-safe!
+	 *
+	 * @param integer $tasktypeid id of the tasktype to delete
+	 *
+	 * @return array
+	 */
 	public function deleteTasktype($tasktypeid)
 	{
 		$this->debug->guard();
@@ -226,7 +269,15 @@ class tkTasktypefunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * gets all information for a workflow
+	 *
+	 * instance-safe!
+	 *
+	 * @param integer $tasktypeid id of the tasktype that is contained by the workflow
+	 *
+	 * @return array
+	 */
 	public function getWorkflowInformation($tasktypeid)
 	{
 		$this->debug->guard();
@@ -256,7 +307,16 @@ class tkTasktypefunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * shifts a task up in the workflow
+	 * happens if a task is finished
+	 *
+	 * instance-safe!
+	 *
+	 * @param integer $taskid id of the tasklog
+	 *
+	 * @return array
+	 */
 	public function workflowUp($taskid)
 	{
 		$this->debug->guard();
@@ -328,7 +388,16 @@ class tkTasktypefunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * shifts a task down in the workflow
+	 * happens if a task is send back
+	 *
+	 * instance-safe!
+	 *
+	 * @param integer $taskid id of the tasklog
+	 *
+	 * @return array
+	 */
 	public function workflowDown($taskid)
 	{
 		$this->debug->guard();

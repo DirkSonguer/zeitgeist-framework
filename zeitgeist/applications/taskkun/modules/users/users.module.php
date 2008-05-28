@@ -3,8 +3,6 @@
 
 defined('TASKKUN_ACTIVE') or die();
 
-// TODO: Deactivate Users
-
 class users
 {
 	protected $debug;

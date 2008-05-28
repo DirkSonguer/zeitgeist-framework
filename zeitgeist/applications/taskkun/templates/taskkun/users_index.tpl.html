@@ -67,8 +67,14 @@
 			}
 		}
 
-		function activateUser(id, status, name)
+		function activateUser(id, status, count, name)
 		{		
+			if (count > 0)
+			{
+				alert("Sie können kein Benutzerkonto deaktivieren, das noch aktiv Aufgaben bearbeitet.\nBitte sorgen Sie dafür, dass der Benutzer seine Aufgaben beendet, bevor Sie sein Konto deaktivieren.");
+				return;
+			}
+
 			if (status > 0)
 			{
 				var answer = window.confirm("Wollen Sie das Benutzerkonto '" + name + "' wirklich deaktivieren?");
@@ -263,10 +269,10 @@
 					<tr class="{ds_EvenOddRow}" spry:repeat="dsUserdata">
 						<td><p style="text-align:center;">
 						<span spry:if="{dsUserdata::user_active} == '0'"><span onmousemove="showTooltip('Benutzerkonto ist deaktiviert', event)" onmouseout="hideTooltip()">
-							<a href="javascript:activateUser({dsUserdata::user_id}, {dsUserdata::user_active}, '{dsUserdata::user_username}')"><img src="@@{templatepath}@@/nuvola/16x16/actions/ledred.png" alt="Benutzerkonto ist deaktiviert" border="0" /></a>
+							<a href="javascript:activateUser({dsUserdata::user_id}, {dsUserdata::user_active}, {dsUserdata::user_taskcount}, '{dsUserdata::user_username}')"><img src="@@{templatepath}@@/nuvola/16x16/actions/ledred.png" alt="Benutzerkonto ist deaktiviert" border="0" /></a>
 						</span></span>
 						<span spry:if="{dsUserdata::user_active} == '1'"><span onmousemove="showTooltip('Benutzerkonto ist aktiv', event)" onmouseout="hideTooltip()">
-							<a href="javascript:activateUser({dsUserdata::user_id}, {dsUserdata::user_active}, '{dsUserdata::user_username}')"><img src="@@{templatepath}@@/nuvola/16x16/actions/ledgreen.png" alt="Benutzerkonto ist aktiv" border="0" /></a>
+							<a href="javascript:activateUser({dsUserdata::user_id}, {dsUserdata::user_active}, {dsUserdata::user_taskcount}, '{dsUserdata::user_username}')"><img src="@@{templatepath}@@/nuvola/16x16/actions/ledgreen.png" alt="Benutzerkonto ist aktiv" border="0" /></a>
 						</span></span>
 						</p></td>
 						<td><p>{dsUserdata::userdata_firstname} {dsUserdata::userdata_lastname} (<a href="mailto:{dsUserdata::user_username}">{dsUserdata::user_username}</a>)</p></td>

@@ -33,13 +33,13 @@ class tkTemplate extends zgTemplate
 	{
 		$this->debug->guard();
 
-		$ret = parent::load($filename);
+		$templatestatus = parent::load($filename);
 
 		$this->assign('basepath', $this->basepath);
 		$this->assign('templatepath', $this->templatepath);
 
-		$this->debug->unguard($ret);
-		return $ret;
+		$this->debug->unguard($templatestatus);
+		return $templatestatus;
 	}
 
 
@@ -79,10 +79,10 @@ class tkTemplate extends zgTemplate
 		$versioninfo = $this->configuration->getConfiguration('taskkun', 'application', 'versioninfo');
 		$this->assign('versioninfo', $versioninfo);
 
-		$ret = parent::show();
+		$showstatus = parent::show();
 
-		$this->debug->unguard($ret);
-		return $ret;
+		$this->debug->unguard($showstatus);
+		return $showstatus;
 	}
 
 

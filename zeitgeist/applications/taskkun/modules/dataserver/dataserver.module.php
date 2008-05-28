@@ -56,7 +56,8 @@ class dataserver
 		$sql .= "WHERE taskusers_user='" . $this->user->getUserID() . "' ";
 		$sql .= "AND u2g.usergroup_user = '" . $this->user->getUserID() . "' ";
 		$sql .= "AND t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
-		$sql .= "GROUP BY t.task_id ORDER BY t.task_end";
+		$sql .= "GROUP BY t.task_id ";
+		$sql .= "ORDER BY DATEDIFF(NOW(), t.task_end) DESC";
 
 		$taskinformation = array();
 

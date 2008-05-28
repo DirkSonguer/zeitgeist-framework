@@ -146,7 +146,7 @@ class tasks
 			if ($taskinformation['task_begin'] == '00.00.0000') $taskinformation['task_begin'] = '';
 			if ($taskinformation['task_end'] == '00.00.0000') $taskinformation['task_end'] = '';
 
-			$tasktypes = $tasktypefunctions->getTaskTypes();
+			$tasktypes = $tasktypefunctions->getTasktypes();
 			foreach ($tasktypes as $tasktype)
 			{
 				$tpl->assignDataset($tasktype);

@@ -22,7 +22,15 @@ class tkTasklogfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * adds a tasklog with the given data
+	 *
+	 * instance-safe!
+	 *
+	 * @param array $tasklogdata array containing all the data for the tasklog
+	 *
+	 * @return boolean
+	 */
 	public function addTasklog($tasklogdata=array())
 	{
 		$this->debug->guard();
@@ -65,7 +73,15 @@ class tkTasklogfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * updates a tasklog with the given data
+	 *
+	 * instance-safe!
+	 *
+	 * @param array $tasklogdata array containing all the data for the tasklog
+	 *
+	 * @return boolean
+	 */
 	public function updateTasklog($tasklogdata=array())
 	{
 		$this->debug->guard();
@@ -119,7 +135,18 @@ class tkTasklogfunctions
 	}
 
 
-	// instance-safe
+
+	/**
+	 * deletes a given tasklog
+	 * the id of the task is needed for checking the instance
+	 *
+	 * instance-safe!
+	 *
+	 * @param integer $tasklogid id of the tasklog to delete
+	 * @param integer $taskid id of the task containing the tasklog
+	 *
+	 * @return boolean
+	 */
 	public function deleteTasklog($tasklogid, $taskid)
 	{
 		$this->debug->guard();
@@ -148,7 +175,15 @@ class tkTasklogfunctions
 	}
 
 
-	// instance-safe
+	/**
+	 * gets all information for a given tasklog
+	 *
+	 * instance-safe!
+	 *
+	 * @param integer $tasklogid id of the tasklog
+	 *
+	 * @return array
+	 */
 	public function getTasklog($tasklogid)
 	{
 		$this->debug->guard();
