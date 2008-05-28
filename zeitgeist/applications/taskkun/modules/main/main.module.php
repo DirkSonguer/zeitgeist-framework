@@ -88,12 +88,12 @@ class main
 				}
 				else
 				{
-					$this->messages->setMessage('Username and/or password was not correct. Please enter your username and password carefully.', 'userwarning');
+					$this->messages->setMessage('Der Benutzername und/oder das Passwort wurde nicht korrekt angegeben. Bitte geben Sie Ihren Benutzernamen und Ihr Passwort sorgfältig ein.');
 				}
 			}
 			else
 			{
-				$this->messages->setMessage('Please enter a valid username and password.', 'userwarning');
+				$this->messages->setMessage('Bitte geben Sie einen gültigen Benutzernamen und das dazugehörige  Passwort ein.', 'userwarning');
 			}
 		}
 
