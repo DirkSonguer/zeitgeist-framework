@@ -22,6 +22,7 @@ class main
 	}
 
 
+	// ok
 	public function index($parameters=array())
 	{
 		$this->debug->guard();
@@ -36,7 +37,62 @@ class main
 	}
 
 
-	public function register($parameters=array())
+	// ok
+	public function login($parameters=array())
+	{
+		$this->debug->guard();
+
+		$tpl = new lrTemplate();
+
+		if ($this->user->isLoggedIn())
+		{
+			$tpl->redirect($tpl->createLink('main', 'index'));
+		}
+
+		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_index'));
+		if (!empty($parameters['login']))
+		{
+			if ( (!empty($parameters['username'])) && (!empty($parameters['password'])) )
+			{
+				if ($this->user->login($parameters['username'], $parameters['password']))
+				{
+					$tpl->redirect($tpl->createLink('main', 'index'));
+				}
+				else
+				{
+					$this->messages->setMessage('Der Benutzername und/oder das Passwort wurde nicht korrekt angegeben. Bitte geben Sie Ihren Benutzernamen und Ihr Passwort sorgfältig ein.', 'userwarning');
+				}
+			}
+			else
+			{
+				$this->messages->setMessage('Bitte geben Sie einen gültigen Benutzernamen und das dazugehörige Passwort ein.', 'userwarning');
+			}
+		}
+
+		$tpl->show();
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	// ok
+	public function logout($parameters=array())
+	{
+		$this->debug->guard();
+
+		$this->user->logout();
+
+		$tpl = new lrTemplate();
+		$tpl->redirect($tpl->createLink('main', 'index'));
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+// TODO: alt
+	public function registeraccount($parameters=array())
 	{
 		$this->debug->guard();
 
@@ -109,58 +165,7 @@ class main
 	}
 
 
-	public function login($parameters=array())
-	{
-		$this->debug->guard();
-
-		$tpl = new lrTemplate();
-
-		if ($this->user->isLoggedIn())
-		{
-			$tpl->redirect($tpl->createLink('main', 'index'));
-		}
-
-		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_index'));
-		if (!empty($parameters['login']))
-		{
-			if ( (!empty($parameters['username'])) && (!empty($parameters['password'])) )
-			{
-				if ($this->user->login($parameters['username'], $parameters['password']))
-				{
-					$tpl->redirect($tpl->createLink('main', 'index'));
-				}
-				else
-				{
-					$this->messages->setMessage('Username and/or password was not correct. Please enter your username and password carefully.', 'userwarning');
-				}
-			}
-			else
-			{
-				$this->messages->setMessage('Please enter a valid username and password.', 'userwarning');
-			}
-		}
-
-		$tpl->show();
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-
-	public function logout($parameters=array())
-	{
-		$this->debug->guard();
-
-		$this->user->logout();
-
-		$tpl = new lrTemplate();
-		$tpl->redirect($tpl->createLink('main', 'index'));
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-
+// TODO: alt
 	public function editaccount($parameters=array())
 	{
 		$this->debug->guard();

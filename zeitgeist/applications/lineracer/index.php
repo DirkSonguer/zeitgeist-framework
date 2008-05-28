@@ -38,7 +38,6 @@
 
 	// load configuration
 	$configuration->loadConfiguration('lineracer', 'configuration/lineracer.ini');
-	$test = $configuration->getConfiguration('lineracer');
 
 	// test if user is logged in
 	$user->establishUserSession();
@@ -70,6 +69,7 @@
 	$debug->showInnerLoops = true;
 	$debug->showMiscInformation();
 	$debug->showDebugMessages();
+	$debug->showQueryMessages();
 	$debug->showGuardMessages();
 
 ?>

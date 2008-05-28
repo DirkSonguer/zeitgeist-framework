@@ -22,6 +22,7 @@ class pregame
 	}
 
 
+// TODO: alt
 	public function showlobby($parameters=array())
 	{
 		$this->debug->guard();
@@ -36,6 +37,7 @@ class pregame
 	}
 
 
+// TODO: alt
 	public function joingame($parameters=array())
 	{
 		$this->debug->guard();
@@ -88,6 +90,7 @@ class pregame
 	}
 
 
+// TODO: alt
 	public function showgameroom($parameters=array())
 	{
 		$this->debug->guard();
@@ -110,6 +113,7 @@ class pregame
 	}
 
 
+// TODO: alt
 	public function leavegameroom($parameters=array())
 	{
 		$this->debug->guard();
@@ -134,6 +138,7 @@ class pregame
 	}
 
 
+// TODO: alt
 	public function creategame($parameters=array())
 	{
 		$this->debug->guard();
