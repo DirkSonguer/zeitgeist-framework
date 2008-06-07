@@ -31,7 +31,7 @@ class lrPregamefunctions
 		if ($this->user->isLoggedIn())
 		{
 			$currentUserId = $this->user->getUserID();
-			$sql = "SELECT * FROM lobbyusers WHERE lobbyuser_user='" . $currentUserId . "'";
+			$sql = "SELECT * FROM lobby_to_users WHERE lobbyuser_user='" . $currentUserId . "'";
 			$res = $this->database->query($sql);
 			if ($this->database->numRows($res) > 0)
 			{

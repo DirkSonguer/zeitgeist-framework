@@ -49,7 +49,7 @@ class main
 			$tpl->redirect($tpl->createLink('main', 'index'));
 		}
 
-		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_index'));
+		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_login'));
 		if (!empty($parameters['login']))
 		{
 			if ( (!empty($parameters['username'])) && (!empty($parameters['password'])) )
@@ -172,7 +172,7 @@ class main
 
 		$tpl = new lrTemplate();
 		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_editaccount'));
-
+/*
 		$editaccountForm = new zgForm();
 		$editaccountForm->load('forms/editaccount.form.ini');
 		$formprocess = $editaccountForm->process($parameters);
@@ -238,7 +238,7 @@ class main
 		{
 			$tpl->insertBlock('thankyou');
 		}
-
+																								   */
 		$tpl->show();
 
 		$this->debug->unguard(true);
