@@ -74,8 +74,6 @@
 
 <!-- InstanceBeginEditable name="body" -->
 
-<p>Main Index</p>
-
 <form method="post" action="@@{[player.editplayerdata]}@@" name="editplayerdata" enctype="multipart/form-data; charset=utf-8">
 	
 	<div id="Userdata" class="textbox">
@@ -149,9 +147,38 @@
 			</tr>
 		</table>
 	</div>
+
+	<div id="Userpassword" class="textbox">
+			
+		<table cellspacing="5" cellpadding="5" border="0">
+			<tr>
+				<td valign="top" nowrap="nowrap" width="200"><p class="formlabel">Neues Passwort</p></td>
+				<td valign="middle" @@{user_password:formerror}@@><input type="password" maxlength="30" name="editplayerdata[user_password]" class="formtext" />
+				<!-- TemplateBeginBlock name="user_password:errormsg" -->
+					<br /><span class="formerrormsg">@@{user_password:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel"> Passwort bestätigen</p></td>
+				<td valign="middle" @@{user_password2:formerror}@@><input type="password" maxlength="30" name="editplayerdata[user_password2]" class="formtext" />
+				<!-- TemplateBeginBlock name="user_password2:errormsg" -->
+					<br /><span class="formerrormsg">@@{user_password2:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+				   <p style="text-align:right; margin-right:0px;"><img src="@@{templatepath}@@/nuvola/32x32/apps/kate.png" alt="" border="0" align="top" />
+				   <input name="submit" value="Daten speichern" class="formbutton" type="submit" /></p>
+				</td>
+			</tr>
+		</table>
+	</div>
 	
 </form>
 
+<p><a href="@@{[main.index]}@@">Zurück</a></p>
 
 <!-- InstanceEndEditable -->
 
