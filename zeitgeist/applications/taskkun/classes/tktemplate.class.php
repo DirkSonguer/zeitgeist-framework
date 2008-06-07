@@ -54,7 +54,6 @@ class tkTemplate extends zgTemplate
 	{
 		$this->debug->guard();
 
-		$ret = true;
 		parent::insertUsermessages();
 
 		if ( ($this->user->isLoggedIn()) && ($showmenu) )

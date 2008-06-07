@@ -169,5 +169,38 @@ class tkGroupfunctions
 		return $row;
 	}
 
+
+	/**
+	 * gets all groups for the current user
+	 *
+	 * instance-safe!
+	 *
+	 * @return array
+	 */
+	public function getGroupsForUser()
+	{
+		$this->debug->guard();
+
+		$sql = "SELECT g.* FROM groups g LEFT JOIN users_to_groups u2g ON g.group_id = u2g.usergroup_group ";
+		$sql .= "WHERE u2g.usergroup_user='" . $this->user->getUserID() . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem getting groups from database', 'warning');
+			$this->messages->setMessage('Problem getting groups from database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$groups = array();
+		while($row = $this->database->fetchArray($res))
+		{
+			$groups[] = $row;
+		}
+
+		$this->debug->unguard($groups);
+		return $groups;
+	}
+
 }
 ?>

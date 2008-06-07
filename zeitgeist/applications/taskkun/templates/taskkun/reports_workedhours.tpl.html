@@ -37,11 +37,8 @@
 	
 <!-- InstanceBeginEditable name="head" -->
 
-
-	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryData.js"></script>
-	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/xpath.js"></script>
-	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryNestedXMLDataSet.js"></script>
-	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/js/SpryExtensions.js"></script>
+	<script type="text/javascript" src="@@{templatepath}@@/js/date-picker/js/datepicker.js"></script>
+	<link href="@@{templatepath}@@/js/date-picker/css/datepicker.css" rel="stylesheet" type="text/css" />
 
 	<script type="text/javascript">
 
@@ -124,48 +121,54 @@
 <!-- InstanceBeginEditable name="body" -->
 
 <div class="textbox">
-	<h2>Reports</h2>
-	<ul>
-		<li>Abgeschlossene Aufgaben heute: </li>
-		<li>Abgeschlossene Aufgaben diese Woche: </li>
-	</ul>
+	<h2>Stundenübersicht</h2>
+
+	<p>Folgend ist eine Übersicht über die eingetragenen Stunden an den entsprechenden Tagen. Es werden nur Tage angezeigt, an denen tatsächlich Tätigkeitsbeschreibungen angegeben wurden.</p>
+		
+	<table width="100%" cellspacing="5" cellpadding="5" border="0" style="margin-left:5px;">
+		<tbody>
+		<tr>
+			<td align="right" nowrap="nowrap" valign="top" width="170"><p class="formlabel">Angezeigte Gruppen:</p></td>
+			<td align="left" valign="middle">
+				<select name="" class="formtext">
+					<option value="-1">Alle</option>
+					<!-- TemplateBeginBlock name="group_loop" -->
+						<option value="@@{group_id}@@">@@{group_name}@@</option>
+					<!-- TemplateEndBlock -->
+				</select>
+			</td>
+			<td align="right" nowrap="nowrap" valign="top" width="100"><p class="formlabel">Beginn Zeitraum</p></td>
+			<td align="left" valign="middle">
+			<input maxlength="30" name="data_begin" class="w8em format-d-m-y divider-dot" id="data_begin" style="width:210px; border:solid 1px #777788; padding:3px; font-family: Osaka,verdana,Sans-Serif; font-size:12pt;" value="@@{data_begin}@@" type="text" />
+			</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<table width="100%" cellspacing="5" cellpadding="5" border="0" style="margin-left:5px;">
+		<tbody>
+		<tr>
+			<td align="right" nowrap="nowrap" valign="top" width="170"><p class="formlabel">Angezeigte Benutzer:</p></td>
+			<td align="left" valign="middle">
+				<select name="" class="formtext">
+					<option value="-1">Alle</option>
+					<!-- TemplateBeginBlock name="user_loop" -->
+						<option value="@@{user_id}@@">@@{user_username}@@</option>
+					<!-- TemplateEndBlock -->
+				</select>
+			</td>
+			<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Ende Zeitraum</p></td>
+			<td align="left" valign="middle">
+			<input maxlength="30" name="data_end" class="w8em format-d-m-y divider-dot" id="data_end" style="width:210px; border:solid 1px #777788; padding:3px; font-family: Osaka,verdana,Sans-Serif; font-size:12pt;" value="@@{data_end}@@" type="text" />
+			</td>
+		</tr>
+		</tbody>
+	</table>
+
+
+	<p>@@{workedhours_chart}@@</p>
+
 </div>
-
-	<div class="textbox">
-		<table cellpadding="0" cellspacing="0" border="0" style="margin-left:10pt;">
-			<tr>
-			<td><a href="@@{[reports.finishedtasks]}@@"><img src="@@{templatepath}@@/nuvola/48x48/filesystems/folder_tar.png" alt="" align="left" border="0" /></a></td>
-			<td>
-				<h3><a href="@@{[reports.finishedtasks]}@@">Abgeschlossene Aufgaben</a></h3>
-				<p>Der Report bietet eine Übersicht über alle abgeschlossenen und archivierten Aufgaben (reguläre, sowie Ad-Hoc-Aufgaben).</p>
-			</td>
-			</tr>
-		</table>
-	</div>
-
-	<div class="textbox">
-		<table cellpadding="0" cellspacing="0" border="0" style="margin-left:10pt;">
-			<tr>
-			<td><a href="@@{[reports.workedhours]}@@"><img src="@@{templatepath}@@/nuvola/48x48/apps/ktimer.png" alt="" align="left" border="0" /></a></td>
-			<td>
-				<h3><a href="@@{[reports.workedhours]}@@">Stundenübersicht</a></h3>
-				<p>Der Report bietet eine Übersicht über die insgesamt benötigten Stundenaufwände aller abgeschlossenen Tätigkeiten.</p>
-			</td>
-			</tr>
-		</table>
-	</div>
-
-	<div class="textbox">
-		<table cellpadding="0" cellspacing="0" border="0" style="margin-left:10pt;">
-			<tr>
-			<td><a href="@@{[reports.showarchivedtasks]}@@"><img src="@@{templatepath}@@/nuvola/48x48/apps/kghostview.png" alt="" align="left" border="0" /></a></td>
-			<td>
-				<h3><a href="@@{[reports.showarchivedtasks]}@@">Suche in archivierten Aufgaben</a></h3>
-				<p>Die Suche ermöglicht es, spezifische Aufgaben im Archiv zu finden und auszuwerten.</p>
-			</td>
-			</tr>
-		</table>
-	</div>
 
 <!-- InstanceEndEditable -->
 
