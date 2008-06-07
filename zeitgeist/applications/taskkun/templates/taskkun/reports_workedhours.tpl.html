@@ -42,6 +42,44 @@
 
 	<script type="text/javascript">
 
+		function updateChart()
+		{
+
+			swfHandle = findSWF("chart");
+			reloadURL = "index.php?module=dataserver&action=workedhourschartdata";
+			
+			var dataBegin = document.getElementById('data_begin').value;
+			reloadURL += '&databegin='+dataBegin;
+			
+			var dataEnd = document.getElementById('data_end').value;
+			reloadURL += '&dataend='+dataEnd;
+			
+			var group = document.getElementById('group').value;
+			reloadURL += '&group='+group;
+
+			var user = document.getElementById('user').value;
+			reloadURL += '&user='+user;
+
+			var mode = document.getElementById('mode').checked;
+			if (mode == true) reloadURL += '&mode=2';
+
+			ret = swfHandle.reload(reloadURL);			
+
+			return true;
+		}
+		
+		function findSWF(movieName)
+		{
+			if (navigator.appName.indexOf("Microsoft")!= -1)
+			{
+				return window["ie_" + movieName];
+			}
+			else
+			{
+				return document[movieName];
+			}
+		}
+
 	</script>
 
 <!-- InstanceEndEditable -->
@@ -130,7 +168,7 @@
 		<tr>
 			<td align="right" nowrap="nowrap" valign="top" width="170"><p class="formlabel">Angezeigte Gruppen:</p></td>
 			<td align="left" valign="middle">
-				<select name="" class="formtext">
+				<select name="group" id="group" class="formtext" onchange="updateChart();">
 					<option value="-1">Alle</option>
 					<!-- TemplateBeginBlock name="group_loop" -->
 						<option value="@@{group_id}@@">@@{group_name}@@</option>
@@ -139,7 +177,7 @@
 			</td>
 			<td align="right" nowrap="nowrap" valign="top" width="100"><p class="formlabel">Beginn Zeitraum</p></td>
 			<td align="left" valign="middle">
-			<input maxlength="30" name="data_begin" class="w8em format-d-m-y divider-dot" id="data_begin" style="width:210px; border:solid 1px #777788; padding:3px; font-family: Osaka,verdana,Sans-Serif; font-size:12pt;" value="@@{data_begin}@@" type="text" />
+			<input maxlength="30" name="data_begin" class="w8em format-d-m-y divider-dot" id="data_begin" style="width:210px; border:solid 1px #777788; padding:3px; font-family: Osaka,verdana,Sans-Serif; font-size:12pt;" value="@@{data_begin}@@" type="text" onchange="updateChart();" />
 			</td>
 		</tr>
 		</tbody>
@@ -150,7 +188,7 @@
 		<tr>
 			<td align="right" nowrap="nowrap" valign="top" width="170"><p class="formlabel">Angezeigte Benutzer:</p></td>
 			<td align="left" valign="middle">
-				<select name="" class="formtext">
+				<select name="user" id="user" class="formtext" onchange="updateChart();">
 					<option value="-1">Alle</option>
 					<!-- TemplateBeginBlock name="user_loop" -->
 						<option value="@@{user_id}@@">@@{user_username}@@</option>
@@ -159,15 +197,16 @@
 			</td>
 			<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Ende Zeitraum</p></td>
 			<td align="left" valign="middle">
-			<input maxlength="30" name="data_end" class="w8em format-d-m-y divider-dot" id="data_end" style="width:210px; border:solid 1px #777788; padding:3px; font-family: Osaka,verdana,Sans-Serif; font-size:12pt;" value="@@{data_end}@@" type="text" />
+			<input maxlength="30" name="data_end" class="w8em format-d-m-y divider-dot" id="data_end" style="width:210px; border:solid 1px #777788; padding:3px; font-family: Osaka,verdana,Sans-Serif; font-size:12pt;" value="@@{data_end}@@" type="text" onchange="updateChart();" />
 			</td>
 		</tr>
 		</tbody>
 	</table>
 
+	<p class="formlabel" style="margin-left:15px;"><input type="checkbox" name="mode" id="mode" value="2" onchange="updateChart();" /> Als Liniendiagramm anzeigen</p>
 
 	<p>@@{workedhours_chart}@@</p>
-
+	
 </div>
 
 <!-- InstanceEndEditable -->

@@ -674,10 +674,52 @@ class dataserver
 
 		$userfunctions = new tkUserfunctions();
 
-		$sql = "SELECT COUNT(tl.tasklog_hoursworked) as hoursworked, DATE_FORMAT(DATE(tl.tasklog_timestamp), '%d.%m.%Y') as dateworked FROM tasklogs tl ";
-		$sql .= "GROUP BY DATE(tl.tasklog_timestamp) ORDER BY tl.tasklog_timestamp LIMIT 14";
-		$res = $this->database->query($sql);
+		if (empty($parameters['databegin']))
+		{
+			$parameters['databegin'] = date("Y-m-d", time()-(86400 * 14));
+		}
+		else
+		{
+			$dateArray = explode('.', $parameters['databegin']);
+			$parameters['databegin'] = $dateArray[2] . '-' . $dateArray[1] . '-' . $dateArray[0];
+		}
 
+		if (empty($parameters['dataend']))
+		{
+			$parameters['dataend'] = 'NOW()';
+		}
+		else
+		{
+			$dateArray = explode('.', $parameters['dataend']);
+			$parameters['dataend'] = $dateArray[2] . '-' . $dateArray[1] . '-' . $dateArray[0];
+		}
+
+		if ( (empty($parameters['group'])) || ($parameters['group'] == -1) )
+		{
+			$groupstring = '';
+		}
+		else
+		{
+			$groupstring = "AND u2g.usergroup_group = '" . $parameters['group'] . "' ";
+		}
+
+		if ( (empty($parameters['user'])) || ($parameters['user'] == -1) )
+		{
+			$userstring = '';
+		}
+		else
+		{
+			$userstring = "AND u2g.usergroup_user = '" . $parameters['user'] . "' ";
+		}
+
+		$sql = "SELECT COUNT(tl.tasklog_hoursworked) as hoursworked, DATE_FORMAT(DATE(tl.tasklog_timestamp), '%d.%m.%Y') as dateworked FROM tasklogs tl ";
+		$sql .= "LEFT JOIN users u ON tl.tasklog_creator = u.user_id ";
+		$sql .= "LEFT JOIN users_to_groups u2g ON u.user_id = u2g.usergroup_user ";
+		$sql .= "WHERE tl.tasklog_timestamp > '" . $parameters['databegin'] . "' AND tl.tasklog_timestamp < '" . $parameters['dataend'] . "' ";
+		$sql .= $groupstring;
+		$sql .= $userstring;
+		$sql .= "GROUP BY DATE(tl.tasklog_timestamp) ORDER BY tl.tasklog_timestamp";
+		$res = $this->database->query($sql);
 
 		$dataArray = array();
 		$descArray = array();
@@ -686,9 +728,11 @@ class dataserver
 
 		$tpl = new tkTemplate();
 		$params = array();
+		$linedata = array();
 		while ($row = $this->database->fetchArray($res))
 		{
 			if ($maxValue < $row['hoursworked']) $maxValue = $row['hoursworked'];
+			$linedata[] = $row['hoursworked'];
 			$bar->add($row['hoursworked'], false);
 			$descArray[] = $row['dateworked'];
 		}
@@ -696,42 +740,29 @@ class dataserver
 		$g = new graph();
 		$g->title( 'Stundenübersicht der eingetragenen Aufgabenbeschreibungen', '{font-size: 12px;}' );
 		$g->bg_colour = '#fafafa';
-		$g->data_sets[] = $bar;
-		$g->set_x_labels($descArray);
-		$g->set_x_label_style( 9, '#000000', 0, 1 );
-		$g->set_x_axis_steps( 1 );
-		$g->set_y_max( $maxValue+1 );
-		$g->y_label_steps( 4 );
-		echo $g->render();
-		die();
 
-/*
-		$dataArray = array();
-		$descArray = array();
-		$maxValue = 0;
-
-		$bar = new bar_outline( 50, '#dddddd', '#000000' );
-
-		$params = array();
-		while($row = $this->database->fetchArray($res))
+		if ( (empty($parameters['mode'])) || ($parameters['mode'] == 1) )
 		{
-			if ($maxValue < $row['hoursworked']) $maxValue = $row['hoursworked'];
-			$bar->add($row['hoursworked'], '');
-			$descArray[] = $row['dateworked'];
+			$g->data_sets[] = $bar;
+			$g->set_x_labels($descArray);
+			$g->set_x_label_style( 9, '#000000', 0, 1 );
+			$g->set_x_axis_steps( 1 );
+			$g->set_y_max( $maxValue+1 );
+			$g->y_label_steps( 4 );
+		}
+		else
+		{
+			$g->set_data( $linedata );
+			$g->line( 2, '#222222', '', 10 );
+			$g->set_x_labels($descArray);
+			$g->set_x_label_style( 9, '#000000', 0, 1 );
+			$g->set_y_max( $maxValue+1 );
+			$g->y_label_steps( 4 );
 		}
 
-		$g = new graph();
-		$g->title('');
-		$g->bg_colour = '#fafafa';
-		$g->data_sets[] = $bar;
-		$g->set_x_labels($descArray);
-		$g->set_x_label_style( 0, '#000000', 0, 1 );
-		$g->set_x_axis_steps( 1 );
-		$g->set_y_max( $maxValue+1 );
-		$g->y_label_steps( 0 );
 		echo $g->render();
 		die();
-*/
+
 		$this->debug->unguard(true);
 		return true;
 	}

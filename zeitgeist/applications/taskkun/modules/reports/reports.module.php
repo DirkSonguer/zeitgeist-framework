@@ -65,7 +65,7 @@ class reports
 		$userfunctions = new tkUserfunctions();
 
 		$dataLink = $tpl->createLink('dataserver', 'workedhourschartdata');
-		$ret = open_flash_chart_object_str( 920, 200, $dataLink, false, $this->configuration->getConfiguration('taskkun', 'application', 'basepath') . '/includes/open-flash-chart/');
+		$ret = open_flash_chart_object_str( 920, 200, $dataLink, true, $this->configuration->getConfiguration('taskkun', 'application', 'basepath') . '/includes/open-flash-chart/');
 		$tpl->assign('workedhours_chart', $ret);
 
 		$groups = $groupfunctions->getGroupsForUser();
