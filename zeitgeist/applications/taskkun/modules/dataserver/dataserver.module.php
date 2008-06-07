@@ -658,5 +658,83 @@ class dataserver
 		return true;
 	}
 
+
+	/**
+	 * gets data for worked hours for report
+	 *
+	 * instance-safe!
+	 *
+	 * @param array $parameters contains the parameters of the call. none are used
+	 *
+	 * @return boolean
+	 */
+	public function workedhourschartdata($parameters=array())
+	{
+		$this->debug->guard();
+
+		$userfunctions = new tkUserfunctions();
+
+		$sql = "SELECT COUNT(tl.tasklog_hoursworked) as hoursworked, DATE_FORMAT(DATE(tl.tasklog_timestamp), '%d.%m.%Y') as dateworked FROM tasklogs tl ";
+		$sql .= "GROUP BY DATE(tl.tasklog_timestamp) ORDER BY tl.tasklog_timestamp LIMIT 14";
+		$res = $this->database->query($sql);
+
+
+		$dataArray = array();
+		$descArray = array();
+		$maxValue = 0;
+		$bar = new bar_outline( 50, '#dddddd', '#000000' );
+
+		$tpl = new tkTemplate();
+		$params = array();
+		while ($row = $this->database->fetchArray($res))
+		{
+			if ($maxValue < $row['hoursworked']) $maxValue = $row['hoursworked'];
+			$bar->add($row['hoursworked'], false);
+			$descArray[] = $row['dateworked'];
+		}
+
+		$g = new graph();
+		$g->title( 'Stundenübersicht der eingetragenen Aufgabenbeschreibungen', '{font-size: 12px;}' );
+		$g->bg_colour = '#fafafa';
+		$g->data_sets[] = $bar;
+		$g->set_x_labels($descArray);
+		$g->set_x_label_style( 9, '#000000', 0, 1 );
+		$g->set_x_axis_steps( 1 );
+		$g->set_y_max( $maxValue+1 );
+		$g->y_label_steps( 4 );
+		echo $g->render();
+		die();
+
+/*
+		$dataArray = array();
+		$descArray = array();
+		$maxValue = 0;
+
+		$bar = new bar_outline( 50, '#dddddd', '#000000' );
+
+		$params = array();
+		while($row = $this->database->fetchArray($res))
+		{
+			if ($maxValue < $row['hoursworked']) $maxValue = $row['hoursworked'];
+			$bar->add($row['hoursworked'], '');
+			$descArray[] = $row['dateworked'];
+		}
+
+		$g = new graph();
+		$g->title('');
+		$g->bg_colour = '#fafafa';
+		$g->data_sets[] = $bar;
+		$g->set_x_labels($descArray);
+		$g->set_x_label_style( 0, '#000000', 0, 1 );
+		$g->set_x_axis_steps( 1 );
+		$g->set_y_max( $maxValue+1 );
+		$g->y_label_steps( 0 );
+		echo $g->render();
+		die();
+*/
+		$this->debug->unguard(true);
+		return true;
+	}
+
 }
 ?>

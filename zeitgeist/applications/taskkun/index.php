@@ -26,6 +26,9 @@
 	require_once('classes/tkuserfunctions.class.php');
 	require_once('classes/tkgroupfunctions.class.php');
 
+	include_once('includes/open-flash-chart/open_flash_chart_object.php');
+	include_once('includes/open-flash-chart/open-flash-chart.php');
+
 	define('ZG_DB_DBSERVER', 'localhost');
 	define('ZG_DB_USERNAME', 'taskkun');
 	define('ZG_DB_USERPASS', 'taskkun');

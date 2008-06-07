@@ -725,5 +725,49 @@ class tkUserfunctions
 		return true;
 	}
 
+
+	/**
+	 * gets all information about all users
+	 *
+	 * instance-safe!
+	 *
+	 * @param array $parameters contains the parameters of the call. none are used
+	 *
+	 * @return boolean
+	 */
+	public function getUserinformation()
+	{
+		$this->debug->guard();
+
+		$sql = 'SELECT COUNT(ttu.taskusers_task) as user_taskcount, u.user_id, u.user_active, u.user_username, ud.*, ur.userrole_id, ur.userrole_name, g.group_name ';
+		$sql .= 'FROM users u ';
+		$sql .= 'LEFT JOIN userdata ud ON u.user_id = ud.userdata_user ';
+		$sql .= 'LEFT JOIN userroles_to_users u2u ON u2u.userroleuser_user = u.user_id ';
+		$sql .= 'LEFT JOIN userroles ur ON u2u.userroleuser_userrole = ur.userrole_id ';
+		$sql .= 'LEFT JOIN users_to_groups u2g ON u.user_id = u2g.usergroup_user ';
+		$sql .= 'LEFT JOIN groups g ON u2g.usergroup_group = g.group_id ';
+		$sql .= 'LEFT JOIN tasks_to_users ttu ON u.user_id = ttu.taskusers_user ';
+		$sql .= "WHERE u.user_instance='" . $this->getUserInstance($this->user->getUserID()) . "' ";
+		$sql .= 'GROUP BY g.group_name, u.user_id ';
+		$sql .= 'ORDER BY u.user_id';
+
+		$res = $this->database->query($sql);
+		$userinformation = array();
+		while($row = $this->database->fetchArray($res))
+		{
+			if (empty($userinformation[$row['user_id']]))
+			{
+				$userinformation[$row['user_id']] = $row;
+			}
+			else
+			{
+				$userinformation[$row['user_id']]['group_name'] .= ', ' . $row['group_name'];
+			}
+		}
+
+		$this->debug->unguard($userinformation);
+		return $userinformation;
+	}
+
 }
 ?>
