@@ -686,12 +686,12 @@ class dataserver
 
 		if (empty($parameters['dataend']))
 		{
-			$parameters['dataend'] = 'NOW()';
+			$parameters['dataend'] = date("Y-m-d", time()+(86400));
 		}
 		else
 		{
 			$dateArray = explode('.', $parameters['dataend']);
-			$parameters['dataend'] = $dateArray[2] . '-' . $dateArray[1] . '-' . $dateArray[0];
+			$parameters['dataend'] = $dateArray[2] . '-' . $dateArray[1] . '-' . ($dateArray[0]+1);
 		}
 
 		if ( (empty($parameters['group'])) || ($parameters['group'] == -1) )
@@ -700,7 +700,7 @@ class dataserver
 		}
 		else
 		{
-			$groupstring = "AND u2g.usergroup_group = '" . $parameters['group'] . "' ";
+			$groupstring = "AND twf.taskworkflow_group = '" . $parameters['group'] . "' ";
 		}
 
 		if ( (empty($parameters['user'])) || ($parameters['user'] == -1) )
@@ -709,12 +709,12 @@ class dataserver
 		}
 		else
 		{
-			$userstring = "AND u2g.usergroup_user = '" . $parameters['user'] . "' ";
+			$userstring = "AND tl.tasklog_creator = '" . $parameters['user'] . "' ";
 		}
 
-		$sql = "SELECT COUNT(tl.tasklog_hoursworked) as hoursworked, DATE_FORMAT(DATE(tl.tasklog_timestamp), '%d.%m.%Y') as dateworked FROM tasklogs tl ";
-		$sql .= "LEFT JOIN users u ON tl.tasklog_creator = u.user_id ";
-		$sql .= "LEFT JOIN users_to_groups u2g ON u.user_id = u2g.usergroup_user ";
+		$sql = "SELECT SUM(tl.tasklog_hoursworked) as hoursworked, DATE_FORMAT(DATE(tl.tasklog_timestamp), '%d.%m.%Y') as dateworked FROM tasklogs tl ";
+		$sql .= "LEFT JOIN taskworkflows twf ON tl.tasklog_taskworkflow = twf.taskworkflow_id ";
+
 		$sql .= "WHERE tl.tasklog_timestamp > '" . $parameters['databegin'] . "' AND tl.tasklog_timestamp < '" . $parameters['dataend'] . "' ";
 		$sql .= $groupstring;
 		$sql .= $userstring;
@@ -738,7 +738,7 @@ class dataserver
 		}
 
 		$g = new graph();
-		$g->title( 'Stundenübersicht der eingetragenen Aufgabenbeschreibungen', '{font-size: 12px;}' );
+		$g->title( 'StundenÃ¼bersicht der eingetragenen Aufgabenbeschreibungen', '{font-size: 12px;}' );
 		$g->bg_colour = '#fafafa';
 
 		if ( (empty($parameters['mode'])) || ($parameters['mode'] == 1) )
@@ -753,7 +753,117 @@ class dataserver
 		else
 		{
 			$g->set_data( $linedata );
-			$g->line( 2, '#222222', '', 10 );
+			$g->line_dot( 2, 3, '#555555', '', 10 );
+			$g->set_x_labels($descArray);
+			$g->set_x_label_style( 9, '#000000', 0, 1 );
+			$g->set_y_max( $maxValue+1 );
+			$g->y_label_steps( 4 );
+		}
+
+		echo $g->render();
+		die();
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	/**
+	 * gets data for finished tasks for report
+	 *
+	 * instance-safe!
+	 *
+	 * @param array $parameters contains the parameters of the call. none are used
+	 *
+	 * @return boolean
+	 */
+	public function finishedtaskschartdata($parameters=array())
+	{
+		$this->debug->guard();
+
+		$userfunctions = new tkUserfunctions();
+
+		if (empty($parameters['databegin']))
+		{
+			$parameters['databegin'] = date("Y-m-d", time()-(86400 * 14));
+		}
+		else
+		{
+			$dateArray = explode('.', $parameters['databegin']);
+			$parameters['databegin'] = $dateArray[2] . '-' . $dateArray[1] . '-' . $dateArray[0];
+		}
+
+		if (empty($parameters['dataend']))
+		{
+			$parameters['dataend'] = date("Y-m-d", time()+(86400));
+		}
+		else
+		{
+			$dateArray = explode('.', $parameters['dataend']);
+			$parameters['dataend'] = $dateArray[2] . '-' . $dateArray[1] . '-' . ($dateArray[0]+1);
+		}
+
+		if ( (empty($parameters['tasktype'])) || ($parameters['tasktype'] == -1) )
+		{
+			$tasktypestring = '';
+		}
+		else
+		{
+			$tasktypestring = "AND t.task_type = '" . $parameters['tasktype'] . "' ";
+		}
+
+		if ( (empty($parameters['user'])) || ($parameters['user'] == -1) )
+		{
+			$userstring = '';
+		}
+		else
+		{
+			$userstring = "AND t.task_creator = '" . $parameters['user'] . "' ";
+		}
+
+		$sql = "SELECT COUNT(t.task_id) as finishedtasks, DATE_FORMAT(DATE(t.task_timestamp), '%d.%m.%Y') as datefinished FROM tasks t ";
+		$sql .= "LEFT JOIN users u ON t.task_creator = u.user_id ";
+		$sql .= "LEFT JOIN users_to_groups u2g ON u.user_id = u2g.usergroup_user ";
+		$sql .= "WHERE t.task_timestamp > '" . $parameters['databegin'] . "' AND t.task_timestamp < '" . $parameters['dataend'] . "' ";
+		$sql .= "AND t.task_workflow = '0' ";
+		$sql .= $tasktypestring;
+		$sql .= $userstring;
+		$sql .= "GROUP BY DATE(t.task_timestamp) ORDER BY t.task_timestamp";
+		$res = $this->database->query($sql);
+
+		$dataArray = array();
+		$descArray = array();
+		$maxValue = 0;
+		$bar = new bar_outline( 50, '#dddddd', '#000000' );
+
+		$tpl = new tkTemplate();
+		$params = array();
+		$linedata = array();
+		while ($row = $this->database->fetchArray($res))
+		{
+			if ($maxValue < $row['finishedtasks']) $maxValue = $row['finishedtasks'];
+			$linedata[] = $row['finishedtasks'];
+			$bar->add($row['finishedtasks'], false);
+			$descArray[] = $row['datefinished'];
+		}
+
+		$g = new graph();
+		$g->title( 'Ãœbersicht Ã¼ber abgeschlossene Aufgaben', '{font-size: 12px;}' );
+		$g->bg_colour = '#fafafa';
+
+		if ( (empty($parameters['mode'])) || ($parameters['mode'] == 1) )
+		{
+			$g->data_sets[] = $bar;
+			$g->set_x_labels($descArray);
+			$g->set_x_label_style( 9, '#000000', 0, 1 );
+			$g->set_x_axis_steps( 1 );
+			$g->set_y_max( $maxValue+1 );
+			$g->y_label_steps( 4 );
+		}
+		else
+		{
+			$g->set_data( $linedata );
+			$g->line_dot( 2, 3, '#555555', '', 10 );
 			$g->set_x_labels($descArray);
 			$g->set_x_label_style( 9, '#000000', 0, 1 );
 			$g->set_y_max( $maxValue+1 );

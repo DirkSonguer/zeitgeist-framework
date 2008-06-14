@@ -43,9 +43,32 @@ class reports
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('reports', 'templates', 'reports_finishedtasks'));
 
+		$tasktypefunctions = new tkTasktypefunctions();
+		$userfunctions = new tkUserfunctions();
+
 		$dataLink = $tpl->createLink('dataserver', 'finishedtaskschartdata');
-		$ret = open_flash_chart_object_str( 800, 200, $dataLink, false, $this->configuration->getConfiguration('taskkun', 'application', 'basepath') . '/includes/open-flash-chart/');
+		$ret = open_flash_chart_object_str( 920, 200, $dataLink, true, $this->configuration->getConfiguration('taskkun', 'application', 'basepath') . '/includes/open-flash-chart/');
 		$tpl->assign('finishedtasks_chart', $ret);
+
+		$tasktypes = $tasktypefunctions->getTasktypes();
+		foreach ($tasktypes as $tasktype)
+		{
+			$tpl->assignDataset($tasktype);
+			$tpl->insertBlock('tasktype_loop');
+		}
+
+		$users = $userfunctions->getUserinformation();
+		foreach ($users as $user)
+		{
+			$tpl->assignDataset($user);
+			$tpl->insertBlock('user_loop');
+		}
+
+		$data_begin = date("d.m.Y", time()-(86400 * 14));
+		$tpl->assign('data_begin', $data_begin);
+
+		$data_end = date("d.m.Y", time());
+		$tpl->assign('data_end', $data_end);
 
 		$tpl->show();
 

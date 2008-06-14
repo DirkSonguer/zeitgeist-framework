@@ -547,5 +547,45 @@ class tkTaskfunctions
 		return true;
 	}
 
+
+	/**
+	 * gets the current workflow id of the task
+	 *
+	 * instance-safe!
+	 *
+	 * @param integer $taskid id of the task
+	 *
+	 * @return boolean
+	 */
+	public function getTaskWorkflow($taskid)
+	{
+		$this->debug->guard();
+
+		$userfunctions = new tkUserfunctions();
+		if (!$userfunctions->checkRightsForTask($taskid))
+		{
+			$this->debug->write('The task is out of bounds of the instance', 'warning');
+			$this->messages->setMessage('The task is out of bounds of the instance', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$sql = "SELECT task_workflow FROM tasks WHERE task_id = '" . $taskid . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem getting the workflow for the task: task not found: ' . $taskid, 'warning');
+			$this->messages->setMessage('Problem getting the workflow for the task: task not found: ' . $taskid, 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$row = $this->database->fetchArray($res);
+		$workflow = $row['task_workflow'];
+
+		$this->debug->unguard($workflow);
+		return $workflow;
+	}
+	
 }
 ?>

@@ -562,7 +562,7 @@ class tkUserfunctions
 			$sql = 'INSERT INTO users_to_groups(usergroup_group, usergroup_user) VALUES';
 			foreach ($groups as $group)
 			{
-				$sql .= "('". $group ."','". $userid ."'),";
+				if (is_numeric($group)) $sql .= "('". $group ."','". $userid ."'),";
 			}
 
 			$sql = substr($sql, 0, -1);
