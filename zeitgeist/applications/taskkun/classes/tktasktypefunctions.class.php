@@ -286,7 +286,7 @@ class tkTasktypefunctions
 
 		$sql = "SELECT t.* FROM taskworkflow t ";
 		$sql .= "LEFT JOIN tasktypes tt ON t.taskworkflow_tasktype = tt.tasktype_id ";
-		$sql .= "WHERE taskworkflow_tasktype='" . $tasktypeid . "' AND tt.tasktype_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
+		$sql .= "WHERE twf.taskworkflow_tasktype='" . $tasktypeid . "' AND tt.tasktype_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{

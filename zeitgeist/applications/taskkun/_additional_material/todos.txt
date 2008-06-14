@@ -1,0 +1,4 @@
+
+BUGS:
+
+- Beim editieren der Aufgaben stimmt die Priorität nicht

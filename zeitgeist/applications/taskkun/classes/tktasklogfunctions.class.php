@@ -190,7 +190,7 @@ class tkTasklogfunctions
 
 		$sql = "SELECT tl.*, ";
 		$sql .= "DATE_FORMAT(tl.tasklog_date, '%d.%m.%Y') as tasklog_date ";
-		$sql .= " FROM tasklogs tl ";
+		$sql .= "FROM tasklogs tl ";
 		$sql .= "WHERE tasklog_id='" . $tasklogid . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
