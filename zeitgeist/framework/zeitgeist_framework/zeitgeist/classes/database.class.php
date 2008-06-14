@@ -191,6 +191,45 @@ class zgDatabase
 
 
 	/**
+	 * Inserts a query to the database
+	 *
+	 * @param string $tablename name of the table to insert into
+	 * @param array $insertdata array of data. keys will be used as table keys
+	 * @param boolean $escapequery if true, all data will be escaped
+	 *
+	 * @return resource
+	 */
+	public function insert($tablename, $insertdata=array(), $escapequery=true)
+	{
+		$this->debug->guard();
+
+		$tablekeys = '';
+		$tablevalues = '';
+		foreach($insertdata as $datakey => $datavalue)
+		{
+			if ($escapequery) $insertdata[$datakey] = mysql_escape_string($datavalue);
+			$tablekeys .= $datakey . ', ';
+			$tablevalues .= "'" . $datavalue . "', ";
+		}
+
+		$query = 'INSERT INTO ' . $tablename . '(' . substr($tablekeys, 0, -2) . ') VALUES(' . substr($tablevalues, 0, -2) . ')';
+
+		$this->debug->beginSQLStatement();
+		$result = mysql_query($query, $this->dblink);
+		$this->debug->storeSQLStatement($query, $result);
+
+		if (!$result)
+		{
+			$this->debug->write('Error inserting data: '.mysql_error().' Query was: "' . $query . '"', 'error');
+			$this->messages->setMessage('Error inserting data: '.mysql_error().' Query was: "' . $query . '"', 'error');
+		}
+
+		$this->debug->unguard($result);
+		return $result;
+	}
+
+
+	/**
 	 * Fetches a row from the sql result
 	 * Standard type is MYSQL_ASSOC, so an associative array is returned
 	 *
