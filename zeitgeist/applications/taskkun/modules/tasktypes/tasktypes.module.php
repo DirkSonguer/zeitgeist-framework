@@ -113,7 +113,10 @@ class tasktypes
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('tasktypes', 'templates', 'tasktypes_edittasktype'));
 		$tpl->assign('documenttitle', 'Aufgabenablauf bearbeiten');
-		$tpl->assign('helptopic', '&topic=addtasktype');
+		$tpl->assign('helptopic', '&topic=edittasktype');
+
+		$edittasktypeForm = new zgStaticform();
+		$edittasktypeForm->load('forms/edittasktype.form.ini');
 
 		$tasktypefunctions = new tkTasktypefunctions();
 
@@ -131,14 +134,37 @@ class tasktypes
 			$tasktypeid = $tasktypefunctions->createTasktype();
 		}
 
-		if (!$tasktypeid)
+		$tasktypeInformation = $tasktypefunctions->getTasktypeInformation($tasktypeid);
+
+		if (!empty($parameters['submit']))
 		{
-			$tpl->redirect($tpl->createLink('tasktypes', 'index'));
-			$this->debug->unguard(true);
-			return true;
+			$formvalid = $edittasktypeForm->process($parameters);
+
+			if ($formvalid)
+			{
+				$tasktypeParameters = $parameters['edittasktype'];
+				if ($tasktypefunctions->updateTasktype($tasktypeParameters))
+			{
+				$this->messages->setMessage('Der Aufgabenablauf wurde erfolgreich geändert.', 'usermessage');
+			}
+			else
+			{
+				$this->messages->setMessage('Der Aufgabenablauf konnte nicht gespeichert werden. Bitte verständigen Sie einen Administrator.', 'usererror');
+			}
+
+				$tpl->redirect($tpl->createLink('tasktypes', 'index'));
+				$this->debug->unguard(true);
+				return true;
+			}
+		}
+		else
+		{
+			$processData = array();
+			$processData['edittasktype'] = $tasktypeInformation;
+			$formvalid = $edittasktypeForm->process($processData);
 		}
 
-		$tasktypeInformation = $tasktypefunctions->getTasktypeInformation($tasktypeid);
+		$formcreated = $edittasktypeForm->create($tpl);
 
 		$tpl->assignDataset($tasktypeInformation);
 		if ($tasktypeInformation['tasktype_count'] > 0)
@@ -202,6 +228,7 @@ class tasktypes
 		$tasktypeinformation = $tasktypefunctions->getTasktypeInformation($parameters['id']);
 
 		$userfunctions = new tkUserfunctions();
+		$currentInstance = $userfunctions->getUserInstance($this->user->getUserId());
 
 		if ( (is_array($tasktypeinformation)) && (count($tasktypeinformation) > 0) )
 		{
@@ -211,43 +238,43 @@ class tasktypes
 
 				if (($parameters['formaction'] == 'stepdown') && ($parameters['formvalue'] < (count($workflowinformation))) )
 				{
-					$sql = "UPDATE taskworkflow SET taskworkflow_order='999' ";
+					$sql = "UPDATE taskworkflows SET taskworkflow_order='999' ";
 					$sql .= "WHERE taskworkflow_tasktype='" . $parameters['id'] . "' AND taskworkflow_order='" . ($parameters['formvalue']) . "'";
 					$res = $this->database->query($sql);
 
-					$sql = "UPDATE taskworkflow SET taskworkflow_order='" . $parameters['formvalue'] . "' ";
+					$sql = "UPDATE taskworkflows SET taskworkflow_order='" . $parameters['formvalue'] . "' ";
 					$sql .= "WHERE taskworkflow_tasktype='" . $parameters['id'] . "' AND taskworkflow_order='" . (($parameters['formvalue'])+1) . "'";
 					$res = $this->database->query($sql);
 
-					$sql = "UPDATE taskworkflow SET taskworkflow_order='" . (($parameters['formvalue'])+1) . "' ";
+					$sql = "UPDATE taskworkflows SET taskworkflow_order='" . (($parameters['formvalue'])+1) . "' ";
 					$sql .= "WHERE taskworkflow_tasktype='" . $parameters['id'] . "' AND taskworkflow_order='999'";
 					$res = $this->database->query($sql);
 				}
 
 				if (($parameters['formaction'] == 'stepup') && ($parameters['formvalue'] > 1) )
 				{
-					$sql = "UPDATE taskworkflow SET taskworkflow_order='999' ";
+					$sql = "UPDATE taskworkflows SET taskworkflow_order='999' ";
 					$sql .= "WHERE taskworkflow_tasktype='" . $parameters['id'] . "' AND taskworkflow_order='" . $parameters['formvalue'] . "'";
 					$res = $this->database->query($sql);
 
-					$sql = "UPDATE taskworkflow SET taskworkflow_order='" . $parameters['formvalue'] . "' ";
+					$sql = "UPDATE taskworkflows SET taskworkflow_order='" . $parameters['formvalue'] . "' ";
 					$sql .= "WHERE taskworkflow_tasktype='" . $parameters['id'] . "' AND taskworkflow_order='" . (($parameters['formvalue'])-1) . "'";
 					$res = $this->database->query($sql);
 
-					$sql = "UPDATE taskworkflow SET taskworkflow_order='" . (($parameters['formvalue'])-1) . "' ";
+					$sql = "UPDATE taskworkflows SET taskworkflow_order='" . (($parameters['formvalue'])-1) . "' ";
 					$sql .= "WHERE taskworkflow_tasktype='" . $parameters['id'] . "' AND taskworkflow_order='999'";
 					$res = $this->database->query($sql);
 				}
 
 				if ($parameters['formaction'] == 'deletestep')
 				{
-					$sql = "DELETE FROM taskworkflow ";
+					$sql = "DELETE FROM taskworkflows ";
 					$sql .= "WHERE taskworkflow_tasktype='" . $parameters['id'] . "' AND taskworkflow_order='" . $parameters['formvalue'] . "'";
 					$res = $this->database->query($sql);
 
 					for ($i=$parameters['formvalue']; $i<count($workflowinformation); $i++)
 					{
-						$sql = "UPDATE taskworkflow SET taskworkflow_order='" . $i . "' ";
+						$sql = "UPDATE taskworkflows SET taskworkflow_order='" . $i . "' ";
 						$sql .= "WHERE taskworkflow_tasktype='" . $parameters['id'] . "' AND taskworkflow_order='" . ($i+1) . "'";
 						$res = $this->database->query($sql);
 					}
@@ -257,28 +284,29 @@ class tasktypes
 				{
 					for ($i=($parameters['formvalue']+1); $i<=count($workflowinformation); $i++)
 					{
-						$sql = "UPDATE taskworkflow SET taskworkflow_order='" . ($i+1) . "' WHERE ";
+						$sql = "UPDATE taskworkflows SET taskworkflow_order='" . ($i+1) . "' WHERE ";
 						$sql .= "taskworkflow_tasktype='" . $parameters['id'] . "' AND taskworkflow_order='" . $i . "'";
 						$res = $this->database->query($sql);
 					}
 
-					$sql = "INSERT INTO taskworkflow(taskworkflow_title, taskworkflow_tasktype, taskworkflow_group, taskworkflow_order) ";
-					$sql .= "VALUES ('Neuer Aufgabenablauf', '" . $tasktypeinformation['tasktype_id'] . "', '1', '" . ($parameters['formvalue']+1) . "')";
+					$sql = "SELECT group_id FROM groups WHERE group_instance='" . $currentInstance . "' LIMIT 1";
+					$res = $this->database->query($sql);
+					$row = $this->database->fetchArray($res);
+
+					$sql = "INSERT INTO taskworkflows(taskworkflow_title, taskworkflow_tasktype, taskworkflow_group, taskworkflow_order) ";
+					$sql .= "VALUES ('Neuer Aufgabenablauf', '" . $tasktypeinformation['tasktype_id'] . "', '" . $row['group_id'] . "', '" . ($parameters['formvalue']+1) . "')";
 					$res = $this->database->query($sql);
 				}
 
 				if ($parameters['formaction'] == 'storedata')
 				{
-					$sql = "UPDATE taskworkflow SET taskworkflow_title='" . $parameters['inputdata'] . "', taskworkflow_group='" . $parameters['dropdowndata'] . "' ";
+					$sql = "UPDATE taskworkflows SET taskworkflow_title='" . $parameters['inputdata'] . "', taskworkflow_group='" . $parameters['dropdowndata'] . "' ";
 					$sql .= "WHERE taskworkflow_tasktype='" . $parameters['id'] . "' AND taskworkflow_order='" . $parameters['formvalue'] . "'";
 					$res = $this->database->query($sql);
 				}
 			}
 
-			$userfunctions = new tkUserfunctions();
-			$currentInstance = $userfunctions->getUserInstance($this->user->getUserId());
-
-			$sql = "SELECT twf.*, g.group_name FROM taskworkflow twf ";
+			$sql = "SELECT twf.*, g.group_name FROM taskworkflows twf ";
 			$sql .= "LEFT JOIN groups g ON twf.taskworkflow_group = g.group_id ";
 			$sql .= "WHERE taskworkflow_tasktype='" . $parameters['id'] . "' AND g.group_instance='" . $currentInstance . "' ORDER BY taskworkflow_order";
 			$xmlData = $this->dataserver->createXMLDatasetFromSQL($sql);

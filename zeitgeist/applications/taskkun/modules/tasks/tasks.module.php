@@ -79,9 +79,21 @@ class tasks
 		$formcreated = $addtaskForm->create($tpl);
 
 		$tasktypes = $tasktypefunctions->getTasktypesForUser();
+
+//		if the manager role should be able to create all kinds of tasktypes, uncomment this line.
+//		$tasktypes = $tasktypefunctions->getTasktypes();
+
 		foreach ($tasktypes as $tasktype)
 		{
-			if (!empty($parameters['addtask']['task_type'])) $tpl->assign('tasktype_selected', 'selected="selected"');
+			if ( (!empty($parameters['addtask']['task_type'])) && ($parameters['addtask']['task_type'] == $tasktype["tasktype_id"]) )
+			{
+				$tpl->assign('tasktype_selected', 'selected="selected"');
+			}
+			else
+			{
+				$tpl->assign('tasktype_selected', '');
+			}
+
 			$tpl->assignDataset($tasktype);
 			$tpl->insertBlock('tasktype_loop');
 		}

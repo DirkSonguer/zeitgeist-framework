@@ -34,7 +34,7 @@
 	}
 
 </script>
-	
+
 <!-- InstanceBeginEditable name="head" -->
 
 	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryData.js"></script>
@@ -54,20 +54,20 @@
 		function addTag(tagText)
 		{
 			currentSearch = document.getElementById('taginput').value;
-			
+
 			if (currentSearch != '')
 			{
-				currentSearch += ' ';
+				currentSearch += ', ';
 			}
-			
+
 			currentSearch += tagText;
 			document.getElementById('taginput').value = currentSearch;
-			
+
 			updateSearch();
 		}
-		
+
 	</script>
-	
+
 <!-- InstanceEndEditable -->
 </head>
 
@@ -78,16 +78,16 @@
 <div class="headmenu">
 	<!-- TemplateBeginBlock name="logoutbutton" -->
 	<div class="menuicon" style="float:right; margin-top:5px;">
-	
+
 	<a href="@@{[configuration.index]}@@"><span onmousemove="showTooltip('Persönliche Einstellungen', event)" onmouseout="hideTooltip()">
 	<img src="@@{templatepath}@@/nuvola/48x48/apps/kcmsystem.png" alt="" border="0" /></span></a>
-	
+
 	<a href="@@{[help.index]}@@@@{helptopic}@@" target="_blank"><span onmousemove="showTooltip('Hilfe', event)" onmouseout="hideTooltip()">
-	<img src="@@{templatepath}@@/nuvola/48x48/apps/filetypes.png" alt="" border="0" /></span></a>	
+	<img src="@@{templatepath}@@/nuvola/48x48/apps/filetypes.png" alt="" border="0" /></span></a>
 
 	<a href="@@{[main.logout]}@@"><span onmousemove="showTooltip('Logout', event)" onmouseout="hideTooltip()">
 	<img src="@@{templatepath}@@/nuvola/48x48/actions/exit.png" alt="" border="0" /></span></a>
-	
+
 	</div>
 	<!-- TemplateEndBlock -->
 </div>
@@ -103,8 +103,8 @@
 		<div style="float:left; margin:10px;"><a href="@@{[adhoc.index]}@@"><span onmousemove="showTooltip('Ad-Hoc-Tätigkeit eintragen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/karm.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[reports.index]}@@"><span onmousemove="showTooltip('Reports', event)" onmouseout="hideTooltip()">
-		<img src="@@{templatepath}@@/nuvola/48x48/apps/kchart.png" alt="" border="0" /></span></a></div>		
-		
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/kchart.png" alt="" border="0" /></span></a></div>
+
 		<!-- TemplateBeginBlock name="managernavigation" -->
 		<div style="float:left; margin:10px; margin-left:40px;"><a href="@@{[tasks.addtask]}@@"><span onmousemove="showTooltip('Neue Aufgabe anlegen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kword.png" alt="" border="0" /></span></a></div>
@@ -122,7 +122,7 @@
 		<div style="float:left; margin:10px;"><a href="@@{[tasktypes.index]}@@"><span onmousemove="showTooltip('Aufgabenabläufe verwalten', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/fsview.png" alt="" border="0" /></span></a></div>
 		<!-- TemplateEndBlock -->
-		
+
 		<div style="clear:both"></div>
 	</div>
 <!-- TemplateEndBlock -->
@@ -142,7 +142,7 @@
 	<!-- TemplateBeginBlock name="usererrors" -->
 		<h3 class="usererror"><img src="@@{templatepath}@@/nuvola/16x16/actions/no.png" alt="" align="left" style="margin-right:5px;" /> @@{usererror}@@</h3>
 	<!-- TemplateEndBlock -->
-	
+
 <!-- InstanceBeginEditable name="body" -->
 
 <form method="post" action="@@{[tasks.addtask]}@@" name="addtask" enctype="multipart/form-data; charset=utf-8">
@@ -172,7 +172,7 @@
 		</tr>
 	</tbody>
 	</table>
-		
+
 	<table width="100%" cellspacing="5" cellpadding="5" border="0">
 	<tbody>
 		<tr>
@@ -229,7 +229,7 @@
 		</tr>
 	</tbody>
 	</table>
-							
+
 	<table width="100%" cellspacing="5" cellpadding="5" border="0">
 	<tbody>
 		<tr>
@@ -257,11 +257,11 @@
 				<div id="AdditionalInformation" class="CollapsiblePanel">
 					<div class="CollapsiblePanelTab">
 					</div>
-				
+
 					<div class="CollapsiblePanelContent">
 						<div spry:region="dsTags">
 							<div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
-						
+
 							<div spry:state="ready">
 							<p style="text-align:center;">
 								<a spry:repeat="dsTags" href="javascript:addTag('{dsTags::tag_text}')" style="margin-left:5px; margin-right:5px;" class='tag{dsTags::tag_score}'>{dsTags::tag_text}</a>
@@ -286,11 +286,11 @@
 
 </div>
 
-</form>	
+</form>
 
 <script type="text/javascript">
 	var AdditionalInformation = new Spry.Widget.CollapsiblePanel("AdditionalInformation", {contentIsOpen:false});
-</script> 
+</script>
 
 <!-- InstanceEndEditable -->
 

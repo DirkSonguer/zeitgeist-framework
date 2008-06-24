@@ -62,7 +62,7 @@ class tkTaskfunctions
 		if (strpos($taskdata['task_hoursplanned'], ',') !== false) $taskdata['task_hoursplanned'] = str_replace(',','.', $taskdata['task_hoursplanned']);
 
 		// get initial task workflow status
-		$sql = "SELECT taskworkflow_id FROM taskworkflow WHERE taskworkflow_tasktype='" . $taskdata['task_type'] . "' ORDER BY taskworkflow_order LIMIT 1";
+		$sql = "SELECT taskworkflow_id FROM taskworkflows WHERE taskworkflow_tasktype='" . $taskdata['task_type'] . "' ORDER BY taskworkflow_order LIMIT 1";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -249,7 +249,7 @@ class tkTaskfunctions
 		$sql = "SELECT t.*, twf.taskworkflow_title, tt.tasktype_name, ";
 		$sql .= "DATE_FORMAT(t.task_end, '%d.%m.%Y') as task_end, DATE_FORMAT(t.task_begin, '%d.%m.%Y') as task_begin ";
 		$sql .= "FROM tasks t ";
-		$sql .= "LEFT JOIN taskworkflow twf ON t.task_workflow = twf.taskworkflow_id ";
+		$sql .= "LEFT JOIN taskworkflows twf ON t.task_workflow = twf.taskworkflow_id ";
 		$sql .= "LEFT JOIN tasktypes tt ON t.task_type = tt.tasktype_id ";
 		$sql .= "WHERE task_id='" . $taskid . "'";
 		$res = $this->database->query($sql);
