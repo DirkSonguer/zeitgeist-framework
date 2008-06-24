@@ -70,7 +70,7 @@ class tkTasktypefunctions
 		$userfunctions = new tkUserfunctions();
 
 		$sql = "SELECT * FROM tasktypes tt ";
-		$sql .= "LEFT JOIN taskworkflow twf ON tt.tasktype_id = twf.taskworkflow_tasktype ";
+		$sql .= "LEFT JOIN taskworkflows twf ON tt.tasktype_id = twf.taskworkflow_tasktype ";
 		$sql .= "LEFT JOIN users_to_groups u2g ON twf.Taskworkflow_group = u2g.usergroup_group ";
 		$sql .= "WHERE tt.tasktype_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
 		$sql .= "AND u2g.usergroup_user='" . $this->user->getUserID() . "' ";
@@ -142,6 +142,7 @@ class tkTasktypefunctions
 		$this->debug->guard();
 
 		$userfunctions = new tkUserfunctions();
+		$currentInstance = $userfunctions->getUserInstance($this->user->getUserId());
 
 		$sql = "INSERT INTO tasktypes(tasktype_name, tasktype_description, tasktype_instance) VALUES ";
 		$sql .= "('Neuer Aufgabentyp', 'Dies ist ein neuer Aufgabentyp. Bitte ändern Sie den Titel und diese Beschreibung gemäß Ihren Angaben', '" . $userfunctions->getUserInstance($this->user->getUserID()) . "')";
@@ -156,8 +157,12 @@ class tkTasktypefunctions
 
 		$tasktypeid = $this->database->insertId();
 
-		$sql = "INSERT INTO taskworkflow(taskworkflow_title, taskworkflow_tasktype, taskworkflow_group, taskworkflow_order) ";
-		$sql .= "VALUES ('Neuer Aufgabenablauf', '" . $tasktypeid . "', '1', '1')";
+		$sql = "SELECT group_id FROM groups WHERE group_instance='" . $currentInstance . "' LIMIT 1";
+		$res = $this->database->query($sql);
+		$row = $this->database->fetchArray($res);
+
+		$sql = "INSERT INTO taskworkflows(taskworkflow_title, taskworkflow_tasktype, taskworkflow_group, taskworkflow_order) ";
+		$sql .= "VALUES ('Neuer Aufgabenablauf', '" . $tasktypeid . "', '" . $row['group_id'] . "', '1')";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -254,12 +259,12 @@ class tkTasktypefunctions
 			return false;
 		}
 
-		$sql = "DELETE FROM taskworkflow WHERE taskworkflow_tasktype='" . $tasktypeid . "'";
+		$sql = "DELETE FROM taskworkflows WHERE taskworkflow_tasktype='" . $tasktypeid . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
-			$this->debug->write('Problem deleting taskworkflow information from database', 'warning');
-			$this->messages->setMessage('Problem deleting taskworkflow information from database', 'warning');
+			$this->debug->write('Problem deleting taskworkflows information from database', 'warning');
+			$this->messages->setMessage('Problem deleting taskworkflows information from database', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -284,8 +289,8 @@ class tkTasktypefunctions
 
 		$userfunctions = new tkUserfunctions();
 
-		$sql = "SELECT t.* FROM taskworkflow t ";
-		$sql .= "LEFT JOIN tasktypes tt ON t.taskworkflow_tasktype = tt.tasktype_id ";
+		$sql = "SELECT twf.* FROM taskworkflows twf ";
+		$sql .= "LEFT JOIN tasktypes tt ON twf.taskworkflow_tasktype = tt.tasktype_id ";
 		$sql .= "WHERE twf.taskworkflow_tasktype='" . $tasktypeid . "' AND tt.tasktype_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
 		$res = $this->database->query($sql);
 		if (!$res)
@@ -330,7 +335,7 @@ class tkTasktypefunctions
 			return false;
 		}
 
-		$sql = "SELECT twf.*, t.task_workflow FROM taskworkflow twf LEFT JOIN tasks t ON twf.taskworkflow_tasktype = t.task_type ";
+		$sql = "SELECT twf.*, t.task_workflow FROM taskworkflows twf LEFT JOIN tasks t ON twf.taskworkflow_tasktype = t.task_type ";
 		$sql .= "WHERE t.task_id='" . $taskid . "' ORDER BY twf.taskworkflow_order";
 		$res = $this->database->query($sql);
 
@@ -411,7 +416,7 @@ class tkTasktypefunctions
 			return false;
 		}
 
-		$sql = "SELECT twf.*, t.task_workflow FROM taskworkflow twf LEFT JOIN tasks t ON twf.taskworkflow_tasktype = t.task_type ";
+		$sql = "SELECT twf.*, t.task_workflow FROM taskworkflows twf LEFT JOIN tasks t ON twf.taskworkflow_tasktype = t.task_type ";
 		$sql .= "WHERE t.task_id='" . $taskid . "' ORDER BY twf.taskworkflow_order";
 		$res = $this->database->query($sql);
 

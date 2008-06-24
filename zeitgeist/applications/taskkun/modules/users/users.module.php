@@ -43,7 +43,6 @@ class users
 
 	public function adduser($parameters=array())
 	{
-
 		$this->debug->guard();
 
 		$tpl = new tkTemplate();

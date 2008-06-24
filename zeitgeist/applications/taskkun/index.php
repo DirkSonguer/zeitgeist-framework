@@ -15,7 +15,7 @@
  */
 
 	define('TASKKUN_ACTIVE', true);
-	define('DEBUGMODE', true);
+//	define('DEBUGMODE', true);
 
 	include('zeitgeist/zeitgeist.php');
 
@@ -25,6 +25,7 @@
 	require_once('classes/tktasktypefunctions.class.php');
 	require_once('classes/tkuserfunctions.class.php');
 	require_once('classes/tkgroupfunctions.class.php');
+	require_once('classes/tkinstancefunctions.class.php');
 
 	include_once('includes/open-flash-chart/open_flash_chart_object.php');
 	include_once('includes/open-flash-chart/open-flash-chart.php');
@@ -66,7 +67,7 @@
 	}
 
 	// test if user is logged in
-	if(!$user->establishUserSession())
+	if ( (!$user->establishUserSession()) && ($module != 'register') )
 	{
 		$module = 'main';
 		$action = 'login';
@@ -80,6 +81,6 @@
 	$debug->showMiscInformation();
 	$debug->showDebugMessages();
 	$debug->showQueryMessages();
-//	$debug->showGuardMessages();
+	$debug->showGuardMessages();
 
 ?>

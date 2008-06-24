@@ -74,10 +74,11 @@ class tkUserfunctions
 	 * @param integer $userrole id of the userrole
 	 * @param array $usergroups array containing the groups of the user
 	 * @param array $userdata array containing the userdata
+	 * @param integer $instance id of the instance. if 0 the current instance is used
 	 *
 	 * @return boolean
 	 */
-	public function createUser($name, $password, $userrole=1, $usergroups=array(), $userdata=array())
+	public function createUser($name, $password, $userrole=1, $usergroups=array(), $userdata=array(), $instance=0)
 	{
 		$this->debug->guard();
 
@@ -87,19 +88,27 @@ class tkUserfunctions
 			return false;
 		}
 
+		if ($instance == 0) $instance = $this->getUserInstance($this->user->getUserID());
+
 		$lastinsert = $this->database->insertId();
+
 		$sql = "SELECT * FROM userdata WHERE userdata_id='" . $lastinsert . "'";
 		$res = $this->database->query($sql);
 		$row = $this->database->fetchArray($res);
 
 		$userid = $row['userdata_user'];
-		$sql = "UPDATE users SET user_instance='" . $this->getUserInstance($this->user->getUserID()) . "' WHERE user_id='" . $userid . "'";
+		$sql = "UPDATE users SET user_instance='" . $instance . "' WHERE user_id='" . $userid . "'";
 		$res = $this->database->query($sql);
 
-		if (!$this->changeUsergroups($usergroups, $userid))
+		$this->messages->setMessage($userid, 'createduserid');
+
+		if (count($usergroups) > 0)
 		{
-			$this->debug->unguard(false);
-			return false;
+			if (!$this->changeUsergroups($usergroups, $userid))
+			{
+				$this->debug->unguard(false);
+				return false;
+			}
 		}
 
 		$this->debug->unguard(true);
@@ -181,7 +190,7 @@ class tkUserfunctions
 
 		$sql = "SELECT user_username FROM users WHERE user_id='" . $userid . "' AND user_instance='" . $this->getUserInstance($this->user->getUserID()) . "'";
 		$res = $this->database->query($sql);
-		if ($this->database->numRows($res) > 0)
+		if (!$this->database->numRows($res) > 0)
 		{
 			$this->debug->write('Problem reading out username: user not found', 'warning');
 			$this->messages->setMessage('Problem reading out username: user not found', 'warning');

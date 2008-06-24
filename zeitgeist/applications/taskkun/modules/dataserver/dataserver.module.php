@@ -50,7 +50,7 @@ class dataserver
 		$sql .= "ELSE '0' END as task_overdrawn ";
 		$sql .= "FROM tasks_to_users tu ";
 		$sql .= "LEFT JOIN tasks t ON tu.taskusers_task = t.task_id LEFT JOIN tasklogs tl ON t.task_id = tl.tasklog_task ";
-		$sql .= "LEFT JOIN taskworkflow twf ON t.task_workflow = twf.taskworkflow_id ";
+		$sql .= "LEFT JOIN taskworkflows twf ON t.task_workflow = twf.taskworkflow_id ";
 		$sql .= "LEFT JOIN users_to_groups u2g ON twf.taskworkflow_group = u2g.usergroup_group ";
 		$sql .= "LEFT JOIN groups g ON u2g.usergroup_group = g.group_id ";
 		$sql .= "WHERE taskusers_user='" . $this->user->getUserID() . "' ";
@@ -114,7 +114,7 @@ class dataserver
 		$sql .= "LEFT JOIN tasks_to_users tu ON t.task_id = tu.taskusers_task ";
 		$sql .= "LEFT JOIN users u ON tu.taskusers_user = u.user_id ";
 		$sql .= "LEFT JOIN tasklogs tl ON t.task_id = tl.tasklog_task ";
-		$sql .= "LEFT JOIN taskworkflow twf ON t.task_workflow = twf.taskworkflow_id ";
+		$sql .= "LEFT JOIN taskworkflows twf ON t.task_workflow = twf.taskworkflow_id ";
 		$sql .= "LEFT JOIN users_to_groups u2g ON twf.taskworkflow_group = u2g.usergroup_group ";
 		$sql .= "LEFT JOIN groups g ON u2g.usergroup_group = g.group_id ";
 		$sql .= "WHERE tu.taskusers_user is null ";
@@ -160,7 +160,7 @@ class dataserver
 		$sql .= "LEFT JOIN users u ON tu.taskusers_user = u.user_id ";
 		$sql .= "LEFT JOIN tasklogs tl ON t.task_id = tl.tasklog_task ";
 		$sql .= "LEFT JOIN tasktypes tt ON t.task_type = tt.tasktype_id ";
-		$sql .= "LEFT JOIN taskworkflow twf ON t.task_workflow = twf.taskworkflow_id ";
+		$sql .= "LEFT JOIN taskworkflows twf ON t.task_workflow = twf.taskworkflow_id ";
 		$sql .= "LEFT JOIN groups g ON twf.taskworkflow_group = g.group_id ";
 		$sql .= "WHERE t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
 		$sql .= "AND t.task_workflow > '0' ";
@@ -249,7 +249,7 @@ class dataserver
 		$sql .= "LEFT JOIN users u ON tu.taskusers_user = u.user_id ";
 		$sql .= "LEFT JOIN tasklogs tl ON t.task_id = tl.tasklog_task ";
 		$sql .= "LEFT JOIN tasktypes tt ON t.task_type = tt.tasktype_id ";
-		$sql .= "LEFT JOIN taskworkflow twf ON t.task_workflow = twf.taskworkflow_id ";
+		$sql .= "LEFT JOIN taskworkflows twf ON t.task_workflow = twf.taskworkflow_id ";
 		$sql .= "LEFT JOIN groups g ON twf.taskworkflow_group = g.group_id ";
 		$sql .= "WHERE t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
 		$sql .= "AND t.task_workflow='0' ";
@@ -445,7 +445,7 @@ class dataserver
 		$sql = 'SELECT g.group_id, g.group_name, g.group_description, u2g.usergroup_user, twf.taskworkflow_tasktype, ';
 		$sql .= 'COUNT(g.group_id) as group_tasktypecount ';
 		$sql .= 'FROM groups g ';
-		$sql .= 'LEFT JOIN taskworkflow twf ON g.group_id = twf.taskworkflow_group ';
+		$sql .= 'LEFT JOIN taskworkflows twf ON g.group_id = twf.taskworkflow_group ';
 		$sql .= 'LEFT JOIN users_to_groups u2g ON g.group_id = u2g.usergroup_group ';
 		$sql .= "WHERE g.group_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
 		$sql .= 'GROUP BY u2g.usergroup_user, group_id ORDER BY g.group_name';
@@ -527,6 +527,8 @@ class dataserver
 		}
 
 		$maxvalue = max($tagvalues);
+		if ($maxvalue == 0) $maxvalue = 1;
+
 		foreach($tags as $tagkey => $tagvalue)
 		{
 			$tags[$tagkey]['tag_score'] = floor(($tagvalue['tag_count']/$maxvalue)*5);
@@ -574,7 +576,7 @@ class dataserver
 				$sql .= "LEFT JOIN tasks_to_users tu ON t.task_id = tu.taskusers_task ";
 				$sql .= "LEFT JOIN users u ON tu.taskusers_user = u.user_id ";
 				$sql .= "LEFT JOIN tasktypes tt ON t.task_type = tt.tasktype_id ";
-				$sql .= "LEFT JOIN taskworkflow twf ON t.task_workflow = twf.taskworkflow_id ";
+				$sql .= "LEFT JOIN taskworkflows twf ON t.task_workflow = twf.taskworkflow_id ";
 				$sql .= "LEFT JOIN groups g ON twf.taskworkflow_group = g.group_id ";
 				$sql .= "WHERE (t.task_name LIKE '%" . $term . "%' OR t.task_description LIKE '%" . $term . "%' OR ta.tag_text LIKE '%" . $term . "%') ";
 				$sql .= "AND t.task_workflow > 0 AND t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
@@ -716,6 +718,7 @@ class dataserver
 		$sql .= "LEFT JOIN taskworkflows twf ON tl.tasklog_taskworkflow = twf.taskworkflow_id ";
 
 		$sql .= "WHERE tl.tasklog_timestamp > '" . $parameters['databegin'] . "' AND tl.tasklog_timestamp < '" . $parameters['dataend'] . "' ";
+		$sql .= "AND t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
 		$sql .= $groupstring;
 		$sql .= $userstring;
 		$sql .= "GROUP BY DATE(tl.tasklog_timestamp) ORDER BY tl.tasklog_timestamp";
@@ -738,7 +741,7 @@ class dataserver
 		}
 
 		$g = new graph();
-		$g->title( 'StundenÃ¼bersicht der eingetragenen Aufgabenbeschreibungen', '{font-size: 12px;}' );
+		$g->title( 'Stundenübersicht der eingetragenen Aufgabenbeschreibungen', '{font-size: 12px;}' );
 		$g->bg_colour = '#fafafa';
 
 		if ( (empty($parameters['mode'])) || ($parameters['mode'] == 1) )
@@ -825,11 +828,14 @@ class dataserver
 		$sql .= "LEFT JOIN users u ON t.task_creator = u.user_id ";
 		$sql .= "LEFT JOIN users_to_groups u2g ON u.user_id = u2g.usergroup_user ";
 		$sql .= "WHERE t.task_timestamp > '" . $parameters['databegin'] . "' AND t.task_timestamp < '" . $parameters['dataend'] . "' ";
+		$sql .= "AND t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
 		$sql .= "AND t.task_workflow = '0' ";
 		$sql .= $tasktypestring;
 		$sql .= $userstring;
 		$sql .= "GROUP BY DATE(t.task_timestamp) ORDER BY t.task_timestamp";
 		$res = $this->database->query($sql);
+
+//		die($sql);
 
 		$dataArray = array();
 		$descArray = array();
@@ -848,7 +854,7 @@ class dataserver
 		}
 
 		$g = new graph();
-		$g->title( 'Ãœbersicht Ã¼ber abgeschlossene Aufgaben', '{font-size: 12px;}' );
+		$g->title( 'Übersicht über abgeschlossene Aufgaben', '{font-size: 12px;}' );
 		$g->bg_colour = '#fafafa';
 
 		if ( (empty($parameters['mode'])) || ($parameters['mode'] == 1) )
