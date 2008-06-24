@@ -367,7 +367,7 @@ class zgTemplate
 		{
 			foreach ($currentUsermessages as $message)
 			{
-				$this->assign('usermessage', $message['message']);
+				$this->assign('usermessage', $message->message);
 				$this->insertBlock($messageblock);
 			}
 		}
@@ -378,7 +378,7 @@ class zgTemplate
 		{
 			foreach ($currentUserwarnings as $warning)
 			{
-				$this->assign('userwarning', $warning['message']);
+				$this->assign('userwarning', $warning->message);
 				$this->insertBlock($warningblock);
 			}
 		}
@@ -389,7 +389,7 @@ class zgTemplate
 		{
 			foreach ($currentUsererrors as $error)
 			{
-				$this->assign('usererror', $error['message']);
+				$this->assign('usererror', $error->message);
 				$this->insertBlock($errorblock);
 			}
 		}

@@ -65,15 +65,15 @@ class zgMessages
 	{
 		$this->debug->guard(true);
 
-		$newMessage = array();
+		$newMessage = new zgMessage;
 
-		$newMessage['message'] = $message;
-		$newMessage['type'] = $type;
+		$newMessage->message = $message;
+		$newMessage->type = $type;
 
 		$backtrace = debug_backtrace();
 		$backtraceSender = $backtrace[0];
-		$newMessage['from'] = array_pop( explode('\\', $backtraceSender['file']) );
-		$newMessage['to'] = $to;
+		$newMessage->from = array_pop( explode('\\', $backtraceSender['file']) );
+		$newMessage->to = $to;
 
 		$this->messages[] = $newMessage;
 
@@ -101,9 +101,9 @@ class zgMessages
 
 		foreach ($this->messages as $message)
 		{
-			if ( ($from == '') || ($message['from'] == $from) )
+			if ( ($from == '') || ($message->from == $from) )
 			{
-				if ($message['to'] == $caller)
+				if ($message->to == $caller)
 				{
 					$retArray[] = $message;
 				}
@@ -130,7 +130,7 @@ class zgMessages
 
 		foreach ($this->messages as $message)
 		{
-			if ($message['type'] == $type)
+			if ($message->type == $type)
 			{
 				$retArray[] = $message;
 			}
@@ -156,7 +156,7 @@ class zgMessages
 
 		foreach ($this->messages as $message)
 		{
-			if ( ($from == '') || ($message['from'] == $from) )
+			if ( ($from == '') || ($message->from == $from) )
 			{
 				$retArray[] = $message;
 			}
@@ -205,6 +205,24 @@ class zgMessages
 
 		$this->debug->unguard(true);
 		return true;
+	}
+
+}
+
+
+class zgMessage
+{
+	public $message;
+	public $type;
+	public $from;
+	public $to;
+
+	public function __construct()
+	{
+		$message = '';
+		$type = '';
+		$from = '';
+		$to = '';
 	}
 
 }
