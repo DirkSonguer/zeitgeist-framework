@@ -41,9 +41,9 @@ require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/objectcache.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/session.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/userhandler.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/errorhandler.class.php');
-require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/template.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/parameterhandler.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/eventhandler.class.php');
+require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/template.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/trafficlogger.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/dataserver.class.php');
 
