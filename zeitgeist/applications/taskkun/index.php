@@ -5,7 +5,7 @@
  * Based on the Zeitgeist Application Framework
  * http://www.zeitgeist-framework.com
  *
- * @author Dirk Songür <songuer@zeitgeist-framework.com>
+ * @author Dirk Songr <songuer@zeitgeist-framework.com>
  *
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
@@ -42,10 +42,10 @@
 	$error = zgErrorhandler::init();
 	$user = zgUserhandler::init();
 	$eventhandler = new zgEventhandler();
-
+	
 	// load configuration
 	$configuration->loadConfiguration('taskkun', 'configuration/taskkun.ini');
-
+	
 	// set module
 	if (isset($_GET['module']))
 	{

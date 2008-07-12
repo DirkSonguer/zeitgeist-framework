@@ -47,13 +47,13 @@ class groups
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('groups', 'templates', 'groups_addgroup'));
 		$tpl->assign('documenttitle', 'Gruppe erstellen');
-
+		
 		$addgroupForm = new zgStaticform();
 		$addgroupForm->load('forms/addgroup.form.ini');
 		$formvalid = $addgroupForm->process($parameters);
 
 		$groupfunctions = new tkGroupfunctions();
-
+		
 		if (!empty($parameters['submit']))
 		{
 
@@ -70,12 +70,12 @@ class groups
 				}
 				else
 				{
-					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator', 'usererror');
+					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verstndigen Sie einen Administrator', 'usererror');
 				}
 			}
 			else
 			{
-				$this->messages->setMessage('Fehler bei der Eingabe. Bitte überprüfen Sie Ihre Angaben sorgfältig.', 'userwarning');
+				$this->messages->setMessage('Fehler bei der Eingabe. Bitte berprfen Sie Ihre Angaben sorgfltig.', 'userwarning');
 			}
 		}
 
@@ -121,12 +121,12 @@ class groups
 				}
 				else
 				{
-					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator', 'usererror');
+					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verstndigen Sie einen Administrator', 'usererror');
 				}
 			}
 			else
 			{
-				$this->messages->setMessage('Fehler bei der Eingabe. Bitte überprüfen Sie Ihre Angaben sorgfältig.', 'userwarning');
+				$this->messages->setMessage('Fehler bei der Eingabe. Bitte berprfen Sie Ihre Angaben sorgfltig.', 'userwarning');
 			}
 		}
 		else
@@ -160,7 +160,7 @@ class groups
 			}
 			else
 			{
-				$this->messages->setMessage('Die Gruppe konnte nicht gelöscht werden. Bitte verständigen Sie einen Administrator', 'usererror');
+				$this->messages->setMessage('Die Gruppe konnte nicht gelscht werden. Bitte verstndigen Sie einen Administrator', 'usererror');
 			}
 		}
 

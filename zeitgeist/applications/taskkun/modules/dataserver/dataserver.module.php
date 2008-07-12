@@ -107,7 +107,7 @@ class dataserver
 		$this->debug->guard();
 
 		$userfunctions = new tkUserfunctions();
-
+		
 		$sql = "SELECT SUM(tl.tasklog_hoursworked) as task_hoursworked, t.*, u.user_username, u.user_id, g.group_name, ";
 		$sql .= "DATE_FORMAT(t.task_end, '%d.%m.%Y') as task_end, DATE_FORMAT(t.task_begin, '%d.%m.%Y') as task_begin ";
 		$sql .= "FROM tasks t ";
