@@ -14,7 +14,7 @@ class tkTemplate extends zgTemplate
 	public function __construct()
 	{
 		$this->user = zgUserhandler::init();
-
+		
 		parent::__construct();
 
 		$this->basepath = $this->configuration->getConfiguration('taskkun', 'application', 'basepath');

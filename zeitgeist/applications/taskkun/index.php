@@ -15,7 +15,7 @@
  */
 
 	define('TASKKUN_ACTIVE', true);
-//	define('DEBUGMODE', true);
+	define('DEBUGMODE', true);
 
 	include('zeitgeist/zeitgeist.php');
 
@@ -42,10 +42,13 @@
 	$error = zgErrorhandler::init();
 	$user = zgUserhandler::init();
 	$eventhandler = new zgEventhandler();
+	$locale = zgLocale::init();
 	
+	$locale->setLocale('de_DE');
+
 	// load configuration
 	$configuration->loadConfiguration('taskkun', 'configuration/taskkun.ini');
-	
+
 	// set module
 	if (isset($_GET['module']))
 	{
@@ -71,7 +74,7 @@
 	{
 		$module = 'main';
 		$action = 'login';
-	}
+	}	
 
 	// load event
 	$ret = $eventhandler->callEvent($module, $action);
