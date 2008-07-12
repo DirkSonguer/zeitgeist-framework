@@ -412,9 +412,12 @@
 											<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Priorität</p></td>
 											<td align="left" valign="middle">
 												<select name="edittask[task_priority]" class="formtext" style="width:220px;">
-													<option value="3"@@{priority_3}@@>Hoch</option>
-													<option value="2"@@{priority_2}@@>Normal</option>
-													<option value="1"@@{priority_1}@@>Niedrig</option>
+													<option value="3" selected="selected" spry:if="{dsTasks::task_priority} == '3'">Hoch</span>
+													<option value="3" spry:if="{dsTasks::task_priority} != '3'">Hoch</span>
+													<option value="2" selected="selected" spry:if="{dsTasks::task_priority} == '2'">Normal</span>
+													<option value="2" spry:if="{dsTasks::task_priority} != '2'">Normal</span>
+													<option value="1" selected="selected" spry:if="{dsTasks::task_priority} == '1'">Niedrig</span>
+													<option value="1" spry:if="{dsTasks::task_priority} != '1'">Niedrig</span>
 												</select>
 											</td>
 										</tr>
