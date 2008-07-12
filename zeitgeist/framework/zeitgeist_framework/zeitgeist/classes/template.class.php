@@ -19,7 +19,9 @@ class zgTemplate
 	protected $debug;
 	protected $messages;
 	protected $database;
-
+	protected $configuration;
+	protected $locale;
+	
 	protected $file;
 	protected $content;
 	protected $blocks;
@@ -32,7 +34,9 @@ class zgTemplate
 	{
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
-
+		$this->configuration = zgConfiguration::init();
+		$this->locale = zgLocale::init();
+		
 		$this->database = new zgDatabase();
 		$this->database->connect();
 
@@ -365,7 +369,7 @@ class zgTemplate
 		{
 			foreach ($currentUsermessages as $message)
 			{
-				$this->assign('usermessage', $message->message);
+				$this->assign($this->locale->write('usermessage'), $message->message);
 				$this->insertBlock($messageblock);
 			}
 		}
@@ -376,7 +380,7 @@ class zgTemplate
 		{
 			foreach ($currentUserwarnings as $warning)
 			{
-				$this->assign('userwarning', $warning->message);
+				$this->assign($this->locale->write('userwarning'), $warning->message);
 				$this->insertBlock($warningblock);
 			}
 		}
@@ -387,7 +391,7 @@ class zgTemplate
 		{
 			foreach ($currentUsererrors as $error)
 			{
-				$this->assign('usererror', $error->message);
+				$this->assign($this->locale->write('usererror'), $error->message);
 				$this->insertBlock($errorblock);
 			}
 		}
