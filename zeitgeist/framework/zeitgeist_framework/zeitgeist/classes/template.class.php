@@ -18,7 +18,6 @@ class zgTemplate
 {
 	protected $debug;
 	protected $messages;
-	protected $configuration;
 	protected $database;
 
 	protected $file;
@@ -33,7 +32,6 @@ class zgTemplate
 	{
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
-		$this->configuration = zgConfiguration::init();
 
 		$this->database = new zgDatabase();
 		$this->database->connect();
