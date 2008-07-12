@@ -40,7 +40,7 @@ class zgStaticform
 		$this->database = new zgDatabase();
 		$this->database->connect();
 
-		$this->formid = 'form_'.rand(10000,1000000000);
+		$this->formid = 'form_' . uniqid(rand(), true);
 		$this->initial = false;
 	}
 
