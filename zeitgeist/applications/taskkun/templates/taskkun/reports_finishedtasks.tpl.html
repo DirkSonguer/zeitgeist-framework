@@ -7,34 +7,8 @@
 <!-- InstanceEndEditable -->
 
 <link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/taskkun.css" />
-
-<script language="javascript" type="text/javascript">
-
-	function showTooltip(text, event)
-	{
-		document.getElementById('Tooltip').innerHTML = text;
-
-		var topPixel = event.clientY + 10;
-		var leftPixel = event.clientX + 10;
-
-		x = (document.all) ? window.event.x + document.body.scrollLeft + 180: event.pageX;
-		y = (document.all) ? window.event.y : event.pageY;
-		document.getElementById('Tooltip').style.left = (x + 20) + "px";
-		document.getElementById('Tooltip').style.top = (y + 20) + "px";
-		document.getElementById('Tooltip').style.display = "block";
-	}
-
-	function hideTooltip()
-	{
-		document.getElementById('Tooltip').innerHTML = "";
-
-		document.getElementById('Tooltip').style.top = "0px";
-		document.getElementById('Tooltip').style.left = "0px";
-		document.getElementById('Tooltip').style.display = "none";
-	}
-
-</script>
-
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/common.js"></script>
+	
 <!-- InstanceBeginEditable name="head" -->
 
 	<script type="text/javascript" src="@@{templatepath}@@/js/date-picker/js/datepicker.js"></script>
@@ -97,16 +71,16 @@
 <div class="headmenu">
 	<!-- TemplateBeginBlock name="logoutbutton" -->
 	<div class="menuicon" style="float:right; margin-top:5px;">
-
+	
 	<a href="@@{[configuration.index]}@@"><span onmousemove="showTooltip('Persönliche Einstellungen', event)" onmouseout="hideTooltip()">
 	<img src="@@{templatepath}@@/nuvola/48x48/apps/kcmsystem.png" alt="" border="0" /></span></a>
-
+	
 	<a href="@@{[help.index]}@@@@{helptopic}@@" target="_blank"><span onmousemove="showTooltip('Hilfe', event)" onmouseout="hideTooltip()">
-	<img src="@@{templatepath}@@/nuvola/48x48/apps/filetypes.png" alt="" border="0" /></span></a>
+	<img src="@@{templatepath}@@/nuvola/48x48/apps/filetypes.png" alt="" border="0" /></span></a>	
 
 	<a href="@@{[main.logout]}@@"><span onmousemove="showTooltip('Logout', event)" onmouseout="hideTooltip()">
 	<img src="@@{templatepath}@@/nuvola/48x48/actions/exit.png" alt="" border="0" /></span></a>
-
+	
 	</div>
 	<!-- TemplateEndBlock -->
 </div>
@@ -122,8 +96,8 @@
 		<div style="float:left; margin:10px;"><a href="@@{[adhoc.index]}@@"><span onmousemove="showTooltip('Ad-Hoc-Tätigkeit eintragen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/karm.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[reports.index]}@@"><span onmousemove="showTooltip('Reports', event)" onmouseout="hideTooltip()">
-		<img src="@@{templatepath}@@/nuvola/48x48/apps/kchart.png" alt="" border="0" /></span></a></div>
-
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/kchart.png" alt="" border="0" /></span></a></div>		
+		
 		<!-- TemplateBeginBlock name="managernavigation" -->
 		<div style="float:left; margin:10px; margin-left:40px;"><a href="@@{[tasks.addtask]}@@"><span onmousemove="showTooltip('Neue Aufgabe anlegen', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kword.png" alt="" border="0" /></span></a></div>
@@ -141,7 +115,7 @@
 		<div style="float:left; margin:10px;"><a href="@@{[tasktypes.index]}@@"><span onmousemove="showTooltip('Aufgabenabläufe verwalten', event)" onmouseout="hideTooltip()">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/fsview.png" alt="" border="0" /></span></a></div>
 		<!-- TemplateEndBlock -->
-
+		
 		<div style="clear:both"></div>
 	</div>
 <!-- TemplateEndBlock -->
@@ -160,7 +134,7 @@
 	<!-- TemplateBeginBlock name="usererrors" -->
 		<h3 class="usererror"><img src="@@{templatepath}@@/nuvola/16x16/actions/no.png" alt="" align="left" style="margin-right:5px;" /> @@{usererror}@@</h3>
 	<!-- TemplateEndBlock -->
-
+	
 <!-- InstanceBeginEditable name="body" -->
 
 <div class="textbox">

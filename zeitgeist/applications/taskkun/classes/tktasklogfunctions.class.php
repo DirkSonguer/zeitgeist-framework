@@ -53,11 +53,14 @@ class tkTasklogfunctions
 			$dateArray = explode('.', $tasklogdata['tasklog_date']);
 			$tasklogdata['tasklog_date'] = $dateArray[2] . '-' . $dateArray[1] . '-' . $dateArray[0];
 		}
+		
+		$taskfunctions = new tkTaskfunctions();
+		$taskinformation = $taskfunctions->getTaskInformation($tasklogdata['tasklog_task']);
 
 		if (strpos($tasklogdata['tasklog_hoursworked'], ',') !== false) $tasklogdata['tasklog_hoursworked'] = str_replace(',','.', $tasklogdata['tasklog_hoursworked']);
 
-		$sql = 'INSERT INTO tasklogs(tasklog_creator, tasklog_task, tasklog_description, tasklog_hoursworked, tasklog_date) ';
-		$sql .= "VALUES('" . $this->user->getUserID() . "', '" . $tasklogdata['tasklog_task'] . "', '" . $tasklogdata['tasklog_description'] . "', '" . $tasklogdata['tasklog_hoursworked'] . "', '" . $tasklogdata['tasklog_date'] . "')";
+		$sql = 'INSERT INTO tasklogs(tasklog_creator, tasklog_taskworkflow, tasklog_task, tasklog_description, tasklog_hoursworked, tasklog_date) ';
+		$sql .= "VALUES('" . $this->user->getUserID() . "', '" . $taskinformation['task_workflow'] . "', '" . $tasklogdata['tasklog_task'] . "', '" . $tasklogdata['tasklog_description'] . "', '" . $tasklogdata['tasklog_hoursworked'] . "', '" . $tasklogdata['tasklog_date'] . "')";
 
 		$res = $this->database->query($sql);
 		if (!$res)

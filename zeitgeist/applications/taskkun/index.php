@@ -15,7 +15,7 @@
  */
 
 	define('TASKKUN_ACTIVE', true);
-	define('DEBUGMODE', true);
+//	define('DEBUGMODE', true);
 
 	include('zeitgeist/zeitgeist.php');
 
