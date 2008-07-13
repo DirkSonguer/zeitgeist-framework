@@ -1,0 +1,212 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/help.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>Taskkun - @@{documenttitle}@@</title>
+<!-- InstanceEndEditable -->
+
+<link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/taskkun.css" />
+
+<script language="javascript" type="text/javascript">
+
+	function showTooltip(text, event)
+	{
+		document.getElementById('Tooltip').innerHTML = text;
+
+		var topPixel = event.clientY + 10;
+		var leftPixel = event.clientX + 10;
+
+		x = (document.all) ? window.event.x + document.body.scrollLeft + 180: event.pageX;
+		y = (document.all) ? window.event.y : event.pageY;
+		document.getElementById('Tooltip').style.left = (x + 20) + "px";
+		document.getElementById('Tooltip').style.top = (y + 20) + "px";
+		document.getElementById('Tooltip').style.display = "block";
+	}
+
+	function hideTooltip()
+	{
+		document.getElementById('Tooltip').innerHTML = "";
+
+		document.getElementById('Tooltip').style.top = "0px";
+		document.getElementById('Tooltip').style.left = "0px";
+		document.getElementById('Tooltip').style.display = "none";
+	}
+
+</script>
+	
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
+</head>
+
+<body>
+
+<div id="Tooltip" class="tooltip" style="display:none; text-align:left;"></div>
+
+<div class="headmenu">
+	<!-- TemplateBeginBlock name="logoutbutton" -->
+	<div class="menuicon" style="float:right; margin-top:5px;">
+	
+	<a href="@@{[help.index]}@@" target="_blank"><span onmousemove="showTooltip('Hilfe', event)" onmouseout="hideTooltip()">
+	<img src="@@{templatepath}@@/nuvola/48x48/apps/filetypes.png" alt="" border="0" /></span></a>	
+
+	</div>
+	<!-- TemplateEndBlock -->
+</div>
+
+<div class="maincontent">
+
+<!-- TemplateBeginBlock name="navigation" -->
+	<div class="headerbox">
+		
+		<table cellspacing="0" cellpadding="0" border="0">
+			<tr>
+				<td valign="top">
+					<h2 class="help">Über Taskkun</h2>
+					<ul>
+						<li class="help"><a href="@@{[help.index]}@@&topic=introduction" class="help">Einführung</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=quickstart" class="help">Schnellstart</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=beta" class="help">Hinweise zur Beta</a></li>
+					</ul>
+				</td>
+				<td valign="top">
+					<h2 class="help">Konfiguration</h2>
+					<ul class="sortlink">
+						<li class="help"><a href="@@{[help.index]}@@&topic=configexamples" class="help">Beispielhafte Konfigurationen</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=groups" class="help">Gruppen anlegen/verwalten</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=workflows" class="help">Aufgabenabläufe anlegen/verwalten</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=users" class="help">Benutzer anlegen/verwalten</a></li>
+					</ul>
+				</td>
+			</tr>
+		</table>
+
+	</div>
+<!-- TemplateEndBlock -->
+
+<!-- InstanceBeginEditable name="pagetitle" -->
+<!-- InstanceEndEditable -->
+
+	<!-- TemplateBeginBlock name="usermessage" -->
+		<h3 class="usermessage"><img src="@@{templatepath}@@/nuvola/16x16/actions/ok.png" alt="" align="left" style="margin-right:5px;" /> @@{usermessage}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="userwarnings" -->
+		<h3 class="userwarning"><img src="@@{templatepath}@@/nuvola/16x16/actions/messagebox_info.png" alt="" align="left" style="margin-right:5px;" /> @@{userwarning}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="usererrors" -->
+		<h3 class="usererror"><img src="@@{templatepath}@@/nuvola/16x16/actions/no.png" alt="" align="left" style="margin-right:5px;" /> @@{usererror}@@</h3>
+	<!-- TemplateEndBlock -->
+	
+<!-- InstanceBeginEditable name="body" -->
+
+<div class="textbox">
+	<h2>Beispielhafte Konfigurationen</h2>
+	<p>Taskkun lässt sich gemäß ihren eigenen Abläufen konfigurieren. Die Anwendung ist in der Lage von klassischen Wasserfall-Modellen bis zu agilen Prozessabläufen flexible Szenarien von Arbeitsabläufen abzubilden.</p>
+	
+	<p>Folgend sind zwei Beispiele, wie sich Taskkun auf spezielle Arbeitsabläufe einstellen kann.</p>
+
+	<h2>Beispiel 1: Abteilungsorientierte Abläufe</h2>
+	<p>In diesem Beispiel werden die Abteilungen bzw. Kompetenzen der einzelnen Teammitglieder als Grundlage für die Arbeitsabläufe verwendet.</p>
+
+	<p>Nutzer einer solchen Struktur könnten beispielsweise kleine Onlineagenturen oder andere interdisziplinäre Teams  sein, die ihre Arbeitsabläufe abteilungs- bzw. kompetenzbezogen abbilden wollen. Es geht einerseits um die Durchführung neuer Projekte, als auch um die Abarbeitung von täglichen inhaltlichen und technischen Korrekturen und Erweiterungen von bestehenden Projekten.</p>
+
+	<h3>Schritt 1: Anlegen und Einbinden der Gruppen</h3>
+	<p>Zunächst werden Gruppen angelegt, welche die Abteilungen bzw. Kompetenzen repräsentieren. Zum Beispiel:</p>
+	
+	<ul>
+		<li>Informationsarchitektur</li>
+		<li>Backendentwicklung</li>
+		<li>Frontendentwicklung</li>
+		<li>Grafik/Design</li>
+		<li>IT-Services</li>
+		<li>Management</li>
+		<li>Buchhaltung</li>
+	</ul>
+
+	<p>Alle Benutzer werden entsprechend ihrer Zugehörigkeit den Gruppen zugeordnet. Die Manager sollten in den jeweils von ihnen gemanagten Gruppen und ihrer eigenen (<em>Management</em>) eingeordnet sein. Beispielsweise würde der Manager der Backendentwicklung (=Technischer Leiter) in den Gruppen <em>Backendentwicklung</em> und <em>Management</em> sein. Ein Technischer Direktor würde beispielsweise Mitglied in den Gruppen <em>Backendentwicklung</em>, <em>Frontendentwicklung</em> und <em>Management</em> sein.</p>
+
+	<h3>Schritt 2: Anlegen der Aufgabenabläufe</h3>
+
+	<p>Die erstellten Gruppen werden anschließend in Aufgabenabläufe eingebunden. Aufgabenabläufe könnten beispielsweise sein:</p>
+
+	<p><em>Erweiterung Backend (typischerweise hinzufügen einer Funktionalität in einem CMS o.ä.)</em></p>
+	<ul>
+		<li>Backendentwickler (Umsetzung)</li>
+		<li>Manager (Abnahme)</li>
+		<li>Buchhaltung (Abrechnung)</li>
+	</ul>
+
+	<p><em>IT Ticket</em></p>
+	<ul>
+		<li>IT-Service (Problembehebung)</li>
+		<li>Manager (Abnahme)</li>
+	</ul>
+
+	<p><em>Rechnungsstellung für abgeschlossenes Projekt</em></p>
+	<ul>
+		<li>Manager (Stundenübersicht generieren)</li>
+		<li>Buchhaltung (Rechnungsstellung)</li>
+		<li>Buchhaltung (Rechnungseingang prüfen)</li>
+		<li>Buchhaltung (Ablage)</li>
+	</ul>
+
+	<h3>Zusammenfassung</h3>
+	<p>Eine solche Einteilung bildet die Abteilungsstrukturen eines Teams ab. Die vorgestellte Struktur kann beispielsweise in einer kleinen Agentur eingesetzt werden, in der es bereits ähnliche Strukturen und Abteilungen mit Mitarbeitern gibt. Die gewohnten Abteilungsstrukturen können ohne Umgewöhnung in Taskkun weiter verwendet werden.</p>
+
+	<h2>Beispiel 2:Phasenorientiert Abläufe</h2>
+
+	<p>In diesem Beispiel werden generische Phasen als Grundlage für die Arbeitsabläufe verwendet. Solche Strukturen sind für eher agil agierende Projektteams typisch, die den Fokus mehr auf Produktumsetzungs legen, als auf Teamstrukturen.</p>
+
+	<h3>Schritt 1: Anlegen und Einbinden der Gruppen</h3>
+
+	<p>Zunächst werden Gruppen angelegt, welche die Phasen einer Entwicklung repräsentieren. Diese könnten beispielsweise sein:</p>
+
+	<ul>
+		<li>Konzeption</li>
+		<li>Umsetzung</li>
+		<li>Test</li>
+		<li>Abnahme</li>
+		<li>Deployment</li>
+		<li>Fehlerbehebung</li>
+	</ul>
+
+	<p>Alle Benutzer werden in einem solchen Fall, gemäß dem agilen Motto, allen Gruppen zugeordnet, da alle Teammitglieder potentiell alle Aufgaben übernehmen könnten. Dies gilt auch für die Manager, die automatisch an allen Projektphasen beteiligt sind.</p>
+
+	<h3>Schritt 2: Anlegen der Aufgabenabläufe</h3>
+
+	<p>Die erstellten Gruppen werden anschließend in Aufgabenabläufe eingebunden. Aufgabenabläufe könnten beispielsweise sein:</p>
+
+	<p><em>Neuentwicklung einer Funktionalität</em></p>
+	<ul>
+		<li>Konzeption (Konzeptionsphase)</li>
+		<li>Umsetzung (Umsetzungsphase)</li>
+		<li>Test (Testphase)</li>
+	</ul>
+
+	<p><em>Beheben eines Fehlers</em></p>
+	<ul>
+		<li>Fehlerbehebung (Bugfixing)</li>
+		<li>Test (Testphase)</li>
+	</ul>
+
+	<p><em>Livestellen einer neuen Produktversion</em></p>
+	<ul>
+		<li>Abnahme (Project Owner prüft gegen die Versionsziele)</li>
+		<li>Deployment (Eigentliches Deployment)</li>
+		<li>Testing (Technische Funktionsprüfung auf dem Liveserver)</li>
+	</ul>
+
+	<h3>Zusammenfassung</h3>
+	<p>Eine solche phasenweise Struktur ist für agil operierende Teams geeignet, die Taskkun als eine Art Sprint- oder Versionsbacklog nutzen wollen. Die Aufgaben der Version werden vorab eingestellt und von den Mitgliedern des Teams abgearbeitet. Der Product Owner (in Taskkun der Manager) erhält durch die integrierten Reports jeweils Auswertungen über den Grad der Fertigstellung der Version und die investierten Aufwände.</p>
+
+</div>
+
+<!-- InstanceEndEditable -->
+
+</div>
+<div class="copyright">@@{versioninfo}@@</div>
+
+</body>
+<!-- InstanceEnd --></html>

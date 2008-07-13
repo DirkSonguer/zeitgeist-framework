@@ -129,7 +129,7 @@ li {
 	font-size: 12pt;
 	text-align:justify;
 	margin-left:0pt;
-	margin-right:0pt;
+	margin-right:10pt;
 	margin-top:5pt;
 	margin-bottom:0pt;
 	color:#000000;
@@ -208,6 +208,42 @@ a:active {
 	letter-spacing:0.6pt;
 	word-spacing:0.7pt;
 	color:#444444;
+}
+
+
+/* help */
+a.help:link {
+	text-decoration:underline;
+	letter-spacing:0.6pt;
+	word-spacing:0.7pt;
+	color:#eeeeee;
+}
+
+a.help:visited {
+	text-decoration:underline;
+	letter-spacing:0.6pt;
+	word-spacing:0.7pt;
+	color:#eeeeee;
+}
+
+a.help:active {
+	text-decoration:underline;
+	letter-spacing:0.6pt;
+	word-spacing:0.7pt;
+	color:#eeeeee;
+}
+
+li.help {
+	font-family: "Georgia",Serif;
+	font-size: 10pt;
+	text-align:justify;
+	padding-top:0px;
+	color:#ffffff;
+}
+
+h2.help {
+	color:#f5f5f5;
+	margin-left:25px;
 }
 
 

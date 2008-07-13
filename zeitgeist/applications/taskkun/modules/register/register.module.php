@@ -90,10 +90,20 @@ class register
 						$lastinsert = $this->messages->getMessagesByType('createduserid');
 						if (count($lastinsert) == 1)
 						{
-							$this->user->deactivateUser($lastinsert[0]->message);
-							$this->messages->setMessage('Ihre Instanz wurde erfolgreich angelegt. Sie können die Beta von Taskkun nutzen, sobald wir sie dafür freigeschaltet haben.', 'usermessage');
-							$this->messages->setMessage('Die Freischaltung erfolgt manuell, bitte haben Sie also etwas Geduld. Sie werden per E-Mail kontaktiert, wenn es so weit ist.', 'usermessage');
-							$this->messages->setMessage('Unrechtmäßige Anmeldungen zur Beta werden kommentarlos entfernt.', 'usermessage');
+							if ($this->configuration->getConfiguration('register', 'betakeys', $newUserdata['beta_key']) == 'true')
+							{
+								$this->messages->setMessage('Vielen Dank für deine Teilname! Deine Instanz wurde erfolgreich angelegt.', 'usermessage');
+								$this->messages->setMessage('Mit dem eingegebenen Beta-Schlüssel bist du bereits freigeschaltet, du kannst Taskkun also sofort benutzen.', 'usermessage');
+								$this->messages->setMessage('Bitte beachte in der Hilfe die Hinweise zur Closed Beta.', 'usermessage');
+							}
+							else
+							{
+								$this->user->deactivateUser($lastinsert[0]->message);
+								$this->messages->setMessage('Ihre Instanz wurde erfolgreich angelegt. Sie können die Beta von Taskkun nutzen, sobald wir sie dafür freigeschaltet haben.', 'usermessage');
+								$this->messages->setMessage('Die Freischaltung erfolgt manuell, bitte haben Sie also etwas Geduld. Sie werden per E-Mail kontaktiert, wenn es so weit ist.', 'usermessage');
+								$this->messages->setMessage('Unrechtmäßige Anmeldungen zur Beta werden kommentarlos entfernt.', 'usermessage');
+							}
+
 							$this->debug->unguard(true);
 							$tpl->redirect($tpl->createLink('register', 'index'));
 							return true;

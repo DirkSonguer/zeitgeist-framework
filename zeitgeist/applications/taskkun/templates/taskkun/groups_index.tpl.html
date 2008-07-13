@@ -175,8 +175,8 @@
 					<td width="180"><p style="text-align:center;">{dsGroups::group_usercount}</p></td>
 					<td width="180"><p style="text-align:center;">{dsGroups::group_tasktypecount}</p></td>
 					<td><p style="text-align:right;">
-					<span onmousemove="showTooltip('Gruppe bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[groups.editgroup]}@@&id={dsGroups::group_id}" alt="Gruppe bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/apps/kate.png" alt="Gruppe bearbeiten" border="0" /></a></span> &nbsp; 
-					<span onmousemove="showTooltip('Gruppe löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteGroup({dsGroups::group_id}, {dsGroups::group_tasktypecount}, '{dsGroups::group_name}');" alt="Gruppe löschen"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Gruppe löschen" border="0" /></a></span>
+					<span onmousemove="showTooltip('Gruppe bearbeiten', event)" onmouseout="hideTooltip();"><a href="@@{[groups.editgroup]}@@&id={dsGroups::group_id}" alt="Gruppe bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/apps/kate.png" alt="Gruppe bearbeiten" border="0" /></a></span> &nbsp; 
+					<span onmousemove="showTooltip('Gruppe löschen', event)" onmouseout="hideTooltip();"><a href="javascript:deleteGroup({dsGroups::group_id}, {dsGroups::group_tasktypecount}, '{dsGroups::group_name}');" alt="Gruppe löschen"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Gruppe löschen" border="0" /></a></span>
 					</p></td>
 				</tr>
 			</table>
