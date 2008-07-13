@@ -714,14 +714,14 @@ class dataserver
 			$userstring = "AND tl.tasklog_creator = '" . $parameters['user'] . "' ";
 		}
 
-		$sql = "SELECT SUM(tl.tasklog_hoursworked) as hoursworked, DATE_FORMAT(DATE(tl.tasklog_timestamp), '%d.%m.%Y') as dateworked FROM tasklogs tl ";
+		$sql = "SELECT SUM(tl.tasklog_hoursworked) as hoursworked, DATE_FORMAT(DATE(tl.tasklog_date), '%d.%m.%Y') as dateworked FROM tasklogs tl ";
 		$sql .= "LEFT JOIN taskworkflows twf ON tl.tasklog_taskworkflow = twf.taskworkflow_id ";
-
-		$sql .= "WHERE tl.tasklog_timestamp > '" . $parameters['databegin'] . "' AND tl.tasklog_timestamp < '" . $parameters['dataend'] . "' ";
+		$sql .= "LEFT JOIN tasks t ON tl.tasklog_task = t.task_id ";
+		$sql .= "WHERE tl.tasklog_timestamp > '" . $parameters['databegin'] . "' AND tl.tasklog_date < '" . $parameters['dataend'] . "' ";
 		$sql .= "AND t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
 		$sql .= $groupstring;
 		$sql .= $userstring;
-		$sql .= "GROUP BY DATE(tl.tasklog_timestamp) ORDER BY tl.tasklog_timestamp";
+		$sql .= "GROUP BY DATE(tl.tasklog_date) ORDER BY tl.tasklog_date";
 		$res = $this->database->query($sql);
 
 		$dataArray = array();
@@ -764,7 +764,6 @@ class dataserver
 		}
 
 		echo $g->render();
-		die();
 
 		$this->debug->unguard(true);
 		return true;
