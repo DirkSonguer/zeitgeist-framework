@@ -47,7 +47,7 @@
 	<!-- TemplateBeginBlock name="logoutbutton" -->
 	<div class="menuicon" style="float:right; margin-top:5px;">
 	
-	<a href="@@{[help.index]}@@" target="_blank"><span onmousemove="showTooltip('Hilfe', event)" onmouseout="hideTooltip()">
+	<a href="@@{[help.index]}@@"><span onmousemove="showTooltip('Hilfe', event)" onmouseout="hideTooltip()">
 	<img src="@@{templatepath}@@/nuvola/48x48/apps/filetypes.png" alt="" border="0" /></span></a>	
 
 	</div>
@@ -72,10 +72,26 @@
 				<td valign="top">
 					<h2 class="help">Konfiguration</h2>
 					<ul class="sortlink">
-						<li class="help"><a href="@@{[help.index]}@@&topic=configexamples" class="help">Beispielhafte Konfigurationen</a></li>
 						<li class="help"><a href="@@{[help.index]}@@&topic=groups" class="help">Gruppen anlegen/verwalten</a></li>
 						<li class="help"><a href="@@{[help.index]}@@&topic=workflows" class="help">Aufgabenabläufe anlegen/verwalten</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=configexamples" class="help">Beispielhafte Konfigurationen</a></li>
 						<li class="help"><a href="@@{[help.index]}@@&topic=users" class="help">Benutzer anlegen/verwalten</a></li>
+					</ul>
+				</td>
+				<td valign="top">
+					<h2 class="help">&nbsp;</h2>
+					<ul class="sortlink">
+						<li class="help"><a href="@@{[help.index]}@@&topic=adhoc" class="help">Ad-Hoc Aufgaben</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=userroles" class="help">Benutzerrollen</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=search" class="help">Aufgaben suchen</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=reports" class="help">Reports verwenden</a></li>
+					</ul>
+				</td>
+				<td valign="top">
+					<h2 class="help">Über Taskkun</h2>
+					<ul class="sortlink">
+						<li class="help"><a href="@@{[help.index]}@@&topic=versions" class="help">Versionen & Updates</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=impress" class="help">Über Menschenwerk</a></li>
 					</ul>
 				</td>
 			</tr>
@@ -102,8 +118,18 @@
 <!-- InstanceBeginEditable name="body" -->
 
 <div class="textbox">
-	<h2>Taskkun - einfach Projektmanagement</h2>
-	<p>Das Problem vieler Projektmanagement-Lösungen ist ihre Komplexität. Im Grunde sieht man sich einem Berg Funktionalität gegenüber, den man schlichtweg nicht braucht. Taskkun ist anders.</p>
+
+	<table collspacing="0" cellpaddin="0" border="0">
+		<tr>
+			<td valign="top">
+				<h2>Taskkun - einfach Projektmanagement</h2>
+				<p>Das Problem vieler Projektmanagement-Lösungen ist ihre Komplexität. Im Grunde sieht man sich einem Berg Funktionalität gegenüber, den man schlichtweg nicht braucht. Taskkun ist anders. Indem es sich auf einen bestimmten Teilbereich des Projektmanagements konzentriert, ist Taskkun sehr fokussiert und besteht nur aus wenigen sehr wirkungsvollen Werkzeugen.</p>
+			</td>
+			<td valign="top">
+				<p><img src="@@{templatepath}@@/nuvola/128x128/apps/filetypes.png" alt="" border="0" /></p>
+			</td>
+		</tr>
+	</table>
 	
 	<h3>Das Konzept von Taskkun</h3>
 	<p>Mit Taskkun überwacht und dokumentiert man die Ausführung eines Projekts. Nicht mehr und nicht weniger. Anforderungsmanagement, Projektplanung, Budgetierung und alle anderen Projektmanagementaufgaben sind ausgeblendet. <em>Taskkun konzentriert sich ganz auf die Bedürfnisse des Projektteams während der Entwicklung.</em></p>

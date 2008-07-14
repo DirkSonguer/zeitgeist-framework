@@ -47,7 +47,7 @@
 	<!-- TemplateBeginBlock name="logoutbutton" -->
 	<div class="menuicon" style="float:right; margin-top:5px;">
 	
-	<a href="@@{[help.index]}@@" target="_blank"><span onmousemove="showTooltip('Hilfe', event)" onmouseout="hideTooltip()">
+	<a href="@@{[help.index]}@@"><span onmousemove="showTooltip('Hilfe', event)" onmouseout="hideTooltip()">
 	<img src="@@{templatepath}@@/nuvola/48x48/apps/filetypes.png" alt="" border="0" /></span></a>	
 
 	</div>
@@ -72,10 +72,26 @@
 				<td valign="top">
 					<h2 class="help">Konfiguration</h2>
 					<ul class="sortlink">
-						<li class="help"><a href="@@{[help.index]}@@&topic=configexamples" class="help">Beispielhafte Konfigurationen</a></li>
 						<li class="help"><a href="@@{[help.index]}@@&topic=groups" class="help">Gruppen anlegen/verwalten</a></li>
 						<li class="help"><a href="@@{[help.index]}@@&topic=workflows" class="help">Aufgabenabläufe anlegen/verwalten</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=configexamples" class="help">Beispielhafte Konfigurationen</a></li>
 						<li class="help"><a href="@@{[help.index]}@@&topic=users" class="help">Benutzer anlegen/verwalten</a></li>
+					</ul>
+				</td>
+				<td valign="top">
+					<h2 class="help">&nbsp;</h2>
+					<ul class="sortlink">
+						<li class="help"><a href="@@{[help.index]}@@&topic=adhoc" class="help">Ad-Hoc Aufgaben</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=userroles" class="help">Benutzerrollen</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=search" class="help">Aufgaben suchen</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=reports" class="help">Reports verwenden</a></li>
+					</ul>
+				</td>
+				<td valign="top">
+					<h2 class="help">Über Taskkun</h2>
+					<ul class="sortlink">
+						<li class="help"><a href="@@{[help.index]}@@&topic=versions" class="help">Versionen & Updates</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=impress" class="help">Über Menschenwerk</a></li>
 					</ul>
 				</td>
 			</tr>
@@ -102,10 +118,20 @@
 <!-- InstanceBeginEditable name="body" -->
 
 <div class="textbox">
-	<h2>Beispielhafte Konfigurationen</h2>
-	<p>Taskkun lässt sich gemäß ihren eigenen Abläufen konfigurieren. Die Anwendung ist in der Lage von klassischen Wasserfall-Modellen bis zu agilen Prozessabläufen flexible Szenarien von Arbeitsabläufen abzubilden.</p>
+
+	<table collspacing="0" cellpaddin="0" border="0">
+		<tr>
+			<td valign="top">
+				<h2>Beispielhafte Konfigurationen</h2>
+				<p>Taskkun lässt sich gemäß ihren eigenen Abläufen konfigurieren. Die Anwendung ist in der Lage von klassischen Wasserfall-Modellen bis zu agilen Prozessabläufen flexible Szenarien von Arbeitsabläufen abzubilden.</p>
 	
-	<p>Folgend sind zwei Beispiele, wie sich Taskkun auf spezielle Arbeitsabläufe einstellen kann.</p>
+				<p>Folgend sind zwei Beispiele, wie sich Taskkun auf spezielle Arbeitsabläufe einstellen kann.</p>
+			</td>
+			<td valign="top">
+				<p><img src="@@{templatepath}@@/nuvola/128x128/apps/kalzium.png" alt="" border="0" /></p>
+			</td>
+		</tr>
+	</table>
 
 	<h2>Beispiel 1: Abteilungsorientierte Abläufe</h2>
 	<p>In diesem Beispiel werden die Abteilungen bzw. Kompetenzen der einzelnen Teammitglieder als Grundlage für die Arbeitsabläufe verwendet.</p>

@@ -47,7 +47,7 @@
 	<!-- TemplateBeginBlock name="logoutbutton" -->
 	<div class="menuicon" style="float:right; margin-top:5px;">
 	
-	<a href="@@{[help.index]}@@" target="_blank"><span onmousemove="showTooltip('Hilfe', event)" onmouseout="hideTooltip()">
+	<a href="@@{[help.index]}@@"><span onmousemove="showTooltip('Hilfe', event)" onmouseout="hideTooltip()">
 	<img src="@@{templatepath}@@/nuvola/48x48/apps/filetypes.png" alt="" border="0" /></span></a>	
 
 	</div>
@@ -72,10 +72,26 @@
 				<td valign="top">
 					<h2 class="help">Konfiguration</h2>
 					<ul class="sortlink">
-						<li class="help"><a href="@@{[help.index]}@@&topic=configexamples" class="help">Beispielhafte Konfigurationen</a></li>
 						<li class="help"><a href="@@{[help.index]}@@&topic=groups" class="help">Gruppen anlegen/verwalten</a></li>
 						<li class="help"><a href="@@{[help.index]}@@&topic=workflows" class="help">Aufgabenabläufe anlegen/verwalten</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=configexamples" class="help">Beispielhafte Konfigurationen</a></li>
 						<li class="help"><a href="@@{[help.index]}@@&topic=users" class="help">Benutzer anlegen/verwalten</a></li>
+					</ul>
+				</td>
+				<td valign="top">
+					<h2 class="help">&nbsp;</h2>
+					<ul class="sortlink">
+						<li class="help"><a href="@@{[help.index]}@@&topic=adhoc" class="help">Ad-Hoc Aufgaben</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=userroles" class="help">Benutzerrollen</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=search" class="help">Aufgaben suchen</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=reports" class="help">Reports verwenden</a></li>
+					</ul>
+				</td>
+				<td valign="top">
+					<h2 class="help">Über Taskkun</h2>
+					<ul class="sortlink">
+						<li class="help"><a href="@@{[help.index]}@@&topic=versions" class="help">Versionen & Updates</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=impress" class="help">Über Menschenwerk</a></li>
 					</ul>
 				</td>
 			</tr>
@@ -102,30 +118,40 @@
 <!-- InstanceBeginEditable name="body" -->
 
 <div class="textbox">
-	<h2>Taskkun Schnellstart</h2>
-	<p>Bei Taskkun handelt es sich um eine Onlineanwendung, um die Ausführung von Projekten zu handhaben und zu dokumentieren. Taskkun setzt nach dem Aufwandsmanagement und Projektplanung an und endet vor dem Projektabschluss. Durch die Konzentration auf einen Teilaspekt des Projektmanagements, ist Taskkun auf das nötigste beschränkt und überfordert die Anwender nicht mit für sie unnötigen Funktionalitäten.</p>
+
+	<table collspacing="0" cellpaddin="0" border="0">
+		<tr>
+			<td valign="top">
+				<h2>Taskkun Schnellstart</h2>
+				<p>Bei Taskkun handelt es sich um eine Onlineanwendung, um die Ausführung von Projekten zu handhaben und zu dokumentieren. Taskkun setzt nach dem Aufwandsmanagement und Projektplanung an und endet vor dem Projektabschluss. Durch die Konzentration auf einen Teilaspekt des Projektmanagements, ist Taskkun auf das nötigste beschränkt und überfordert den Anwender nicht mit für ihn unnötigen Funktionalitäten.</p>
+			</td>
+			<td valign="top">
+				<p><img src="@@{templatepath}@@/nuvola/128x128/apps/filetypes.png" alt="" border="0" /></p>
+			</td>
+		</tr>
+	</table>
 
 	<p>Entwickelt wurde Taskkun im Hinblick auf kleine bis mittelgroße Teams, deren Tagesgeschäft vornehmlich aus vielen kleinen, abgeschlossenen Aufgaben besteht. Umfangreichere Projekte werden in viele Einzelaufgaben aufgeteilt, die sich wiederrum auf viele Personen, Projektgruppen oder Abteilungen verteilen. Taskkun ermöglicht es, solche Strukturen in beliebiger Weise abzubilden, sei es mit klassischen Wasserfall-Modellen oder mit agilen Prozessstrukturen. Die Anwendung lässt sich so konfigurieren, dass sie sich den Prozessen des Teams anpasst und nicht umgekehrt.</p>
 
-	<p>Im Einsatz können Projektverantwortliche mit einem minimalen administrativen Aufwand Aufgaben anlegen und verteilen. Mitarbeiter an einem Projekt können gleichermaßen schnell und effizient ihre Projekttätigkeiten eintragen.</p>
+	<p>Im Einsatz können Projektverantwortliche mit einem minimalen administrativen Aufwand Aufgaben anlegen und verteilen. Mitarbeiter an einem Projekt können gleichermaßen schnell und effizient ihre Aufgaben überblicken und bearbeiten.</p>
 	
 	<h2>Vorbereitung</h2>
-	<p>Vor dem Einsatz von Taskkun im Projektalltag muss der Administrator zunächst die Anwendung vorkonfigurieren um die Arbeitsabläufe des Projektteams abzubilden. Bitte beachten Sie, dass die Einrichtung von Taskkun nur von einem Administrator-Account aus durchgeführt werden kann. Weder Benutzer noch Manager haben ausreichende Rechte, um die entsprechenden Menüpunkte aufrufen zu können.</p>
+	<p>Vor dem Einsatz von Taskkun im Projektalltag muss der Administrator zunächst die Anwendung vorkonfigurieren, um die Arbeitsabläufe des Projektteams abzubilden. Bitte beachten Sie, dass die Einrichtung von Taskkun nur von einem Administrator-Account aus durchgeführt werden kann. Weder Benutzer noch Manager haben ausreichende Rechte, um die entsprechenden Menüpunkte aufrufen zu können.</p>
 	
 	<h3>Erstellen von Projektgruppen</h3>
-	<p>Zunächst müssen die vorhandenen Gruppen hinzugefügt werden. Eine Gruppe kann als ein Element eines Arbeitsablaufs verstanden werden. In einem klassischen Wasserfall-Modell wäre es beispielsweise sinnvoll einzelne Abteilungen als Gruppe zu definieren. In agileren Ablaufstrukturen wären die Gruppen eher eine Abbildung der Phasen einer Aufgabe. Beispiele für die Einteilung in Gruppen finden Sie hier.</p>
+	<p>Zunächst müssen die vorhandenen Gruppen hinzugefügt werden. Eine Gruppe kann als ein Element eines Arbeitsablaufs verstanden werden. In einem klassischen Wasserfall-Modell wäre es beispielsweise sinnvoll einzelne Abteilungen als Gruppe zu definieren. In agileren Ablaufstrukturen wären die Gruppen eher eine Abbildung der Phasen einer Aufgabe. Beispiele für die Einteilung in Gruppen finden Sie im Kapitel "<a href="@@{[help.index]}@@&topic=configexamples">Beispielshafte Konfigurationen</a>".</p>
 	
 	<p>Gruppen werden über den Menüpunkt: "Gruppen verwalten" hinzugefügt und bearbeitet. Nähere Informationen zum Verwalten von Benutzern finden Sie im Kapitel: "Gruppen".</p>
 	
 	<h3>Festlegen von Aufgabenabläufen</h3>
 	<p>Anschließend müssen die Aufgabenabläufe definiert werden. Aufgabenabläufe beschreiben einen Weg durch die vorher angelegten Gruppen. Alle später angelegten Aufgaben werden einem Aufgabenablauf zugeteilt und durchlaufen daraufhin dessen Gruppen.</p>
 	
-	<p>Aufgabenabläufe werden über den Menüpunkt: "Aufgabenabläufe verwalten" hinzugefügt und bearbeitet. Nähere Informationen zum Verwalten von Aufgabenabläufen finden Sie im Kapitel: "Aufgabenabläufe".</p>
+	<p>Aufgabenabläufe werden über den Menüpunkt: "Aufgabenabläufe verwalten" hinzugefügt und bearbeitet. Nähere Informationen zum Verwalten von Aufgabenabläufen finden Sie im Kapitel: "<a href="@@{[help.index]}@@&topic=workflows">Aufgabenabläufe</a>".</p>
 
 	<h3>Hinzufügen des Projektteams</h3>
 	<p>Schließlich sollten alle Mitglieder des Projektteams hinzugefügt werden, so dass diese Taskkun benutzen können.</p>
 	
-	<p>Neue Benutzer können mit dem Menüpunkt: "Benutzer verwalten" hinzugefügt und bearbeitet werden. Nähere Informationen zum Verwalten von Benutzern finden Sie im Kapitel: "Benutzer".</p>
+	<p>Neue Benutzer können mit dem Menüpunkt: "Benutzer verwalten" hinzugefügt und bearbeitet werden. Nähere Informationen zum Verwalten von Benutzern finden Sie im Kapitel: "<a href="@@{[help.index]}@@&topic=users">Benutzer</a>".</p>
 
 	<h2>Managen von Aufgaben</h2>
 	<p>Das Managen von Tätigkeiten ist die Aufgabe der Benutzer mit der Rolle "Manager". Sie haben die Aufgabe, die eigentlichen Tätigkeiten für die Gruppen und deren Benutzer zu definieren und deren Durchführung zu überwachen.</p>
@@ -137,12 +163,10 @@
 
 	<p>Das Stundenbudget beschreibt die Anzahl der Stunden, die für die neue Aufgabe vorgesehen sind. Die Fälligkeit gibt das Datum an, bis wann die neue Aufgabe erledigt sein sollte. Bei Übertretung der beiden Angaben erfolgen jeweils Warnungen an den Manager.</p>
 
-	<p>Tags sind beschreibende Stichwörter zu einer Aufgabe. In Taskkun gibt es weder Kunden noch Projekte im herkömmlichen Sinne. Projekte und Kundenzugehörigkeit werden über Tags definiert. So lassen sich alle Aufgaben ihren entsprechenden Tags nach zuordnen. Es ist demnach ratsam für jeden Kunden und für jedes Projekt eigene Tags zu definieren und gewissenhaft zu benutzen.</p>
+	<p>Tags sind beschreibende Stichwörter zu einer Aufgabe. In Taskkun gibt es weder Kunden, Iterationen, noch Projekte im herkömmlichen Sinne. Alle Zugehörigkeiten werden über Tags definiert. So lassen sich alle Aufgaben ihren entsprechenden Tags nach zuordnen. Es ist demnach ratsam für jede logische Gruppierung von Aufgaben eigene Tags zu definieren und gewissenhaft zu benutzen.</p>
 
 	<h3>Übersicht und Editieren von Aufgaben</h3>
-	<p>Mit dem Symbol "Alle aktiven Aufgaben anzeigen" kann sich ein Manager alle zur Zeit im System aktiven Aufgaben auflisten. Zu sehen ist der Titel, sowie Priorität, gelantes und bisher verbrauchtes Stundenbudget, sowie das Fälligkeitsdatum der Aufgabe. </p>
-	
-	<p>Die Priorität, das Stundenbudget und die Fälligkeit sind farblich markiert:</p>
+	<p>Mit dem Symbol "Alle aktiven Aufgaben anzeigen" kann sich ein Manager alle zur Zeit im System aktiven Aufgaben auflisten. Zu sehen ist der Titel, sowie Priorität, geplantes und bisher verbrauchtes Stundenbudget, sowie das Fälligkeitsdatum der Aufgabe. Wichtige Angaben sind über die Farbgebung und Symbole markiert, um einen schnellen Überblick zu gewährleisten:</p>
 	
 	<ul>
 		<li>Grüne und rote Anzeiger für niedrige und hohe Priorität.</li>
@@ -150,13 +174,21 @@
 		<li>Grüne, gelbe und rote Anzeiger für Aufgaben im, auf oder über dem Terminplan. </li>
 	</ul>
 	
-	<p>Wird eine Aufgabe angeklickt, so öffnet sich eine Detailübersicht der Aufgabe. Zu sehen sind die bisherigen Tätigkeiten, sowie Details zur Aufgabe, die sich editieren lassen. Des weiteren erscheint eine Auswahl zum Löschen der Aufgabe.</p>
+	<p>Wird eine Aufgabe angeklickt, so öffnet sich eine Detailübersicht der Aufgabe. Zu sehen sind die bisherigen Tätigkeiten, sowie Details zur Aufgabe, die sich editieren lassen. Des Weiteren erscheint eine Auswahl zum Löschen der Aufgabe.</p>
 
 	<h2>Bearbeiten von Aufgaben</h2>
-	<p>Aufgaben können von Benutzern bearbeitet und anschließend abgeschlossen bzw. zurückgegeben werden. Normale Benutzer können keine Aufgaben anlegen oder editieren, jedoch "Ad-Hoc"-Aufgaben anlegen, die in sich geschlossen und bereits fertig bearbeitet sind.</p>
+	<p>Aufgaben können von Benutzern angenommen, bearbeitet und anschließend abgeschlossen bzw. zurückgegeben werden. Normale Benutzer können keine Aufgaben anlegen oder editieren, jedoch "Ad-Hoc"-Aufgaben eintragen, die in sich geschlossen und bereits fertig bearbeitet sind.</p>
 
+	<h3>Eigene Aufgaben & Aufgaben der Gruppen</h3>
+	<p>Eine neu erstellte Aufgabe ist zunächst gemäß ihrem Ablauf einer Gruppe zugewiesen. Jedes Teammitglied, das sich in der Gruppe befindet, kann die Aufgabe in der Aufgabenübersicht in der Liste der Aufgaben seiner Gruppe sehen. Damit ein Benutzer eine Aufgabe bearbeiten kann, muss er sie zunächst übernehmen. Übernommene Aufgaben sind nur noch für den entsprechenden Benutzer sichtbar, der sie nun bearbeiten kann.</p>
+	
+	<p>Dies tut er, indem er auf den grünen Haken rechts neben der Aufgabenbeschreibung klickt. Anschließend findet er sie in der Übersicht der ihm zugewiesenen Aufgaben wieder. Die Aufgabe ist nicht mehr in der Gruppe verfügbar und kann nur noch von dem Besitzer bearbeitet werden.</p>
+	
+	<p>In der Übersicht der eigenen Aufgaben</p>
+	
+	
+	
 <!--	
-Aufgaben annehmen & bearbeiten
 Aufgaben abschließen
 Ad-Hoc Aufgaben
 Reports
@@ -164,6 +196,7 @@ Von „http://wiki.zeitalter3.de/index.php?title=Taskkun_Hilfe_Schnellstart“
 Kategorien: Taskkun | Taskkun Hilfe
 	•		
 -->
+
 </div>
 
 <!-- InstanceEndEditable -->
