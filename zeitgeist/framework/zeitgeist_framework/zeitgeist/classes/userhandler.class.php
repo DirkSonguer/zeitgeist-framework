@@ -1122,6 +1122,10 @@ class zgUserhandler
 
 		if ($this->session->getBoundIP() != getenv('REMOTE_ADDR'))
 		{
+			$this->session->unsetSessionVariable('user_userid');
+			$this->session->unsetSessionVariable('user_key');
+			$this->session->stopSession();
+
 			$this->debug->write('Problem validating the user session: IP does not match the session', 'warning');
 			$this->messages->setMessage('Problem validating the user session: IP does not match the session', 'warning');
 			$this->debug->unguard(false);
