@@ -501,7 +501,7 @@ class dataserver
 
 		$userfunctions = new tkUserfunctions();
 
-		$sql = 'SELECT ta.*, COUNT(ta.tag_id) as tag_count FROM taskkun.tasks t ';
+		$sql = 'SELECT ta.*, COUNT(ta.tag_id) as tag_count FROM tasks t ';
 		$sql .= 'LEFT JOIN tags_to_tasks t2t ON t.task_id = t2t.tagtasks_task ';
 		$sql .= 'LEFT JOIN tags ta ON t2t.tagtasks_tag = ta.tag_id ';
 		$sql .= "AND t.task_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
