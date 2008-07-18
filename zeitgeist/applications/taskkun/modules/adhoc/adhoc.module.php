@@ -30,6 +30,18 @@ class adhoc
 		$tpl->load($this->configuration->getConfiguration('adhoc', 'templates', 'adhoc_index'));
 		$tpl->assign('documenttitle', 'Ad-Hoc-Tätigkeit eintragen');
 
+		$taskfunctions = new tkTaskfunctions();
+		$tasktypefunctions = new tkTasktypefunctions();
+		
+		$tasktypes = $tasktypefunctions->getTasktypesForUser();
+		if (count($tasktypes) == 0)
+		{
+			$this->messages->setMessage('Um neue Ad-Hoc Aufgaben hinzuzufügen, müssen zuvor Gruppen und Aufgabenabläufe angelegt sein.', 'usererror');
+			$this->debug->unguard(true);
+			$tpl->redirect($tpl->createLink('groups', 'index'));
+			return(true);
+		}
+
 		$addadhocForm = new zgStaticform();
 		$addadhocForm->load('forms/addadhoc.form.ini');
 		$formvalid = $addadhocForm->process($parameters);
