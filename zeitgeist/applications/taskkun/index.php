@@ -70,7 +70,7 @@
 	}
 
 	// test if user is logged in
-	if ( (!$user->establishUserSession()) && ($module != 'register') )
+	if ( (!$user->establishUserSession()) && ($module != 'register')  && ($module != 'help') )
 	{
 		$module = 'main';
 		$action = 'login';

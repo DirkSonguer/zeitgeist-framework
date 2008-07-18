@@ -218,7 +218,7 @@
 			<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Tags*</p></td>
 			<td align="left" valign="middle"@@{task_tags:formerror}@@>
 				<input maxlength="512" style="width:650px; margin-top:10px;" id="taginput" name="addtask[task_tags]" value="@@{task_tags:value}@@" class="formtext" type="text" />
-				<span onmousemove="showTooltip('Alle Tags anzeigen', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/1downarrow.png" alt="" onclick="AdditionalInformation.open();" name="groupIcon" border="0" /></span>
+				<span onmousemove="showTooltip('Alle Tags anzeigen', event);" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/22x22/actions/1downarrow.png" alt="" onclick="AdditionalInformation.open();" name="groupIcon" border="0" /></span>
 				<p style="margin-left:0px;">(Mehrere Tags durch Komma trennen. Bitte <u>mindestens</u> Kunde und evtl. Projekt angeben)
 				<!-- TemplateBeginBlock name="task_tags:errormsg" -->
 					<br /><span class="formerrormsg">@@{task_tags:errormsg}@@</span>

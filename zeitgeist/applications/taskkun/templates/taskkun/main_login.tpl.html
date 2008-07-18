@@ -87,24 +87,24 @@
 <!-- InstanceBeginEditable name="body" -->
 
 <div class="textbox">
-	<table border="0" cellpadding="0" cellspacing="5" width="950">
+	<table border="0" cellpadding="0" cellspacing="5" width="950" style="margin-left:auto; margin-right:auto; margin-top:20px; margin-bottom:15px;">
 		<tr>
-			<td width="140">
+			<td width="180">
 				<p><img src="@@{templatepath}@@/nuvola/128x128/apps/important.png" alt="Authentication required" border="0" /></p>
 			</td>
 			<td valign="middle">
-				<h2 style="margin-bottom:0px;">Taskkun - Login</h2>
-				<p>Bitte geben Sie Ihre Zugangsdaten ein, um Taskkun benutzen zu können.</p>
+				<h2 style="margin-bottom:0px;">Taskkun - einfach Projektmanagement</h2>
+				<p>Bitte geben Sie Ihre Zugangsdaten ein..</p>
 	
 				<form method="post" action="@@{[main.login]}@@" name="login">
 					<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px; margin-left:15px;">
 						<tr>
 							<td align="right" nowrap="nowrap" width="110"><p class="formlabel">E-Mail</p></td>
-							<td align="left" valign="middle" nowrap="nowrap"><input type="text" size="60" maxlength="60" name="username" class="formtext" style="width:250px;" /></td>
+							<td align="left" valign="middle" nowrap="nowrap"><input type="text" size="60" maxlength="60" name="username" class="formtext" style="width:300px;" /></td>
 						</tr>
 						<tr>
 							<td align="right" nowrap="nowrap"><p class="formlabel">Passwort</p></td>
-							<td align="left" valign="middle" nowrap="nowrap"><input type="password" size="32" maxlength="60" name="password" class="formtext" style="width:250px;" /></td>
+							<td align="left" valign="middle" nowrap="nowrap"><input type="password" size="60" maxlength="60" name="password" class="formtext" style="width:300px;" /></td>
 						</tr>
 						<tr>
 							<td align="left" nowrap="nowrap">&nbsp;</td>
@@ -113,10 +113,29 @@
 					</table>
 				</form>
 			</td>
+			<td width="200" valign="top">
+				<p style="text-align:right; margin-top:0px;"><a href="@@{[register.index]}@@">
+				<span onmousemove="showTooltip('Neue Instanz registrieren', event);" onmouseout="hideTooltip();">
+				<img src="@@{templatepath}@@/nuvola/48x48/actions/edit_add.png" alt="Neue Instanz registrieren" border="0" />
+				</span></a></p>
+
+				<p style="text-align:right;"><a href="@@{[help.index]}@@" target="_blank">
+				<span onmousemove="showTooltip('Taskkun Hilfe', event);" onmouseout="hideTooltip();">
+				<img src="@@{templatepath}@@/nuvola/48x48/apps/filetypes.png" alt="Taskkun Hilfe" border="0" />
+				</span></a></p>
+
+				<p style="text-align:right;"><a href="http://www.taskkun.de">
+				<span onmousemove="showTooltip('Taskkun Hauptseite', event);" onmouseout="hideTooltip();">
+				<img src="@@{templatepath}@@/nuvola/48x48/filesystems/folder_home.png" alt="Taskkun Hauptseite" border="0" />
+				</span></a></p>
+
+				<p style="text-align:right;"><a href="http://blog.taskkun.de" target="_blank">
+				<span onmousemove="showTooltip('Taskkun Blog', event);" onmouseout="hideTooltip();">
+				<img src="@@{templatepath}@@/nuvola/48x48/mimetypes/document.png" alt="Taskkun Blog" border="0" />
+				</span></a></p>
+			</td>
 		</tr>
 	</table>
-	
-	<p style="text-align:right;"><a href="@@{[register.index]}@@">Neue Instanz registrieren</a></p>
 </div>
 	
 
