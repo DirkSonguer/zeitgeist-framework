@@ -46,13 +46,22 @@ class tasks
 		$tpl->load($this->configuration->getConfiguration('tasks', 'templates', 'tasks_addtask'));
 		$tpl->assign('documenttitle', 'Aufgabe hinzufügen');
 		$tpl->assign('helptopic', '&topic=addtask');
+		
+		$taskfunctions = new tkTaskfunctions();
+		$tasktypefunctions = new tkTasktypefunctions();
+		
+		$tasktypes = $tasktypefunctions->getTasktypesForUser();
+		if (count($tasktypes) == 0)
+		{
+			$this->messages->setMessage('Um neue Aufgaben hinzuzufügen, müssen zuvor Gruppen und Aufgabenabläufe angelegt sein.', 'usererror');
+			$this->debug->unguard(true);
+			$tpl->redirect($tpl->createLink('groups', 'index'));
+			return(true);
+		}
 
 		$addtaskForm = new zgStaticform();
 		$addtaskForm->load('forms/addtask.form.ini');
 		$formvalid = $addtaskForm->process($parameters);
-
-		$taskfunctions = new tkTaskfunctions();
-		$tasktypefunctions = new tkTasktypefunctions();
 
 		if (!empty($parameters['submit']))
 		{
