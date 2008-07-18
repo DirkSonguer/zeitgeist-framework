@@ -166,7 +166,7 @@
 		
 			<div spry:state="ready">
 			<p style="text-align:center;">
-				<a spry:repeat="dsTags" href="javascript:addTag('{dsTags::tag_text}')" style="margin-left:5px; margin-right:5px;" class='tag{dsTags::tag_score}'>{dsTags::tag_text}</a>
+				<a spry:repeat="dsTags" href="javascript:addTag('{dsTags::tag_text}')" style="margin-left:5px; margin-right:5px;" class='tag{dsTags::tag_score}'> {dsTags::tag_text}</a>
 			</p>
 			<div style="clear:both;"></div>
 			</div>
@@ -211,9 +211,9 @@
 					</div>
 				</td>
 				<td width="120"><p style="text-align:center;">
-				<span onmousemove="showTooltip('Details', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.taskdetails]}@@&id={dsResults::task_id}" alt="Details"><img src="@@{templatepath}@@/nuvola/22x22/apps/kappfinder.png" alt="Details" border="0" /></a></span> &nbsp; 
-				<span onmousemove="showTooltip('Aufgabe bearbeiten', event)" onmouseout="hideTooltip()"><a href="@@{[tasks.edittask]}@@&id={dsResults::task_id}" alt="Aufgabe bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/apps/kate.png" alt="Aufgabe bearbeiten" border="0" /></a></span> &nbsp; 
-				<span onmousemove="showTooltip('Aufgabe löschen', event)" onmouseout="hideTooltip()"><a href="javascript:deleteTask({dsResults::task_id}, '{dsResults::task_name}')" alt="Aufgabe löschen"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Aufgabe löschen" border="0" /></a></span>
+				<span onmousemove="showTooltip('Details', event)" onmouseout="hideTooltip();"><a href="@@{[tasks.taskdetails]}@@&id={dsResults::task_id}" alt="Details"><img src="@@{templatepath}@@/nuvola/22x22/apps/kappfinder.png" alt="Details" border="0" /></a></span> &nbsp; 
+				<span onmousemove="showTooltip('Aufgabe bearbeiten', event)" onmouseout="hideTooltip();"><a href="@@{[tasks.edittask]}@@&id={dsResults::task_id}" alt="Aufgabe bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/apps/kate.png" alt="Aufgabe bearbeiten" border="0" /></a></span> &nbsp; 
+				<span onmousemove="showTooltip('Aufgabe löschen', event)" onmouseout="hideTooltip();"><a href="javascript:deleteTask({dsResults::task_id}, '{dsResults::task_name}')" alt="Aufgabe löschen"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Aufgabe löschen" border="0" /></a></span>
                 </p></td>
 	        </tr>
 	    </table>
