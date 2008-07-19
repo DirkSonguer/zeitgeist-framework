@@ -74,7 +74,16 @@
 	{
 		$module = 'main';
 		$action = 'login';
-	}	
+	}
+	
+	$systemwarnings = $message->getMessagesByType('warning');
+	foreach($systemwarnings as $warnings)
+	{
+		if ($warnings->message == 'Problem validating the user session: IP does not match the session')
+		{
+			$message->setMessage('Ihre Sitzung ist abgelaufen. Sie wurden aus Sicherheitsgründen abgemeldet', 'usererror');
+		}
+	}
 
 	// load event
 	$ret = $eventhandler->callEvent($module, $action);
