@@ -15,7 +15,7 @@
  */
 
 	define('TASKKUN_ACTIVE', true);
-//	define('DEBUGMODE', true);
+	define('DEBUGMODE', true);
 
 	include('zeitgeist/zeitgeist.php');
 
@@ -30,11 +30,7 @@
 	include_once('includes/open-flash-chart/open_flash_chart_object.php');
 	include_once('includes/open-flash-chart/open-flash-chart.php');
 
-	define('ZG_DB_DBSERVER', 'localhost');
-	define('ZG_DB_USERNAME', 'taskkun');
-	define('ZG_DB_USERPASS', 'taskkun');
-	define('ZG_DB_DATABASE', 'taskkun');
-	define('ZG_DB_CONFIGURATIONCACHE', 'configurationcache');
+	include('configuration/taskkun.config.php');
 
 	$debug = zgDebug::init();
 	$message = zgMessages::init();
