@@ -32,19 +32,18 @@
 
 		var dsGroups = new Spry.Data.XMLDataSet("@@{[dataserver.getgroups]}@@", "container/element");
 
+		var dsTags = new Spry.Data.XMLDataSet("@@{[dataserver.getalltags]}@@", "container/element", { useCache: false });
+		dsTags.setColumnType("tag_id", "number");
+		dsTags.setColumnType("tag_count", "number");
+
 		function insertData(dataElement, dataContent)
 		{
 			document.getElementById(dataElement).innerHTML = dataContent;
 		}
 	
-		function taskDetails(id, name)
-		{
-		   window.location.href = "@@{[tasks.taskdetails]}@@"+"&id="+id;
-		}
-		
 		function editTask(id)
 		{
-		   window.location.href = "@@{[tasks.edittask]}@@"+"&id="+id;
+		   window.location.href = "@@{[tasks.edittask]}@@"+"&task_id="+id;
 		}
 					
 		function deleteTask(id, name)
@@ -57,6 +56,11 @@
 			}
 		}
 
+		function filterTag(tagText)
+		{
+			filterSpryDataset('task_tags', tagText, dsTasks, false);
+		}
+		
 		function filterGroup()
 		{
 			filterParameter = document.getElementById('filter_group').value;
@@ -170,7 +174,7 @@
 
 	<div class="CollapsiblePanelContent">
 		<form name="formFilter" method="post" action="#">
-		<table border="0" cellpadding="0" cellspacing="0" cellpadding="0" cellspacing="0" style="margin-top:0px;">
+		<table border="0" cellpadding="0" cellspacing="0" cellpadding="0" cellspacing="0" style="margin-top:0px; margin-bottom:10px;">
 			<tr>
 				<td width="130" valign="top" rowspan="4">
 					<p><img src="@@{templatepath}@@/nuvola/128x128/apps/kghostview.png" alt="Aufgaben filtern" border="0" /></p>
@@ -228,6 +232,20 @@
 			</tr>
 		</table>
 		</form>
+		
+		<div spry:region="dsTags">
+			<h2 style="background:#B5BD82; padding:5px;">Filtern nach Tags</h2>
+			<div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
+		
+			<div spry:state="ready">
+			<p style="text-align:center;">
+				<span spry:repeat="dsTags"> <a href="javascript:filterTag('{dsTags::tag_text}')" style="margin-left:5px; margin-right:5px;" class='tag{dsTags::tag_score}'> {dsTags::tag_text}</a></span>
+			</p>
+			<div style="clear:both;"></div>
+			</div>
+			<br />
+		</div>
+		
 	</div>
 </div>
 

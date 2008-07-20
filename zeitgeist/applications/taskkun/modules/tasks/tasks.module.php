@@ -128,15 +128,15 @@ class tasks
 		$tpl->assign('documenttitle', 'Aufgabe bearbeiten');
 		$tpl->assign('helptopic', '&topic=edittask');
 
-		$addtaskForm = new zgStaticform();
-		$addtaskForm->load('forms/edittask.form.ini');
+		$edittaskForm = new zgStaticform();
+		$edittaskForm->load('forms/edittask.form.ini');
 
 		$taskfunctions = new tkTaskfunctions();
 		$tasktypefunctions = new tkTasktypefunctions();
-
+		
 		if (!empty($parameters['submit']))
 		{
-			$formvalid = $addtaskForm->process($parameters);
+			$formvalid = $edittaskForm->process($parameters);
 
 			if ($formvalid)
 			{
@@ -160,9 +160,9 @@ class tasks
 			$tpl->assign('priority_' . $parameters['edittask']['task_priority'], 'selected="selected"');
 		}
 
-		if(!empty($parameters['id']))
+		if(!empty($parameters['task_id']))
 		{
-			$taskinformation = $taskfunctions->getTaskInformation($parameters['id']);
+			$taskinformation = $taskfunctions->getTaskInformation($parameters['task_id']);
 
 			if ($taskinformation['task_begin'] == '00.00.0000') $taskinformation['task_begin'] = '';
 			if ($taskinformation['task_end'] == '00.00.0000') $taskinformation['task_end'] = '';
@@ -186,10 +186,10 @@ class tasks
 
 			$processData = array();
 			$processData['edittask'] = $taskinformation;
-			$formvalid = $addtaskForm->process($processData);
+			$formvalid = $edittaskForm->process($processData);
 		}
 
-		$formcreated = $addtaskForm->create($tpl);
+		$formcreated = $edittaskForm->create($tpl);
 
 		$tpl->show();
 
