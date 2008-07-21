@@ -63,19 +63,19 @@ class groups
 
 				if ($groupfunctions->addGroup($groupdata))
 				{
-					$this->messages->setMessage('Neue Gruppendaten wurden gespeichert', 'usermessage');
+					$this->messages->setMessage('Die neuen Gruppendaten wurden gespeichert.', 'usermessage');
 					$tpl = new tkTemplate();
 					$tpl->redirect($tpl->createLink('groups', 'index'));
 					return true;
 				}
 				else
 				{
-					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verstndigen Sie einen Administrator', 'usererror');
+					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator.', 'usererror');
 				}
 			}
 			else
 			{
-				$this->messages->setMessage('Fehler bei der Eingabe. Bitte berprfen Sie Ihre Angaben sorgfltig.', 'userwarning');
+				$this->messages->setMessage('Fehler bei der Eingabe. Bitte überprüfen Sie Ihre Angaben sorgfältig.', 'userwarning');
 			}
 		}
 
@@ -114,19 +114,19 @@ class groups
 
 				if ($groupfunctions->updateGroup($groupdata))
 				{
-					$this->messages->setMessage('Neue Gruppendaten wurden gespeichert', 'usermessage');
+					$this->messages->setMessage('Die neuen Gruppendaten wurden gespeichert.', 'usermessage');
 					$tpl = new tkTemplate();
 					$tpl->redirect($tpl->createLink('groups', 'index'));
 					return true;
 				}
 				else
 				{
-					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verstndigen Sie einen Administrator', 'usererror');
+					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator.', 'usererror');
 				}
 			}
 			else
 			{
-				$this->messages->setMessage('Fehler bei der Eingabe. Bitte berprfen Sie Ihre Angaben sorgfltig.', 'userwarning');
+				$this->messages->setMessage('Fehler bei der Eingabe. Bitte überprüfen Sie Ihre Angaben sorgfältig.', 'userwarning');
 			}
 		}
 		else
@@ -156,11 +156,11 @@ class groups
 			$groupfunctions = new tkGroupfunctions();
 			if ($groupfunctions->deleteGroup($parameters['id']))
 			{
-				$this->messages->setMessage('Die Gruppe wurde entfernt', 'usermessage');
+				$this->messages->setMessage('Die Gruppe wurde aus dem System entfernt.', 'usermessage');
 			}
 			else
 			{
-				$this->messages->setMessage('Die Gruppe konnte nicht gelscht werden. Bitte verstndigen Sie einen Administrator', 'usererror');
+				$this->messages->setMessage('Die Gruppe konnte nicht gelöscht werden. Bitte verständigen Sie einen Administrator.', 'usererror');
 			}
 		}
 

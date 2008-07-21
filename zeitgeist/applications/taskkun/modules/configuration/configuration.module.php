@@ -53,8 +53,8 @@ class configuration
 					if (!$this->user->changeUsername($newUserdata['user_username']))
 					{
 						$configurationForm->validateElement('user_username', false);
-						$this->debug->write('Der Benutzername existiert bereits. Bitte wählen Sie einen anderen Benutzernamen aus.', 'warning');
-						$this->messages->setMessage('Der Benutzername existiert bereits. Bitte wählen Sie einen anderen Benutzernamen aus.', 'userwarning');
+						$this->debug->write('Die Email des neuen Benutzers existiert bereits im System. Bitte wählen Sie eine anderen Email aus.', 'warning');
+						$this->messages->setMessage('Die Email des neuen Benutzers existiert bereits im System. Bitte wählen Sie eine anderen Email aus.', 'userwarning');
 						$updateProblems= true;
 					}
 				}
@@ -80,12 +80,12 @@ class configuration
 
 				if (!$updateProblems)
 				{
-					$this->messages->setMessage('Die Daten wurden erfolgreich gespeichert.', 'usermessage');
+					$this->messages->setMessage('Die Benuterdaten wurden gespeichert.', 'usermessage');
 				}
 			}
 			else
 			{
-				$this->messages->setMessage('Fehler bei der Eingabe. Bitte überprüfen Sie Ihre Angaben sorgfältig.', 'userwarning');
+				$this->messages->setMessage('Fehler bei der Eingabe der Benutzerdaten. Bitte überprüfen Sie Ihre Angaben sorgfältig.', 'userwarning');
 			}
 		}
 		else
