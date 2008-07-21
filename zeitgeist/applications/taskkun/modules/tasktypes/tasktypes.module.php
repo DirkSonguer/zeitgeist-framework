@@ -72,7 +72,7 @@ class tasktypes
 				$tasktypeParameters = $parameters['edittasktype'];
 				if ($tasktypefunctions->updateTasktype($tasktypeParameters))
 			{
-				$this->messages->setMessage('Der Aufgabenablauf wurde erfolgreich geändert.', 'usermessage');
+				$this->messages->setMessage('Der Aufgabenablauf wurde geändert.', 'usermessage');
 			}
 			else
 			{
@@ -145,7 +145,7 @@ class tasktypes
 				$tasktypeParameters = $parameters['edittasktype'];
 				if ($tasktypefunctions->updateTasktype($tasktypeParameters))
 			{
-				$this->messages->setMessage('Der Aufgabenablauf wurde erfolgreich geändert.', 'usermessage');
+				$this->messages->setMessage('Der Aufgabenablauf wurde geändert.', 'usermessage');
 			}
 			else
 			{
@@ -189,7 +189,7 @@ class tasktypes
 		{
 			if ($tasktypefunctions->deleteTasktype($parameters['id']))
 			{
-				$this->messages->setMessage('Der Aufgabenablauf wurde erfolgreich gelöscht', 'usermessage');
+				$this->messages->setMessage('Der Aufgabenablauf wurde gelöscht', 'usermessage');
 			}
 			else
 			{

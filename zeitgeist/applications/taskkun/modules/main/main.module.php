@@ -93,7 +93,7 @@ class main
 			}
 			else
 			{
-				$this->messages->setMessage('Bitte geben Sie einen gültigen Benutzernamen und das dazugehörige  Passwort ein.', 'userwarning');
+				$this->messages->setMessage('Bitte geben Sie einen gültigen Benutzernamen und das dazugehörige Passwort ein.', 'userwarning');
 			}
 		}
 

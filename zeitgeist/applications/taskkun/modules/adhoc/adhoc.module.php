@@ -33,10 +33,19 @@ class adhoc
 		$taskfunctions = new tkTaskfunctions();
 		$tasktypefunctions = new tkTasktypefunctions();
 		
-		$tasktypes = $tasktypefunctions->getTasktypesForUser();
+		$tasktypes = $tasktypefunctions->getTasktypes();
 		if (count($tasktypes) == 0)
 		{
 			$this->messages->setMessage('Um neue Ad-Hoc Aufgaben hinzuzufügen, müssen zuvor Gruppen und Aufgabenabläufe angelegt sein.', 'usererror');
+			$this->debug->unguard(true);
+			$tpl->redirect($tpl->createLink('groups', 'index'));
+			return(true);
+		}
+
+		$tasktypes = $tasktypefunctions->getTasktypesForUser();
+		if (count($tasktypes) == 0)
+		{
+			$this->messages->setMessage('Um neue Ad-Hoc Aufgaben hinzuzufügen, müssen Sie zuvor einer Gruppe mit Aufgabenabläufen zugeordnet sein.', 'usererror');
 			$this->debug->unguard(true);
 			$tpl->redirect($tpl->createLink('groups', 'index'));
 			return(true);
@@ -61,7 +70,7 @@ class adhoc
 				}
 				else
 				{
-					$this->messages->setMessage('Die Ad-Hoc-Tätigkeitsbeschreibung wurde gespeichert', 'usermessage');
+					$this->messages->setMessage('Die Ad-Hoc Tätigkeitsbeschreibung wurde gespeichert und im Archiv abgelegt.', 'usermessage');
 				}
 
 				$this->debug->unguard(true);

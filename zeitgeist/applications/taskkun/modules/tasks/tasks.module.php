@@ -50,10 +50,19 @@ class tasks
 		$taskfunctions = new tkTaskfunctions();
 		$tasktypefunctions = new tkTasktypefunctions();
 		
-		$tasktypes = $tasktypefunctions->getTasktypesForUser();
+		$tasktypes = $tasktypefunctions->getTasktypes();
 		if (count($tasktypes) == 0)
 		{
 			$this->messages->setMessage('Um neue Aufgaben hinzuzufügen, müssen zuvor Gruppen und Aufgabenabläufe angelegt sein.', 'usererror');
+			$this->debug->unguard(true);
+			$tpl->redirect($tpl->createLink('groups', 'index'));
+			return(true);
+		}
+
+		$tasktypes = $tasktypefunctions->getTasktypesForUser();
+		if (count($tasktypes) == 0)
+		{
+			$this->messages->setMessage('Um neue Ad-Hoc Aufgaben hinzuzufügen, müssen Sie zuvor einer Gruppe mit Aufgabenabläufen zugeordnet sein.', 'usererror');
 			$this->debug->unguard(true);
 			$tpl->redirect($tpl->createLink('groups', 'index'));
 			return(true);
@@ -69,11 +78,11 @@ class tasks
 			{
 				if (!$taskfunctions->addTask($parameters['addtask']))
 				{
-					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator', 'usererror');
+					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator.', 'usererror');
 				}
 				else
 				{
-					$this->messages->setMessage('Die Informationen wurden gespeichert', 'usermessage');
+					$this->messages->setMessage('Die neue Aufgabe wurde angelegt und der ersten Gruppe im gewählten Aufgabenablauf zugewiesen.', 'usermessage');
 					$this->debug->unguard(true);
 					$tpl->redirect($tpl->createLink('tasks', 'showactivetasks'));
 					return(true);
@@ -81,7 +90,7 @@ class tasks
 			}
 			else
 			{
-				$this->messages->setMessage('Bitte füllen Sie alle Formularfelder korrekt aus', 'userwarning');
+				$this->messages->setMessage('Bitte füllen Sie alle Formularfelder korrekt aus.', 'userwarning');
 			}
 		}
 
@@ -142,11 +151,11 @@ class tasks
 			{
 				if (!$taskfunctions->updateTask($parameters['edittask']))
 				{
-					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator', 'usererror');
+					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator.', 'usererror');
 				}
 				else
 				{
-					$this->messages->setMessage('Die Informationen wurden gespeichert', 'usermessage');
+					$this->messages->setMessage('Die Aufgabe wurde gespeichert.', 'usermessage');
 					$this->debug->unguard(true);
 					$tpl->redirect($tpl->createLink('tasks', 'showactivetasks'));
 					return true;
@@ -154,7 +163,7 @@ class tasks
 			}
 			else
 			{
-				$this->messages->setMessage('Bitte füllen Sie alle Formularfelder korrekt aus', 'userwarning');
+				$this->messages->setMessage('Bitte füllen Sie alle Formularfelder korrekt aus.', 'userwarning');
 			}
 
 			$tpl->assign('priority_' . $parameters['edittask']['task_priority'], 'selected="selected"');
@@ -208,11 +217,11 @@ class tasks
 		{
 			if ($taskfunctions->deleteTask($parameters['id']))
 			{
-				$this->messages->setMessage('Die Aufgabe wurde erfolgreich gelöscht', 'usermessage');
+				$this->messages->setMessage('Die Aufgabe wurde gelöscht.', 'usermessage');
 			}
 			else
 			{
-				$this->messages->setMessage('Die Aufgabe konnte nicht gelöscht werden. Bitte verständigen Sie einen Administrator', 'usererror');
+				$this->messages->setMessage('Die Aufgabe konnte nicht gelöscht werden. Bitte verständigen Sie einen Administrator.', 'usererror');
 			}
 		}
 
@@ -289,23 +298,23 @@ class tasks
 
 				if (!$tasklogfunctions->addTasklog($formcontent))
 				{
-					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator', 'usererror');
+					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator.', 'usererror');
 				}
 				else
 				{
-					$this->messages->setMessage('Die Tätigkeitsbeschreibung wurde gespeichert', 'usermessage');
+					$this->messages->setMessage('Die Tätigkeitsbeschreibung wurde gespeichert.', 'usermessage');
 				}
 
 				switch($parameters['submitButton'])
 				{
 					case 2:
 						$tasktypefunctions->workflowDown($formcontent['tasklog_task']);
-						$this->messages->setMessage('Die Aufgabe wurde zurückgegeben', 'usermessage');
+						$this->messages->setMessage('Die Aufgabe wurde im Aufgabenablauf zurückgegeben.', 'usermessage');
 						break;
 
 					case 3:
 						$tasktypefunctions->workflowUp($formcontent['tasklog_task']);
-						$this->messages->setMessage('Die Aufgabe wurde abgeschlossen', 'usermessage');
+						$this->messages->setMessage('Die Aufgabe wurde abgeschlossen und im Aufgabenablauf weitergegeben.', 'usermessage');
 						break;
 
 					default:
@@ -321,7 +330,7 @@ class tasks
 			{
 				case 2:
 					$tasktypefunctions->workflowDown($formcontent['tasklog_task']);
-					$this->messages->setMessage('Die Aufgabe wurde zurückgegeben', 'usermessage');
+					$this->messages->setMessage('Die Aufgabe wurde im Aufgabenablauf zurückgegeben.', 'usermessage');
 					$this->debug->unguard(true);
 					$tpl->redirect($tpl->createLink('tasks', 'index'));
 					return true;
@@ -329,7 +338,7 @@ class tasks
 
 				case 3:
 					$tasktypefunctions->workflowUp($formcontent['tasklog_task']);
-					$this->messages->setMessage('Die Aufgabe wurde abgeschlossen', 'usermessage');
+					$this->messages->setMessage('Die Aufgabe wurde abgeschlossen und im Aufgabenablauf weitergegeben.', 'usermessage');
 					$this->debug->unguard(true);
 					$tpl->redirect($tpl->createLink('tasks', 'index'));
 					return true;
@@ -400,7 +409,7 @@ class tasks
 
 				if ($tasklogfunctions->updateTasklog($formcontent))
 				{
-					$this->messages->setMessage('Die Tätigkeitsbeschreibung wurde gespeichert', 'usermessage');
+					$this->messages->setMessage('Die Tätigkeitsbeschreibung wurde gespeichert.', 'usermessage');
 					$taskloginformation = $tasklogfunctions->getTasklog($parameters['id']);
 					$parameters = array();
 					$parameters['id'] = $taskloginformation['tasklog_task'];
@@ -410,12 +419,12 @@ class tasks
 				}
 				else
 				{
-					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator', 'usererror');
+					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator.', 'usererror');
 				}
 			}
 			else
 			{
-				$this->messages->setMessage('Bitte füllen Sie alle Formularfelder korrekt aus', 'userwarning');
+				$this->messages->setMessage('Bitte füllen Sie alle Formularfelder korrekt aus.', 'userwarning');
 			}
 		}
 
@@ -469,11 +478,11 @@ class tasks
 
 			if ($tasklogfunctions->deleteTasklog($parameters['id'], $taskid))
 			{
-				$this->messages->setMessage('Die Aufgabenbeschreibung wurde erfolgreich gelöscht', 'usermessage');
+				$this->messages->setMessage('Die Aufgabenbeschreibung wurde gelöscht.', 'usermessage');
 			}
 			else
 			{
-				$this->messages->setMessage('Die Aufgabenbeschreibung konnte nicht gelöscht werden. Bitte verständigen Sie einen Administrator', 'usererror');
+				$this->messages->setMessage('Die Aufgabenbeschreibung konnte nicht gelöscht werden. Bitte verständigen Sie einen Administrator.', 'usererror');
 			}
 		}
 

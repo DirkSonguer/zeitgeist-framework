@@ -100,7 +100,7 @@ class register
 							{
 								$this->user->deactivateUser($lastinsert[0]->message);
 								$this->messages->setMessage('Ihre Instanz wurde erfolgreich angelegt. Sie können die Beta von Taskkun nutzen, sobald wir sie dafür freigeschaltet haben.', 'usermessage');
-								$this->messages->setMessage('Die Freischaltung erfolgt manuell, bitte haben Sie also etwas Geduld. Sie werden per E-Mail kontaktiert, wenn es so weit ist.', 'usermessage');
+								$this->messages->setMessage('Die Freischaltung erfolgt manuell, bitte haben Sie also etwas Geduld. Sie werden per E-Mail kontaktiert, sobald es so weit ist.', 'usermessage');
 								$this->messages->setMessage('Unrechtmäßige Anmeldungen zur Beta werden kommentarlos entfernt.', 'usermessage');
 							}
 

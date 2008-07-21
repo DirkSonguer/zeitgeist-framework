@@ -89,7 +89,7 @@ class users
 					}
 					else
 					{
-						$this->messages->setMessage('Die Daten wurden erfolgreich gespeichert.', 'usermessage');
+						$this->messages->setMessage('Der Benutzer wurde hinzugefügt.', 'usermessage');
 						$this->debug->unguard(true);
 						$tpl->redirect($tpl->createLink('users', 'index'));
 						return true;
@@ -242,7 +242,7 @@ class users
 
 				if (!$updateProblems)
 				{
-					$this->messages->setMessage('Die Daten wurden erfolgreich gespeichert.', 'usermessage');
+					$this->messages->setMessage('Die Benutzerdaten wurden geändert.', 'usermessage');
 				}
 			}
 			else
