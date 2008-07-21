@@ -43,18 +43,18 @@ class reports
 		$tpl = new tkTemplate();
 		$tpl->load($this->configuration->getConfiguration('reports', 'templates', 'reports_finishedtasks'));
 
-		$tasktypefunctions = new tkTasktypefunctions();
+		$workflowfunctions = new tkWorkflowfunctions();
 		$userfunctions = new tkUserfunctions();
 
 		$dataLink = $tpl->createLink('dataserver', 'finishedtaskschartdata');
 		$ret = open_flash_chart_object_str( 920, 200, $dataLink, true, $this->configuration->getConfiguration('taskkun', 'application', 'basepath') . '/includes/open-flash-chart/');
 		$tpl->assign('finishedtasks_chart', $ret);
 
-		$tasktypes = $tasktypefunctions->getTasktypes();
-		foreach ($tasktypes as $tasktype)
+		$workflows = $workflowfunctions->getWorkflows();
+		foreach ($workflows as $workflow)
 		{
-			$tpl->assignDataset($tasktype);
-			$tpl->insertBlock('tasktype_loop');
+			$tpl->assignDataset($workflow);
+			$tpl->insertBlock('workflow_loop');
 		}
 
 		$users = $userfunctions->getUserinformation();

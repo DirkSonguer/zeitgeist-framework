@@ -91,7 +91,7 @@
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kdmconfig.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[groups.index]}@@"><span onmousemove="showTooltip('Gruppen verwalten', event);" onmouseout="hideTooltip();">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/katomic.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[tasktypes.index]}@@"><span onmousemove="showTooltip('Aufgabenabläufe verwalten', event);" onmouseout="hideTooltip();">
+		<div style="float:left; margin:10px;"><a href="@@{[workflows.index]}@@"><span onmousemove="showTooltip('Aufgabenabläufe verwalten', event);" onmouseout="hideTooltip();">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kalzium.png" alt="" border="0" /></span></a></div>
 		<!-- TemplateEndBlock -->
 		
@@ -139,7 +139,7 @@
 					<th><p><a onclick="dsGroups.sort('group_name');" class="sortlink">Name</a></p></th>
 					<th><p><a onclick="dsGroups.sort('group_description');" class="sortlink">Beschreibung</a></p></th>
 					<th width="180"><p style="text-align:center;"><a onclick="dsGroups.sort('group_usercount');" class="sortlink">Benutzer in<br />dieser Gruppe</a></p></th>
-					<th width="180"><p style="text-align:center;"><a onclick="dsGroups.sort('group_tasktypecount');" class="sortlink">Aufgabenabläufe<br />mit dieser Gruppe</a></p></th>
+					<th width="180"><p style="text-align:center;"><a onclick="dsGroups.sort('group_workflowcount');" class="sortlink">Aufgabenabläufe<br />mit dieser Gruppe</a></p></th>
 					<th style="width:90px;"><p class="thtext">Aktion</p></th>
 				</tr>
 
@@ -147,10 +147,10 @@
 					<td><p>{dsGroups::group_name}</p></td>
 					<td><p>{dsGroups::group_description}</p></td>
 					<td width="180"><p style="text-align:center;">{dsGroups::group_usercount}</p></td>
-					<td width="180"><p style="text-align:center;">{dsGroups::group_tasktypecount}</p></td>
+					<td width="180"><p style="text-align:center;">{dsGroups::group_workflowcount}</p></td>
 					<td><p style="text-align:right;">
 					<span onmousemove="showTooltip('Gruppe bearbeiten', event);" onmouseout="hideTooltip();"><a href="@@{[groups.editgroup]}@@&id={dsGroups::group_id}" alt="Gruppe bearbeiten"><img src="@@{templatepath}@@/nuvola/22x22/apps/kate.png" alt="Gruppe bearbeiten" border="0" /></a></span> &nbsp; 
-					<span onmousemove="showTooltip('Gruppe löschen', event);" onmouseout="hideTooltip();"><a href="javascript:deleteGroup({dsGroups::group_id}, {dsGroups::group_tasktypecount}, '{dsGroups::group_name}');" alt="Gruppe löschen"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Gruppe löschen" border="0" /></a></span>
+					<span onmousemove="showTooltip('Gruppe löschen', event);" onmouseout="hideTooltip();"><a href="javascript:deleteGroup({dsGroups::group_id}, {dsGroups::group_workflowcount}, '{dsGroups::group_name}');" alt="Gruppe löschen"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Gruppe löschen" border="0" /></a></span>
 					</p></td>
 				</tr>
 			</table>

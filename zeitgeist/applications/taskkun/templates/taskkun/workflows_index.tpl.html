@@ -18,10 +18,10 @@
 
 	<script type="text/javascript">
 
-		var dsTasktypes = new Spry.Data.XMLDataSet("@@{[dataserver.gettasktypes]}@@", "container/element");
-		dsTasktypes.setColumnType("tasktype_id", "number");
+		var dsWorkflows = new Spry.Data.XMLDataSet("@@{[dataserver.getworkflows]}@@", "container/element");
+		dsWorkflows.setColumnType("workflow_id", "number");
 
-		function deleteTasktype(id, count, name)
+		function deleteWorkflow(id, count, name)
 		{
 			if (count > 0)
 			{
@@ -33,7 +33,7 @@
 
 			if (answer == true)
 			{
-			   window.location.href = "@@{[tasktypes.deletetasktype]}@@"+"&id="+id;
+			   window.location.href = "@@{[workflows.deleteworkflow]}@@"+"&id="+id;
 			}
 		}
 
@@ -90,7 +90,7 @@
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kdmconfig.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[groups.index]}@@"><span onmousemove="showTooltip('Gruppen verwalten', event);" onmouseout="hideTooltip();">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/katomic.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[tasktypes.index]}@@"><span onmousemove="showTooltip('Aufgabenabläufe verwalten', event);" onmouseout="hideTooltip();">
+		<div style="float:left; margin:10px;"><a href="@@{[workflows.index]}@@"><span onmousemove="showTooltip('Aufgabenabläufe verwalten', event);" onmouseout="hideTooltip();">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kalzium.png" alt="" border="0" /></span></a></div>
 		<!-- TemplateEndBlock -->
 		
@@ -122,30 +122,30 @@
 -->
 
 <div class="textbox">
-	<h3><img src="@@{templatepath}@@/nuvola/22x22/actions/view_bottom.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[tasktypes.addtasktype]}@@">Neuen Aufgabenablauf hinzufügen</a></h3>
+	<h3><img src="@@{templatepath}@@/nuvola/22x22/actions/view_bottom.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[workflows.addworkflow]}@@">Neuen Aufgabenablauf hinzufügen</a></h3>
 </div>
 	
 <div class="textbox">
 <h2>Aufgabenabläufe</h2>
 
-	<div spry:region="dsTasktypes">
+	<div spry:region="dsWorkflows">
     <div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
 
 	<div spry:state="ready">
 	    <table border="0" cellspacing="0" cellpadding="0" width="100%">
 	        <tr class="tablehead">
-				<th><p><a onclick="dsTasktypes.sort('tasktype_name');" class="sortlink">Aufgabenablauf</a></p></th>
-				<th><p><a onclick="dsTasktypes.sort('tasktype_description');" class="sortlink">Beschreibung</a></p></th>
+				<th><p><a onclick="dsWorkflows.sort('workflow_name');" class="sortlink">Aufgabenablauf</a></p></th>
+				<th><p><a onclick="dsWorkflows.sort('workflow_description');" class="sortlink">Beschreibung</a></p></th>
 				<th width="180"><p style="text-align:center;"><a onclick="dsGroups.sort('task_count');" class="sortlink">Aktive Aufgaben<br />mit diesem Ablauf</a></p></th>
 				<th><p class="thtext">Aktion</p></th>
 	        </tr>
-	        <tr class="{ds_EvenOddRow}" spry:repeat="dsTasktypes">
-				<td><p>{dsTasktypes::tasktype_name}</p></td>
-				<td><p>{dsTasktypes::tasktype_description}</p></td>
-				<td><p style="text-align:center;">{dsTasktypes::task_count}</p></td>
+	        <tr class="{ds_EvenOddRow}" spry:repeat="dsWorkflows">
+				<td><p>{dsWorkflows::workflow_name}</p></td>
+				<td><p>{dsWorkflows::workflow_description}</p></td>
+				<td><p style="text-align:center;">{dsWorkflows::task_count}</p></td>
 				<td width="90"><p>
-				<span onmousemove="showTooltip('Aufgabenablauf bearbeiten', event);" onmouseout="hideTooltip();"><a href="@@{[tasktypes.edittasktype]}@@&id={dsTasktypes::tasktype_id}"><img src="@@{templatepath}@@/nuvola/22x22/apps/kate.png" alt="Aufgabenablauf bearbeiten" border="0" /></a></span> &nbsp; 
-				<span onmousemove="showTooltip('Aufgabenablauf löschen', event);" onmouseout="hideTooltip();"><a href="javascript:deleteTasktype({dsTasktypes::tasktype_id}, {dsTasktypes::task_count}, '{dsTasktypes::tasktype_name}')"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Aufgabenablauf löschen" border="0" /></a></span>
+				<span onmousemove="showTooltip('Aufgabenablauf bearbeiten', event);" onmouseout="hideTooltip();"><a href="@@{[workflows.editworkflow]}@@&id={dsWorkflows::workflow_id}"><img src="@@{templatepath}@@/nuvola/22x22/apps/kate.png" alt="Aufgabenablauf bearbeiten" border="0" /></a></span> &nbsp; 
+				<span onmousemove="showTooltip('Aufgabenablauf löschen', event);" onmouseout="hideTooltip();"><a href="javascript:deleteWorkflow({dsWorkflows::workflow_id}, {dsWorkflows::task_count}, '{dsWorkflows::workflow_name}')"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Aufgabenablauf löschen" border="0" /></a></span>
                 </p></td>
 	        </tr>
 	    </table>

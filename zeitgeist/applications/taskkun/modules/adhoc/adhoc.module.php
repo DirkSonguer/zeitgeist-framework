@@ -31,10 +31,10 @@ class adhoc
 		$tpl->assign('documenttitle', 'Ad-Hoc-Tätigkeit eintragen');
 
 		$taskfunctions = new tkTaskfunctions();
-		$tasktypefunctions = new tkTasktypefunctions();
+		$workflowfunctions = new tkWorkflowfunctions();
 		
-		$tasktypes = $tasktypefunctions->getTasktypes();
-		if (count($tasktypes) == 0)
+		$workflows = $workflowfunctions->getWorkflows();
+		if (count($workflows) == 0)
 		{
 			$this->messages->setMessage('Um neue Ad-Hoc Aufgaben hinzuzufügen, müssen zuvor Gruppen und Aufgabenabläufe angelegt sein.', 'usererror');
 			$this->debug->unguard(true);
@@ -42,8 +42,8 @@ class adhoc
 			return(true);
 		}
 
-		$tasktypes = $tasktypefunctions->getTasktypesForUser();
-		if (count($tasktypes) == 0)
+		$workflows = $workflowfunctions->getWorkflowsForUser();
+		if (count($workflows) == 0)
 		{
 			$this->messages->setMessage('Um neue Ad-Hoc Aufgaben hinzuzufügen, müssen Sie zuvor einer Gruppe mit Aufgabenabläufen zugeordnet sein.', 'usererror');
 			$this->debug->unguard(true);

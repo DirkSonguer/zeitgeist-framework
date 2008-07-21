@@ -48,10 +48,10 @@ class tasks
 		$tpl->assign('helptopic', '&topic=addtask');
 		
 		$taskfunctions = new tkTaskfunctions();
-		$tasktypefunctions = new tkTasktypefunctions();
+		$workflowfunctions = new tkWorkflowfunctions();
 		
-		$tasktypes = $tasktypefunctions->getTasktypes();
-		if (count($tasktypes) == 0)
+		$workflows = $workflowfunctions->getWorkflows();
+		if (count($workflows) == 0)
 		{
 			$this->messages->setMessage('Um neue Aufgaben hinzuzufügen, müssen zuvor Gruppen und Aufgabenabläufe angelegt sein.', 'usererror');
 			$this->debug->unguard(true);
@@ -59,8 +59,8 @@ class tasks
 			return(true);
 		}
 
-		$tasktypes = $tasktypefunctions->getTasktypesForUser();
-		if (count($tasktypes) == 0)
+		$workflows = $workflowfunctions->getWorkflowsForUser();
+		if (count($workflows) == 0)
 		{
 			$this->messages->setMessage('Um neue Ad-Hoc Aufgaben hinzuzufügen, müssen Sie zuvor einer Gruppe mit Aufgabenabläufen zugeordnet sein.', 'usererror');
 			$this->debug->unguard(true);
@@ -96,24 +96,24 @@ class tasks
 
 		$formcreated = $addtaskForm->create($tpl);
 
-		$tasktypes = $tasktypefunctions->getTasktypesForUser();
+		$workflows = $workflowfunctions->getWorkflowsForUser();
 
-//		if the manager role should be able to create all kinds of tasktypes, uncomment this line.
-//		$tasktypes = $tasktypefunctions->getTasktypes();
+//		if the manager role should be able to create all kinds of workflows, uncomment this line.
+//		$workflows = $workflowfunctions->getWorkflows();
 
-		foreach ($tasktypes as $tasktype)
+		foreach ($workflows as $workflow)
 		{
-			if ( (!empty($parameters['addtask']['task_type'])) && ($parameters['addtask']['task_type'] == $tasktype["tasktype_id"]) )
+			if ( (!empty($parameters['addtask']['task_type'])) && ($parameters['addtask']['task_type'] == $workflow["workflow_id"]) )
 			{
-				$tpl->assign('tasktype_selected', 'selected="selected"');
+				$tpl->assign('workflow_selected', 'selected="selected"');
 			}
 			else
 			{
-				$tpl->assign('tasktype_selected', '');
+				$tpl->assign('workflow_selected', '');
 			}
 
-			$tpl->assignDataset($tasktype);
-			$tpl->insertBlock('tasktype_loop');
+			$tpl->assignDataset($workflow);
+			$tpl->insertBlock('workflow_loop');
 		}
 
 		if (empty($parameters['addtask']['task_begin']))
@@ -141,7 +141,7 @@ class tasks
 		$edittaskForm->load('forms/edittask.form.ini');
 
 		$taskfunctions = new tkTaskfunctions();
-		$tasktypefunctions = new tkTasktypefunctions();
+		$workflowfunctions = new tkWorkflowfunctions();
 		
 		if (!empty($parameters['submit']))
 		{
@@ -176,19 +176,19 @@ class tasks
 			if ($taskinformation['task_begin'] == '00.00.0000') $taskinformation['task_begin'] = '';
 			if ($taskinformation['task_end'] == '00.00.0000') $taskinformation['task_end'] = '';
 
-			$tasktypes = $tasktypefunctions->getTasktypes();
-			foreach ($tasktypes as $tasktype)
+			$workflows = $workflowfunctions->getWorkflows();
+			foreach ($workflows as $workflow)
 			{
-				$tpl->assignDataset($tasktype);
-				if ($taskinformation['task_type'] == $tasktype['tasktype_id'])
+				$tpl->assignDataset($workflow);
+				if ($taskinformation['task_type'] == $workflow['workflow_id'])
 				{
-					$tpl->assign('tasktype_selected', 'selected="selected"');
+					$tpl->assign('workflow_selected', 'selected="selected"');
 				}
 				else
 				{
-					$tpl->assign('tasktype_selected', '');
+					$tpl->assign('workflow_selected', '');
 				}
-				$tpl->insertBlock('tasktype_loop');
+				$tpl->insertBlock('workflow_loop');
 			}
 
 			$tpl->assign('priority_' . $taskinformation['task_priority'], 'selected="selected"');
@@ -284,7 +284,7 @@ class tasks
 
 		$taskfunctions = new tkTaskfunctions();
 		$tasklogfunctions = new tkTasklogfunctions();
-		$tasktypefunctions = new tkTasktypefunctions();
+		$workflowfunctions = new tkWorkflowfunctions();
 
 		$formvalid = $addtasklogForm->process($parameters);
 
@@ -308,12 +308,12 @@ class tasks
 				switch($parameters['submitButton'])
 				{
 					case 2:
-						$tasktypefunctions->workflowDown($formcontent['tasklog_task']);
+						$workflowfunctions->workflowDown($formcontent['tasklog_task']);
 						$this->messages->setMessage('Die Aufgabe wurde im Aufgabenablauf zurückgegeben.', 'usermessage');
 						break;
 
 					case 3:
-						$tasktypefunctions->workflowUp($formcontent['tasklog_task']);
+						$workflowfunctions->workflowUp($formcontent['tasklog_task']);
 						$this->messages->setMessage('Die Aufgabe wurde abgeschlossen und im Aufgabenablauf weitergegeben.', 'usermessage');
 						break;
 
@@ -329,7 +329,7 @@ class tasks
 			switch($parameters['submitButton'])
 			{
 				case 2:
-					$tasktypefunctions->workflowDown($formcontent['tasklog_task']);
+					$workflowfunctions->workflowDown($formcontent['tasklog_task']);
 					$this->messages->setMessage('Die Aufgabe wurde im Aufgabenablauf zurückgegeben.', 'usermessage');
 					$this->debug->unguard(true);
 					$tpl->redirect($tpl->createLink('tasks', 'index'));
@@ -337,7 +337,7 @@ class tasks
 					break;
 
 				case 3:
-					$tasktypefunctions->workflowUp($formcontent['tasklog_task']);
+					$workflowfunctions->workflowUp($formcontent['tasklog_task']);
 					$this->messages->setMessage('Die Aufgabe wurde abgeschlossen und im Aufgabenablauf weitergegeben.', 'usermessage');
 					$this->debug->unguard(true);
 					$tpl->redirect($tpl->createLink('tasks', 'index'));
@@ -524,7 +524,7 @@ class tasks
 		$addtaskForm->load('forms/edittask.form.ini');
 
 		$taskfunctions = new tkTaskfunctions();
-		$tasktypefunctions = new tkTasktypefunctions();
+		$workflowfunctions = new tkWorkflowfunctions();
 
 		if (!empty($parameters['id']))
 		{
@@ -536,7 +536,7 @@ class tasks
 			if ($taskinformation['task_end'] == '00.00.0000') $taskinformation['task_end'] = '';
 
 			$tpl->assign('priority_' . $taskinformation['task_priority'], 'selected="selected"');
-			$tpl->assign('tasktype_name', $taskinformation['tasktype_name']);
+			$tpl->assign('workflow_name', $taskinformation['workflow_name']);
 
 			$processData = array();
 			$processData['edittask'] = $taskinformation;
