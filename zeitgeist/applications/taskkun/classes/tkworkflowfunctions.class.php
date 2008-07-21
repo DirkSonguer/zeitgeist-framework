@@ -2,7 +2,7 @@
 
 defined('TASKKUN_ACTIVE') or die();
 
-class tkTasktypefunctions
+class tkWorkflowfunctions
 {
 	protected $debug;
 	protected $messages;
@@ -23,184 +23,184 @@ class tkTasktypefunctions
 
 
 	/**
-	 * gets all tasktype for the current instance
+	 * gets all workflow for the current instance
 	 *
 	 * instance-safe!
 	 *
 	 * @return array
 	 */
-	public function getTasktypes()
+	public function getWorkflows()
 	{
 		$this->debug->guard();
 
 		$userfunctions = new tkUserfunctions();
 
-		$sql = "SELECT * FROM tasktypes WHERE tasktype_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "'";
+		$sql = "SELECT * FROM workflows WHERE workflow_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
-			$this->debug->write('Problem getting tasktypes from database', 'warning');
-			$this->messages->setMessage('Problem getting tasktypes from database' . $taskid, 'warning');
+			$this->debug->write('Problem getting workflows from database', 'warning');
+			$this->messages->setMessage('Problem getting workflows from database' . $taskid, 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
 
-		$tasktypes = array();
+		$workflows = array();
 		while($row = $this->database->fetchArray($res))
 		{
-			$tasktypes[] = $row;
+			$workflows[] = $row;
 		}
 
-		$this->debug->unguard($tasktypes);
-		return $tasktypes;
+		$this->debug->unguard($workflows);
+		return $workflows;
 	}
 
 
 	/**
-	 * gets all tasktypes for the current user
+	 * gets all workflows for the current user
 	 *
 	 * instance-safe!
 	 *
 	 * @return array
 	 */
-	public function getTasktypesForUser()
+	public function getWorkflowsForUser()
 	{
 		$this->debug->guard();
 
 		$userfunctions = new tkUserfunctions();
 
-		$sql = "SELECT * FROM tasktypes tt ";
-		$sql .= "LEFT JOIN taskworkflows twf ON tt.tasktype_id = twf.taskworkflow_tasktype ";
-		$sql .= "LEFT JOIN users_to_groups u2g ON twf.Taskworkflow_group = u2g.usergroup_group ";
-		$sql .= "WHERE tt.tasktype_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
+		$sql = "SELECT * FROM workflows tt ";
+		$sql .= "LEFT JOIN workflowactions twf ON tt.workflow_id = twf.workflowaction_workflow ";
+		$sql .= "LEFT JOIN users_to_groups u2g ON twf.workflowaction_group = u2g.usergroup_group ";
+		$sql .= "WHERE tt.workflow_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
 		$sql .= "AND u2g.usergroup_user='" . $this->user->getUserID() . "' ";
-		$sql .= "GROUP BY tt.tasktype_id";
+		$sql .= "GROUP BY tt.workflow_id";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
-			$this->debug->write('Problem getting tasktypes from database', 'warning');
-			$this->messages->setMessage('Problem getting tasktypes from database', 'warning');
+			$this->debug->write('Problem getting workflows from database', 'warning');
+			$this->messages->setMessage('Problem getting workflows from database', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
 
-		$tasktypes = array();
+		$workflows = array();
 		while($row = $this->database->fetchArray($res))
 		{
-			$tasktypes[] = $row;
+			$workflows[] = $row;
 		}
 
-		$this->debug->unguard($tasktypes);
-		return $tasktypes;
+		$this->debug->unguard($workflows);
+		return $workflows;
 	}
 
 
 	/**
-	 * gets all information for a given tasktype
+	 * gets all information for a given workflow
 	 *
 	 * instance-safe!
 	 *
-	 * @param integer $tasktypeid id of the tasktype
+	 * @param integer $workflowid id of the workflow
 	 *
 	 * @return array
 	 */
-	public function getTasktypeInformation($tasktypeid)
+	public function getWorkflowInformation($workflowid)
 	{
 		$this->debug->guard();
 
 		$userfunctions = new tkUserfunctions();
 
-		$sql = "SELECT tt.*, COUNT(t.task_id) as tasktype_count FROM tasktypes tt LEFT JOIN tasks t ON tt.tasktype_id = t.task_type ";
-		$sql .= "WHERE tt.tasktype_id='" . $tasktypeid . "' AND tt.tasktype_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
-		$sql .= "GROUP BY tt.tasktype_id;";
+		$sql = "SELECT tt.*, COUNT(t.task_id) as workflow_count FROM workflows tt LEFT JOIN tasks t ON tt.workflow_id = t.task_type ";
+		$sql .= "WHERE tt.workflow_id='" . $workflowid . "' AND tt.workflow_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
+		$sql .= "GROUP BY tt.workflow_id;";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
-			$this->debug->write('Problem getting tasktype information from database: '. $tasktypeid, 'warning');
-			$this->messages->setMessage('Problem getting tasktype information from database: ' . $tasktypeid, 'warning');
+			$this->debug->write('Problem getting workflow information from database: '. $workflowid, 'warning');
+			$this->messages->setMessage('Problem getting workflow information from database: ' . $workflowid, 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
 
-		$tasktypeinformation = $this->database->fetchArray($res);
+		$workflowinformation = $this->database->fetchArray($res);
 
-		$this->debug->unguard($tasktypeinformation);
-		return $tasktypeinformation;
+		$this->debug->unguard($workflowinformation);
+		return $workflowinformation;
 	}
 
 
 	/**
-	 * creates a new tasktype
-	 * the new tasktype is created with default values
+	 * creates a new workflow
+	 * the new workflow is created with default values
 	 *
 	 * instance-safe!
 	 *
 	 * @return array
 	 */
-	public function createTasktype()
+	public function createWorkflow()
 	{
 		$this->debug->guard();
 
 		$userfunctions = new tkUserfunctions();
 		$currentInstance = $userfunctions->getUserInstance($this->user->getUserId());
 
-		$sql = "INSERT INTO tasktypes(tasktype_name, tasktype_description, tasktype_instance) VALUES ";
+		$sql = "INSERT INTO workflows(workflow_name, workflow_description, workflow_instance) VALUES ";
 		$sql .= "('Neuer Aufgabentyp', 'Dies ist ein neuer Aufgabentyp. Bitte ändern Sie den Titel und diese Beschreibung gemäß Ihren Angaben', '" . $userfunctions->getUserInstance($this->user->getUserID()) . "')";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
-			$this->debug->write('Problem inserting tasktype information into database', 'warning');
-			$this->messages->setMessage('Problem inserting tasktype information into database', 'warning');
+			$this->debug->write('Problem inserting workflow information into database', 'warning');
+			$this->messages->setMessage('Problem inserting workflow information into database', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
 
-		$tasktypeid = $this->database->insertId();
+		$workflowid = $this->database->insertId();
 
 		$sql = "SELECT group_id FROM groups WHERE group_instance='" . $currentInstance . "' LIMIT 1";
 		$res = $this->database->query($sql);
 		$row = $this->database->fetchArray($res);
 
-		$sql = "INSERT INTO taskworkflows(taskworkflow_title, taskworkflow_tasktype, taskworkflow_group, taskworkflow_order) ";
-		$sql .= "VALUES ('Neuer Aufgabenablauf', '" . $tasktypeid . "', '" . $row['group_id'] . "', '1')";
+		$sql = "INSERT INTO workflowactions(workflowaction_title, workflowaction_workflow, workflowaction_group, workflowaction_order) ";
+		$sql .= "VALUES ('Neuer Aufgabenablauf', '" . $workflowid . "', '" . $row['group_id'] . "', '1')";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
-			$this->debug->write('Problem inserting workflow for tasktype into database', 'warning');
-			$this->messages->setMessage('Problem inserting workflow for tasktype into database', 'warning');
+			$this->debug->write('Problem inserting workflow for workflow into database', 'warning');
+			$this->messages->setMessage('Problem inserting workflow for workflow into database', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
 
-		$this->debug->unguard($tasktypeid);
-		return $tasktypeid;
+		$this->debug->unguard($workflowid);
+		return $workflowid;
 	}
 
 
 	/**
-	 * updates a tasktype with the given data
+	 * updates a workflow with the given data
 	 *
 	 * instance-safe!
 	 *
-	 * @param array $tasktypedata array with the tasktype data
+	 * @param array $workflowdata array with the workflow data
 	 *
 	 * @return boolean
 	 */
-	public function updateTasktype($tasktypedata = array())
+	public function updateWorkflow($workflowdata = array())
 	{
 		$this->debug->guard();
 
 		$userfunctions = new tkUserfunctions();
 
-		$sql = "UPDATE tasktypes SET tasktype_name='" . $tasktypedata['tasktype_name'] . "', tasktype_description='" . $tasktypedata['tasktype_description'] . "' ";
-		$sql .= "WHERE tasktype_id='" . $tasktypedata['tasktype_id'] . "' ";
-		$sql .= "AND tasktype_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "'";
+		$sql = "UPDATE workflows SET workflow_name='" . $workflowdata['workflow_name'] . "', workflow_description='" . $workflowdata['workflow_description'] . "' ";
+		$sql .= "WHERE workflow_id='" . $workflowdata['workflow_id'] . "' ";
+		$sql .= "AND workflow_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "'";
 
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
-			$this->debug->write('Problem writing tasktypedata to the database', 'warning');
-			$this->messages->setMessage('Problem writing tasktypedata to the database', 'warning');
+			$this->debug->write('Problem writing workflowdata to the database', 'warning');
+			$this->messages->setMessage('Problem writing workflowdata to the database', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -211,30 +211,30 @@ class tkTasktypefunctions
 
 
 	/**
-	 * deletes a given tasktype
+	 * deletes a given workflow
 	 *
 	 * instance-safe!
 	 *
-	 * @param integer $tasktypeid id of the tasktype to delete
+	 * @param integer $workflowid id of the workflow to delete
 	 *
 	 * @return array
 	 */
-	public function deleteTasktype($tasktypeid)
+	public function deleteWorkflow($workflowid)
 	{
 		$this->debug->guard();
 
 		$userfunctions = new tkUserfunctions();
 
-		$sql = "SELECT tt.*, COUNT(t.task_id) as task_count FROM tasktypes tt ";
-		$sql .= "LEFT JOIN tasks t ON tt.tasktype_id = t.task_type ";
-		$sql .= "WHERE tt.tasktype_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
-		$sql .= "AND tt.tasktype_id='" . $tasktypeid . "' ";
-		$sql .= "GROUP BY tt.tasktype_id";
+		$sql = "SELECT tt.*, COUNT(t.task_id) as task_count FROM workflows tt ";
+		$sql .= "LEFT JOIN tasks t ON tt.workflow_id = t.task_type ";
+		$sql .= "WHERE tt.workflow_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
+		$sql .= "AND tt.workflow_id='" . $workflowid . "' ";
+		$sql .= "GROUP BY tt.workflow_id";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
-			$this->debug->write('Problem getting tasktype information from database: '. $tasktypeid, 'warning');
-			$this->messages->setMessage('Problem getting tasktype information from database: ' . $tasktypeid, 'warning');
+			$this->debug->write('Problem getting workflow information from database: '. $workflowid, 'warning');
+			$this->messages->setMessage('Problem getting workflow information from database: ' . $workflowid, 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -243,60 +243,60 @@ class tkTasktypefunctions
 
 		if ( (!isset($row['task_count'])) || ($row['task_count'] > 0) )
 		{
-			$this->debug->write('Tasktype does not exist, is out of bounds or has children: '. $tasktypeid, 'warning');
-			$this->messages->setMessage('Tasktype does not exist, is out of bounds or has children: ' . $tasktypeid, 'warning');
+			$this->debug->write('Workflow does not exist, is out of bounds or has children: '. $workflowid, 'warning');
+			$this->messages->setMessage('Workflow does not exist, is out of bounds or has children: ' . $workflowid, 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
 
-		$sql = "DELETE FROM tasktypes WHERE tasktype_id='" . $tasktypeid . "' AND tasktype_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "'";
+		$sql = "DELETE FROM workflows WHERE workflow_id='" . $workflowid . "' AND workflow_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
-			$this->debug->write('Problem deleting tasktype information from database', 'warning');
-			$this->messages->setMessage('Problem deleting tasktype information from database', 'warning');
+			$this->debug->write('Problem deleting workflow information from database', 'warning');
+			$this->messages->setMessage('Problem deleting workflow information from database', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
 
-		$sql = "DELETE FROM taskworkflows WHERE taskworkflow_tasktype='" . $tasktypeid . "'";
+		$sql = "DELETE FROM workflowactions WHERE workflowaction_workflow='" . $workflowid . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
-			$this->debug->write('Problem deleting taskworkflows information from database', 'warning');
-			$this->messages->setMessage('Problem deleting taskworkflows information from database', 'warning');
+			$this->debug->write('Problem deleting workflowactions information from database', 'warning');
+			$this->messages->setMessage('Problem deleting workflowactions information from database', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
 
-		$this->debug->unguard($tasktypeid);
-		return $tasktypeid;
+		$this->debug->unguard($workflowid);
+		return $workflowid;
 	}
 
 
 	/**
-	 * gets all information for a workflow
+	 * gets a given workflow
 	 *
 	 * instance-safe!
 	 *
-	 * @param integer $tasktypeid id of the tasktype that is contained by the workflow
+	 * @param integer $workflowid id of the workflow that is contained by the workflow
 	 *
 	 * @return array
 	 */
-	public function getWorkflowInformation($tasktypeid)
+	public function getWorkflow($workflowid)
 	{
 		$this->debug->guard();
 
 		$userfunctions = new tkUserfunctions();
 
-		$sql = "SELECT twf.* FROM taskworkflows twf ";
-		$sql .= "LEFT JOIN tasktypes tt ON twf.taskworkflow_tasktype = tt.tasktype_id ";
-		$sql .= "WHERE twf.taskworkflow_tasktype='" . $tasktypeid . "' AND tt.tasktype_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
+		$sql = "SELECT twf.* FROM workflowactions twf ";
+		$sql .= "LEFT JOIN workflows tt ON twf.workflowaction_workflow = tt.workflow_id ";
+		$sql .= "WHERE twf.workflowaction_workflow='" . $workflowid . "' AND tt.workflow_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
-			$this->debug->write('Problem getting workflow for tasktype from database: '. $tasktypeid, 'warning');
-			$this->messages->setMessage('Problem getting workflow for tasktype from database: ' . $tasktypeid, 'warning');
+			$this->debug->write('Problem getting workflow for workflow from database: '. $workflowid, 'warning');
+			$this->messages->setMessage('Problem getting workflow for workflow from database: ' . $workflowid, 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -335,14 +335,14 @@ class tkTasktypefunctions
 			return false;
 		}
 
-		$sql = "SELECT twf.*, t.task_workflow FROM taskworkflows twf LEFT JOIN tasks t ON twf.taskworkflow_tasktype = t.task_type ";
-		$sql .= "WHERE t.task_id='" . $taskid . "' ORDER BY twf.taskworkflow_order";
+		$sql = "SELECT twf.*, t.task_workflow FROM workflowactions twf LEFT JOIN tasks t ON twf.workflowaction_workflow = t.task_type ";
+		$sql .= "WHERE t.task_id='" . $taskid . "' ORDER BY twf.workflowaction_order";
 		$res = $this->database->query($sql);
 
 		$workflowOrder = array();
 		while ($row = $this->database->fetchArray($res))
 		{
-			$workflowOrder[$row['taskworkflow_order']] = $row['taskworkflow_id'];
+			$workflowOrder[$row['workflowaction_order']] = $row['workflowaction_id'];
 			$lastRow = $row;
 		}
 
@@ -416,14 +416,14 @@ class tkTasktypefunctions
 			return false;
 		}
 
-		$sql = "SELECT twf.*, t.task_workflow FROM taskworkflows twf LEFT JOIN tasks t ON twf.taskworkflow_tasktype = t.task_type ";
-		$sql .= "WHERE t.task_id='" . $taskid . "' ORDER BY twf.taskworkflow_order";
+		$sql = "SELECT twf.*, t.task_workflow FROM workflowactions twf LEFT JOIN tasks t ON twf.workflowaction_workflow = t.task_type ";
+		$sql .= "WHERE t.task_id='" . $taskid . "' ORDER BY twf.workflowaction_order";
 		$res = $this->database->query($sql);
 
 		$workflowOrder = array();
 		while ($row = $this->database->fetchArray($res))
 		{
-			$workflowOrder[$row['taskworkflow_order']] = $row['taskworkflow_id'];
+			$workflowOrder[$row['workflowaction_order']] = $row['workflowaction_id'];
 			$lastRow = $row;
 		}
 

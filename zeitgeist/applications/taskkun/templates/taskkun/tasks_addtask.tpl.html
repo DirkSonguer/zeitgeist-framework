@@ -93,7 +93,7 @@
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kdmconfig.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[groups.index]}@@"><span onmousemove="showTooltip('Gruppen verwalten', event);" onmouseout="hideTooltip();">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/katomic.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[tasktypes.index]}@@"><span onmousemove="showTooltip('Aufgabenabläufe verwalten', event);" onmouseout="hideTooltip();">
+		<div style="float:left; margin:10px;"><a href="@@{[workflows.index]}@@"><span onmousemove="showTooltip('Aufgabenabläufe verwalten', event);" onmouseout="hideTooltip();">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kalzium.png" alt="" border="0" /></span></a></div>
 		<!-- TemplateEndBlock -->
 		
@@ -157,8 +157,8 @@
 						<td align="right" nowrap="nowrap" valign="top" width="170"><p class="formlabel">Aufgabenablauf*</p></td>
 						<td align="left" valign="middle">
 							<select name="addtask[task_type]" class="formtext">
-								<!-- TemplateBeginBlock name="tasktype_loop" -->
-									<option value="@@{tasktype_id}@@"@@{tasktype_selected}@@>@@{tasktype_name}@@</option>
+								<!-- TemplateBeginBlock name="workflow_loop" -->
+									<option value="@@{workflow_id}@@"@@{workflow_selected}@@>@@{workflow_name}@@</option>
 								<!-- TemplateEndBlock -->
 							</select>
 						</td>
