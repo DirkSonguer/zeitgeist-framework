@@ -103,7 +103,7 @@ class tasks
 
 		foreach ($workflows as $workflow)
 		{
-			if ( (!empty($parameters['addtask']['task_type'])) && ($parameters['addtask']['task_type'] == $workflow["workflow_id"]) )
+			if ( (!empty($parameters['addtask']['task_workflow'])) && ($parameters['addtask']['task_workflow'] == $workflow["workflow_id"]) )
 			{
 				$tpl->assign('workflow_selected', 'selected="selected"');
 			}
@@ -180,7 +180,7 @@ class tasks
 			foreach ($workflows as $workflow)
 			{
 				$tpl->assignDataset($workflow);
-				if ($taskinformation['task_type'] == $workflow['workflow_id'])
+				if ($taskinformation['task_workflow'] == $workflow['workflow_id'])
 				{
 					$tpl->assign('workflow_selected', 'selected="selected"');
 				}

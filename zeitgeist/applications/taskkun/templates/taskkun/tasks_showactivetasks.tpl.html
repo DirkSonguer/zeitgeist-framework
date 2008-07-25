@@ -32,7 +32,7 @@
 
 		var dsGroups = new Spry.Data.XMLDataSet("@@{[dataserver.getgroups]}@@", "container/element");
 
-		var dsTags = new Spry.Data.XMLDataSet("@@{[dataserver.getactivetags]}@@", "container/element", { useCache: false });
+		var dsTags = new Spry.Data.XMLDataSet("@@{[dataserver.getalltags]}@@", "container/element", { useCache: false });
 		dsTags.setColumnType("tag_id", "number");
 		dsTags.setColumnType("tag_count", "number");
 

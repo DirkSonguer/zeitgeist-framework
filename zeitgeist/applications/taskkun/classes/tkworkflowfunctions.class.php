@@ -23,7 +23,7 @@ class tkWorkflowfunctions
 
 
 	/**
-	 * gets all workflow for the current instance
+	 * gets all workflows for the current instance
 	 *
 	 * instance-safe!
 	 *
@@ -69,12 +69,12 @@ class tkWorkflowfunctions
 
 		$userfunctions = new tkUserfunctions();
 
-		$sql = "SELECT * FROM workflows tt ";
-		$sql .= "LEFT JOIN workflowactions twf ON tt.workflow_id = twf.workflowaction_workflow ";
-		$sql .= "LEFT JOIN users_to_groups u2g ON twf.workflowaction_group = u2g.usergroup_group ";
-		$sql .= "WHERE tt.workflow_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
+		$sql = "SELECT * FROM workflows wf ";
+		$sql .= "LEFT JOIN workflows_to_groups w2g ON wf.workflow_id = w2g.workflowgroup_workflow ";
+		$sql .= "LEFT JOIN users_to_groups u2g ON w2g.workflowgroup_group = u2g.usergroup_group ";
+		$sql .= "WHERE wf.workflow_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
 		$sql .= "AND u2g.usergroup_user='" . $this->user->getUserID() . "' ";
-		$sql .= "GROUP BY tt.workflow_id";
+		$sql .= "GROUP BY wf.workflow_id";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -110,9 +110,9 @@ class tkWorkflowfunctions
 
 		$userfunctions = new tkUserfunctions();
 
-		$sql = "SELECT tt.*, COUNT(t.task_id) as workflow_count FROM workflows tt LEFT JOIN tasks t ON tt.workflow_id = t.task_type ";
-		$sql .= "WHERE tt.workflow_id='" . $workflowid . "' AND tt.workflow_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
-		$sql .= "GROUP BY tt.workflow_id;";
+		$sql = "SELECT wf.*, COUNT(t.task_id) as workflow_count FROM workflows wf LEFT JOIN tasks t ON wf.workflow_id = t.task_workflowgroup ";
+		$sql .= "WHERE wf.workflow_id='" . $workflowid . "' AND wf.workflow_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
+		$sql .= "GROUP BY wf.workflow_id;";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -144,6 +144,7 @@ class tkWorkflowfunctions
 		$userfunctions = new tkUserfunctions();
 		$currentInstance = $userfunctions->getUserInstance($this->user->getUserId());
 
+//TODO: Localisation!
 		$sql = "INSERT INTO workflows(workflow_name, workflow_description, workflow_instance) VALUES ";
 		$sql .= "('Neuer Aufgabentyp', 'Dies ist ein neuer Aufgabentyp. Bitte ändern Sie den Titel und diese Beschreibung gemäß Ihren Angaben', '" . $userfunctions->getUserInstance($this->user->getUserID()) . "')";
 		$res = $this->database->query($sql);
@@ -161,7 +162,7 @@ class tkWorkflowfunctions
 		$res = $this->database->query($sql);
 		$row = $this->database->fetchArray($res);
 
-		$sql = "INSERT INTO workflowactions(workflowaction_title, workflowaction_workflow, workflowaction_group, workflowaction_order) ";
+		$sql = "INSERT INTO workflows_to_groups(workflowgroup_title, workflowgroup_workflow, workflowgroup_group, workflowgroup_order) ";
 		$sql .= "VALUES ('Neuer Aufgabenablauf', '" . $workflowid . "', '" . $row['group_id'] . "', '1')";
 		$res = $this->database->query($sql);
 		if (!$res)
@@ -225,11 +226,11 @@ class tkWorkflowfunctions
 
 		$userfunctions = new tkUserfunctions();
 
-		$sql = "SELECT tt.*, COUNT(t.task_id) as task_count FROM workflows tt ";
-		$sql .= "LEFT JOIN tasks t ON tt.workflow_id = t.task_type ";
-		$sql .= "WHERE tt.workflow_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
-		$sql .= "AND tt.workflow_id='" . $workflowid . "' ";
-		$sql .= "GROUP BY tt.workflow_id";
+		$sql = "SELECT wf.*, COUNT(t.task_id) as task_count FROM workflows wf ";
+		$sql .= "LEFT JOIN tasks t ON wf.workflow_id = t.task_workflow ";
+		$sql .= "WHERE wf.workflow_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
+		$sql .= "AND wf.workflow_id='" . $workflowid . "' ";
+		$sql .= "GROUP BY wf.workflow_id";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -259,12 +260,12 @@ class tkWorkflowfunctions
 			return false;
 		}
 
-		$sql = "DELETE FROM workflowactions WHERE workflowaction_workflow='" . $workflowid . "'";
+		$sql = "DELETE FROM workflows_to_groups WHERE workflowgroup_workflow='" . $workflowid . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
-			$this->debug->write('Problem deleting workflowactions information from database', 'warning');
-			$this->messages->setMessage('Problem deleting workflowactions information from database', 'warning');
+			$this->debug->write('Problem deleting workflowgroup information from database', 'warning');
+			$this->messages->setMessage('Problem deleting workflowgroup information from database', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -275,7 +276,7 @@ class tkWorkflowfunctions
 
 
 	/**
-	 * gets a given workflow
+	 * gets workflowgroup information for a given workflow
 	 *
 	 * instance-safe!
 	 *
@@ -283,20 +284,20 @@ class tkWorkflowfunctions
 	 *
 	 * @return array
 	 */
-	public function getWorkflow($workflowid)
+	public function getWorkflowgroupInformation($workflowid)
 	{
 		$this->debug->guard();
 
 		$userfunctions = new tkUserfunctions();
 
-		$sql = "SELECT twf.* FROM workflowactions twf ";
-		$sql .= "LEFT JOIN workflows tt ON twf.workflowaction_workflow = tt.workflow_id ";
-		$sql .= "WHERE twf.workflowaction_workflow='" . $workflowid . "' AND tt.workflow_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
+		$sql = "SELECT w2g.* FROM workflows_to_groups w2g ";
+		$sql .= "LEFT JOIN workflows wf ON w2g.workflowgroup_workflow = wf.workflow_id ";
+		$sql .= "WHERE w2g.workflowgroup_workflow='" . $workflowid . "' AND wf.workflow_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
-			$this->debug->write('Problem getting workflow for workflow from database: '. $workflowid, 'warning');
-			$this->messages->setMessage('Problem getting workflow for workflow from database: ' . $workflowid, 'warning');
+			$this->debug->write('Problem getting workflow from database: '. $workflowid, 'warning');
+			$this->messages->setMessage('Problem getting workflow from database: ' . $workflowid, 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -335,18 +336,18 @@ class tkWorkflowfunctions
 			return false;
 		}
 
-		$sql = "SELECT twf.*, t.task_workflow FROM workflowactions twf LEFT JOIN tasks t ON twf.workflowaction_workflow = t.task_type ";
-		$sql .= "WHERE t.task_id='" . $taskid . "' ORDER BY twf.workflowaction_order";
+		$sql = "SELECT w2g.*, t.task_workflowgroup FROM workflows_to_groups w2g LEFT JOIN tasks t ON w2g.workflowgroup_workflow = t.task_workflow ";
+		$sql .= "WHERE t.task_id='" . $taskid . "' ORDER BY w2g.workflowgroup_order";
 		$res = $this->database->query($sql);
 
 		$workflowOrder = array();
 		while ($row = $this->database->fetchArray($res))
 		{
-			$workflowOrder[$row['workflowaction_order']] = $row['workflowaction_id'];
+			$workflowOrder[$row['workflowgroup_order']] = $row['workflowgroup_id'];
 			$lastRow = $row;
 		}
 
-		$currentWorkflowId = array_search($lastRow['task_workflow'], $workflowOrder);
+		$currentWorkflowId = array_search($lastRow['task_workflowgroup'], $workflowOrder);
 		if ($currentWorkflowId != count($workflowOrder))
 		{
 			if (!empty($workflowOrder[$currentWorkflowId+1]))
@@ -416,14 +417,14 @@ class tkWorkflowfunctions
 			return false;
 		}
 
-		$sql = "SELECT twf.*, t.task_workflow FROM workflowactions twf LEFT JOIN tasks t ON twf.workflowaction_workflow = t.task_type ";
-		$sql .= "WHERE t.task_id='" . $taskid . "' ORDER BY twf.workflowaction_order";
+		$sql = "SELECT w2g.*, t.task_workflow FROM workflows_to_groups w2g LEFT JOIN tasks t ON w2g.workflowgroup_workflow = t.task_workflow ";
+		$sql .= "WHERE t.task_id='" . $taskid . "' ORDER BY w2g.workflowgroup_order";
 		$res = $this->database->query($sql);
 
 		$workflowOrder = array();
 		while ($row = $this->database->fetchArray($res))
 		{
-			$workflowOrder[$row['workflowaction_order']] = $row['workflowaction_id'];
+			$workflowOrder[$row['workflowgroup_order']] = $row['workflowgroup_id'];
 			$lastRow = $row;
 		}
 
