@@ -27,15 +27,17 @@
 
 		function addTag(tagText)
 		{
-			currentTags = document.getElementById('taginput').value;
+			currentSearch = document.getElementById('taginput').value;
 			
-			if (currentTags != '')
+			if (currentSearch != '')
 			{
-				currentTags += ', ';
+				currentSearch += ', ';
 			}
 			
-			currentTags += tagText;
-			document.getElementById('taginput').value = currentTags;
+			currentSearch += tagText;
+			document.getElementById('taginput').value = currentSearch;
+			
+			updateSearch();
 		}
 		
 	</script>

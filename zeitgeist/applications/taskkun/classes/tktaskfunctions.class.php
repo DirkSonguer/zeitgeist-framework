@@ -62,7 +62,7 @@ class tkTaskfunctions
 		if (strpos($taskdata['task_hoursplanned'], ',') !== false) $taskdata['task_hoursplanned'] = str_replace(',','.', $taskdata['task_hoursplanned']);
 
 		// get initial task workflow status
-		$sql = "SELECT workflowaction_id FROM workflowactions WHERE workflowaction_workflow='" . $taskdata['task_type'] . "' ORDER BY workflowaction_order LIMIT 1";
+		$sql = "SELECT workflowgroup_id FROM workflows_to_groups WHERE workflowgroup_workflow='" . $taskdata['task_workflow'] . "' ORDER BY workflowgroup_order LIMIT 1";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -73,11 +73,11 @@ class tkTaskfunctions
 		}
 
 		$row = $this->database->fetchArray($res);
-		$initialstatus = $row['workflowaction_id'];
+		$initialstatus = $row['workflowgroup_id'];
 
-		$sql = 'INSERT INTO tasks(task_creator, task_name, task_description, task_hoursplanned, task_type, task_workflow, task_priority, task_begin, task_end, task_notes, task_instance) ';
+		$sql = 'INSERT INTO tasks(task_creator, task_name, task_description, task_hoursplanned, task_workflow, task_workflowgroup, task_priority, task_begin, task_end, task_notes, task_instance) ';
 		$sql .= "VALUES('" . $this->user->getUserID() . "', ";
-		$sql .= "'" . $taskdata['task_name'] . "', '" . $taskdata['task_description'] . "', '" . $taskdata['task_hoursplanned'] . "', '" . $taskdata['task_type'] . "', ";
+		$sql .= "'" . $taskdata['task_name'] . "', '" . $taskdata['task_description'] . "', '" . $taskdata['task_hoursplanned'] . "', '" . $taskdata['task_workflow'] . "', ";
 		$sql .= "'" . $initialstatus . "', '" . $taskdata['task_priority'] . "', '" . $taskdata['task_begin'] . "', '" . $taskdata['task_end'] . "', '" . $taskdata['task_notes'] . "', '" . $userfunctions->getUserInstance($this->user->getUserID()) . "')";
 
 		$res = $this->database->query($sql);
@@ -246,11 +246,11 @@ class tkTaskfunctions
 		}
 
 		// task information
-		$sql = "SELECT t.*, twf.workflowaction_title, tt.workflow_name, ";
+		$sql = "SELECT t.*, w2g.workflowgroup_title, wf.workflow_name, ";
 		$sql .= "DATE_FORMAT(t.task_end, '%d.%m.%Y') as task_end, DATE_FORMAT(t.task_begin, '%d.%m.%Y') as task_begin ";
 		$sql .= "FROM tasks t ";
-		$sql .= "LEFT JOIN workflowactions twf ON t.task_workflow = twf.workflowaction_id ";
-		$sql .= "LEFT JOIN workflows tt ON t.task_type = tt.workflow_id ";
+		$sql .= "LEFT JOIN workflows_to_groups w2g ON t.task_workflowgroup = w2g.workflowgroup_id ";
+		$sql .= "LEFT JOIN workflows wf ON t.task_workflow = wf.workflow_id ";
 		$sql .= "WHERE task_id='" . $taskid . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
@@ -517,7 +517,7 @@ class tkTaskfunctions
 
 		if (strpos($adhocdata['task_hoursworked'], ',') !== false) $adhocdata['task_hoursworked'] = str_replace(',','.', $adhocdata['task_hoursworked']);
 
-		$sql = 'INSERT INTO tasks(task_creator, task_name, task_description, task_hoursplanned, task_type, task_workflow, task_priority, task_begin, task_end, task_notes, task_instance) ';
+		$sql = 'INSERT INTO tasks(task_creator, task_name, task_description, task_hoursplanned, task_workflow, task_workflowgroup, task_priority, task_begin, task_end, task_notes, task_instance) ';
 		$sql .= "VALUES('" . $this->user->getUserID() . "', ";
 		$sql .= "'" . $adhocdata['task_name'] . "', '" . $adhocdata['task_description'] . "', '" . $adhocdata['task_hoursworked'] . "', '0', ";
 		$sql .= "'0', '2', '" . $adhocdata['task_date'] . "', '" . $adhocdata['task_date'] . "', '', '" . $userfunctions->getUserInstance($this->user->getUserID()) . "')";
@@ -557,7 +557,7 @@ class tkTaskfunctions
 	 *
 	 * @return boolean
 	 */
-	public function getTaskWorkflow($taskid)
+	public function getWorkflowgroup($taskid)
 	{
 		$this->debug->guard();
 
@@ -570,7 +570,7 @@ class tkTaskfunctions
 			return false;
 		}
 
-		$sql = "SELECT task_workflow FROM tasks WHERE task_id = '" . $taskid . "'";
+		$sql = "SELECT task_workflowgroup FROM tasks WHERE task_id = '" . $taskid . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -581,7 +581,7 @@ class tkTaskfunctions
 		}
 
 		$row = $this->database->fetchArray($res);
-		$workflow = $row['task_workflow'];
+		$workflow = $row['task_workflowgroup'];
 
 		$this->debug->unguard($workflow);
 		return $workflow;

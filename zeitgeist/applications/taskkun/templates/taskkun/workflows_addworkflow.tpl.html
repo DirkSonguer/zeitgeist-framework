@@ -181,25 +181,25 @@
 			<div spry:repeat="dsWorkflowInformation">
 				<div class="textboxhalf">
 					<p style="text-align:center; margin-top:15px; margin-left:10px;">
-						<strong>Beschreibung:</strong> <input maxlength="256" id="inputfield_{dsWorkflowInformation::workflowaction_order}" value="{dsWorkflowInformation::workflowaction_title}" class="formtext" type="text" onchange="updateWorkflow('storedata', '{dsWorkflowInformation::workflowaction_order}')" />
+						<strong>Beschreibung:</strong> <input maxlength="256" id="inputfield_{dsWorkflowInformation::workflowgroup_order}" value="{dsWorkflowInformation::workflowgroup_title}" class="formtext" type="text" onchange="updateWorkflow('storedata', '{dsWorkflowInformation::workflowgroup_order}')" />
 					</p>
 
 					<p style="text-align:center; margin-top:20px; margin-left:10px;"><strong>Zuständige Gruppe:</strong>
-						<select id="dropdownfield_{dsWorkflowInformation::workflowaction_order}" name="dropdownfield_{dsWorkflowInformation::workflowaction_order}" class="formtext" spry:repeatChildren="dsGroupInformation" onchange="updateWorkflow('storedata', '{dsWorkflowInformation::workflowaction_order}')">
-							<option spry:if="{dsGroupInformation::group_id} == {dsWorkflowInformation::workflowaction_group}" value="{dsGroupInformation::group_id}" selected="selected">{dsGroupInformation::group_name}</option>
-							<option spry:if="{dsGroupInformation::group_id} != {dsWorkflowInformation::workflowaction_group}" value="{dsGroupInformation::group_id}">{dsGroupInformation::group_name}</option>
+						<select id="dropdownfield_{dsWorkflowInformation::workflowgroup_order}" name="dropdownfield_{dsWorkflowInformation::workflowgroup_order}" class="formtext" spry:repeatChildren="dsGroupInformation" onchange="updateWorkflow('storedata', '{dsWorkflowInformation::workflowgroup_order}')">
+							<option spry:if="{dsGroupInformation::group_id} == {dsWorkflowInformation::workflowgroup_group}" value="{dsGroupInformation::group_id}" selected="selected">{dsGroupInformation::group_name}</option>
+							<option spry:if="{dsGroupInformation::group_id} != {dsWorkflowInformation::workflowgroup_group}" value="{dsGroupInformation::group_id}">{dsGroupInformation::group_name}</option>
 						</select>
 					</p>
 
 					<p style="margin-top:10px; text-align:center;">
-						<span onmousemove="showTooltip('Im Aufgabenablauf nach oben', event);" onmouseout="hideTooltip();"><img src="@@{templatepath}@@/nuvola/22x22/actions/up.png" alt="Im Aufgabenablauf nach oben" border="0" onclick="updateWorkflow('stepup', '{dsWorkflowInformation::workflowaction_order}')" /></span>
-						<span style="margin-left:10px;" onmousemove="showTooltip('Im Aufgabenablauf nach unten', event);" onmouseout="hideTooltip();"><img src="@@{templatepath}@@/nuvola/22x22/actions/down.png" alt="Im Aufgabenablauf nach unten" border="0" onclick="updateWorkflow('stepdown', '{dsWorkflowInformation::workflowaction_order}')" /></span>
-						<span style="margin-left:10px;" onmousemove="showTooltip('Diesen Schritt löschen', event);" onmouseout="hideTooltip();"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Diesen Schritt löschen" border="0" onclick="deleteStep('{dsWorkflowInformation::workflowaction_order}', '{dsWorkflowInformation::workflowaction_title}')" /></span>
+						<span onmousemove="showTooltip('Im Aufgabenablauf nach oben', event);" onmouseout="hideTooltip();"><img src="@@{templatepath}@@/nuvola/22x22/actions/up.png" alt="Im Aufgabenablauf nach oben" border="0" onclick="updateWorkflow('stepup', '{dsWorkflowInformation::workflowgroup_order}')" /></span>
+						<span style="margin-left:10px;" onmousemove="showTooltip('Im Aufgabenablauf nach unten', event);" onmouseout="hideTooltip();"><img src="@@{templatepath}@@/nuvola/22x22/actions/down.png" alt="Im Aufgabenablauf nach unten" border="0" onclick="updateWorkflow('stepdown', '{dsWorkflowInformation::workflowgroup_order}')" /></span>
+						<span style="margin-left:10px;" onmousemove="showTooltip('Diesen Schritt löschen', event);" onmouseout="hideTooltip();"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Diesen Schritt löschen" border="0" onclick="deleteStep('{dsWorkflowInformation::workflowgroup_order}', '{dsWorkflowInformation::workflowgroup_title}')" /></span>
 					</p>
 				</div>
 				<p style="margin-top:10px; margin-right:50px; text-align:center;">
 					<img src="@@{templatepath}@@/nuvola/48x48/apps/download_manager.png" alt="" border="0" align="top" />
-					<span style="margin-left:20px;" onmousemove="showTooltip('Weiteren Schritt hinzufügen', event);" onmouseout="hideTooltip();"><img src="@@{templatepath}@@/nuvola/22x22/actions/edit_add.png" alt="" border="0" align="top" onclick="updateWorkflow('newstep', '{dsWorkflowInformation::workflowaction_order}')" /></span>
+					<span style="margin-left:20px;" onmousemove="showTooltip('Weiteren Schritt hinzufügen', event);" onmouseout="hideTooltip();"><img src="@@{templatepath}@@/nuvola/22x22/actions/edit_add.png" alt="" border="0" align="top" onclick="updateWorkflow('newstep', '{dsWorkflowInformation::workflowgroup_order}')" /></span>
 					
 				</p>
 			</div>
