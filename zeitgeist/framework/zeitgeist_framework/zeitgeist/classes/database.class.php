@@ -138,8 +138,8 @@ class zgDatabase
 		$res = mysql_query("SET character_set_connection = ".$charset, $this->dblink);
 		if (!$res)
 		{
-			$this->debug->write('Error setting charset for connection: '.mysql_error().' Query was: "' . $query . '"', 'error');
-			$this->messages->setMessage('Error setting charset for connection: '.mysql_error().' Query was: "' . $query . '"', 'error');
+			$this->debug->write('Problem setting charset for connection: '.mysql_error().' Query was: "' . $query . '"', 'warning');
+			$this->messages->setMessage('Problem setting charset for connection: '.mysql_error().' Query was: "' . $query . '"', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -147,8 +147,8 @@ class zgDatabase
 		$res = mysql_query("SET character_set_results = ".$charset, $this->dblink);
 		if (!$res)
 		{
-			$this->debug->write('Error setting charset for results: '.mysql_error().' Query was: "' . $query . '"', 'error');
-			$this->messages->setMessage('Error setting charset for results: '.mysql_error().' Query was: "' . $query . '"', 'error');
+			$this->debug->write('Problem setting charset for results: '.mysql_error().' Query was: "' . $query . '"', 'warning');
+			$this->messages->setMessage('Problem setting charset for results: '.mysql_error().' Query was: "' . $query . '"', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -156,8 +156,8 @@ class zgDatabase
 		$res = mysql_query("SET character_set_client = ".$charset, $this->dblink);
 		if (!$res)
 		{
-			$this->debug->write('Error setting charset for client: '.mysql_error().' Query was: "' . $query . '"', 'error');
-			$this->messages->setMessage('Error setting charset for client: '.mysql_error().' Query was: "' . $query . '"', 'error');
+			$this->debug->write('Problem setting charset for client: '.mysql_error().' Query was: "' . $query . '"', 'warning');
+			$this->messages->setMessage('Problem setting charset for client: '.mysql_error().' Query was: "' . $query . '"', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -184,8 +184,8 @@ class zgDatabase
 
 		if (!$result)
 		{
-			$this->debug->write('Error executing query: '.mysql_error().' Query was: "' . $query . '"', 'error');
-			$this->messages->setMessage('Error executing query: '.mysql_error().' Query was: "' . $query . '"', 'error');
+			$this->debug->write('Problem executing query: '.mysql_error().' Query was: "' . $query . '"', 'warning');
+			$this->messages->setMessage('Problem executing query: '.mysql_error().' Query was: "' . $query . '"', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -199,7 +199,7 @@ class zgDatabase
 	 * Fetches a row from the sql result
 	 * Standard type is MYSQL_ASSOC, so an associative array is returned
 	 *
-	 * @param string $result resource id of the query
+	 * @param result $result resource id of the query
 	 * @param string $type type of array to be fetched
 	 *
 	 * @return array
@@ -207,6 +207,15 @@ class zgDatabase
 	public function fetchArray($result, $type=MYSQL_ASSOC)
 	{
 		$this->debug->guard(true);
+
+		$resulttype = gettype($result);
+		if ($resulttype != 'resource')
+		{
+			$this->debug->write('Problem fetching result: The given result was not a resource: "' . $result . '"', 'warning');
+			$this->messages->setMessage('Problem fetching result: The given result was not a resource: "' . $result . '"', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
 
 		$ret = mysql_fetch_array($result, $type);
 
@@ -218,13 +227,22 @@ class zgDatabase
 	/**
 	 * Returns the number of rows for a resource
 	 *
-	 * @param string $result resource id of the query
+	 * @param result $result resource id of the query
 	 *
 	 * @return integer
 	 */
 	public function numRows($result)
 	{
 		$this->debug->guard();
+
+		$resulttype = gettype($result);
+		if ($resulttype != 'resource')
+		{
+			$this->debug->write('Problem counting rows: The given result was not a resource: "' . $result . '"', 'warning');
+			$this->messages->setMessage('Problem counting rows: The given result was not a resource: "' . $result . '"', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
 
 		$ret = mysql_num_rows($result);
 
@@ -262,8 +280,8 @@ class zgDatabase
 
 		if (!$ret)
 		{
-			$this->debug->write('Error geting the last insert id: '.mysql_error(), 'error');
-			$this->messages->setMessage('Error geting the last insert id: '.mysql_error(), 'error');
+			$this->debug->write('Problem geting the last insert id: '.mysql_error(), 'warning');
+			$this->messages->setMessage('Problem geting the last insert id: '.mysql_error(), 'warning');
 		}
 
 		$this->debug->unguard($ret);

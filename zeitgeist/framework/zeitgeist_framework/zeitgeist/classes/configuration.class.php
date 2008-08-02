@@ -61,9 +61,9 @@ class zgConfiguration
 
 			// try to load zeitgeist configuration in the application configuration directory
 			// the application configuration will overwrite the default values
-			if (file_exists('./configuration/zeitgeist.ini'))
+			if (file_exists(APPLICATION_ROOTDIRECTORY . 'configuration/zeitgeist.ini'))
 			{
-				self::$instance->loadConfiguration('zeitgeist', './configuration/zeitgeist.ini', true);
+				self::$instance->loadConfiguration('zeitgeist', APPLICATION_ROOTDIRECTORY . 'configuration/zeitgeist.ini', true);
 			}
 		}
 
@@ -183,8 +183,8 @@ class zgConfiguration
 			$configurationArray = $this->_readINIfile($filename);
 			if (!is_array($configurationArray))
 			{
-				$this->debug->write('Error loading the configuration: no contents could be extracted', 'error');
-				$this->messages->setMessage('Error loading the configuration: no contents could be extracted', 'error');
+				$this->debug->write('Problem loading the configuration: no contents could be extracted', 'warning');
+				$this->messages->setMessage('Problem loading the configuration: no contents could be extracted', 'warning');
 				$this->debug->unguard(false);
 				return false;
 			}
