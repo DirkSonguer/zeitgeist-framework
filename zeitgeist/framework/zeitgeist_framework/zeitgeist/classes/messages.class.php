@@ -61,7 +61,7 @@ class zgMessages
 	 *
 	 * @return boolean
 	 */
-	public function setMessage($message, $type='message', $to='')
+	public function setMessage($message, $type='message')
 	{
 		$this->debug->guard(true);
 
@@ -73,45 +73,11 @@ class zgMessages
 		$backtrace = debug_backtrace();
 		$backtraceSender = $backtrace[0];
 		$newMessage->from = array_pop( explode('\\', $backtraceSender['file']) );
-		$newMessage->to = $to;
 
 		$this->messages[] = $newMessage;
 
 		$this->debug->unguard(true);
 		return true;
-	}
-
-
-	/**
-	 * Gets all messages from the message stack for the caller
-	 *
-	 * @param string $from gets all messages from this sender
-	 *
-	 * @return array
-	 */
-	public function getMessagesForModule($from='')
-	{
-		$this->debug->guard();
-
-		$retArray = array();
-
-		$backtrace = debug_backtrace();
-		$backtrace = $backtrace[0];
-		$caller = array_pop( explode('\\', $backtrace['file']) );
-
-		foreach ($this->messages as $message)
-		{
-			if ( ($from == '') || ($message->from == $from) )
-			{
-				if ($message->to == $caller)
-				{
-					$retArray[] = $message;
-				}
-			}
-		}
-
-		$this->debug->unguard($retArray);
-		return $retArray;
 	}
 
 
