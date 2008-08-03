@@ -67,11 +67,11 @@ class zgLocale
 	 * 
 	 * @return boolean
 	 */
-	public function loadLocale($id, $filename)
+	public function loadLocale($id, $filename, $overwrite=false)
 	{
 		$this->debug->guard(true);
 
-		if (!$this->locales[$id] = $configuration->loadConfiguration('zglocale_' . $id, $filename))
+		if (!$this->locales[$id] = $this->configuration->loadConfiguration('zglocale_' . $id, $filename, $overwrite))
 		{
 			$this->debug->write('Problem loading the locale: the given locale file could not be load', 'warning');
 			$this->messages->setMessage('Problem loading the locale: the given locale file could not be load', 'warning');
@@ -130,7 +130,7 @@ class zgLocale
 		}
 		
 		$localeMessage = '';
-		$localeMessage = $this->configuration->getConfiguration('zglocale_' . $this->currentLocale, $message);		
+		$localeMessage = $this->configuration->getConfiguration('zglocale_' . $this->currentLocale, $this->currentLocale, $message);		
 		if ($localeMessage != '')
 		{
 			$this->debug->unguard($localeMessage);
