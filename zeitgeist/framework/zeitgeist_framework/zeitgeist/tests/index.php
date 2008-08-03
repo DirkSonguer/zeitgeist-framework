@@ -5,7 +5,7 @@
 	    define('SIMPLE_TEST', 'simpletest/');
 	}
 	require_once(SIMPLE_TEST . 'autorun.php');
-		
+				
 	define('DEBUGMODE', true);
 	if (!defined('ZEITGEIST_ROOTDIRECTORY')) define('ZEITGEIST_ROOTDIRECTORY', '../');
 	require_once('../zeitgeist.php');
@@ -15,10 +15,21 @@
 	define('ZG_DB_USERPASS', '');
 	define('ZG_DB_DATABASE', 'zg_test');
 	define('ZG_DB_CONFIGURATIONCACHE', 'configurationcache');
+
+	$debug = zgDebug::init();
+	$message = zgMessages::init();
+	$configuration = zgConfiguration::init();
+	$error = zgErrorhandler::init();
+	$user = zgUserhandler::init();
+	$eventhandler = new zgEventhandler();
+	$locale = zgLocale::init();
 	
 	require_once('messages.test.php');
 	require_once('database.test.php');
 	require_once('configuration.test.php');
+	require_once('locale.test.php');
+	require_once('userhandler.test.php');
+	require_once('parameterhandler.test.php');
 
 	$debug = zgDebug::init();
 
@@ -26,6 +37,9 @@
     $test->addTestCase(new testMessages());
     $test->addTestCase(new testDatabase());
     $test->addTestCase(new testConfiguration());
+    $test->addTestCase(new testLocale());
+    $test->addTestCase(new testUserhandler());
+    $test->addTestCase(new testParameterhandler());
     $test->run(new HtmlReporter());
 
 	$debug->loadStylesheet('debug.css');

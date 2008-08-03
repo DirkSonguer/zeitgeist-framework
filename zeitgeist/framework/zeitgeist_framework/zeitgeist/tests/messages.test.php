@@ -6,8 +6,8 @@ class testMessages extends UnitTestCase
 	function test_init()
 	{
 		$message = zgMessages::init();
-
 		$this->assertNotNull($message);
+		unset($message);
     }
 
 	function test_setMessage()
