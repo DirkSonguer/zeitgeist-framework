@@ -2,6 +2,7 @@
 
 class testUserhandler extends UnitTestCase
 {
+	
 	function test_init()
 	{
 		$userhandler = zgUserhandler::init();

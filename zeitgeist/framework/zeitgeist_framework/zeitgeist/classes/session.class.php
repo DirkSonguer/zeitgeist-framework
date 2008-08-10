@@ -333,9 +333,9 @@ class zgSession
 
 		$currentTime = time();
 
-		$id = mysql_real_escape_string($id);
-		$access = mysql_real_escape_string($access);
-		$data = mysql_real_escape_string($data);
+		$id = mysql_escape_string($id);
+		$access = mysql_escape_string($access);
+		$data = mysql_escape_string($data);
 
 		$sessionTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_sessiondata');
 
@@ -369,7 +369,7 @@ class zgSession
 	{
 		$this->debug->guard();
 
-		$id = mysql_real_escape_string($id);
+		$id = mysql_escape_string($id);
 
 		$sessionTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_sessiondata');
 		$sql = "DELETE FROM " . $sessionTablename . " WHERE sessiondata_id = '" . $id . "'";
@@ -393,7 +393,7 @@ class zgSession
 		$this->debug->guard();
 
 		$old = time() - $max;
-		$old = mysql_real_escape_string($old);
+		$old = mysql_escape_string($old);
 
 		$sessionTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_sessiondata');
 		$sql = "DELETE FROM " . $sessionTablename . " WHERE sessiondata_lastupdate < '" . $old . "'";
