@@ -48,9 +48,11 @@ class testLocale extends UnitTestCase
 		$ret = $locale->write('true');
 		$this->assertEqual($ret, 'wahr');
 		unset($ret);
+		
 		$ret = $locale->write('false');
 		$this->assertEqual($ret, 'falsch');
 		unset($ret);
+		
 		$ret = $locale->write('this is a test');
 		$this->assertEqual($ret, 'das ist ein test');
 		unset($ret);

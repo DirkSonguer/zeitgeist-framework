@@ -8,13 +8,14 @@
 				
 	define('DEBUGMODE', true);
 	if (!defined('ZEITGEIST_ROOTDIRECTORY')) define('ZEITGEIST_ROOTDIRECTORY', '../');
-	require_once('../zeitgeist.php');
 
 	define('ZG_DB_DBSERVER', 'localhost');
 	define('ZG_DB_USERNAME', 'root');
 	define('ZG_DB_USERPASS', '');
 	define('ZG_DB_DATABASE', 'zg_test');
 	define('ZG_DB_CONFIGURATIONCACHE', 'configurationcache');
+
+	require_once('../zeitgeist.php');
 
 	$debug = zgDebug::init();
 	$message = zgMessages::init();
@@ -44,9 +45,9 @@
 
 	$debug->loadStylesheet('debug.css');
 	$debug->showInnerLoops = true;
-	$debug->showMiscInformation();
-	$debug->showDebugMessages();
-	$debug->showQueryMessages();
+//	$debug->showMiscInformation();
+//	$debug->showDebugMessages();
+//	$debug->showQueryMessages();
 	$debug->showGuardMessages();
 	
 ?>
