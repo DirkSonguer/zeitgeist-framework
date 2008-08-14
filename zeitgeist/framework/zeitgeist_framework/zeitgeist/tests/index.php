@@ -21,7 +21,7 @@
 	$message = zgMessages::init();
 	$configuration = zgConfiguration::init();
 	$error = zgErrorhandler::init();
-	$user = zgUserhandler::init();
+//	$user = zgUserhandler::init();
 	$eventhandler = new zgEventhandler();
 	$locale = zgLocale::init();
 	
@@ -29,7 +29,7 @@
 	require_once('database.test.php');
 	require_once('configuration.test.php');
 	require_once('locale.test.php');
-	require_once('userhandler.test.php');
+	require_once('userrights.test.php');
 	require_once('parameterhandler.test.php');
 
 	$debug = zgDebug::init();
@@ -39,16 +39,16 @@
     $test->addTestCase(new testDatabase());
     $test->addTestCase(new testConfiguration());
     $test->addTestCase(new testLocale());
-    $test->addTestCase(new testUserhandler());
+    $test->addTestCase(new testUserrights());
     $test->addTestCase(new testParameterhandler());
     $test->run(new HtmlReporter());
 
 	$debug->loadStylesheet('debug.css');
-	$debug->showInnerLoops = true;
+//	$debug->showInnerLoops = true;
 //	$debug->showMiscInformation();
 //	$debug->showDebugMessages();
-//	$debug->showQueryMessages();
-	$debug->showGuardMessages();
+	$debug->showQueryMessages();
+//	$debug->showGuardMessages();
 	
 ?>
 

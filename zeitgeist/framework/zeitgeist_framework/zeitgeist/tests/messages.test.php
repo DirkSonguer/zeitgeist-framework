@@ -18,8 +18,9 @@ class testMessages extends UnitTestCase
 
 		$ret = $message->setMessage('hello world', 'error');
 		$this->assertTrue($ret);
+		unset($message);
     }
-	
+
 	function test_clearAllMessages()
 	{
 		$message = zgMessages::init();
@@ -27,6 +28,10 @@ class testMessages extends UnitTestCase
 
 		$ret = $message->clearAllMessages();
 		$this->assertTrue($ret);
+		
+		$ret = $message->getAllMessages();
+		$this->assertEqual(count($ret), 0);
+		unset($message);
     }	
 	
 	function test_getMessagesByType()
@@ -46,6 +51,7 @@ class testMessages extends UnitTestCase
 		$ret = $message->getMessagesByType('test');
 		$this->assertEqual(count($ret), 1);
 		$this->assertEqual($ret[0]->message, 'Hallo');
+		unset($message);
 	}
 	
 	function test_getAllMessages()
@@ -65,8 +71,9 @@ class testMessages extends UnitTestCase
 		$this->assertEqual($ret[0]->message, 'test1');
 		$this->assertEqual($ret[1]->message, 'test2');
 		unset($ret);
+		unset($message);
 	}
-
+	
 	function test_importMessages()
 	{
 		$message = zgMessages::init();
@@ -90,6 +97,7 @@ class testMessages extends UnitTestCase
 		$this->assertEqual($ret[0]->message, 'test1');
 		$this->assertEqual($ret[1]->message, 'test2');
 		unset($ret);
+		unset($message);
 	}
 }
 
