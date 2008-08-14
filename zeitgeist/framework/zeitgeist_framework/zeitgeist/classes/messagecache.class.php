@@ -132,13 +132,6 @@ class zgMessagecache
 			return false;
 		}
 
-/*
- INSERT INTO FOO
-(ID, BAR)
-VALUES(1,2),(3,4)
-ON DUPLICATE KEY UPDATE BAR=VALUES(BAR)
-*/
-
 		$sql = "INSERT INTO " . $messagecacheTablename . "(messagecache_user, messagecache_content) ";
 		$sql .= "VALUES('" . $this->user->getUserID() . "', '" . $serializedMessages . "') ";
 		$sql .= "ON DUPLICATE KEY UPDATE messagecache_content='" . $serializedMessages . "'";

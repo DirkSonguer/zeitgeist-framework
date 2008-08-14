@@ -95,8 +95,8 @@ class zgUserhandler
 
 		if (!$this->session->getSessionId())
 		{
-			$this->debug->write('Error establishing user session: could not find a session id', 'error');
-			$this->messages->setMessage('Error establishing user session: could not find a session id', 'error');
+			$this->debug->write('Problem establishing user session: could not find a session id', 'warning');
+			$this->messages->setMessage('Problem establishing user session: could not find a session id', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -251,31 +251,6 @@ class zgUserhandler
 
 
 	/**
-	 * Returns the current UserID
-	 *
-	 * @return integer
-	 */
-	public function getUserID()
-	{
-		$this->debug->guard();
-
-		if ($this->loggedIn)
-		{
-			$userid = $this->session->getSessionVariable('user_userid');
-
-			if ($userid)
-			{
-				$this->debug->unguard($userid);
-				return $userid;
-			}
-		}
-
-		$this->debug->unguard(false);
-		return false;
-	}
-
-
-	/**
 	 * Returns the current Username
 	 *
 	 * @return string
@@ -385,8 +360,7 @@ class zgUserhandler
 		}
 
 		// insert user
-		srand(microtime()*1000000);
-		$key = rand(10000,1000000000);
+		$key = uniqid();
 		$key = md5($key);
 
 		$active = 0;
@@ -395,13 +369,21 @@ class zgUserhandler
 			$active = 1;
 		}
 
-		$sqlUser = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . "(user_username, user_key, user_password, user_active) VALUES('" . $name . "', '" . $key . "', '" . md5($password) . "', '" . $active . "')";
-		$resUser = $this->database->query($sqlUser);
+		$sql = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . "(user_username, user_key, user_password, user_active) VALUES('" . $name . "', '" . $key . "', '" . md5($password) . "', '" . $active . "')";
+		$res = $this->database->query($sql);
+		if (!res)
+		{
+			$this->debug->write('Problem creating the user: could not insert the user into the database.', 'error');
+			$this->messages->setMessage('Problem creating the user: could not insert the user into the database.', 'error');
+			$this->debug->unguard(false);
+			return false;
+		}
 
 		$currentId = $this->database->insertId();
-
+		
+/*
 		// insert confirmation key
-		$confirmationkey = rand(10000,1000000000);
+		$confirmationkey = uniqid();
 		$confirmationkey = md5($confirmationkey);
 		$sqlUser = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','table_userconfirmation') . "(userconfirmation_user, userconfirmation_key) VALUES('" . $currentId . "', '" . $confirmationkey . "')";
 		$resUser = $this->database->query($sqlUser);
@@ -411,19 +393,21 @@ class zgUserhandler
 		$resUserrole = $this->database->query($sqlUserrole);
 
 		//userdata
-		$userdataKeys = array();
-		$userdataValues = array();
-		foreach ($userdata as $key => $value)
+		if (count($userdata) > 0)
 		{
-			$userdataKeys[] = $key;
-			$userdataValues[] = $value;
+			$userdataKeys = array();
+			$userdataValues = array();
+			foreach ($userdata as $key => $value)
+			{
+				$userdataKeys[] = $key;
+				$userdataValues[] = $value;
+			}
+			$sqlUserdata = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','table_userdata') . "(userdata_user, " . implode(', ', $userdataKeys) . ") VALUES('" . $currentId . "', '" . implode("', '", $userdataValues) . "')";
+			$resUserdata = $this->database->query($sqlUserdata);
 		}
-
-		$sqlUserdata = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','table_userdata') . "(userdata_user, " . implode(', ', $userdataKeys) . ") VALUES('" . $currentId . "', '" . implode("', '", $userdataValues) . "')";
-		$resPassword = $this->database->query($sqlUserdata);
-
-		$this->debug->unguard(true);
-		return true;
+*/
+		$this->debug->unguard($currentId);
+		return $currentId;
 	}
 
 
