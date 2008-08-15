@@ -24,7 +24,7 @@ class zgUserroles
 	/**
 	 * Class constructor
 	 */
-	private function __construct()
+	public function __construct()
 	{
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
@@ -81,9 +81,52 @@ class zgUserroles
 	}
 
 
-	public function setUserroles()
+	/**
+	 * Save all userroles for the user
+	 *
+	 * @param integer $userid id of the user
+	 * @param array $userroles array containing all roles
+	 *
+	 * @return boolean
+	 */
+	public function setUserroles($userid, $userroles)
 	{
-		// TODO: FUNCTION!
+		$this->debug->guard();
+
+		if (!is_array($userroles) && (count($userroles) < 1))
+		{
+			$this->debug->write('Problem setting the user roles: array not valid', 'warning');
+			$this->messages->setMessage('Problem setting the user roles: array not valid', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$userrolesTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userroles_to_users');
+		$sql = 'DELETE FROM ' . $userrolesTablename . " WHERE userroleuser_user='" . $userid . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem setting the user r: lescould not clean up the roles table', 'warning');
+			$this->messages->setMessage('Problem setting the user roles: could not clean up the roles table', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		foreach ($userroles as $key => $value)
+		{
+			$sql = 'INSERT INTO ' . $userrolesTablename . "(userroleuser_userrole, userroleuser_user) VALUES('" . $key . "', '" . $userid . "')";
+			$res = $this->database->query($sql);
+			if (!$res)
+			{
+				$this->debug->write('Problem setting the user roles: could not insert the roles into the database', 'warning');
+				$this->messages->setMessage('Problem setting the user roles: could not insert the roles into the database', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
+		}
+
+		$this->debug->unguard(true);
+		return true;
 	}
 	
 	

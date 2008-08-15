@@ -29,7 +29,7 @@
 	require_once('database.test.php');
 	require_once('configuration.test.php');
 	require_once('locale.test.php');
-	require_once('userrights.test.php');
+	require_once('userroles.test.php');
 	require_once('parameterhandler.test.php');
 
 	$debug = zgDebug::init();
@@ -39,7 +39,7 @@
     $test->addTestCase(new testDatabase());
     $test->addTestCase(new testConfiguration());
     $test->addTestCase(new testLocale());
-    $test->addTestCase(new testUserrights());
+    $test->addTestCase(new testUserroles());
     $test->addTestCase(new testParameterhandler());
     $test->run(new HtmlReporter());
 
