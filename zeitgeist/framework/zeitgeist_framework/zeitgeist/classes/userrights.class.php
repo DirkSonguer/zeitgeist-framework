@@ -14,19 +14,12 @@
 
 defined('ZEITGEIST_ACTIVE') or die();
 
-/**
- * NOTE: This class is extended by userroles.class.php.
- */
 class zgUserrights
 {
 	protected $debug;
 	protected $messages;
-	protected $session;
 	protected $database;
 	protected $configuration;
-
-	protected $userrightsLoaded;
-	public $userrights;
 
 	/**
 	 * Class constructor
@@ -39,75 +32,49 @@ class zgUserrights
 
 		$this->database = new zgDatabase();
 		$this->database->connect();
-
-		$this->session = zgSession::init();
-		$this->session->startSession();
-
-		$this->userrights = array();
-		$this->userrightsLoaded = false;
 	}
 
 
 	/**
-	 * Returns the current UserID
-	 *
-	 * @return integer
-	 */
-	public function getUserID()
-	{
-		$this->debug->guard();
-
-		if ($this->loggedIn)
-		{
-			$userid = $this->session->getSessionVariable('user_userid');
-
-			if ($userid)
-			{
-				$this->debug->unguard($userid);
-				return $userid;
-			}
-		}
-
-		$this->debug->unguard(false);
-		return false;
-	}
-
-
-	/**
-	 * Load all userrights for a given user
+	 * Returns all userrights for a given user
 	 *
 	 * @param integer $userid id of the user
 	 *
-	 * @return boolean
+	 * @return array
 	 */
-	public function loadUserrights()
+	public function getUserrights($userid)
 	{
 		$this->debug->guard();
 
 		$userrightsTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userrights');
-		$sql = "SELECT * FROM " . $userrightsTablename . " WHERE userright_user = '" . $this->getUserID() . "'";
+		$sql = "SELECT * FROM " . $userrightsTablename . " WHERE userright_user = '" . $userid . "'";
 
 		if ($res = $this->database->query($sql))
 		{
+			$ret = array();
 			while ($row = $this->database->fetchArray($res))
 			{
-				$this->userrights[$row['userright_action']] = true;
+				$ret[$row['userright_action']] = true;
 			}
 
-			$this->_getUserrightsForRoles();
-
-			if (count($this->userrights) == 0)
+			$rolefunctions = new zgUserroles();
+			$roles = $rolefunctions->getUserroles($userid);
+			foreach($roles as $roleid => $value)
 			{
-				$this->debug->write('Possible problem getting userrights for a user: the user seems to habe no assigned rights', 'warning');
-				$this->messages->setMessage('Possible problem getting userrights for a user: the user seems to habe no assigned rights', 'warning');
+				$rights = $this->_getUserrightsForRoles($roleid);
+				$ret = array_merge($ret, $rights);
+			}
 
+			if (count($ret) == 0)
+			{
+				$this->debug->write('Possible problem getting userrights for a user: the user seems to have no assigned rights', 'warning');
+				$this->messages->setMessage('Possible problem getting userrights for a user: the user seems to have no assigned rights', 'warning');
 				$this->debug->unguard(false);
 				return false;
 			}
 
-			$this->userrightsLoaded = true;
-			$this->debug->unguard(true);
-			return true;
+			$this->debug->unguard($ret);
+			return $ret;
 		}
 		else
 		{
@@ -126,101 +93,91 @@ class zgUserrights
 	 * Save all userrights to the session for later use
 	 * Also updates the according userright table with the current data
 	 *
+	 * @param integer $userid id of the user
+	 * @param array $userrights array containing all rights
+	 *
 	 * @return boolean
 	 */
-	public function saveUserrights()
+	public function setUserrights($userid, $userrights)
 	{
 		$this->debug->guard();
-
-		if ($this->userrightsLoaded)
+		
+		if (count($userrights) < 1)
 		{
-			$userrightsTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userrights');
-			$userid = $this->session->getSessionVariable('user_userid');
+			$this->debug->write('Problem setting the user rights: array not valid', 'warning');
+			$this->messages->setMessage('Problem setting the user rights: array not valid', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
 
-			$sql = 'DELETE FROM ' . $userrightsTablename . " WHERE userright_user='" . $userid . "'";
+		$userrightsTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userrights');
+		$sql = 'DELETE FROM ' . $userrightsTablename . " WHERE userright_user='" . $userid . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem setting the user rights: could not clean up the rights table', 'warning');
+			$this->messages->setMessage('Problem setting the user rights: could not clean up the rights table', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		foreach ($userrights as $key => $value)
+		{
+			$sql = 'INSERT INTO ' . $userrightsTablename . "(userright_action, userright_user) VALUES('" . $key . "', '" . $userid . "')";
 			$res = $this->database->query($sql);
-
-			foreach ($this->userrights as $key => $value)
+			if (!$res)
 			{
-				$sql = 'INSERT INTO ' . $userrightsTablename . "(userright_action, userright_user) VALUES('" . $key . "', '" . $userid . "')";
-				$res = $this->database->query($sql);
+				$this->debug->write('Problem setting the user rights: could not insert the rights into the database', 'warning');
+				$this->messages->setMessage('Problem setting the user rights: could not insert the rights into the database', 'warning');
+				$this->debug->unguard(false);
+				return false;
 			}
 		}
 
 		$this->debug->unguard(true);
 		return true;
 	}
-
-
+	
+	
 	/**
-	 * Check if the user has a given userright
+	 * Loads all userrights for a given role
 	 *
-	 * @param integer $actionid id of the action
-	 *
-	 * @return boolean
+	 * @param integer $roleid id of the role
+	 * 
+	 * @return array
 	 */
-	public function hasUserright($actionid)
+	protected function _getUserrightsForRole($roleid)
 	{
 		$this->debug->guard();
 
-		if (!$this->userrightsLoaded)
+		$rolestoactionsTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userroles_to_actions');
+		$sql = "SELECT * FROM " . $rolestoactionsTablename . " WHERE userroleaction_userrole = '" . $roleid . "'";
+
+		if ($res = $this->database->query($sql))
 		{
-			$this->loadUserrights();
+			$ret = array();
+			while ($row = $this->database->fetchArray($res))
+			{
+				$ret[$row['userroleaction_action']] = true;
+			}
+
+			if (count($this->userrights) == 0)
+			{
+				$this->debug->write('Possible problem getting the rights for the roles of a user: there seems to be no rights assigned with the roles', 'warning');
+				$this->messages->setMessage('Possible problem getting the rights for the roles of a user: there seems to be no rights assigned with the roles', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
+
+			$this->debug->unguard($ret);
+			return $ret;
 		}
-
-		if (!empty($this->userrights[$actionid]))
+		else
 		{
-			$this->debug->unguard(true);
-			return true;
-		}
-
-		$this->debug->write('User does not have the requested right for action (' . $actionid . ')', 'warning');
-		$this->messages->setMessage('User does not have the requested right for action (' . $actionid . ')', 'warning');
-
-		$this->debug->unguard(false);
-		return false;
-	}
-
-
-	/**
-	 * Adds rights for the user for a given action
-	 *
-	 * @param integer $userright id of the action to add rights to
-	 *
-	 * @return boolean
-	 */
-	public function addUserright($userright)
-	{
-		$this->debug->guard();
-
-		if (!$this->userrightsLoaded)
-		{
-			$this->loadUserrights();
-		}
-
-		$this->userrights[$userright] = true;
-		$this->saveUserrights();
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-
-	/**
-	 * Deletes a userright for an action
-	 *
-	 * @param integer $userright id of the action to delete rights for
-	 *
-	 * @return boolean
-	 */
-	public function deleteUserright($userright)
-	{
-		$this->debug->guard();
-
-		if (isset($this->userrights[$userright]))
-		{
-			unset($this->userrights[$userright]);
-			$this->saveUserrights();
+			$this->debug->write('Problem getting userrole for a user: could not find the userrole', 'warning');
+			$this->messages->setMessage('Problem getting userrole for a user: could not find the userrole', 'warning');
+			$this->debug->unguard(false);
+			return false;
 		}
 
 		$this->debug->unguard(true);
