@@ -59,13 +59,19 @@ class zgUserrights
 
 			$rolefunctions = new zgUserroles();
 			$roles = $rolefunctions->getUserroles($userid);
-			foreach($roles as $roleid => $value)
+			if ((is_array($roles)) && (count($roles) > 0))
 			{
-				$rights = $this->_getUserrightsForRoles($roleid);
-				$ret = array_merge($ret, $rights);
+				foreach ($roles as $roleid => $value)
+				{
+					$rights = $this->_getUserrightsForRoles($roleid);
+					if ((is_array($rights)) && (count($rights) > 0))
+					{
+						$ret = $ret + $rights;
+					}
+				}
 			}
 
-			if (count($ret) == 0)
+			if (count($ret) < 1)
 			{
 				$this->debug->write('Possible problem getting userrights for a user: the user seems to have no assigned rights', 'warning');
 				$this->messages->setMessage('Possible problem getting userrights for a user: the user seems to have no assigned rights', 'warning');
@@ -90,8 +96,7 @@ class zgUserrights
 
 
 	/**
-	 * Save all userrights to the session for later use
-	 * Also updates the according userright table with the current data
+	 * Stores the according userrights to the database
 	 *
 	 * @param integer $userid id of the user
 	 * @param array $userrights array containing all rights
@@ -102,7 +107,7 @@ class zgUserrights
 	{
 		$this->debug->guard();
 		
-		if (count($userrights) < 1)
+		if ((is_array($userrights)) && (count($userrights) < 1))
 		{
 			$this->debug->write('Problem setting the user rights: array not valid', 'warning');
 			$this->messages->setMessage('Problem setting the user rights: array not valid', 'warning');
@@ -146,7 +151,7 @@ class zgUserrights
 	 * 
 	 * @return array
 	 */
-	protected function _getUserrightsForRole($roleid)
+	protected function _getUserrightsForRoles($roleid)
 	{
 		$this->debug->guard();
 
@@ -161,7 +166,7 @@ class zgUserrights
 				$ret[$row['userroleaction_action']] = true;
 			}
 
-			if (count($this->userrights) == 0)
+			if (count($ret) == 0)
 			{
 				$this->debug->write('Possible problem getting the rights for the roles of a user: there seems to be no rights assigned with the roles', 'warning');
 				$this->messages->setMessage('Possible problem getting the rights for the roles of a user: there seems to be no rights assigned with the roles', 'warning');

@@ -47,18 +47,16 @@ class testUserroles extends UnitTestCase
 		$this->assertEqual(count($ret), 2);
 		$this->assertEqual($ret['1'], true);
 		$this->assertEqual($ret['5'], true);
-		$this->assertNull($ret['2']);
 		unset($ret);
 
 		$ret = $userroles->getUserroles('2');
 		$this->assertEqual(count($ret), 2);
 		$this->assertEqual($ret['2'], true);
 		$this->assertEqual($ret['6'], true);
-		$this->assertNull($ret['1']);
 		unset($ret);
 
 		unset($userroles);
-    }	
+    }
 }
 
 ?>

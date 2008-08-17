@@ -195,8 +195,7 @@ class zgUserhandler
 
 		if ($this->loggedIn)
 		{
-			$this->session->unsetSessionVariable('user_userid');
-			$this->session->unsetSessionVariable('user_key');
+			$this->session->unsetAllSessionVariables();
 		}
 		else
 		{
@@ -207,6 +206,7 @@ class zgUserhandler
 		}
 
 		$this->session->stopSession();
+		$this->loggedIn = false;
 
 		$this->debug->unguard(true);
 		return true;
@@ -223,6 +223,8 @@ class zgUserhandler
 		$this->debug->guard();
 
 		$this->saveUserrights();
+		// TODO: Add roles!
+//		$this->saveUserroles();
 		$this->saveUserdata();
 
 		$this->debug->unguard(true);
@@ -301,40 +303,6 @@ class zgUserhandler
 
 
 	/**
-	 * Checks if the user has a given userrole
-	 *
-	 * @param string $userrole name of the userrole
-	 * @param integer $userid id of the user to chek the userrole for. if 0 the current user is used
-	 *
-	 * @return boolean
-	 */
-	public function hasUserrole($userrole='', $userid=0)
-	{
-		$this->debug->guard();
-
-		if ($this->loggedIn)
-		{
-			if ($userid == 0) $userid = $this->getUserID();
-
-			$sql = "SELECT userrole_id FROM userroles ur LEFT JOIN userroles_to_users u2u ON u2u.userroleuser_userrole = ur.userrole_id ";
-			$sql .= "WHERE userrole_name='" . $userrole . "' AND u2u.userroleuser_user = '" . $userid . "'";
-
-			if ($res = $this->database->query($sql))
-			{
-				if ($this->database->numRows($res) == 1)
-				{
-					$this->debug->unguard(true);
-					return true;
-				}
-			}
-
-			$this->debug->unguard(false);
-			return false;
-		}
-	}
-
-
-	/**
 	 * Creates a new user with a given name and password
 	 * Optional a usergroup and userdata can be given
 	 *
@@ -345,7 +313,7 @@ class zgUserhandler
 	 *
 	 * @return boolean
 	 */
-	public function createUser($name, $password, $userrole=1, $userdata=array())
+	public function createUser($name, $password)
 	{
 		$this->debug->guard();
 
@@ -359,14 +327,11 @@ class zgUserhandler
 			return false;
 		}
 
-		// insert user
-		$key = uniqid();
-		$key = md5($key);
-
-		$active = 0;
+		$active = 1;
+		$key = md5(uniqid());
 		if ($this->configuration->getConfiguration('zeitgeist', 'userhandler', 'use_doubleoptin') == '1')
 		{
-			$active = 1;
+			$active = 0;
 		}
 
 		$sql = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . "(user_username, user_key, user_password, user_active) VALUES('" . $name . "', '" . $key . "', '" . md5($password) . "', '" . $active . "')";
@@ -380,32 +345,12 @@ class zgUserhandler
 		}
 
 		$currentId = $this->database->insertId();
-		
-/*
+
 		// insert confirmation key
-		$confirmationkey = uniqid();
-		$confirmationkey = md5($confirmationkey);
+		$confirmationkey = md5(uniqid());
 		$sqlUser = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','table_userconfirmation') . "(userconfirmation_user, userconfirmation_key) VALUES('" . $currentId . "', '" . $confirmationkey . "')";
 		$resUser = $this->database->query($sqlUser);
-
-		//userrole
-		$sqlUserrole = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','table_userroles_to_users') . "(userroleuser_userrole, userroleuser_user) VALUES('" . $userrole . "', '" . $currentId . "')";
-		$resUserrole = $this->database->query($sqlUserrole);
-
-		//userdata
-		if (count($userdata) > 0)
-		{
-			$userdataKeys = array();
-			$userdataValues = array();
-			foreach ($userdata as $key => $value)
-			{
-				$userdataKeys[] = $key;
-				$userdataValues[] = $value;
-			}
-			$sqlUserdata = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','table_userdata') . "(userdata_user, " . implode(', ', $userdataKeys) . ") VALUES('" . $currentId . "', '" . implode("', '", $userdataValues) . "')";
-			$resUserdata = $this->database->query($sqlUserdata);
-		}
-*/
+		
 		$this->debug->unguard($currentId);
 		return $currentId;
 	}
@@ -450,18 +395,16 @@ class zgUserhandler
 	/**
 	 * Changes the password of the user to a given one password
 	 *
-	 * @param string $password password of the user
 	 * @param integer $userid id of the user to chek the userrole for. if 0 the current user is used
+	 * @param string $password password of the user
 	 *
 	 * @return boolean
 	 */
-	public function changePassword($password, $userid=0)
+	public function changePassword($userid, $password)
 	{
 		$this->debug->guard();
 
-		if ($userid == 0) $userid = $this->getUserID();
-
-		$sql = "UPDATE " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " SET user_password = '" . md5($password) . "' WHERE user_id='" . $this->getUserID() . "'";
+		$sql = "UPDATE " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " SET user_password = '" . md5($password) . "' WHERE user_id='" . $userid . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -480,16 +423,14 @@ class zgUserhandler
 	 * Changes the username of the user to a given one
 	 * Checks if the given username already exists
 	 *
-	 * @param string $username username of the user
 	 * @param integer $userid id of the user to chek the userrole for. if 0 the current user is used
+	 * @param string $username username of the user
 	 *
 	 * @return boolean
 	 */
-	public function changeUsername($username, $userid=0)
+	public function changeUsername($userid, $username)
 	{
 		$this->debug->guard();
-
-		if ($userid == 0) $userid = $this->getUserID();
 
 		$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " WHERE user_username='" . $username . "'";
 		$res = $this->database->query($sql);
@@ -501,7 +442,7 @@ class zgUserhandler
 			return false;
 		}
 
-		$sql = "UPDATE " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " SET user_username = '" . $username . "' WHERE user_id='" . $this->getUserID() . "'";
+		$sql = "UPDATE " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " SET user_username = '" . $username . "' WHERE user_id='" . $userid . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -520,24 +461,22 @@ class zgUserhandler
 
 	/**
 	 * Checks if the confirmation key exists
-	 * Returns the user id if the key is found or false
+	 * Returns the user id if the key is found or false if key is invalid
 	 *
 	 * @param string $confirmationkey key to confirm
-	 * @param integer $userid id of the user to chek the userrole for. if 0 the current user is used
 	 *
 	 * @return integer
 	 */
-	public function checkConfirmation($confirmationkey, $userid=0)
+	public function checkConfirmation($confirmationkey)
 	{
 		$this->debug->guard();
 
-		if ($userid == 0) $userid = $this->getUserID();
-
-		$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_userconfirmation') . " WHERE userconfirmation_key = '" . $confirmationkey . "' AND userconfirmation_user='" . $userid . "'";
+		$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_userconfirmation') . " WHERE userconfirmation_key = '" . $confirmationkey . "'";
 		if ($res = $this->database->query($sql))
 		{
 			if ($this->database->numRows($res))
 			{
+				$row = $this->database->fetchArray($res);
 				$this->debug->unguard($row['userconfirmation_user']);
 				return $row['userconfirmation_user'];
 			}
@@ -633,8 +572,7 @@ class zgUserhandler
 				$res = $this->database->query($sql);
 
 				// insert confirmation key
-				$confirmationkey = rand(10000,1000000000);
-				$confirmationkey = md5($confirmationkey);
+				$confirmationkey = md5($uniqid);
 				$sqlUser = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','table_userconfirmation') . "(userconfirmation_user, userconfirmation_key) VALUES('" . $userid . "', '" . $confirmationkey . "')";
 				$resUser = $this->database->query($sqlUser);
 
@@ -664,85 +602,32 @@ class zgUserhandler
 
 
 	/**
-	 * Load all userdata for a given user
+	 * Load all userrights for a given user
+	 *
+	 * @param integer $userid id of the user
 	 *
 	 * @return boolean
 	 */
-	public function loadUserdata()
+	public function loadUserrights($userid)
 	{
 		$this->debug->guard();
 
-		$userdataTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userdata');
-		$sql = "SELECT * FROM " . $userdataTablename . " WHERE userdata_user = '" . $this->getUserID() . "'";
+		$userrights = new zgUserrights();		
+		$this->userrights = $userrights->getUserrights($userid);
 
-		if ($res = $this->database->query($sql))
+
+		if (!is_array($this->userrights) || (count($this->userrights) == 0))
 		{
-			$row = $this->database->fetchArray($res);
-
-			if (is_array($row))
-			{
-				$this->userdata = $row;
-			}
-			else
-			{
-				$this->debug->write('Possible problem getting userdata for a user: the user seems to habe no assigned data', 'warning');
-				$this->messages->setMessage('Possible problem getting userdata for a user: the user seems to habe no assigned data', 'warning');
-
-				$this->debug->unguard(false);
-				return false;
-			}
-
-			$this->userdataLoaded = true;
-			$this->debug->unguard(true);
-			return true;
-		}
-		else
-		{
-			$this->debug->write('Error getting userdata for a user: could not find the userdata', 'error');
-			$this->messages->setMessage('Error getting userdata for a user: could not find the userdata', 'error');
+			$this->debug->write('Error getting userrights for a user: could not find the userrights', 'error');
+			$this->messages->setMessage('Error getting userrights for a user: could not find the userrights', 'error');
 			$this->debug->unguard(false);
 			return false;
-		}
-
-		$this->debug->unguard(false);
-		return false;
-	}
-
-
-	/**
-	 * Save all userrdata to the session for later use
-	 * Also updates the according userdata table with the current data
-	 *
-	 * @return boolean
-	 */
-	public function saveUserdata()
-	{
-		$this->debug->guard();
-
-		if ($this->userdataLoaded)
-		{
-			$userdataTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userdata');
-			$userid = $this->session->getSessionVariable('user_userid');
-
-			$sql = 'UPDATE ' . $userdataTablename . ' SET ';
-			$sqlupdate = '';
-
-			foreach ($this->userdata as $key => $value)
-			{
-				if (strpos($key, 'userdata_timestamp') === false)
-				{
-					if ($sqlupdate != '') $sqlupdate .= ', ';
-					$sqlupdate .= $key . "='" . $value . "'";
-				}
-			}
-
-			$sql .= $sqlupdate . " WHERE userdata_user='" . $userid . "'";
-			$res = $this->database->query($sql);
 		}
 
 		$this->debug->unguard(true);
 		return true;
 	}
+
 
 
 	/**
@@ -824,55 +709,6 @@ class zgUserhandler
 
 
 	/**
-	 * Load all userrights for a given user
-	 *
-	 * @param integer $userid id of the user
-	 *
-	 * @return boolean
-	 */
-	public function loadUserrights()
-	{
-		$this->debug->guard();
-
-		$userrightsTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userrights');
-		$sql = "SELECT * FROM " . $userrightsTablename . " WHERE userright_user = '" . $this->getUserID() . "'";
-
-		if ($res = $this->database->query($sql))
-		{
-			while ($row = $this->database->fetchArray($res))
-			{
-				$this->userrights[$row['userright_action']] = true;
-			}
-
-			$this->_getUserrightsForRoles();
-
-			if (count($this->userrights) == 0)
-			{
-				$this->debug->write('Possible problem getting userrights for a user: the user seems to habe no assigned rights', 'warning');
-				$this->messages->setMessage('Possible problem getting userrights for a user: the user seems to habe no assigned rights', 'warning');
-
-				$this->debug->unguard(false);
-				return false;
-			}
-
-			$this->userrightsLoaded = true;
-			$this->debug->unguard(true);
-			return true;
-		}
-		else
-		{
-			$this->debug->write('Error getting userrights for a user: could not find the userrights', 'error');
-			$this->messages->setMessage('Error getting userrights for a user: could not find the userrights', 'error');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$this->debug->unguard(false);
-		return false;
-	}
-
-
-	/**
 	 * Save all userrights to the session for later use
 	 * Also updates the according userright table with the current data
 	 *
@@ -915,7 +751,7 @@ class zgUserhandler
 
 		if (!$this->userrightsLoaded)
 		{
-			$this->loadUserrights();
+			$this->loadUserrights($this->getUserID());
 		}
 
 		if (!empty($this->userrights[$actionid]))
@@ -945,7 +781,7 @@ class zgUserhandler
 
 		if (!$this->userrightsLoaded)
 		{
-			$this->loadUserrights();
+			$this->loadUserrights($this->getUserID());
 		}
 
 		$this->userrights[$userright] = true;
@@ -971,58 +807,6 @@ class zgUserhandler
 		{
 			unset($this->userrights[$userright]);
 			$this->saveUserrights();
-		}
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-
-	/**
-	 * Loads all userrights for the roles
-	 *
-	 * @return boolean
-	 */
-	private function _getUserrightsForRoles()
-	{
-		$this->debug->guard();
-
-		if (!$this->userrolesLoaded)
-		{
-			$this->loadUserroles($this->session->getSessionVariable('user_userid'));
-		}
-
-		foreach ($this->userroles as $roleId => $state)
-		{
-			$rolestoactionsTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userroles_to_actions');
-			$sql = "SELECT * FROM " . $rolestoactionsTablename . " WHERE userroleaction_userrole = '" . $roleId . "'";
-
-			if ($res = $this->database->query($sql))
-			{
-				while ($row = $this->database->fetchArray($res))
-				{
-					$this->userrights[$row['userroleaction_action']] = true;
-				}
-
-				if (count($this->userrights) == 0)
-				{
-					$this->debug->write('Possible problem getting the rights for the roles of a user: there seems to be no rights assigned with the roles', 'warning');
-					$this->messages->setMessage('Possible problem getting the rights for the roles of a user: there seems to be no rights assigned with the roles', 'warning');
-
-					$this->debug->unguard(false);
-					return false;
-				}
-
-				$this->debug->unguard(true);
-				return true;
-			}
-			else
-			{
-				$this->debug->write('Error getting userrole for a user: could not find the userrole', 'warning');
-				$this->messages->setMessage('Error getting userrole for a user: could not find the userrole', 'warning');
-				$this->debug->unguard(false);
-				return false;
-			}
 		}
 
 		$this->debug->unguard(true);

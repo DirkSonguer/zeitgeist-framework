@@ -124,10 +124,10 @@ class zgSession
 	{
 		$this->debug->guard();
 
-		session_destroy();
+		$ret = session_destroy();
 
-		$this->debug->unguard(true);
-		return true;
+		$this->debug->unguard($ret);
+		return $ret;
 	}
 
 
