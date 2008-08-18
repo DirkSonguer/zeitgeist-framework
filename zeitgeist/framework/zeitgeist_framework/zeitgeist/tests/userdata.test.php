@@ -14,7 +14,7 @@ class testUserdata extends UnitTestCase
 		unset($userdata);
     }
 
-	function test_setUserdata()
+	function test_saveUserdata()
 	{
 		$userdata = new zgUserdata();
 		$res = $this->database->query("TRUNCATE TABLE userdata");
@@ -23,7 +23,7 @@ class testUserdata extends UnitTestCase
 		$testdata['userdata_firstname'] = 'Mr';
 		$testdata['userdata_lastname'] = 'Test';
 		
-		$ret = $userdata->setUserdata('1', $testdata);
+		$ret = $userdata->saveUserdata('1', $testdata);
 		$this->assertTrue($ret);
 		
 		$res = $this->database->query("SELECT * FROM userdata");
@@ -33,20 +33,20 @@ class testUserdata extends UnitTestCase
 		unset($userdata);
     }
 
-	function test_getUserdata()
+	function test_loadUserdata()
 	{
 		$userdata = new zgUserdata();
 		$res = $this->database->query("TRUNCATE TABLE userdata");
 		$this->database->query("INSERT INTO userdata(userdata_user, userdata_firstname, userdata_lastname) VALUES('1', 'Mr', 'Test')");
 		$this->database->query("INSERT INTO userdata(userdata_user, userdata_firstname, userdata_lastname) VALUES('2', 'Mrs', 'Test')");
 
-		$ret = $userdata->getUserdata('1');
+		$ret = $userdata->loadUserdata('1');
 		$this->assertEqual(count($ret), 12);
 		$this->assertEqual($ret['userdata_firstname'], 'Mr');
 		$this->assertEqual($ret['userdata_lastname'], 'Test');
 		unset($ret);
 
-		$ret = $userdata->getUserdata('2');
+		$ret = $userdata->loadUserdata('2');
 		$this->assertEqual(count($ret), 12);
 		$this->assertEqual($ret['userdata_firstname'], 'Mrs');
 		$this->assertEqual($ret['userdata_lastname'], 'Test');

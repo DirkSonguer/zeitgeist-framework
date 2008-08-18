@@ -43,6 +43,18 @@ class testUserhandler_s2 extends UnitTestCase
 
 		unset($userhandler);
 	}	
+
+	function test_getUserdata()
+	{
+		$userhandler = zgUserhandler::init();
+
+		$ret = $userhandler->getUserdata();
+		$this->assertEqual(count($ret), 12);
+		$this->assertEqual($ret['userdata_firstname'], 'Mr');
+		$this->assertEqual($ret['userdata_lastname'], 'Test');
+
+		unset($userhandler);		
+	}
 	
 	function test_getUserKey()
 	{

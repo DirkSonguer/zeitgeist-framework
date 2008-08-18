@@ -42,7 +42,7 @@ class zgUserroles
 	 *
 	 * @return boolean
 	 */
-	public function getUserroles($userid)
+	public function loadUserroles($userid)
 	{
 		$this->debug->guard();
 
@@ -89,7 +89,7 @@ class zgUserroles
 	 *
 	 * @return boolean
 	 */
-	public function setUserroles($userid, $userroles)
+	public function saveUserroles($userid, $userroles)
 	{
 		$this->debug->guard();
 

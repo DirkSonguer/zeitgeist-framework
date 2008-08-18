@@ -42,7 +42,7 @@ class zgUserrights
 	 *
 	 * @return array
 	 */
-	public function getUserrights($userid)
+	public function loadUserrights($userid)
 	{
 		$this->debug->guard();
 
@@ -58,7 +58,7 @@ class zgUserrights
 			}
 
 			$rolefunctions = new zgUserroles();
-			$roles = $rolefunctions->getUserroles($userid);
+			$roles = $rolefunctions->loadUserroles($userid);
 			if ((is_array($roles)) && (count($roles) > 0))
 			{
 				foreach ($roles as $roleid => $value)
@@ -103,7 +103,7 @@ class zgUserrights
 	 *
 	 * @return boolean
 	 */
-	public function setUserrights($userid, $userrights)
+	public function saveUserrights($userid, $userrights)
 	{
 		$this->debug->guard();
 		
