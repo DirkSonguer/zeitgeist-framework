@@ -42,7 +42,7 @@ class zgUserdata
 	 *
 	 * @return boolean
 	 */
-	public function getUserdata($userid)
+	public function loadUserdata($userid)
 	{
 		$this->debug->guard();
 
@@ -51,20 +51,24 @@ class zgUserdata
 
 		if ($res = $this->database->query($sql))
 		{
-
-			if ($this->database->numRows() > 0)
+			$ret = array();
+			if ($this->database->numRows($res) > 0)
 			{
-				$ret = array();
 				$row = $this->database->fetchArray($res);
 				$ret = $row;
 			}
 			else
 			{
-				$this->debug->write('Possible problem getting userdata for a user: the user seems to habe no assigned data', 'warning');
-				$this->messages->setMessage('Possible problem getting userdata for a user: the user seems to habe no assigned data', 'warning');
-
-				$this->debug->unguard(false);
-				return false;
+				$sql = "EXPLAIN " . $userdataTablename;
+				$res = $this->database->query($sql);
+				
+				while($row = $this->database->fetchArray($res))
+				{
+					$ret[$row['Field']] = '';
+				}
+				
+				$this->debug->write('The user seems to habe no assigned data. Userdata returned empty.', 'message');
+				$this->messages->setMessage('The user seems to habe no assigned data. Userdata returned empty.', 'message');
 			}
 
 			$this->debug->unguard($ret);
@@ -91,7 +95,7 @@ class zgUserdata
 	 *
 	 * @return boolean
 	 */
-	public function setUserdata($userid, $userdata)
+	public function saveUserdata($userid, $userdata)
 	{
 		$this->debug->guard();
 

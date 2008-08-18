@@ -222,10 +222,10 @@ class zgUserhandler
 	{
 		$this->debug->guard();
 
-		$this->saveUserrights();
+		$this->_saveUserrights();
 		// TODO: Add roles!
 //		$this->saveUserroles();
-		$this->saveUserdata();
+		$this->_saveUserdata();
 
 		$this->debug->unguard(true);
 		return true;
@@ -263,7 +263,7 @@ class zgUserhandler
 
 		if ($this->loggedIn)
 		{
-			$userid = $this->session->getSessionVariable('user_id');
+			$userid = $this->session->getSessionVariable('user_userid');
 
 			if ($userid)
 			{
@@ -628,14 +628,16 @@ class zgUserhandler
 	/**
 	 * Load all userdata for the current user
 	 *
+	 * @access protected
+	 *
 	 * @return boolean
 	 */
-	private function loadUserdata()
+	protected function _loadUserdata()
 	{
 		$this->debug->guard();
 
-		$userdata = new zgUserdata();		
-		$this->userdata = $userdata->getUserdata($this->getUserID());
+		$userdata = new zgUserdata();
+		$this->userdata = $userdata->loadUserdata($this->getUserID());
 
 		if (!is_array($this->userdata) || (count($this->userdata) == 0))
 		{
@@ -645,6 +647,7 @@ class zgUserhandler
 			return false;
 		}
 
+		$this->userdataLoaded = true;
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -653,9 +656,11 @@ class zgUserhandler
 	/**
 	 * Saves all userdata for the current user
 	 *
+	 * @access protected
+	 *
 	 * @return boolean
 	 */
-	private function saveUserdata()
+	protected function _saveUserdata()
 	{
 		$this->debug->guard();
 
@@ -668,7 +673,7 @@ class zgUserhandler
 		}
 
 		$userdata = new zgUserdata();
-		$ret = $userdata->setUserdata($this->getUserID(), $this->userdata);
+		$ret = $userdata->saveUserdata($this->getUserID(), $this->userdata);
 
 		if (!$ret)
 		{
@@ -697,7 +702,7 @@ class zgUserhandler
 
 		if (!$this->userdataLoaded)
 		{
-			$this->loadUserdata();
+			$this->_loadUserdata();
 		}
 
 		if ($datakey != '')
@@ -732,6 +737,7 @@ class zgUserhandler
 	 *
 	 * @param string $userdata key of the userdata to write
 	 * @param string $value content to write
+	 * @param boolean $saveuserdata flag if userdata should be saved to database
 	 *
 	 * @return boolean
 	 */
@@ -741,13 +747,13 @@ class zgUserhandler
 
 		if (!$this->userdataLoaded)
 		{
-			$this->loadUserdata();
+			$this->_loadUserdata();
 		}
 
 		if (isset($this->userdata[$userdata]))
 		{
 			$this->userdata[$userdata] = $value;
-			if ($saveuserdata) $this->saveUserdata();
+			if ($saveuserdata) $this->_saveUserdata();
 
 			$this->debug->unguard(true);
 			return true;
@@ -761,23 +767,58 @@ class zgUserhandler
 	}
 
 
-
 	/**
 	 * Load all userrights for the current user
 	 *
+	 * @access protected
+	 *
 	 * @return boolean
 	 */
-	public function loadUserrights()
+	protected function _loadUserrights()
 	{
 		$this->debug->guard();
 
 		$userrights = new zgUserrights();		
-		$this->userrights = $userrights->getUserrights($userid);
+		$this->userrights = $userrights->loadUserrights($this->getUserID());
 
 		if (!is_array($this->userrights) || (count($this->userrights) == 0))
 		{
-			$this->debug->write('Error getting userrights for a user: could not find the userrights', 'error');
-			$this->messages->setMessage('Error getting userrights for a user: could not find the userrights', 'error');
+			$this->debug->write('Problem getting userrights for a user: could not find the userrights', 'warning');
+			$this->messages->setMessage('Problem getting userrights for a user: could not find the userrights', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->userrightsLoaded = true;
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	/**
+	 * Save all userrights to the database
+	 *
+	 * @return boolean
+	 */
+	protected function _saveUserrights()
+	{
+		$this->debug->guard();
+
+		if (!$this->userrightsLoaded)
+		{
+			$this->debug->write('Problem saving user rights: User rights are not loaded for user. No update needed.', 'message');
+			$this->messages->setMessage('Problem saving user rights: User rights are not loaded for user. No update needed.', 'message');
+			$this->debug->unguard(true);
+			return true;
+		}
+
+		$userrights = new zgUserrights();
+		$ret = $userrights->saveUserrights($this->getUserID(), $this->userrights);
+
+		if (!$ret)
+		{
+			$this->debug->write('Problem saving the user rights', 'warning');
+			$this->messages->setMessage('Problem saving the user rights', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -786,63 +827,6 @@ class zgUserhandler
 		return true;
 	}
 
-
-	/**
-	 * Load all userrights for the current user
-	 *
-	 * @return boolean
-	 */
-/*
-	public function saveUserrights()
-	{
-		$this->debug->guard();
-
-		$userrights = new zgUserrights();		
-		$this->userrights = $userrights->getUserrights($userid);
-
-		if (!is_array($this->userrights) || (count($this->userrights) == 0))
-		{
-			$this->debug->write('Error getting userrights for a user: could not find the userrights', 'error');
-			$this->messages->setMessage('Error getting userrights for a user: could not find the userrights', 'error');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$this->debug->unguard(true);
-		return true;
-	}
-*/
-
-	/**
-	 * Save all userrights to the session for later use
-	 * Also updates the according userright table with the current data
-	 *
-	 * @return boolean
-	 */
-/*
-	public function saveUserrights()
-	{
-		$this->debug->guard();
-
-		if ($this->userrightsLoaded)
-		{
-			$userrightsTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userrights');
-			$userid = $this->session->getSessionVariable('user_userid');
-
-			$sql = 'DELETE FROM ' . $userrightsTablename . " WHERE userright_user='" . $userid . "'";
-			$res = $this->database->query($sql);
-
-			foreach ($this->userrights as $key => $value)
-			{
-				$sql = 'INSERT INTO ' . $userrightsTablename . "(userright_action, userright_user) VALUES('" . $key . "', '" . $userid . "')";
-				$res = $this->database->query($sql);
-			}
-		}
-
-		$this->debug->unguard(true);
-		return true;
-	}
-*/
 
 	/**
 	 * Check if the user has a given userright
@@ -857,9 +841,9 @@ class zgUserhandler
 
 		if (!$this->userrightsLoaded)
 		{
-			$this->loadUserrights($this->getUserID());
+			$this->_loadUserrights($this->getUserID());
 		}
-
+		
 		if (!empty($this->userrights[$actionid]))
 		{
 			$this->debug->unguard(true);
@@ -877,21 +861,22 @@ class zgUserhandler
 	/**
 	 * Adds rights for the user for a given action
 	 *
-	 * @param integer $userright id of the action to add rights to
+	 * @param integer $actionid id of the action to add rights to
+	 * @param boolean $saveuserrights flag if user rights should be saved to database
 	 *
 	 * @return boolean
 	 */
-	public function addUserright($userright)
+	public function addUserright($actionid, $saveuserrights=true)
 	{
 		$this->debug->guard();
 
 		if (!$this->userrightsLoaded)
 		{
-			$this->loadUserrights($this->getUserID());
+			$this->_loadUserrights($this->getUserID());
 		}
 
-		$this->userrights[$userright] = true;
-		$this->saveUserrights();
+		$this->userrights[$actionid] = true;
+		if ($saveuserrights) $this->_saveUserrights();
 
 		$this->debug->unguard(true);
 		return true;
@@ -901,18 +886,19 @@ class zgUserhandler
 	/**
 	 * Deletes a userright for an action
 	 *
-	 * @param integer $userright id of the action to delete rights for
+	 * @param integer $actionid id of the action to delete rights for
+	 * @param boolean $saveuserrights flag if user rights should be saved to database
 	 *
 	 * @return boolean
 	 */
-	public function deleteUserright($userright)
+	public function deleteUserright($actionid, $saveuserrights=true)
 	{
 		$this->debug->guard();
 
-		if (isset($this->userrights[$userright]))
+		if (isset($this->userrights[$actionid]))
 		{
-			unset($this->userrights[$userright]);
-			$this->saveUserrights();
+			unset($this->userrights[$actionid]);
+			if ($saveuserrights) $this->_saveUserrights();
 		}
 
 		$this->debug->unguard(true);

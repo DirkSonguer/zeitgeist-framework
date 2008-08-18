@@ -14,7 +14,7 @@ class testUserrights extends UnitTestCase
 		unset($userrights);
     }
 
-	function test_setUserrights()
+	function test_saveUserrights()
 	{
 		$userrights = new zgUserrights();
 		$res = $this->database->query("TRUNCATE TABLE userrights");
@@ -23,7 +23,7 @@ class testUserrights extends UnitTestCase
 		$testrights['1'] = true;
 		$testrights['5'] = true;
 		
-		$ret = $userrights->setUserrights('1', $testrights);
+		$ret = $userrights->saveUserrights('1', $testrights);
 		$this->assertTrue($ret);
 		
 		$res = $this->database->query("SELECT * FROM userrights");
@@ -33,7 +33,7 @@ class testUserrights extends UnitTestCase
 		unset($userrights);
     }
 
-	function test_getUserrights()
+	function test_loadUserrights()
 	{
 		$userrights = new zgUserrights();
 		$res = $this->database->query("TRUNCATE TABLE userrights");
@@ -48,13 +48,13 @@ class testUserrights extends UnitTestCase
 		$this->database->query("INSERT INTO userroles_to_actions(userroleaction_userrole, userroleaction_action) VALUES('1', '3')");
 		$this->database->query("INSERT INTO userroles_to_actions(userroleaction_userrole, userroleaction_action) VALUES('1', '7')");
 		
-		$ret = $userrights->getUserrights('1');
+		$ret = $userrights->loadUserrights('1');
 		$this->assertEqual(count($ret), 2);
 		$this->assertEqual($ret['1'], true);
 		$this->assertEqual($ret['5'], true);
 		unset($ret);
 
-		$ret = $userrights->getUserrights('2');
+		$ret = $userrights->loadUserrights('2');
 		$this->assertEqual(count($ret), 4);
 		$this->assertEqual($ret['2'], true);
 		$this->assertEqual($ret['6'], true);
