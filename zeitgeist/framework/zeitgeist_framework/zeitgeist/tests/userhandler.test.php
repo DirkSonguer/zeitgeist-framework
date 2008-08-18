@@ -14,6 +14,21 @@ class testUserhandler extends UnitTestCase
 		unset($userhandler);
     }
 
+	function test_establishUserSession()
+	{
+		$userhandler = zgUserhandler::init();
+
+		$ret = $userhandler->establishUserSession();
+		$this->assertFalse($testid);
+
+		$_SESSION['user_userid'] = 1;
+		$ret = $userhandler->establishUserSession();
+		$this->assertFalse($testid);
+
+		unset($_SESSION['user_userid']);
+		unset($userhandler);
+	}
+	
 	function test_createUser()
 	{
 		$userhandler = zgUserhandler::init();
