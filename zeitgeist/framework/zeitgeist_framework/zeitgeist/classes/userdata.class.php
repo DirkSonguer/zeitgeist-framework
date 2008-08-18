@@ -51,11 +51,11 @@ class zgUserdata
 
 		if ($res = $this->database->query($sql))
 		{
-			$ret = array();
-			$row = $this->database->fetchArray($res);
 
-			if (is_array($row))
+			if ($this->database->numRows() > 0)
 			{
+				$ret = array();
+				$row = $this->database->fetchArray($res);
 				$ret = $row;
 			}
 			else
