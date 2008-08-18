@@ -14,21 +14,6 @@ class testUserhandler extends UnitTestCase
 		unset($userhandler);
     }
 
-	function test_establishUserSession()
-	{
-		$userhandler = zgUserhandler::init();
-
-		$ret = $userhandler->establishUserSession();
-		$this->assertFalse($testid);
-
-		$_SESSION['user_userid'] = 1;
-		$ret = $userhandler->establishUserSession();
-		$this->assertFalse($testid);
-
-		unset($_SESSION['user_userid']);
-		unset($userhandler);
-	}
-	
 	function test_createUser()
 	{
 		$userhandler = zgUserhandler::init();
@@ -167,20 +152,6 @@ class testUserhandler extends UnitTestCase
 		unset($userhandler);
 	}
 
-	function test_isLoggedIn()
-	{
-		$userhandler = zgUserhandler::init();
-
-		$ret = $userhandler->isLoggedIn();
-		$this->assertFalse($ret);
-/*
-		$ret = $userhandler->login('test', 'test');
-		$ret = $userhandler->isLoggedIn();
-		$this->assertTrue($ret);
-*/
-		unset($userhandler);
-	}	
-
 	function test_login()
 	{
 		$userhandler = zgUserhandler::init();
@@ -197,18 +168,25 @@ class testUserhandler extends UnitTestCase
 		unset($userhandler);
 	}
 
-	function test_logout()
+	function test_isLoggedIn_true()
 	{
 		$userhandler = zgUserhandler::init();
 
-		$ret = $userhandler->logout();
+		$ret = $userhandler->isLoggedIn();
 		$this->assertTrue($ret);
 
-		$ret = $userhandler->logout();
-		$this->assertFalse($ret);
-
 		unset($userhandler);
-	}	
+	}
+	
+	function test_getUserdata()
+	{
+		$userhandler = zgUserhandler::init();
+
+		$ret = $userhandler->getUserdata();
+		var_dump($ret);
+
+		unset($userhandler);		
+	}
 
 }
 

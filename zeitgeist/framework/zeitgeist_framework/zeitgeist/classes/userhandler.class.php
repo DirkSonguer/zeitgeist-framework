@@ -253,6 +253,31 @@ class zgUserhandler
 
 
 	/**
+	 * Returns the current User ID
+	 *
+	 * @return string
+	 */
+	public function getUserID()
+	{
+		$this->debug->guard();
+
+		if ($this->loggedIn)
+		{
+			$userid = $this->session->getSessionVariable('user_id');
+
+			if ($userid)
+			{
+				$this->debug->unguard($userid);
+				return $userid;
+			}
+		}
+
+		$this->debug->unguard(false);
+		return false;
+	}
+
+
+	/**
 	 * Returns the current Username
 	 *
 	 * @return string
@@ -601,23 +626,21 @@ class zgUserhandler
 
 
 	/**
-	 * Load all userrights for a given user
-	 *
-	 * @param integer $userid id of the user
+	 * Load all userdata for the current user
 	 *
 	 * @return boolean
 	 */
-	public function loadUserrights($userid)
+	private function loadUserdata()
 	{
 		$this->debug->guard();
 
-		$userrights = new zgUserrights();		
-		$this->userrights = $userrights->getUserrights($userid);
+		$userdata = new zgUserdata();		
+		$this->userdata = $userdata->getUserdata($this->getUserID());
 
-		if (!is_array($this->userrights) || (count($this->userrights) == 0))
+		if (!is_array($this->userdata) || (count($this->userdata) == 0))
 		{
-			$this->debug->write('Error getting userrights for a user: could not find the userrights', 'error');
-			$this->messages->setMessage('Error getting userrights for a user: could not find the userrights', 'error');
+			$this->debug->write('Error getting userdata for a user: could not find the userdata', 'error');
+			$this->messages->setMessage('Error getting userdata for a user: could not find the userdata', 'error');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -626,6 +649,38 @@ class zgUserhandler
 		return true;
 	}
 
+
+	/**
+	 * Saves all userdata for the current user
+	 *
+	 * @return boolean
+	 */
+	private function saveUserdata()
+	{
+		$this->debug->guard();
+
+		if (!$this->userdataLoaded)
+		{
+			$this->debug->write('Problem saving userdata: Userdata is not loaded for user. No update needed.', 'message');
+			$this->messages->setMessage('Problem saving userdata: Userdata is not loaded for user. No update needed.', 'message');
+			$this->debug->unguard(true);
+			return true;
+		}
+
+		$userdata = new zgUserdata();
+		$ret = $userdata->setUserdata($this->getUserID(), $this->userdata);
+
+		if (!$ret)
+		{
+			$this->debug->write('Problem saving the user data', 'warning');
+			$this->messages->setMessage('Problem saving the user data', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
 
 
 	/**
@@ -705,6 +760,58 @@ class zgUserhandler
 		return false;
 	}
 
+
+
+	/**
+	 * Load all userrights for the current user
+	 *
+	 * @return boolean
+	 */
+	public function loadUserrights()
+	{
+		$this->debug->guard();
+
+		$userrights = new zgUserrights();		
+		$this->userrights = $userrights->getUserrights($userid);
+
+		if (!is_array($this->userrights) || (count($this->userrights) == 0))
+		{
+			$this->debug->write('Error getting userrights for a user: could not find the userrights', 'error');
+			$this->messages->setMessage('Error getting userrights for a user: could not find the userrights', 'error');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	/**
+	 * Load all userrights for the current user
+	 *
+	 * @return boolean
+	 */
+/*
+	public function saveUserrights()
+	{
+		$this->debug->guard();
+
+		$userrights = new zgUserrights();		
+		$this->userrights = $userrights->getUserrights($userid);
+
+		if (!is_array($this->userrights) || (count($this->userrights) == 0))
+		{
+			$this->debug->write('Error getting userrights for a user: could not find the userrights', 'error');
+			$this->messages->setMessage('Error getting userrights for a user: could not find the userrights', 'error');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+*/
 
 	/**
 	 * Save all userrights to the session for later use
