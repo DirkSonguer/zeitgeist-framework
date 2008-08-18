@@ -600,7 +600,6 @@ class zgUserhandler
 	}
 
 
-
 	/**
 	 * Load all userrights for a given user
 	 *
@@ -614,7 +613,6 @@ class zgUserhandler
 
 		$userrights = new zgUserrights();		
 		$this->userrights = $userrights->getUserrights($userid);
-
 
 		if (!is_array($this->userrights) || (count($this->userrights) == 0))
 		{
@@ -714,6 +712,7 @@ class zgUserhandler
 	 *
 	 * @return boolean
 	 */
+/*
 	public function saveUserrights()
 	{
 		$this->debug->guard();
@@ -736,7 +735,7 @@ class zgUserhandler
 		$this->debug->unguard(true);
 		return true;
 	}
-
+*/
 
 	/**
 	 * Check if the user has a given userright
@@ -821,6 +820,7 @@ class zgUserhandler
 	 *
 	 * @return boolean
 	 */
+/*	
 	public function loadUserroles($userid)
 	{
 		$this->debug->guard();
@@ -859,7 +859,7 @@ class zgUserhandler
 		$this->debug->unguard(true);
 		return true;
 	}
-
+*/
 
 	public function addUserrole()
 	{
