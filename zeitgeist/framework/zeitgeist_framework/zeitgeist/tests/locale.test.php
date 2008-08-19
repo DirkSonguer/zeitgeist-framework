@@ -20,6 +20,8 @@ class testLocale extends UnitTestCase
 		$ret = $locale->loadLocale('testlocale', 'testdata/testlocale.ini');
 		$this->assertTrue($ret);
 		unset($ret);
+
+		unset($locale);		
 	}
 
 	function test_setLocale()
@@ -34,6 +36,8 @@ class testLocale extends UnitTestCase
 		$ret = $locale->setLocale('testlocale');
 		$this->assertTrue($ret);
 		unset($ret);
+
+		unset($locale);		
 	}
 
 	function test_write()
@@ -56,6 +60,8 @@ class testLocale extends UnitTestCase
 		$ret = $locale->write('this is a test');
 		$this->assertEqual($ret, 'das ist ein test');
 		unset($ret);
+
+		unset($locale);		
 	}
 }
 
