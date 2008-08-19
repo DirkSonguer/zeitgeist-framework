@@ -34,6 +34,7 @@
 	require_once('userdata.test.php');
 	require_once('userhandler.test.php');
 	require_once('parameterhandler.test.php');
+	require_once('session.test.php');
 	
 	$debug = zgDebug::init();
 
@@ -47,6 +48,7 @@
     $test->addTestCase(new testUserdata());
     $test->addTestCase(new testUserhandler());
     $test->addTestCase(new testParameterhandler());
+    $test->addTestCase(new testSession());
     $test->run(new HtmlReporter());
 
 	echo "<h2><a href='index_step2.php'>Step 2</a></h2>";
