@@ -130,7 +130,7 @@ class zgObjectcache
 			return false;
 		}
 
-		unset($this->objects[$name]);
+		unset($this->objects[$objectname]);
 
 		$this->debug->unguard(true);
 		return true;

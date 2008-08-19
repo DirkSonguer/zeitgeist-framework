@@ -1,6 +1,6 @@
 <?php
 
-class testMessagecache_s2 extends UnitTestCase
+class testMessagecache extends UnitTestCase
 {
 	
 	function test_init()
@@ -10,14 +10,13 @@ class testMessagecache_s2 extends UnitTestCase
 		unset($messagecache);
     }
 
-	function test_loadMessagesFromDatabase()
+	function test_saveMessagesToDatabase()
 	{
 		$messagecache = zgMessagecache::init();
 		$message = zgMessages::init();
+		$ret = $message->setMessage('cache testing', 'cachetest');
 		
-		$messagecache->loadMessagesFromDatabase();
-		$ret = $message->getMessagesByType('cachetest');
-		$this->assertIdentical($ret[0]->message, 'cache testing');
+		$messagecache->saveMessagesToDatabase();
 
 		unset($message);
 		unset($messagecache);
