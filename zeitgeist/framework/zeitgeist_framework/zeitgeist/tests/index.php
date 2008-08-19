@@ -26,6 +26,7 @@
 	$locale = zgLocale::init();
 	
 	require_once('messages.test.php');
+	require_once('objectcache.test.php');
 	require_once('database.test.php');
 	require_once('configuration.test.php');
 	require_once('locale.test.php');
@@ -35,11 +36,13 @@
 	require_once('userhandler.test.php');
 	require_once('parameterhandler.test.php');
 	require_once('session.test.php');
+	require_once('messagecache.test.php');
 	
 	$debug = zgDebug::init();
 
     $test = &new TestSuite('Zeitgeist Unit Tests');
     $test->addTestCase(new testMessages());
+    $test->addTestCase(new testObjectcache());
     $test->addTestCase(new testDatabase());
     $test->addTestCase(new testConfiguration());
     $test->addTestCase(new testLocale());
@@ -49,6 +52,7 @@
     $test->addTestCase(new testUserhandler());
     $test->addTestCase(new testParameterhandler());
     $test->addTestCase(new testSession());
+    $test->addTestCase(new testMessagecache());
     $test->run(new HtmlReporter());
 
 	echo "<h2><a href='index_step2.php'>Step 2</a></h2>";

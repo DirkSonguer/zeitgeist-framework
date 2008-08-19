@@ -26,11 +26,13 @@
 	$locale = zgLocale::init();
 	
 	require_once('userhandler_step2.test.php');
+	require_once('messagecache_step2.test.php');
 
 	$debug = zgDebug::init();
 
     $test = &new TestSuite('Zeitgeist Unit Tests');
     $test->addTestCase(new testUserhandler_s2());
+    $test->addTestCase(new testMessagecache_s2());
     $test->run(new HtmlReporter());
 
 	echo "<h2><a href='index.php'>Step 1</a></h2>";
