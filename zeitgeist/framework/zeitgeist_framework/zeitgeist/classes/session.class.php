@@ -124,7 +124,7 @@ class zgSession
 	{
 		$this->debug->guard();
 
-		if ($this->getSessionId != false)
+		if ($this->getSessionId() != false)
 		{
 			$ret = session_destroy();
 		}
