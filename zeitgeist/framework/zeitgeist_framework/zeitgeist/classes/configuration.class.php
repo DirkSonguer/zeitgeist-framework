@@ -366,7 +366,7 @@ class zgConfiguration
 		{
 			$this->debug->write('Error loading the configuration file ' . $filename . ': file not found', 'error');
 			$this->messages->setMessage('Error loading the configuration file ' . $filename . ': file not found', 'error');
-			$this->debug->unguard($retArray);
+			$this->debug->unguard(false);
 			return false;
 		}
 
