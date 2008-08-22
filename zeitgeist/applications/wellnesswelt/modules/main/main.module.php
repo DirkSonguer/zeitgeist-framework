@@ -1,6 +1,6 @@
 <?php
 
-defined('PROJECT_ACTIVE') or die();
+defined('WELLNESSWELT_ACTIVE') or die();
 
 class main
 {
@@ -25,6 +25,8 @@ class main
 	public function index($parameters=array())
 	{
 		$this->debug->guard();
+		
+		echo "test";
 
 		$this->debug->unguard(true);
 		return true;
