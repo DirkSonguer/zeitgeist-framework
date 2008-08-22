@@ -841,7 +841,7 @@ class zgUserhandler
 
 		if (!$this->userrightsLoaded)
 		{
-			$this->_loadUserrights($this->getUserID());
+			$this->_loadUserrights();
 		}
 		
 		if (!empty($this->userrights[$actionid]))
@@ -872,7 +872,7 @@ class zgUserhandler
 
 		if (!$this->userrightsLoaded)
 		{
-			$this->_loadUserrights($this->getUserID());
+			$this->_loadUserrights();
 		}
 
 		$this->userrights[$actionid] = true;
@@ -907,52 +907,65 @@ class zgUserhandler
 
 
 	/**
-	 * Loads a userrole for a given user and prepares all userrights for the role
+	 * Load all userrights for the current user
 	 *
-	 * @param integer $userid id of the user
+	 * @access protected
 	 *
 	 * @return boolean
 	 */
-/*	
-	public function loadUserroles($userid)
+	protected function _loadUserroles()
 	{
 		$this->debug->guard();
 
-		$userrolesTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userroles_to_users');
-		$sql = "SELECT * FROM " . $userrolesTablename . " WHERE userroleuser_user = '" . $userid . "'";
-
-		if ($res = $this->database->query($sql))
+		$userroles = new zgUserroles();
+		$this->userroles = $userroles->loadUserroles($this->getUserID());
+		if ((is_array($this->userroles)) && (count($this->userroles) > 0))
 		{
-			while ($row = $this->database->fetchArray($res))
+			foreach ($this->userroles as $roleid => $value)
 			{
-				$this->userroles[$row['userroleuser_userrole']] = true;
-			}
-
-			if (count($this->userroles) == 0)
-			{
-				$this->debug->write('Possible problem getting the role of a user: there seems to be no roles assigned to the user', 'warning');
-				$this->messages->setMessage('Possible problem getting the role of a user: there seems to be no roles assigned to the user', 'warning');
-
+				$this->debug->write('Problem getting userroles for a user: could not find the userroles', 'warning');
+				$this->messages->setMessage('Problem getting userroles for a user: could not find the userroles', 'warning');
 				$this->debug->unguard(false);
 				return false;
 			}
-
-			$this->debug->unguard(true);
-			return true;
 		}
-		else
-		{
-			$this->debug->write('Error getting userrole for a user: could not find the userrole', 'warning');
-			$this->messages->setMessage('Error getting userrole for a user: could not find the userrole', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$this->userroleLoaded = true;
+		
+		$this->userrolesLoaded = true;
 		$this->debug->unguard(true);
 		return true;
 	}
-*/
+
+
+
+	/**
+	 * Check if the user has a given userrole
+	 *
+	 * @param string $arolename name of the userrole
+	 *
+	 * @return boolean
+	 */
+	public function hasUserrole($rolename)
+	{
+		$this->debug->guard();
+
+		if (!$this->userrightsLoaded)
+		{
+			$this->_loadUserroles();
+		}
+		
+		if (in_array($rolename, $this->userrights))
+		{
+			$this->debug->unguard(true);
+			return true;
+		}
+
+		$this->debug->write('User does not have the requested role assigned (' . $rolename . ')', 'warning');
+		$this->messages->setMessage('User does not have the requested role assigned (' . $rolename . ')', 'warning');
+
+		$this->debug->unguard(false);
+		return false;
+	}
+
 
 	public function addUserrole()
 	{
