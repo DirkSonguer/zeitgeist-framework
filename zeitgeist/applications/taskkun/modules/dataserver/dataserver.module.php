@@ -50,7 +50,7 @@ class dataserver
 		$sql .= "ELSE '0' END as task_overdrawn ";
 		$sql .= "FROM tasks_to_users tu ";
 		$sql .= "LEFT JOIN tasks t ON tu.taskusers_task = t.task_id LEFT JOIN tasklogs tl ON t.task_id = tl.tasklog_task ";
-		$sql .= "LEFT JOIN workflows_to_groups w2g ON t.task_workflow = w2g.workflowgroup_id ";
+		$sql .= "LEFT JOIN workflows_to_groups w2g ON t.task_workflow = w2g.workflowgroup_workflow ";
 		$sql .= "LEFT JOIN users_to_groups u2g ON w2g.workflowgroup_group = u2g.usergroup_group ";
 		$sql .= "LEFT JOIN groups g ON u2g.usergroup_group = g.group_id ";
 		$sql .= "WHERE taskusers_user='" . $this->user->getUserID() . "' ";

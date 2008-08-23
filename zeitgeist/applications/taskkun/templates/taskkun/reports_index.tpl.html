@@ -63,8 +63,6 @@
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kword.png" alt="" border="0" /></span></a></div>
 		<div style="float:left; margin:10px;"><a href="@@{[tasks.showactivetasks]}@@"><span onmousemove="showTooltip('Alle aktiven Aufgaben anzeigen', event);" onmouseout="hideTooltip();">
 		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpager.png" alt="" border="0" /></span></a></div>
-		<div style="float:left; margin:10px;"><a href="@@{[search.index]}@@"><span onmousemove="showTooltip('Aktive Aufgaben suchen', event);" onmouseout="hideTooltip();">
-		<img src="@@{templatepath}@@/nuvola/48x48/apps/kpdf.png" alt="" border="0" /></span></a></div>
 		<!-- TemplateEndBlock -->
 
 		<!-- TemplateBeginBlock name="adminnavigation" -->
@@ -97,14 +95,6 @@
 	
 <!-- InstanceBeginEditable name="body" -->
 
-<div class="textbox">
-	<h2>Reports</h2>
-	<ul>
-		<li>Abgeschlossene Aufgaben heute: </li>
-		<li>Abgeschlossene Aufgaben diese Woche: </li>
-	</ul>
-</div>
-
 	<div class="textbox">
 		<table cellpadding="0" cellspacing="0" border="0" style="margin-left:10pt;">
 			<tr>
@@ -128,14 +118,14 @@
 			</tr>
 		</table>
 	</div>
-
+	
 	<div class="textbox">
 		<table cellpadding="0" cellspacing="0" border="0" style="margin-left:10pt;">
 			<tr>
-			<td><a href="@@{[reports.showarchivedtasks]}@@"><img src="@@{templatepath}@@/nuvola/48x48/apps/kghostview.png" alt="" align="left" border="0" /></a></td>
+			<td><a href="@@{[search.index]}@@"><img src="@@{templatepath}@@/nuvola/48x48/apps/kpdf.png" alt="" align="left" border="0" /></a></td>
 			<td>
-				<h3><a href="@@{[reports.showarchivedtasks]}@@">Suche in archivierten Aufgaben</a></h3>
-				<p>Die Suche ermöglicht es, spezifische Aufgaben im Archiv zu finden und auszuwerten.</p>
+				<h3><a href="@@{[search.index]}@@">Suche in Aufgaben/Aufgabengruppen</a></h3>
+				<p>Die Suche ermöglicht es, aktive oder archivierte Aufgaben oder Aufgabengruppen zu finden und auszuwerten.</p>
 			</td>
 			</tr>
 		</table>
