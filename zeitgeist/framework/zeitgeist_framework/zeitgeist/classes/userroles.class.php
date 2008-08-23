@@ -48,7 +48,7 @@ class zgUserroles
 
 		$userrolesToUsersTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userroles_to_users');
 		$userrolesTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userroles');
-		$sql = "SELECT * FROM " . $userrolesToUsersTablename . " u2r ";
+		$sql = "SELECT u2r.userroleuser_userrole, r.userrole_name FROM " . $userrolesToUsersTablename . " u2r ";
 		$sql .= "LEFT JOIN " . $userrolesTablename . " r ON u2r.userroleuser_userrole = r.userrole_id ";
 		$sql .= "WHERE u2r.userroleuser_user = '" . $userid . "'";
 
@@ -57,7 +57,8 @@ class zgUserroles
 			$ret = array();
 			while ($row = $this->database->fetchArray($res))
 			{
-				$ret[$row['userroleuser_userrole']] = true;
+				if ($row['userrole_name'] == NULL) $row['userrole_name'] = true;
+				$ret[$row['userroleuser_userrole']] = $row['userrole_name'];
 			}
 
 			if (count($ret) == 0)

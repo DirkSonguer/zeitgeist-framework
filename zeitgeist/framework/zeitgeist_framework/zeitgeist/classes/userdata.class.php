@@ -131,7 +131,7 @@ class zgUserdata
 			}
 		}
 
-		$sql = 'INSERT INTO ' . $userdataTablename . '(userdata_user, ' . $sqlkeys . ') VALUES(' . $userid . ',' . $sqlvalues . ')';
+		$sql = "INSERT INTO " . $userdataTablename . "(userdata_user, " . $sqlkeys . ") VALUES('" . $userid . "'," . $sqlvalues . ")";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{

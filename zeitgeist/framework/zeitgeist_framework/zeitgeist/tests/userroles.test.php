@@ -37,22 +37,22 @@ class testUserroles extends UnitTestCase
 	{
 		$userroles = new zgUserroles();
 		$res = $this->database->query("TRUNCATE TABLE userroles_to_users");
-
 		$this->database->query("INSERT INTO userroles_to_users(userroleuser_user, userroleuser_userrole) VALUES('1', '1')");
 		$this->database->query("INSERT INTO userroles_to_users(userroleuser_user, userroleuser_userrole) VALUES('1', '5')");
 		$this->database->query("INSERT INTO userroles_to_users(userroleuser_user, userroleuser_userrole) VALUES('2', '2')");
 		$this->database->query("INSERT INTO userroles_to_users(userroleuser_user, userroleuser_userrole) VALUES('2', '6')");
 		
 		$ret = $userroles->loadUserroles('1');
+		
 		$this->assertEqual(count($ret), 2);
-		$this->assertEqual($ret['1'], true);
-		$this->assertEqual($ret['5'], true);
+		$this->assertNotNull($ret[1]);
+		$this->assertNotNull($ret[5]);
 		unset($ret);
 
 		$ret = $userroles->loadUserroles('2');
 		$this->assertEqual(count($ret), 2);
-		$this->assertEqual($ret['2'], true);
-		$this->assertEqual($ret['6'], true);
+		$this->assertNotNull($ret[2]);
+		$this->assertNotNull($ret[6]);
 		unset($ret);
 
 		unset($userroles);

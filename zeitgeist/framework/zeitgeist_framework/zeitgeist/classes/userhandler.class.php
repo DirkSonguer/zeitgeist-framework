@@ -333,8 +333,6 @@ class zgUserhandler
 	 *
 	 * @param string $name name of the user
 	 * @param string $password password of the user
-	 * @param integer $userrole id of the userrole
-	 * @param array $userdata array containing the userdata
 	 *
 	 * @return boolean
 	 */
@@ -361,7 +359,7 @@ class zgUserhandler
 
 		$sql = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . "(user_username, user_key, user_password, user_active) VALUES('" . $name . "', '" . $key . "', '" . md5($password) . "', '" . $active . "')";
 		$res = $this->database->query($sql);
-		if (!res)
+		if (!$res)
 		{
 			$this->debug->write('Problem creating the user: could not insert the user into the database.', 'error');
 			$this->messages->setMessage('Problem creating the user: could not insert the user into the database.', 'error');
@@ -597,7 +595,7 @@ class zgUserhandler
 				$res = $this->database->query($sql);
 
 				// insert confirmation key
-				$confirmationkey = md5($uniqid);
+				$confirmationkey = md5(uniqid());
 				$sqlUser = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','table_userconfirmation') . "(userconfirmation_user, userconfirmation_key) VALUES('" . $userid . "', '" . $confirmationkey . "')";
 				$resUser = $this->database->query($sqlUser);
 
@@ -919,6 +917,7 @@ class zgUserhandler
 
 		$userroles = new zgUserroles();
 		$this->userroles = $userroles->loadUserroles($this->getUserID());
+		
 		if ((is_array($this->userroles)) && (count($this->userroles) > 0))
 		{
 			foreach ($this->userroles as $roleid => $value)
@@ -948,12 +947,19 @@ class zgUserhandler
 	{
 		$this->debug->guard();
 
-		if (!$this->userrightsLoaded)
+		if (!$this->userrolesLoaded)
 		{
 			$this->_loadUserroles();
 		}
+		if ($rolename === true)
+		{
+			$this->debug->write('You should not ask for generic roles', 'warning');
+			$this->messages->setMessage('You should not ask for generic roles', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
 		
-		if (in_array($rolename, $this->userrights))
+		if (in_array($rolename, $this->userroles))
 		{
 			$this->debug->unguard(true);
 			return true;
@@ -961,7 +967,6 @@ class zgUserhandler
 
 		$this->debug->write('User does not have the requested role assigned (' . $rolename . ')', 'warning');
 		$this->messages->setMessage('User does not have the requested role assigned (' . $rolename . ')', 'warning');
-
 		$this->debug->unguard(false);
 		return false;
 	}
