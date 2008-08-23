@@ -57,7 +57,7 @@ class tkTemplate extends zgTemplate
 		parent::insertUsermessages();
 
 		if ( ($this->user->isLoggedIn()) && ($showmenu) )
-		{
+		{			
 			if ($this->user->hasUserrole('Manager'))
 			{
 				$this->insertBlock('managernavigation');

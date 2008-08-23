@@ -82,7 +82,23 @@ class tkUserfunctions
 	{
 		$this->debug->guard();
 
-		if (!$this->user->createUser($name, $password, $userrole, $userdata))
+		if (!$newUserId = $this->user->createUser($name, $password))
+		{
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$userdatafunctions = new zgUserdata();
+		if (!$userdatafunctions->saveUserdata($newUserId, $userdata))
+		{
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$userrolearray = array();
+		$userrolearray[$userrole] = true;
+		$userrolefunctions = new zgUserroles();
+		if (!$userrolefunctions->saveUserroles($newUserId, $userrolearray))
 		{
 			$this->debug->unguard(false);
 			return false;
@@ -90,21 +106,14 @@ class tkUserfunctions
 
 		if ($instance == 0) $instance = $this->getUserInstance($this->user->getUserID());
 
-		$lastinsert = $this->database->insertId();
-
-		$sql = "SELECT * FROM userdata WHERE userdata_id='" . $lastinsert . "'";
-		$res = $this->database->query($sql);
-		$row = $this->database->fetchArray($res);
-
-		$userid = $row['userdata_user'];
-		$sql = "UPDATE users SET user_instance='" . $instance . "' WHERE user_id='" . $userid . "'";
+		$sql = "UPDATE users SET user_instance='" . $instance . "' WHERE user_id='" . $newUserId . "'";
 		$res = $this->database->query($sql);
 
-		$this->messages->setMessage($userid, 'createduserid');
+		$this->messages->setMessage($newUserId, 'createduserid');
 
 		if (count($usergroups) > 0)
 		{
-			if (!$this->changeUsergroups($usergroups, $userid))
+			if (!$this->changeUsergroups($usergroups, $newUserId))
 			{
 				$this->debug->unguard(false);
 				return false;
