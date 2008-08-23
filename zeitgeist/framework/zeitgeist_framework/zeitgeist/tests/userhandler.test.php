@@ -231,7 +231,7 @@ class testUserhandler extends UnitTestCase
 		$ret = $userhandler->hasUserright('3');
 		$this->assertTrue($ret);
 
-		unset($userhandler);		
+		unset($userhandler);
 	}
 
 	function test_addUserright()
@@ -263,6 +263,32 @@ class testUserhandler extends UnitTestCase
 		unset($userhandler);		
 	}
 
+
+	function test_hasUserrole()
+	{
+		$userhandler = zgUserhandler::init();
+		
+		$userid = $userhandler->getUserId();
+		$res = $this->database->query("TRUNCATE TABLE userroles");
+		$res = $this->database->query("TRUNCATE TABLE userroles_to_users");
+		$this->database->query("INSERT INTO userroles(userrole_name, userrole_description) VALUES('testrole', 'Test')");
+		$testrole = $this->database->insertId();
+		$this->database->query("INSERT INTO userroles(userrole_name, userrole_description) VALUES('anothertest', 'Test')");
+		$anothertest = $this->database->insertId();
+		
+		$this->database->query("INSERT INTO userroles_to_users(userroleuser_user, userroleuser_userrole) VALUES('" . $userid . "', '" . $testrole . "')");
+
+		$ret = $userhandler->hasUserrole('false');
+		$this->assertFalse($ret);
+		$ret = $userhandler->hasUserrole('testrole');
+		$this->assertTrue($ret);
+		$ret = $userhandler->hasUserrole('anothertest');
+		$this->assertFalse($ret);
+		$ret = $userhandler->hasUserrole(true);
+		$this->assertFalse($ret);
+
+		unset($userhandler);		
+	}
 }
 
 ?>
