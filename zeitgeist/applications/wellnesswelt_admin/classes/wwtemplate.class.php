@@ -55,24 +55,10 @@ class wwTemplate extends zgTemplate
 		$this->debug->guard();
 
 		parent::insertUsermessages();
-/*
-		if ( ($this->user->isLoggedIn()) && ($showmenu) )
-		{
-			if ($this->user->hasUserrole('Manager'))
-			{
-				$this->insertBlock('managernavigation');
-			}
-			elseif ($this->user->hasUserrole('Administrator'))
-			{
-				$this->insertBlock('adminnavigation');
-				$this->insertBlock('managernavigation');
-			}
-			$this->insertBlock('navigation');
-		}
-*/
+		
 		if ($this->user->isLoggedIn())
 		{
-			$this->insertBlock('logoutbutton');
+			$this->insertBlock('navigation');
 		}
 
 		$showstatus = parent::show();

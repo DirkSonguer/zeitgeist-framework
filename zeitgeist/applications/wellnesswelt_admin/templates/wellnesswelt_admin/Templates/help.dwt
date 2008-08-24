@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- TemplateBeginEditable name="doctitle" -->
+<title>Taskkun - @@{documenttitle}@@</title>
+<!-- TemplateEndEditable -->
+
+<link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/taskkun.css" />
+
+<script language="javascript" type="text/javascript">
+
+	function showTooltip(text, event)
+	{
+		document.getElementById('Tooltip').innerHTML = text;
+
+		var topPixel = event.clientY + 10;
+		var leftPixel = event.clientX + 10;
+
+		x = (document.all) ? window.event.x + document.body.scrollLeft + 180: event.pageX;
+		y = (document.all) ? window.event.y : event.pageY;
+		document.getElementById('Tooltip').style.left = (x + 20) + "px";
+		document.getElementById('Tooltip').style.top = (y + 20) + "px";
+		document.getElementById('Tooltip').style.display = "block";
+	}
+
+	function hideTooltip()
+	{
+		document.getElementById('Tooltip').innerHTML = "";
+
+		document.getElementById('Tooltip').style.top = "0px";
+		document.getElementById('Tooltip').style.left = "0px";
+		document.getElementById('Tooltip').style.display = "none";
+	}
+
+</script>
+	
+<!-- TemplateBeginEditable name="head" -->
+<!-- TemplateEndEditable -->
+</head>
+
+<body>
+
+<div id="Tooltip" class="tooltip" style="display:none; text-align:left;"></div>
+
+<div class="headmenu">
+	<!-- TemplateBeginBlock name="logoutbutton" -->
+	<div class="menuicon" style="float:right; margin-top:5px;">
+	
+	<a href="@@{[help.index]}@@"><span onmousemove="showTooltip('Hilfe', event);" onmouseout="hideTooltip();">
+	<img src="@@{templatepath}@@/nuvola/48x48/apps/filetypes.png" alt="" border="0" /></span></a>	
+
+	</div>
+	<!-- TemplateEndBlock -->
+</div>
+
+<div class="maincontent">
+
+	<div class="headerbox">
+			
+		<table cellspacing="0" cellpadding="0" border="0">
+			<tr>
+				<td valign="top">
+					<h2 class="help">Go Taskkun</h2>
+					<ul>
+						<li class="help"><a href="@@{[help.index]}@@&topic=introduction" class="help">Einführung</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=quickstart" class="help">Schnellstart</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=beta" class="help">Hinweise zur Beta</a></li>
+					</ul>
+				</td>
+				<td valign="top">
+					<h2 class="help">Konfiguration</h2>
+					<ul class="sortlink">
+						<li class="help"><a href="@@{[help.index]}@@&topic=configexamples" class="help">Beispielhafte Konfigurationen</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=groups" class="help">Gruppen anlegen/verwalten</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=workflows" class="help">Aufgabenabläufe anlegen/verwalten</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=users" class="help">Benutzer anlegen/verwalten</a></li>
+					</ul>
+				</td>
+				<td valign="top">
+					<h2 class="help">Bedienung</h2>
+					<ul class="sortlink">
+						<li class="help"><a href="@@{[help.index]}@@&topic=userroles" class="help">Benutzerrollen</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=adhoc" class="help">Ad-Hoc Aufgaben</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=search" class="help">Aufgaben suchen</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=reports" class="help">Reports verwenden</a></li>
+					</ul>
+				</td>
+				<td valign="top">
+					<h2 class="help">Hinweise</h2>
+					<ul class="sortlink">
+						<li class="help"><a href="@@{[help.index]}@@&topic=versions" class="help">Versionen & Updates</a></li>
+						<li class="help"><a href="@@{[help.index]}@@&topic=impress" class="help">Über Menschenwerk</a></li>
+					</ul>
+				</td>
+			</tr>
+		</table>
+	
+	</div>
+
+<!-- TemplateBeginEditable name="pagetitle" -->
+<!-- TemplateEndEditable -->
+
+	<!-- TemplateBeginBlock name="usermessage" -->
+		<h3 class="usermessage"><img src="@@{templatepath}@@/nuvola/16x16/actions/ok.png" alt="" align="left" style="margin-right:5px;" /> @@{usermessage}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="userwarnings" -->
+		<h3 class="userwarning"><img src="@@{templatepath}@@/nuvola/16x16/actions/messagebox_info.png" alt="" align="left" style="margin-right:5px;" /> @@{userwarning}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="usererrors" -->
+		<h3 class="usererror"><img src="@@{templatepath}@@/nuvola/16x16/actions/no.png" alt="" align="left" style="margin-right:5px;" /> @@{usererror}@@</h3>
+	<!-- TemplateEndBlock -->
+	
+<!-- TemplateBeginEditable name="body" -->
+
+<p>Haupttext</p>
+
+<!-- TemplateEndEditable -->
+
+</div>
+<div class="copyright">@@{versioninfo}@@</div>
+
+</body>
+</html>
