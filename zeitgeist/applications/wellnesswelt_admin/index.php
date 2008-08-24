@@ -23,14 +23,6 @@
 
 	include('configuration/wellnesswelt.config.php');
 
-
-/*
-	define(ZG_DB_DBSERVER, 'localhost');
-	define(ZG_DB_USERNAME, 'wellnesswelt');
-	define(ZG_DB_USERPASS, 'wellnesswelt');
-	define(ZG_DB_DATABASE, 'wellnesswelt');
-	define(ZG_DB_CONFIGURATIONCACHE, 'configurationcache');
-	*/
 	$debug = zgDebug::init();
 	$message = zgMessages::init();
 	$configuration = zgConfiguration::init();
@@ -60,14 +52,24 @@
 	{
 		$action = 'index';
 	}	
-/*
+
 	// test if user is logged in
 	if(!$user->establishUserSession())
 	{
 		$module = 'main';
 		$action = 'login';
 	}
-*/	
+	else
+	{
+		if (!$user->hasUserrole('Administrator'))
+		{
+			$user->logout();
+			$module = 'main';
+			$action = 'login';
+		}
+	}
+		
+
 	// load event
 	$ret = $eventhandler->callEvent($module, $action);
 	
