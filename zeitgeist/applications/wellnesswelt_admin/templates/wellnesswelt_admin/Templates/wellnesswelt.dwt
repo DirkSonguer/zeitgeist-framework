@@ -18,7 +18,6 @@
 <div id="TooltipID" style="position:absolute; visibility:hidden; left:-200px; z-index: 100"></div>
 
 <div class="headmenu">
-
 	<!-- TemplateBeginBlock name="navigation" -->
 	<div style="margin-top:35px;">
 		<div style="float:left; margin:10px;"><a href="@@{[main.index]}@@"><span onmousemove="showBallon('Hauptseite');" onmouseout="hideBallon();">
@@ -33,7 +32,6 @@
 	<img src="@@{templatepath}@@/nuvola/48x48/actions/exit.png" alt="" border="0" /></span></a></div>
 	</div>
 	<!-- TemplateEndBlock -->
-
 </div>
 
 <div class="subheadmenu">
@@ -43,6 +41,21 @@
 <!-- TemplateEndEditable -->
 	
 <div class="maincontent">
+	<!-- TemplateBeginBlock name="subnav_adress" -->
+	<div style="margin-top:35px;">
+		<div style="float:left; margin:10px;"><a href="@@{[main.index]}@@"><span onmousemove="showBallon('Hauptseite');" onmouseout="hideBallon();">
+		<img src="@@{templatepath}@@/nuvola/48x48/actions/gohome.png" alt="" border="0" /></span></a></div>
+
+		<div style="float:left; margin:10px; margin-left:40px;"><a href="@@{[address.index]}@@"><span onmousemove="showBallon('Adressverwaltung');" onmouseout="hideBallon();">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/kaddressbook.png" alt="" border="0" /></span></a></div>
+		<div style="float:left; margin:10px; margin-left:10px;"><a href="@@{[users.index]}@@"><span onmousemove="showBallon('Benutzerverwaltung');" onmouseout="hideBallon();">
+		<img src="@@{templatepath}@@/nuvola/48x48/apps/kdmconfig.png" alt="" border="0" /></span></a></div>
+
+		<div style="float:right; margin:10px; margin-left:10px;"><a href="@@{[main.logout]}@@"><span onmousemove="showBallon('Logout');" onmouseout="hideBallon();">
+	<img src="@@{templatepath}@@/nuvola/48x48/actions/exit.png" alt="" border="0" /></span></a></div>
+	</div>
+	<!-- TemplateEndBlock -->
+
 	<!-- TemplateBeginBlock name="usermessage" -->
 		<h3 class="usermessage"><img src="@@{templatepath}@@/nuvola/16x16/actions/ok.png" alt="" align="left" style="margin-right:5px;" /> @@{usermessage}@@</h3>
 	<!-- TemplateEndBlock -->
