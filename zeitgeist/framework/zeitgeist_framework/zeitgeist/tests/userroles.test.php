@@ -37,7 +37,10 @@ class testUserroles extends UnitTestCase
 	{
 		$userroles = new zgUserroles();
 		$res = $this->database->query("TRUNCATE TABLE userroles_to_users");
-		$this->database->query("INSERT INTO userroles_to_users(userroleuser_user, userroleuser_userrole) VALUES('1', '1')");
+		$res = $this->database->query("TRUNCATE TABLE userroles");
+		$this->database->query("INSERT INTO userroles(userrole_name, userrole_description) VALUES('test', 'Testrole')");
+		$testrole = $this->database->insertId();
+		$this->database->query("INSERT INTO userroles_to_users(userroleuser_user, userroleuser_userrole) VALUES('1', $testrole)");
 		$this->database->query("INSERT INTO userroles_to_users(userroleuser_user, userroleuser_userrole) VALUES('1', '5')");
 		$this->database->query("INSERT INTO userroles_to_users(userroleuser_user, userroleuser_userrole) VALUES('2', '2')");
 		$this->database->query("INSERT INTO userroles_to_users(userroleuser_user, userroleuser_userrole) VALUES('2', '6')");
@@ -45,8 +48,9 @@ class testUserroles extends UnitTestCase
 		$ret = $userroles->loadUserroles('1');
 		
 		$this->assertEqual(count($ret), 2);
-		$this->assertNotNull($ret[1]);
+		$this->assertNotNull($ret[$testrole]);
 		$this->assertNotNull($ret[5]);
+		$this->assertFalse($ret[2]);
 		unset($ret);
 
 		$ret = $userroles->loadUserroles('2');
