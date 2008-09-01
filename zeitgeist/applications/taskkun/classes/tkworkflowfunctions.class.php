@@ -110,7 +110,7 @@ class tkWorkflowfunctions
 
 		$userfunctions = new tkUserfunctions();
 
-		$sql = "SELECT wf.*, COUNT(t.task_id) as workflow_count FROM workflows wf LEFT JOIN tasks t ON wf.workflow_id = t.task_workflowgroup ";
+		$sql = "SELECT wf.*, COUNT(t.task_id) as workflow_count FROM workflows wf LEFT JOIN tasks t ON wf.workflow_id = t.task_workflow ";
 		$sql .= "WHERE wf.workflow_id='" . $workflowid . "' AND wf.workflow_instance='" . $userfunctions->getUserInstance($this->user->getUserID()) . "' ";
 		$sql .= "GROUP BY wf.workflow_id;";
 		$res = $this->database->query($sql);

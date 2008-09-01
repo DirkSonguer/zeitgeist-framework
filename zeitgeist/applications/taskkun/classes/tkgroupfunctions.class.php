@@ -35,6 +35,14 @@ class tkGroupfunctions
 	{
 		$this->debug->guard();
 
+		if ( (!is_array($groupdata)) || (empty($groupdata['group_description'])) || (empty($groupdata['group_name']))  || (empty($groupdata['group_id'])))
+		{
+			$this->debug->write('Problem updating group: given array does not contain valid groupdata', 'warning');
+			$this->messages->setMessage('Problem updating group: given array does not contain valid groupdata', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
 		$userfunctions = new tkUserfunctions();
 
 		$sql = "UPDATE groups SET group_name='" . $groupdata['group_name'] . "', group_description='" . $groupdata['group_description'] . "' ";
@@ -43,8 +51,8 @@ class tkGroupfunctions
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
-			$this->debug->write('Problem updating group: ' . $groupdata['group_id'], 'warning');
-			$this->messages->setMessage('Problem updating group: ' . $groupdata['group_id'], 'warning');
+			$this->debug->write('Problem updating group: could not write groupdata to database', 'warning');
+			$this->messages->setMessage('Problem updating group: could not write groupdata to database', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -66,7 +74,15 @@ class tkGroupfunctions
 	public function addGroup($groupdata=array())
 	{
 		$this->debug->guard();
-
+		
+		if ( (!is_array($groupdata)) || (empty($groupdata['group_description'])) || (empty($groupdata['group_name'])) )
+		{
+			$this->debug->write('Problem creating group: given array does not contain valid groupdata', 'warning');
+			$this->messages->setMessage('Problem creating group: given array does not contain valid groupdata', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
 		$userfunctions = new tkUserfunctions();
 
 		$sql = "INSERT INTO groups(group_name, group_description, group_instance) VALUES('" . $groupdata['group_name'] . "', ";
@@ -75,8 +91,8 @@ class tkGroupfunctions
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
-			$this->debug->write('Problem updating group: ' . $groupdata['group_id'], 'warning');
-			$this->messages->setMessage('Problem updating group: ' . $groupdata['group_id'], 'warning');
+			$this->debug->write('Problem creating group: could not write groupdata to database', 'warning');
+			$this->messages->setMessage('Problem creating group: could not write groupdata to database', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}

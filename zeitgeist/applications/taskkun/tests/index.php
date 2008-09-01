@@ -19,6 +19,11 @@
 
 	require_once('../zeitgeist/zeitgeist.php');
 
+	require_once('../classes/tktemplate.class.php');
+	require_once('../classes/tktaskfunctions.class.php');
+	require_once('../classes/tktasklogfunctions.class.php');
+	require_once('../classes/tkworkflowfunctions.class.php');
+	require_once('../classes/tkuserfunctions.class.php');
 	require_once('../classes/tkgroupfunctions.class.php');
 	require_once('../classes/tkinstancefunctions.class.php');
 

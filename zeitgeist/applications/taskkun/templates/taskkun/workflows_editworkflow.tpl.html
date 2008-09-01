@@ -131,89 +131,110 @@
 </div>
 -->
 
+<!-- TemplateBeginBlock name="warningactivetasks" -->
+	<div class="textbox">
+	   <h2>Anmerkung:</h2>
+	   <p>Achten Sie bitte darauf, dass Änderungen des Aufgabenablaufs direkte Auswirkungen auf noch aktive Aufgaben mit diesem Ablauf haben. Falls Sie Probleme vermeiden wollen, stellen Sie sicher, dass zuvor alle Aufgaben mit diesem Ablauf abgeschlossen wurden.</p>
+	   <p class="targetwarning"><strong>Zur Zeit noch aktive Aufgaben mit diesem Aufgabenablauf: @@{workflow_count}@@</strong></p>
+	</div>
+<!-- TemplateEndBlock -->
+
 <div class="textbox">
 
-<h2>Aufgabenablauf bearbeiten</h2>
+<h2>Beschreibung Aufgabenablauf</h2>
 
-	<table width="100%" cellspacing="5" cellpadding="5" border="0">
-	<tr>
-	<td width="50%" valign="top">
-		<form method="post" action="@@{[workflows.editworkflow]}@@" name="editworkflow" enctype="multipart/form-data; charset=utf-8">
-		<input type="hidden" name="editworkflow[workflow_id]" value="@@{workflow_id:value}@@" />
-		
-        <table style="margin-bottom: 10px;" border="0" cellpadding="0" cellspacing="0">
-            <tbody>
+	<form method="post" action="@@{[workflows.editworkflow]}@@" name="editworkflow" enctype="multipart/form-data; charset=utf-8">
+	<input type="hidden" name="editworkflow[workflow_id]" value="@@{workflow_id:value}@@" />
+	
+		<table width="100%" cellspacing="5" cellpadding="5" border="0">
+		<tbody>
 			<tr>
-                <td nowrap="nowrap" valign="top" width="140"><p class="formlabel">Titel*</p></td>
-                <td valign="middle"@@{workflow_name:formerror}@@><input maxlength="128" name="editworkflow[workflow_name]" value="@@{workflow_name:value}@@" class="formtext" type="text" />
-				<!-- TemplateBeginBlock name="workflow_name:errormsg" -->
-					<br /><span class="formerrormsg">@@{workflow_name:errormsg}@@</span>
-				<!-- TemplateEndBlock -->
+                <td nowrap="nowrap" valign="top" width="160"><p class="formlabel">Titel*</p></td>
+                <td valign="middle"@@{workflow_name:formerror}@@>
+					<input maxlength="128" name="editworkflow[workflow_name]" value="@@{workflow_name:value}@@" class="formtext" style="width:700px;" type="text" />
+					<!-- TemplateBeginBlock name="workflow_name:errormsg" -->
+						<br /><span class="formerrormsg">@@{workflow_name:errormsg}@@</span>
+					<!-- TemplateEndBlock -->
 				</td>
-            </tr>
-            <tr>
+			</tr>
+			<tr>
                 <td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Beschreibung*</p></td>
-                <td align="left" valign="middle"@@{workflow_description:formerror}@@><textarea rows="5" name="editworkflow[workflow_description]" class="formtext" style="height:175px;">@@{workflow_description:value}@@</textarea>
-				<!-- TemplateBeginBlock name="workflow_description:errormsg" -->
-					<br /><span class="formerrormsg">@@{workflow_description:errormsg}@@</span>
-				<!-- TemplateEndBlock -->
+                <td align="left" valign="middle"@@{workflow_description:formerror}@@>
+					<textarea rows="5" name="editworkflow[workflow_description]" class="formtext" style="height:75px;width:700px;">@@{workflow_description:value}@@</textarea>
+					<!-- TemplateBeginBlock name="workflow_description:errormsg" -->
+						<br /><span class="formerrormsg">@@{workflow_description:errormsg}@@</span>
+					<!-- TemplateEndBlock -->
 				</td>
-            </tr>
+			</tr>
 		</tbody>
 		</table>
-           <p style="text-align:center; margin-top:25px;"><img src="@@{templatepath}@@/nuvola/32x32/apps/kate.png" alt="" border="0" align="top" />
-		   <input name="submit" value="Aufgabenablauf speichern" class="formbutton" type="submit" /></p>
-		   <!-- TemplateBeginBlock name="warningactivetasks" -->
-		   <h2 style="margin-top:50px;">Anmerkung:</h2>
-		   <p>Achten Sie bitte darauf, dass Änderungen des Aufgabenablaufs direkte Auswirkungen auf noch aktive Aufgaben mit diesem Ablauf haben. Falls Sie Probleme vermeiden wollen, stellen Sie sicher, dass zuvor alle Aufgaben mit diesem Ablauf abgeschlossen wurden.</p>
-		   <p class="targetwarning"><strong>Zur Zeit noch aktive Aufgaben mit diesem Aufgabenablauf: @@{workflow_count}@@</strong></p>
-		   <!-- TemplateEndBlock -->
-	   </form>
-	</td>
-	<td width="50%" valign="top">
-		<div spry:region="dsWorkflowInformation dsGroupInformation">
-		<div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
+		
+	</form>
 	
-		<div spry:state="ready">
-			<br />
+	
+	<h2 style="margin-top:20px;">Aufgabenablauf bearbeiten</h2>
+	
+	<div spry:region="dsWorkflowInformation dsGroupInformation">
+	<div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
 
-			<p spry:if="dsWorkflowInformation.getRowCount() == '0'" style="margin-top:10px; margin-right:50px; text-align:center;">
-				<span style="margin-left:20px;" onmousemove="showTooltip('Weiteren Schritt hinzufügen', event);" onmouseout="hideTooltip();"><img src="@@{templatepath}@@/nuvola/32x32/actions/edit_add.png" alt="" border="0" align="top" onclick="updateWorkflow('newstep', '0')" /></span>					
+	<div spry:state="ready">
+		<br />
+
+		<p spry:if="dsWorkflowInformation.getRowCount() == '0'" style="margin-top:10px; margin-right:50px; text-align:center;">
+			<span style="margin-left:20px;" onmousemove="showTooltip('Weiteren Schritt hinzufügen', event);" onmouseout="hideTooltip();"><img src="@@{templatepath}@@/nuvola/32x32/actions/edit_add.png" alt="" border="0" align="top" onclick="updateWorkflow('newstep', '0')" /></span>					
+		</p>
+		
+		<div spry:repeat="dsWorkflowInformation">
+			<div class="textboxtask">
+				<table cellpadding="10" cellspacing="0" border="0" width="100%">
+					<tr>
+					<td width="10">
+						<h1 style="margin-right:0px;">{dsWorkflowInformation::workflowgroup_order}</h1>
+					</td>
+					<td width="40">
+						<p style="margin-top:10px; margin-left:0px; margin-right:0px; text-align:center;">
+							<span onmousemove="showTooltip('Im Aufgabenablauf nach oben', event);" onmouseout="hideTooltip();">
+								<img src="@@{templatepath}@@/nuvola/32x32/actions/up.png" alt="Im Aufgabenablauf nach oben" border="0" onclick="updateWorkflow('stepup', '{dsWorkflowInformation::workflowgroup_order}')" />
+							</span><br />
+							<span style="margin-left:10px;" onmousemove="showTooltip('Im Aufgabenablauf nach unten', event);" onmouseout="hideTooltip();">
+								<img src="@@{templatepath}@@/nuvola/32x32/actions/down.png" alt="Im Aufgabenablauf nach unten" border="0" onclick="updateWorkflow('stepdown', '{dsWorkflowInformation::workflowgroup_order}')" />
+							</span><br />
+						</p>
+					</td>
+					<td>
+						<p style="text-align:center; margin-top:15px; margin-left:10px;">
+							<strong>Beschreibung:</strong> <input maxlength="256" id="inputfield_{dsWorkflowInformation::workflowgroup_order}" value="{dsWorkflowInformation::workflowgroup_title}" class="formtext" type="text" onchange="updateWorkflow('storedata', '{dsWorkflowInformation::workflowgroup_order}')" />
+						</p>
+		
+						<p style="text-align:center; margin-top:20px; margin-left:10px;"><strong>Zuständige Gruppe:</strong>
+							<select id="dropdownfield_{dsWorkflowInformation::workflowgroup_order}" name="dropdownfield_{dsWorkflowInformation::workflowgroup_order}" class="formtext" spry:repeatChildren="dsGroupInformation" onchange="updateWorkflow('storedata', '{dsWorkflowInformation::workflowgroup_order}')">
+								<option spry:if="{dsGroupInformation::group_id} == {dsWorkflowInformation::workflowgroup_group}" value="{dsGroupInformation::group_id}" selected="selected">{dsGroupInformation::group_name}</option>
+								<option spry:if="{dsGroupInformation::group_id} != {dsWorkflowInformation::workflowgroup_group}" value="{dsGroupInformation::group_id}">{dsGroupInformation::group_name}</option>
+							</select>
+						</p>
+					</td>
+					<td width="50">
+							<span style="margin-left:10px;" onmousemove="showTooltip('Diesen Schritt löschen', event);" onmouseout="hideTooltip();">
+								<img src="@@{templatepath}@@/nuvola/48x48/filesystems/trashcan_full.png" alt="Diesen Schritt löschen" border="0" onclick="deleteStep('{dsWorkflowInformation::workflowgroup_order}', '{dsWorkflowInformation::workflowgroup_title}')" />
+							</span>
+						</p>
+					</td>
+					</tr>
+				</table>
+			</div>
+			<p style="margin-top:10px; margin-right:0px; text-align:center;">
+				<img src="@@{templatepath}@@/nuvola/48x48/apps/download_manager.png" alt="" border="0" align="top" />
+				<span style="margin-left:20px;" onmousemove="showTooltip('Weiteren Schritt hinzufügen', event);" onmouseout="hideTooltip();"><img src="@@{templatepath}@@/nuvola/32x32/actions/edit_add.png" alt="" border="0" align="top" onclick="updateWorkflow('newstep', '{dsWorkflowInformation::workflowgroup_order}')" /></span>					
 			</p>
-			
-			<div spry:repeat="dsWorkflowInformation">
-				<div class="textboxhalf">
-					<p style="text-align:center; margin-top:15px; margin-left:10px;">
-						<strong>Beschreibung:</strong> <input maxlength="256" id="inputfield_{dsWorkflowInformation::workflowgroup_order}" value="{dsWorkflowInformation::workflowgroup_title}" class="formtext" type="text" onchange="updateWorkflow('storedata', '{dsWorkflowInformation::workflowgroup_order}')" />
-					</p>
-
-					<p style="text-align:center; margin-top:20px; margin-left:10px;"><strong>Zuständige Gruppe:</strong>
-						<select id="dropdownfield_{dsWorkflowInformation::workflowgroup_order}" name="dropdownfield_{dsWorkflowInformation::workflowgroup_order}" class="formtext" spry:repeatChildren="dsGroupInformation" onchange="updateWorkflow('storedata', '{dsWorkflowInformation::workflowgroup_order}')">
-							<option spry:if="{dsGroupInformation::group_id} == {dsWorkflowInformation::workflowgroup_group}" value="{dsGroupInformation::group_id}" selected="selected">{dsGroupInformation::group_name}</option>
-							<option spry:if="{dsGroupInformation::group_id} != {dsWorkflowInformation::workflowgroup_group}" value="{dsGroupInformation::group_id}">{dsGroupInformation::group_name}</option>
-						</select>
-					</p>
-
-					<p style="margin-top:10px; text-align:center;">
-						<span onmousemove="showTooltip('Im Aufgabenablauf nach oben', event);" onmouseout="hideTooltip();"><img src="@@{templatepath}@@/nuvola/22x22/actions/up.png" alt="Im Aufgabenablauf nach oben" border="0" onclick="updateWorkflow('stepup', '{dsWorkflowInformation::workflowgroup_order}')" /></span>
-						<span style="margin-left:10px;" onmousemove="showTooltip('Im Aufgabenablauf nach unten', event);" onmouseout="hideTooltip();"><img src="@@{templatepath}@@/nuvola/22x22/actions/down.png" alt="Im Aufgabenablauf nach unten" border="0" onclick="updateWorkflow('stepdown', '{dsWorkflowInformation::workflowgroup_order}')" /></span>
-						<span style="margin-left:10px;" onmousemove="showTooltip('Diesen Schritt löschen', event);" onmouseout="hideTooltip();"><img src="@@{templatepath}@@/nuvola/22x22/filesystems/trashcan_full.png" alt="Diesen Schritt löschen" border="0" onclick="deleteStep('{dsWorkflowInformation::workflowgroup_order}', '{dsWorkflowInformation::workflowgroup_title}')" /></span>
-					</p>
-				</div>
-				<p style="margin-top:10px; margin-right:50px; text-align:center;">
-					<img src="@@{templatepath}@@/nuvola/48x48/apps/download_manager.png" alt="" border="0" align="top" />
-					<span style="margin-left:20px;" onmousemove="showTooltip('Weiteren Schritt hinzufügen', event);" onmouseout="hideTooltip();"><img src="@@{templatepath}@@/nuvola/22x22/actions/edit_add.png" alt="" border="0" align="top" onclick="updateWorkflow('newstep', '{dsWorkflowInformation::workflowgroup_order}')" /></span>					
-				</p>
-			</div>
-			<div class="textboxhalf">
-			<h2 style="text-align:center;">Archiv</h2>
-			</div>
 		</div>
+		<div class="textboxtask">
+		<h2 style="text-align:center;">Archiv</h2>
 		</div>
+	</div>
+	</div>
 
-	</td>
-	</tr>
-	</table>
+	<p style="text-align:center; margin-top:50px;"><img src="@@{templatepath}@@/nuvola/32x32/actions/filenew.png" alt="" border="0" align="top" />
+	<input name="submit" value="Aufgabenablauf speichern" class="formbutton" type="submit" /></p>
 
 </div>
 
