@@ -124,8 +124,8 @@ class dataserver
 		$sql .= "ORDER BY DATEDIFF(NOW(), t.task_end) DESC";
 
 		$xmlData = $this->dataserver->createXMLDatasetFromSQL($sql);
-		$this->dataserver->streamXMLDataset($xmlData);
-		die();
+//		$this->dataserver->streamXMLDataset($xmlData);
+//		die();
 
 		$this->debug->unguard(true);
 		return true;
