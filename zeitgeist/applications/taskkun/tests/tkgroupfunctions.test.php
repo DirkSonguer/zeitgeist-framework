@@ -2,112 +2,116 @@
 
 class testTkgroupfunctions extends UnitTestCase
 {
+	public $database;
+	
 	function test_init()
 	{
+		$this->database = new zgDatabase();
+		$this->database->connect();
+
 		$groupfunctions = new tkGroupfunctions();
 		$this->assertNotNull($groupfunctions);
 		unset($groupfunctions);
     }
 
-/*
-	function test_connect()
+	function test_addGroup()
 	{
-		$ret = $this->database->connect();
+		$groupfunctions = new tkGroupfunctions();
+
+		$this->database->query('TRUNCATE TABLE groups');
+
+		$groupdata = array();
+		$ret = $groupfunctions->addGroup($groupdata);
+		$this->assertFalse($ret);
+
+		$groupdata['group_description'] = 'this is a testgroup';
+		$groupdata['group_name'] = 'test';
+		$ret = $groupfunctions->addGroup($groupdata);
 		$this->assertTrue($ret);
+
+		$res = $this->database->query("SELECT * FROM groups");
+		$ret = $this->database->numRows($res);
+		$this->assertEqual($ret, 1);
+		$ret = $this->database->fetchArray($res);
+		$this->assertEqual($ret['group_name'], 'test');
+
+		unset($instancefunctions);
     }
 	
-	function test_query()
+	function test_updateGroup()
 	{
-		$ret = $this->database->query('false');
+		$groupfunctions = new tkGroupfunctions();
+
+		$this->database->query('TRUNCATE TABLE groups');
+
+		$groupdata = array();
+		$groupdata['group_description'] = 'this is a testgroup';
+		$groupdata['group_name'] = 'test';
+		$groupfunctions->addGroup($groupdata);
+		$groupid = $this->database->insertId();
+
+		$groupdata = array();
+		$ret = $groupfunctions->updateGroup($groupdata);
 		$this->assertFalse($ret);
 
-		$ret = $this->database->query("CREATE TABLE test(id INT, test VARCHAR(30))");
+		$groupdata['group_id'] = $groupid;
+		$groupdata['group_description'] = 'this is some other testgroup';
+		$groupdata['group_name'] = 'updated';
+		$ret = $groupfunctions->updateGroup($groupdata);
 		$this->assertTrue($ret);
-		unset($ret);
 
-		$ret = $this->database->query("INSERT INTO test(id, test) VALUES('1', 'test')");
-		$this->assertTrue($ret);
-		unset($ret);
-
-		$ret = $this->database->query("SELECT * FROM test");
-		$this->assertTrue($ret);
-		unset($ret);
-
-		$ret = $this->database->query("DROP TABLE test");
-		$this->assertTrue($ret);
-    }
-
-	function test_fetchArray()
-	{
-		$ret = $this->database->fetchArray('');
-		$this->assertFalse($ret);
-
-		$this->database->query("CREATE TABLE test(id INT, test VARCHAR(30))");
-		$this->database->query("INSERT INTO test(id, test) VALUES('1', 'test1')");
-		$this->database->query("INSERT INTO test(id, test) VALUES('2', 'test2')");
-		$res = $this->database->query("SELECT * FROM test");
-		$ret = $this->database->fetchArray($res);
-		$this->assertEqual(count($ret), 2);
-		$this->assertEqual($ret['test'], 'test1');
-		$this->assertEqual($ret['id'], '1');
-		unset($ret);
-
-		$ret = $this->database->fetchArray($res);
-		$this->assertEqual(count($ret), 2);
-		$this->assertEqual($ret['test'], 'test2');
-		$this->assertEqual($ret['id'], '2');
-
-		$this->database->query(" DROP TABLE test");
-    }
-
-	function test_numRows()
-	{
-		$ret = $this->database->numRows('');
-		$this->assertFalse($ret);
-
-		$this->database->query("CREATE TABLE test(id INT, test VARCHAR(30))");
-		$this->database->query("INSERT INTO test(id, test) VALUES('1', 'test1')");
-		$this->database->query("INSERT INTO test(id, test) VALUES('2', 'test2')");
-		$res = $this->database->query("SELECT * FROM test");
+		$res = $this->database->query("SELECT * FROM groups");
 		$ret = $this->database->numRows($res);
-		$this->assertEqual($ret, 2);
+		$this->assertEqual($ret, 1);
+		$ret = $this->database->fetchArray($res);
+		$this->assertEqual($ret['group_name'], 'updated');
 
-		$this->database->query(" DROP TABLE test");
+		unset($instancefunctions);
     }
-
-	function test_affectedRows()
+	
+	function test_deleteGroup()
 	{
-		$ret = $this->database->affectedRows();
+		$groupfunctions = new tkGroupfunctions();
+
+		$this->database->query('TRUNCATE TABLE groups');
+
+		$groupdata = array();
+		$groupdata['group_description'] = 'this is a testgroup';
+		$groupdata['group_name'] = 'test';
+		$groupfunctions->addGroup($groupdata);
+		$groupid = $this->database->insertId();
+
+		$ret = $groupfunctions->deleteGroup($groupid);
+
+		$res = $this->database->query("SELECT * FROM groups");
+		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 0);
 
-		$this->database->query("CREATE TABLE test(id INT, test VARCHAR(30))");
-		$this->database->query("INSERT INTO test(id, test) VALUES('1', 'test1')");
-		$this->database->query("INSERT INTO test(id, test) VALUES('2', 'test2')");
-		$res = $this->database->query("DELETE FROM test");
-		$ret = $this->database->affectedRows();
-		$this->assertEqual($ret, 2);
+		unset($instancefunctions);
+    }	
 
-		$this->database->query(" DROP TABLE test");
-    }
-	
-	function test_insertId()
+	function test_getGroupdata()
 	{
-		$this->database->query("CREATE TABLE test(id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(id), test VARCHAR(30))");
-		$this->database->query("INSERT INTO test(test) VALUES('test1')");
-		$this->database->query("INSERT INTO test(test) VALUES('test2')");
-		$ret = $this->database->insertId();
-		$this->assertEqual($ret, 2);
+		$groupfunctions = new tkGroupfunctions();
 
-		$this->database->query(" DROP TABLE test");
+		$this->database->query('TRUNCATE TABLE groups');
+
+		$groupdata = array();
+		$groupdata['group_description'] = 'this is a testgroup';
+		$groupdata['group_name'] = 'test';
+		$groupfunctions->addGroup($groupdata);
+		$groupid = $this->database->insertId();
+
+		$ret = $groupfunctions->getGroupdata(0);
+		$this->assertFalse($ret);
+
+		$ret = $groupfunctions->getGroupdata($groupid);
+		$this->assertEqual($ret['group_description'], 'this is a testgroup');
+		$this->assertEqual($ret['group_name'], 'test');
+
+		unset($instancefunctions);
     }
-	
-	function test_close()
-	{
-		$ret = $this->database->close();
-		$this->assertTrue($ret);
-		unset($ret);
-    }
- */
+
 }
 
 ?>
