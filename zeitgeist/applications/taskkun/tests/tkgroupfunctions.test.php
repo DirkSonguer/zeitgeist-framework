@@ -35,7 +35,7 @@ class testTkgroupfunctions extends UnitTestCase
 		$ret = $this->database->fetchArray($res);
 		$this->assertEqual($ret['group_name'], 'test');
 
-		unset($instancefunctions);
+		unset($groupfunctions);
     }
 	
 	function test_updateGroup()
@@ -66,7 +66,7 @@ class testTkgroupfunctions extends UnitTestCase
 		$ret = $this->database->fetchArray($res);
 		$this->assertEqual($ret['group_name'], 'updated');
 
-		unset($instancefunctions);
+		unset($groupfunctions);
     }
 	
 	function test_deleteGroup()
@@ -87,7 +87,7 @@ class testTkgroupfunctions extends UnitTestCase
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 0);
 
-		unset($instancefunctions);
+		unset($groupfunctions);
     }	
 
 	function test_getGroupdata()
@@ -109,7 +109,37 @@ class testTkgroupfunctions extends UnitTestCase
 		$this->assertEqual($ret['group_description'], 'this is a testgroup');
 		$this->assertEqual($ret['group_name'], 'test');
 
-		unset($instancefunctions);
+		unset($groupfunctions);
+    }
+
+	function test_getGroupsForUser()
+	{
+		$groupfunctions = new tkGroupfunctions();
+
+		$this->database->query('TRUNCATE TABLE groups');
+		$this->database->query('TRUNCATE TABLE users_to_groups');
+
+		$groupdata = array();
+		$groupdata['group_description'] = 'this is a testgroup';
+		$groupdata['group_name'] = 'test';
+		$groupfunctions->addGroup($groupdata);
+		$groupid = $this->database->insertId();
+		$ret = $this->database->query("INSERT INTO users_to_groups(usergroup_user, usergroup_group) VALUES('1', '" . $groupid . "')");
+
+		$groupdata = array();
+		$groupdata['group_description'] = 'this is another testgroup';
+		$groupdata['group_name'] = 'test2';
+		$groupfunctions->addGroup($groupdata);
+		$groupid = $this->database->insertId();
+		$ret = $this->database->query("INSERT INTO users_to_groups(usergroup_user, usergroup_group) VALUES('1', '" . $groupid . "')");
+
+		$ret = $groupfunctions->getGroupsForUser();
+
+//		TODO: works only with user handling
+//		$this->assertEqual(count($ret), 2);
+//		$this->assertEqual($ret[0]['group_name'], 'test');
+//		$this->assertEqual($ret[1]['group_name'], 'test2');
+		unset($groupfunctions);
     }
 
 }
