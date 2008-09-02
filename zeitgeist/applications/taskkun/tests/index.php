@@ -34,8 +34,14 @@
 	$user = zgUserhandler::init();
 	$eventhandler = new zgEventhandler();
 	$locale = zgLocale::init();
+
+	$_SESSION['user_userid'] = '1';
+	$_SESSION['user_key'] = '1';
+	$_SESSION['user_username'] = 'testuser';
+	$_SESSION['user_instance'] = '2';
 	
 	require_once('database.test.php');
+	require_once('tkuserfunctions.test.php');
 	require_once('tkgroupfunctions.test.php');
 	require_once('tkinstancefunctions.test.php');
 	
@@ -43,6 +49,7 @@
 
     $test = &new TestSuite('Taskkun Unit Tests');
     $test->addTestCase(new testDatabase());
+    $test->addTestCase(new testTkuserfunctions());
     $test->addTestCase(new testTkgroupfunctions());
     $test->addTestCase(new testTkinstancefunctions());
     $test->run(new HtmlReporter());
