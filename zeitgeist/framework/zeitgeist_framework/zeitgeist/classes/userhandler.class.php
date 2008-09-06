@@ -211,6 +211,25 @@ class zgUserhandler
 		$this->debug->unguard(true);
 		return true;
 	}
+	
+	
+	/**
+	 * Sets the login status of a user
+	 * This is public as the unit tests use it as well
+	 *
+	 * @param boolean $status login status pf the user
+	 *
+	 * @return boolean
+	 */
+	public function setLoginStatus($status=false)
+	{
+		$this->debug->guard();
+		
+		$this->loggedIn = $status;
+		
+		$this->debug->unguard(true);
+		return true;
+	}
 
 
 	/**
