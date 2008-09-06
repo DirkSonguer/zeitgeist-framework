@@ -62,7 +62,7 @@ class tkTaskfunctions
 		if (strpos($taskdata['task_hoursplanned'], ',') !== false) $taskdata['task_hoursplanned'] = str_replace(',','.', $taskdata['task_hoursplanned']);
 
 		// get initial task workflow status
-		$sql = "SELECT workflowgroup_id FROM workflows_to_groups WHERE workflowgroup_workflow='" . $taskdata['task_workflow'] . "' ORDER BY workflowgroup_order LIMIT 1";
+		$sql = "SELECT taskworkflow_id FROM taskworkflows WHERE taskworkflow_id='" . $taskdata['task_workflow'] . "' ORDER BY taskworkflow_order LIMIT 1";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{

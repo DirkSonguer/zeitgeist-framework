@@ -34,16 +34,12 @@
 	$user = zgUserhandler::init();
 	$eventhandler = new zgEventhandler();
 	$locale = zgLocale::init();
-
-	$_SESSION['user_userid'] = '1';
-	$_SESSION['user_key'] = '1';
-	$_SESSION['user_username'] = 'testuser';
-	$_SESSION['user_instance'] = '2';
 	
 	require_once('database.test.php');
 	require_once('tkuserfunctions.test.php');
 	require_once('tkgroupfunctions.test.php');
 	require_once('tkinstancefunctions.test.php');
+	require_once('tktaskfunctions.test.php');
 	
 	$debug = zgDebug::init();
 
@@ -52,6 +48,7 @@
     $test->addTestCase(new testTkuserfunctions());
     $test->addTestCase(new testTkgroupfunctions());
     $test->addTestCase(new testTkinstancefunctions());
+    $test->addTestCase(new testTktaskfunctions());
     $test->run(new HtmlReporter());
 
 //	echo "<h2><a href='index_step2.php'>Step 2</a></h2>";
