@@ -115,6 +115,7 @@ class testTkgroupfunctions extends UnitTestCase
 	function test_getGroupsForUser()
 	{
 		$groupfunctions = new tkGroupfunctions();
+		$user = zgUserhandler::init();
 
 		$this->database->query('TRUNCATE TABLE groups');
 		$this->database->query('TRUNCATE TABLE users_to_groups');
@@ -133,12 +134,53 @@ class testTkgroupfunctions extends UnitTestCase
 		$groupid = $this->database->insertId();
 		$ret = $this->database->query("INSERT INTO users_to_groups(usergroup_user, usergroup_group) VALUES('1', '" . $groupid . "')");
 
+		$_SESSION['user_userid'] = '1';
+		$_SESSION['user_key'] = '1';
+		$_SESSION['user_username'] = 'testuser';
+		$_SESSION['user_instance'] = '1';
+		$user->setLoginStatus(true);
+
 		$ret = $groupfunctions->getGroupsForUser();
 
-//		TODO: works only with user handling
-//		$this->assertEqual(count($ret), 2);
-//		$this->assertEqual($ret[0]['group_name'], 'test');
-//		$this->assertEqual($ret[1]['group_name'], 'test2');
+		$this->assertEqual(count($ret), 2);
+		$this->assertEqual($ret[0]['group_name'], 'test');
+		$this->assertEqual($ret[1]['group_name'], 'test2');
+
+		unset($groupfunctions);
+    }
+
+	function test_getNumberofGroupsForUser()
+	{
+		$groupfunctions = new tkGroupfunctions();
+		$user = zgUserhandler::init();
+
+		$this->database->query('TRUNCATE TABLE groups');
+		$this->database->query('TRUNCATE TABLE users_to_groups');
+
+		$groupdata = array();
+		$groupdata['group_description'] = 'this is a testgroup';
+		$groupdata['group_name'] = 'test';
+		$groupfunctions->addGroup($groupdata);
+		$groupid = $this->database->insertId();
+		$ret = $this->database->query("INSERT INTO users_to_groups(usergroup_user, usergroup_group) VALUES('1', '" . $groupid . "')");
+
+		$groupdata = array();
+		$groupdata['group_description'] = 'this is another testgroup';
+		$groupdata['group_name'] = 'test2';
+		$groupfunctions->addGroup($groupdata);
+		$groupid = $this->database->insertId();
+		$ret = $this->database->query("INSERT INTO users_to_groups(usergroup_user, usergroup_group) VALUES('1', '" . $groupid . "')");
+
+		$_SESSION['user_userid'] = '1';
+		$_SESSION['user_key'] = '1';
+		$_SESSION['user_username'] = 'testuser';
+		$_SESSION['user_instance'] = '1';
+		$user->setLoginStatus(true);
+
+		$ret = $groupfunctions->getNumberofGroupsForUser();
+
+		$this->assertEqual($ret, 2);
+
 		unset($groupfunctions);
     }
 
