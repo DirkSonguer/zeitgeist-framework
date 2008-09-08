@@ -1,0 +1,20 @@
+Mensch - Person - Figur - Wesen - Gestalt - Hauptrolle
+Menge - Masse - Allgemeinheit - Schwarm
+Zielgruppe - Relevanz - Relevanz
+Inhalt - Bedeutung - Botschaft - Kern - Mitteilung - Information
+Kultur - kultivieren - erschließen - kolonisieren
+Community - Gesellschaft - Zusammenschluss - Interessensgemeinschaft
+	- Bund - Bande - Kreis - Runde - Union - Club - Gemeinschaft
+herstellen - fabrizieren - erstellen - ausarbeiten - anfertigen
+erfinden - konstruieren
+Werkstatt - Atelier - Fabrik - Studio
+Team - Gruppe - Gemeinschaft - Equipe - Mannschaft - Aktivisten - Trupp
+aktiv - geschäftig - kühn - rastlos - ruhelos - beharrlich - beherzt - agil
+
+
+--
+
+Hauptrolle:Mensch
+Zielgruppe:Mensch
+Botschaft:Er
+Menschenbande
