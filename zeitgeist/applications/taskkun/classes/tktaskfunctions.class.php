@@ -36,7 +36,15 @@ class tkTaskfunctions
 		$this->debug->guard();
 
 		$userfunctions = new tkUserfunctions();
-
+		
+		if (empty($taskdata['task_name']))
+		{
+			$this->debug->write('Problem adding task: could not find taskdata in parameter', 'warning');
+			$this->messages->setMessage('Problem adding task: could not find taskdata in parameter', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
 		if (empty($taskdata['task_hoursplanned'])) $taskdata['task_hoursplanned'] = '0';
 		if (empty($taskdata['task_begin']))
 		{
@@ -62,19 +70,26 @@ class tkTaskfunctions
 		if (strpos($taskdata['task_hoursplanned'], ',') !== false) $taskdata['task_hoursplanned'] = str_replace(',','.', $taskdata['task_hoursplanned']);
 
 		// get initial task workflow status
-		$sql = "SELECT taskworkflow_id FROM taskworkflows WHERE taskworkflow_id='" . $taskdata['task_workflow'] . "' ORDER BY taskworkflow_order LIMIT 1";
+		$sql = "SELECT workflowgroup_id FROM workflows_to_groups WHERE workflowgroup_workflow='" . $taskdata['task_workflow'] . "' ORDER BY workflowgroup_order LIMIT 1";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
-			$this->debug->write('Problem getting workflows from database', 'warning');
-			$this->messages->setMessage('Problem getting workflows from database', 'warning');
+			$this->debug->write('Problem getting workflows from database: could not read workflows from table', 'warning');
+			$this->messages->setMessage('Problem getting workflows from database: could not read workflows from table', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
 
 		$row = $this->database->fetchArray($res);
 		$initialstatus = $row['workflowgroup_id'];
-
+		if (!$initialstatus)
+		{
+			$this->debug->write('Problem getting workflows from database: could not find initial status', 'warning');
+			$this->messages->setMessage('Problem getting workflows from database: could not find initial status', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
 		$sql = 'INSERT INTO tasks(task_creator, task_name, task_description, task_hoursplanned, task_workflow, task_workflowgroup, task_priority, task_begin, task_end, task_notes, task_instance) ';
 		$sql .= "VALUES('" . $this->user->getUserID() . "', ";
 		$sql .= "'" . $taskdata['task_name'] . "', '" . $taskdata['task_description'] . "', '" . $taskdata['task_hoursplanned'] . "', '" . $taskdata['task_workflow'] . "', ";
@@ -511,6 +526,14 @@ class tkTaskfunctions
 		$this->debug->guard();
 
 		$userfunctions = new tkUserfunctions();
+
+		if (empty($adhocdata['task_name']))
+		{
+			$this->debug->write('Problem adding task: could not find taskdata in parameter', 'warning');
+			$this->messages->setMessage('Problem adding task: could not find taskdata in parameter', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
 
 		$dateArray = explode('.', $adhocdata['task_date']);
 		$adhocdata['task_date'] = $dateArray[2] . '-' . $dateArray[1] . '-' . $dateArray[0];

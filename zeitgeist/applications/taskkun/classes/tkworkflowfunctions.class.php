@@ -40,7 +40,7 @@ class tkWorkflowfunctions
 		if (!$res)
 		{
 			$this->debug->write('Problem getting workflows from database', 'warning');
-			$this->messages->setMessage('Problem getting workflows from database' . $taskid, 'warning');
+			$this->messages->setMessage('Problem getting workflows from database', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
