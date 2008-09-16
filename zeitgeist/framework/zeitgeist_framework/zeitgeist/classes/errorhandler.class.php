@@ -34,7 +34,7 @@ class zgErrorhandler
 	 *
 	 * The constructor is set to private to prevent files from calling the class as a class instead of a singleton.
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		$this->errornames = array(
 		E_ERROR => 'E_ERROR',
