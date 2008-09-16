@@ -37,7 +37,7 @@ class zgEventhandler
 		$this->messagecache = zgMessagecache::init();
 		$this->configuration = zgConfiguration::init();
 		$this->user = zgUserhandler::init();
-		$this->traffic = zgTrafficlogger::init();
+		$this->traffic = new zgTrafficlogger();
 
 		$this->database = new zgDatabase();
 		$this->database->connect();

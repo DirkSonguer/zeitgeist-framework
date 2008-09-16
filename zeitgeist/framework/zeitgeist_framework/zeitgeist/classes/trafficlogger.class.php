@@ -14,13 +14,8 @@
 
 defined('ZEITGEIST_ACTIVE') or die();
 
-/**
- * NOTE: This class is a singleton.
- * Other classes or files may initialize it with zgErrorhandler::init();
- */
 class zgTrafficlogger
 {
-	private static $instance = false;
 
 	protected $debug;
 	protected $messages;
@@ -31,29 +26,13 @@ class zgTrafficlogger
 	 *
 	 * The constructor is set to private to prevent files from calling the class as a class instead of a singleton.
 	 */
-	private function __construct()
+	public function __construct()
 	{
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
 
 		$this->database = new zgDatabase();
 		$this->database->connect();
-	}
-
-
-	/**
-	 * Initialize the singleton
-	 *
-	 * @return object
-	 */
-	public static function init()
-	{
-		if (self::$instance === false)
-		{
-			self::$instance = new zgTrafficlogger();
-		}
-
-		return self::$instance;
 	}
 
 
