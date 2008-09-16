@@ -2,7 +2,7 @@
 
 defined('WELLNESSWELT_ACTIVE') or die();
 
-class wwUser
+class wwAdminUser
 {
 	private $user;
 	private $basepath;
