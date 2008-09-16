@@ -20,6 +20,8 @@
 	include('zeitgeist/zeitgeist.php');
 	
 	require_once('classes/wwtemplate.class.php');
+	require_once('classes/wwadminuser.class.php');
+	require_once('classes/wwwellnessweltuser.class.php');
 
 	include('configuration/wellnesswelt.config.php');
 
@@ -68,7 +70,9 @@
 			$action = 'login';
 		}
 	}
-		
+	
+	$wwuser = wwWellnessweltUser::init();
+	$testid = $wwuser->createUser('test', 'test');
 
 	// load event
 	$ret = $eventhandler->callEvent($module, $action);
