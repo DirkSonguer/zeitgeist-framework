@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Taskkun - Agile Project Management Tool
  *
