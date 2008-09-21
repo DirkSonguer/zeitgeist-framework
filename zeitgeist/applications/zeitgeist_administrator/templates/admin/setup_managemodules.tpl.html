@@ -201,10 +201,10 @@
 				<td colspan="2" align="right"><p style="text-align:right;"><span onmousemove="showTooltip('Next Page', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/16x16/actions/next.png" alt="" style="margin-right:5px;" onclick="pagination('up');" /></span></p></td>
 	        </tr>      
 	        <tr class="tablehead">
-				<th><p><a onClick="dsOverviewModules.sort('module_id');">ID</a></p></th>
-				<th><p><a onClick="dsOverviewModules.sort('module_name');">Name</a></p></th>
+				<th><p><a onclick="dsOverviewModules.sort('module_id');">ID</a></p></th>
+				<th><p><a onclick="dsOverviewModules.sort('module_name');">Name</a></p></th>
 				<th><p>Description</p></th>
-				<th><p><a onClick="dsOverviewModules.sort('module_active');">Active</a></p></th>
+				<th><p><a onclick="dsOverviewModules.sort('module_active');">Active</a></p></th>
 				<th><p>Action</p></th>
 	        </tr>
 	        <tr class="{ds_EvenOddRow}" spry:repeat="dsOverviewModules">

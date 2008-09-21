@@ -36,7 +36,7 @@
 		document.getElementById('Tooltip').style.left = "0px";
 		document.getElementById('Tooltip').style.display = "none";
 	}
-	
+
 	function showShortcuts()
 	{
 		if (bShowShortcuts == false)
@@ -54,16 +54,16 @@
 	}
 
 </script>
-	
+
 <!-- InstanceBeginEditable name="head" -->
 
-	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryData.js"></script>	
+	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryData.js"></script>
 	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/xpath.js"></script>
 	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryNestedXMLDataSet.js"></script>
 	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/js/SpryExtensions.js"></script>
 
 	<script type="text/javascript">
-			
+
 		var dsUserdata = new Spry.Data.XMLDataSet("@@{[dataserver.getuserinformation]}@@", "container/element", { filterFunc: paginationFunc });
 		dsUserdata.setColumnType("user_id", "number");
 
@@ -75,7 +75,7 @@
 				return null;
 			return row;
 		}
-		
+
 		function pagination(direction)
 		{
 			if (direction == 'up')
@@ -87,33 +87,33 @@
 				updatePagination(paginationOffset - paginationSize, dsUserdata);
 			}
 		}
-				
+
 		function deleteUser(id, name)
 		{
-			var answer = window.confirm("Do you really want to delete the user '" + name + "'?");    
-			
+			var answer = window.confirm("Do you really want to delete the user '" + name + "'?");
+
 			/* Question icon, Yes/No button. */
 			/* 0 = error, 1 = OK, 2 = Cancel, 3 = No, 4 = Yes */
-			
+
 			if (answer == true)
 			{
 			   window.location.href = "@@{[users.deleteuser]}@@"+"&id="+id;
 			}
 		}
-				
+
 		function updateSearch()
 		{
 			document.searchform.submit();
 		}
 
-		
+
 		function filterUserrole()
 		{
 			filterParameter = document.getElementById('filter_userrole').value;
 			filterSpryDataset('userrole_id', filterParameter, dsUserdata);
-			
+
 			var numRows = dsUserdata.getData().length;
-			
+
 			if (numRows > 0)
 			{
 				if (numRows < paginationStop)
@@ -124,7 +124,7 @@
 				{
 					end = paginationStop
 				}
-				
+
 				if (paginationOffset == 0)
 				{
 					start = 1;
@@ -133,11 +133,11 @@
 				{
 					start = paginationOffset;
 				}
-				
+
 				document.getElementById('pageinfo').innerHTML = '<p style="text-align:center;"><strong>Showing ' + numRows + ' entries</strong></p>';
-			}			
+			}
 		}
-		
+
 	</script>
 
 <!-- InstanceEndEditable -->
@@ -149,10 +149,10 @@
 <div class="maincontent">
 <div class="headmenu">
 		<h1><img src="@@{templatepath}@@/nuvola/32x32/apps/kcontrol.png" alt="" align="left" style="margin-right:10px;" /> ZGA <i>zeitgeist administration tool</i></h1>
-	
+
 	<!-- TemplateBeginBlock name="mainmenu" -->
 		<div class="menuleiste">
-		
+
 		<div class="menuicon"><a href="@@{[main.index]}@@" alt=""><span onmousemove="showTooltip('ZGA Index', event)" onmouseout="hideTooltip()">
         <img src="@@{templatepath}@@/nuvola/22x22/actions/gohome.png" alt="" align="left" border="0" /></span></a></div>
 		<div class="menuicon"><a href="@@{[setup.index]}@@" alt=""><span onmousemove="showTooltip('Setup application', event)" onmouseout="hideTooltip()">
@@ -167,7 +167,7 @@
         <img src="@@{templatepath}@@/nuvola/22x22/actions/exit.png" alt="" align="left" border="0" /></span></a></div>
 		<div class="menuicon" style="float:right;"><a href="javascript:showShortcuts();" alt=""><span onmousemove="showTooltip('Show/hide shortcuts', event)" onmouseout="hideTooltip()">
         <img src="@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png" alt="" name="shortcutIcon" align="left" border="0" /></span></a></div>
-		
+
 		<div style="clear:both"></div>
 		</div>
 	<!-- TemplateEndBlock -->
@@ -214,7 +214,7 @@
 	<!-- TemplateBeginBlock name="usererrors" -->
 		<h3 class="usererror"><img src="@@{templatepath}@@/nuvola/16x16/actions/no.png" alt="" align="left" style="margin-right:5px;" /> @@{usererror}@@</h3>
 	<!-- TemplateEndBlock -->
-	
+
 <!-- InstanceBeginEditable name="body" -->
 
 <h2>Manage application users</h2>
@@ -223,7 +223,7 @@
 	<h3><img src="@@{templatepath}@@/nuvola/22x22/actions/view_bottom.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[users.adduser]}@@" alt="add new user">Add new user</a></h3>
 </div>
 
-<form name="searchform" method="POST" action="@@{[users.index]}@@">
+<form name="searchform" method="post" action="@@{[users.index]}@@">
 <div class="textbox" style="padding:10px;">
 <table border="0" cellpadding="0" cellspacing="0" cellpadding="0" cellspacing="0">
 	<tr>
@@ -246,9 +246,9 @@
 		<td align="left" valign="middle">
 			<p style="margin-bottom:0px; padding-bottom:5px;">Userrole</p>
 		</td>
-		<td align="left" valign="middle">	
+		<td align="left" valign="middle">
 			<div spry:region="dsUserroles">
-			<select id="filter_userrole" class="eingabefeld" style="width:255px;" onChange="filterUserrole()">
+			<select id="filter_userrole" class="eingabefeld" style="width:255px;" onchange="filterUserrole()">
 				<option value="-1">All</option>
 				<option spry:repeat="dsUserroles" value="{userrole_id}">{userrole_name}</option>
 			</select>
@@ -259,7 +259,7 @@
 	<tr>
 		<td align="left" valign="middle">&nbsp;</td>
 		<td align="left" valign="middle">&nbsp;</td>
-	</tr>    
+	</tr>
 </table>
 </div>
 
@@ -277,15 +277,15 @@
                     </script>
                 </td>
 				<td colspan="2" align="right"><p style="text-align:right;"><span onmousemove="showTooltip('Next Page', event)" onmouseout="hideTooltip()"><img src="@@{templatepath}@@/nuvola/16x16/actions/next.png" alt="" style="margin-right:5px;" onclick="pagination('up');" /></span></p></td>
-	        </tr>        
+	        </tr>
 	        <tr class="tablehead">
-				<th><p><a onClick="dsUserdata.sort('user_id');">ID</a></p></th>
-				<th><p><a onClick="dsUserdata.sort('user_username');">Username</a></p></th>
-				<th><p><a onClick="dsUserdata.sort('userdata_firstname');">Full name</a></p></th>
+				<th><p><a onclick="dsUserdata.sort('user_id');">ID</a></p></th>
+				<th><p><a onclick="dsUserdata.sort('user_username');">Username</a></p></th>
+				<th><p><a onclick="dsUserdata.sort('userdata_firstname');">Full name</a></p></th>
 				<th><p>Userkey</p></th>
-				<th><p><a onClick="dsUserdata.sort('userrole_name');">Userrrole</a></p></th>
+				<th><p><a onclick="dsUserdata.sort('userrole_name');">Userrrole</a></p></th>
 				<th><p>Action</p></th>
-	        </tr>			
+	        </tr>
 	        <tr class="{ds_EvenOddRow}" spry:repeat="dsUserdata">
 				<td><p>{dsUserdata::user_id}</p></td>
 				<td><p>{dsUserdata::user_username}</p></td>
@@ -298,7 +298,7 @@
 	        </tr>
 	    </table>
     </div>
-	</div>	
+	</div>
 </div>
 
 <div class="textbox">

@@ -36,7 +36,7 @@
 		document.getElementById('Tooltip').style.left = "0px";
 		document.getElementById('Tooltip').style.display = "none";
 	}
-	
+
 	function showShortcuts()
 	{
 		if (bShowShortcuts == false)
@@ -54,27 +54,27 @@
 	}
 
 </script>
-	
+
 <!-- InstanceBeginEditable name="head" -->
 
-	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryData.js"></script>	
+	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryData.js"></script>
 	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/Spry/xpath.js"></script>
 	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/Spry/SpryNestedXMLDataSet.js"></script>
 	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/js/SpryExtensions.js"></script>
 
 	<script type="text/javascript">
-	
-		var dsModules = new Spry.Data.XMLDataSet("@@{[dataserver.getmoduleinfo]}@@", "container/element");	
+
+		var dsModules = new Spry.Data.XMLDataSet("@@{[dataserver.getmoduleinfo]}@@", "container/element");
 		var dsActionAnalytics = new Spry.Data.XMLDataSet("@@{[dataserver.getmoduledetailanalytics]}@@", "container/element");
-			
+
 		function filterModules()
 		{
 			filterParameter = document.getElementById('filter_modules').value;
 			filterSpryDataset('action_module', filterParameter, dsActionAnalytics);
-		}			
-			
+		}
+
 	</script>
-	
+
 <!-- InstanceEndEditable -->
 </head>
 
@@ -84,10 +84,10 @@
 <div class="maincontent">
 <div class="headmenu">
 		<h1><img src="@@{templatepath}@@/nuvola/32x32/apps/kcontrol.png" alt="" align="left" style="margin-right:10px;" /> ZGA <i>zeitgeist administration tool</i></h1>
-	
+
 	<!-- TemplateBeginBlock name="mainmenu" -->
 		<div class="menuleiste">
-		
+
 		<div class="menuicon"><a href="@@{[main.index]}@@" alt=""><span onmousemove="showTooltip('ZGA Index', event)" onmouseout="hideTooltip()">
         <img src="@@{templatepath}@@/nuvola/22x22/actions/gohome.png" alt="" align="left" border="0" /></span></a></div>
 		<div class="menuicon"><a href="@@{[setup.index]}@@" alt=""><span onmousemove="showTooltip('Setup application', event)" onmouseout="hideTooltip()">
@@ -102,7 +102,7 @@
         <img src="@@{templatepath}@@/nuvola/22x22/actions/exit.png" alt="" align="left" border="0" /></span></a></div>
 		<div class="menuicon" style="float:right;"><a href="javascript:showShortcuts();" alt=""><span onmousemove="showTooltip('Show/hide shortcuts', event)" onmouseout="hideTooltip()">
         <img src="@@{templatepath}@@/nuvola/22x22/actions/tool_dock.png" alt="" name="shortcutIcon" align="left" border="0" /></span></a></div>
-		
+
 		<div style="clear:both"></div>
 		</div>
 	<!-- TemplateEndBlock -->
@@ -149,7 +149,7 @@
 	<!-- TemplateBeginBlock name="usererrors" -->
 		<h3 class="usererror"><img src="@@{templatepath}@@/nuvola/16x16/actions/no.png" alt="" align="left" style="margin-right:5px;" /> @@{usererror}@@</h3>
 	<!-- TemplateEndBlock -->
-	
+
 <!-- InstanceBeginEditable name="body" -->
 
 <h2>Module detail analytics</h2>
@@ -169,9 +169,9 @@
 		<td align="left" valign="middle">
 			<p style="margin-bottom:0px; padding-bottom:5px;">Module</p>
 		</td>
-		<td align="left" valign="middle">	
+		<td align="left" valign="middle">
 			<div spry:region="dsModules">
-			<select id="filter_modules" class="eingabefeld" style="width:255px;" onChange="filterModules()">
+			<select id="filter_modules" class="eingabefeld" style="width:255px;" onchange="filterModules()">
 				<option value="-1">All</option>
 				<option spry:repeat="dsModules" value="{module_id}">{module_name}</option>
 			</select>
@@ -182,7 +182,7 @@
 	<tr>
 		<td align="left" valign="middle">&nbsp;</td>
 		<td align="left" valign="middle">&nbsp;</td>
-	</tr>    
+	</tr>
 </table>
 </div>
 
@@ -193,12 +193,12 @@
 	<div spry:state="ready">
 	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
 	        <tr class="tablehead">
-				<th><p><a onClick="dsActionAnalytics.sort('trafficlog_action');">ID</a></p></th>
-				<th><p><a onClick="dsActionAnalytics.sort('action_name');">Name</a></p></th>
+				<th><p><a onclick="dsActionAnalytics.sort('trafficlog_action');">ID</a></p></th>
+				<th><p><a onclick="dsActionAnalytics.sort('action_name');">Name</a></p></th>
 				<th><p>Description</p></th>
-				<th><p><a onClick="dsActionAnalytics.sort('action_views');">Views</a></p></th>
-				<th><p><a onClick="dsActionAnalytics.sort('module_name');">Module</a></p></th>
-	        </tr>			
+				<th><p><a onclick="dsActionAnalytics.sort('action_views');">Views</a></p></th>
+				<th><p><a onclick="dsActionAnalytics.sort('module_name');">Module</a></p></th>
+	        </tr>
 	        <tr class="{ds_EvenOddRow}" spry:repeat="dsActionAnalytics">
 				<td><p>{dsActionAnalytics::trafficlog_action}</p></td>
 				<td><p>{dsActionAnalytics::action_name}</p></td>
@@ -208,7 +208,7 @@
 	        </tr>
 	    </table>
     </div>
-	</div>	
+	</div>
 </div>
 
 <!-- InstanceEndEditable -->
