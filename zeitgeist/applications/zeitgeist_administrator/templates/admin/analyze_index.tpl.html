@@ -224,9 +224,9 @@
 	<div spry:state="ready">
 	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
 	        <tr class="tablehead">
-				<th><p><a onClick="dsModuleAnalytics.sort('module_position');">Position</a></p></th>
-				<th><p><a onClick="dsModuleAnalytics.sort('module_name');">Name</a></p></th>
-				<th><p><a onClick="dsModuleAnalytics.sort('module_views');">Views</a></p></th>
+				<th><p><a onclick="dsModuleAnalytics.sort('module_position');">Position</a></p></th>
+				<th><p><a onclick="dsModuleAnalytics.sort('module_name');">Name</a></p></th>
+				<th><p><a onclick="dsModuleAnalytics.sort('module_views');">Views</a></p></th>
 				<th><p>Description</p></th>
 	        </tr>			
 	        <tr class="{ds_EvenOddRow}" spry:repeat="dsModuleAnalytics">
@@ -264,10 +264,10 @@
 	<div spry:state="ready">
 	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
 	        <tr class="tablehead">
-				<th><p><a onClick="dsActionAnalytics.sort('action_position');">Position</a></p></th>
-				<th><p><a onClick="dsActionAnalytics.sort('action_name');">Name</a></p></th>
-				<th><p><a onClick="dsActionAnalytics.sort('action_views');">Views</a></p></th>
-				<th><p><a onClick="dsActionAnalytics.sort('module_name');">Module</a></p></th>
+				<th><p><a onclick="dsActionAnalytics.sort('action_position');">Position</a></p></th>
+				<th><p><a onclick="dsActionAnalytics.sort('action_name');">Name</a></p></th>
+				<th><p><a onclick="dsActionAnalytics.sort('action_views');">Views</a></p></th>
+				<th><p><a onclick="dsActionAnalytics.sort('module_name');">Module</a></p></th>
 				<th><p>Description</p></th>
 	        </tr>			
 	        <tr class="{ds_EvenOddRow}" spry:repeat="dsActionAnalytics">
@@ -306,9 +306,9 @@
 	<div spry:state="ready">
 	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
 	        <tr class="tablehead">
-				<th><p><a onClick="dsUserAnalytics.sort('user_position');">Position</a></p></th>
-				<th><p><a onClick="dsUserAnalytics.sort('user_username');">User ID</a></p></th>
-				<th><p><a onClick="dsUserAnalytics.sort('user_views');">Actions</a></p></th>
+				<th><p><a onclick="dsUserAnalytics.sort('user_position');">Position</a></p></th>
+				<th><p><a onclick="dsUserAnalytics.sort('user_username');">User ID</a></p></th>
+				<th><p><a onclick="dsUserAnalytics.sort('user_views');">Actions</a></p></th>
 	        </tr>			
 	        <tr class="{ds_EvenOddRow}" spry:repeat="dsUserAnalytics">
 				<td><p>{dsUserAnalytics::user_position}</p></td>
