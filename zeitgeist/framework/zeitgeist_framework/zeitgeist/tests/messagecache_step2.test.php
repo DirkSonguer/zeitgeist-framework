@@ -1,93 +1,27 @@
 <?php
 
-class testUserhandler_s2 extends UnitTestCase
+class testMessagecache_s2 extends UnitTestCase
 {
-	public $database;
 	
 	function test_init()
 	{
-		$this->database = new zgDatabase();
-		$ret = $this->database->connect();
-
-		$userhandler = zgUserhandler::init();
-		$this->assertNotNull($userhandler);
-		unset($userhandler);
+		$messagecache = zgMessagecache::init();
+		$this->assertNotNull($messagecache);
+		unset($messagecache);
     }
 
-	function test_establishUserSession()
+	function test_loadMessagesFromDatabase()
 	{
-		$userhandler = zgUserhandler::init();
+		$messagecache = zgMessagecache::init();
+		$message = zgMessages::init();
+		
+		$messagecache->loadMessagesFromDatabase();
+		$ret = $message->getMessagesByType('cachetest');
+		$this->assertIdentical($ret[0]->message, 'cache testing');
 
-		$ret = $userhandler->establishUserSession();
-		$this->assertTrue($ret);
-
-		unset($userhandler);
+		unset($message);
+		unset($messagecache);
 	}
-
-	function test_isLoggedIn_true()
-	{
-		$userhandler = zgUserhandler::init();
-
-		$ret = $userhandler->isLoggedIn();
-		$this->assertTrue($ret);
-
-		unset($userhandler);
-	}	
-
-	function test_getUsername()
-	{
-		$userhandler = zgUserhandler::init();
-
-		$ret = $userhandler->getUsername();
-		$this->assertEqual($ret, 'test');
-
-		unset($userhandler);
-	}	
-
-	function test_getUserdata()
-	{
-		$userhandler = zgUserhandler::init();
-
-		$ret = $userhandler->getUserdata();
-		$this->assertEqual(count($ret), 12);
-		$this->assertEqual($ret['userdata_firstname'], 'Mr');
-		$this->assertEqual($ret['userdata_lastname'], 'Test');
-
-		unset($userhandler);		
-	}
-	
-	function test_getUserKey()
-	{
-		$userhandler = zgUserhandler::init();
-
-		$ret = $userhandler->getUserKey();
-		$this->assertTrue($ret);
-
-		unset($userhandler);
-	}	
-	
-	function test_logout()
-	{
-		$userhandler = zgUserhandler::init();
-
-		$ret = $userhandler->logout();
-		$this->assertTrue($ret);
-
-		$ret = $userhandler->logout();
-		$this->assertFalse($ret);
-
-		unset($userhandler);
-	}	
-
-	function test_isLoggedIn_false()
-	{
-		$userhandler = zgUserhandler::init();
-
-		$ret = $userhandler->isLoggedIn();
-		$this->assertFalse($ret);
-
-		unset($userhandler);
-	}	
 
 }
 
