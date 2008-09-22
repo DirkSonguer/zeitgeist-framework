@@ -1,27 +1,70 @@
 <?php
 
-class testMessagecache_s2 extends UnitTestCase
+class testUserhandler_s2 extends UnitTestCase
 {
+	public $database;
 	
 	function test_init()
 	{
-		$messagecache = zgMessagecache::init();
-		$this->assertNotNull($messagecache);
-		unset($messagecache);
+		$this->database = new zgDatabase();
+		$ret = $this->database->connect();
+
+		$userhandler = zgUserhandler::init();
+		$this->assertNotNull($userhandler);
+		unset($userhandler);
     }
 
-	function test_loadMessagesFromDatabase()
+	function test_establishUserSession()
 	{
-		$messagecache = zgMessagecache::init();
-		$message = zgMessages::init();
-		
-		$messagecache->loadMessagesFromDatabase();
-		$ret = $message->getMessagesByType('cachetest');
-		$this->assertIdentical($ret[0]->message, 'cache testing');
+		$userhandler = zgUserhandler::init();
 
-		unset($message);
-		unset($messagecache);
+		$ret = $userhandler->establishUserSession();
+		$this->assertTrue($ret);
+
+		unset($userhandler);
 	}
+
+	function test_isLoggedIn_true()
+	{
+		$userhandler = zgUserhandler::init();
+
+		$ret = $userhandler->isLoggedIn();
+		$this->assertTrue($ret);
+
+		unset($userhandler);
+	}	
+
+	function test_getUsername()
+	{
+		$userhandler = zgUserhandler::init();
+
+		$ret = $userhandler->getUsername();
+		$this->assertEqual($ret, 'test');
+
+		unset($userhandler);
+	}	
+
+	function test_getUserdata()
+	{
+		$userhandler = zgUserhandler::init();
+
+		$ret = $userhandler->getUserdata();
+		$this->assertEqual(count($ret), 12);
+		$this->assertEqual($ret['userdata_firstname'], 'Mr');
+		$this->assertEqual($ret['userdata_lastname'], 'Test');
+
+		unset($userhandler);		
+	}
+	
+	function test_getUserKey()
+	{
+		$userhandler = zgUserhandler::init();
+
+		$ret = $userhandler->getUserKey();
+		$this->assertTrue($ret);
+
+		unset($userhandler);
+	}	
 
 }
 
