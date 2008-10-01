@@ -2,7 +2,7 @@ Konzept für "Projekt Flaschenpost"
 
 Kurzbeschreibung:
 
-Grundgedanke ist, dass ein Benutzer ein Gegenstand mit einer Nachricht irgendwo aussetzt. Die Nachricht führt den Finder auf eine Webseite, auf der Wünsche für den Finder und Hoffnungen der Aussetzers eingetragen sind. Der Finder kann nun seine Wünsche und Gedanken hinzufügen und den Gegenstand erneut aussetzen oder ihn behalten.
+Grundgedanke ist, dass ein Benutzer einen Gegenstand mit einer Nachricht irgendwo aussetzt. Die Nachricht führt den Finder auf eine Webseite, auf der Wünsche für den Finder und Hoffnungen der Aussetzers eingetragen sind. Der Finder kann nun seine Wünsche und Gedanken hinzufügen und den Gegenstand erneut aussetzen oder ihn behalten.
 
 
 Einführung:
