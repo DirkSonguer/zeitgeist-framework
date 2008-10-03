@@ -24,11 +24,7 @@
 	require_once('classes/lrgamefunctions.class.php');
 	require_once('classes/lruserfunctions.class.php');
 
-	define(ZG_DB_DBSERVER, 'localhost');
-	define(ZG_DB_USERNAME, 'lineracer');
-	define(ZG_DB_USERPASS, 'lineracer');
-	define(ZG_DB_DATABASE, 'lineracer');
-	define(ZG_DB_CONFIGURATIONCACHE, 'configurationcache');
+	include('configuration/lineracer.config.php');
 
 	$debug = zgDebug::init();
 	$message = zgMessages::init();
