@@ -66,12 +66,6 @@ class lrTemplate extends zgTemplate
 
 		parent::insertUsermessages();
 
-		$pregamefunctions = new lrPregamefunctions();
-		if ($pregamefunctions->playerWaitingForGame())
-		{
-			parent::insertBlock('watingforgame');
-		}
-
 		if ($this->user->isLoggedIn())
 		{
 			parent::insertBlock('logoutbox');
