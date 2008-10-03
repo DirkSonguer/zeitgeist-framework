@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Taskkun - Agile Project Management Tool
  *
@@ -77,7 +77,7 @@
 	{
 		if ($warnings->message == 'Problem validating the user session: IP does not match the session')
 		{
-			$message->setMessage('Ihre Sitzung ist abgelaufen. Sie wurden aus Sicherheitsgründen abgemeldet', 'usererror');
+			$message->setMessage('Ihre Sitzung ist abgelaufen. Sie wurden aus Sicherheitsgr�nden abgemeldet', 'usererror');
 		}
 	}
 
