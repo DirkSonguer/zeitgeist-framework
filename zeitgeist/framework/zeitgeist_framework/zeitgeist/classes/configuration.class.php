@@ -119,8 +119,8 @@ class zgConfiguration
 			// return configuration value
 			if (empty($this->configuration[$module][$section][$configuration]))
 			{
-				$this->debug->write('Problem reading the configuration: configuration not found', 'warning');
-				$this->messages->setMessage('Problem reading the configuration: configuration not found', 'warning');
+				$this->debug->write('Problem reading the configuration: configuration not found ('.$module.' - '.$section.' - '.$configuration.')', 'warning');
+				$this->messages->setMessage('Problem reading the configuration: configuration not found ('.$module.' - '.$section.' - '.$configuration.')', 'warning');
 				$this->debug->unguard(false);
 				return false;
 			}
