@@ -11,20 +11,19 @@
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
  *
  * @package LINERACER
- * @subpackage LINERACER CORE
+ * @subpackage LINERACER TOOLS
  */
 
 	define('LINERACER_ACTIVE', true);
 	define('DEBUGMODE', true);
 
-	include('zeitgeist/zeitgeist.php');
+	if (!defined('ZEITGEIST_ROOTDIRECTORY')) define('ZEITGEIST_ROOTDIRECTORY', '../zeitgeist/');
+	if (!defined('APPLICATION_ROOTDIRECTORY')) define('APPLICATION_ROOTDIRECTORY', './tools');
+	include('../zeitgeist/zeitgeist.php');
 
-	require_once('classes/lrtemplate.class.php');
-//	require_once('classes/lrpregamefunctions.class.php');
-	require_once('classes/lrgamefunctions.class.php');
-	require_once('classes/lruserfunctions.class.php');
+//	require_once('classes/lrtemplate.class.php');
 
-	include('configuration/lineracer.config.php');
+	include('../configuration/lineracer.config.php');
 
 	$debug = zgDebug::init();
 	$message = zgMessages::init();
@@ -34,33 +33,8 @@
 	$eventhandler = new zgEventhandler();
 
 	// load configuration
-	$configuration->loadConfiguration('lineracer', 'configuration/lineracer.ini');
+	$configuration->loadConfiguration('lineracer', '../configuration/lineracer.ini');
 
-	// test if user is logged in
-	$user->establishUserSession();
-
-	// set module
-	if (isset($_GET['module']))
-	{
-		$module = $_GET['module'];
-	}
-	else
-	{
-		$module = 'main';
-	}
-
-	// set action
-	if (isset($_GET['action']))
-	{
-		$action = $_GET['action'];
-	}
-	else
-	{
-		$action = 'index';
-	}
-
-	// load event
-	$ret = $eventhandler->callEvent($module, $action);
 
 	$debug->loadStylesheet('debug.css');
 	$debug->showInnerLoops = true;
