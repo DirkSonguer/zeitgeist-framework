@@ -24,11 +24,11 @@ class lrGamefunctions
 	}
 
 
-	public function getGamestates($race_id)
+	public function getGamestates($raceid)
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT * FROM races r LEFT JOIN circuits c ON r.race_circuit = c.circuit_id WHERE r.race_id='" . $race_id . "'";
+		$sql = "SELECT * FROM races r LEFT JOIN circuits c ON r.race_circuit = c.circuit_id WHERE r.race_id='" . $raceid . "'";
 		$res = $this->database->query($sql);
 		$row = $this->database->fetchArray($res);
 
@@ -46,7 +46,7 @@ class lrGamefunctions
 		$currentGamedata['moves'][$row['race_player3']] = array();
 		$currentGamedata['moves'][$row['race_player4']] = array();
 			
-		$sql = "SELECT * FROM race_moves WHERE move_race='" . $race_id . "'";
+		$sql = "SELECT * FROM race_moves WHERE move_race='" . $raceid . "'";
 		$res = $this->database->query($sql);
 
 		while($row = $this->database->fetchArray($res))
