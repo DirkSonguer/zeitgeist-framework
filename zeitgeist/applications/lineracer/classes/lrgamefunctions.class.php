@@ -23,59 +23,43 @@ class lrGamefunctions
 		$this->database->connect();
 	}
 
-/*
-	public function validateMove($currentMove = array())
+
+	public function getGamestates($race_id)
 	{
 		$this->debug->guard();
 
-		$currentGamedata = $this->getGamestates();
-
-		$moves = array();
-		$moves = $currentGamedata['players'][$currentGamedata['activePlayer']]['moves'];
-		$lastMove = $moves[count($moves)-1];
-		$currentVector = $currentGamedata['players'][$currentGamedata['activePlayer']]['vector'];
-
-		$minX = $lastMove[0]+$currentVector[0]-20;
-		$maxX = $lastMove[0]+$currentVector[0]+20;
-		$minY = $lastMove[1]+$currentVector[1]-20;
-		$maxY = $lastMove[1]+$currentVector[1]+20;
-
-		if ( ($currentMove[0] < $minX) || ($currentMove[0] > $maxX) ||
-			($currentMove[1] < $minY) || ($currentMove[1] > $maxY) )
-		{
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-
-	public function getGamestates()
-	{
-		$this->debug->guard();
-
-		$sql = "SELECT * FROM racedata rd LEFT JOIN races r ON rd.racedata_race = r.race_id LEFT JOIN circuits c ON r.race_circuit = c.circuit_id WHERE rd.racedata_id='1'";
+		$sql = "SELECT * FROM races r LEFT JOIN circuits c ON r.race_circuit = c.circuit_id WHERE r.race_id='" . $race_id . "'";
 		$res = $this->database->query($sql);
 		$row = $this->database->fetchArray($res);
 
 		$currentGamedata = array();
 
-		if ($row['racedata_active'] != '')
-		{
-			$currentGamedata['activePlayer'] = $row['racedata_active'];
-		}
-		else
-		{
-			$currentGamedata['activePlayer'] = 1;
-		}
+		$currentGamedata['activePlayer'] = $row['race_activeplayer'];
 
 		if ($row['race_player4'] != '') $currentGamedata['numPlayers'] = 4;
 			elseif ($row['race_player3'] != '') $currentGamedata['numPlayers'] = 3;
 			elseif ($row['race_player2'] != '') $currentGamedata['numPlayers'] = 2;
 			else $currentGamedata['numPlayers'] = 1;
 
+		$currentGamedata['moves'][$row['race_player1']] = array();
+		$currentGamedata['moves'][$row['race_player2']] = array();
+		$currentGamedata['moves'][$row['race_player3']] = array();
+		$currentGamedata['moves'][$row['race_player4']] = array();
+			
+		$sql = "SELECT * FROM race_moves WHERE move_race='" . $race_id . "'";
+		$res = $this->database->query($sql);
+
+		while($row = $this->database->fetchArray($res))
+		{
+			if ($row['move_action'] == '1')
+			{
+				$vectors = explode(',',$row['move_parameter']);
+				$currentGamedata['moves'][$row['move_user']][] = array($vectors[0], $vectors[1]);
+			}
+		}
+
+			
+/*
 		for ($i=1; $i<=$currentGamedata['numPlayers']; $i++)
 		{
 			$positionString = $row['racedata_position'.$i];
@@ -110,10 +94,41 @@ class lrGamefunctions
 				$currentGamedata['players'][$i]['vector'][1] = 1;
 			}
 		}
-
+*/
 		$this->debug->unguard($currentGamedata);
 		return $currentGamedata;
 	}
+	
+/*
+	public function validateMove($currentMove = array())
+	{
+		$this->debug->guard();
+
+		$currentGamedata = $this->getGamestates();
+
+		$moves = array();
+		$moves = $currentGamedata['players'][$currentGamedata['activePlayer']]['moves'];
+		$lastMove = $moves[count($moves)-1];
+		$currentVector = $currentGamedata['players'][$currentGamedata['activePlayer']]['vector'];
+
+		$minX = $lastMove[0]+$currentVector[0]-20;
+		$maxX = $lastMove[0]+$currentVector[0]+20;
+		$minY = $lastMove[1]+$currentVector[1]-20;
+		$maxY = $lastMove[1]+$currentVector[1]+20;
+
+		if ( ($currentMove[0] < $minX) || ($currentMove[0] > $maxX) ||
+			($currentMove[1] < $minY) || ($currentMove[1] > $maxY) )
+		{
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+
 
 
 	public function updateGamestates($currentMove = array())
