@@ -1,45 +1,37 @@
 <?php
-/**
- * Lineracer
- *
- * Based on the Zeitgeist Application Framework
- * http://www.zeitgeist-framework.com
- *
- * @author Dirk Songür <songuer@zeitgeist-framework.com>
- *
- * @copyright http://www.zeitgeist-framework.com
- * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
- *
- * @package LINERACER
- * @subpackage LINERACER CORE
- */
 
-	define('LINERACER_ACTIVE', true);
-	define('DEBUGMODE', true);
+defined('LINERACER_ACTIVE') or die();
 
-	include('zeitgeist/zeitgeist.php');
+class prototypeRenderer
+{
+	protected $debug;
+	protected $messages;
+	protected $objects;
+	protected $database;
+	protected $configuration;
+	protected $user;
 
-	require_once('classes/lrtemplate.class.php');
-//	require_once('classes/lrpregamefunctions.class.php');
-	require_once('classes/lrgamefunctions.class.php');
-	require_once('classes/lruserfunctions.class.php');
+	public function __construct()
+	{
+		$this->debug = zgDebug::init();
+		$this->messages = zgMessages::init();
+		$this->objects = zgObjectcache::init();
+		$this->configuration = zgConfiguration::init();
+		$this->user = zgUserhandler::init();
 
-	include('configuration/lineracer.config.php');
+		$this->database = new zgDatabase();
+		$this->database->connect();
+	}
 
-	$debug = zgDebug::init();
-	$message = zgMessages::init();
-	$configuration = zgConfiguration::init();
-	$error = zgErrorhandler::init();
-	$user = zgUserhandler::init();
-	$eventhandler = new zgEventhandler();
 
-	// load configuration
-	$configuration->loadConfiguration('lineracer', 'configuration/lineracer.ini');
+	public function draw($race_id)
+	{
 
-	$gamefunctions = new lrGamefunctions();
-	$gamestates = $gamefunctions->getGamestates(1);
-	
-	var_dump($gamestates);
+		$gamefunctions = new lrGamefunctions();
+		$gamestates = $gamefunctions->getGamestates(1);
+		
+		var_dump($gamestates);
+
 /*
 		$circuit = imagecreatefromjpeg('data/circuits/circuit1.jpg');
 		if (!$circuit) die('1');
@@ -92,12 +84,8 @@
 		$ret = imagejpeg($circuit, 'testdata/circuit1_game.jpg');
 		imagedestroy($circuit);
 */
+	}
 
-	$debug->loadStylesheet('debug.css');
-	$debug->showInnerLoops = true;
-	$debug->showMiscInformation();
-	$debug->showDebugMessages();
-	$debug->showQueryMessages();
-	$debug->showGuardMessages();
+}
 
 ?>
