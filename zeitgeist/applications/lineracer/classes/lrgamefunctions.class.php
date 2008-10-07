@@ -36,17 +36,40 @@ class lrGamefunctions
 
 		$currentGamedata['activePlayer'] = $row['race_activeplayer'];
 
-		if ($row['race_player4'] != '') $currentGamedata['numPlayers'] = 4;
-			elseif ($row['race_player3'] != '') $currentGamedata['numPlayers'] = 3;
-			elseif ($row['race_player2'] != '') $currentGamedata['numPlayers'] = 2;
-			else $currentGamedata['numPlayers'] = 1;
+		$player = array();
+		$currentGamedata['players'] = array();
+		$currentGamedata['numPlayers'] = 0;
+		if ($row['race_player4'] != '')
+		{
+			$currentGamedata['numPlayers'] = 4;
+			$player[$row['race_player4']] = 4;
+			$currentGamedata['players'][4] = $row['race_player4'];
+		}
+		
+		if ($row['race_player3'] != '')
+		{
+			if ($currentGamedata['numPlayers'] == 0) $currentGamedata['numPlayers'] = 3;
+			$player[$row['race_player3']] = 3;
+			$currentGamedata['players'][3] = $row['race_player3'];
+		}
 
-		$currentGamedata['moves'][$row['race_player1']] = array();
-		$currentGamedata['moves'][$row['race_player2']] = array();
-		$currentGamedata['moves'][$row['race_player3']] = array();
-		$currentGamedata['moves'][$row['race_player4']] = array();
-			
-		$sql = "SELECT * FROM race_moves WHERE move_race='" . $raceid . "'";
+		if ($row['race_player2'] != '')
+		{
+			if ($currentGamedata['numPlayers'] == 0) $currentGamedata['numPlayers'] = 2;
+			$player[$row['race_player2']] = 2;
+			$currentGamedata['players'][2] = $row['race_player2'];
+		}
+
+		if ($currentGamedata['numPlayers'] == 0) $currentGamedata['numPlayers'] = 1;
+		$player[$row['race_player1']] = 1;
+		$currentGamedata['players'][1] = $row['race_player1'];
+
+		$currentGamedata['moves'][$player[$row['race_player1']]] = array();
+		$currentGamedata['moves'][$player[$row['race_player2']]] = array();
+		$currentGamedata['moves'][$player[$row['race_player3']]] = array();
+		$currentGamedata['moves'][$player[$row['race_player4']]] = array();
+
+		$sql = "SELECT * FROM race_moves WHERE move_race='" . $raceid . "' ORDER BY move_id";
 		$res = $this->database->query($sql);
 
 		while($row = $this->database->fetchArray($res))
@@ -58,45 +81,28 @@ class lrGamefunctions
 			}
 		}
 
-			
-/*
-		for ($i=1; $i<=$currentGamedata['numPlayers']; $i++)
-		{
-			$positionString = $row['racedata_position'.$i];
-			$positionsArray = explode(';', $positionString);
-
-			$startPosition = explode(',', $row['circuit_startposition']);
-			$moves[0] = $startPosition[0]+($i*20);
-			$moves[1] = $startPosition[1];
-			$currentGamedata['players'][$i]['moves'] = array($moves);
-
-			if ($positionsArray[0] != '')
-			{
-				foreach($positionsArray as $move)
-				{
-					$movePosition = explode(',', $move);
-					$currentGamedata['players'][$i]['moves'][] = array($movePosition[0], $movePosition[1]);
-				}
-			}
-
-			$currentGamedata['players'][$i]['movecount'] = count($currentGamedata['players'][$i]['moves']);
-
-			$currentVector = $row['racedata_vector'.$i];
-			$currentVector = explode(',', $currentVector);
-			if (is_array($currentVector))
-			{
-				$currentGamedata['players'][$i]['vector'][0] = $currentVector[0];
-				$currentGamedata['players'][$i]['vector'][1] = $currentVector[1];
-			}
-			else
-			{
-				$currentGamedata['players'][$i]['vector'][0] = 0;
-				$currentGamedata['players'][$i]['vector'][1] = 1;
-			}
-		}
-*/
 		$this->debug->unguard($currentGamedata);
 		return $currentGamedata;
+	}
+	
+	public function move($raceid, $newX, $newY)
+	{
+		$this->debug->guard();
+		
+		$gamestates = $this->getGamestates($raceid);
+		$currentPlayer = $gamestates['players'][$gamestates['activePlayer']];
+		
+		$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('" . $raceid . "', '" . $currentPlayer . "', '1', '" . $newX . "," . $newY . "')";
+		$res = $this->database->query($sql);
+
+		$gamestates['activePlayer']++;
+		if ($gamestates['activePlayer'] > 4) $gamestates['activePlayer'] = 1;
+		
+		$sql = "UPDATE races SET race_activeplayer='" . $gamestates['activePlayer'] . "'  WHERE race_id='" . $raceid . "'";
+		$res = $this->database->query($sql);
+		
+		$this->debug->unguard(true);
+		return true;
 	}
 	
 /*
