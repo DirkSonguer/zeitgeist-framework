@@ -21,7 +21,7 @@
 	if (!defined('APPLICATION_ROOTDIRECTORY')) define('APPLICATION_ROOTDIRECTORY', './prototype');
 	include('../zeitgeist/zeitgeist.php');
 
-//	require_once('classes/lrtemplate.class.php');
+	require_once('../classes/lrtemplate.class.php');
 //	require_once('classes/lrpregamefunctions.class.php');
 	require_once('../classes/lrgamefunctions.class.php');
 //	require_once('classes/lruserfunctions.class.php');
@@ -40,10 +40,22 @@
 	$configuration->loadConfiguration('lineracer', '../configuration/lineracer.ini');
 
 	$gamefunctions = new lrGamefunctions();
+	$gamestates = $gamefunctions->getGamestates(1);
 	
 	$renderer = new prototypeRenderer();
 	$renderer->draw(1);
 
+	var_dump($gamestates);
+
+	$tpl = new lrTemplate();
+	$tpl->load('game_index.tpl.html');
+	
+	if ($gamestates['activePlayer'] == 1) $tpl->assign('bgcolor', '#00ff00');
+	elseif ($gamestates['activePlayer'] == 2) $tpl->assign('bgcolor', '#ff0000');
+	elseif ($gamestates['activePlayer'] == 3) $tpl->assign('bgcolor', '#0000ff');
+	else $tpl->assign('bgcolor', '#000000');
+	$tpl->show();
+		
 	$debug->loadStylesheet('debug.css');
 	$debug->showInnerLoops = true;
 	$debug->showMiscInformation();

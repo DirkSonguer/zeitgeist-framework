@@ -35,12 +35,24 @@
 	$error = zgErrorhandler::init();
 	$user = zgUserhandler::init();
 	$eventhandler = new zgEventhandler();
+	$database = new zgDatabase();
+	$database->connect();
 
 	// load configuration
 	$configuration->loadConfiguration('lineracer', '../configuration/lineracer.ini');
 
-	$gamefunctions = new lrGamefunctions();
-	$move = $gamefunctions->move(1, $_POST['position_x'], $_POST['position_y']);
+	$sql = "TRUNCATE TABLE race_moves";
+	$res = $database->query($sql);
+	$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('1', '1', '1', '150,370')";
+	$res = $database->query($sql);
+	$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('1', '2', '1', '170,370')";
+	$res = $database->query($sql);
+	$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('1', '3', '1', '190,370')";
+	$res = $database->query($sql);
+	$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('1', '4', '1', '210,370')";
+	$res = $database->query($sql);
+	$sql = "UPDATE races SET race_activeplayer='1' WHERE race_id='1'";
+	$res = $database->query($sql);
 
 	$tpl = new lrTemplate();
 	$tpl->redirect('127.0.0.1/lineracer/prototype/game.php');
