@@ -17,8 +17,8 @@ class fkTemplate extends zgTemplate
 
 		parent::__construct();
 
-		$this->basepath = $this->configuration->getConfiguration('taskkun', 'application', 'basepath');
-		$this->templatepath = $this->basepath . '/templates/' . $this->configuration->getConfiguration('taskkun', 'application', 'templatepath');
+		$this->basepath = $this->configuration->getConfiguration('feedkun', 'application', 'basepath');
+		$this->templatepath = $this->basepath . '/templates/' . $this->configuration->getConfiguration('feedkun', 'application', 'templatepath');
 	}
 
 
