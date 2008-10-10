@@ -98,7 +98,7 @@ class lrGamefunctions
 		}
 
 		$correctedMove = array();
-		if (!$correctedMove = $this->validateLine($moveX, $moveY, $gamestates['playerdata'][$gamestates['activePlayer']]))
+		if (!$correctedMove = $this->validateTerrain($moveX, $moveY, $gamestates['playerdata'][$gamestates['activePlayer']]))
 		{
 			$this->debug->write('Could not move player: validating line failed', 'warning');
 			$this->messages->setMessage('Could not move player: validating line failed', 'warning');
@@ -107,6 +107,7 @@ class lrGamefunctions
 		}
 		
 		$this->_saveGamestates($raceid, $gamestates['activePlayer'], $correctedMove[0], $correctedMove[1]);
+
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -127,7 +128,7 @@ class lrGamefunctions
 	{
 		$this->debug->guard();
 
-		$lastMove = $playerGamestates['moves'][count($moves)-1];
+		$lastMove = $playerGamestates['moves'][count($playerGamestates['moves'])-1];
 		$currentVector = $playerGamestates['vector'];
 
 		$minX = $lastMove[0]+$currentVector[0]-20;
@@ -146,37 +147,42 @@ class lrGamefunctions
 	}
 
 
-	public function validateLine($moveX, $moveY, $playerGamestates)
+	public function validateTerrain($moveX, $moveY, $playerGamestates)
 	{
 		$this->debug->guard();
 
 		$correctedMove = array();
-		$lastMove = $playerGamestates['moves'][count($moves)-1];
-		if ($lastMove[0] > $moveX)
-		{
-			$fromX = $moveX;
-			$toX = $lastMove[0];
-		}
-		else
-		{
-			$fromX = $lastMove[0];
-			$toX = $moveX;	
-		}
+		$lastMove = $playerGamestates['moves'][count($playerGamestates['moves'])-1];
 
-		if ($lastMove[1] > $moveY)
+		$fromX = $lastMove[0];
+		$fromY = $lastMove[1];
+
+		$terrain = array();
+		$terrain = $this->_checkTerrainType($fromX, $fromY, $moveX, $moveY);
+		
+		foreach($terrain as $step)
 		{
-			$fromY = $moveY;
-			$toY = $lastMove[1];
+			echo $step[0];
 		}
-		else
-		{
-			$fromY = $lastMove[1];
-			$toY = $moveY;	
-		}
-				
+		echo "<br />";
+
 		$correctedMove[0] = $moveX;
 		$correctedMove[1] = $moveY;
 
+		foreach($terrain as $step)
+		{
+			// check for blocking terrain
+			if ($step[0] == 0)
+			{
+				echo "move: ".$moveX.",".$moveY." corrected to ".$step[1].",".$step[2]."<br />";
+				$correctedMove[0] = $step[1];
+				$correctedMove[1] = $step[2];
+				// TODO: Gamestates global
+				// TODO: Vector auf 0,0
+				break;
+			}
+		}
+		
 		$this->debug->unguard($correctedMove);
 		return $correctedMove;
 	}
@@ -189,6 +195,7 @@ class lrGamefunctions
 		$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('" . $raceid . "', '" . $player . "', '1', '" . $moveX . "," . $moveY . "')";
 		$res = $this->database->query($sql);
 
+		// TODO: max player
 		$player++;
 		if ($player > 4) $player = 1;
 		
@@ -197,6 +204,80 @@ class lrGamefunctions
 		
 		$this->debug->unguard(true);
 		return true;
+	}
+
+
+	private function _checkTerrainType($fromX, $fromY, $toX, $toY)
+	{
+		$this->debug->guard();
+
+//		echo "from: ".$fromX.",".$fromY."<br />";
+//		echo "to: ".$toX.",".$toY."<br />";
+
+		$circuitData = $this->_getCircuitData();
+
+		$lengthX = $toX - $fromX;
+		if ($lengthX > 0) $factorX = 1; else $factorX = -1;
+		$lengthY = $toY - $fromY;
+		if ($lengthY > 0) $factorY = 1; else $factorY = -1;
+
+		if (abs($lengthX) > abs($lengthY))
+		{
+			for ($i=1; $i<=abs($lengthX); $i++)
+			{
+				$checkX = $fromX + $i*$factorX;
+				$checkY = $fromY + round($lengthY/$lengthX*$i*$factorY);
+		// TODO: Allgemeine Breite
+				$terrainData[] = array(substr($circuitData, $checkY*800+$checkX, 1), $checkX, $checkY);
+//				echo $checkX.",".$checkY." - (".round($lengthX/$i*$factorX).",".abs($i*$factorY).") - ".$terrainData[count($terrainData)-1]."<br />";
+			}
+		}
+		else
+		{
+			for ($i=1; $i<=abs($lengthY); $i++)
+			{
+				$checkX = $fromX + round($lengthX/$lengthY*$i*$factorX);
+				$checkY = $fromY + $i*$factorY;
+		// TODO: Allgemeine Breite
+				$terrainData[] = array(substr($circuitData, $checkY*800+$checkX, 1), $checkX, $checkY);
+//				echo $checkX.",".$checkY." - (".round($lengthX/$i*$factorX).",".abs($i*$factorY).") - ".$terrainData[count($terrainData)-1]."<br />";
+			}
+		}
+
+		$this->debug->unguard($terrainData);
+		return $terrainData;
+	}
+
+
+
+	// TODO: Richitg aufsetzen
+	private function _getCircuitData()
+	{
+		$this->debug->guard();
+
+		$sql = "SELECT * FROM circuit_data";
+		$res = $this->database->query($sql);
+
+		$row = $this->database->fetchArray($res);
+		$circuitData = $row['circuitdata_data'];
+
+// TODO: Longtext checken
+
+/*
+echo "<p style='font-size:5px;'>";
+for($j=1;$j<620;$j++)
+{
+		for($i=1;$i<800;$i++)
+		{
+			echo substr($circuitData, $j*800+$i, 1);
+		}
+		echo "<br />";
+}
+echo "</p>";
+//*/
+
+		$this->debug->unguard($circuitData);
+		return $circuitData;
 	}
 
 }
