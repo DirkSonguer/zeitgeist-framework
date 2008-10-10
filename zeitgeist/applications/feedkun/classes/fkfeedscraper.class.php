@@ -2,7 +2,7 @@
 
 defined('FEEDKUN_ACTIVE') or die();
 
-class fkFeed
+class fkFeeds
 {
 	protected $debug;
 	protected $messages;
@@ -72,7 +72,7 @@ class fkFeed
 
 		$row = $this->database->fetchArray($res);
 
-		if (time() > $row['feed_lastupdate']+3600)
+		if (time() > $row['feed_lastupdate']+600)
 		{
 			$feed->set_feed_url($row['feed_url']);
 			$feed->init();
@@ -93,13 +93,26 @@ class fkFeed
 					$allitems = $feed->get_items();
 					foreach($allitems as $item)
 					{
-						echo "found: ".$item->get_date('U')."<br />";
 						if ($item->get_date('U') > $row['feed_lastupdate'])
 						{
+							$authors = $item->get_authors();
+							$item_authors = array();
+							foreach($authors as $author)
+							{
+								$item_authors[] = $author->name;
+							}
+
+							$categories = $item->get_categories();
+							$item_categories = array();
+							foreach($categories as $category)
+							{
+								$item_categories[] = $category->term;
+							}
+
 							$sql = 'INSERT INTO articles(article_feed, article_title, article_content, article_description,';
-							$sql .= 'article_link, article_author, article_tags, article_categories) VALUES';
+							$sql .= 'article_link, article_author, article_categories, article_timestamp) VALUES';
 							$sql .= "('" . $feedid . "', '" . $this->database->escape($item->get_title()) . "', '" . $this->database->escape($item->get_content()) . "', '" . $this->database->escape($item->get_description()) . "', ";
-							$sql .= "'" . $this->database->escape($item->get_permalink()) . "', '', '', '')";
+							$sql .= "'" . $this->database->escape($item->get_permalink()) . "', '" . implode(', ', $item_authors) . "', '" . implode(', ', $item_categories) . "', '" . $item->get_date('Y-m-d H:i:s') . "')";
 
 							$res = $this->database->query($sql);
 							if (!$res)
