@@ -26,7 +26,8 @@ class prototypeRenderer
 
 	public function draw($race_id)
 	{
-
+		$offset = 20;
+		
 		$gamefunctions = new lrGamefunctions();
 		$currentGamedata = $gamefunctions->getGamestates($race_id);
 		
@@ -39,48 +40,31 @@ class prototypeRenderer
 		$colorRed = imagecolorallocate($circuit, 255, 0, 0);
 		$colorGray = imagecolorallocate($circuit, 230, 220, 220);
 
-//		$currentGamedata = array();
-//		$gamefunctions = new lrGamefunctions;
-//		$currentGamedata = $gamefunctions->getGamestates();
-
 		for ($j=1; $j<=$currentGamedata['numPlayers']; $j++)
 		{
 			if ($j == 1) $currentColor = $colorGreen;
 			if ($j == 2) $currentColor = $colorRed;
 			if ($j == 3) $currentColor = $colorBlue;
 			if ($j == 4) $currentColor = $colorBlack;
-/*
-			$positionString = $row['racedata_position'.$j];
-			$positionsArray = explode(';', $positionString);
 
-			$startPosition = explode(',', $row['circuit_startposition']);
-			$moves[0] = $startPosition[0]+($j*20);
-			$moves[1] = $startPosition[1];
-			$currentMoves = array($moves);
-
-			if ($positionsArray[0] != '')
-			{
-				foreach($positionsArray as $move)
-				{
-					$movePosition = explode(',', $move);
-					$currentMoves[] = array($movePosition[0], $movePosition[1]);
-				}
-			}
-//*/
-
-			$currentMoves = $currentGamedata['moves'][$j];
+			$currentMoves = $currentGamedata['playerdata'][$j]['moves'];
 			
 			for ($i=0; $i<count($currentMoves); $i++)// as $index => $move)
 			{
 				imagefilledellipse($circuit, $currentMoves[$i][0], $currentMoves[$i][1], 6, 6, $currentColor);
 				if ($i > 0) imageline($circuit, $currentMoves[$i-1][0], $currentMoves[$i-1][1], $currentMoves[$i][0], $currentMoves[$i][1], $currentColor);
 			}
-//*/			
+
+			if ($currentGamedata['activePlayer'] == $j)
+			{
+				$vect[0] = $currentMoves[count($currentMoves)-1][0] + $currentGamedata['playerdata'][$j]['vector'][0];
+				$vect[1] = $currentMoves[count($currentMoves)-1][1] + $currentGamedata['playerdata'][$j]['vector'][1];
+				imageRectangle($circuit, $vect[0]-$offset, $vect[1]-$offset, $vect[0]+$offset, $vect[1]+$offset, $currentColor);
+			}
 		}
 
 		$ret = imagejpeg($circuit, '../data/circuits/circuit1_game.jpg');
 		imagedestroy($circuit);
-
 	}
 
 }
