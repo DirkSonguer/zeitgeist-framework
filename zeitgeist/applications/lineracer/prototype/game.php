@@ -45,8 +45,6 @@
 	$renderer = new prototypeRenderer();
 	$renderer->draw(1);
 
-	var_dump($gamestates);
-
 	$tpl = new lrTemplate();
 	$tpl->load('game_index.tpl.html');
 	
@@ -55,6 +53,8 @@
 	elseif ($gamestates['activePlayer'] == 3) $tpl->assign('bgcolor', '#0000ff');
 	else $tpl->assign('bgcolor', '#000000');
 	$tpl->show();
+
+	var_dump($gamestates);
 		
 	$debug->loadStylesheet('debug.css');
 	$debug->showInnerLoops = true;
