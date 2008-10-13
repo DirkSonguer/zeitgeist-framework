@@ -40,7 +40,16 @@
 	$configuration->loadConfiguration('lineracer', '../configuration/lineracer.ini');
 
 	$gamefunctions = new lrGamefunctions();
-	$move = $gamefunctions->move(1, $_POST['position_x'], $_POST['position_y']);
+	$gamestates = $gamefunctions->loadGamestates(1);
+	
+	if ($_REQUEST['action'] == '1')
+	{
+		$move = $gamefunctions->move($_REQUEST['position_x'], $_REQUEST['position_y']);
+	}
+	elseif ($_REQUEST['action'] == '3')
+	{
+		$move = $gamefunctions->playGamecard($_REQUEST['gamecard']);
+	}
 
 	$tpl = new lrTemplate();
 	$tpl->redirect('127.0.0.1/lineracer/prototype/game.php');

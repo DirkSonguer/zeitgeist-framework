@@ -51,6 +51,13 @@ class imagetocircuit
 			return false;
 		}
 
+		$imagedata = getimagesize($filename);
+		if (!$imagedata)
+		{
+			$this->debug->write('Problem importing circuit: could not read out image data ('.$filename.')', 'warning');
+			return false;	
+		}
+
 		$ret = $this->database->fetchArray($res);
 		$circuit_id = $ret['circuit_id'];
 
@@ -60,12 +67,12 @@ class imagetocircuit
 		$res = $this->database->query($sql);
 		if ($this->database->numRows($res) > 0)
 		{
-			$sql = "UPDATE circuit_data SET circuitdata_data='" . $circuit_data . "', circuitdata_scale='" . $scale . "' WHERE circuitdata_circuit='" . $circuit_id . "'";
+			$sql = "UPDATE circuit_data SET circuitdata_size='".$imagedata[0].",".$imagedata[1]."', circuitdata_data='" . $circuit_data . "', circuitdata_scale='" . $scale . "' WHERE circuitdata_circuit='" . $circuit_id . "'";
 			$this->database->query($sql);
 		}
 		else
 		{
-			$sql = "INSERT INTO circuit_data(circuitdata_circuit, circuitdata_data, circuitdata_scale) VALUES('" . $circuit_id . "', '" . $circuit_data . "', '" . $scale . "')";
+			$sql = "INSERT INTO circuit_data(circuitdata_circuit, circuitdata_size, circuitdata_data, circuitdata_scale) VALUES('".$imagedata[0].",".$imagedata[1]."', '" . $circuit_id . "', '" . $circuit_data . "', '" . $scale . "')";
 			$this->database->query($sql);
 		}
 				
@@ -95,7 +102,7 @@ class imagetocircuit
 		$circuit_width = $imagedata[0];
 		$circuit_height = $imagedata[1];
 		
-		$circuit = imagecreatefromjpeg($filename);
+		$circuit = imagecreatefrompng($filename);
 		if (!$circuit)
 		{
 			$this->debug->write('Problem creating buffer from circuit: circuit file not found ('.$filename.')', 'warning');
