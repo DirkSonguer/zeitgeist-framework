@@ -37,7 +37,26 @@
 
 	// start importing
 	$imagetocircuit = new imagetocircuit();
-	$ret = $imagetocircuit->import('Teststrecke', '../data/circuits/circuit1_negative.jpg', 1);
+	$ret = $imagetocircuit->import('Teststrecke', '../data/circuits/circuit1_negative.png', 1);
+
+	$database = new zgDatabase();
+	$database->connect();
+
+	$sql = "SELECT * FROM circuits c LEFT JOIN circuit_data cd ON c.circuit_id = cd.circuitdata_circuit WHERE c.circuit_name='Teststrecke'";
+	$res = $database->query($sql);
+	$row = $database->fetchArray($res);
+	$circuitData = $row['circuitdata_data'];
+	
+	echo "<p style='font-size:1px;'>";
+	for($j=1;$j<620;$j++)
+	{
+			for($i=1;$i<800;$i++)
+			{
+				echo substr($circuitData, $j*800+$i, 1);
+			}
+			echo "<br />";
+	}
+	echo "</p>";
 
 	$debug->loadStylesheet('debug.css');
 	$debug->showInnerLoops = true;

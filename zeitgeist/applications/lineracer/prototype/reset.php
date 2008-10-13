@@ -43,6 +43,8 @@
 
 	$sql = "TRUNCATE TABLE race_moves";
 	$res = $database->query($sql);
+	$sql = "TRUNCATE TABLE gamecards_stack";
+	$res = $database->query($sql);
 	$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('1', '1', '1', '150,370')";
 	$res = $database->query($sql);
 	$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('1', '2', '1', '170,370')";

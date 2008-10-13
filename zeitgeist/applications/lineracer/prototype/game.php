@@ -40,10 +40,11 @@
 	$configuration->loadConfiguration('lineracer', '../configuration/lineracer.ini');
 
 	$gamefunctions = new lrGamefunctions();
-	$gamestates = $gamefunctions->getGamestates(1);
+	$gamefunctions->loadGamestates(1);
+	$gamestates = $gamefunctions->getGamestates();
 	
 	$renderer = new prototypeRenderer();
-	$renderer->draw(1);
+	$renderer->draw($gamestates);
 
 	$tpl = new lrTemplate();
 	$tpl->load('game_index.tpl.html');
@@ -52,10 +53,19 @@
 	elseif ($gamestates['activePlayer'] == 2) $tpl->assign('bgcolor', '#ff0000');
 	elseif ($gamestates['activePlayer'] == 3) $tpl->assign('bgcolor', '#0000ff');
 	else $tpl->assign('bgcolor', '#000000');
+
+	$tpl->assign('bgcolor_p1', '#00ff00');
+	$tpl->assign('bgcolor_p2', '#ff0000');
+	$tpl->assign('bgcolor_p3', '#0000ff');
+	$tpl->assign('bgcolor_p4', '#ff6000');
+
+	$tpl->assign('moves_p1', count($gamefunctions->getMovement(1)));
+	$tpl->assign('moves_p2', count($gamefunctions->getMovement(2)));
+	$tpl->assign('moves_p3', count($gamefunctions->getMovement(3)));
+	$tpl->assign('moves_p4', count($gamefunctions->getMovement(4)));
+	
 	$tpl->show();
 
-	var_dump($gamestates);
-		
 	$debug->loadStylesheet('debug.css');
 	$debug->showInnerLoops = true;
 	$debug->showMiscInformation();
