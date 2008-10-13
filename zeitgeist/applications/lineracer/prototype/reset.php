@@ -43,7 +43,7 @@
 
 	$sql = "TRUNCATE TABLE race_moves";
 	$res = $database->query($sql);
-	$sql = "TRUNCATE TABLE gamecards_stack";
+	$sql = "TRUNCATE TABLE race_eventhandler";
 	$res = $database->query($sql);
 	$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('1', '1', '1', '150,370')";
 	$res = $database->query($sql);
@@ -53,7 +53,7 @@
 	$res = $database->query($sql);
 	$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('1', '4', '1', '210,370')";
 	$res = $database->query($sql);
-	$sql = "UPDATE races SET race_activeplayer='1' WHERE race_id='1'";
+	$sql = "UPDATE races SET race_currentround='1', race_activeplayer='1' WHERE race_id='1'";
 	$res = $database->query($sql);
 
 	$tpl = new lrTemplate();
