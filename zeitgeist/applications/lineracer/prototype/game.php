@@ -23,6 +23,7 @@
 
 	require_once('../classes/lrtemplate.class.php');
 //	require_once('classes/lrpregamefunctions.class.php');
+	require_once('../classes/lrgamecardfunctions.class.php');
 	require_once('../classes/lrgamefunctions.class.php');
 //	require_once('classes/lruserfunctions.class.php');
 	require_once('classes/prototyperenderer.class.php');
@@ -42,6 +43,8 @@
 	$gamefunctions = new lrGamefunctions();
 	$gamefunctions->loadGamestates(1);
 	$gamestates = $gamefunctions->getGamestates();
+	
+	$gamecardfunctions = new lrGamecardfunctions();
 	
 	$renderer = new prototypeRenderer();
 	$renderer->draw($gamestates);
@@ -63,6 +66,13 @@
 	$tpl->assign('moves_p2', count($gamefunctions->getMovement(2)));
 	$tpl->assign('moves_p3', count($gamefunctions->getMovement(3)));
 	$tpl->assign('moves_p4', count($gamefunctions->getMovement(4)));
+
+	if ($gamecardfunctions->checkRights('1', $gamestates['activePlayer'])) $tpl->assign('bgcolor_card1', '#ffff00');
+		else $tpl->assign('bgcolor_card1', '#cccc00');
+	if ($gamecardfunctions->checkRights('2', $gamestates['activePlayer'])) $tpl->assign('bgcolor_card2', '#ffff00');
+		else $tpl->assign('bgcolor_card2', '#cccc00');
+	if ($gamecardfunctions->checkRights('3', $gamestates['activePlayer'])) $tpl->assign('bgcolor_card3', '#ffff00');
+		else $tpl->assign('bgcolor_card3', '#cccc00');
 	
 	$tpl->show();
 

@@ -327,7 +327,17 @@ class lrGamefunctions
 			return false;
 		}
 		
-		if (!$gamecardData = $this->_getGamecardData($gamecard))
+		$gamecardfunctions = new lrGamecardfunctions();
+
+		if (!$gamecardfunctions->checkRights($gamecard, $this->currentGamestates['activePlayer']))
+		{
+			$this->debug->write('Could not play gamecard: no rights to play gamecard', 'warning');
+			$this->messages->setMessage('Could not play gamecard: no rights to play gamecard', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		if (!$gamecardData = $gamecardfunctions->getGamecardData($gamecard))
 		{
 			$this->debug->write('Could not play gamecard: gamecard not found', 'warning');
 			$this->messages->setMessage('Could not play gamecard: gamecard not found', 'warning');
@@ -339,6 +349,7 @@ class lrGamefunctions
 		
 		// TODO: player
 		$this->_saveRaceevent('1', $gamecard, $this->currentGamestates['activePlayer']+$gamecardData['gamecard_roundoffset']);
+		$gamecardfunctions->redeemGamecard($gamecard, $this->currentGamestates['activePlayer']);
 
 		$this->debug->unguard(true);
 		return true;
@@ -470,29 +481,6 @@ class lrGamefunctions
 		return $row;
 	}
 	
-	
-	// TODO: Richitg aufsetzen
-	protected function _getGamecardData($gamecard)
-	{
-		$this->debug->guard();
-
-		$sql = "SELECT * FROM gamecards WHERE gamecard_id='" . $gamecard . "'";
-		$res = $this->database->query($sql);
-		if (!$res)
-		{
-			$this->debug->write('Could not get gamecard data: gamecard not found', 'warning');
-			$this->messages->setMessage('Could not get gamecard data: gamecard not found', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-		
-		$row = $this->database->fetchArray($res);
-
-		$this->debug->unguard($row);
-		return $row;
-	}
-		
-
 	protected function _handleRaceevents()
 	{
 		$this->debug->guard();

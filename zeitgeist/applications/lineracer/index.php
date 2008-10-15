@@ -21,6 +21,7 @@
 
 	require_once('classes/lrtemplate.class.php');
 //	require_once('classes/lrpregamefunctions.class.php');
+	require_once('classes/lrgamecardfunctions.class.php');
 	require_once('classes/lrgamefunctions.class.php');
 	require_once('classes/lruserfunctions.class.php');
 
