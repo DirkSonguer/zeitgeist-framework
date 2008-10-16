@@ -11,11 +11,6 @@ class lrGamefunctions
 	protected $configuration;
 	protected $user;
 
-	protected $currentGamestates;
-	protected $currentRound;
-	protected $currentRace;
-	protected $currentCircuit;
-
 	public function __construct()
 	{
 		$this->debug = zgDebug::init();
@@ -24,11 +19,6 @@ class lrGamefunctions
 		$this->configuration = zgConfiguration::init();
 		$this->user = zgUserhandler::init();
 		
-		$this->currentGamestates = false;
-		$this->currentRound = 1;
-		$this->currentRace = false;
-		$this->currentCircuit = false;
-
 		$this->database = new zgDatabase();
 		$this->database->connect();
 	}
@@ -68,7 +58,7 @@ class lrGamefunctions
 		}
 
 		// temp storing gamedata
-		$this->currentGamestates = $currentGamedata;
+		$this->objects->storeObject('currentGamedata', $currentGamedata, true);
 		
 		// get vectors
 		for ($i=1; $i<=$currentGamedata['numPlayers']; $i++)
@@ -88,10 +78,11 @@ class lrGamefunctions
 		}
 		
 		// done loading
-		$this->currentGamestates = $currentGamedata;
+		$this->objects->storeObject('currentGamedata', $currentGamedata, true);
 		
-		// manipulate current gamestates
-		$this->_handleRaceevents();
+		// handle current game events and update the gamestates
+		$gameeventhandler = new lrGameeventhandler();
+		$gameeventhandler->handleRaceevents();
 
 		$this->debug->unguard(true);
 		return true;
@@ -102,7 +93,7 @@ class lrGamefunctions
 	{
 		$this->debug->guard();
 		
-		if (!is_array($this->currentGamestates))
+		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
 		{
 			$this->debug->write('Could not get gamestates: gamestates not loaded yet', 'warning');
 			$this->messages->setMessage('Could not get gamestates: gamestates not loaded yet', 'warning');
@@ -110,8 +101,8 @@ class lrGamefunctions
 			return false;
 		}
 
-		$this->debug->unguard($this->currentGamestates);
-		return $this->currentGamestates;
+		$this->debug->unguard($currentGamestates);
+		return $currentGamestates;
 	}
 
 
@@ -119,7 +110,7 @@ class lrGamefunctions
 	{
 		$this->debug->guard();
 		
-		if ( (!$this->currentGamestates) || (!$this->currentRace) )
+		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
 		{
 			$this->debug->write('Could not move player: gamestates are not loaded', 'warning');
 			$this->messages->setMessage('Could not move player: gamestates are not loaded', 'warning');
@@ -152,7 +143,8 @@ class lrGamefunctions
 			return false;
 		}
 		
-		$this->_saveGamestates($this->currentRace, $this->currentGamestates['activePlayer'], '1', $correctedMove[0].','.$correctedMove[1]);
+		// TODO: 1 = movement. use constant
+		$this->_saveGamestates('1', $correctedMove[0].','.$correctedMove[1]);
 
 		$this->debug->unguard(true);
 		return true;
@@ -175,7 +167,7 @@ class lrGamefunctions
 	{
 		$this->debug->guard();
 
-		if ( (!$this->currentGamestates) || (!$this->currentRace) )
+		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
 		{
 			$this->debug->write('Could not move player: gamestates are not loaded', 'warning');
 			$this->messages->setMessage('Could not move player: gamestates are not loaded', 'warning');
@@ -183,8 +175,8 @@ class lrGamefunctions
 			return false;
 		}
 
-		$lastMove = $this->getMovement($this->currentGamestates['activePlayer'],-1);
-		$currentVector = $this->currentGamestates['playerdata'][$this->currentGamestates['activePlayer']]['vector'];
+		$lastMove = $this->getMovement(-1);
+		$currentVector = $currentGamestates['playerdata'][$currentGamestates['activePlayer']]['vector'];
 
 		$minX = $lastMove[0]+$currentVector[0]-20;
 		$maxX = $lastMove[0]+$currentVector[0]+20;
@@ -206,15 +198,7 @@ class lrGamefunctions
 	{
 		$this->debug->guard();
 
-		if ( (!$this->currentGamestates) || (!$this->currentRace) )
-		{
-			$this->debug->write('Could not move player: gamestates are not loaded', 'warning');
-			$this->messages->setMessage('Could not move player: gamestates are not loaded', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-		
-		$lastMove = $this->getMovement($this->currentGamestates['activePlayer'],-1);
+		$lastMove = $this->getMovement(-1);
 		$fromX = $lastMove[0];
 		$fromY = $lastMove[1];
 
@@ -254,7 +238,8 @@ class lrGamefunctions
 					$correctedMove[1] = $terrain[$key][2] + (($lastMove[1] - $terrain[$key][2])*5);
 				}
 				
-				$this->_saveRaceevent('2', '1', $this->currentGamestates['activePlayer'], $this->currentRound+1);
+				$gameeventhandler = new lrGameeventhandler();
+				$gameeventhandler->saveRaceevent('2', '1', +1);
 				
 //				echo "move: ".$moveX.",".$moveY." hit at ".$terrain[$key][1].",".$terrain[$key][2]." corrected to: ".$correctedMove[0].",".$correctedMove[1]."<br />";
 
@@ -268,11 +253,11 @@ class lrGamefunctions
 	}
 
 	
-	public function getMovement($player, $history=0)
+	public function getMovement($history=0)
 	{
 		$this->debug->guard();
 		
-		if (!$this->currentGamestates)
+		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
 		{
 			$this->debug->write('Could not move player: gamestates are not loaded', 'warning');
 			$this->messages->setMessage('Could not move player: gamestates are not loaded', 'warning');
@@ -280,8 +265,10 @@ class lrGamefunctions
 			return false;
 		}
 
+		$player = $currentGamestates['activePlayer'];
+
 		$movement = array();
-		foreach ($this->currentGamestates['playerdata'][$player]['moves'] as $move)
+		foreach ($currentGamestates['playerdata'][$player]['moves'] as $move)
 		{
 			if ($move[0] == '1')
 			{
@@ -311,7 +298,7 @@ class lrGamefunctions
 	{
 		$this->debug->guard();
 		
-		if ( (!$this->currentGamestates) || (!$this->currentRace) )
+		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
 		{
 			$this->debug->write('Could not play gamecard: gamestates are not loaded', 'warning');
 			$this->messages->setMessage('Could not play gamecard: gamestates are not loaded', 'warning');
@@ -328,8 +315,7 @@ class lrGamefunctions
 		}
 		
 		$gamecardfunctions = new lrGamecardfunctions();
-
-		if (!$gamecardfunctions->checkRights($gamecard, $this->currentGamestates['activePlayer']))
+		if (!$gamecardfunctions->checkRights($gamecard))
 		{
 			$this->debug->write('Could not play gamecard: no rights to play gamecard', 'warning');
 			$this->messages->setMessage('Could not play gamecard: no rights to play gamecard', 'warning');
@@ -345,22 +331,24 @@ class lrGamefunctions
 			return false;
 		}
 
-		$this->_saveGamestates($this->currentRace, $this->currentGamestates['activePlayer'], '3', $gamecard);
+		// TODO: 3 = gamecard. use constant
+		$this->_saveGamestates('3', $gamecard);
 		
-		// TODO: player
-		$this->_saveRaceevent('1', $gamecard, $this->currentGamestates['activePlayer']+$gamecardData['gamecard_roundoffset']);
-		$gamecardfunctions->redeemGamecard($gamecard, $this->currentGamestates['activePlayer']);
+		// TODO: player, round
+		$gameeventhandler = new lrGameeventhandler();
+		$gameeventhandler->saveRaceevent('1', $gamecard, $currentGamestates['activePlayer']+$gamecardData['gamecard_roundoffset']);
+		$gamecardfunctions->redeemGamecard($gamecard);
 
 		$this->debug->unguard(true);
 		return true;
 	}
 	
 
-	protected function _saveGamestates($raceid, $player, $action, $parameter)
+	protected function _saveGamestates($action, $parameter)
 	{
 		$this->debug->guard();
 
-		if ( (!$this->currentGamestates) || (!$this->currentRace) )
+		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
 		{
 			$this->debug->write('Could not move player: gamestates are not loaded', 'warning');
 			$this->messages->setMessage('Could not move player: gamestates are not loaded', 'warning');
@@ -373,11 +361,11 @@ class lrGamefunctions
 
 		if ($action == 1)
 		{
-			$sql = "DELETE FROM race_eventhandler WHERE raceevent_race='" . $this->currentRace . "' AND raceevent_player='" . $this->currentGamestates['activePlayer'] . "' AND raceevent_round='" . $this->currentRound . "'";
+			$sql = "DELETE FROM race_eventhandler WHERE raceevent_race='" . $this->currentRace . "' AND raceevent_player='" . $currentGamestates['activePlayer'] . "' AND raceevent_round='" . $this->currentRound . "'";
 			$res = $this->database->query($sql);
 
 			$player++;
-			if ($player > $this->currentGamestates['numPlayers'])
+			if ($player > $currentGamestates['numPlayers'])
 			{
 				$player = 1;
 				$this->currentRound += 1;
@@ -393,28 +381,6 @@ class lrGamefunctions
 	}
 	
 	
-	protected function _saveRaceevent($action, $parameter, $player, $round=0)
-	{
-		$this->debug->guard();
-
-		if (!$this->currentRace)
-		{
-			$this->debug->write('Could save race event: gamestates are not loaded', 'warning');
-			$this->messages->setMessage('Could save race event: gamestates are not loaded', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-		
-		if ($round == 0) $round = $this->currentRound;
-
-		$sql = "INSERT INTO race_eventhandler(raceevent_race, raceevent_round, raceevent_action, raceevent_parameter, raceevent_player) VALUES('" . $this->currentRace . "', '" . $round . "', '" . $action . "', '" . $parameter . "', '" . $player . "')";
-		$res = $this->database->query($sql);
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-
 	protected function _checkTerrainType($fromX, $fromY, $toX, $toY)
 	{
 		$this->debug->guard();
@@ -479,56 +445,6 @@ class lrGamefunctions
 
 		$this->debug->unguard($row);
 		return $row;
-	}
-	
-	protected function _handleRaceevents()
-	{
-		$this->debug->guard();
-		
-		if ( (!$this->currentGamestates) || (!$this->currentRace) )
-		{
-			$this->debug->write('Could not move player: gamestates are not loaded', 'warning');
-			$this->messages->setMessage('Could not move player: gamestates are not loaded', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$sql = "SELECT * FROM race_eventhandler WHERE raceevent_race='" . $this->currentRace . "' AND raceevent_round='" . $this->currentRound . "' AND raceevent_player='" . $this->currentGamestates['activePlayer'] . "'";
-		$res = $this->database->query($sql);
-		
-		$activeevents = array();
-		while ($row = $this->database->fetchArray($res))
-		{
-			$activeevents[$row['raceevent_action']] = $row['raceevent_parameter'];
-		}
-		
-		foreach ($activeevents as $action => $parameter)
-		{
-			if ($action == '1')
-			{
-				switch ($parameter)
-				{
-					case 2:
-						$this->currentGamestates['playerdata'][$this->currentGamestates['activePlayer']]['vector'][0] *= 2;
-						$this->currentGamestates['playerdata'][$this->currentGamestates['activePlayer']]['vector'][1] *= 2;
-						break;
-
-					case 3:
-						$this->currentGamestates['playerdata'][$this->currentGamestates['activePlayer']]['vector'][0] = 0;
-						$this->currentGamestates['playerdata'][$this->currentGamestates['activePlayer']]['vector'][1] = 0;
-						break;
-				}
-			}
-
-			if ($action == '2')
-			{
-				$this->currentGamestates['playerdata'][$this->currentGamestates['activePlayer']]['vector'][0] = 0;
-				$this->currentGamestates['playerdata'][$this->currentGamestates['activePlayer']]['vector'][1] = 0;
-			}
-		}
-
-		$this->debug->unguard(true);
-		return true;		
 	}
 
 }
