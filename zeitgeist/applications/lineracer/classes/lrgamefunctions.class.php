@@ -24,6 +24,56 @@ class lrGamefunctions
 	}
 
 
+	public function playGamecard($gamecard)
+	{
+		$this->debug->guard();
+		
+		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
+		{
+			$this->debug->write('Could not play gamecard: gamestates are not loaded', 'warning');
+			$this->messages->setMessage('Could not play gamecard: gamestates are not loaded', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		if (!$this->validateTurn())
+		{
+			$this->debug->write('Could not play gamecard: it is another players turn', 'warning');
+			$this->messages->setMessage('Could not play gamecard: it is another players turn', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$gamecardfunctions = new lrGamecardfunctions();
+		if (!$gamecardfunctions->checkRights($gamecard, $currentGamestates['activePlayer']))
+		{
+			$this->debug->write('Could not play gamecard: no rights to play gamecard', 'warning');
+			$this->messages->setMessage('Could not play gamecard: no rights to play gamecard', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		if (!$gamecardData = $gamecardfunctions->getGamecardData($gamecard))
+		{
+			$this->debug->write('Could not play gamecard: gamecard not found', 'warning');
+			$this->messages->setMessage('Could not play gamecard: gamecard not found', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		// TODO: 3 = gamecard. use constant
+		$this->_saveGamestates('3', $gamecard);
+		
+		// TODO: player, round
+		$gameeventhandler = new lrGameeventhandler();
+		$gameeventhandler->saveRaceevent('1', $gamecard, $currentGamestates['activePlayer']+$gamecardData['gamecard_roundoffset']);
+		$gamecardfunctions->redeemGamecard($gamecard);
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
 	public function loadGamestates($raceid)
 	{
 		$this->debug->guard();
