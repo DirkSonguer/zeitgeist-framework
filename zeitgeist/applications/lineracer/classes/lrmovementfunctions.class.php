@@ -2,7 +2,7 @@
 
 defined('LINERACER_ACTIVE') or die();
 
-class lrGamefunctions
+class lrMovementfunctions
 {
 	protected $debug;
 	protected $messages;
@@ -23,51 +23,6 @@ class lrGamefunctions
 		$this->database->connect();
 	}
 
-
-	public function move($moveX, $moveY)
-	{
-		$this->debug->guard();
-		
-		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
-		{
-			$this->debug->write('Could not move player: gamestates are not loaded', 'warning');
-			$this->messages->setMessage('Could not move player: gamestates are not loaded', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-		
-		if (!$this->validateTurn())
-		{
-			$this->debug->write('Could not move player: it is another players turn', 'warning');
-			$this->messages->setMessage('Could not move player: it is another players turn', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		if (!$this->validateMove($moveX, $moveY))
-		{
-			$this->debug->write('Could not move player: player moved outside its allowed area', 'warning');
-			$this->messages->setMessage('Could not move player: player moved outside its allowed area', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$correctedMove = array();
-		if (!$correctedMove = $this->validateTerrain($moveX, $moveY))
-		{
-			$this->debug->write('Could not move player: validating line failed', 'warning');
-			$this->messages->setMessage('Could not move player: validating line failed', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-		
-		// TODO: 1 = movement. use constant
-		$this->_saveGamestates('1', $correctedMove[0].','.$correctedMove[1]);
-
-		$this->debug->unguard(true);
-		return true;
-	}
-	
 
 	public function validateMove($moveX, $moveY)
 	{
@@ -111,14 +66,14 @@ class lrGamefunctions
 		$terrain = array();
 		$terrain = $this->_checkTerrainType($fromX, $fromY, $moveX, $moveY);
 
-/*
+///*
 		echo "from: ".$fromX.",".$fromY." to: ".$moveX.",".$moveY."<br />";
 		foreach($terrain as $step)
 		{
 			echo $step[0];
 		}
 		echo "<br />";
-*/
+//*/
 
 		$correctedMove = array();
 		$correctedMove[0] = $moveX;
@@ -242,7 +197,6 @@ class lrGamefunctions
 		$this->debug->unguard($terrainData);
 		return $terrainData;
 	}
-
 
 
 	// TODO: Richitg aufsetzen
