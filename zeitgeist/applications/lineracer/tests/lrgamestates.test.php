@@ -23,34 +23,67 @@ class testLrgamestates extends UnitTestCase
 		$this->database->query('TRUNCATE TABLE users_to_gamecards');
 
 		$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('1', '1', '1', '150,370')";
-		$res = $database->query($sql);
+		$res = $this->database->query($sql);
 		$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('1', '2', '1', '170,370')";
-		$res = $database->query($sql);
+		$res = $this->database->query($sql);
 		$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('1', '3', '1', '190,370')";
-		$res = $database->query($sql);
+		$res = $this->database->query($sql);
 		$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('1', '4', '1', '210,370')";
-		$res = $database->query($sql);
+		$res = $this->database->query($sql);
 		$sql = "INSERT INTO races(race_player1, race_player2, race_player3, race_player4, race_circuit, race_activeplayer, race_currentround, race_gamecardsallowed)";
 		$sql .= "VALUES(1, 2, 3, 4, 1, 1, 1, 0)";
-		$res = $database->query($sql);
+		$res = $this->database->query($sql);
 	}
 
 
-	function test_load()
+	function test_loadGamestates()
 	{
 		$gamestates = new lrGamestates();
 		
-		$ret = $gamestates->load(0);
+		$this->createNewGame();
+		
+		$ret = $gamestates->loadGamestates(0);
 		$this->assertFalse($ret);
 
-		$ret = $gamestates->load(1);
+		$ret = $gamestates->loadGamestates(1);
+		$this->assertTrue($ret);
+
+		$objects = zgObjectcache::init();
+		$ret = $objects->getObject('currentGamestates');
+		$this->assertTrue(is_array($ret));		
+		$this->assertEqual($ret['activePlayer'], '1');		
+		$this->assertEqual($ret['numPlayers'], '4');		
+		$this->assertEqual($ret['playerdata'][1]['moves'][0][1], '150,370');		
+		$this->assertEqual($ret['playerdata'][1]['vector'][0], '0');
+	}
+
+
+	function test_saveGameaction()
+	{
+		$gamestates = new lrGamestates();
+		
+		$this->createNewGame();
+		
+		$ret = $gamestates->loadGamestates(1);
+		$this->assertTrue($ret);
+
+		$ret = $gamestates->saveGameaction('1', '150,200');
+		$this->assertTrue($ret);
+
+		$ret = $gamestates->saveGameaction('1', '170,200');
+		$this->assertTrue($ret);
+
+		$ret = $gamestates->loadGamestates(1);
 		$this->assertTrue($ret);
 
 		$objects = zgObjectcache::init();
 		$ret = $objects->getObject('currentGamestates');
 		var_dump($ret);
-		$this->assertTrue(is_array($ret));		
+		$this->assertTrue(is_array($ret));
+		$this->assertEqual($ret['playerdata'][1]['moves'][1][1], '150,200');		
+		$this->assertEqual($ret['playerdata'][1]['vector'][1], '0');
 	}
+
 }
 
 ?>
