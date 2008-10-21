@@ -28,12 +28,12 @@ class lrGamefunctions
 	{
 		$this->debug->guard();
 
-		$currentGamedata = $this->getGamestates();
+		$currentGamestates = $this->getGamestates();
 
 		$moves = array();
-		$moves = $currentGamedata['players'][$currentGamedata['activePlayer']]['moves'];
+		$moves = $currentGamestates['players'][$currentGamestates['activePlayer']]['moves'];
 		$lastMove = $moves[count($moves)-1];
-		$currentVector = $currentGamedata['players'][$currentGamedata['activePlayer']]['vector'];
+		$currentVector = $currentGamestates['players'][$currentGamestates['activePlayer']]['vector'];
 
 		$minX = $lastMove[0]+$currentVector[0]-20;
 		$maxX = $lastMove[0]+$currentVector[0]+20;
@@ -60,23 +60,23 @@ class lrGamefunctions
 		$res = $this->database->query($sql);
 		$row = $this->database->fetchArray($res);
 
-		$currentGamedata = array();
+		$currentGamestates = array();
 
 		if ($row['racedata_active'] != '')
 		{
-			$currentGamedata['activePlayer'] = $row['racedata_active'];
+			$currentGamestates['activePlayer'] = $row['racedata_active'];
 		}
 		else
 		{
-			$currentGamedata['activePlayer'] = 1;
+			$currentGamestates['activePlayer'] = 1;
 		}
 
-		if ($row['race_player4'] != '') $currentGamedata['numPlayers'] = 4;
-			elseif ($row['race_player3'] != '') $currentGamedata['numPlayers'] = 3;
-			elseif ($row['race_player2'] != '') $currentGamedata['numPlayers'] = 2;
-			else $currentGamedata['numPlayers'] = 1;
+		if ($row['race_player4'] != '') $currentGamestates['numPlayers'] = 4;
+			elseif ($row['race_player3'] != '') $currentGamestates['numPlayers'] = 3;
+			elseif ($row['race_player2'] != '') $currentGamestates['numPlayers'] = 2;
+			else $currentGamestates['numPlayers'] = 1;
 
-		for ($i=1; $i<=$currentGamedata['numPlayers']; $i++)
+		for ($i=1; $i<=$currentGamestates['numPlayers']; $i++)
 		{
 			$positionString = $row['racedata_position'.$i];
 			$positionsArray = explode(';', $positionString);
@@ -84,35 +84,35 @@ class lrGamefunctions
 			$startPosition = explode(',', $row['circuit_startposition']);
 			$moves[0] = $startPosition[0]+($i*20);
 			$moves[1] = $startPosition[1];
-			$currentGamedata['players'][$i]['moves'] = array($moves);
+			$currentGamestates['players'][$i]['moves'] = array($moves);
 
 			if ($positionsArray[0] != '')
 			{
 				foreach($positionsArray as $move)
 				{
 					$movePosition = explode(',', $move);
-					$currentGamedata['players'][$i]['moves'][] = array($movePosition[0], $movePosition[1]);
+					$currentGamestates['players'][$i]['moves'][] = array($movePosition[0], $movePosition[1]);
 				}
 			}
 
-			$currentGamedata['players'][$i]['movecount'] = count($currentGamedata['players'][$i]['moves']);
+			$currentGamestates['players'][$i]['movecount'] = count($currentGamestates['players'][$i]['moves']);
 
 			$currentVector = $row['racedata_vector'.$i];
 			$currentVector = explode(',', $currentVector);
 			if (is_array($currentVector))
 			{
-				$currentGamedata['players'][$i]['vector'][0] = $currentVector[0];
-				$currentGamedata['players'][$i]['vector'][1] = $currentVector[1];
+				$currentGamestates['players'][$i]['vector'][0] = $currentVector[0];
+				$currentGamestates['players'][$i]['vector'][1] = $currentVector[1];
 			}
 			else
 			{
-				$currentGamedata['players'][$i]['vector'][0] = 0;
-				$currentGamedata['players'][$i]['vector'][1] = 1;
+				$currentGamestates['players'][$i]['vector'][0] = 0;
+				$currentGamestates['players'][$i]['vector'][1] = 1;
 			}
 		}
 
-		$this->debug->unguard($currentGamedata);
-		return $currentGamedata;
+		$this->debug->unguard($currentGamestates);
+		return $currentGamestates;
 	}
 
 
@@ -120,22 +120,22 @@ class lrGamefunctions
 	{
 		$this->debug->guard();
 
-		$currentGamedata = $this->getGamestates();
-		$currentGamedata['players'][$currentGamedata['activePlayer']]['moves'][] = array($currentMove[0], $currentMove[1]);
+		$currentGamestates = $this->getGamestates();
+		$currentGamestates['players'][$currentGamestates['activePlayer']]['moves'][] = array($currentMove[0], $currentMove[1]);
 
-		if (count($currentGamedata['players'][$currentGamedata['activePlayer']]['moves']) > 1)
+		if (count($currentGamestates['players'][$currentGamestates['activePlayer']]['moves']) > 1)
 		{
-			$moves = $currentGamedata['players'][$currentGamedata['activePlayer']]['moves'];
+			$moves = $currentGamestates['players'][$currentGamestates['activePlayer']]['moves'];
 			$newVector = array();
 			$newVector[0] = $moves[count($moves)-1][0] - $moves[count($moves)-2][0];
 			$newVector[1] = $moves[count($moves)-1][1] - $moves[count($moves)-2][1];
-			$currentGamedata['players'][$currentGamedata['activePlayer']]['vector'][0] = $newVector[0];
-			$currentGamedata['players'][$currentGamedata['activePlayer']]['vector'][1] = $newVector[1];
+			$currentGamestates['players'][$currentGamestates['activePlayer']]['vector'][0] = $newVector[0];
+			$currentGamestates['players'][$currentGamestates['activePlayer']]['vector'][1] = $newVector[1];
 		}
 		else
 		{
-			$currentGamedata['players'][$currentGamedata['activePlayer']]['vector'][0] = 0;
-			$currentGamedata['players'][$currentGamedata['activePlayer']]['vector'][1] = 0;
+			$currentGamestates['players'][$currentGamestates['activePlayer']]['vector'][0] = 0;
+			$currentGamestates['players'][$currentGamestates['activePlayer']]['vector'][1] = 0;
 		}
 
 		$circuitnegative = imagecreatefromjpeg('testdata/circuit1_negative.jpg');
@@ -144,13 +144,13 @@ class lrGamefunctions
 		$colorarray = imagecolorsforindex($circuitnegative, $pixelcolor);
 		if ( ($colorarray['red'] == 0) && ($colorarray['green'] == 0) && ($colorarray['blue'] == 0) )
 		{
-			$currentGamedata['players'][$currentGamedata['activePlayer']]['vector'][0] = 0;
-			$currentGamedata['players'][$currentGamedata['activePlayer']]['vector'][1] = 0;
+			$currentGamestates['players'][$currentGamestates['activePlayer']]['vector'][0] = 0;
+			$currentGamestates['players'][$currentGamestates['activePlayer']]['vector'][1] = 0;
 		}
 
-		$currentGamedata['players'][$currentGamedata['activePlayer']]['movecount'] += 1;
+		$currentGamestates['players'][$currentGamestates['activePlayer']]['movecount'] += 1;
 
-		if (!$this->_saveGamestates($currentGamedata))
+		if (!$this->_saveGamestates($currentGamestates))
 		{
 			$this->debug->unguard(false);
 			return false;
@@ -161,18 +161,18 @@ class lrGamefunctions
 	}
 
 
-	private function _saveGamestates($currentGamedata = array())
+	private function _saveGamestates($currentGamestates = array())
 	{
 		$this->debug->guard();
 
-		$nextPlayer = $currentGamedata['activePlayer'] + 1;
-		if ($nextPlayer > $currentGamedata['numPlayers'])
+		$nextPlayer = $currentGamestates['activePlayer'] + 1;
+		if ($nextPlayer > $currentGamestates['numPlayers'])
 		{
 			$nextPlayer = 1;
 		}
 
 		$movestring = '';
-		foreach ($currentGamedata['players'][$currentGamedata['activePlayer']]['moves'] as $index => $move)
+		foreach ($currentGamestates['players'][$currentGamestates['activePlayer']]['moves'] as $index => $move)
 		{
 			if ($index > 0)
 			{
@@ -182,8 +182,8 @@ class lrGamefunctions
 
 		$movestring = substr($movestring, 0, -1);
 
-		$vector = $currentGamedata['players'][$currentGamedata['activePlayer']]['vector'];
-		$sql = "UPDATE racedata SET racedata_vector".$currentGamedata['activePlayer']."='" . $vector[0] . "," .$vector[1] . "', racedata_position".$currentGamedata['activePlayer']."='".$movestring."', racedata_active='".$nextPlayer."' WHERE racedata_id='1'";
+		$vector = $currentGamestates['players'][$currentGamestates['activePlayer']]['vector'];
+		$sql = "UPDATE racedata SET racedata_vector".$currentGamestates['activePlayer']."='" . $vector[0] . "," .$vector[1] . "', racedata_position".$currentGamestates['activePlayer']."='".$movestring."', racedata_active='".$nextPlayer."' WHERE racedata_id='1'";
 
 		$res = $this->database ->query($sql);
 		if (!$res)

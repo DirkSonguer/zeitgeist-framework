@@ -24,14 +24,14 @@ class lrGamestates
 	}
 
 
-	public function load($raceid)
+	public function loadGamestates($raceid)
 	{
 		$this->debug->guard();
 
 		$movementfunctions = new lrMovementfunctions();
 		
 		$this->currentRace = $raceid;
-		$currentGamedata = array();
+		$currentGamestates = array();
 
 		// get race data from database
 		$sql = "SELECT * FROM races r LEFT JOIN circuits c ON r.race_circuit = c.circuit_id WHERE r.race_id='" . $raceid . "'";
@@ -46,48 +46,49 @@ class lrGamestates
 		}
 
 		// fill structure
-		$this->currentCircuit = $row['race_circuit'];
-		$this->currentRound = $row['race_currentround'];
-		$currentGamedata['activePlayer'] = $row['race_activeplayer'];
-		$currentGamedata['numPlayers'] = 0;
-		if ($row['race_player4'] != '') $currentGamedata['numPlayers'] = 4;
-		elseif ($row['race_player3'] != '') $currentGamedata['numPlayers'] = 3;
-		elseif ($row['race_player2'] != '') $currentGamedata['numPlayers'] = 2;
-		else $currentGamedata['numPlayers'] = 1;
+		$currentGamestates['currentRace'] = $raceid;
+		$currentGamestates['currentCircuit'] = $row['race_circuit'];
+		$currentGamestates['currentRound'] = $row['race_currentround'];
+		$currentGamestates['activePlayer'] = $row['race_activeplayer'];
+		$currentGamestates['numPlayers'] = 0;
+		if ($row['race_player4'] != '') $currentGamestates['numPlayers'] = 4;
+		elseif ($row['race_player3'] != '') $currentGamestates['numPlayers'] = 3;
+		elseif ($row['race_player2'] != '') $currentGamestates['numPlayers'] = 2;
+		else $currentGamestates['numPlayers'] = 1;
 
 		// get moves from database
-		$sql = "SELECT * FROM race_moves WHERE move_race='" . $raceid . "' ORDER BY move_id";
+		$sql = "SELECT * FROM race_moves WHERE move_race='" . $raceid . "'AND move_action='1' ORDER BY move_id";
 		$res = $this->database->query($sql);
 
-		$currentGamedata['playerdata'] = array();
+		$currentGamestates['playerdata'] = array();
 		while($row = $this->database->fetchArray($res))
 		{
 			$position = explode(',',$row['move_parameter']);
-			$currentGamedata['playerdata'][$row['move_user']]['moves'][] = array($row['move_action'], $row['move_parameter']);
+			$currentGamestates['playerdata'][$row['move_user']]['moves'][] = array($row['move_action'], $row['move_parameter']);
 		}
-
+		
 		// temp storing gamedata
-		$this->objects->storeObject('currentGamedata', $currentGamedata, true);
+		$this->objects->storeObject('currentGamestates', $currentGamestates, true);
 		
 		// get vectors
-		for ($i=1; $i<=$currentGamedata['numPlayers']; $i++)
+		for ($i=1; $i<=$currentGamestates['numPlayers']; $i++)
 		{
-			if (count($movementfunctions->getMovement($currentGamedata['activePlayer'])) > 1)
+			if (count($movementfunctions->getMovement($currentGamestates['activePlayer'])) > 1)
 			{
 				$lastMove = $this->getMovement($i,-1);
 				$moveBefore = $this->getMovement($i,-2);
-				$currentGamedata['playerdata'][$i]['vector'][0] = $lastMove[0] - $moveBefore[0];
-				$currentGamedata['playerdata'][$i]['vector'][1] = $lastMove[1] - $moveBefore[1];
+				$currentGamestates['playerdata'][$i]['vector'][0] = $lastMove[0] - $moveBefore[0];
+				$currentGamestates['playerdata'][$i]['vector'][1] = $lastMove[1] - $moveBefore[1];
 			}
 			else
 			{
-				$currentGamedata['playerdata'][$i]['vector'][0] = 0;
-				$currentGamedata['playerdata'][$i]['vector'][1] = 0;
+				$currentGamestates['playerdata'][$i]['vector'][0] = 0;
+				$currentGamestates['playerdata'][$i]['vector'][1] = 0;
 			}
 		}
 		
 		// done loading
-		$this->objects->storeObject('currentGamedata', $currentGamedata, true);
+		$this->objects->storeObject('currentGamestates', $currentGamestates, true);
 		
 		// handle current game events and update the gamestates
 		$gameeventhandler = new lrGameeventhandler();
@@ -98,37 +99,39 @@ class lrGamestates
 	}
 	
 	
-	protected function _save($action, $parameter)
+	public function saveGameaction($action, $parameter)
 	{
 		$this->debug->guard();
 
 		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
 		{
-			$this->debug->write('Could not move player: gamestates are not loaded', 'warning');
-			$this->messages->setMessage('Could not move player: gamestates are not loaded', 'warning');
+			$this->debug->write('Could not save gameaction: gamestates are not loaded', 'warning');
+			$this->messages->setMessage('Could not save gameaction: gamestates are not loaded', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
 
-		$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('" . $raceid . "', '" . $player . "', '" . $action . "', '" . $parameter . "')";
+		$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('" . $currentGamestates['currentRace'] . "', '" . $currentGamestates['activePlayer'] . "', '" . $action . "', '" . $parameter . "')";
 		$res = $this->database->query($sql);
 
 		if ($action == 1)
 		{
-			$sql = "DELETE FROM race_eventhandler WHERE raceevent_race='" . $this->currentRace . "' AND raceevent_player='" . $currentGamestates['activePlayer'] . "' AND raceevent_round='" . $this->currentRound . "'";
+			$sql = "DELETE FROM race_eventhandler WHERE raceevent_race='" . $currentGamestates['currentRace'] . "' AND raceevent_player='" . $currentGamestates['activePlayer'] . "' AND raceevent_round='" . $currentGamestates['currentRound'] . "'";
 			$res = $this->database->query($sql);
 
-			$player++;
-			if ($player > $currentGamestates['numPlayers'])
+			$currentGamestates['activePlayer'] += 1;
+			if ($currentGamestates['activePlayer'] > $currentGamestates['numPlayers'])
 			{
-				$player = 1;
-				$this->currentRound += 1;
+				$currentGamestates['activePlayer'] = 1;
+				$currentGamestates['$currentRound'] += 1;
 			}
 
-			$currentround = ", race_currentround='" . $this->currentRound . "'";			
-			$sql = "UPDATE races SET race_activeplayer='" . $player . "'" . $currentround . "  WHERE race_id='" . $raceid . "'";
+			$currentround = ", race_currentround='" . $currentGamestates['$currentRound'] . "'";			
+			$sql = "UPDATE races SET race_activeplayer='" . $currentGamestates['activePlayer'] . "'" . $currentGamestates['currentRound'] . "  WHERE race_id='" . $currentGamestates['currentRace'] . "'";
 			$res = $this->database->query($sql);
 		}
+		
+		$this->objects->storeObject('currentGamestates', $currentGamestates, true);
 		
 		$this->debug->unguard(true);
 		return true;

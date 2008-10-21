@@ -61,15 +61,15 @@ class game
 		$colorRed = imagecolorallocate($circuit, 255, 0, 0);
 		$colorGray = imagecolorallocate($circuit, 230, 220, 220);
 
-		$currentGamedata = array();
+		$currentGamestates = array();
 		$gamefunctions = new lrGamefunctions;
-		$currentGamedata = $gamefunctions->getGamestates();
+		$currentGamestates = $gamefunctions->getGamestates();
 
 		$sql = "SELECT * FROM racedata rd LEFT JOIN races r ON rd.racedata_race = r.race_id LEFT JOIN circuits c ON r.race_circuit = c.circuit_id WHERE rd.racedata_id='1'";
 		$res = $this->database->query($sql);
 		$row = $this->database->fetchArray($res);
 
-		for ($j=1; $j<=$currentGamedata['numPlayers']; $j++)
+		for ($j=1; $j<=$currentGamestates['numPlayers']; $j++)
 		{
 			if ($j == 1) $currentColor = $colorGreen;
 			if ($j == 2) $currentColor = $colorRed;

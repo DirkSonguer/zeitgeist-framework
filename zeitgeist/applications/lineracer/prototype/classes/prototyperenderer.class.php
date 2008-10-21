@@ -24,7 +24,7 @@ class prototypeRenderer
 	}
 
 
-	public function draw($currentGamedata)
+	public function draw($currentGamestates)
 	{
 		$offset = 20;
 		
@@ -38,14 +38,14 @@ class prototypeRenderer
 		$colorRed = imagecolorallocate($circuit, 255, 0, 0);
 		$colorGray = imagecolorallocate($circuit, 230, 220, 220);
 
-		for ($j=1; $j<=$currentGamedata['numPlayers']; $j++)
+		for ($j=1; $j<=$currentGamestates['numPlayers']; $j++)
 		{
 			if ($j == 1) $currentColor = $colorGreen;
 			if ($j == 2) $currentColor = $colorRed;
 			if ($j == 3) $currentColor = $colorBlue;
 			if ($j == 4) $currentColor = $colorYellow;
 
-			$currentMoves = $currentGamedata['playerdata'][$j]['moves'];
+			$currentMoves = $currentGamestates['playerdata'][$j]['moves'];
 			
 			$lastPosition = array(0,0);
 			foreach ($currentMoves as $move)
@@ -59,10 +59,10 @@ class prototypeRenderer
 				}
 			}
 
-			if ($currentGamedata['activePlayer'] == $j)
+			if ($currentGamestates['activePlayer'] == $j)
 			{
-				$vect[0] = $currentPosition[0] + $currentGamedata['playerdata'][$j]['vector'][0];
-				$vect[1] = $currentPosition[1] + $currentGamedata['playerdata'][$j]['vector'][1];
+				$vect[0] = $currentPosition[0] + $currentGamestates['playerdata'][$j]['vector'][0];
+				$vect[1] = $currentPosition[1] + $currentGamestates['playerdata'][$j]['vector'][1];
 				imageRectangle($circuit, $vect[0]-$offset, $vect[1]-$offset, $vect[0]+$offset, $vect[1]+$offset, $currentColor);
 				imageRectangle($circuit, $vect[0]-$offset+1, $vect[1]-$offset+1, $vect[0]+$offset+1, $vect[1]+$offset+1, $currentColor);
 			}
