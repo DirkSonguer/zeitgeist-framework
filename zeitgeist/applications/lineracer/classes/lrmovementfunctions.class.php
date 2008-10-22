@@ -58,22 +58,29 @@ class lrMovementfunctions
 	public function validateTerrain($moveX, $moveY)
 	{
 		$this->debug->guard();
-
+		
+		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
+		{
+			$this->debug->write('Could not move player: gamestates are not loaded', 'warning');
+			$this->messages->setMessage('Could not move player: gamestates are not loaded', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
 		$lastMove = $this->getMovement(-1);
 		$fromX = $lastMove[0];
 		$fromY = $lastMove[1];
 
 		$terrain = array();
 		$terrain = $this->_checkTerrainType($fromX, $fromY, $moveX, $moveY);
-
-///*
+/*
 		echo "from: ".$fromX.",".$fromY." to: ".$moveX.",".$moveY."<br />";
 		foreach($terrain as $step)
 		{
 			echo $step[0];
 		}
 		echo "<br />";
-//*/
+*/
 
 		$correctedMove = array();
 		$correctedMove[0] = $moveX;
@@ -100,7 +107,7 @@ class lrMovementfunctions
 				}
 				
 				$gameeventhandler = new lrGameeventhandler();
-				$gameeventhandler->saveRaceevent('2', '1', +1);
+				$gameeventhandler->saveRaceevent($currentGamestates['activePlayer'], '2', '1', $currentGamestates['currentRound']+1);
 				
 //				echo "move: ".$moveX.",".$moveY." hit at ".$terrain[$key][1].",".$terrain[$key][2]." corrected to: ".$correctedMove[0].",".$correctedMove[1]."<br />";
 
@@ -126,10 +133,8 @@ class lrMovementfunctions
 			return false;
 		}
 
-		$player = $currentGamestates['activePlayer'];
-
 		$movement = array();
-		foreach ($currentGamestates['playerdata'][$player]['moves'] as $move)
+		foreach ($currentGamestates['playerdata'][$currentGamestates['activePlayer']]['moves'] as $move)
 		{
 			if ($move[0] == '1')
 			{
@@ -204,7 +209,15 @@ class lrMovementfunctions
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT * FROM circuit_data WHERE circuitdata_circuit='" . $this->currentCircuit . "'";
+		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
+		{
+			$this->debug->write('Could not get circuit data: gamestates are not loaded', 'warning');
+			$this->messages->setMessage('Could not get circuit data: gamestates are not loaded', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$sql = "SELECT * FROM circuit_data WHERE circuitdata_circuit='" . $currentGamestates['currentCircuit'] . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{

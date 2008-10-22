@@ -78,7 +78,6 @@ class testLrgamestates extends UnitTestCase
 
 		$objects = zgObjectcache::init();
 		$ret = $objects->getObject('currentGamestates');
-		var_dump($ret);
 		$this->assertTrue(is_array($ret));
 		$this->assertEqual($ret['playerdata'][1]['moves'][1][1], '150,200');		
 		$this->assertEqual($ret['playerdata'][1]['vector'][1], '0');

@@ -24,7 +24,7 @@ class lrGameeventhandler
 	}
 
 
-	public function saveRaceevent($action, $parameter, $round=0)
+	public function saveRaceevent($player, $action, $parameter, $round=0)
 	{
 		$this->debug->guard();
 
@@ -36,9 +36,9 @@ class lrGameeventhandler
 			return false;
 		}
 		
-		if ($round == 0) $round = $this->currentRound;
+		if ($round == 0) $round = $currentGamestates['currentRound'];
 
-		$sql = "INSERT INTO race_eventhandler(raceevent_race, raceevent_round, raceevent_action, raceevent_parameter, raceevent_player) VALUES('" . $this->currentRace . "', '" . $round . "', '" . $action . "', '" . $parameter . "', '" . $player . "')";
+		$sql  = "INSERT INTO race_eventhandler(raceevent_race, raceevent_round, raceevent_action, raceevent_parameter, raceevent_player) VALUES('" . $currentGamestates['currentRace'] . "', '" . $round . "', '" . $action . "', '" . $parameter . "', '" . $player . "')";
 		$res = $this->database->query($sql);
 
 		$this->debug->unguard(true);
