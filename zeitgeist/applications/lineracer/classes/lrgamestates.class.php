@@ -127,7 +127,7 @@ class lrGamestates
 			}
 
 			$currentround = ", race_currentround='" . $currentGamestates['$currentRound'] . "'";			
-			$sql = "UPDATE races SET race_activeplayer='" . $currentGamestates['activePlayer'] . "'" . $currentGamestates['currentRound'] . "  WHERE race_id='" . $currentGamestates['currentRace'] . "'";
+			$sql = "UPDATE races SET race_activeplayer='" . $currentGamestates['activePlayer'] . "'" . $currentround . "  WHERE race_id='" . $currentGamestates['currentRace'] . "'";
 			$res = $this->database->query($sql);
 		}
 		

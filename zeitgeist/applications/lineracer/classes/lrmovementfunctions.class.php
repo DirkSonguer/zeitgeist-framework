@@ -39,10 +39,11 @@ class lrMovementfunctions
 		$lastMove = $this->getMovement(-1);
 		$currentVector = $currentGamestates['playerdata'][$currentGamestates['activePlayer']]['vector'];
 
-		$minX = $lastMove[0]+$currentVector[0]-20;
-		$maxX = $lastMove[0]+$currentVector[0]+20;
-		$minY = $lastMove[1]+$currentVector[1]-20;
-		$maxY = $lastMove[1]+$currentVector[1]+20;
+		$movementradius = $this->configuration->getConfiguration('gamedefinitions', 'gamelogic', 'movementradius');
+		$minX = $lastMove[0]+$currentVector[0]-$movementradius;
+		$maxX = $lastMove[0]+$currentVector[0]+$movementradius;
+		$minY = $lastMove[1]+$currentVector[1]-$movementradius;
+		$maxY = $lastMove[1]+$currentVector[1]+$movementradius;
 
 		if ( ($moveX < $minX) || ($moveX > $maxX) || ($moveY < $minY) || ($moveY > $maxY) )
 		{
@@ -105,13 +106,17 @@ class lrMovementfunctions
 					$correctedMove[0] = $terrain[$key][1] + (($lastMove[0] - $terrain[$key][1])*5);
 					$correctedMove[1] = $terrain[$key][2] + (($lastMove[1] - $terrain[$key][2])*5);
 				}
-				
+
+				// save event to clear vector				
 				$gameeventhandler = new lrGameeventhandler();
 				$gameeventhandler->saveRaceevent($currentGamestates['activePlayer'], '2', '1', $currentGamestates['currentRound']+1);
-				
+
+				// save crash to game moves
+				$gamestates = new lrGamestates();
+				$gamestates->saveGameaction('2', $moveX.",".$moveY);
+
 //				echo "move: ".$moveX.",".$moveY." hit at ".$terrain[$key][1].",".$terrain[$key][2]." corrected to: ".$correctedMove[0].",".$correctedMove[1]."<br />";
 
-				// TODO: Vector auf 0,0
 				break;
 			}
 		}
