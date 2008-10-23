@@ -41,12 +41,16 @@
 	$user = zgUserhandler::init();
 	$eventhandler = new zgEventhandler();
 	$locale = zgLocale::init();
+
+	// load configuration
+	$configuration->loadConfiguration('lineracer', '../configuration/lineracer.ini');
+	$configuration->loadConfiguration('gamedefinitions', '../configuration/gamedefinitions.ini');
 	
 	require_once('database.test.php');
+	require_once('lrgamestates.test.php');
 	require_once('lrgamecardfunctions.test.php');
 	require_once('lrmovementfunctions.test.php');
 	require_once('lrmovementfunctions.test.php');
-	require_once('lrgamestates.test.php');
 	require_once('lrgameeventhandler.test.php');
 	
 	$debug = zgDebug::init();

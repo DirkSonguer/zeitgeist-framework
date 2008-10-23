@@ -52,8 +52,8 @@ class lrGameeventhandler
 		
 		if ( (!$this->currentGamestates) || (!$this->currentRace) )
 		{
-			$this->debug->write('Could not move player: gamestates are not loaded', 'warning');
-			$this->messages->setMessage('Could not move player: gamestates are not loaded', 'warning');
+			$this->debug->write('Could not handle race events: gamestates are not loaded', 'warning');
+			$this->messages->setMessage('Could not handle race events: gamestates are not loaded', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -69,7 +69,7 @@ class lrGameeventhandler
 		
 		foreach ($activeevents as $action => $parameter)
 		{
-			if ($action == '1')
+			if ($action == $this->configuration->getConfiguration('gamedefinitions', 'events', 'playgamecard'))
 			{
 				switch ($parameter)
 				{
@@ -85,7 +85,7 @@ class lrGameeventhandler
 				}
 			}
 
-			if ($action == '2')
+			if ($action == $this->configuration->getConfiguration('gamedefinitions', 'events', 'crash'))
 			{
 				$this->currentGamestates['playerdata'][$this->currentGamestates['activePlayer']]['vector'][0] = 0;
 				$this->currentGamestates['playerdata'][$this->currentGamestates['activePlayer']]['vector'][1] = 0;
