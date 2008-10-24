@@ -90,7 +90,7 @@ class lrGamefunctions
 		}
 		
 		$gamecardfunctions = new lrGamecardfunctions();
-		if (!$gamecardfunctions->checkRights($gamecard, $currentGamestates['activePlayer']))
+		if (!$gamecardfunctions->checkRights($gamecard, $currentGamestates['currentPlayer']))
 		{
 			$this->debug->write('Could not play gamecard: no rights to play gamecard', 'warning');
 			$this->messages->setMessage('Could not play gamecard: no rights to play gamecard', 'warning');
@@ -111,7 +111,7 @@ class lrGamefunctions
 		
 		// TODO: player, round
 		$gameeventhandler = new lrGameeventhandler();
-		$gameeventhandler->saveRaceevent('1', $gamecard, $currentGamestates['activePlayer']+$gamecardData['gamecard_roundoffset']);
+		$gameeventhandler->saveRaceevent('1', $gamecard, $currentGamestates['currentPlayer']+$gamecardData['gamecard_roundoffset']);
 		$gamecardfunctions->redeemGamecard($gamecard);
 
 		$this->debug->unguard(true);

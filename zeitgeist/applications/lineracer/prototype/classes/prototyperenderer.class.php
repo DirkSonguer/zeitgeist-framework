@@ -59,7 +59,7 @@ class prototypeRenderer
 				}
 			}
 
-			if ($currentGamestates['activePlayer'] == $j)
+			if ($currentGamestates['currentPlayer'] == $j)
 			{
 				$vect[0] = $currentPosition[0] + $currentGamestates['playerdata'][$j]['vector'][0];
 				$vect[1] = $currentPosition[1] + $currentGamestates['playerdata'][$j]['vector'][1];

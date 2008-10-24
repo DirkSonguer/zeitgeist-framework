@@ -10,7 +10,7 @@
 	define('DEBUGMODE', true);
 	define('LINERACER_ACTIVE', true);
 	if (!defined('ZEITGEIST_ROOTDIRECTORY')) define('ZEITGEIST_ROOTDIRECTORY', '../zeitgeist/');
-	if (!defined('APPLICATION_ROOTDIRECTORY')) define('APPLICATION_ROOTDIRECTORY', './prototype');
+	if (!defined('APPLICATION_ROOTDIRECTORY')) define('APPLICATION_ROOTDIRECTORY', '../');
 
 	define('ZG_DB_DBSERVER', 'localhost');
 	define('ZG_DB_USERNAME', 'root');
@@ -19,10 +19,9 @@
 	define('ZG_DB_CONFIGURATIONCACHE', 'configurationcache');
 
 	require_once('../zeitgeist/zeitgeist.php');
-	if (!defined('ZEITGEIST_ROOTDIRECTORY')) define('ZEITGEIST_ROOTDIRECTORY', '../zeitgeist/');
-	if (!defined('APPLICATION_ROOTDIRECTORY')) define('APPLICATION_ROOTDIRECTORY', './prototype');
 	include('../zeitgeist/zeitgeist.php');
 
+	require_once('../includes/lreventoverride.include.php');
 	require_once('../classes/lrtemplate.class.php');
 //	require_once('classes/lrpregamefunctions.class.php');
 	require_once('../classes/lrgameeventhandler.class.php');
@@ -33,6 +32,9 @@
 //	require_once('classes/lruserfunctions.class.php');
 
 	include('../configuration/lineracer.config.php');
+
+	spl_autoload_register ('__autoload');
+	spl_autoload_register('lrEventoverride');
 
 	$debug = zgDebug::init();
 	$message = zgMessages::init();
@@ -70,7 +72,7 @@
 //	$debug->showMiscInformation();
 	$debug->showDebugMessages();
 	$debug->showQueryMessages();
-//	$debug->showGuardMessages();
+	$debug->showGuardMessages();
 	
 ?>
 

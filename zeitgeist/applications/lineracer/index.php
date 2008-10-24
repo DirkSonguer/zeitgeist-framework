@@ -18,7 +18,8 @@
 	define('DEBUGMODE', true);
 
 	include('zeitgeist/zeitgeist.php');
-
+	
+	require_once('includes/lreventoverride.include.php');
 	require_once('classes/lrtemplate.class.php');
 //	require_once('classes/lrpregamefunctions.class.php');
 	require_once('classes/lrgamecardfunctions.class.php');
@@ -26,6 +27,9 @@
 	require_once('classes/lruserfunctions.class.php');
 
 	include('configuration/lineracer.config.php');
+	
+	spl_autoload_register ('__autoload');
+	spl_autoload_register('lrEventoverride');
 
 	$debug = zgDebug::init();
 	$message = zgMessages::init();
