@@ -53,9 +53,9 @@
 	$tpl = new lrTemplate();
 	$tpl->load('game_index.tpl.html');
 	
-	if ($gamestates['activePlayer'] == 1) $tpl->assign('bgcolor', '#00ff00');
-	elseif ($gamestates['activePlayer'] == 2) $tpl->assign('bgcolor', '#ff0000');
-	elseif ($gamestates['activePlayer'] == 3) $tpl->assign('bgcolor', '#0000ff');
+	if ($gamestates['currentPlayer'] == 1) $tpl->assign('bgcolor', '#00ff00');
+	elseif ($gamestates['currentPlayer'] == 2) $tpl->assign('bgcolor', '#ff0000');
+	elseif ($gamestates['currentPlayer'] == 3) $tpl->assign('bgcolor', '#0000ff');
 	else $tpl->assign('bgcolor', '#000000');
 
 	$tpl->assign('bgcolor_p1', '#00ff00');
@@ -68,11 +68,11 @@
 	$tpl->assign('moves_p3', count($gamefunctions->getMovement(3)));
 	$tpl->assign('moves_p4', count($gamefunctions->getMovement(4)));
 
-	if ($gamecardfunctions->checkRights('1', $gamestates['activePlayer'])) $tpl->assign('bgcolor_card1', '#ffff00');
+	if ($gamecardfunctions->checkRights('1', $gamestates['currentPlayer'])) $tpl->assign('bgcolor_card1', '#ffff00');
 		else $tpl->assign('bgcolor_card1', '#cccc00');
-	if ($gamecardfunctions->checkRights('2', $gamestates['activePlayer'])) $tpl->assign('bgcolor_card2', '#ffff00');
+	if ($gamecardfunctions->checkRights('2', $gamestates['currentPlayer'])) $tpl->assign('bgcolor_card2', '#ffff00');
 		else $tpl->assign('bgcolor_card2', '#cccc00');
-	if ($gamecardfunctions->checkRights('3', $gamestates['activePlayer'])) $tpl->assign('bgcolor_card3', '#ffff00');
+	if ($gamecardfunctions->checkRights('3', $gamestates['currentPlayer'])) $tpl->assign('bgcolor_card3', '#ffff00');
 		else $tpl->assign('bgcolor_card3', '#cccc00');
 	
 	$tpl->show();

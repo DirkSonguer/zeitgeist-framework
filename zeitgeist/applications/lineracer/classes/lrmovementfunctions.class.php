@@ -37,7 +37,7 @@ class lrMovementfunctions
 		}
 
 		$lastMove = $this->getMovement(-1);
-		$currentVector = $currentGamestates['playerdata'][$currentGamestates['activePlayer']]['vector'];
+		$currentVector = $currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['vector'];
 
 		$movementradius = $this->configuration->getConfiguration('gamedefinitions', 'gamelogic', 'movementradius');
 		$minX = $lastMove[0]+$currentVector[0]-$movementradius;
@@ -109,7 +109,7 @@ class lrMovementfunctions
 
 				// save event to clear vector				
 				$gameeventhandler = new lrGameeventhandler();
-				$gameeventhandler->saveRaceevent($currentGamestates['activePlayer'], '2', '1', $currentGamestates['currentRound']+1);
+				$gameeventhandler->saveRaceevent($currentGamestates['currentPlayer'], '2', '1', $currentGamestates['currentRound']+1);
 
 				// save crash to game moves
 				$gamestates = new lrGamestates();
@@ -139,7 +139,7 @@ class lrMovementfunctions
 		}
 
 		$movement = array();
-		foreach ($currentGamestates['playerdata'][$currentGamestates['activePlayer']]['moves'] as $move)
+		foreach ($currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['moves'] as $move)
 		{
 			if ($move[0] == '1')
 			{

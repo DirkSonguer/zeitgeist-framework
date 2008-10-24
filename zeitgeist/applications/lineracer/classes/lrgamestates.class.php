@@ -49,7 +49,7 @@ class lrGamestates
 		$currentGamestates['currentRace'] = $raceid;
 		$currentGamestates['currentCircuit'] = $row['race_circuit'];
 		$currentGamestates['currentRound'] = $row['race_currentround'];
-		$currentGamestates['activePlayer'] = $row['race_activeplayer'];
+		$currentGamestates['currentPlayer'] = $row['race_activeplayer'];
 		$currentGamestates['numPlayers'] = 0;
 		if ($row['race_player4'] != '') $currentGamestates['numPlayers'] = 4;
 		elseif ($row['race_player3'] != '') $currentGamestates['numPlayers'] = 3;
@@ -73,7 +73,7 @@ class lrGamestates
 		// get vectors
 		for ($i=1; $i<=$currentGamestates['numPlayers']; $i++)
 		{
-			if (count($movementfunctions->getMovement($currentGamestates['activePlayer'])) > 1)
+			if (count($movementfunctions->getMovement($currentGamestates['currentPlayer'])) > 1)
 			{
 				$lastMove = $this->getMovement($i,-1);
 				$moveBefore = $this->getMovement($i,-2);
@@ -92,7 +92,7 @@ class lrGamestates
 		
 		// handle current game events and update the gamestates
 		$gameeventhandler = new lrGameeventhandler();
-		$gameeventhandler->handleRaceevents();
+//		$gameeventhandler->handleRaceevents();
 
 		$this->debug->unguard(true);
 		return true;
@@ -111,23 +111,23 @@ class lrGamestates
 			return false;
 		}
 
-		$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('" . $currentGamestates['currentRace'] . "', '" . $currentGamestates['activePlayer'] . "', '" . $action . "', '" . $parameter . "')";
+		$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('" . $currentGamestates['currentRace'] . "', '" . $currentGamestates['currentPlayer'] . "', '" . $action . "', '" . $parameter . "')";
 		$res = $this->database->query($sql);
 
 		if ($action == 1)
 		{
-			$sql = "DELETE FROM race_eventhandler WHERE raceevent_race='" . $currentGamestates['currentRace'] . "' AND raceevent_player='" . $currentGamestates['activePlayer'] . "' AND raceevent_round='" . $currentGamestates['currentRound'] . "'";
+			$sql = "DELETE FROM race_eventhandler WHERE raceevent_race='" . $currentGamestates['currentRace'] . "' AND raceevent_player='" . $currentGamestates['currentPlayer'] . "' AND raceevent_round='" . $currentGamestates['currentRound'] . "'";
 			$res = $this->database->query($sql);
 
-			$currentGamestates['activePlayer'] += 1;
-			if ($currentGamestates['activePlayer'] > $currentGamestates['numPlayers'])
+			$currentGamestates['currentPlayer'] += 1;
+			if ($currentGamestates['currentPlayer'] > $currentGamestates['numPlayers'])
 			{
-				$currentGamestates['activePlayer'] = 1;
+				$currentGamestates['currentPlayer'] = 1;
 				$currentGamestates['$currentRound'] += 1;
 			}
 
 			$currentround = ", race_currentround='" . $currentGamestates['$currentRound'] . "'";			
-			$sql = "UPDATE races SET race_activeplayer='" . $currentGamestates['activePlayer'] . "'" . $currentround . "  WHERE race_id='" . $currentGamestates['currentRace'] . "'";
+			$sql = "UPDATE races SET race_activeplayer='" . $currentGamestates['currentPlayer'] . "'" . $currentround . "  WHERE race_id='" . $currentGamestates['currentRace'] . "'";
 			$res = $this->database->query($sql);
 		}
 		

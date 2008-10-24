@@ -30,8 +30,8 @@ class lrGameeventhandler
 
 		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
 		{
-			$this->debug->write('Could not move player: gamestates are not loaded', 'warning');
-			$this->messages->setMessage('Could not move player: gamestates are not loaded', 'warning');
+			$this->debug->write('Could save race event: gamestates are not loaded', 'warning');
+			$this->messages->setMessage('Could save race event: gamestates are not loaded', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -40,6 +40,13 @@ class lrGameeventhandler
 
 		$sql  = "INSERT INTO race_eventhandler(raceevent_race, raceevent_round, raceevent_action, raceevent_parameter, raceevent_player) VALUES('" . $currentGamestates['currentRace'] . "', '" . $round . "', '" . $action . "', '" . $parameter . "', '" . $player . "')";
 		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could save race event: could not write data into database', 'warning');
+			$this->messages->setMessage('Could save race event: could not write data into database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
 
 		$this->debug->unguard(true);
 		return true;
@@ -49,8 +56,8 @@ class lrGameeventhandler
 	public function handleRaceevents()
 	{
 		$this->debug->guard();
-		
-		if ( (!$this->currentGamestates) || (!$this->currentRace) )
+
+		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
 		{
 			$this->debug->write('Could not handle race events: gamestates are not loaded', 'warning');
 			$this->messages->setMessage('Could not handle race events: gamestates are not loaded', 'warning');
@@ -58,7 +65,7 @@ class lrGameeventhandler
 			return false;
 		}
 
-		$sql = "SELECT * FROM race_eventhandler WHERE raceevent_race='" . $this->currentRace . "' AND raceevent_round='" . $this->currentRound . "' AND raceevent_player='" . $this->currentGamestates['activePlayer'] . "'";
+		$sql = "SELECT * FROM race_eventhandler WHERE raceevent_race='" . $currentGamestates['currentRace'] . "' AND raceevent_round='" . $currentGamestates['currentRound'] . "' AND raceevent_player='" . $currentGamestates['currentPlayer'] . "'";
 		$res = $this->database->query($sql);
 		
 		$activeevents = array();
@@ -66,29 +73,31 @@ class lrGameeventhandler
 		{
 			$activeevents[$row['raceevent_action']] = $row['raceevent_parameter'];
 		}
-		
+
 		foreach ($activeevents as $action => $parameter)
 		{
-			if ($action == $this->configuration->getConfiguration('gamedefinitions', 'events', 'playgamecard'))
+			
+			if ($action == $this->configuration->getConfiguration('gamedefinitions', 'events', 'playgamegard'))
 			{
-				switch ($parameter)
+				//check if the gamecard exists
+				$gamecardClassname = $this->configuration->getConfiguration('gamedefinitions', 'gamecards', $parameter);
+				if (!class_exists($gamecardClassname, true))
 				{
-					case 2:
-						$this->currentGamestates['playerdata'][$this->currentGamestates['activePlayer']]['vector'][0] *= 2;
-						$this->currentGamestates['playerdata'][$this->currentGamestates['activePlayer']]['vector'][1] *= 2;
-						break;
-
-					case 3:
-						$this->currentGamestates['playerdata'][$this->currentGamestates['activePlayer']]['vector'][0] = 0;
-						$this->currentGamestates['playerdata'][$this->currentGamestates['activePlayer']]['vector'][1] = 0;
-						break;
+					$this->debug->write('Could not handle race events: gamecard class was not found: '.$gamecardClassname, 'warning');
+					$this->messages->setMessage('Could not handle race events: gamecard class was not found: '.$gamecardClassname, 'warning');
+					$this->debug->unguard(false);
+					return false;
 				}
+
+				// load the module class through the autoloader
+				$gamecardClass = new $gamecardClassname;
+				$ret = call_user_func(array(&$gamecardClass, execute));
 			}
 
 			if ($action == $this->configuration->getConfiguration('gamedefinitions', 'events', 'crash'))
 			{
-				$this->currentGamestates['playerdata'][$this->currentGamestates['activePlayer']]['vector'][0] = 0;
-				$this->currentGamestates['playerdata'][$this->currentGamestates['activePlayer']]['vector'][1] = 0;
+				$this->currentGamestates['playerdata'][$this->currentGamestates['currentPlayer']]['vector'][0] = 0;
+				$this->currentGamestates['playerdata'][$this->currentGamestates['currentPlayer']]['vector'][1] = 0;
 			}
 		}
 
