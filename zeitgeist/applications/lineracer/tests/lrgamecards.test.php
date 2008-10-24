@@ -1,6 +1,6 @@
 <?php
 
-class testLrgameeventhandler extends UnitTestCase
+class testLrgamecards extends UnitTestCase
 {
 	public $database;
 	
@@ -14,7 +14,7 @@ class testLrgameeventhandler extends UnitTestCase
 		unset($gameeventhandler);
     }
 	
-	function createNewGame()
+	function setupGame()
 	{
 		$this->database->query('TRUNCATE TABLE races');
 		$this->database->query('TRUNCATE TABLE race_actions');
@@ -30,41 +30,39 @@ class testLrgameeventhandler extends UnitTestCase
 		$res = $this->database->query($sql);
 		$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('1', '4', '1', '210,370')";
 		$res = $this->database->query($sql);
+		$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('1', '1', '1', '155,380')";
+		$res = $this->database->query($sql);
+		$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('1', '2', '1', '175,380')";
+		$res = $this->database->query($sql);
+		$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('1', '3', '1', '195,380')";
+		$res = $this->database->query($sql);
+		$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('1', '4', '1', '215,380')";
+		$res = $this->database->query($sql);
 		$sql = "INSERT INTO races(race_player1, race_player2, race_player3, race_player4, race_circuit, race_activeplayer, race_currentround, race_gamecardsallowed)";
 		$sql .= "VALUES(1, 2, 3, 4, 1, 1, 1, 0)";
 		$res = $this->database->query($sql);
 	}
-	
-	function test_saveRaceevent()
-	{
-		$gameeventhandler = new lrGameeventhandler();
-		
-		$this->createNewGame();
-		
-		$ret = $gameeventhandler->saveRaceevent('1', '2', '3', '1');
-		$this->assertTrue($ret);
 
-		$res = $this->database->query("SELECT * FROM race_eventhandler");
-		$ret = $this->database->numRows($res);
-		$this->assertEqual($ret, 1);
-		$ret = $this->database->fetchArray($res);
-		$this->assertEqual($ret['raceevent_player'], '1');		
-		$this->assertEqual($ret['raceevent_action'], '2');		
-		$this->assertEqual($ret['raceevent_parameter'], '3');		
-	}	
-
-	function test_handleRaceevents()
+	function test_dash()
 	{
 		$gamestates = new lrGamestates();
 		$gameeventhandler = new lrGameeventhandler();
-		
-		$this->createNewGame();
+		$objects = zgObjectcache::init();
+
+		$this->setupGame();
 
 		$gamestates->loadGamestates(1);
 		$gameeventhandler->saveRaceevent('1', '1', '2', '1');
 
+		$currentGamestates = $objects->getObject('currentGamestates');
+		var_dump($currentGamestates);
+
 		$ret = $gameeventhandler->handleRaceevents();
 		$this->assertTrue($ret);
+		
+		$currentGamestates = $objects->getObject('currentGamestates');
+		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['vector'][0], 10);
+		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['vector'][1], 20);
 	}
 
 }
