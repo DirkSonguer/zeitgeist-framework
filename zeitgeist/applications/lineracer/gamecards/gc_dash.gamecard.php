@@ -1,6 +1,6 @@
 <?php
 
-class gc_leadfoot
+class gc_dash
 {
 	protected $objects;
 	protected $configuration;

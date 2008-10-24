@@ -54,6 +54,7 @@
 	require_once('lrmovementfunctions.test.php');
 	require_once('lrmovementfunctions.test.php');
 	require_once('lrgameeventhandler.test.php');
+	require_once('lrgamecards.test.php');
 	
 	$debug = zgDebug::init();
 
@@ -63,6 +64,7 @@
     $test->addTestCase(new testLrgamestates());
     $test->addTestCase(new testLrmovementfunctions());
     $test->addTestCase(new testLrgameeventhandler());
+    $test->addTestCase(new testLrgamecards());
     $test->run(new HtmlReporter());
 
 //	echo "<h2><a href='index_step2.php'>Step 2</a></h2>";
@@ -72,7 +74,7 @@
 //	$debug->showMiscInformation();
 	$debug->showDebugMessages();
 	$debug->showQueryMessages();
-	$debug->showGuardMessages();
+//	$debug->showGuardMessages();
 	
 ?>
 

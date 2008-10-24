@@ -73,10 +73,10 @@ class lrGamestates
 		// get vectors
 		for ($i=1; $i<=$currentGamestates['numPlayers']; $i++)
 		{
-			if (count($movementfunctions->getMovement($currentGamestates['currentPlayer'])) > 1)
+			if (count($movementfunctions->getMovement()) > 1)
 			{
-				$lastMove = $this->getMovement($i,-1);
-				$moveBefore = $this->getMovement($i,-2);
+				$lastMove = $movementfunctions($i,-1);
+				$moveBefore = $movementfunctions($i,-2);
 				$currentGamestates['playerdata'][$i]['vector'][0] = $lastMove[0] - $moveBefore[0];
 				$currentGamestates['playerdata'][$i]['vector'][1] = $lastMove[1] - $moveBefore[1];
 			}
