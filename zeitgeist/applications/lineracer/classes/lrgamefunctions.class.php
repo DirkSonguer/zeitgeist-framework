@@ -35,16 +35,18 @@ class lrGamefunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-		
-		if (!$this->validateTurn())
+/*		
+		$movementfunctions = new lrMovementfunctions();
+		if (!$movementfunctions->validateTurn())
 		{
 			$this->debug->write('Could not move player: it is another players turn', 'warning');
 			$this->messages->setMessage('Could not move player: it is another players turn', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
-
-		if (!$this->validateMove($moveX, $moveY))
+*/
+		$movementfunctions = new lrMovementfunctions();
+		if (!$movementfunctions->validateMove($moveX, $moveY))
 		{
 			$this->debug->write('Could not move player: player moved outside its allowed area', 'warning');
 			$this->messages->setMessage('Could not move player: player moved outside its allowed area', 'warning');
@@ -53,7 +55,7 @@ class lrGamefunctions
 		}
 
 		$correctedMove = array();
-		if (!$correctedMove = $this->validateTerrain($moveX, $moveY))
+		if (!$correctedMove = $movementfunctions->validateTerrain($moveX, $moveY))
 		{
 			$this->debug->write('Could not move player: validating line failed', 'warning');
 			$this->messages->setMessage('Could not move player: validating line failed', 'warning');
@@ -61,8 +63,8 @@ class lrGamefunctions
 			return false;
 		}
 		
-		// TODO: 1 = movement. use constant
-		$this->_saveGamestates('1', $correctedMove[0].','.$correctedMove[1]);
+		$gamestates = new lrGamestates();
+		$gamestates->saveGameaction($this->configuration->getConfiguration('gamedefinitions', 'actions', 'move'), $correctedMove[0].','.$correctedMove[1]);
 
 		$this->debug->unguard(true);
 		return true;
@@ -80,7 +82,7 @@ class lrGamefunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-
+/*
 		if (!$this->validateTurn())
 		{
 			$this->debug->write('Could not play gamecard: it is another players turn', 'warning');
@@ -88,7 +90,7 @@ class lrGamefunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+*/
 		$gamecardfunctions = new lrGamecardfunctions();
 		if (!$gamecardfunctions->checkRights($gamecard, $currentGamestates['currentPlayer']))
 		{
@@ -106,13 +108,14 @@ class lrGamefunctions
 			return false;
 		}
 
-		// TODO: 3 = gamecard. use constant
-		$this->_saveGamestates('3', $gamecard);
+		$gamestates = new lrGamestates();
+		$gamestates->saveGameaction($this->configuration->getConfiguration('gamedefinitions', 'actions', 'playgamecard'), $gamecard);
 		
 		// TODO: player, round
 		$gameeventhandler = new lrGameeventhandler();
-		$gameeventhandler->saveRaceevent('1', $gamecard, $currentGamestates['currentPlayer']+$gamecardData['gamecard_roundoffset']);
-		$gamecardfunctions->redeemGamecard($gamecard);
+		
+		$gameeventhandler->saveRaceevent($currentGamestates['currentPlayer'], $this->configuration->getConfiguration('gamedefinitions', 'events', 'playgamecard'), $gamecard, ($currentGamestates['currentRound']+$gamecardData['gamecard_roundoffset']));
+		$gamecardfunctions->removeGamecard($gamecard, $currentGamestates['currentPlayer']);
 
 		$this->debug->unguard(true);
 		return true;

@@ -24,12 +24,19 @@ class prototypeRenderer
 	}
 
 
-	public function draw($currentGamestates)
+	public function draw()
 	{
-		$offset = 20;
+		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
+		{
+			$this->debug->write('Could not draw game: gamestates are not loaded', 'warning');
+			$this->messages->setMessage('Could not draw game: gamestates are not loaded', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		$offset = $this->configuration->getConfiguration('gamedefinitions', 'gamelogic', 'movementradius');
 		
-		$circuit = imagecreatefrompng('../data/circuits/circuit1.png');
-//		$circuit = imagecreatefrompng('../data/circuits/circuit1_negative.png');
+//		$circuit = imagecreatefrompng('../data/circuits/circuit1.png');
+		$circuit = imagecreatefrompng('../data/circuits/circuit1_negative.png');
 		if (!$circuit) die('1');
 
 		$colorYellow = imagecolorallocate($circuit, 255, 150, 0);

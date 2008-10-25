@@ -99,9 +99,8 @@ class lrGamecardfunctions
 		}
 			
 		$row = $this->database->fetchArray($res);
-		$count = $row['usergamecard_count'];
 		
-		if ($count == '1')
+		if ($row['usergamecard_count'] == '1')
 		{
 			$sql = "DELETE FROM users_to_gamecards WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $user . "'";
 			$res = $this->database->query($sql);
@@ -115,7 +114,7 @@ class lrGamecardfunctions
 		}
 		else
 		{
-			$sql = "UPDATE users_to_gamecards SET usergamecard_gamecard='" . $gamecard . "', usergamecard_user='" . $user . "', usergamecard_count='" . ($count-1) . "' WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $user . "'";
+			$sql = "UPDATE users_to_gamecards SET usergamecard_gamecard='" . $gamecard . "', usergamecard_user='" . $user . "', usergamecard_count='" . ($row['usergamecard_count']-1) . "' WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $user . "'";
 			$res = $this->database->query($sql);
 			if (!$res)
 			{

@@ -55,7 +55,6 @@ class testLrgamecards extends UnitTestCase
 		$gameeventhandler->saveRaceevent('1', '1', '2', '1');
 
 		$currentGamestates = $objects->getObject('currentGamestates');
-		var_dump($currentGamestates);
 
 		$ret = $gameeventhandler->handleRaceevents();
 		$this->assertTrue($ret);
