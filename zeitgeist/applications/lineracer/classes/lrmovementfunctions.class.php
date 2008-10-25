@@ -147,7 +147,10 @@ class lrMovementfunctions
 			}
 		}
 		
-		if ($history == 0) $return = $movement;
+		if ($history == 0)
+		{
+			$return = $movement;
+		}
 		else
 		{
 			if (empty($movement[count($movement)+$history]))
@@ -187,7 +190,6 @@ class lrMovementfunctions
 			{
 				$checkX = $fromX + $i*$factorX;
 				$checkY = $fromY + round(abs($lengthY)/abs($lengthX)*$i*$factorY);
-		// TODO: Allgemeine Breite
 				$terrainData[] = array(substr($circuitData, $checkY*$circuitSize[0]+$checkX, 1), $checkX, $checkY);
 //				echo "type 1: pos: <b>".$checkX.",".$checkY."</b> - (".($i*$factorX).",".(round(abs($lengthY)/abs($lengthX)*$i*$factorY)).") - ".$terrainData[count($terrainData)-1]."<br />";
 			}
@@ -198,7 +200,6 @@ class lrMovementfunctions
 			{
 				$checkX = $fromX + round(abs($lengthX)/abs($lengthY)*$i*$factorX);
 				$checkY = $fromY + $i*$factorY;
-		// TODO: Allgemeine Breite
 				$terrainData[] = array(substr($circuitData, $checkY*$circuitSize[0]+$checkX, 1), $checkX, $checkY);
 //				echo "type 2:: pos: <b>".$checkX.",".$checkY."</b> - (".(round(abs($lengthX)/abs($lengthY)*$i*$factorX)).",".($i*$factorY).") - ".$terrainData[count($terrainData)-1]."<br />";
 			}

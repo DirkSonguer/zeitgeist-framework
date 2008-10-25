@@ -15,21 +15,27 @@
  */
 
 	define('LINERACER_ACTIVE', true);
-//	define('DEBUGMODE', true);
+	define('DEBUGMODE', true);
 
 	if (!defined('ZEITGEIST_ROOTDIRECTORY')) define('ZEITGEIST_ROOTDIRECTORY', '../zeitgeist/');
-	if (!defined('APPLICATION_ROOTDIRECTORY')) define('APPLICATION_ROOTDIRECTORY', './prototype');
+	if (!defined('APPLICATION_ROOTDIRECTORY')) define('APPLICATION_ROOTDIRECTORY', '../');
 	include('../zeitgeist/zeitgeist.php');
 
+	require_once('../includes/lreventoverride.include.php');
 	require_once('../classes/lrtemplate.class.php');
 //	require_once('classes/lrpregamefunctions.class.php');
 	require_once('../classes/lrgameeventhandler.class.php');
+	require_once('../classes/lrgamestates.class.php');
 	require_once('../classes/lrgamecardfunctions.class.php');
+	require_once('../classes/lrmovementfunctions.class.php');
 	require_once('../classes/lrgamefunctions.class.php');
-//	require_once('classes/lruserfunctions.class.php');
+
 	require_once('classes/prototyperenderer.class.php');
 
 	include('../configuration/lineracer.config.php');
+
+	spl_autoload_register ('__autoload');
+	spl_autoload_register('lrEventoverride');
 
 	$debug = zgDebug::init();
 	$message = zgMessages::init();
@@ -40,15 +46,18 @@
 
 	// load configuration
 	$configuration->loadConfiguration('lineracer', '../configuration/lineracer.ini');
+	$configuration->loadConfiguration('gamedefinitions', '../configuration/gamedefinitions.ini');
 
 	$gamefunctions = new lrGamefunctions();
-	$gamestates = $gamefunctions->loadGamestates(1);
+
+	$gamestates = new lrGamestates();
+	$currentGamestates = $gamestates->loadGamestates(1);
 	
-	if ($_REQUEST['action'] == '1')
+	if ($_REQUEST['action'] == $configuration->getConfiguration('gamedefinitions', 'actions', 'move'))
 	{
 		$move = $gamefunctions->move($_REQUEST['position_x'], $_REQUEST['position_y']);
 	}
-	elseif ($_REQUEST['action'] == '3')
+	elseif ($_REQUEST['action'] == $configuration->getConfiguration('gamedefinitions', 'actions', 'playgamecard'))
 	{
 		$move = $gamefunctions->playGamecard($_REQUEST['gamecard']);
 	}

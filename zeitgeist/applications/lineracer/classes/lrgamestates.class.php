@@ -75,8 +75,8 @@ class lrGamestates
 		{
 			if (count($movementfunctions->getMovement()) > 1)
 			{
-				$lastMove = $movementfunctions($i,-1);
-				$moveBefore = $movementfunctions($i,-2);
+				$lastMove = $movementfunctions->getMovement(-1);
+				$moveBefore = $movementfunctions->getMovement(-2);
 				$currentGamestates['playerdata'][$i]['vector'][0] = $lastMove[0] - $moveBefore[0];
 				$currentGamestates['playerdata'][$i]['vector'][1] = $lastMove[1] - $moveBefore[1];
 			}
@@ -92,7 +92,7 @@ class lrGamestates
 		
 		// handle current game events and update the gamestates
 		$gameeventhandler = new lrGameeventhandler();
-//		$gameeventhandler->handleRaceevents();
+		$gameeventhandler->handleRaceevents();
 
 		$this->debug->unguard(true);
 		return true;
@@ -123,10 +123,10 @@ class lrGamestates
 			if ($currentGamestates['currentPlayer'] > $currentGamestates['numPlayers'])
 			{
 				$currentGamestates['currentPlayer'] = 1;
-				$currentGamestates['$currentRound'] += 1;
+				$currentGamestates['currentRound'] += 1;
 			}
 
-			$currentround = ", race_currentround='" . $currentGamestates['$currentRound'] . "'";			
+			$currentround = ", race_currentround='" . $currentGamestates['currentRound'] . "'";			
 			$sql = "UPDATE races SET race_activeplayer='" . $currentGamestates['currentPlayer'] . "'" . $currentround . "  WHERE race_id='" . $currentGamestates['currentRace'] . "'";
 			$res = $this->database->query($sql);
 		}

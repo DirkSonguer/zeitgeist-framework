@@ -67,7 +67,7 @@ class testLrgamecardfunctions extends UnitTestCase
 		$ret = $this->database->fetchArray($res);
 		$this->assertEqual($ret['usergamecard_gamecard'], '1');		
 		$this->assertEqual($ret['usergamecard_user'], '1');		
-		$this->assertEqual($ret['usergamecard_count'], '1');		
+		$this->assertEqual($ret['usergamecard_count'], '1');
 	}
 
 

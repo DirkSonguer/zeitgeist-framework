@@ -18,16 +18,24 @@
 	define('DEBUGMODE', true);
 
 	if (!defined('ZEITGEIST_ROOTDIRECTORY')) define('ZEITGEIST_ROOTDIRECTORY', '../zeitgeist/');
-	if (!defined('APPLICATION_ROOTDIRECTORY')) define('APPLICATION_ROOTDIRECTORY', './prototype');
+	if (!defined('APPLICATION_ROOTDIRECTORY')) define('APPLICATION_ROOTDIRECTORY', '../');
 	include('../zeitgeist/zeitgeist.php');
 
+	require_once('../includes/lreventoverride.include.php');
 	require_once('../classes/lrtemplate.class.php');
 //	require_once('classes/lrpregamefunctions.class.php');
+	require_once('../classes/lrgameeventhandler.class.php');
+	require_once('../classes/lrgamestates.class.php');
+	require_once('../classes/lrgamecardfunctions.class.php');
+	require_once('../classes/lrmovementfunctions.class.php');
 	require_once('../classes/lrgamefunctions.class.php');
-//	require_once('classes/lruserfunctions.class.php');
+
 	require_once('classes/prototyperenderer.class.php');
 
 	include('../configuration/lineracer.config.php');
+
+	spl_autoload_register ('__autoload');
+	spl_autoload_register('lrEventoverride');
 
 	$debug = zgDebug::init();
 	$message = zgMessages::init();
@@ -37,9 +45,10 @@
 	$eventhandler = new zgEventhandler();
 	$database = new zgDatabase();
 	$database->connect();
-
+	
 	// load configuration
 	$configuration->loadConfiguration('lineracer', '../configuration/lineracer.ini');
+	$configuration->loadConfiguration('gamedefinitions', '../configuration/gamedefinitions.ini');
 
 	$sql = "TRUNCATE TABLE race_moves";
 	$res = $database->query($sql);

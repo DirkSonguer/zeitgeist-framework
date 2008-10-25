@@ -74,10 +74,10 @@ class lrGameeventhandler
 			$activeevents[$row['raceevent_action']] = $row['raceevent_parameter'];
 		}
 
-		foreach ($activeevents as $action => $parameter)
+		foreach ($activeevents as $event => $parameter)
 		{
 			
-			if ($action == $this->configuration->getConfiguration('gamedefinitions', 'events', 'playgamegard'))
+			if ($event == $this->configuration->getConfiguration('gamedefinitions', 'events', 'playgamecard'))
 			{
 				//check if the gamecard exists
 				$gamecardClassname = $this->configuration->getConfiguration('gamedefinitions', 'gamecards', $parameter);
@@ -91,13 +91,15 @@ class lrGameeventhandler
 
 				// load the module class through the autoloader
 				$gamecardClass = new $gamecardClassname;
-				$ret = call_user_func(array(&$gamecardClass, execute));
+				$ret = call_user_func(array(&$gamecardClass, 'execute'));
 			}
 
-			if ($action == $this->configuration->getConfiguration('gamedefinitions', 'events', 'crash'))
+			if ($event == $this->configuration->getConfiguration('gamedefinitions', 'events', 'crash'))
 			{
-				$this->currentGamestates['playerdata'][$this->currentGamestates['currentPlayer']]['vector'][0] = 0;
-				$this->currentGamestates['playerdata'][$this->currentGamestates['currentPlayer']]['vector'][1] = 0;
+				$currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['vector'][0] = 0;
+				$currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['vector'][1] = 0;
+
+				$this->objects->storeObject('currentGamestates', $currentGamestates, true);
 			}
 		}
 
