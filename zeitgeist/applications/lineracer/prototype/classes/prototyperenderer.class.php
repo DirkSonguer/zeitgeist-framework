@@ -35,8 +35,8 @@ class prototypeRenderer
 		}
 		$offset = $this->configuration->getConfiguration('gamedefinitions', 'gamelogic', 'movementradius');
 		
-//		$circuit = imagecreatefrompng('../data/circuits/circuit1.png');
-		$circuit = imagecreatefrompng('../data/circuits/circuit1_negative.png');
+//		$circuit = imagecreatefrompng(APPLICATION_ROOTDIRECTORY . '/data/circuits/circuit1.png');
+		$circuit = imagecreatefrompng(APPLICATION_ROOTDIRECTORY . '/data/circuits/circuit1_negative.png');
 		if (!$circuit) die('1');
 
 		$colorYellow = imagecolorallocate($circuit, 255, 150, 0);
@@ -75,7 +75,7 @@ class prototypeRenderer
 			}
 		}
 
-		$ret = imagepng($circuit, '../data/circuits/circuit1_game.png');
+		$ret = imagepng($circuit, APPLICATION_ROOTDIRECTORY . '/data/circuits/circuit1_game.png');
 		imagedestroy($circuit);
 	}
 
