@@ -47,7 +47,7 @@
 	$row = $database->fetchArray($res);
 	$circuitData = $row['circuitdata_data'];
 	
-	echo "<p style='font-size:1px;'>";
+	echo "<p style='font-size:5px;'>";
 	for($j=1;$j<620;$j++)
 	{
 			for($i=1;$i<800;$i++)

@@ -57,14 +57,24 @@ class lrGamestates
 		else $currentGamestates['numPlayers'] = 1;
 
 		// get moves from database
-		$sql = "SELECT * FROM race_moves WHERE move_race='" . $raceid . "'AND move_action='1' ORDER BY move_id";
+		$sql = "SELECT * FROM race_moves WHERE move_race='" . $raceid . "' ORDER BY move_id";
 		$res = $this->database->query($sql);
 
 		$currentGamestates['playerdata'] = array();
-		while($row = $this->database->fetchArray($res))
+		while ($row = $this->database->fetchArray($res))
 		{
-			$position = explode(',',$row['move_parameter']);
-			$currentGamestates['playerdata'][$row['move_user']]['moves'][] = array($row['move_action'], $row['move_parameter']);
+			if ($row['move_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'move'))
+			{
+				$position = explode(',',$row['move_parameter']);
+				$currentGamestates['playerdata'][$row['move_user']]['moves'][] = array($row['move_action'], $row['move_parameter']);
+			}
+
+			if ( ($row['move_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint1'))
+			|| ($row['move_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint2'))
+			|| ($row['move_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint3')) )
+			{
+				$currentGamestates['playerdata'][$row['move_user']]['checkpoints'][$row['move_parameter']] = true;
+			}
 		}
 		
 		// temp storing gamedata

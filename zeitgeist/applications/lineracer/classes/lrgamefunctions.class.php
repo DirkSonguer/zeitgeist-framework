@@ -35,16 +35,16 @@ class lrGamefunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-/*		
-		$movementfunctions = new lrMovementfunctions();
-		if (!$movementfunctions->validateTurn())
+
+		$userfunctions = new lrUserfunctions();
+		if (!$userfunctions->validateTurn())
 		{
-			$this->debug->write('Could not move player: it is another players turn', 'warning');
-			$this->messages->setMessage('Could not move player: it is another players turn', 'warning');
+			$this->debug->write('Could not move player: not the players turn', 'warning');
+			$this->messages->setMessage('Could not move player: not the players turn', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
-*/
+
 		$movementfunctions = new lrMovementfunctions();
 		if (!$movementfunctions->validateMove($moveX, $moveY))
 		{
