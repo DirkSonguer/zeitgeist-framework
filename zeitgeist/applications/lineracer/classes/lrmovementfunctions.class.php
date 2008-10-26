@@ -81,7 +81,7 @@ class lrMovementfunctions
 			echo $step[0];
 		}
 		echo "<br />";
-*/
+//*/
 
 		$correctedMove = array();
 		$correctedMove[0] = $moveX;
@@ -90,12 +90,11 @@ class lrMovementfunctions
 
 		foreach($terrain as $key => $step)
 		{
-//			echo "terrain: ".$step[0]." position: ".$step[1].",".$step[2]."<br />";
+//			echo "key: ".$key." - terrain: ".$step[0]." position: ".$step[1].",".$step[2]."<br />";
 
 			// check for blocking terrain
-			if ($step[0] == 0)
+			if ($step[0] == $this->configuration->getConfiguration('gamedefinitions', 'game_surfaces', 'unpassable'))
 			{
-				$corrected = array();
 				if ($key > 0)
 				{
 					$correctedMove[0] = $terrain[$key][1] + (($terrain[$key-1][1] - $terrain[$key][1])*5);
@@ -114,10 +113,69 @@ class lrMovementfunctions
 				// save crash to game moves
 				$gamestates = new lrGamestates();
 				$gamestates->saveGameaction('2', $moveX.",".$moveY);
-
-//				echo "move: ".$moveX.",".$moveY." hit at ".$terrain[$key][1].",".$terrain[$key][2]." corrected to: ".$correctedMove[0].",".$correctedMove[1]."<br />";
-
+				
+				$this->debug->write("Crash happened with move: ".$moveX.",".$moveY." hit at ".$terrain[$key][1].",".$terrain[$key][2]." corrected to: ".$correctedMove[0].",".$correctedMove[1], 'message');
 				break;
+			}
+
+			// check for checkpoint1
+			if ($step[0] == $this->configuration->getConfiguration('gamedefinitions', 'game_surfaces', 'checkpoint1')) 
+			{
+				if (empty($currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['checkpoints']['1']))
+				{
+					// save action
+					$gamestates = new lrGamestates();
+					$gamestates->saveGameaction($this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint1'), '1');
+					$currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['checkpoints']['1'] = true;
+					$this->objects->storeObject('currentGamestates', $currentGamestates, true);
+					$this->debug->write("Checkpoint 1 hit with move: ".$moveX.",".$moveY." hit at ".$terrain[$key][1].",".$terrain[$key][2], 'message');
+				}
+			}
+
+			// check for checkpoint2
+			if ($step[0] == $this->configuration->getConfiguration('gamedefinitions', 'game_surfaces', 'checkpoint2')) 
+			{
+				if ( (empty($currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['checkpoints']['2']))
+				&& (!empty($currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['checkpoints']['1'])) )
+				{
+					// save action
+					$gamestates = new lrGamestates();
+					$gamestates->saveGameaction($this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint2'), '2');
+					$currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['checkpoints']['2'] = true;
+					$this->objects->storeObject('currentGamestates', $currentGamestates, true);
+					$this->debug->write("Checkpoint 2 hit with move: ".$moveX.",".$moveY." hit at ".$terrain[$key][1].",".$terrain[$key][2], 'message');
+				}
+			}
+			
+			// check for checkpoint3
+			if ($step[0] == $this->configuration->getConfiguration('gamedefinitions', 'game_surfaces', 'checkpoint3')) 
+			{
+				if ( (empty($currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['checkpoints']['3']))
+				&& (!empty($currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['checkpoints']['2'])) )
+				{
+					// save action
+					$gamestates = new lrGamestates();
+					$gamestates->saveGameaction($this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint2'), '3');
+					$currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['checkpoints']['3'] = true;
+					$this->objects->storeObject('currentGamestates', $currentGamestates, true);
+					$this->debug->write("Checkpoint 3 hit with move: ".$moveX.",".$moveY." hit at ".$terrain[$key][1].",".$terrain[$key][2], 'message');
+				}
+			}
+
+			// check for finish line
+			if ($step[0] == $this->configuration->getConfiguration('gamedefinitions', 'game_surfaces', 'finish')) 
+			{
+				if ( (empty($currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['finish']))
+				&& (!empty($currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['checkpoints']['3'])) )
+				{
+					// save action
+					$gamestates = new lrGamestates();
+					$gamestates->saveGameaction($this->configuration->getConfiguration('gamedefinitions', 'actions', 'finish'), '1');
+					$currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['finished'] = true;
+					$this->objects->storeObject('currentGamestates', $currentGamestates, true);
+					$this->debug->write("Player finished with move: ".$moveX.",".$moveY." hit at ".$terrain[$key][1].",".$terrain[$key][2], 'message');
+					break;
+				}
 			}
 		}
 		
@@ -210,7 +268,6 @@ class lrMovementfunctions
 	}
 
 
-	// TODO: Richitg aufsetzen
 	protected function _getCircuitData()
 	{
 		$this->debug->guard();

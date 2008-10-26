@@ -111,7 +111,12 @@ class imagetocircuit
 		
 		$circuit_data = '';
 		
+		$surface = array();
 		$surface['unpassable'] = explode(',', $this->configuration->getConfiguration('circuit_definitions', 'surfaces', 'unpassable'));
+		$surface['checkpoint1'] = explode(',', $this->configuration->getConfiguration('circuit_definitions', 'surfaces', 'checkpoint1'));
+		$surface['checkpoint2'] = explode(',', $this->configuration->getConfiguration('circuit_definitions', 'surfaces', 'checkpoint2'));
+		$surface['checkpoint3'] = explode(',', $this->configuration->getConfiguration('circuit_definitions', 'surfaces', 'checkpoint3'));
+		$surface['finish'] = explode(',', $this->configuration->getConfiguration('circuit_definitions', 'surfaces', 'finish'));
 
 		for ($y=1; $y<$circuit_height; $y+=$scale)
 		{
@@ -123,9 +128,33 @@ class imagetocircuit
 				$colorarray = imagecolorsforindex($circuit, $pixelcolor);
 				
 				// check for unpassable surface
-				if ( ($colorarray['red'] == $surface['unpassable'][0]) && ($colorarray['green'] == $surface['unpassable'][1]) && ($colorarray['blue'] == $surface['unpassable'][0]) )
+				if ( ($colorarray['red'] == $surface['unpassable'][0]) && ($colorarray['green'] == $surface['unpassable'][1]) && ($colorarray['blue'] == $surface['unpassable'][2]) )
 				{
 					$surfacestate = 0;
+				}
+
+				// check for checkpoint1
+				if ( ($colorarray['red'] == $surface['checkpoint1'][0]) && ($colorarray['green'] == $surface['checkpoint1'][1]) && ($colorarray['blue'] == $surface['checkpoint1'][2]) )
+				{
+					$surfacestate = 2;
+				}
+
+				// check for checkpoint2
+				if ( ($colorarray['red'] == $surface['checkpoint2'][0]) && ($colorarray['green'] == $surface['checkpoint2'][1]) && ($colorarray['blue'] == $surface['checkpoint2'][2]) )
+				{
+					$surfacestate = 3;
+				}
+
+				// check for checkpoint3
+				if ( ($colorarray['red'] == $surface['checkpoint3'][0]) && ($colorarray['green'] == $surface['checkpoint3'][1]) && ($colorarray['blue'] == $surface['checkpoint3'][2]) )
+				{
+					$surfacestate = 4;
+				}
+
+				// check for finish
+				if ( ($colorarray['red'] == $surface['finish'][0]) && ($colorarray['green'] == $surface['finish'][1]) && ($colorarray['blue'] == $surface['finish'][2]) )
+				{
+					$surfacestate = 5;
 				}
 				
 				$circuit_data .= $surfacestate;
