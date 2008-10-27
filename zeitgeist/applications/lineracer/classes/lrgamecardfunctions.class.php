@@ -24,7 +24,13 @@ class lrGamecardfunctions
 	}
 
 	
-	// TODO: Richitg aufsetzen
+	/**
+	 * Gets all data for a given gamecard
+	 *
+	 * @param integer $gamecard id of the gamecard to get
+	 *
+	 * @return array
+	 */
 	public function getGamecardData($gamecard)
 	{
 		$this->debug->guard();
@@ -46,6 +52,14 @@ class lrGamecardfunctions
 	}
 
 
+	/**
+	 * Checks if a given user has the gamecard in his stack
+	 *
+	 * @param integer $gamecard id of the gamecard
+	 * @param integer $user id of the user
+	 *
+	 * @return boolean
+	 */
 	public function checkRights($gamecard, $user)
 	{
 		$this->debug->guard();
@@ -74,6 +88,14 @@ class lrGamecardfunctions
 	}
 
 
+	/**
+	 * This removes one instance of the given gamecard from the stack of the given user
+	 *
+	 * @param integer $gamecard id of the gamecard to remove
+	 * @param integer $user user to remove the gamecard from
+	 *
+	 * @return boolean
+	 */
 	public function removeGamecard($gamecard, $user)
 	{
 		$this->debug->guard();
@@ -130,6 +152,14 @@ class lrGamecardfunctions
 	}
 
 
+	/**
+	 * Adds the given gamecard to the stack of the given user
+	 *
+	 * @param integer $gamecard id of the gamecard to add
+	 * @param integer $user user to add the gamecard to
+	 *
+	 * @return boolean
+	 */
 	public function addGamecard($gamecard, $user)
 	{
 		$this->debug->guard();

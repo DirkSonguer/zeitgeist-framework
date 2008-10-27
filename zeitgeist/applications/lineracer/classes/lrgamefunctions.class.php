@@ -24,6 +24,14 @@ class lrGamefunctions
 	}
 
 
+	/**
+	 * Moves the currently active player to the given position
+	 *
+	 * @param integer $moveX x coordinate to move to
+	 * @param integer $moveY y coordinate to move to
+	 *
+	 * @return boolean
+	 */
 	public function move($moveX, $moveY)
 	{
 		$this->debug->guard();
@@ -71,6 +79,13 @@ class lrGamefunctions
 	}
 	
 
+	/**
+	 * Plays a gamecard for the currently active player
+	 *
+	 * @param integer $gamecard id of the gamecard to play
+	 *
+	 * @return boolean
+	 */
 	public function playGamecard($gamecard)
 	{
 		$this->debug->guard();
@@ -82,15 +97,16 @@ class lrGamefunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-/*
-		if (!$this->validateTurn())
+
+		$userfunctions = new lrUserfunctions();
+		if (!$userfunctions->validateTurn())
 		{
-			$this->debug->write('Could not play gamecard: it is another players turn', 'warning');
-			$this->messages->setMessage('Could not play gamecard: it is another players turn', 'warning');
+			$this->debug->write('Could not move player: not the players turn', 'warning');
+			$this->messages->setMessage('Could not move player: not the players turn', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
-*/
+
 		$gamecardfunctions = new lrGamecardfunctions();
 		if (!$gamecardfunctions->checkRights($gamecard, $currentGamestates['currentPlayer']))
 		{
