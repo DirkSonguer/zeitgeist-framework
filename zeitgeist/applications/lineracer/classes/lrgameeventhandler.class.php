@@ -24,6 +24,16 @@ class lrGameeventhandler
 	}
 
 
+	/**
+	 * Saves a raceevent to the stack
+	 *
+	 * @param integer $player id of the player that the event concerns
+	 * @param integer $action id of the action that should be executed
+	 * @param integer $gparameter the parameter/s of the action
+	 * @param integer $round this is the offset, in how many rounds the event should be handled
+	 *
+	 * @return boolean
+	 */
 	public function saveRaceevent($player, $action, $parameter, $round=0)
 	{
 		$this->debug->guard();
@@ -53,6 +63,11 @@ class lrGameeventhandler
 	}
 
 
+	/**
+	 * Handles all race events
+	 *
+	 * @return boolean
+	 */
 	public function handleRaceevents()
 	{
 		$this->debug->guard();
