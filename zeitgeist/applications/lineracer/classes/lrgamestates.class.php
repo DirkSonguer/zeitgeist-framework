@@ -83,7 +83,7 @@ class lrGamestates
 				$currentGamestates['playerdata'][$row['move_user']]['checkpoints'][$row['move_parameter']] = true;
 			}
 
-			if ($row['move_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'finished'))
+			if ($row['move_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'finish'))
 			{
 				$currentGamestates['playerdata'][$row['move_user']]['finished'] = true;
 			}
@@ -95,10 +95,10 @@ class lrGamestates
 		// get vectors
 		for ($i=1; $i<=$currentGamestates['numPlayers']; $i++)
 		{
-			if (count($movementfunctions->getMovement()) > 1)
+			if (count($movementfunctions->getMovement($i)) > 1)
 			{
-				$lastMove = $movementfunctions->getMovement(-1);
-				$moveBefore = $movementfunctions->getMovement(-2);
+				$lastMove = $movementfunctions->getMovement($i, -1);
+				$moveBefore = $movementfunctions->getMovement($i, -2);
 				$currentGamestates['playerdata'][$i]['vector'][0] = $lastMove[0] - $moveBefore[0];
 				$currentGamestates['playerdata'][$i]['vector'][1] = $lastMove[1] - $moveBefore[1];
 			}

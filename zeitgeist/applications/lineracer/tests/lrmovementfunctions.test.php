@@ -68,11 +68,11 @@ class testLrmovementfunctions extends UnitTestCase
 		$gamestates->saveGameaction('1', '210,200');
 		$gamestates->loadGamestates(1);
 
-		$ret = $movementfunctions->getMovement(-1);
+		$ret = $movementfunctions->getMovement(1, -1);
 		$this->assertEqual($ret[0], '150');
 		$this->assertEqual($ret[1], '200');
 
-		$ret = $movementfunctions->getMovement();
+		$ret = $movementfunctions->getMovement(1);
 		$this->assertEqual($ret[1][0], '150');
 		$this->assertEqual($ret[1][1], '200');
 	}	

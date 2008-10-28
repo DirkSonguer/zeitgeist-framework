@@ -45,7 +45,7 @@ class lrMovementfunctions
 			return false;
 		}
 
-		$lastMove = $this->getMovement(-1);
+		$lastMove = $this->getMovement($currentGamestates['currentPlayer'], -1);
 		$currentVector = $currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['vector'];
 
 		$movementradius = $this->configuration->getConfiguration('gamedefinitions', 'gamelogic', 'movementradius');
@@ -85,7 +85,7 @@ class lrMovementfunctions
 			return false;
 		}
 		
-		$lastMove = $this->getMovement(-1);
+		$lastMove = $this->getMovement($currentGamestates['currentPlayer'], -1);
 		$fromX = $lastMove[0];
 		$fromY = $lastMove[1];
 
@@ -210,7 +210,7 @@ class lrMovementfunctions
 	 *
 	 * @return boolean
 	 */
-	public function getMovement($history=0)
+	public function getMovement($player, $history=0)
 	{
 		$this->debug->guard();
 		
@@ -223,7 +223,7 @@ class lrMovementfunctions
 		}
 
 		$movement = array();
-		foreach ($currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['moves'] as $move)
+		foreach ($currentGamestates['playerdata'][$player]['moves'] as $move)
 		{
 			if ($move[0] == '1')
 			{
