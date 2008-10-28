@@ -24,6 +24,13 @@ class lrGamestates
 	}
 
 
+	/**
+	 * Loads all the information associated with a running game
+	 *
+	 * @param integer $raceid id of the race
+	 *
+	 * @return boolean
+	 */
 	public function loadGamestates($raceid)
 	{
 		$this->debug->guard();
@@ -107,8 +114,16 @@ class lrGamestates
 		$this->debug->unguard(true);
 		return true;
 	}
-	
-	
+
+
+	/**
+	 * This stores a given game action to the database
+	 *
+	 * @param integer $action action to store
+	 * @param integer $parameter parameter of the action
+	 *
+	 * @return boolean
+	 */
 	public function saveGameaction($action, $parameter)
 	{
 		$this->debug->guard();

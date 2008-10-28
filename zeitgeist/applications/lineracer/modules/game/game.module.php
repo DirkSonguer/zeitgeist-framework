@@ -77,10 +77,7 @@ class game
 		$gamestates = new lrGamestates();
 		$currentGamestates = $gamestates->loadGamestates(1);
 		
-		if ($_REQUEST['action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'move'))
-		{
-			$ret = $gamefunctions->move($_REQUEST['position_x'], $_REQUEST['position_y']);
-		}
+		$ret = $gamefunctions->move($parameters['position_x'], $parameters['position_y']);
 	
 		$tpl = new lrTemplate();
 		$tpl->redirect($tpl->createLink('game', 'index'));
@@ -89,6 +86,25 @@ class game
 		return true;
 	}
 
+
+	public function playgamecard($parameters=array())
+	{
+		$this->debug->guard();
+
+		$gamefunctions = new lrGamefunctions();
+	
+		$gamestates = new lrGamestates();
+		$currentGamestates = $gamestates->loadGamestates(1);
+		
+		$ret = $gamefunctions->playGamecard($parameters['gamecard']);
+	
+		$tpl = new lrTemplate();
+		$tpl->redirect($tpl->createLink('game', 'index'));
+
+		$this->debug->unguard(true);
+		return true;
+	}
+	
 
 	public function reset($parameters=array())
 	{

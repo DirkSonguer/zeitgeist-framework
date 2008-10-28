@@ -89,7 +89,7 @@ class lrGamefunctions
 	public function playGamecard($gamecard)
 	{
 		$this->debug->guard();
-		
+
 		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
 		{
 			$this->debug->write('Could not play gamecard: gamestates are not loaded', 'warning');
