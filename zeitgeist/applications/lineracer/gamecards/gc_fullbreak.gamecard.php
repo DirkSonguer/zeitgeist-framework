@@ -1,6 +1,6 @@
 <?php
 
-class gc_fullstop
+class gc_fullbreak
 {
 	protected $objects;
 	protected $configuration;

@@ -24,6 +24,15 @@ class lrMovementfunctions
 	}
 
 
+	/**
+	 * Validates the move of a player based on a given move and the last move
+	 * Returns false if move is not valid
+	 *
+	 * @param integer $moveX x coordinate to move to
+	 * @param integer $moveY y coordinate to move to
+	 *
+	 * @return boolean
+	 */
 	public function validateMove($moveX, $moveY)
 	{
 		$this->debug->guard();
@@ -56,6 +65,14 @@ class lrMovementfunctions
 	}
 
 
+	/**
+	 * Validates a move against the terrain
+	 *
+	 * @param integer $moveX x coordinate to move to
+	 * @param integer $moveY y coordinate to move to
+	 *
+	 * @return boolean
+	 */
 	public function validateTerrain($moveX, $moveY)
 	{
 		$this->debug->guard();
@@ -184,6 +201,15 @@ class lrMovementfunctions
 	}
 
 	
+	/**
+	 * Gets movements of the currently active player 
+	 * If parameter is empty, all moves will be given
+	 * Otherwise, only the last moves according to the parameter are given
+	 *
+	 * @param integer $history number of moves to return
+	 *
+	 * @return boolean
+	 */
 	public function getMovement($history=0)
 	{
 		$this->debug->guard();
@@ -226,6 +252,20 @@ class lrMovementfunctions
 	}
 	
 
+	/**
+	 * Returns all the terrain types of a move
+	 * This will check pixel by pixel along he line of the move
+	 * Returns array with terrain data
+	 *
+	 * @access protected
+	 *
+	 * @param string $fromX x coordinate from where the terrain is checked
+	 * @param string $fromY y coordinate from where the terrain is checked
+	 * @param string $toX x coordinate to where the terrain is checked
+	 * @param string $toY y coordinate to where the terrain is checked
+	 *
+	 * @return array
+	 */
 	protected function _checkTerrainType($fromX, $fromY, $toX, $toY)
 	{
 		$this->debug->guard();
@@ -268,6 +308,13 @@ class lrMovementfunctions
 	}
 
 
+	/**
+	 * Returns all the terrain data of the current circuit
+	 *
+	 * @access protected
+	 *
+	 * @return array
+	 */
 	protected function _getCircuitData()
 	{
 		$this->debug->guard();
