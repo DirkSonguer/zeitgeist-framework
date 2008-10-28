@@ -82,6 +82,11 @@ class lrGamestates
 			{
 				$currentGamestates['playerdata'][$row['move_user']]['checkpoints'][$row['move_parameter']] = true;
 			}
+
+			if ($row['move_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'finished'))
+			{
+				$currentGamestates['playerdata'][$row['move_user']]['finished'] = true;
+			}
 		}
 		
 		// temp storing gamedata
@@ -161,7 +166,70 @@ class lrGamestates
 		$this->debug->unguard(true);
 		return true;
 	}
-	
+
+
+	/**
+	 * Checks if race is finished by all players
+	 *
+	 * @return boolean
+	 */
+	public function raceFinished()
+	{
+		$this->debug->guard();
+
+		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
+		{
+			$this->debug->write('Could not save gameaction: gamestates are not loaded', 'warning');
+			$this->messages->setMessage('Could not save gameaction: gamestates are not loaded', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$finished = true;
+		for ($i=1; $i<=$currentGamestates['numPlayers']; $i++)
+		{
+			if (empty($currentGamestates['playerdata'][$i]['finished']))
+			{
+				$finished = false;
+			}
+		}
+
+		$this->debug->unguard($finished);
+		return $finished;
+	}
+
+	/**
+	 * Checks if race is finished for the given player
+	 * If no player is given, the current player is used
+	 *
+	 * @return boolean
+	 */
+	public function playerFinished($player=0)
+	{
+		$this->debug->guard();
+
+		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
+		{
+			$this->debug->write('Could not save gameaction: gamestates are not loaded', 'warning');
+			$this->messages->setMessage('Could not save gameaction: gamestates are not loaded', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		if (!$player)
+		{
+			$player = $currentGamestates['currentPlayer'];
+		}
+		
+		$finished = true;
+		if (empty($currentGamestates['playerdata'][$player]['finished']))
+		{
+			$finished = false;
+		}
+
+		$this->debug->unguard($finished);
+		return $finished;
+	}
 
 }
 
