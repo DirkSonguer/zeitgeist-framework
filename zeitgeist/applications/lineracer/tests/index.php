@@ -60,14 +60,14 @@
 
     $test = &new TestSuite('Lineracer Unit Tests');
     $test->addTestCase(new testDatabase());
+
     $test->addTestCase(new testLrgamecardfunctions());
     $test->addTestCase(new testLrgamestates());
     $test->addTestCase(new testLrmovementfunctions());
     $test->addTestCase(new testLrgameeventhandler());
     $test->addTestCase(new testLrgamecards());
-    $test->run(new HtmlReporter());
 
-//	echo "<h2><a href='index_step2.php'>Step 2</a></h2>";
+    $test->run(new HtmlReporter());
 
 	$debug->loadStylesheet('debug.css');
 //	$debug->showInnerLoops = true;

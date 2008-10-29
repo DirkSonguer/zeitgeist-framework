@@ -36,8 +36,6 @@ class lrGamestates
 		$this->debug->guard();
 
 		$movementfunctions = new lrMovementfunctions();
-		
-		$this->currentRace = $raceid;
 		$currentGamestates = array();
 
 		// get race data from database
@@ -57,6 +55,8 @@ class lrGamestates
 		$currentGamestates['currentCircuit'] = $row['race_circuit'];
 		$currentGamestates['currentRound'] = $row['race_currentround'];
 		$currentGamestates['currentPlayer'] = $row['race_activeplayer'];
+		
+		// get max number of players
 		$currentGamestates['numPlayers'] = 0;
 		if ($row['race_player4'] != '') $currentGamestates['numPlayers'] = 4;
 		elseif ($row['race_player3'] != '') $currentGamestates['numPlayers'] = 3;
@@ -67,15 +67,18 @@ class lrGamestates
 		$sql = "SELECT * FROM race_moves WHERE move_race='" . $raceid . "' ORDER BY move_id";
 		$res = $this->database->query($sql);
 
+		// get player data
 		$currentGamestates['playerdata'] = array();
 		while ($row = $this->database->fetchArray($res))
 		{
+			// get all moves
 			if ($row['move_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'move'))
 			{
 				$position = explode(',',$row['move_parameter']);
 				$currentGamestates['playerdata'][$row['move_user']]['moves'][] = array($row['move_action'], $row['move_parameter']);
 			}
 
+			// get checkpoints
 			if ( ($row['move_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint1'))
 			|| ($row['move_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint2'))
 			|| ($row['move_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint3')) )
@@ -83,6 +86,7 @@ class lrGamestates
 				$currentGamestates['playerdata'][$row['move_user']]['checkpoints'][$row['move_parameter']] = true;
 			}
 
+			// see if player is finished
 			if ($row['move_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'finish'))
 			{
 				$currentGamestates['playerdata'][$row['move_user']]['finished'] = true;
@@ -109,44 +113,9 @@ class lrGamestates
 			}
 		}
 		
-		// done loading
+		// store complete gamestates in object
 		$this->objects->storeObject('currentGamestates', $currentGamestates, true);
 
-		$this->debug->unguard(true);
-		return true;
-	}
-
-
-	/**
-	 * This stores a given game action to the database
-	 *
-	 * @param integer $action action to store
-	 * @param integer $parameter parameter of the action
-	 *
-	 * @return boolean
-	 */
-	public function saveGameaction($action, $parameter)
-	{
-		$this->debug->guard();
-
-		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
-		{
-			$this->debug->write('Could not save gameaction: gamestates are not loaded', 'warning');
-			$this->messages->setMessage('Could not save gameaction: gamestates are not loaded', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('" . $currentGamestates['currentRace'] . "', '" . $currentGamestates['currentPlayer'] . "', '" . $action . "', '" . $parameter . "')";
-		$res = $this->database->query($sql);
-
-		if ($action == 1)
-		{
-			// TODO: next player
-		}
-		
-		$this->objects->storeObject('currentGamestates', $currentGamestates, true);
-		
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -157,7 +126,7 @@ class lrGamestates
 	 *
 	 * @return boolean
 	 */
-	public function nextPlayer()
+	public function endTurn()
 	{
 		$this->debug->guard();
 
@@ -182,6 +151,15 @@ class lrGamestates
 		$currentround = ", race_currentround='" . $currentGamestates['currentRound'] . "'";			
 		$sql = "UPDATE races SET race_activeplayer='" . $currentGamestates['currentPlayer'] . "'" . $currentround . "  WHERE race_id='" . $currentGamestates['currentRace'] . "'";
 		$res = $this->database->query($sql);
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+	
+	
+	public function endRace()
+	{
+		$this->debug->guard();
 		
 		$this->debug->unguard(true);
 		return true;
@@ -217,6 +195,7 @@ class lrGamestates
 		$this->debug->unguard($finished);
 		return $finished;
 	}
+
 
 	/**
 	 * Checks if race is finished for the given player

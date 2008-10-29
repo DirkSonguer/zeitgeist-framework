@@ -72,13 +72,66 @@ class game
 	{
 		$this->debug->guard();
 
-		$gamefunctions = new lrGamefunctions();
-	
+		if ( (empty($parameters['position_x'])) || (empty($parameters['position_y'])) )
+		{
+			$this->debug->write('Could not move player: no movement detected', 'warning');
+			$this->messages->setMessage('Could not move player: no movement detected', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		// load current gamestates
 		$gamestates = new lrGamestates();
 		$currentGamestates = $gamestates->loadGamestates(1);
 		
-		$ret = $gamefunctions->move($parameters['position_x'], $parameters['position_y']);
-	
+		// check status of current gamestates
+		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
+		{
+			$this->debug->write('Could not move player: gamestates are not loaded', 'warning');
+			$this->messages->setMessage('Could not move player: gamestates are not loaded', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		// load pre turn events
+		$gameeventhandler = new lrGameeventhandler();
+		$gameeventhandler->handleRaceeevents(1);
+
+		// validate if it's the players turn
+		$userfunctions = new lrUserfunctions();
+		if (!$userfunctions->validateTurn())
+		{
+			$this->debug->write('Could not move player: not the players turn', 'warning');
+			$this->messages->setMessage('Could not move player: not the players turn', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		// validate the movement
+		$movementfunctions = new lrMovementfunctions();
+		if (!$movementfunctions->validateMove($parameters['position_x'], $parameters['position_y']))
+		{
+			$this->debug->write('Could not move player: player moved outside its allowed area', 'warning');
+			$this->messages->setMessage('Could not move player: player moved outside its allowed area', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		// check terrain and correct movement value
+		$correctedMove = array();
+		if (!$correctedMove = $movementfunctions->validateTerrain($parameters['position_x'], $parameters['position_y']))
+		{
+			$this->debug->write('Could not move player: validating line failed', 'warning');
+			$this->messages->setMessage('Could not move player: validating line failed', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		// save race action and handle post turn events
+		$gameeventhandler->saveRaceaction($this->configuration->getConfiguration('gamedefinitions', 'actions', 'move'), $correctedMove[0].','.$correctedMove[1]);
+		$gameeventhandler->handleRaceeevents(2);
+
+		// redirect to game overview
 		$tpl = new lrTemplate();
 		$tpl->redirect($tpl->createLink('game', 'index'));
 
@@ -91,13 +144,66 @@ class game
 	{
 		$this->debug->guard();
 
-		$gamefunctions = new lrGamefunctions();
-	
+		if (empty($parameters['gamecard']))
+		{
+			$this->debug->write('Could not play gamecard: no gamecard detected', 'warning');
+			$this->messages->setMessage('Could not play gamecard: no gamecard detected', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		// load current gamestates
 		$gamestates = new lrGamestates();
 		$currentGamestates = $gamestates->loadGamestates(1);
-		
-		$ret = $gamefunctions->playGamecard($parameters['gamecard']);
 	
+		// check status of current gamestates		
+		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
+		{
+			$this->debug->write('Could not play gamecard: gamestates are not loaded', 'warning');
+			$this->messages->setMessage('Could not play gamecard: gamestates are not loaded', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		// load pre turn events
+		$gameeventhandler = new lrGameeventhandler();
+		$gameeventhandler->handleRaceeevents(1);
+
+		// validate if it's the players turn
+		$userfunctions = new lrUserfunctions();
+		if (!$userfunctions->validateTurn())
+		{
+			$this->debug->write('Could not move player: not the players turn', 'warning');
+			$this->messages->setMessage('Could not move player: not the players turn', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		// vidate if the player has the right for the gamecard
+		$gamecardfunctions = new lrGamecardfunctions();
+		if (!$gamecardfunctions->checkRights($parameters['gamecard'], $currentGamestates['currentPlayer']))
+		{
+			$this->debug->write('Could not play gamecard: no rights to play gamecard', 'warning');
+			$this->messages->setMessage('Could not play gamecard: no rights to play gamecard', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		// Get gamecard data
+		if (!$gamecardData = $gamecardfunctions->getGamecardData($parameters['gamecard']))
+		{
+			$this->debug->write('Could not play gamecard: gamecard not found', 'warning');
+			$this->messages->setMessage('Could not play gamecard: gamecard not found', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		// save race action and handle post turn events
+		$gameeventhandler->saveRaceaction($this->configuration->getConfiguration('gamedefinitions', 'actions', 'playgamecard'), $parameters['gamecard']);
+		$gameeventhandler->saveRaceevent($currentGamestates['currentPlayer'], $this->configuration->getConfiguration('gamedefinitions', 'events', 'playgamecard'), $parameters['gamecard'], ($currentGamestates['currentRound']+$gamecardData['gamecard_roundoffset']), $gamecardData['gamecard_type']);
+		$gamecardfunctions->removeGamecard($gamecard, $currentGamestates['currentPlayer']);
+		
+		// redirect to game overview
 		$tpl = new lrTemplate();
 		$tpl->redirect($tpl->createLink('game', 'index'));
 
