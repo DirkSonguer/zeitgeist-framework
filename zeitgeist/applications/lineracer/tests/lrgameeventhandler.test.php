@@ -35,6 +35,36 @@ class testLrgameeventhandler extends UnitTestCase
 		$res = $this->database->query($sql);
 	}
 	
+
+	function test_saveRaceaction()
+	{
+		$gamestates = new lrGamestates();
+		$gameeventhandler = new lrGameeventhandler();
+		$objects = zgObjectcache::init();
+		
+		$this->createNewGame();
+		$gamestates->loadGamestates(1);
+		
+		$ret = $gameeventhandler->saveRaceaction('1', '150,200');
+		$this->assertTrue($ret);
+
+		$ret = $gameeventhandler->saveRaceaction('1', '170,200');
+		$this->assertTrue($ret);
+
+		$ret = $gameeventhandler->saveRaceaction('1', '170,200');
+		$this->assertTrue($ret);
+
+		$objects->deleteObject('currentGamestates');
+		$ret = $gamestates->loadGamestates(1);
+		$this->assertTrue($ret);
+
+		$objects = zgObjectcache::init();
+		$ret = $objects->getObject('currentGamestates');
+		$this->assertTrue(is_array($ret));
+		$this->assertEqual($ret['playerdata'][1]['moves'][1][1], '150,200');
+		$this->assertEqual($ret['playerdata'][1]['vector'][1], '0');
+	}
+	
 	function test_saveRaceevent()
 	{
 		$gameeventhandler = new lrGameeventhandler();

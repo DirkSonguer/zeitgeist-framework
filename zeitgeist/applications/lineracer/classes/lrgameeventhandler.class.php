@@ -25,6 +25,41 @@ class lrGameeventhandler
 
 
 	/**
+	 * This stores a given game action to the database
+	 *
+	 * @param integer $action action to store
+	 * @param integer $parameter parameter of the action
+	 *
+	 * @return boolean
+	 */
+	public function saveRaceaction($action, $parameter)
+	{
+		$this->debug->guard();
+
+		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
+		{
+			$this->debug->write('Could not save gameaction: gamestates are not loaded', 'warning');
+			$this->messages->setMessage('Could not save gameaction: gamestates are not loaded', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('" . $currentGamestates['currentRace'] . "', '" . $currentGamestates['currentPlayer'] . "', '" . $action . "', '" . $parameter . "')";
+		$res = $this->database->query($sql);
+
+		if ($action == 1)
+		{
+			// TODO: next player
+		}
+		
+		$this->objects->storeObject('currentGamestates', $currentGamestates, true);
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+	
+
+	/**
 	 * Saves a raceevent to the stack
 	 *
 	 * @param integer $player id of the player that the event concerns
@@ -68,7 +103,7 @@ class lrGameeventhandler
 	 *
 	 * @return boolean
 	 */
-	public function handlePreEevents()
+	public function handleRaceeevents($type)
 	{
 		$this->debug->guard();
 
@@ -80,7 +115,7 @@ class lrGameeventhandler
 			return false;
 		}
 
-		$sql = "SELECT * FROM race_eventhandler WHERE raceevent_race='" . $currentGamestates['currentRace'] . "' AND raceevent_round='" . $currentGamestates['currentRound'] . "' AND raceevent_player='" . $currentGamestates['currentPlayer'] . "' AND raceevent_type='1'";
+		$sql = "SELECT * FROM race_eventhandler WHERE raceevent_race='" . $currentGamestates['currentRace'] . "' AND raceevent_round='" . $currentGamestates['currentRound'] . "' AND raceevent_player='" . $currentGamestates['currentPlayer'] . "' AND raceevent_type='" . $type . "'";
 		$res = $this->database->query($sql);
 		
 		$activeevents = array();

@@ -58,38 +58,11 @@ class testLrgamestates extends UnitTestCase
 	}
 
 
-	function test_saveGameaction()
-	{
-		$gamestates = new lrGamestates();
-		$objects = zgObjectcache::init();
-		
-		$this->createNewGame();
-		$gamestates->loadGamestates(1);
-		
-		$ret = $gamestates->saveGameaction('1', '150,200');
-		$this->assertTrue($ret);
-
-		$ret = $gamestates->saveGameaction('1', '170,200');
-		$this->assertTrue($ret);
-
-		$ret = $gamestates->saveGameaction('1', '170,200');
-		$this->assertTrue($ret);
-
-		$objects->deleteObject('currentGamestates');
-		$ret = $gamestates->loadGamestates(1);
-		$this->assertTrue($ret);
-
-		$objects = zgObjectcache::init();
-		$ret = $objects->getObject('currentGamestates');
-		$this->assertTrue(is_array($ret));
-		$this->assertEqual($ret['playerdata'][1]['moves'][1][1], '150,200');
-		$this->assertEqual($ret['playerdata'][1]['vector'][1], '0');
-	}
-
 	function test_raceFinished()
 	{
 		$gamestates = new lrGamestates();
 		$objects = zgObjectcache::init();
+		$gameeventhandler = new lrGameeventhandler();
 		
 		$this->createNewGame();
 		$gamestates->loadGamestates(1);
@@ -98,11 +71,11 @@ class testLrgamestates extends UnitTestCase
 		$this->assertFalse($ret);
 
 		$configuration = zgConfiguration::init();
-		$gamestates->saveGameaction($configuration->getConfiguration('gamedefinitions', 'actions', 'finish'), '1');
-		$gamestates->saveGameaction($configuration->getConfiguration('gamedefinitions', 'actions', 'move'), '100,100');
+		$gameeventhandler->saveRaceaction($configuration->getConfiguration('gamedefinitions', 'actions', 'finish'), '1');
+		$gameeventhandler->saveRaceaction($configuration->getConfiguration('gamedefinitions', 'actions', 'move'), '100,100');
 		$objects->deleteObject('currentGamestates');
 		$gamestates->loadGamestates(1);
-		$gamestates->saveGameaction($configuration->getConfiguration('gamedefinitions', 'actions', 'finish'), '1');
+		$gameeventhandler->saveRaceaction($configuration->getConfiguration('gamedefinitions', 'actions', 'finish'), '1');
 		$objects->deleteObject('currentGamestates');
 		$gamestates->loadGamestates(1);
 
@@ -114,6 +87,7 @@ class testLrgamestates extends UnitTestCase
 	{
 		$gamestates = new lrGamestates();
 		$objects = zgObjectcache::init();
+		$gameeventhandler = new lrGameeventhandler();
 		
 		$this->createNewGame();
 		$gamestates->loadGamestates(1);
@@ -122,7 +96,7 @@ class testLrgamestates extends UnitTestCase
 		$this->assertFalse($ret);
 
 		$configuration = zgConfiguration::init();
-		$gamestates->saveGameaction($configuration->getConfiguration('gamedefinitions', 'actions', 'finish'), '1');
+		$gameeventhandler->saveRaceaction($configuration->getConfiguration('gamedefinitions', 'actions', 'finish'), '1');
 		$objects->deleteObject('currentGamestates');
 		$gamestates->loadGamestates(1);
 

@@ -58,14 +58,15 @@ class testLrmovementfunctions extends UnitTestCase
 	{
 		$gamestates = new lrGamestates();
 		$movementfunctions = new lrMovementfunctions();
+		$gameeventhandler = new lrGameeventhandler();
 		
 		$this->createNewGame();
 
-		$gamestates->loadGamestates(1);
-		$gamestates->saveGameaction('1', '150,200');
-		$gamestates->saveGameaction('1', '170,200');
-		$gamestates->saveGameaction('1', '190,200');
-		$gamestates->saveGameaction('1', '210,200');
+		$gameeventhandler->loadGamestates(1);
+		$gameeventhandler->saveRaceaction('1', '150,200');
+		$gameeventhandler->saveRaceaction('1', '170,200');
+		$gameeventhandler->saveRaceaction('1', '190,200');
+		$gameeventhandler->saveRaceaction('1', '210,200');
 		$gamestates->loadGamestates(1);
 
 		$ret = $movementfunctions->getMovement(1, -1);
