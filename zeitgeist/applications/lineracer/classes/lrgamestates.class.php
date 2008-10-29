@@ -111,10 +111,6 @@ class lrGamestates
 		
 		// done loading
 		$this->objects->storeObject('currentGamestates', $currentGamestates, true);
-		
-		// handle current game events and update the gamestates
-		$gameeventhandler = new lrGameeventhandler();
-		$gameeventhandler->handleRaceevents();
 
 		$this->debug->unguard(true);
 		return true;
@@ -146,22 +142,46 @@ class lrGamestates
 
 		if ($action == 1)
 		{
-			$sql = "DELETE FROM race_eventhandler WHERE raceevent_race='" . $currentGamestates['currentRace'] . "' AND raceevent_player='" . $currentGamestates['currentPlayer'] . "' AND raceevent_round='" . $currentGamestates['currentRound'] . "'";
-			$res = $this->database->query($sql);
-
-			$currentGamestates['currentPlayer'] += 1;
-			if ($currentGamestates['currentPlayer'] > $currentGamestates['numPlayers'])
-			{
-				$currentGamestates['currentPlayer'] = 1;
-				$currentGamestates['currentRound'] += 1;
-			}
-
-			$currentround = ", race_currentround='" . $currentGamestates['currentRound'] . "'";			
-			$sql = "UPDATE races SET race_activeplayer='" . $currentGamestates['currentPlayer'] . "'" . $currentround . "  WHERE race_id='" . $currentGamestates['currentRace'] . "'";
-			$res = $this->database->query($sql);
+			// TODO: next player
 		}
 		
 		$this->objects->storeObject('currentGamestates', $currentGamestates, true);
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	/**
+	 * Switches to next player
+	 *
+	 * @return boolean
+	 */
+	public function nextPlayer()
+	{
+		$this->debug->guard();
+
+		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
+		{
+			$this->debug->write('Could not switch to next player: gamestates are not loaded', 'warning');
+			$this->messages->setMessage('Could not switch to next player: gamestates are not loaded', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$sql = "DELETE FROM race_eventhandler WHERE raceevent_race='" . $currentGamestates['currentRace'] . "' AND raceevent_player='" . $currentGamestates['currentPlayer'] . "' AND raceevent_round='" . $currentGamestates['currentRound'] . "'";
+		$res = $this->database->query($sql);
+
+		$currentGamestates['currentPlayer'] += 1;
+		if ($currentGamestates['currentPlayer'] > $currentGamestates['numPlayers'])
+		{
+			$currentGamestates['currentPlayer'] = 1;
+			$currentGamestates['currentRound'] += 1;
+		}
+
+		$currentround = ", race_currentround='" . $currentGamestates['currentRound'] . "'";			
+		$sql = "UPDATE races SET race_activeplayer='" . $currentGamestates['currentPlayer'] . "'" . $currentround . "  WHERE race_id='" . $currentGamestates['currentRace'] . "'";
+		$res = $this->database->query($sql);
 		
 		$this->debug->unguard(true);
 		return true;

@@ -34,7 +34,7 @@ class lrGameeventhandler
 	 *
 	 * @return boolean
 	 */
-	public function saveRaceevent($player, $action, $parameter, $round=0)
+	public function saveRaceevent($player, $action, $parameter, $round=0, $type=1)
 	{
 		$this->debug->guard();
 
@@ -48,7 +48,7 @@ class lrGameeventhandler
 		
 		if ($round == 0) $round = $currentGamestates['currentRound'];
 
-		$sql  = "INSERT INTO race_eventhandler(raceevent_race, raceevent_round, raceevent_action, raceevent_parameter, raceevent_player) VALUES('" . $currentGamestates['currentRace'] . "', '" . $round . "', '" . $action . "', '" . $parameter . "', '" . $player . "')";
+		$sql  = "INSERT INTO race_eventhandler(raceevent_race, raceevent_round, raceevent_type, raceevent_action, raceevent_parameter, raceevent_player) VALUES('" . $currentGamestates['currentRace'] . "', '" . $round . "', '" . $type . "', '" . $action . "', '" . $parameter . "', '" . $player . "')";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -68,7 +68,7 @@ class lrGameeventhandler
 	 *
 	 * @return boolean
 	 */
-	public function handleRaceevents()
+	public function handlePreEevents()
 	{
 		$this->debug->guard();
 
@@ -80,7 +80,7 @@ class lrGameeventhandler
 			return false;
 		}
 
-		$sql = "SELECT * FROM race_eventhandler WHERE raceevent_race='" . $currentGamestates['currentRace'] . "' AND raceevent_round='" . $currentGamestates['currentRound'] . "' AND raceevent_player='" . $currentGamestates['currentPlayer'] . "'";
+		$sql = "SELECT * FROM race_eventhandler WHERE raceevent_race='" . $currentGamestates['currentRace'] . "' AND raceevent_round='" . $currentGamestates['currentRound'] . "' AND raceevent_player='" . $currentGamestates['currentPlayer'] . "' AND raceevent_type='1'";
 		$res = $this->database->query($sql);
 		
 		$activeevents = array();
