@@ -1,22 +1,16 @@
 -- phpMyAdmin SQL Dump
--- version 2.11.7
+-- version 2.11.4
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 26. Oktober 2008 um 16:21
+-- Erstellungszeit: 01. November 2008 um 09:49
 -- Server Version: 5.0.51
--- PHP-Version: 5.2.6
+-- PHP-Version: 5.2.5
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-
 --
--- Datenbank: `lineracer`
+-- Datenbank: `lineracer_test`
 --
 
 -- --------------------------------------------------------
@@ -126,7 +120,7 @@ CREATE TABLE IF NOT EXISTS `configurationcache` (
   `configurationcache_content` text NOT NULL,
   PRIMARY KEY  (`configurationcache_id`),
   UNIQUE KEY `configuration_cache_modulename` (`configurationcache_name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
 
 --
 -- Daten für Tabelle `configurationcache`
@@ -138,10 +132,11 @@ INSERT INTO `configurationcache` (`configurationcache_id`, `configurationcache_n
 (3, 'configuration/lineracer.ini', '1224959711', 'YToyOntzOjExOiJhcHBsaWNhdGlvbiI7YTozOntzOjg6ImJhc2VwYXRoIjtzOjI2OiJodHRwOi8vMTI3LjAuMC4xL2xpbmVyYWNlciI7czoxMjoidGVtcGxhdGVwYXRoIjtzOjk6ImxpbmVyYWNlciI7czoxMToidmVyc2lvbmluZm8iO3M6MzY6IkxpbmVyYWNlciBWZXJzaW9uIGIxNTg7IDIwMDctMjAwOCBNVyI7fXM6MTQ6InBhcmFtZXRlcnR5cGVzIjthOjI6e3M6ODoidXNlcm5hbWUiO3M6Mjc6Ii9eW1x3w7zDnMOkw4TDtsOWIF17NCwxNn0kLyI7czoxMjoidXNlcnBhc3N3b3JkIjtzOjExOiIvXi57NCwxNn0kLyI7fX0='),
 (4, './modules/main/main.ini', '1212245876', 'YTozOntzOjU6ImluZGV4IjthOjE6e3M6MjE6Imhhc0V4dGVybmFsUGFyYW1ldGVycyI7czo1OiJmYWxzZSI7fXM6NToibG9naW4iO2E6NDp7czoyMToiaGFzRXh0ZXJuYWxQYXJhbWV0ZXJzIjtzOjQ6InRydWUiO3M6ODoidXNlcm5hbWUiO2E6Mzp7czo5OiJwYXJhbWV0ZXIiO3M6NDoidHJ1ZSI7czo2OiJzb3VyY2UiO3M6NDoiUE9TVCI7czo0OiJ0eXBlIjtzOjExOiIvXi57NCwzMn0kLyI7fXM6ODoicGFzc3dvcmQiO2E6Mzp7czo5OiJwYXJhbWV0ZXIiO3M6NDoidHJ1ZSI7czo2OiJzb3VyY2UiO3M6NDoiUE9TVCI7czo0OiJ0eXBlIjtzOjExOiIvXi57NCwzMn0kLyI7fXM6NToibG9naW4iO2E6NDp7czo5OiJwYXJhbWV0ZXIiO3M6NDoidHJ1ZSI7czo2OiJzb3VyY2UiO3M6NDoiUE9TVCI7czo0OiJ0eXBlIjtzOjg6IkNPTlNUQU5UIjtzOjU6InZhbHVlIjtzOjU6IkxvZ2luIjt9fXM6OToidGVtcGxhdGVzIjthOjI6e3M6MTA6Im1haW5faW5kZXgiO3M6Njg6InRlbXBsYXRlcy9bW2xpbmVyYWNlci5hcHBsaWNhdGlvbi50ZW1wbGF0ZXBhdGhdXS9tYWluX2luZGV4LnRwbC5odG1sIjtzOjEwOiJtYWluX2xvZ2luIjtzOjY4OiJ0ZW1wbGF0ZXMvW1tsaW5lcmFjZXIuYXBwbGljYXRpb24udGVtcGxhdGVwYXRoXV0vbWFpbl9sb2dpbi50cGwuaHRtbCI7fX0='),
 (6, './modules/game/game.ini', '1224962753', 'YTozOntzOjQ6Im1vdmUiO2E6Mzp7czoyMToiaGFzRXh0ZXJuYWxQYXJhbWV0ZXJzIjtzOjQ6InRydWUiO3M6MTA6InBvc2l0aW9uX3giO2E6Mzp7czo5OiJwYXJhbWV0ZXIiO3M6NDoidHJ1ZSI7czo2OiJzb3VyY2UiO3M6MzoiR0VUIjtzOjQ6InR5cGUiO3M6MTA6Ii9eWzAtOV0qJC8iO31zOjEwOiJwb3NpdGlvbl95IjthOjM6e3M6OToicGFyYW1ldGVyIjtzOjQ6InRydWUiO3M6Njoic291cmNlIjtzOjM6IkdFVCI7czo0OiJ0eXBlIjtzOjEwOiIvXlswLTldKiQvIjt9fXM6NjoidXBkYXRlIjthOjM6e3M6MjE6Imhhc0V4dGVybmFsUGFyYW1ldGVycyI7czo0OiJ0cnVlIjtzOjg6InBsYXllcmlkIjthOjM6e3M6OToicGFyYW1ldGVyIjtzOjQ6InRydWUiO3M6Njoic291cmNlIjtzOjM6IkdFVCI7czo0OiJ0eXBlIjtzOjEwOiIvXlswLTldKiQvIjt9czo5OiJwbGF5ZXJrZXkiO2E6Mzp7czo5OiJwYXJhbWV0ZXIiO3M6NDoidHJ1ZSI7czo2OiJzb3VyY2UiO3M6MzoiR0VUIjtzOjQ6InR5cGUiO3M6MTI6Ii9eLnsyNSwzNX0kLyI7fX1zOjk6InRlbXBsYXRlcyI7YToxOntzOjEwOiJnYW1lX2luZGV4IjtzOjY4OiJ0ZW1wbGF0ZXMvW1tsaW5lcmFjZXIuYXBwbGljYXRpb24udGVtcGxhdGVwYXRoXV0vZ2FtZV9pbmRleC50cGwuaHRtbCI7fX0='),
-(7, '../zeitgeist/configuration/zeitgeist.ini', '1223063625', 'YToxMDp7czo3OiJtb2R1bGVzIjthOjI6e3M6MTE6ImZvcm1jcmVhdG9yIjtzOjQ6InRydWUiO3M6NDoic2hvcCI7czo0OiJ0cnVlIjt9czo2OiJ0YWJsZXMiO2E6MTQ6e3M6MTE6InRhYmxlX3VzZXJzIjtzOjU6InVzZXJzIjtzOjE0OiJ0YWJsZV91c2VyZGF0YSI7czo4OiJ1c2VyZGF0YSI7czoxNjoidGFibGVfdXNlcnJpZ2h0cyI7czoxMDoidXNlcnJpZ2h0cyI7czoxNToidGFibGVfdXNlcnJvbGVzIjtzOjk6InVzZXJyb2xlcyI7czoyMDoidGFibGVfdXNlcmNoYXJhY3RlcnMiO3M6MTQ6InVzZXJjaGFyYWN0ZXJzIjtzOjI0OiJ0YWJsZV91c2Vycm9sZXNfdG9fdXNlcnMiO3M6MTg6InVzZXJyb2xlc190b191c2VycyI7czoyNjoidGFibGVfdXNlcnJvbGVzX3RvX2FjdGlvbnMiO3M6MjA6InVzZXJyb2xlc190b19hY3Rpb25zIjtzOjE4OiJ0YWJsZV91c2Vyc2Vzc2lvbnMiO3M6MTI6InVzZXJzZXNzaW9ucyI7czoyMjoidGFibGVfdXNlcmNvbmZpcm1hdGlvbiI7czoxNjoidXNlcmNvbmZpcm1hdGlvbiI7czoxNzoidGFibGVfc2Vzc2lvbmRhdGEiO3M6MTE6InNlc3Npb25kYXRhIjtzOjEzOiJ0YWJsZV9tb2R1bGVzIjtzOjc6Im1vZHVsZXMiO3M6MTM6InRhYmxlX2FjdGlvbnMiO3M6NzoiYWN0aW9ucyI7czoxOToidGFibGVfdGVtcGxhdGVjYWNoZSI7czoxMzoidGVtcGxhdGVjYWNoZSI7czoxODoidGFibGVfbWVzc2FnZWNhY2hlIjtzOjEyOiJtZXNzYWdlY2FjaGUiO31zOjc6InNlc3Npb24iO2E6Mzp7czoxNToic2Vzc2lvbl9zdG9yYWdlIjtzOjg6ImRhdGFiYXNlIjtzOjEyOiJzZXNzaW9uX25hbWUiO3M6MTk6IlpFSVRHRUlTVF9TRVNTSU9OSUQiO3M6MTY6InNlc3Npb25fbGlmZXRpbWUiO3M6MToiMCI7fXM6ODoibWVzc2FnZXMiO2E6MTp7czoyMzoidXNlX3BlcnNpc3RlbnRfbWVzc2FnZXMiO3M6MToiMSI7fXM6ODoidGVtcGxhdGUiO2E6MTU6e3M6MTI6InJld3JpdGVfdXJscyI7czoxOiIwIjtzOjE4OiJ2YXJpYWJsZVN1YnN0QmVnaW4iO3M6NToiPCEtLUAiO3M6MTY6InZhcmlhYmxlU3Vic3RFbmQiO3M6NDoiQC0tPiI7czoxNToiYmxvY2tTdWJzdEJlZ2luIjtzOjU6IjwhLS0jIjtzOjEzOiJibG9ja1N1YnN0RW5kIjtzOjQ6IiMtLT4iO3M6OToibGlua0JlZ2luIjtzOjQ6IkBAe1siO3M6NzoibGlua0VuZCI7czo0OiJdfUBAIjtzOjEzOiJ2YXJpYWJsZUJlZ2luIjtzOjM6IkBAeyI7czoxMToidmFyaWFibGVFbmQiO3M6MzoifUBAIjtzOjE0OiJibG9ja09wZW5CZWdpbiI7czozMDoiPCEtLSBUZW1wbGF0ZUJlZ2luQmxvY2sgbmFtZT0iIjtzOjEyOiJibG9ja09wZW5FbmQiO3M6NToiIiAtLT4iO3M6MTA6ImJsb2NrQ2xvc2UiO3M6MjU6IjwhLS0gVGVtcGxhdGVFbmRCbG9jayAtLT4iO3M6MTk6IlVzZXJtZXNzYWdlV2FybmluZ3MiO3M6MTI6InVzZXJ3YXJuaW5ncyI7czoxNzoiVXNlcm1lc3NhZ2VFcnJvcnMiO3M6MTA6InVzZXJlcnJvcnMiO3M6MTk6IlVzZXJtZXNzYWdlTWVzc2FnZXMiO3M6MTE6InVzZXJtZXNzYWdlIjt9czoxMjoiZXZlbnRoYW5kbGVyIjthOjM6e3M6MjQ6Im5vX3VzZXJyaWdodHNfZm9yX2FjdGlvbiI7czoxOiIyIjtzOjI4OiJyZXF1aXJlZF9wYXJhbWV0ZXJfbm90X2ZvdW5kIjtzOjM6Ijk5OSI7czo5OiJtZXRob2Rfb2siO3M6NDoidHJ1ZSI7fXM6MTM6InRyYWZmaWNsb2dnZXIiO2E6MTp7czoyMDoidHJhZmZpY2xvZ2dlcl9hY3RpdmUiO3M6MToiMCI7fXM6MTI6ImVycm9yaGFuZGxlciI7YToxOntzOjE3OiJlcnJvcl9yZXBvcnRsZXZlbCI7czoxOiIyIjt9czoxMToidXNlcmhhbmRsZXIiO2E6MTp7czoxNToidXNlX2RvdWJsZW9wdGluIjtzOjE6IjEiO31zOjE2OiJwYXJhbWV0ZXJoYW5kbGVyIjthOjg6e3M6MTc6ImVzY2FwZV9wYXJhbWV0ZXJzIjtzOjE6IjEiO3M6NToiZW1haWwiO3M6NjY6Ii9eW1x3XC1cK1wmXCpdKyg/OlwuW1x3XC1cX1wrXCZcKl0rKSpAKD86W1x3LV0rXC4pK1thLXpBLVpdezIsN30kLyI7czozOiJ1cmwiO3M6ODU6Ii9eKGZ0cHxodHRwfGh0dHBzKTpcL1wvKFx3Kzp7MCwxfVx3KkApPyhcUyspKDpbMC05XSspPyhcL3xcLyhbXHcjITouPys9JiVAIVwtXC9dKSk/JC8iO3M6MzoiemlwIjtzOjExOiIvXlxkezMsNX0kLyI7czo2OiJzdHJpbmciO3M6Njc6Ii9eW1x3w7zDnMOkw4TDtsOWIF0rKChbXCxcLlw6XC1cL1woXClcIVw/IF0pP1tcd8O8w5zDpMOEw7bDliBdKikqJC8iO3M6NDoidGV4dCI7czo3NzoiL15bXHfDvMOcw6TDhMO2w5YgXSsoKFtcXFwiXCxcLlw6XC1cL1xyXG5cdFwhXD9cKFwpIF0pP1tcd8O8w5zDpMOEw7bDliBdKikqJC8iO3M6NjoibnVtYmVyIjtzOjI0OiIvXlswLTldKihcLnxcLCk/WzAtOV0rJC8iO3M6NDoiZGF0ZSI7czozODoiL15bMC05XXsyfShcLik/WzAtOV17Mn0oXC4pP1swLTldezR9JC8iO319'),
-(8, '../configuration/zeitgeist.ini', '1198895915', 'YToyOntzOjc6InNlc3Npb24iO2E6Mzp7czoxNToic2Vzc2lvbl9zdG9yYWdlIjtzOjg6ImRhdGFiYXNlIjtzOjEyOiJzZXNzaW9uX25hbWUiO3M6OToiTElORVJBQ0VSIjtzOjE2OiJzZXNzaW9uX2xpZmV0aW1lIjtzOjE6IjAiO31zOjEzOiJ0cmFmZmljbG9nZ2VyIjthOjE6e3M6MjA6InRyYWZmaWNsb2dnZXJfYWN0aXZlIjtzOjE6IjEiO319'),
-(9, '../configuration/lineracer.ini', '1224959711', 'YToyOntzOjExOiJhcHBsaWNhdGlvbiI7YTozOntzOjg6ImJhc2VwYXRoIjtzOjI2OiJodHRwOi8vMTI3LjAuMC4xL2xpbmVyYWNlciI7czoxMjoidGVtcGxhdGVwYXRoIjtzOjk6ImxpbmVyYWNlciI7czoxMToidmVyc2lvbmluZm8iO3M6MzY6IkxpbmVyYWNlciBWZXJzaW9uIGIxNTg7IDIwMDctMjAwOCBNVyI7fXM6MTQ6InBhcmFtZXRlcnR5cGVzIjthOjI6e3M6ODoidXNlcm5hbWUiO3M6Mjc6Ii9eW1x3w7zDnMOkw4TDtsOWIF17NCwxNn0kLyI7czoxMjoidXNlcnBhc3N3b3JkIjtzOjExOiIvXi57NCwxNn0kLyI7fX0='),
-(11, 'configuration/gamedefinitions.ini', '1224921214', 'YTo0OntzOjk6ImdhbWVsb2dpYyI7YToxOntzOjE0OiJtb3ZlbWVudHJhZGl1cyI7czoyOiIyMCI7fXM6NzoiYWN0aW9ucyI7YTozOntzOjQ6Im1vdmUiO3M6MToiMSI7czo1OiJjcmFzaCI7czoxOiIyIjtzOjEyOiJwbGF5Z2FtZWNhcmQiO3M6MToiMyI7fXM6NjoiZXZlbnRzIjthOjI6e3M6NToiY3Jhc2giO3M6MToiMiI7czoxMjoicGxheWdhbWVjYXJkIjtzOjE6IjMiO31zOjk6ImdhbWVjYXJkcyI7YTozOntpOjE7czoxMzoiZ2NfZG91YmxlbW92ZSI7aToyO3M6NzoiZ2NfZGFzaCI7aTozO3M6MTE6ImdjX2Z1bGxzdG9wIjt9fQ==');
+(12, '../zeitgeist/configuration/zeitgeist.ini', '1223277030', 'YToxMDp7czo3OiJtb2R1bGVzIjthOjI6e3M6MTE6ImZvcm1jcmVhdG9yIjtzOjQ6InRydWUiO3M6NDoic2hvcCI7czo0OiJ0cnVlIjt9czo2OiJ0YWJsZXMiO2E6MTQ6e3M6MTE6InRhYmxlX3VzZXJzIjtzOjU6InVzZXJzIjtzOjE0OiJ0YWJsZV91c2VyZGF0YSI7czo4OiJ1c2VyZGF0YSI7czoxNjoidGFibGVfdXNlcnJpZ2h0cyI7czoxMDoidXNlcnJpZ2h0cyI7czoxNToidGFibGVfdXNlcnJvbGVzIjtzOjk6InVzZXJyb2xlcyI7czoyMDoidGFibGVfdXNlcmNoYXJhY3RlcnMiO3M6MTQ6InVzZXJjaGFyYWN0ZXJzIjtzOjI0OiJ0YWJsZV91c2Vycm9sZXNfdG9fdXNlcnMiO3M6MTg6InVzZXJyb2xlc190b191c2VycyI7czoyNjoidGFibGVfdXNlcnJvbGVzX3RvX2FjdGlvbnMiO3M6MjA6InVzZXJyb2xlc190b19hY3Rpb25zIjtzOjE4OiJ0YWJsZV91c2Vyc2Vzc2lvbnMiO3M6MTI6InVzZXJzZXNzaW9ucyI7czoyMjoidGFibGVfdXNlcmNvbmZpcm1hdGlvbiI7czoxNjoidXNlcmNvbmZpcm1hdGlvbiI7czoxNzoidGFibGVfc2Vzc2lvbmRhdGEiO3M6MTE6InNlc3Npb25kYXRhIjtzOjEzOiJ0YWJsZV9tb2R1bGVzIjtzOjc6Im1vZHVsZXMiO3M6MTM6InRhYmxlX2FjdGlvbnMiO3M6NzoiYWN0aW9ucyI7czoxOToidGFibGVfdGVtcGxhdGVjYWNoZSI7czoxMzoidGVtcGxhdGVjYWNoZSI7czoxODoidGFibGVfbWVzc2FnZWNhY2hlIjtzOjEyOiJtZXNzYWdlY2FjaGUiO31zOjc6InNlc3Npb24iO2E6Mzp7czoxNToic2Vzc2lvbl9zdG9yYWdlIjtzOjg6ImRhdGFiYXNlIjtzOjEyOiJzZXNzaW9uX25hbWUiO3M6MTk6IlpFSVRHRUlTVF9TRVNTSU9OSUQiO3M6MTY6InNlc3Npb25fbGlmZXRpbWUiO3M6MToiMCI7fXM6ODoibWVzc2FnZXMiO2E6MTp7czoyMzoidXNlX3BlcnNpc3RlbnRfbWVzc2FnZXMiO3M6MToiMSI7fXM6ODoidGVtcGxhdGUiO2E6MTU6e3M6MTI6InJld3JpdGVfdXJscyI7czoxOiIwIjtzOjE4OiJ2YXJpYWJsZVN1YnN0QmVnaW4iO3M6NToiPCEtLUAiO3M6MTY6InZhcmlhYmxlU3Vic3RFbmQiO3M6NDoiQC0tPiI7czoxNToiYmxvY2tTdWJzdEJlZ2luIjtzOjU6IjwhLS0jIjtzOjEzOiJibG9ja1N1YnN0RW5kIjtzOjQ6IiMtLT4iO3M6OToibGlua0JlZ2luIjtzOjQ6IkBAe1siO3M6NzoibGlua0VuZCI7czo0OiJdfUBAIjtzOjEzOiJ2YXJpYWJsZUJlZ2luIjtzOjM6IkBAeyI7czoxMToidmFyaWFibGVFbmQiO3M6MzoifUBAIjtzOjE0OiJibG9ja09wZW5CZWdpbiI7czozMDoiPCEtLSBUZW1wbGF0ZUJlZ2luQmxvY2sgbmFtZT0iIjtzOjEyOiJibG9ja09wZW5FbmQiO3M6NToiIiAtLT4iO3M6MTA6ImJsb2NrQ2xvc2UiO3M6MjU6IjwhLS0gVGVtcGxhdGVFbmRCbG9jayAtLT4iO3M6MTk6IlVzZXJtZXNzYWdlV2FybmluZ3MiO3M6MTI6InVzZXJ3YXJuaW5ncyI7czoxNzoiVXNlcm1lc3NhZ2VFcnJvcnMiO3M6MTA6InVzZXJlcnJvcnMiO3M6MTk6IlVzZXJtZXNzYWdlTWVzc2FnZXMiO3M6MTE6InVzZXJtZXNzYWdlIjt9czoxMjoiZXZlbnRoYW5kbGVyIjthOjM6e3M6MjQ6Im5vX3VzZXJyaWdodHNfZm9yX2FjdGlvbiI7czoxOiIyIjtzOjI4OiJyZXF1aXJlZF9wYXJhbWV0ZXJfbm90X2ZvdW5kIjtzOjM6Ijk5OSI7czo5OiJtZXRob2Rfb2siO3M6NDoidHJ1ZSI7fXM6MTM6InRyYWZmaWNsb2dnZXIiO2E6MTp7czoyMDoidHJhZmZpY2xvZ2dlcl9hY3RpdmUiO3M6MToiMCI7fXM6MTI6ImVycm9yaGFuZGxlciI7YToxOntzOjE3OiJlcnJvcl9yZXBvcnRsZXZlbCI7czoxOiIyIjt9czoxMToidXNlcmhhbmRsZXIiO2E6MTp7czoxNToidXNlX2RvdWJsZW9wdGluIjtzOjE6IjEiO31zOjE2OiJwYXJhbWV0ZXJoYW5kbGVyIjthOjg6e3M6MTc6ImVzY2FwZV9wYXJhbWV0ZXJzIjtzOjE6IjEiO3M6NToiZW1haWwiO3M6NjY6Ii9eW1x3XC1cK1wmXCpdKyg/OlwuW1x3XC1cX1wrXCZcKl0rKSpAKD86W1x3LV0rXC4pK1thLXpBLVpdezIsN30kLyI7czozOiJ1cmwiO3M6ODU6Ii9eKGZ0cHxodHRwfGh0dHBzKTpcL1wvKFx3Kzp7MCwxfVx3KkApPyhcUyspKDpbMC05XSspPyhcL3xcLyhbXHcjITouPys9JiVAIVwtXC9dKSk/JC8iO3M6MzoiemlwIjtzOjExOiIvXlxkezMsNX0kLyI7czo2OiJzdHJpbmciO3M6Njc6Ii9eW1x3w7zDnMOkw4TDtsOWIF0rKChbXCxcLlw6XC1cL1woXClcIVw/IF0pP1tcd8O8w5zDpMOEw7bDliBdKikqJC8iO3M6NDoidGV4dCI7czo3NzoiL15bXHfDvMOcw6TDhMO2w5YgXSsoKFtcXFwiXCxcLlw6XC1cL1xyXG5cdFwhXD9cKFwpIF0pP1tcd8O8w5zDpMOEw7bDliBdKikqJC8iO3M6NjoibnVtYmVyIjtzOjI0OiIvXlswLTldKihcLnxcLCk/WzAtOV0rJC8iO3M6NDoiZGF0ZSI7czozODoiL15bMC05XXsyfShcLik/WzAtOV17Mn0oXC4pP1swLTldezR9JC8iO319'),
+(13, '../configuration/zeitgeist.ini', '1198899516', 'YToyOntzOjc6InNlc3Npb24iO2E6Mzp7czoxNToic2Vzc2lvbl9zdG9yYWdlIjtzOjg6ImRhdGFiYXNlIjtzOjEyOiJzZXNzaW9uX25hbWUiO3M6OToiTElORVJBQ0VSIjtzOjE2OiJzZXNzaW9uX2xpZmV0aW1lIjtzOjE6IjAiO31zOjEzOiJ0cmFmZmljbG9nZ2VyIjthOjE6e3M6MjA6InRyYWZmaWNsb2dnZXJfYWN0aXZlIjtzOjE6IjEiO319'),
+(14, '../configuration/lineracer.ini', '1225088624', 'YToyOntzOjExOiJhcHBsaWNhdGlvbiI7YTozOntzOjg6ImJhc2VwYXRoIjtzOjI2OiJodHRwOi8vMTI3LjAuMC4xL2xpbmVyYWNlciI7czoxMjoidGVtcGxhdGVwYXRoIjtzOjk6ImxpbmVyYWNlciI7czoxMToidmVyc2lvbmluZm8iO3M6MzY6IkxpbmVyYWNlciBWZXJzaW9uIGIxNTg7IDIwMDctMjAwOCBNVyI7fXM6MTQ6InBhcmFtZXRlcnR5cGVzIjthOjI6e3M6ODoidXNlcm5hbWUiO3M6Mjc6Ii9eW1x3w7zDnMOkw4TDtsOWIF17NCwxNn0kLyI7czoxMjoidXNlcnBhc3N3b3JkIjtzOjExOiIvXi57NCwxNn0kLyI7fX0='),
+(11, 'configuration/gamedefinitions.ini', '1224921214', 'YTo0OntzOjk6ImdhbWVsb2dpYyI7YToxOntzOjE0OiJtb3ZlbWVudHJhZGl1cyI7czoyOiIyMCI7fXM6NzoiYWN0aW9ucyI7YTozOntzOjQ6Im1vdmUiO3M6MToiMSI7czo1OiJjcmFzaCI7czoxOiIyIjtzOjEyOiJwbGF5Z2FtZWNhcmQiO3M6MToiMyI7fXM6NjoiZXZlbnRzIjthOjI6e3M6NToiY3Jhc2giO3M6MToiMiI7czoxMjoicGxheWdhbWVjYXJkIjtzOjE6IjMiO31zOjk6ImdhbWVjYXJkcyI7YTozOntpOjE7czoxMzoiZ2NfZG91YmxlbW92ZSI7aToyO3M6NzoiZ2NfZGFzaCI7aTozO3M6MTE6ImdjX2Z1bGxzdG9wIjt9fQ=='),
+(15, '../configuration/gamedefinitions.ini', '1225178052', 'YTo1OntzOjk6ImdhbWVsb2dpYyI7YToxOntzOjE0OiJtb3ZlbWVudHJhZGl1cyI7czoyOiIyMCI7fXM6NzoiYWN0aW9ucyI7YTo3OntzOjQ6Im1vdmUiO3M6MToiMSI7czo1OiJjcmFzaCI7czoxOiIyIjtzOjEyOiJwbGF5Z2FtZWNhcmQiO3M6MToiMyI7czoxMToiY2hlY2twb2ludDEiO3M6MToiNCI7czoxMToiY2hlY2twb2ludDIiO3M6MToiNSI7czoxMToiY2hlY2twb2ludDMiO3M6MToiNiI7czo2OiJmaW5pc2giO3M6MToiNyI7fXM6NjoiZXZlbnRzIjthOjI6e3M6NToiY3Jhc2giO3M6MToiMiI7czoxMjoicGxheWdhbWVjYXJkIjtzOjE6IjMiO31zOjk6ImdhbWVjYXJkcyI7YTozOntpOjE7czoxMzoiZ2NfZG91YmxlbW92ZSI7aToyO3M6NzoiZ2NfZGFzaCI7aTozO3M6MTI6ImdjX2Z1bGxicmVhayI7fXM6MTM6ImdhbWVfc3VyZmFjZXMiO2E6Njp7czoxMDoidW5wYXNzYWJsZSI7czoxOiIwIjtzOjY6Im5vcm1hbCI7czoxOiIxIjtzOjExOiJjaGVja3BvaW50MSI7czoxOiIyIjtzOjExOiJjaGVja3BvaW50MiI7czoxOiIzIjtzOjExOiJjaGVja3BvaW50MyI7czoxOiI0IjtzOjY6ImZpbmlzaCI7czoxOiI1Ijt9fQ==');
 
 -- --------------------------------------------------------
 
@@ -158,16 +153,14 @@ CREATE TABLE IF NOT EXISTS `gamecards` (
   `gamecard_roundoffset` int(2) NOT NULL,
   `gamecard_playerrange` varchar(255) collate latin1_general_ci NOT NULL,
   PRIMARY KEY  (`gamecard_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=4 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=2 ;
 
 --
 -- Daten für Tabelle `gamecards`
 --
 
 INSERT INTO `gamecards` (`gamecard_id`, `gamecard_name`, `gamecard_description`, `gamecard_image`, `gamecard_code`, `gamecard_roundoffset`, `gamecard_playerrange`) VALUES
-(1, 'Zweimal ziehen', 'Der Spieler kann 2x ziehen', '', '', 1, '0'),
-(2, 'Bleifuß', 'Der Spieler beschleunigt', '', '', 0, '0'),
-(3, 'Vollbremsung', 'Der Spieler macht eine Vollbremsung', '', '', 0, '0');
+(1, 'Test', 'Simple Gamecard Test', '', '', 1, '0');
 
 -- --------------------------------------------------------
 
@@ -312,7 +305,7 @@ CREATE TABLE IF NOT EXISTS `races` (
 --
 
 INSERT INTO `races` (`race_id`, `race_player1`, `race_player2`, `race_player3`, `race_player4`, `race_circuit`, `race_activeplayer`, `race_currentround`, `race_gamecardsallowed`, `race_created`) VALUES
-(1, 1, 2, 3, NULL, 1, 2, 2, 0, '2008-10-26 09:56:59');
+(1, 1, 2, 3, 4, 1, 1, 1, 0, '2008-10-31 10:45:54');
 
 -- --------------------------------------------------------
 
@@ -321,71 +314,48 @@ INSERT INTO `races` (`race_id`, `race_player1`, `race_player2`, `race_player3`, 
 --
 
 CREATE TABLE IF NOT EXISTS `race_actions` (
-  `action_id` int(12) NOT NULL auto_increment,
-  `action_name` varchar(255) collate latin1_general_ci NOT NULL,
-  `action_description` text collate latin1_general_ci NOT NULL,
-  PRIMARY KEY  (`action_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=4 ;
+  `raceaction_id` int(12) NOT NULL auto_increment,
+  `raceaction_race` int(12) NOT NULL,
+  `raceaction_user` int(12) NOT NULL,
+  `raceaction_action` int(12) NOT NULL,
+  `raceaction_parameter` varchar(255) collate latin1_general_ci NOT NULL,
+  `raceaction_timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`raceaction_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=5 ;
 
 --
 -- Daten für Tabelle `race_actions`
 --
 
-INSERT INTO `race_actions` (`action_id`, `action_name`, `action_description`) VALUES
-(1, 'move', 'macht einen Zug'),
-(2, 'crash', 'hat einen Unfall'),
-(3, 'gamecard', 'spielt eine Rennkarte');
+INSERT INTO `race_actions` (`raceaction_id`, `raceaction_race`, `raceaction_user`, `raceaction_action`, `raceaction_parameter`, `raceaction_timestamp`) VALUES
+(1, 1, 1, 1, '150,370', '2008-10-31 10:45:54'),
+(2, 1, 2, 1, '170,370', '2008-10-31 10:45:54'),
+(3, 1, 3, 1, '190,370', '2008-10-31 10:45:54'),
+(4, 1, 4, 1, '210,370', '2008-10-31 10:45:54');
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `race_eventhandler`
+-- Tabellenstruktur für Tabelle `race_events`
 --
 
-CREATE TABLE IF NOT EXISTS `race_eventhandler` (
+CREATE TABLE IF NOT EXISTS `race_events` (
   `raceevent_id` int(12) NOT NULL auto_increment,
   `raceevent_race` int(12) NOT NULL,
   `raceevent_round` int(4) NOT NULL,
   `raceevent_player` int(1) NOT NULL,
+  `raceevent_type` int(1) NOT NULL,
   `raceevent_action` int(12) NOT NULL,
   `raceevent_parameter` varchar(255) NOT NULL,
   PRIMARY KEY  (`raceevent_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
--- Daten für Tabelle `race_eventhandler`
+-- Daten für Tabelle `race_events`
 --
 
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `race_moves`
---
-
-CREATE TABLE IF NOT EXISTS `race_moves` (
-  `move_id` int(12) NOT NULL auto_increment,
-  `move_race` int(12) NOT NULL,
-  `move_user` int(12) NOT NULL,
-  `move_action` int(12) NOT NULL,
-  `move_parameter` varchar(255) collate latin1_general_ci NOT NULL,
-  `move_timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  PRIMARY KEY  (`move_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=9 ;
-
---
--- Daten für Tabelle `race_moves`
---
-
-INSERT INTO `race_moves` (`move_id`, `move_race`, `move_user`, `move_action`, `move_parameter`, `move_timestamp`) VALUES
-(1, 1, 1, 1, '150,370', '2008-10-26 09:54:58'),
-(2, 1, 2, 1, '170,370', '2008-10-26 09:54:58'),
-(3, 1, 3, 1, '190,370', '2008-10-26 09:54:58'),
-(4, 1, 4, 1, '210,370', '2008-10-26 09:54:58'),
-(5, 1, 1, 1, '149,386', '2008-10-26 09:56:45'),
-(6, 1, 2, 1, '170,386', '2008-10-26 09:56:50'),
-(7, 1, 3, 1, '191,387', '2008-10-26 09:56:54'),
-(8, 1, 1, 1, '152,419', '2008-10-26 09:56:59');
+INSERT INTO `race_events` (`raceevent_id`, `raceevent_race`, `raceevent_round`, `raceevent_player`, `raceevent_type`, `raceevent_action`, `raceevent_parameter`) VALUES
+(1, 1, 1, 1, 1, 1, '2');
 
 -- --------------------------------------------------------
 
@@ -428,7 +398,8 @@ CREATE TABLE IF NOT EXISTS `sessiondata` (
 --
 
 INSERT INTO `sessiondata` (`sessiondata_id`, `sessiondata_created`, `sessiondata_lastupdate`, `sessiondata_content`, `sessiondata_ip`) VALUES
-('bb972f2d9cf96bd03e771791276ff5b0', 1224971735, 1225012491, 'user_userid|s:1:"1";user_key|s:32:"098f6bcd4621d373cade4e832627b4f6";user_username|s:5:"test1";', 2130706433);
+('bb972f2d9cf96bd03e771791276ff5b0', 1224971735, 1225012491, 'user_userid|s:1:"1";user_key|s:32:"098f6bcd4621d373cade4e832627b4f6";user_username|s:5:"test1";', 2130706433),
+('f5da36644649fcc0aaae9f941e8d7c7d', 1225445846, 1225446355, '', 2130706433);
 
 -- --------------------------------------------------------
 
@@ -933,13 +904,3 @@ CREATE TABLE IF NOT EXISTS `users_to_gamecards` (
 -- Daten für Tabelle `users_to_gamecards`
 --
 
-INSERT INTO `users_to_gamecards` (`usergamecard_user`, `usergamecard_gamecard`, `usergamecard_count`) VALUES
-(1, 1, 1),
-(1, 2, 1),
-(1, 3, 1),
-(2, 1, 1),
-(2, 2, 1),
-(2, 3, 1),
-(3, 1, 1),
-(3, 2, 1),
-(3, 3, 1);
