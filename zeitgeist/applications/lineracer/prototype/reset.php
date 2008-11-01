@@ -50,7 +50,7 @@
 	$configuration->loadConfiguration('lineracer', '../configuration/lineracer.ini');
 	$configuration->loadConfiguration('gamedefinitions', '../configuration/gamedefinitions.ini');
 
-	$sql = "TRUNCATE TABLE race_moves";
+	$sql = "TRUNCATE TABLE race_actions";
 	$res = $database->query($sql);
 	$sql = "TRUNCATE TABLE race_events";
 	$res = $database->query($sql);
@@ -62,13 +62,13 @@
 	$res = $database->query($sql);
 	$sql = "INSERT INTO users_to_gamecards(usergamecard_user, usergamecard_gamecard, usergamecard_count) VALUES('3', '1', '1'), ('3', '2', '1'), ('3', '3', '1')";
 	$res = $database->query($sql);
-	$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('1', '1', '1', '150,370')";
+	$sql = "INSERT INTO race_actions(raceaction_race, raceaction_user, raceaction_action, raceaction_parameter) VALUES('1', '1', '1', '150,370')";
 	$res = $database->query($sql);
-	$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('1', '2', '1', '170,370')";
+	$sql = "INSERT INTO race_actions(raceaction_race, raceaction_user, raceaction_action, raceaction_parameter) VALUES('1', '2', '1', '170,370')";
 	$res = $database->query($sql);
-	$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('1', '3', '1', '190,370')";
+	$sql = "INSERT INTO race_actions(raceaction_race, raceaction_user, raceaction_action, raceaction_parameter) VALUES('1', '3', '1', '190,370')";
 	$res = $database->query($sql);
-	$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('1', '4', '1', '210,370')";
+	$sql = "INSERT INTO race_actions(raceaction_race, raceaction_user, raceaction_action, raceaction_parameter) VALUES('1', '4', '1', '210,370')";
 	$res = $database->query($sql);
 	$sql = "UPDATE races SET race_currentround='1', race_activeplayer='1' WHERE race_id='1'";
 	$res = $database->query($sql);
