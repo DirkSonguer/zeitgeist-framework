@@ -72,24 +72,24 @@ class lrGamestates
 		while ($row = $this->database->fetchArray($res))
 		{
 			// get all moves
-			if ($row['move_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'move'))
+			if ($row['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'move'))
 			{
-				$position = explode(',',$row['move_parameter']);
-				$currentGamestates['playerdata'][$row['move_user']]['moves'][] = array($row['move_action'], $row['move_parameter']);
+				$position = explode(',',$row['raceaction_parameter']);
+				$currentGamestates['playerdata'][$row['raceaction_user']]['moves'][] = array($row['raceaction_action'], $row['raceaction_parameter']);
 			}
 
 			// get checkpoints
-			if ( ($row['move_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint1'))
-			|| ($row['move_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint2'))
-			|| ($row['move_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint3')) )
+			if ( ($row['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint1'))
+			|| ($row['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint2'))
+			|| ($row['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint3')) )
 			{
-				$currentGamestates['playerdata'][$row['move_user']]['checkpoints'][$row['move_parameter']] = true;
+				$currentGamestates['playerdata'][$row['raceaction_user']]['checkpoints'][$row['raceaction_parameter']] = true;
 			}
 
 			// see if player is finished
-			if ($row['move_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'finish'))
+			if ($row['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'finish'))
 			{
-				$currentGamestates['playerdata'][$row['move_user']]['finished'] = true;
+				$currentGamestates['playerdata'][$row['raceaction_user']]['finished'] = true;
 			}
 		}
 		
