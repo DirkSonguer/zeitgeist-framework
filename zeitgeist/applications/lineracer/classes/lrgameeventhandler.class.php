@@ -44,7 +44,7 @@ class lrGameeventhandler
 			return false;
 		}
 
-		$sql = "INSERT INTO race_moves(move_race, move_user, move_action, move_parameter) VALUES('" . $currentGamestates['currentRace'] . "', '" . $currentGamestates['currentPlayer'] . "', '" . $action . "', '" . $parameter . "')";
+		$sql = "INSERT INTO race_actions(raceaction_race, raceaction_user, raceaction_action, raceaction_parameter) VALUES('" . $currentGamestates['currentRace'] . "', '" . $currentGamestates['currentPlayer'] . "', '" . $action . "', '" . $parameter . "')";
 		$res = $this->database->query($sql);
 
 		if ($action == 1)
@@ -83,7 +83,7 @@ class lrGameeventhandler
 		
 		if ($round == 0) $round = $currentGamestates['currentRound'];
 
-		$sql  = "INSERT INTO race_eventhandler(raceevent_race, raceevent_round, raceevent_type, raceevent_action, raceevent_parameter, raceevent_player) VALUES('" . $currentGamestates['currentRace'] . "', '" . $round . "', '" . $type . "', '" . $action . "', '" . $parameter . "', '" . $player . "')";
+		$sql  = "INSERT INTO race_events(raceevent_race, raceevent_round, raceevent_type, raceevent_action, raceevent_parameter, raceevent_player) VALUES('" . $currentGamestates['currentRace'] . "', '" . $round . "', '" . $type . "', '" . $action . "', '" . $parameter . "', '" . $player . "')";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -115,7 +115,7 @@ class lrGameeventhandler
 			return false;
 		}
 
-		$sql = "SELECT * FROM race_eventhandler WHERE raceevent_race='" . $currentGamestates['currentRace'] . "' AND raceevent_round='" . $currentGamestates['currentRound'] . "' AND raceevent_player='" . $currentGamestates['currentPlayer'] . "' AND raceevent_type='" . $type . "'";
+		$sql = "SELECT * FROM race_events WHERE raceevent_race='" . $currentGamestates['currentRace'] . "' AND raceevent_round='" . $currentGamestates['currentRound'] . "' AND raceevent_player='" . $currentGamestates['currentPlayer'] . "' AND raceevent_type='" . $type . "'";
 		$res = $this->database->query($sql);
 		
 		$activeevents = array();

@@ -63,8 +63,8 @@ class lrGamestates
 		elseif ($row['race_player2'] != '') $currentGamestates['numPlayers'] = 2;
 		else $currentGamestates['numPlayers'] = 1;
 
-		// get moves from database
-		$sql = "SELECT * FROM race_moves WHERE move_race='" . $raceid . "' ORDER BY move_id";
+		// get raceaction from database
+		$sql = "SELECT * FROM race_actions WHERE raceaction_race='" . $raceid . "' ORDER BY raceaction_id";
 		$res = $this->database->query($sql);
 
 		// get player data
@@ -138,7 +138,7 @@ class lrGamestates
 			return false;
 		}
 
-		$sql = "DELETE FROM race_eventhandler WHERE raceevent_race='" . $currentGamestates['currentRace'] . "' AND raceevent_player='" . $currentGamestates['currentPlayer'] . "' AND raceevent_round='" . $currentGamestates['currentRound'] . "'";
+		$sql = "DELETE FROM race_events WHERE raceevent_race='" . $currentGamestates['currentRace'] . "' AND raceevent_player='" . $currentGamestates['currentPlayer'] . "' AND raceevent_round='" . $currentGamestates['currentRound'] . "'";
 		$res = $this->database->query($sql);
 
 		$currentGamestates['currentPlayer'] += 1;

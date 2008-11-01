@@ -19,7 +19,7 @@ class testLrmovementfunctions extends UnitTestCase
 	{
 		$this->database->query('TRUNCATE TABLE races');
 		$this->database->query('TRUNCATE TABLE race_actions');
-		$this->database->query('TRUNCATE TABLE race_eventhandler');
+		$this->database->query('TRUNCATE TABLE race_events');
 		$this->database->query('TRUNCATE TABLE race_moves');
 		$this->database->query('TRUNCATE TABLE users_to_gamecards');
 
@@ -62,7 +62,7 @@ class testLrmovementfunctions extends UnitTestCase
 		
 		$this->createNewGame();
 
-		$gameeventhandler->loadGamestates(1);
+		$gamestates->loadGamestates(1);
 		$gameeventhandler->saveRaceaction('1', '150,200');
 		$gameeventhandler->saveRaceaction('1', '170,200');
 		$gameeventhandler->saveRaceaction('1', '190,200');
@@ -70,7 +70,7 @@ class testLrmovementfunctions extends UnitTestCase
 		$gamestates->loadGamestates(1);
 
 		$ret = $movementfunctions->getMovement(1, -1);
-		$this->assertEqual($ret[0], '150');
+		$this->assertEqual($ret[0], '210');
 		$this->assertEqual($ret[1], '200');
 
 		$ret = $movementfunctions->getMovement(1);
