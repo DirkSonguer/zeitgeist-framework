@@ -18,7 +18,7 @@ class testLrgamecards extends UnitTestCase
 	{
 		$this->database->query('TRUNCATE TABLE races');
 		$this->database->query('TRUNCATE TABLE race_actions');
-		$this->database->query('TRUNCATE TABLE race_eventhandler');
+		$this->database->query('TRUNCATE TABLE race_events');
 		$this->database->query('TRUNCATE TABLE race_moves');
 		$this->database->query('TRUNCATE TABLE users_to_gamecards');
 

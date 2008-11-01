@@ -18,7 +18,7 @@ class testLrgameeventhandler extends UnitTestCase
 	{
 		$this->database->query('TRUNCATE TABLE races');
 		$this->database->query('TRUNCATE TABLE race_actions');
-		$this->database->query('TRUNCATE TABLE race_eventhandler');
+		$this->database->query('TRUNCATE TABLE race_events');
 		$this->database->query('TRUNCATE TABLE race_moves');
 		$this->database->query('TRUNCATE TABLE users_to_gamecards');
 
@@ -67,14 +67,17 @@ class testLrgameeventhandler extends UnitTestCase
 	
 	function test_saveRaceevent()
 	{
+		$gamestates = new lrGamestates();
 		$gameeventhandler = new lrGameeventhandler();
+		$objects = zgObjectcache::init();
 		
 		$this->createNewGame();
+		$gamestates->loadGamestates(1);
 		
-		$ret = $gameeventhandler->saveRaceevent('1', '2', '3', '1');
+		$ret = $gameeventhandler->saveRaceevent('1', '2', '3', '1', '1');
 		$this->assertTrue($ret);
 
-		$res = $this->database->query("SELECT * FROM race_eventhandler");
+		$res = $this->database->query("SELECT * FROM race_events");
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 1);
 		$ret = $this->database->fetchArray($res);
@@ -93,7 +96,7 @@ class testLrgameeventhandler extends UnitTestCase
 		$gamestates->loadGamestates(1);
 		$gameeventhandler->saveRaceevent('1', '1', '2', '1');
 
-		$ret = $gameeventhandler->handleRaceevents();
+		$ret = $gameeventhandler->handleRaceeevents(1);
 		$this->assertTrue($ret);
 	}
 

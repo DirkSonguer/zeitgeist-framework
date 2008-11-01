@@ -52,7 +52,7 @@
 
 	$sql = "TRUNCATE TABLE race_moves";
 	$res = $database->query($sql);
-	$sql = "TRUNCATE TABLE race_eventhandler";
+	$sql = "TRUNCATE TABLE race_events";
 	$res = $database->query($sql);
 	$sql = "TRUNCATE TABLE users_to_gamecards";
 	$res = $database->query($sql);

@@ -37,6 +37,7 @@ class lrMovementfunctions
 	{
 		$this->debug->guard();
 
+		// check if gamestates are loaded
 		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
 		{
 			$this->debug->write('Could not move player: gamestates are not loaded', 'warning');
@@ -45,15 +46,18 @@ class lrMovementfunctions
 			return false;
 		}
 
+		// gets last move and vector for current player
 		$lastMove = $this->getMovement($currentGamestates['currentPlayer'], -1);
 		$currentVector = $currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['vector'];
 
+		// on the basis of the movement radius, calculate a valid region
 		$movementradius = $this->configuration->getConfiguration('gamedefinitions', 'gamelogic', 'movementradius');
 		$minX = $lastMove[0]+$currentVector[0]-$movementradius;
 		$maxX = $lastMove[0]+$currentVector[0]+$movementradius;
 		$minY = $lastMove[1]+$currentVector[1]-$movementradius;
 		$maxY = $lastMove[1]+$currentVector[1]+$movementradius;
 
+		// check if the player is outside the allowed region
 		if ( ($moveX < $minX) || ($moveX > $maxX) || ($moveY < $minY) || ($moveY > $maxY) )
 		{
 			$this->debug->unguard(false);
@@ -77,6 +81,7 @@ class lrMovementfunctions
 	{
 		$this->debug->guard();
 		
+		// check if gamestates are loaded
 		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
 		{
 			$this->debug->write('Could not move player: gamestates are not loaded', 'warning');
@@ -85,14 +90,18 @@ class lrMovementfunctions
 			return false;
 		}
 		
+		// get last move
 		$lastMove = $this->getMovement($currentGamestates['currentPlayer'], -1);
 		$fromX = $lastMove[0];
 		$fromY = $lastMove[1];
 
+		// get an array of terrain points between the last position and the given one
 		$terrain = array();
 		$terrain = $this->_checkTerrainType($fromX, $fromY, $moveX, $moveY);
+
 /*
 		echo "from: ".$fromX.",".$fromY." to: ".$moveX.",".$moveY."<br />";
+		echo "terrain: ".$terrain."<br />";
 		foreach($terrain as $step)
 		{
 			echo $step[0];
@@ -105,6 +114,7 @@ class lrMovementfunctions
 		$correctedMove[1] = $moveY;
 		$correctedMove[2] = 0;
 
+		// cycle through all the points on the movement line and check their terrain type
 		foreach($terrain as $key => $step)
 		{
 //			echo "key: ".$key." - terrain: ".$step[0]." position: ".$step[1].",".$step[2]."<br />";
@@ -123,7 +133,7 @@ class lrMovementfunctions
 					$correctedMove[1] = $terrain[$key][2] + (($lastMove[1] - $terrain[$key][2])*5);
 				}
 
-				// save event to clear vector				
+				// save event to clear vector
 				$gameeventhandler = new lrGameeventhandler();
 				$gameeventhandler->saveRaceevent($currentGamestates['currentPlayer'], '2', '1', $currentGamestates['currentRound']+1, '1');
 
@@ -208,7 +218,8 @@ class lrMovementfunctions
 	public function getMovement($player, $history=0)
 	{
 		$this->debug->guard();
-		
+
+		// check if gamestates are loaded
 		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
 		{
 			$this->debug->write('Could not move player: gamestates are not loaded', 'warning');
@@ -265,17 +276,25 @@ class lrMovementfunctions
 	{
 		$this->debug->guard();
 
-//		echo "from: ".$fromX.",".$fromY." to: ".$toX.",".$toY."<br />";
-		$circuitData = $this->_getCircuitData();
+		// check if gamestates are loaded
+		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
+		{
+			$this->debug->write('Could not move player: gamestates are not loaded', 'warning');
+			$this->messages->setMessage('Could not move player: gamestates are not loaded', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		// load circuit data and attributes from database
+		$circuitData = $this->_getCircuitData($currentGamestates['currentCircuit']);
 		$circuitSize = explode(',', $circuitData['circuitdata_size']);
 		$circuitData = $circuitData['circuitdata_data'];
-
+		
+		// we use a simple system here and move along the largest axis
 		$lengthX = $toX - $fromX;
 		if ($lengthX > 0) $factorX = 1; else $factorX = -1;
 		$lengthY = $toY - $fromY;
 		if ($lengthY > 0) $factorY = 1; else $factorY = -1;
-
-//		echo "factor: ".$factorX.",".$factorY."<br />";
 
 		if (abs($lengthX) > abs($lengthY))
 		{
@@ -284,7 +303,6 @@ class lrMovementfunctions
 				$checkX = $fromX + $i*$factorX;
 				$checkY = $fromY + round(abs($lengthY)/abs($lengthX)*$i*$factorY);
 				$terrainData[] = array(substr($circuitData, $checkY*$circuitSize[0]+$checkX, 1), $checkX, $checkY);
-//				echo "type 1: pos: <b>".$checkX.",".$checkY."</b> - (".($i*$factorX).",".(round(abs($lengthY)/abs($lengthX)*$i*$factorY)).") - ".$terrainData[count($terrainData)-1]."<br />";
 			}
 		}
 		else
@@ -294,7 +312,6 @@ class lrMovementfunctions
 				$checkX = $fromX + round(abs($lengthX)/abs($lengthY)*$i*$factorX);
 				$checkY = $fromY + $i*$factorY;
 				$terrainData[] = array(substr($circuitData, $checkY*$circuitSize[0]+$checkX, 1), $checkX, $checkY);
-//				echo "type 2:: pos: <b>".$checkX.",".$checkY."</b> - (".(round(abs($lengthX)/abs($lengthY)*$i*$factorX)).",".($i*$factorY).") - ".$terrainData[count($terrainData)-1]."<br />";
 			}
 		}
 
@@ -310,19 +327,11 @@ class lrMovementfunctions
 	 *
 	 * @return array
 	 */
-	protected function _getCircuitData()
+	protected function _getCircuitData($circuit)
 	{
 		$this->debug->guard();
 
-		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
-		{
-			$this->debug->write('Could not get circuit data: gamestates are not loaded', 'warning');
-			$this->messages->setMessage('Could not get circuit data: gamestates are not loaded', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$sql = "SELECT * FROM circuit_data WHERE circuitdata_circuit='" . $currentGamestates['currentCircuit'] . "'";
+		$sql = "SELECT * FROM circuit_data WHERE circuitdata_circuit='" . $circuit . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
