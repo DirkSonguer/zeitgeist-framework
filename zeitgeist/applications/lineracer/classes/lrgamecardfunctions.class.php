@@ -53,6 +53,39 @@ class lrGamecardfunctions
 
 
 	/**
+	 * Gets all gamecards and their data for a given user
+	 *
+	 * @param integer $user user id of the player
+	 *
+	 * @return array
+	 */
+	public function getPlayerDeck($user)
+	{
+		$this->debug->guard();
+
+		$sql = "SELECT * FROM users_to_gamecards u2g LEFT JOIN gamecards g ON u2g.usergamecard_gamecard = g.gamecard_id WHERE u2g.usergamecard_user='" . $user . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not get gamecard data: no gamecards found', 'warning');
+			$this->messages->setMessage('Could not get gamecard data: no gamecards found', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$gamecards = array();
+		while ($row = $this->database->fetchArray($res))
+		{
+			$gamecards[] = $row;
+		}
+
+
+		$this->debug->unguard($gamecards);
+		return $gamecards;
+	}
+	
+
+	/**
 	 * Checks if a given user has the gamecard in his stack
 	 *
 	 * @param integer $gamecard id of the gamecard

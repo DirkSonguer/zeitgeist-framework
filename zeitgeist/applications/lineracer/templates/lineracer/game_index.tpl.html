@@ -111,13 +111,11 @@ setTimeout("reloadPage()", 10000);
 		</td>
 		<td valign="top">
 			<table cellspacing="1" cellpadding="5">
-				<tr>
-				<td style="background:@@{bgcolor_card1}@@;"><p style="margin-left:10px;margin-right:10px;text-align:center;"><a href="@@{[game.playgamecard]}@@&gamecard=1">Gamecard 1</a><br />(2x ziehen)</p></td>
-				</tr><tr>
-				<td style="background:@@{bgcolor_card2}@@;"><p style="margin-left:10px;margin-right:10px;text-align:center;"><a href="@@{[game.playgamecard]}@@&gamecard=2">Gamecard 2</a><br />(Bleifuß)</p></td>
-				</tr><tr>
-				<td style="background:@@{bgcolor_card3}@@;"><p style="margin-left:10px;margin-right:10px;text-align:center;"><a href="@@{[game.playgamecard]}@@&gamecard=3">Gamecard 3</a><br />(Vollbremsung)</p></td>
-				</tr>
+				<!-- TemplateBeginBlock name="gamecard" -->
+					<tr>
+						<td style="background:#ffff00;" width="200"><p style="margin-left:10px;margin-right:10px;text-align:center;"><a href="@@{[game.playgamecard]}@@&gamecard=@@{gamecard_id}@@">@@{gamecard_name}@@</a><br />@@{gamecard_description}@@</p></td>
+					</tr>
+				<!-- TemplateEndBlock -->	
 			</table>
 		</td>
 	</table>
