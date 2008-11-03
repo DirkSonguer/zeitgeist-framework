@@ -90,6 +90,8 @@ class lrMovementfunctions
 			return false;
 		}
 		
+		$gameeventhandler = new lrGameeventhandler();
+		
 		// get last move
 		$lastMove = $this->getMovement($currentGamestates['currentPlayer'], -1);
 		$fromX = $lastMove[0];
@@ -134,7 +136,6 @@ class lrMovementfunctions
 				}
 
 				// save event to clear vector
-				$gameeventhandler = new lrGameeventhandler();
 				$gameeventhandler->saveRaceevent($currentGamestates['currentPlayer'], '2', '1', $currentGamestates['currentRound']+1, '1');
 
 				// save crash to game moves

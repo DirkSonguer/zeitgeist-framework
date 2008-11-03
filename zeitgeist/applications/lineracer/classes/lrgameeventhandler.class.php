@@ -130,7 +130,9 @@ class lrGameeventhandler
 			if ($event == $this->configuration->getConfiguration('gamedefinitions', 'events', 'playgamecard'))
 			{
 				//check if the gamecard exists
-				$gamecardClassname = $this->configuration->getConfiguration('gamedefinitions', 'gamecards', $parameter);
+				$gamecardfunctions = new lrGamecardfunctions();
+				$gamecardData = $gamecardfunctions->getGamecardData($parameter);
+				$gamecardClassname = $gamecardData['gamecard_classname'];
 				if (!class_exists($gamecardClassname, true))
 				{
 					$this->debug->write('Could not handle race events: gamecard class was not found: '.$gamecardClassname, 'warning');
