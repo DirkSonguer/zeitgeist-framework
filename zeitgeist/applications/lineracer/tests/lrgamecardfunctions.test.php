@@ -94,8 +94,8 @@ class testLrgamecardfunctions extends UnitTestCase
 		$ret = $gamecardfunctions->getGamecardData(1);
 		$this->assertFalse($ret);
 
-		$sql = "INSERT INTO gamecards (gamecard_id, gamecard_name, gamecard_description, gamecard_image, gamecard_code, gamecard_roundoffset, gamecard_playerrange) ";
-		$sql .= "VALUES (1, 'Test', 'Simple Gamecard Test', '', '', 1, '0')";
+		$sql = "INSERT INTO gamecards (gamecard_id, gamecard_name, gamecard_description, gamecard_image, gamecard_roundoffset, gamecard_playerrange) ";
+		$sql .= "VALUES (1, 'Test', 'Simple Gamecard Test', '', '1', '0')";
 		$res = $this->database->query($sql);
 		
 		$ret = $gamecardfunctions->getGamecardData(1);

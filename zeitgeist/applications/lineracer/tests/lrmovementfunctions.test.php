@@ -97,11 +97,11 @@ class testLrmovementfunctions extends UnitTestCase
 		$this->assertEqual($ret[1], '596');
 
 		$ret = $movementfunctions->validateTerrain(50,370);
-		$this->assertEqual($ret[0], '124');
+		$this->assertEqual($ret[0], '121');
 		$this->assertEqual($ret[1], '370');
 
 		$ret = $movementfunctions->validateTerrain(250,370);
-		$this->assertEqual($ret[0], '243');
+		$this->assertEqual($ret[0], '250');
 		$this->assertEqual($ret[1], '370');
 	}	
 }

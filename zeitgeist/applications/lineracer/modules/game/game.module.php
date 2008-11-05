@@ -41,7 +41,7 @@ class game
 		
 		// load gamestates
 		$gamestates->loadGamestates(1);
-		$gameeventhandler->handleRaceeevents(1);
+		$gameeventhandler->handleRaceeevents();
 		$currentGamestates = $this->objects->getObject('currentGamestates');
 
 		if ($gamestates->raceFinished())

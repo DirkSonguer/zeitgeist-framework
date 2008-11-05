@@ -53,7 +53,7 @@ class lrGamefunctions
 		
 		// load pre turn events
 		$gameeventhandler = new lrGameeventhandler();
-		$gameeventhandler->handleRaceeevents(1);
+		$gameeventhandler->handleRaceeevents();
 
 		// validate if it's the players turn
 		$userfunctions = new lrUserfunctions();
@@ -87,7 +87,6 @@ class lrGamefunctions
 		
 		// save race action and handle post turn events
 		$gameeventhandler->saveRaceaction($this->configuration->getConfiguration('gamedefinitions', 'actions', 'move'), $correctedMove[0].','.$correctedMove[1]);
-		$gameeventhandler->handleRaceeevents(2);
 		$gamestates->endTurn();
 
 		$this->debug->unguard(true);
@@ -121,7 +120,7 @@ class lrGamefunctions
 
 		// load pre turn events
 		$gameeventhandler = new lrGameeventhandler();
-		$gameeventhandler->handleRaceeevents(1);
+		$gameeventhandler->handleRaceeevents();
 
 		// validate if it's the players turn
 		$userfunctions = new lrUserfunctions();
@@ -154,7 +153,7 @@ class lrGamefunctions
 		
 		// save race action and handle post turn events
 		$gameeventhandler->saveRaceaction($this->configuration->getConfiguration('gamedefinitions', 'actions', 'playgamecard'), $gamecard);
-		$gameeventhandler->saveRaceevent($currentGamestates['currentPlayer'], $this->configuration->getConfiguration('gamedefinitions', 'events', 'playgamecard'), $gamecard, ($currentGamestates['currentRound']+$gamecardData['gamecard_roundoffset']), $gamecardData['gamecard_type']);
+		$gameeventhandler->saveRaceevent($currentGamestates['currentPlayer'], $this->configuration->getConfiguration('gamedefinitions', 'events', 'playgamecard'), $gamecard, ($currentGamestates['currentRound']+$gamecardData['gamecard_roundoffset']));
 		$gamecardfunctions->removeGamecard($gamecard, $currentGamestates['currentPlayer']);
 		
 		$this->debug->unguard(true);

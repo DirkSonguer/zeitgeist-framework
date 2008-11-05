@@ -57,7 +57,7 @@ class testLrgamecards extends UnitTestCase
 		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['vector'][0], 5);
 		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['vector'][1], 10);
 
-		$gameeventhandler->saveRaceevent('1', $configuration->getConfiguration('gamedefinitions', 'events', 'playgamecard'), '2', '1');
+		$gameeventhandler->saveRaceevent('1', $configuration->getConfiguration('gamedefinitions', 'events', 'playgamecard'), '2');
 		$objects->deleteObject('currentGamestates');
 
 		$gamestates->loadGamestates(1);
@@ -80,7 +80,7 @@ class testLrgamecards extends UnitTestCase
 		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['vector'][0], 5);
 		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['vector'][1], 10);
 
-		$gameeventhandler->saveRaceevent('1', $configuration->getConfiguration('gamedefinitions', 'events', 'playgamecard'), '3', '1');
+		$gameeventhandler->saveRaceevent('1', $configuration->getConfiguration('gamedefinitions', 'events', 'playgamecard'), '3');
 		$objects->deleteObject('currentGamestates');
 
 		$gamestates->loadGamestates(1);

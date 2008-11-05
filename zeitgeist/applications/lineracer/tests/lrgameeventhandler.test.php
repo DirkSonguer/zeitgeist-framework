@@ -74,7 +74,7 @@ class testLrgameeventhandler extends UnitTestCase
 		$this->createNewGame();
 		$gamestates->loadGamestates(1);
 		
-		$ret = $gameeventhandler->saveRaceevent('1', '2', '3', '1', '1');
+		$ret = $gameeventhandler->saveRaceevent('1', '2', '3', '1');
 		$this->assertTrue($ret);
 
 		$res = $this->database->query("SELECT * FROM race_events");
@@ -94,9 +94,9 @@ class testLrgameeventhandler extends UnitTestCase
 		$this->createNewGame();
 
 		$gamestates->loadGamestates(1);
-		$gameeventhandler->saveRaceevent('1', '1', '2', '1');
+		$gameeventhandler->saveRaceevent('1', '1', '2');
 
-		$ret = $gameeventhandler->handleRaceeevents(1);
+		$ret = $gameeventhandler->handleRaceeevents();
 		$this->assertTrue($ret);
 	}
 
