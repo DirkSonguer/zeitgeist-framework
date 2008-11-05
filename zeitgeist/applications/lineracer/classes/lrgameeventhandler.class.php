@@ -69,7 +69,7 @@ class lrGameeventhandler
 	 *
 	 * @return boolean
 	 */
-	public function saveRaceevent($player, $action, $parameter, $round=0, $type=1)
+	public function saveRaceevent($player, $action, $parameter, $round=0)
 	{
 		$this->debug->guard();
 
@@ -83,7 +83,7 @@ class lrGameeventhandler
 		
 		if ($round == 0) $round = $currentGamestates['currentRound'];
 
-		$sql  = "INSERT INTO race_events(raceevent_race, raceevent_round, raceevent_type, raceevent_action, raceevent_parameter, raceevent_player) VALUES('" . $currentGamestates['currentRace'] . "', '" . $round . "', '" . $type . "', '" . $action . "', '" . $parameter . "', '" . $player . "')";
+		$sql  = "INSERT INTO race_events(raceevent_race, raceevent_round, raceevent_action, raceevent_parameter, raceevent_player) VALUES('" . $currentGamestates['currentRace'] . "', '" . $round . "', '" . $action . "', '" . $parameter . "', '" . $player . "')";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -103,10 +103,10 @@ class lrGameeventhandler
 	 *
 	 * @return boolean
 	 */
-	public function handleRaceeevents($type)
+	public function handleRaceeevents()
 	{
 		$this->debug->guard();
-
+		
 		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
 		{
 			$this->debug->write('Could not handle race events: gamestates are not loaded', 'warning');
@@ -115,7 +115,7 @@ class lrGameeventhandler
 			return false;
 		}
 
-		$sql = "SELECT * FROM race_events WHERE raceevent_race='" . $currentGamestates['currentRace'] . "' AND raceevent_round='" . $currentGamestates['currentRound'] . "' AND raceevent_player='" . $currentGamestates['currentPlayer'] . "' AND raceevent_type='" . $type . "'";
+		$sql = "SELECT * FROM race_events WHERE raceevent_race='" . $currentGamestates['currentRace'] . "' AND raceevent_round='" . $currentGamestates['currentRound'] . "' AND raceevent_player='" . $currentGamestates['currentPlayer'] . "'";
 		$res = $this->database->query($sql);
 		
 		$activeevents = array();
@@ -124,6 +124,7 @@ class lrGameeventhandler
 			$activeevents[$row['raceevent_action']] = $row['raceevent_parameter'];
 		}
 
+// TODO: Was ist, wenn ein Spieler eine Karte zweimal ausspielt?
 		foreach ($activeevents as $event => $parameter)
 		{
 			

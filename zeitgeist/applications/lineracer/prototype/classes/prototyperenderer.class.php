@@ -33,7 +33,7 @@ class prototypeRenderer
 			$this->debug->unguard(false);
 			return false;
 		}
-		$offset = $this->configuration->getConfiguration('gamedefinitions', 'gamelogic', 'movementradius');
+		$offset = $currentGamestates['currentRadius'];
 		
 		$circuit = imagecreatefrompng(APPLICATION_ROOTDIRECTORY . '/data/circuits/circuit1.png');
 //		$circuit = imagecreatefrompng(APPLICATION_ROOTDIRECTORY . '/data/circuits/circuit1_negative.png');

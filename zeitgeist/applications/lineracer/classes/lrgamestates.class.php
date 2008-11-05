@@ -55,7 +55,8 @@ class lrGamestates
 		$currentGamestates['currentCircuit'] = $row['race_circuit'];
 		$currentGamestates['currentRound'] = $row['race_currentround'];
 		$currentGamestates['currentPlayer'] = $row['race_activeplayer'];
-		
+		$currentGamestates['currentRadius'] = $this->configuration->getConfiguration('gamedefinitions', 'gamelogic', 'movementradius');
+
 		// get max number of players
 		$currentGamestates['numPlayers'] = 0;
 		if ($row['race_player4'] != '') $currentGamestates['numPlayers'] = 4;
@@ -148,7 +149,7 @@ class lrGamestates
 			$currentGamestates['currentRound'] += 1;
 		}
 
-		$currentround = ", race_currentround='" . $currentGamestates['currentRound'] . "'";			
+		$currentround = ", race_currentround='" . $currentGamestates['currentRound'] . "'";
 		$sql = "UPDATE races SET race_activeplayer='" . $currentGamestates['currentPlayer'] . "'" . $currentround . "  WHERE race_id='" . $currentGamestates['currentRace'] . "'";
 		$res = $this->database->query($sql);
 		

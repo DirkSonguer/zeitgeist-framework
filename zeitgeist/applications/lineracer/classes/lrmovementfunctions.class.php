@@ -51,7 +51,7 @@ class lrMovementfunctions
 		$currentVector = $currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['vector'];
 
 		// on the basis of the movement radius, calculate a valid region
-		$movementradius = $this->configuration->getConfiguration('gamedefinitions', 'gamelogic', 'movementradius');
+		$movementradius = $currentGamestates['currentRadius'];
 		$minX = $lastMove[0]+$currentVector[0]-$movementradius;
 		$maxX = $lastMove[0]+$currentVector[0]+$movementradius;
 		$minY = $lastMove[1]+$currentVector[1]-$movementradius;
@@ -136,7 +136,7 @@ class lrMovementfunctions
 				}
 
 				// save event to clear vector
-				$gameeventhandler->saveRaceevent($currentGamestates['currentPlayer'], '2', '1', $currentGamestates['currentRound']+1, '1');
+				$gameeventhandler->saveRaceevent($currentGamestates['currentPlayer'], '2', '1', $currentGamestates['currentRound']+1);
 
 				// save crash to game moves
 				$gameeventhandler->saveRaceaction($this->configuration->getConfiguration('gamedefinitions', 'actions', 'playgamecard'), $moveX.",".$moveY);
