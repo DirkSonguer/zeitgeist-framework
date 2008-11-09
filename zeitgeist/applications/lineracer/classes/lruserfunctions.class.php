@@ -68,19 +68,16 @@ class lrUserfunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-
-		$sql = "SELECT * FROM races WHERE race_player" . $currentGamestates['currentPlayer'] . "='" . $this->user->getUserID() . "'";
-		$res = $this->database->query($sql);
-		if (!$res)
+		
+		if (empty($currentGamestates['players'][($currentGamestates['currentPlayer']-1)]))
 		{
-			$this->debug->write('Could not validate player turn: could not find game data in database', 'warning');
-			$this->messages->setMessage('Could not validate player turn: could not find game data in database', 'warning');
+			$this->debug->write('Could not validate player turn: could not find player data in the game data', 'warning');
+			$this->messages->setMessage('Could not validate player turn: could not find player data in the game data', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
 
-		$ret = $this->database->numRows($res);
-		if ($ret < 1)
+		if ($currentGamestates['players'][($currentGamestates['currentPlayer']-1)] != $this->user->getUserID())
 		{
 			$this->debug->write('Could not validate player turn: player not found active', 'warning');
 			$this->messages->setMessage('Could not validate player turn: player not found active', 'warning');

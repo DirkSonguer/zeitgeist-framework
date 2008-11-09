@@ -27,6 +27,7 @@
 	require_once('../classes/lrgamestates.class.php');
 	require_once('../classes/lrgamecardfunctions.class.php');
 	require_once('../classes/lrmovementfunctions.class.php');
+	require_once('../classes/lrgamefunctions.class.php');
 
 	include('../configuration/lineracer.config.php');
 
@@ -45,6 +46,7 @@
 	$configuration->loadConfiguration('lineracer', '../configuration/lineracer.ini');
 	$configuration->loadConfiguration('gamedefinitions', '../configuration/gamedefinitions.ini');
 	
+	require_once('miscfunctions.php');
 	require_once('database.test.php');
 	require_once('lrgamestates.test.php');
 	require_once('lrgamecardfunctions.test.php');
@@ -52,6 +54,7 @@
 	require_once('lrmovementfunctions.test.php');
 	require_once('lrgameeventhandler.test.php');
 	require_once('lrgamecards.test.php');
+	require_once('lrgamefunctions.test.php');
 
 	$debug = zgDebug::init();
 
@@ -62,7 +65,7 @@
     $test->addTestCase(new testLrgamecardfunctions());
     $test->addTestCase(new testLrmovementfunctions());
     $test->addTestCase(new testLrgameeventhandler());
-//    $test->addTestCase(new testLrgamecards());
+    $test->addTestCase(new testLrgamefunctions());
 
     $test->run(new HtmlReporter());
 

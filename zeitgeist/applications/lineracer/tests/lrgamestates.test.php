@@ -3,44 +3,25 @@
 class testLrgamestates extends UnitTestCase
 {
 	public $database;
+	public $miscfunctions;
 	
 	function test_init()
 	{
 		$this->database = new zgDatabase();
 		$this->database->connect();
+		$this->miscfunctions  = new miscFunctions();
 
 		$gamestates = new lrGamestates();
 		$this->assertNotNull($gamestates);
 		unset($gamestates);
     }
 	
-	function createNewGame()
-	{
-		$this->database->query('TRUNCATE TABLE races');
-		$this->database->query('TRUNCATE TABLE race_actions');
-		$this->database->query('TRUNCATE TABLE race_events');
-		$this->database->query('TRUNCATE TABLE race_actions');
-		$this->database->query('TRUNCATE TABLE users_to_gamecards');
-
-		$sql = "INSERT INTO race_actions(raceaction_race, raceaction_user, raceaction_action, raceaction_parameter) VALUES('1', '1', '1', '150,370')";
-		$res = $this->database->query($sql);
-		$sql = "INSERT INTO race_actions(raceaction_race, raceaction_user, raceaction_action, raceaction_parameter) VALUES('1', '2', '1', '170,370')";
-		$res = $this->database->query($sql);
-		$sql = "INSERT INTO race_actions(raceaction_race, raceaction_user, raceaction_action, raceaction_parameter) VALUES('1', '3', '1', '190,370')";
-		$res = $this->database->query($sql);
-		$sql = "INSERT INTO race_actions(raceaction_race, raceaction_user, raceaction_action, raceaction_parameter) VALUES('1', '4', '1', '210,370')";
-		$res = $this->database->query($sql);
-		$sql = "INSERT INTO races(race_player1, race_player2, race_player3, race_player4, race_circuit, race_activeplayer, race_currentround, race_gamecardsallowed)";
-		$sql .= "VALUES(1, 2, NULL, NULL, 1, 1, 1, 0)";
-		$res = $this->database->query($sql);
-	}
-
 	function test_loadGamestates()
 	{
 		$gamestates = new lrGamestates();
 		$objects = zgObjectcache::init();
 		
-		$this->createNewGame();
+		$this->miscfunctions->setupGame();
 		
 		// this should not contain any data as race 0 does not exist
 		$ret = $gamestates->loadGamestates(0);
@@ -52,11 +33,12 @@ class testLrgamestates extends UnitTestCase
 
 		// check if data is ok
 		$ret = $objects->getObject('currentGamestates');
+		
 		$this->assertTrue(is_array($ret));		
 		$this->assertEqual($ret['currentPlayer'], '1');		
 		$this->assertEqual($ret['numPlayers'], '2');		
 		$this->assertEqual($ret['playerdata'][1]['moves'][0][1], '150,370');		
-		$this->assertEqual($ret['playerdata'][1]['vector'][0], '0');
+		$this->assertEqual($ret['playerdata'][1]['vector'][0], '5');
 	}
 
 	function test_endTurn()
@@ -64,7 +46,7 @@ class testLrgamestates extends UnitTestCase
 		$gamestates = new lrGamestates();
 		$objects = zgObjectcache::init();
 		
-		$this->createNewGame();
+		$this->miscfunctions->setupGame();
 		
 		// this should not contain any data as race 0 does not exist
 		$gamestates->loadGamestates(1);
@@ -88,7 +70,7 @@ class testLrgamestates extends UnitTestCase
 		$gameeventhandler = new lrGameeventhandler();
 		
 		// reset game and load gamestates
-		$this->createNewGame();
+		$this->miscfunctions->setupGame();
 		$gamestates->loadGamestates(1);
 		
 		// race should not be finished
@@ -116,7 +98,7 @@ class testLrgamestates extends UnitTestCase
 		$configuration = zgConfiguration::init();
 
 		// reset game and load gamestates
-		$this->createNewGame();
+		$this->miscfunctions->setupGame();
 		$gamestates->loadGamestates(1);
 
 		// race should not be finished

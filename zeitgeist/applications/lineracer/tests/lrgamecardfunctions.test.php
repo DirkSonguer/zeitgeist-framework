@@ -3,11 +3,13 @@
 class testLrgamecardfunctions extends UnitTestCase
 {
 	public $database;
+	public $miscfunctions;
 	
 	function test_init()
 	{
 		$this->database = new zgDatabase();
 		$this->database->connect();
+		$this->miscfunctions  = new miscFunctions();
 
 		$gamecardfunctions = new lrGamecardfunctions();
 		$this->assertNotNull($gamecardfunctions);
@@ -17,18 +19,18 @@ class testLrgamecardfunctions extends UnitTestCase
 	function test_addGamecard()
 	{
 		$gamecardfunctions = new lrGamecardfunctions();
-		$this->database->query('TRUNCATE TABLE users_to_gamecards');
+		$this->database->query('TRUNCATE TABLE gamecards_to_users');
 
 		$ret = $gamecardfunctions->addGamecard('1', '1');
 		$ret = $gamecardfunctions->addGamecard('2', '2');
 
-		$res = $this->database->query("SELECT * FROM users_to_gamecards");
+		$res = $this->database->query("SELECT * FROM gamecards_to_users");
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 2);
 
 		$ret = $gamecardfunctions->addGamecard('2', '1');
 		$gamecardfunctions->addGamecard('1', '1');
-		$res = $this->database->query("SELECT * FROM users_to_gamecards");
+		$res = $this->database->query("SELECT * FROM gamecards_to_users");
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 3);
 		$ret = $this->database->fetchArray($res);
@@ -41,7 +43,7 @@ class testLrgamecardfunctions extends UnitTestCase
 	function test_removeGamecard()
 	{
 		$gamecardfunctions = new lrGamecardfunctions();
-		$this->database->query('TRUNCATE TABLE users_to_gamecards');
+		$this->database->query('TRUNCATE TABLE gamecards_to_users');
 
 		$ret = $gamecardfunctions->removeGamecard('1', '1');
 		$this->assertTrue($ret);
@@ -52,7 +54,7 @@ class testLrgamecardfunctions extends UnitTestCase
 		$ret = $gamecardfunctions->removeGamecard('2', '2');
 		$this->assertTrue($ret);
 
-		$res = $this->database->query("SELECT * FROM users_to_gamecards");
+		$res = $this->database->query("SELECT * FROM gamecards_to_users");
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 1);
 
@@ -60,7 +62,7 @@ class testLrgamecardfunctions extends UnitTestCase
 		$ret = $gamecardfunctions->removeGamecard('1', '1');
 		$this->assertTrue($ret);
 
-		$res = $this->database->query("SELECT * FROM users_to_gamecards");
+		$res = $this->database->query("SELECT * FROM gamecards_to_users");
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 1);
 		
@@ -74,7 +76,7 @@ class testLrgamecardfunctions extends UnitTestCase
 	function test_checkRights()
 	{
 		$gamecardfunctions = new lrGamecardfunctions();
-		$this->database->query('TRUNCATE TABLE users_to_gamecards');
+		$this->database->query('TRUNCATE TABLE gamecards_to_users');
 
 		$ret = $gamecardfunctions->addGamecard('1', '1');
 		
