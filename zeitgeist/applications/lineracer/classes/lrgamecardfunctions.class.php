@@ -63,7 +63,7 @@ class lrGamecardfunctions
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT * FROM users_to_gamecards u2g LEFT JOIN gamecards g ON u2g.usergamecard_gamecard = g.gamecard_id WHERE u2g.usergamecard_user='" . $user . "'";
+		$sql = "SELECT * FROM gamecards_to_users u2g LEFT JOIN gamecards g ON u2g.usergamecard_gamecard = g.gamecard_id WHERE u2g.usergamecard_user='" . $user . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -97,7 +97,7 @@ class lrGamecardfunctions
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT * FROM users_to_gamecards WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $user . "'";
+		$sql = "SELECT * FROM gamecards_to_users WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $user . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -133,7 +133,7 @@ class lrGamecardfunctions
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT * FROM users_to_gamecards WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $user . "'";
+		$sql = "SELECT * FROM gamecards_to_users WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $user . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -157,7 +157,7 @@ class lrGamecardfunctions
 		
 		if ($row['usergamecard_count'] == '1')
 		{
-			$sql = "DELETE FROM users_to_gamecards WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $user . "'";
+			$sql = "DELETE FROM gamecards_to_users WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $user . "'";
 			$res = $this->database->query($sql);
 			if (!$res)
 			{
@@ -169,7 +169,7 @@ class lrGamecardfunctions
 		}
 		else
 		{
-			$sql = "UPDATE users_to_gamecards SET usergamecard_gamecard='" . $gamecard . "', usergamecard_user='" . $user . "', usergamecard_count='" . ($row['usergamecard_count']-1) . "' WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $user . "'";
+			$sql = "UPDATE gamecards_to_users SET usergamecard_gamecard='" . $gamecard . "', usergamecard_user='" . $user . "', usergamecard_count='" . ($row['usergamecard_count']-1) . "' WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $user . "'";
 			$res = $this->database->query($sql);
 			if (!$res)
 			{
@@ -197,13 +197,13 @@ class lrGamecardfunctions
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT * FROM users_to_gamecards WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $user . "'";
+		$sql = "SELECT * FROM gamecards_to_users WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $user . "'";
 		$res = $this->database->query($sql);
 		$count = $this->database->numRows($res);
 		
 		if ($count == 0)
 		{
-			$sql = "INSERT INTO users_to_gamecards(usergamecard_gamecard, usergamecard_user, usergamecard_count) VALUES('" . $gamecard . "', '" . $user . "', '1')";
+			$sql = "INSERT INTO gamecards_to_users(usergamecard_gamecard, usergamecard_user, usergamecard_count) VALUES('" . $gamecard . "', '" . $user . "', '1')";
 			$res = $this->database->query($sql);
 			if (!$res)
 			{
@@ -215,7 +215,7 @@ class lrGamecardfunctions
 		}
 		else
 		{
-			$sql = "UPDATE users_to_gamecards SET usergamecard_gamecard='" . $gamecard . "', usergamecard_user='" . $user . "', usergamecard_count='" . ($count+1) . "' WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $user . "'";
+			$sql = "UPDATE gamecards_to_users SET usergamecard_gamecard='" . $gamecard . "', usergamecard_user='" . $user . "', usergamecard_count='" . ($count+1) . "' WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $user . "'";
 			$res = $this->database->query($sql);
 			if (!$res)
 			{

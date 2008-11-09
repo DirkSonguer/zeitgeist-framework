@@ -158,7 +158,13 @@ class lrGamefunctions
 		
 		$this->debug->unguard(true);
 		return true;
-	}	
+	}
+	
+	
+	public function startGame($lobby)
+	{
+		
+	}
 
 }
 ?>

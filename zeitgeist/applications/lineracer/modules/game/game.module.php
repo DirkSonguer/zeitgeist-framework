@@ -58,10 +58,7 @@ class game
 		elseif ($currentGamestates['currentPlayer'] == 3) $tpl->assign('bgcolor', '#0000ff');
 		else $tpl->assign('bgcolor', '#000000');
 		
-		$tpl->assign('bgcolor_p1', '#00ff00');
-		$tpl->assign('bgcolor_p2', '#ff0000');
-		$tpl->assign('bgcolor_p3', '#0000ff');
-		$tpl->assign('bgcolor_p4', '#ff6000');
+		$tpl->assign('round', $currentGamestates['currentRound']);
 
 		$userdeck = $gamecardfunctions->getPlayerDeck($this->user->getUserID());
 
@@ -143,17 +140,18 @@ class game
 	{
 		$this->debug->guard();
 
-		$sql = "TRUNCATE TABLE race_actions";
+		$this->database->query('TRUNCATE TABLE races');
+		$this->database->query('TRUNCATE TABLE race_actions');
+		$this->database->query('TRUNCATE TABLE race_to_users');
+		$this->database->query('TRUNCATE TABLE race_events');
+		$this->database->query('TRUNCATE TABLE race_actions');
+		$this->database->query('TRUNCATE TABLE gamecards_to_users');
+
+		$sql = "INSERT INTO gamecards_to_users(usergamecard_user, usergamecard_gamecard, usergamecard_count) VALUES('1', '1', '1'), ('1', '2', '1'), ('1', '3', '1')";
 		$res = $this->database->query($sql);
-		$sql = "TRUNCATE TABLE race_events";
+		$sql = "INSERT INTO gamecards_to_users(usergamecard_user, usergamecard_gamecard, usergamecard_count) VALUES('2', '1', '1'), ('2', '2', '1'), ('2', '3', '1')";
 		$res = $this->database->query($sql);
-		$sql = "TRUNCATE TABLE users_to_gamecards";
-		$res = $this->database->query($sql);
-		$sql = "INSERT INTO users_to_gamecards(usergamecard_user, usergamecard_gamecard, usergamecard_count) VALUES('1', '1', '1'), ('1', '2', '1'), ('1', '3', '1')";
-		$res = $this->database->query($sql);
-		$sql = "INSERT INTO users_to_gamecards(usergamecard_user, usergamecard_gamecard, usergamecard_count) VALUES('2', '1', '1'), ('2', '2', '1'), ('2', '3', '1')";
-		$res = $this->database->query($sql);
-		$sql = "INSERT INTO users_to_gamecards(usergamecard_user, usergamecard_gamecard, usergamecard_count) VALUES('3', '1', '1'), ('3', '2', '1'), ('3', '3', '1')";
+		$sql = "INSERT INTO gamecards_to_users(usergamecard_user, usergamecard_gamecard, usergamecard_count) VALUES('3', '1', '1'), ('3', '2', '1'), ('3', '3', '1')";
 		$res = $this->database->query($sql);
 		$sql = "INSERT INTO race_actions(raceaction_race, raceaction_user, raceaction_action, raceaction_parameter) VALUES('1', '1', '1', '150,370')";
 		$res = $this->database->query($sql);
@@ -161,11 +159,14 @@ class game
 		$res = $this->database->query($sql);
 		$sql = "INSERT INTO race_actions(raceaction_race, raceaction_user, raceaction_action, raceaction_parameter) VALUES('1', '3', '1', '190,370')";
 		$res = $this->database->query($sql);
-		$sql = "INSERT INTO race_actions(raceaction_race, raceaction_user, raceaction_action, raceaction_parameter) VALUES('1', '4', '1', '210,370')";
+		$sql = "INSERT INTO races(race_id, race_circuit, race_activeplayer, race_currentround, race_gamecardsallowed)";
+		$sql .= "VALUES(1, 1, 1, 1, 1)";
 		$res = $this->database->query($sql);
-		$sql = "UPDATE races SET race_currentround='1', race_activeplayer='1' WHERE race_id='1'";
+		$sql = "INSERT INTO race_to_users(raceuser_race, raceuser_user) VALUES('1', '1')";
 		$res = $this->database->query($sql);
-	
+		$sql = "INSERT INTO race_to_users(raceuser_race, raceuser_user) VALUES('1', '2')";
+//		$res = $this->database->query($sql);
+
 		$tpl = new lrTemplate();
 		$tpl->redirect($tpl->createLink('game', 'index'));
 

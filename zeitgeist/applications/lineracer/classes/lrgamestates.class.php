@@ -50,19 +50,21 @@ class lrGamestates
 			return false;
 		}
 
+		// get player data from database
+		$sqlPlayers = "SELECT * FROM race_to_users WHERE raceuser_race='" . $raceid . "'";
+		$resPlayers = $this->database->query($sqlPlayers);
+		while ($rowPlayers = $this->database->fetchArray($resPlayers))
+		{
+			$currentGamestates['players'][] = $rowPlayers['raceuser_user'];
+		}
+		$currentGamestates['numPlayers'] = count($currentGamestates['players']);
+
 		// fill structure
 		$currentGamestates['currentRace'] = $raceid;
 		$currentGamestates['currentCircuit'] = $row['race_circuit'];
 		$currentGamestates['currentRound'] = $row['race_currentround'];
 		$currentGamestates['currentPlayer'] = $row['race_activeplayer'];
 		$currentGamestates['currentRadius'] = $this->configuration->getConfiguration('gamedefinitions', 'gamelogic', 'movementradius');
-
-		// get max number of players
-		$currentGamestates['numPlayers'] = 0;
-		if ($row['race_player4'] != '') $currentGamestates['numPlayers'] = 4;
-		elseif ($row['race_player3'] != '') $currentGamestates['numPlayers'] = 3;
-		elseif ($row['race_player2'] != '') $currentGamestates['numPlayers'] = 2;
-		else $currentGamestates['numPlayers'] = 1;
 
 		// get raceaction from database
 		$sql = "SELECT * FROM race_actions WHERE raceaction_race='" . $raceid . "' ORDER BY raceaction_id";
