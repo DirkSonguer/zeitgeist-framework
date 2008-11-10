@@ -161,9 +161,38 @@ class lrGamefunctions
 	}
 	
 	
-	public function startGame($lobby)
+	public function startGame($lobbyid)
 	{
+		$this->debug->guard();
+
+		// get lobby data from database
+		$sql = "SELECT * FROM lobby WHERE lobby_id='" . $lobbyid . "'";
+		$res = $this->database->query($sql);
+		$row = $this->database->fetchArray($res);
+		if(!$row)
+		{
+			$this->debug->write('Could not start game: no lobby information found', 'warning');
+			$this->messages->setMessage('Could not start game: no lobby information found', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		// store new race data
+		$sql = "INSERT INTO race(race_circuit, race_activeplayer, race_currentround, race_gamecardsallowed) ";
+		$sql .= "VALUES('" . $row['lobby_circuit'] ."', '1', '1', '" . $row['lobby_gamecardsallowed'] . "')";
+		$res = $this->database->query($sql);
+		if(!$res)
+		{
+			$this->debug->write('Could not start game: could not write race data to database', 'warning');
+			$this->messages->setMessage('Could not start game: could not write race data to database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$raceid = $this->database->insertId();
 		
+		$this->debug->unguard(true);
+		return true;
 	}
 
 }

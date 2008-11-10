@@ -15,7 +15,6 @@ class testLrgameeventhandler extends UnitTestCase
 		$this->assertNotNull($gameeventhandler);
 		unset($gameeventhandler);
     }
-	
 
 	function test_saveRaceaction()
 	{
