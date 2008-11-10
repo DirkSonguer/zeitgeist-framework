@@ -168,17 +168,17 @@ class lrGamefunctions
 		// get lobby data from database
 		$sql = "SELECT * FROM lobby WHERE lobby_id='" . $lobbyid . "'";
 		$res = $this->database->query($sql);
-		$row = $this->database->fetchArray($res);
-		if(!$row)
+		if(!$res)
 		{
 			$this->debug->write('Could not start game: no lobby information found', 'warning');
 			$this->messages->setMessage('Could not start game: no lobby information found', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
+		$row = $this->database->fetchArray($res);
 
 		// store new race data
-		$sql = "INSERT INTO race(race_circuit, race_activeplayer, race_currentround, race_gamecardsallowed) ";
+		$sql = "INSERT INTO races(race_circuit, race_activeplayer, race_currentround, race_gamecardsallowed) ";
 		$sql .= "VALUES('" . $row['lobby_circuit'] ."', '1', '1', '" . $row['lobby_gamecardsallowed'] . "')";
 		$res = $this->database->query($sql);
 		if(!$res)
@@ -190,10 +190,153 @@ class lrGamefunctions
 		}
 
 		$raceid = $this->database->insertId();
+		if(!$raceid)
+		{
+			$this->debug->write('Could not start game: could not get race id from database', 'warning');
+			$this->messages->setMessage('Could not start game: could not get race id from database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		// get lobby users from database
+		$sql = "SELECT * FROM lobby_to_users WHERE lobbyuser_lobby='" . $lobbyid . "'";
+		$res = $this->database->query($sql);
+		if(!$res)
+		{
+			$this->debug->write('Could not start game: no lobby information found', 'warning');
+			$this->messages->setMessage('Could not start game: no lobby information found', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$gameusers = array();
+		while ($row = $this->database->fetchArray($res))
+		{
+			$gameusers[] = $row['lobbyuser_user'];
+		}
+		
+		$sql = 'INSERT INTO race_to_users(raceuser_race, raceuser_user) VALUES';
+		foreach ($gameusers as $player)
+		{
+			$sql .= "('" . $raceid . "','" . $player . "'),";
+		}
+		$sql = substr($sql, 0, -1);
+		$res = $this->database->query($sql);
+		if(!$res)
+		{
+			$this->debug->write('Could not start game: could not insert player data', 'warning');
+			$this->messages->setMessage('Could not start game: could not insert player data', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$sql = "DELETE FROM lobby WHERE lobby_id='" . $lobbyid . "'";
+		$res = $this->database->query($sql);
+		if(!$res)
+		{
+			$this->debug->write('Could not start game: lobby data could not be erased', 'warning');
+			$this->messages->setMessage('Could not start game: lobby data could not be erased', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$sql = "DELETE FROM lobby_to_users WHERE lobbyuser_lobby='" . $lobbyid . "'";
+		$res = $this->database->query($sql);
+		if(!$res)
+		{
+			$this->debug->write('Could not start game: player data could not be erased', 'warning');
+			$this->messages->setMessage('Could not start game: player data could not be erased', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}		
+		
+		$this->debug->unguard($raceid);
+		return $raceid;
+	}
+
+
+	public function endGame($raceid)
+	{
+		$this->debug->guard();
+
+		// get race data from database
+		$sql = "SELECT * FROM races WHERE race_id='" . $raceid . "'";
+		$res = $this->database->query($sql);
+		if(!$res)
+		{
+			$this->debug->write('Could not end game: no race information found', 'warning');
+			$this->messages->setMessage('Could not end game: no race information found', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		$row = $this->database->fetchArray($res);
+
+		// store new race data
+		$sql = "INSERT INTO races_archive(race_id, race_circuit, race_activeplayer, race_currentround, race_gamecardsallowed) ";
+		$sql .= "VALUES('" . $row['race_id'] ."', '" . $row['race_circuit'] ."', '" . $row['race_activeplayer'] ."', '" . $row['race_currentround'] ."', '" . $row['race_gamecardsallowed'] ."')";
+		$res = $this->database->query($sql);
+		if(!$res)
+		{
+			$this->debug->write('Could not end game: could not write race archive data to database', 'warning');
+			$this->messages->setMessage('Could not end game: could not write race archive data to database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		// get race actions from database
+		$sql = "SELECT * FROM race_actions WHERE raceaction_race='" . $raceid . "'";
+		$res = $this->database->query($sql);
+		if(!$res)
+		{
+			$this->debug->write('Could not end game: no race actions found', 'warning');
+			$this->messages->setMessage('Could not end game: no race actions found', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$gameactions = array();
+		while ($row = $this->database->fetchArray($res))
+		{
+			$gameactions[] = $row;
+		}
+		
+		$sql = 'INSERT INTO race_actions_archive(raceaction_id, raceaction_race, raceaction_user, raceaction_action, raceaction_parameter) VALUES';
+		foreach ($gameactions as $action)
+		{
+			$sql .= "('" . $action['raceaction_id'] . "','" . $action['raceaction_race'] . "','" . $action['raceaction_user'] . "','" . $action['raceaction_action'] . "','" . $action['raceaction_parameter'] . "'),";
+		}
+		$sql = substr($sql, 0, -1);
+		$res = $this->database->query($sql);
+		if(!$res)
+		{
+			$this->debug->write('Could not end game: could not archive action data', 'warning');
+			$this->messages->setMessage('Could not end game: could not archive action data', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$sql = "DELETE FROM races WHERE race_id='" . $raceid . "'";
+		$res = $this->database->query($sql);
+		if(!$res)
+		{
+			$this->debug->write('Could not end game: race data could not be erased', 'warning');
+			$this->messages->setMessage('Could not end game: race data could not be erased', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$sql = "DELETE FROM race_actions WHERE raceaction_race='" . $raceid . "'";
+		$res = $this->database->query($sql);
+		if(!$res)
+		{
+			$this->debug->write('Could not end game: race actions could not be erased', 'warning');
+			$this->messages->setMessage('Could not end game: race actions could not be erased', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}		
 		
 		$this->debug->unguard(true);
 		return true;
 	}
-
 }
 ?>
