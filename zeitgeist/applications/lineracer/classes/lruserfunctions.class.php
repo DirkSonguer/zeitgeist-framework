@@ -90,5 +90,36 @@ class lrUserfunctions
 	}
 
 
+	/**
+	 * checks if a user is in a lobby, waiting for a game
+	 *
+	 * @return boolean
+	 */
+	public function waitingForGame()
+	{
+		$this->debug->guard();
+		
+		$sql = "SELECT * FROM lobby_to_users WHERE lobbyuser_user='" . $this->user->getUserId() . "'";
+		$res = $this->database->query($sql);
+		if(!$res)
+		{
+			$this->debug->write('Could validate user lobby status: could get lobby data from database', 'warning');
+			$this->messages->setMessage('Could validate user lobby status: could get lobby data from database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$playerFound = $this->database->numRows($res);
+		if ($playerFound == 0)
+		{
+			$this->debug->unguard(false);
+			return false;		
+		}
+
+		$this->debug->unguard(true);
+		return true;		
+	}
+
+
 }
 ?>

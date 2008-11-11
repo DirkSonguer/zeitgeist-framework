@@ -334,9 +334,104 @@ class lrGamefunctions
 			$this->debug->unguard(false);
 			return false;
 		}		
+
+// TODO: Punkteverteilung
+// TODO: Achievments		
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function createLobby($circuit, $maxplayers, $gamecardsallowed)
+	{
+		$this->debug->guard();
+
+		// create new lobby
+		$sql = "INSERT INTO lobby(lobby_circuit, lobby_maxplayers, lobby_gamecardsallowed) ";
+		$sql .= "VALUES('" . $circuit . "', '" . $maxplayers . "', '" . $gamecardsallowed . "')";
+		$res = $this->database->query($sql);
+		if(!$res)
+		{
+			$this->debug->write('Could not create lobby: could not enter lobby data into database', 'warning');
+			$this->messages->setMessage('Could not create lobby: could not enter lobby data into database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$lobbyid = $this->database->insertId();
+		if(!$lobbyid)
+		{
+			$this->debug->write('Could not create lobby: could get lobby id from database', 'warning');
+			$this->messages->setMessage('Could not create lobby: could not get lobby id from database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		// add current user to lobby
+		$sql = "INSERT INTO lobby_to_users(lobbyuser_lobby, lobbyuser_user) ";
+		$sql .= "VALUES('" . $lobbyid ."', '" . $this->user->getUserId() ."')";
+		$res = $this->database->query($sql);
+		if(!$res)
+		{
+			$this->debug->write('Could not create lobby: could not write lobby creator to database', 'warning');
+			$this->messages->setMessage('Could not create lobby: could not write lobby creator to database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
 		
 		$this->debug->unguard(true);
 		return true;
 	}
+
+	public function joinLobby($lobbyid)
+	{
+		$this->debug->guard();
+
+		$userfunctions = new lrUserfunctions();
+		if ($userfunctions->waitingForGame())
+		{
+			$this->debug->write('Could not join lobby: user already waiting for a game', 'warning');
+			$this->messages->setMessage('Could not join lobby: user already waiting for a game', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}		
+
+		$sql = "SELECT * FROM lobby_to_users l2u LEFT JOIN lobby l ON l2u.lobbyuser_lobby = l.lobby_id WHERE l2u.lobbyuser_lobby='" . $lobbyid . "'";
+		$res = $this->database->query($sql);
+		if(!$res)
+		{
+			$this->debug->write('Could not join lobby: could get lobby data from database', 'warning');
+			$this->messages->setMessage('Could not join lobby: could not get lobby data from database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$numPlayers = $this->database->numRows($res);
+		$row = $this->database->fetchArray($res);
+		if($numPlayers == $row['lobby_maxplayers'])
+		{
+			$this->debug->write('Could not join lobby: lobby already full', 'warning');
+			$this->messages->setMessage('Could not join lobby: lobby already full', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		// add current user to lobby
+		$sql = "INSERT INTO lobby_to_users(lobbyuser_lobby, lobbyuser_user) ";
+		$sql .= "VALUES('" . $lobbyid ."', '" . $this->user->getUserId() ."')";
+		$res = $this->database->query($sql);
+		if(!$res)
+		{
+			$this->debug->write('Could not join lobby: could not write lobby player to database', 'warning');
+			$this->messages->setMessage('Could not join lobby: could not write lobby player to database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
 }
 ?>
