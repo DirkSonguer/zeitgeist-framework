@@ -272,8 +272,8 @@ class lrGamefunctions
 		$row = $this->database->fetchArray($res);
 
 		// store new race data
-		$sql = "INSERT INTO races_archive(race_id, race_circuit, race_activeplayer, race_currentround, race_gamecardsallowed) ";
-		$sql .= "VALUES('" . $row['race_id'] ."', '" . $row['race_circuit'] ."', '" . $row['race_activeplayer'] ."', '" . $row['race_currentround'] ."', '" . $row['race_gamecardsallowed'] ."')";
+		$sql = "INSERT INTO races_archive(race_id, race_circuit, race_gamecardsallowed, race_started) ";
+		$sql .= "VALUES('" . $row['race_id'] ."', '" . $row['race_circuit'] ."', '" . $row['race_gamecardsallowed'] ."', '" . $row['race_created'] ."')";
 		$res = $this->database->query($sql);
 		if(!$res)
 		{
