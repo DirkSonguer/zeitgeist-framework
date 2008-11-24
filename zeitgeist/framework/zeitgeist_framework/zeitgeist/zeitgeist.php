@@ -38,7 +38,7 @@ require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/database.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/configuration.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/locale.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/messagecache.class.php');
-require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/objectcache.class.php');
+require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/objects.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/session.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/userroles.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/userrights.class.php');

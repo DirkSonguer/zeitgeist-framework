@@ -34,7 +34,7 @@ class zgShop
 	{
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
-		$this->objects = zgObjectcache::init();
+		$this->objects = zgObjects::init();
 		$this->configuration = zgConfiguration::init();
 
 		$this->database = new zgDatabase();

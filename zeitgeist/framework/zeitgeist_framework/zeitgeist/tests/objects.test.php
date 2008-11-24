@@ -1,18 +1,18 @@
 <?php
 
-class testObjectcache extends UnitTestCase
+class testObjects extends UnitTestCase
 {
 
 	function test_init()
 	{
-		$objectcache = zgObjectcache::init();
+		$objectcache = zgObjects::init();
 		$this->assertNotNull($objectcache);
 		unset($objectcache);
     }
 
 	function test_storeObject()
 	{
-		$objectcache = zgObjectcache::init();
+		$objectcache = zgObjects::init();
 		
 		$testobj = 'testobj';
 		$ret = $objectcache->storeObject('testobject', $testobj);
@@ -26,7 +26,7 @@ class testObjectcache extends UnitTestCase
 
 	function test_getObject()
 	{
-		$objectcache = zgObjectcache::init();
+		$objectcache = zgObjects::init();
 		
 		$ret = $objectcache->getObject('testobject');
 		$this->assertEqual($ret, 'testobj');
@@ -36,7 +36,7 @@ class testObjectcache extends UnitTestCase
 
 	function test_deleteObject()
 	{
-		$objectcache = zgObjectcache::init();
+		$objectcache = zgObjects::init();
 
 		$ret = $objectcache->getObject('testobject');
 		$this->assertEqual($ret, 'testobj');
@@ -52,7 +52,7 @@ class testObjectcache extends UnitTestCase
 	
 	function test_deleteAllObjects()
 	{
-		$objectcache = zgObjectcache::init();
+		$objectcache = zgObjects::init();
 
 		$testobj = 'testobj';
 		$ret = $objectcache->storeObject('testobject1', $testobj);

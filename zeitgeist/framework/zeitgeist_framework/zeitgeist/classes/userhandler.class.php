@@ -16,7 +16,7 @@ defined('ZEITGEIST_ACTIVE') or die();
 
 /**
  * NOTE: This class is a singleton.
- * Other classes or files may initialize it with zgObjectcache::init();
+ * Other classes or files may initialize it with zgObjects::init();
  */
 class zgUserhandler
 {
