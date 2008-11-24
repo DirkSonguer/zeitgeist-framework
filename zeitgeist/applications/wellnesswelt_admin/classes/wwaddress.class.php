@@ -18,8 +18,8 @@ class wwAddress
 		
 		parent::__construct();
 
-		$this->basepath = $this->configuration->getConfiguration('wellnesswelt', 'application', 'basepath');
-		$this->templatepath = $this->basepath . '/templates/' . $this->configuration->getConfiguration('wellnesswelt', 'application', 'templatepath');
+		$this->database = new zgDatabase();
+		$this->database->connect(WW_DB_DBSERVER, WW_DB_USERNAME, WW_DB_USERPASS, WW_DB_DATABASE);
 	}
 
 

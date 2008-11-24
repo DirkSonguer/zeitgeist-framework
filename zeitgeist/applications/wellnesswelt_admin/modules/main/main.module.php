@@ -19,6 +19,10 @@ class main
 
 		$this->database = new zgDatabase();
 		$this->database->connect();
+		
+//	$wwuser = wwWellnessweltUser::init();
+//	$testid = $wwuser->createUser('test', 'test');
+		
 	}
 
 
