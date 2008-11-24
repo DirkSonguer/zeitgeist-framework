@@ -14,12 +14,7 @@ class wwAdminUser
 	 */
 	public function __construct()
 	{
-		$this->user = zgUserhandler::init();
-		
 		parent::__construct();
-
-		$this->basepath = $this->configuration->getConfiguration('wellnesswelt', 'application', 'basepath');
-		$this->templatepath = $this->basepath . '/templates/' . $this->configuration->getConfiguration('wellnesswelt', 'application', 'templatepath');
 	}
 
 

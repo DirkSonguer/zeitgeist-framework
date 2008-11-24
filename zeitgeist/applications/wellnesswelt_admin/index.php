@@ -70,9 +70,6 @@
 			$action = 'login';
 		}
 	}
-	
-	$wwuser = wwWellnessweltUser::init();
-	$testid = $wwuser->createUser('test', 'test');
 
 	// load event
 	$ret = $eventhandler->callEvent($module, $action);
