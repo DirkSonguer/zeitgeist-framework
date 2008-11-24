@@ -20,7 +20,7 @@ class testLrgamecards extends UnitTestCase
 	{
 		$gamestates = new lrGamestates();
 		$gameeventhandler = new lrGameeventhandler();
-		$objects = zgObjectcache::init();
+		$objects = zgObjects::init();
 		$configuration = zgConfiguration::init();
 
 		$this->miscfunctions->setupGame();
@@ -43,7 +43,7 @@ class testLrgamecards extends UnitTestCase
 	{
 		$gamestates = new lrGamestates();
 		$gameeventhandler = new lrGameeventhandler();
-		$objects = zgObjectcache::init();
+		$objects = zgObjects::init();
 		$configuration = zgConfiguration::init();
 
 		$this->miscfunctions->setupGame();

@@ -18,7 +18,7 @@ class lrGamefunctions
 		$this->messages = zgMessages::init();
 		$this->session = zgSession::init();
 		$this->configuration = zgConfiguration::init();
-		$this->objects = zgObjectcache::init();
+		$this->objects = zgObjects::init();
 		$this->user = zgUserhandler::init();
 
 		$this->database = new zgDatabase();
@@ -283,29 +283,8 @@ class lrGamefunctions
 			return false;
 		}
 
-		// get race actions from database
-		$sql = "SELECT * FROM race_actions WHERE raceaction_race='" . $raceid . "'";
-		$res = $this->database->query($sql);
-		if(!$res)
-		{
-			$this->debug->write('Could not end game: no race actions found', 'warning');
-			$this->messages->setMessage('Could not end game: no race actions found', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$gameactions = array();
-		while ($row = $this->database->fetchArray($res))
-		{
-			$gameactions[] = $row;
-		}
-		
-		$sql = 'INSERT INTO race_actions_archive(raceaction_id, raceaction_race, raceaction_user, raceaction_action, raceaction_parameter) VALUES';
-		foreach ($gameactions as $action)
-		{
-			$sql .= "('" . $action['raceaction_id'] . "','" . $action['raceaction_race'] . "','" . $action['raceaction_user'] . "','" . $action['raceaction_action'] . "','" . $action['raceaction_parameter'] . "'),";
-		}
-		$sql = substr($sql, 0, -1);
+		// copy race actions
+		$sql = "INSERT INTO race_actions_archive (SELECT * FROM race_actions WHERE raceaction_race='" . $raceid . "')";
 		$res = $this->database->query($sql);
 		if(!$res)
 		{
@@ -314,7 +293,19 @@ class lrGamefunctions
 			$this->debug->unguard(false);
 			return false;
 		}
+		
+		// copy race users
+		$sql = "INSERT INTO race_to_users_archive (SELECT * FROM race_to_users WHERE raceuser_race='" . $raceid . "')";
+		$res = $this->database->query($sql);
+		if(!$res)
+		{
+			$this->debug->write('Could not end game: race data could not be erased', 'warning');
+			$this->messages->setMessage('Could not end game: race data could not be erased', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}		
 
+		// delete race data
 		$sql = "DELETE FROM races WHERE race_id='" . $raceid . "'";
 		$res = $this->database->query($sql);
 		if(!$res)
@@ -325,6 +316,7 @@ class lrGamefunctions
 			return false;
 		}
 		
+		// delete race actions
 		$sql = "DELETE FROM race_actions WHERE raceaction_race='" . $raceid . "'";
 		$res = $this->database->query($sql);
 		if(!$res)
@@ -335,8 +327,90 @@ class lrGamefunctions
 			return false;
 		}		
 
-// TODO: Punkteverteilung
-// TODO: Achievments		
+		// delete race users
+		$sql = "DELETE FROM race_to_users WHERE raceuser_race='" . $raceid . "'";
+		$res = $this->database->query($sql);
+		if(!$res)
+		{
+			$this->debug->write('Could not end game: race users could not be erased', 'warning');
+			$this->messages->setMessage('Could not end game: race users could not be erased', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}	
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+	
+	
+	// TODO: Punkteverteilung
+	// TODO: Achievements		
+	// TODO: Finish!
+	public function assessRace($raceid)
+	{
+		$this->debug->guard();
+		
+		$raceGamestates = array();
+
+		// get race data from database
+		$sql = "SELECT * FROM races_archive r LEFT JOIN circuits c ON r.race_circuit = c.circuit_id WHERE r.race_id='" . $raceid . "'";
+		$res = $this->database->query($sql);
+		$row = $this->database->fetchArray($res);
+		if(!$row)
+		{
+			$this->debug->write('Could not assess race: no race information found', 'warning');
+			$this->messages->setMessage('Could not assess race: no race information found', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		// get player data from database
+		$sqlPlayers = "SELECT * FROM race_to_users_archive WHERE raceuser_race='" . $raceid . "'";
+		$resPlayers = $this->database->query($sqlPlayers);
+		while ($rowPlayers = $this->database->fetchArray($resPlayers))
+		{
+			$raceGamestates['players'][] = $rowPlayers['raceuser_user'];
+		}
+		$raceGamestates['numPlayers'] = count($raceGamestates['players']);
+
+		// fill structure
+		$raceGamestates['currentRace'] = $raceid;
+		$raceGamestates['currentCircuit'] = $row['race_circuit'];
+		$raceGamestates['currentRound'] = $row['race_currentround'];
+		$raceGamestates['currentPlayer'] = $row['race_activeplayer'];
+		$raceGamestates['currentRadius'] = $this->configuration->getConfiguration('gamedefinitions', 'gamelogic', 'movementradius');
+
+		// get raceaction from database
+		$sql = "SELECT * FROM race_actions WHERE raceaction_race='" . $raceid . "' ORDER BY raceaction_id";
+		$res = $this->database->query($sql);
+
+		// get player data
+		$raceGamestates['playerdata'] = array();
+		while ($row = $this->database->fetchArray($res))
+		{
+			// get all moves
+			if ($row['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'move'))
+			{
+				$position = explode(',',$row['raceaction_parameter']);
+				$raceGamestates['playerdata'][$row['raceaction_user']]['moves'][] = array($row['raceaction_action'], $row['raceaction_parameter']);
+			}
+
+			// get checkpoints
+			if ( ($row['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint1'))
+			|| ($row['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint2'))
+			|| ($row['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint3')) )
+			{
+				$raceGamestates['playerdata'][$row['raceaction_user']]['checkpoints'][$row['raceaction_parameter']] = true;
+			}
+
+			// see if player is finished
+			if ($row['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'finish'))
+			{
+				$raceGamestates['playerdata'][$row['raceaction_user']]['finished'] = true;
+			}
+		}
+		
+				
 		$this->debug->unguard(true);
 		return true;
 	}

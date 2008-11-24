@@ -7,7 +7,7 @@ class gc_fullbreak
 
 	public function __construct()
 	{
-		$this->objects = zgObjectcache::init();
+		$this->objects = zgObjects::init();
 		$this->configuration = zgConfiguration::init();
 	}
 	

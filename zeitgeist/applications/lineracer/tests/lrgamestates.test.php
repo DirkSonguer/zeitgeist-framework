@@ -19,7 +19,7 @@ class testLrgamestates extends UnitTestCase
 	function test_loadGamestates()
 	{
 		$gamestates = new lrGamestates();
-		$objects = zgObjectcache::init();
+		$objects = zgObjects::init();
 		
 		$this->miscfunctions->setupGame();
 		
@@ -44,7 +44,7 @@ class testLrgamestates extends UnitTestCase
 	function test_endTurn()
 	{
 		$gamestates = new lrGamestates();
-		$objects = zgObjectcache::init();
+		$objects = zgObjects::init();
 		
 		$this->miscfunctions->setupGame();
 		
@@ -66,7 +66,7 @@ class testLrgamestates extends UnitTestCase
 	function test_playerFinished()
 	{
 		$gamestates = new lrGamestates();
-		$objects = zgObjectcache::init();
+		$objects = zgObjects::init();
 		$gameeventhandler = new lrGameeventhandler();
 		
 		// reset game and load gamestates
@@ -93,7 +93,7 @@ class testLrgamestates extends UnitTestCase
 	function test_raceFinished()
 	{
 		$gamestates = new lrGamestates();
-		$objects = zgObjectcache::init();
+		$objects = zgObjects::init();
 		$gameeventhandler = new lrGameeventhandler();
 		$configuration = zgConfiguration::init();
 

@@ -70,6 +70,7 @@ class testLrgamefunctions extends UnitTestCase
 
 		$res = $this->database->query("TRUNCATE TABLE races_archive");
 		$res = $this->database->query("TRUNCATE TABLE race_actions_archive");
+		$res = $this->database->query("TRUNCATE TABLE race_to_users_archive");
 
 		$res = $this->database->query("SELECT * FROM races");
 		$ret = $this->database->numRows($res);
@@ -93,6 +94,14 @@ class testLrgamefunctions extends UnitTestCase
 		$res = $this->database->query("SELECT * FROM race_actions_archive");
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 8);
+
+		$res = $this->database->query("SELECT * FROM race_to_users");
+		$ret = $this->database->numRows($res);
+		$this->assertEqual($ret, 0);
+
+		$res = $this->database->query("SELECT * FROM race_to_users_archive");
+		$ret = $this->database->numRows($res);
+		$this->assertEqual($ret, 2);
 	}
 
 	function test_createLobby()

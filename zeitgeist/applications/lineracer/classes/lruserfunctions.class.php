@@ -18,7 +18,7 @@ class lrUserfunctions
 		$this->messages = zgMessages::init();
 		$this->session = zgSession::init();
 		$this->configuration = zgConfiguration::init();
-		$this->objects = zgObjectcache::init();
+		$this->objects = zgObjects::init();
 		$this->user = zgUserhandler::init();
 
 		$this->database = new zgDatabase();
