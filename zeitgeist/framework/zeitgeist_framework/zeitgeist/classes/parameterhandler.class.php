@@ -30,7 +30,7 @@ class zgParameterhandler
 	{
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
-		$this->objects = zgObjectcache::init();
+		$this->objects = zgObjects::init();
 		$this->configuration = zgConfiguration::init();
 
 		$this->rawParameters = array();
@@ -43,7 +43,7 @@ class zgParameterhandler
 	/**
 	 * Retrieves all parameters that are safe for the current module and action
 	 * Returns an array with all parameters found safe
-	 * Also creates an object in the objectcache with parameters found unsafe
+	 * Also creates an object in the objecthandler with parameters found unsafe
 	 *
 	 * @param string $module name of the current module
 	 * @param string $action name of the current action

@@ -26,7 +26,7 @@
 	$locale = zgLocale::init();
 	
 	require_once('messages.test.php');
-	require_once('objectcache.test.php');
+	require_once('objects.test.php');
 	require_once('database.test.php');
 	require_once('configuration.test.php');
 	require_once('locale.test.php');
@@ -43,7 +43,7 @@
 
     $test = &new TestSuite('Zeitgeist Unit Tests');
     $test->addTestCase(new testMessages());
-    $test->addTestCase(new testObjectcache());
+    $test->addTestCase(new testObjects());
     $test->addTestCase(new testDatabase());
     $test->addTestCase(new testConfiguration());
     $test->addTestCase(new testLocale());
