@@ -7,7 +7,7 @@ class gc_dash
 
 	public function __construct()
 	{
-		$this->objects = zgObjectcache::init();
+		$this->objects = zgObjects::init();
 		$this->configuration = zgConfiguration::init();
 	}
 	

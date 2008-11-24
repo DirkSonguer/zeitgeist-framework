@@ -17,7 +17,7 @@ class game
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
 		$this->configuration = zgConfiguration::init();
-		$this->objects = zgObjectcache::init();
+		$this->objects = zgObjects::init();
 		$this->user = zgUserhandler::init();
 		$this->dataserver = new zgDataserver();
 

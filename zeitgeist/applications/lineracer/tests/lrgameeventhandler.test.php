@@ -20,7 +20,7 @@ class testLrgameeventhandler extends UnitTestCase
 	{
 		$gamestates = new lrGamestates();
 		$gameeventhandler = new lrGameeventhandler();
-		$objects = zgObjectcache::init();
+		$objects = zgObjects::init();
 		
 		$this->miscfunctions->setupGame();
 		$gamestates->loadGamestates(1);
@@ -38,7 +38,7 @@ class testLrgameeventhandler extends UnitTestCase
 		$ret = $gamestates->loadGamestates(1);
 		$this->assertTrue($ret);
 
-		$objects = zgObjectcache::init();
+		$objects = zgObjects::init();
 		$ret = $objects->getObject('currentGamestates');
 		$this->assertTrue(is_array($ret));
 		$this->assertEqual($ret['playerdata'][1]['moves'][1][1], '155,380');
@@ -49,7 +49,7 @@ class testLrgameeventhandler extends UnitTestCase
 	{
 		$gamestates = new lrGamestates();
 		$gameeventhandler = new lrGameeventhandler();
-		$objects = zgObjectcache::init();
+		$objects = zgObjects::init();
 		
 		$this->miscfunctions->setupGame();
 		$gamestates->loadGamestates(1);
