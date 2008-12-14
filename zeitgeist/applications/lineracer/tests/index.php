@@ -74,8 +74,8 @@
 //	$debug->showInnerLoops = true;
 //	$debug->showMiscInformation();
 	$debug->showDebugMessages();
-//	$debug->showQueryMessages();
-	$debug->showGuardMessages();
+	$debug->showQueryMessages();
+//	$debug->showGuardMessages();
 	
 ?>
 
