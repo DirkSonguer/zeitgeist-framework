@@ -299,8 +299,8 @@ class lrGamefunctions
 		$res = $this->database->query($sql);
 		if(!$res)
 		{
-			$this->debug->write('Could not end game: race data could not be erased', 'warning');
-			$this->messages->setMessage('Could not end game: race data could not be erased', 'warning');
+			$this->debug->write('Could not end game: race data could not be archived', 'warning');
+			$this->messages->setMessage('Could not end game: race data could not be archived', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}		
