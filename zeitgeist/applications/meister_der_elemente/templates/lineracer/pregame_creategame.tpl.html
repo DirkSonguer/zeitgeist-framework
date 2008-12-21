@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/lineracer.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>Lineracer</title>
+<!-- InstanceEndEditable -->
+
+<link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/lineracer.css" />
+
+<script language="javascript" type="text/javascript">
+
+
+</script>
+	
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
+</head>
+
+<body>
+
+	<!-- TemplateBeginBlock name="usermessage" -->
+		<h3 class="usermessage"><img src="@@{templatepath}@@/nuvola/16x16/actions/ok.png" alt="" align="left" style="margin-right:5px;" /> @@{usermessage}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="userwarnings" -->
+		<h3 class="userwarning"><img src="@@{templatepath}@@/nuvola/16x16/actions/messagebox_info.png" alt="" align="left" style="margin-right:5px;" /> @@{userwarning}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="usererrors" -->
+		<h3 class="usererror"><img src="@@{templatepath}@@/nuvola/16x16/actions/no.png" alt="" align="left" style="margin-right:5px;" /> @@{usererror}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<h1>Lineracer</h1>
+
+	<!-- TemplateBeginBlock name="loginbox" -->
+		<div class="textbox" style="width:400px;">
+			<form method="post" action="@@{[main.login]}@@" name="login">
+
+				<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+					<tr>
+						<td align="right" nowrap width="110"><p>Username</p></td>
+						<td align="left" valign="middle" nowrap><input type="text" size="35" maxlength="20" name="username" class="formtext" style="width:250px;" /></td>
+					</tr>
+					<tr>
+						<td align="right" nowrap><p>Password</p></td>
+						<td align="left" valign="middle" nowrap><input type="password" size="35" maxlength="32" name="password" class="formtext" style="width:250px;" /></td>
+
+					</tr>
+					<tr>
+						<td align="left" nowrap>&nbsp;</td>
+						<td align="right" valign="middle" nowrap><input type="submit" name="login" value="Login" class="formbutton" /></td>
+					</tr>
+				</table>
+				<p><a href="@@{[main.register]}@@">Neuen Nutzer erstellen</a></p>
+			</form>		
+		</div>
+	<!-- TemplateEndBlock -->
+	
+	<!-- TemplateBeginBlock name="logoutbox" -->
+		<div class="textbox" style="width:400px;">
+			<p>Hallo, du bist eingeloggt</p>
+			<p><a href="@@{[player.editplayerdata]}@@">Nutzerdaten ändern</a></p>
+			<p><a href="@@{[main.logout]}@@">Ausloggen</a></p>
+		</div>
+	<!-- TemplateEndBlock -->	
+
+<!-- InstanceBeginEditable name="body" -->
+
+<p>Main Index</p>
+
+<form method="post" action="@@{[player.editplayerdata]}@@" name="editplayerdata" enctype="multipart/form-data; charset=utf-8">
+	
+	<div id="Userdata" class="textbox">
+		
+		<table cellspacing="5" cellpadding="5" border="0">
+			<tr>
+				<td valign="top" nowrap="nowrap" width="200"><p class="formlabel">Anmeldung/E-Mail*</p></td>
+				<td valign="middle" @@{user_username:formerror}@@><input type="text" maxlength="60" name="editplayerdata[user_username]" value="@@{user_username:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="user_username:errormsg" -->
+					<br /><span class="formerrormsg">@@{user_username:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">Vorname*</p></td>
+				<td valign="middle" @@{userdata_firstname:formerror}@@><input type="text" maxlength="60" name="editplayerdata[userdata_firstname]" value="@@{userdata_firstname:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="userdata_firstname:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_firstname:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">Name*</p></td>
+				<td valign="middle" @@{userdata_lastname:formerror}@@><input type="text" maxlength="60" name="editplayerdata[userdata_lastname]" value="@@{userdata_lastname:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="userdata_lastname:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_lastname:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">Straße, Hausnummer</p></td>
+				<td valign="middle" @@{userdata_address1:formerror}@@><input type="text" maxlength="60" name="editplayerdata[userdata_address1]" value="@@{userdata_address1:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="userdata_address1:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_address1:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">Adresszusatz</p></td>
+				<td valign="middle" @@{userdata_address2:formerror}@@><input type="text" maxlength="60" name="editplayerdata[userdata_address2]" value="@@{userdata_address2:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="userdata_address2:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_address2:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">PLZ, Ort</p></td>
+				<td valign="middle" @@{userdata_zip:formerror}@@@@{userdata_city:formerror}@@><input type="text" maxlength="6" name="editplayerdata[userdata_zip]" value="@@{userdata_zip:value}@@" class="formtext" style="width:55px;" />
+				<input type="text" maxlength="60" name="editplayerdata[userdata_city]" value="@@{userdata_city:value}@@" class="formtext" style="width:212px;" />
+				<!-- TemplateBeginBlock name="userdata_zip:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_zip:errormsg}@@</span>
+				<!-- TemplateEndBlock -->				
+				<!-- TemplateBeginBlock name="userdata_city:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_city:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">URL</p></td>
+				<td valign="middle" @@{userdata_url:userdata_zip}@@><input type="text" maxlength="60" name="editplayerdata[userdata_url]" value="@@{userdata_url:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="userdata_url:errormsg" -->
+					<br /><span class="formerrormsg">@@{userdata_url:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+				   <p style="text-align:right; margin-right:0px;"><img src="@@{templatepath}@@/nuvola/32x32/apps/kate.png" alt="" border="0" align="top" />
+				   <input name="submit" value="Daten speichern" class="formbutton" type="submit" /></p>
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+</form>
+
+
+<!-- InstanceEndEditable -->
+
+</body>
+<!-- InstanceEnd --></html>
