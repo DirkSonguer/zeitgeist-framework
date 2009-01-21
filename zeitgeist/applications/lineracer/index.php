@@ -25,7 +25,7 @@
 	require_once('includes/lreventoverride.include.php');
 	require_once('classes/lruserfunctions.class.php');
 	require_once('classes/lrtemplate.class.php');
-//	require_once('classes/lrpregamefunctions.class.php');
+	require_once('classes/lrlobbyfunctions.class.php');
 	require_once('classes/lrgameeventhandler.class.php');
 	require_once('classes/lrgamestates.class.php');
 	require_once('classes/lrgamecardfunctions.class.php');
@@ -81,6 +81,6 @@
 	$debug->showMiscInformation();
 	$debug->showDebugMessages();
 	$debug->showQueryMessages();
-//	$debug->showGuardMessages();
+	$debug->showGuardMessages();
 
 ?>

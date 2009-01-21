@@ -121,5 +121,35 @@ class lrUserfunctions
 	}
 
 
+	/**
+	 * checks if a user is part of a running game
+	 *
+	 * @return boolean
+	 */
+	public function currentlyPlayingGame()
+	{
+		$this->debug->guard();
+		
+		$sql = "SELECT * FROM race_to_users WHERE raceuser_user='" . $this->user->getUserId() . "'";
+		$res = $this->database->query($sql);
+		if(!$res)
+		{
+			$this->debug->write('Could validate user play status: could get race data from database', 'warning');
+			$this->messages->setMessage('Could validate play lobby status: could get race data from database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$playerFound = $this->database->numRows($res);
+		if ($playerFound == 0)
+		{
+			$this->debug->unguard(false);
+			return false;		
+		}
+
+		$this->debug->unguard(true);
+		return true;		
+	}
+
 }
 ?>

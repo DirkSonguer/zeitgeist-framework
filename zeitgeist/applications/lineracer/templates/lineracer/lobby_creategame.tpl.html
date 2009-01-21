@@ -14,19 +14,6 @@
 </script>
 	
 <!-- InstanceBeginEditable name="head" -->
-
-	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/includes/Spry/SpryData.js"></script>
-	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/includes/Spry/xpath.js"></script>
-	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/includes/Spry/SpryNestedXMLDataSet.js"></script>
-	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/js/SpryExtensions.js"></script>
-
-	<script type="text/javascript">
-
-		var dsLobbydata = new Spry.Data.XMLDataSet("@@{[dataserver.getlobbydata]}@@", "container/element", { useCache:  false, loadInterval: 10000 });
-		dsLobbydata.setColumnType("lobby_id", "number");
-
-	</script>
-
 <!-- InstanceEndEditable -->
 </head>
 
@@ -73,8 +60,21 @@
 	<!-- TemplateBeginBlock name="logoutbox" -->
 		<div class="textbox" style="width:400px;">
 			<p>Hallo, du bist eingeloggt</p>
-			<p><a href="@@{[player.editplayerdata]}@@">Nutzerdaten ändern</a></p>
+			<p><a href="@@{[main.index]}@@">Hauptseite</a></p>
+			<p><a href="@@{[lobby.index]}@@">Zur Lobby</a></p>
 			<p><a href="@@{[main.logout]}@@">Ausloggen</a></p>
+		</div>
+	<!-- TemplateEndBlock -->	
+
+	<!-- TemplateBeginBlock name="gamebox" -->
+		<div class="textbox" style="width:400px;">
+			<p>Du fährst gerade ein Rennen: <a href="@@{[game.index]}@@">zum Rennen</a></p>
+		</div>
+	<!-- TemplateEndBlock -->	
+
+	<!-- TemplateBeginBlock name="lobbybox" -->
+		<div class="textbox" style="width:400px;">
+			<p>Du wartest bereits auf ein Rennen: <a href="@@{[lobby.showgameroom]}@@">zur Rennvorbereitung</a></p>
 		</div>
 	<!-- TemplateEndBlock -->	
 
@@ -82,37 +82,45 @@
 
 <p>Main Index</p>
 
-<p><a href="@@{[pregame.creategame]}@@">Neues Spiel erstellen</a></p>
-
-<p>Aktuelle Spiele:</p>
-<div class="textbox">
-	<div spry:region="dsLobbydata">
-    <div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
-
-	<div spry:state="ready">
-	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
-	        <tr class="tablehead">
-				<th><p><a onclick="dsLobbydata.sort('lobby_id');">ID</a></p></th>
-				<th><p><a onclick="dsLobbydata.sort('lobby_currentplayers');">aktuelle Spieler</a></p></th>
-				<th><p><a onclick="dsLobbydata.sort('lobby_maxplayers');">max Spieler</a></p></th>
-				<th><p><a onclick="dsLobbydata.sort('lobby_circuit');">Strecke</a></p></th>
-				<th><p>Aktion</p></th>
-	        </tr>
-	        <tr class="{ds_EvenOddRow}" spry:repeat="dsLobbydata">
-				<td><p>{dsLobbydata::lobby_id}</p></td>
-				<td><p>{dsLobbydata::lobby_currentplayers}</p></td>
-				<td><p>{dsLobbydata::lobby_maxplayers}</p></td>
-				<td><p>{dsLobbydata::circuit_name}</p></td>
-				<td width="90"><p>
-				<a href="@@{[pregame.joingame]}@@&lobbyid={dsLobbydata::lobby_id}" alt="Spiel beitreten">beitreten</a>
-                </p></td>
-	        </tr>
-	    </table>
-    </div>
+<form method="post" action="@@{[lobby.creategame]}@@" name="creategame" enctype="multipart/form-data; charset=utf-8">
+	
+	<div id="CreateGame" class="textbox">
+		
+		<table cellspacing="5" cellpadding="5" border="0">
+			<tr>
+				<td valign="top" nowrap="nowrap" width="200"><p class="formlabel">Max Players</p></td>
+				<td valign="middle" @@{race_maxplayers:formerror}@@><input type="text" maxlength="1" name="creategame[race_maxplayers]" value="@@{race_maxplayers:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="race_maxplayers:errormsg" -->
+					<br /><span class="formerrormsg">@@{race_maxplayers:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">Circuit</p></td>
+				<td valign="middle" @@{race_circuit:formerror}@@><input type="text" maxlength="60" name="creategame[race_circuit]" value="@@{race_circuit:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="race_circuit:errormsg" -->
+					<br /><span class="formerrormsg">@@{race_circuit:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">Gamecards allowed</p></td>
+				<td valign="middle" @@{race_gamecardsallowed:formerror}@@><input type="text" maxlength="60" name="creategame[race_gamecardsallowed]" value="@@{race_gamecardsallowed:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="race_gamecardsallowed:errormsg" -->
+					<br /><span class="formerrormsg">@@{race_gamecardsallowed:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+			</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+				   <p style="text-align:right; margin-right:0px;"><input name="submit" value="Spiel erstellen" class="formbutton" type="submit" /></p>
+				</td>
+			</tr>
+		</table>
 	</div>
-</div>
+	
+</form>
 
-<p><a href="@@{[main.index]}@@">Zurück</a></p>
 
 <!-- InstanceEndEditable -->
 

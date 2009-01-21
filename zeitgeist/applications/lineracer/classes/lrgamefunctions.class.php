@@ -410,7 +410,6 @@ class lrGamefunctions
 			}
 		}
 		
-				
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -456,6 +455,7 @@ class lrGamefunctions
 		$this->debug->unguard(true);
 		return true;
 	}
+
 
 	public function joinLobby($lobbyid)
 	{

@@ -18,18 +18,12 @@
 	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/includes/Spry/SpryData.js"></script>
 	<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/includes/Spry/xpath.js"></script>
 	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/includes/Spry/SpryNestedXMLDataSet.js"></script>
-	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/includes/Spry/SpryDOMUtils.js"></script>
 	<script language="Javascript" type="text/javascript" src="@@{templatepath}@@/js/SpryExtensions.js"></script>
 
 	<script type="text/javascript">
 
-		var dsLobbydata = new Spry.Data.XMLDataSet("@@{[dataserver.getgameroomdata]}@@", "container/element", { useCache:  false, loadInterval: 10000 });
+		var dsLobbydata = new Spry.Data.XMLDataSet("@@{[dataserver.getlobbydata]}@@", "container/element", { useCache:  false, loadInterval: 10000 });
 		dsLobbydata.setColumnType("lobby_id", "number");
-
-		function startGame(sTrigger)
-		{
-//			alert("hallo" + sText);
-		}
 
 	</script>
 
@@ -79,8 +73,21 @@
 	<!-- TemplateBeginBlock name="logoutbox" -->
 		<div class="textbox" style="width:400px;">
 			<p>Hallo, du bist eingeloggt</p>
-			<p><a href="@@{[player.editplayerdata]}@@">Nutzerdaten ändern</a></p>
+			<p><a href="@@{[main.index]}@@">Hauptseite</a></p>
+			<p><a href="@@{[lobby.index]}@@">Zur Lobby</a></p>
 			<p><a href="@@{[main.logout]}@@">Ausloggen</a></p>
+		</div>
+	<!-- TemplateEndBlock -->	
+
+	<!-- TemplateBeginBlock name="gamebox" -->
+		<div class="textbox" style="width:400px;">
+			<p>Du fährst gerade ein Rennen: <a href="@@{[game.index]}@@">zum Rennen</a></p>
+		</div>
+	<!-- TemplateEndBlock -->	
+
+	<!-- TemplateBeginBlock name="lobbybox" -->
+		<div class="textbox" style="width:400px;">
+			<p>Du wartest bereits auf ein Rennen: <a href="@@{[lobby.showgameroom]}@@">zur Rennvorbereitung</a></p>
 		</div>
 	<!-- TemplateEndBlock -->	
 
@@ -88,35 +95,37 @@
 
 <p>Main Index</p>
 
-<p>Aktuelles Spiel:</p>
+<p><a href="@@{[lobby.creategame]}@@">Neues Spiel erstellen</a></p>
+
+<p>Aktuelle Spiele:</p>
 <div class="textbox">
 	<div spry:region="dsLobbydata">
     <div spry:state="loading"><p style="text-align:center;"><img src="@@{templatepath}@@/images/loading.gif" alt="" /></p></div>
 
-	<div spry:state="ready" style="text-align:left;">
-	<p>Max Spieler: {dsLobbydata::lobby_maxplayers}</p>
-	<p>Strecke: {dsLobbydata::circuit_name}</p>
-
+	<div spry:state="ready">
 	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
 	        <tr class="tablehead">
-				<th><p>Spieler</p></th>
+				<th><p><a onclick="dsLobbydata.sort('lobby_id');">ID</a></p></th>
+				<th><p><a onclick="dsLobbydata.sort('lobby_currentplayers');">aktuelle Spieler</a></p></th>
+				<th><p><a onclick="dsLobbydata.sort('lobby_maxplayers');">max Spieler</a></p></th>
+				<th><p><a onclick="dsLobbydata.sort('lobby_circuit');">Strecke</a></p></th>
+				<th><p>Aktion</p></th>
 	        </tr>
 	        <tr class="{ds_EvenOddRow}" spry:repeat="dsLobbydata">
-				<td><p>{dsLobbydata::user_username}</p></td>
+				<td><p>{dsLobbydata::lobby_id}</p></td>
+				<td><p>{dsLobbydata::lobby_currentplayers}</p></td>
+				<td><p>{dsLobbydata::lobby_maxplayers}</p></td>
+				<td><p>{dsLobbydata::circuit_name}</p></td>
+				<td width="90"><p>
+				<a href="@@{[lobby.joingameroom]}@@&lobbyid={dsLobbydata::lobby_id}" alt="Spiel beitreten">beitreten</a>
+                </p></td>
 	        </tr>
 	    </table>
-
-		<div spry:choose="spry:choose">
-			<div spry:when="'{dsLobbydata::circuit_name}' == ''"></div>
-			<div spry:default="spry:default"><script type="text/javascript">Spry.Utils.addLoadListener(startGame('{dsLobbydata::circuit_name}'));</script></div>
-		</div>
-	</div>
+    </div>
 	</div>
 </div>
 
-<p><a href="@@{[pregame.leavegameroom]}@@">Raum verlassen</a></p>
-<p><a href="@@{[pregame.showlobby]}@@">Zurück zur Lobby</a></p>
-<p><a href="@@{[main.index]}@@">Zurück zur Hauptseite</a></p>
+<p><a href="@@{[main.index]}@@">Zurück</a></p>
 
 <!-- InstanceEndEditable -->
 
