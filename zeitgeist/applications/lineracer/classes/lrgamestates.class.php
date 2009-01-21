@@ -144,11 +144,25 @@ class lrGamestates
 		$sql = "DELETE FROM race_events WHERE raceevent_race='" . $currentGamestates['currentRace'] . "' AND raceevent_player='" . $currentGamestates['currentPlayer'] . "' AND raceevent_round='" . $currentGamestates['currentRound'] . "'";
 		$res = $this->database->query($sql);
 
-		$currentGamestates['currentPlayer'] += 1;
-		if ($currentGamestates['currentPlayer'] > $currentGamestates['numPlayers'])
+		$playerFound = false;
+		if (!$this->raceFinished())
 		{
-			$currentGamestates['currentPlayer'] = 1;
-			$currentGamestates['currentRound'] += 1;
+			while (!$playerFound)
+			{
+				$this->debug->write('current player: '.$currentGamestates['currentPlayer'], 'warning');
+
+				$currentGamestates['currentPlayer'] += 1;
+				if ($currentGamestates['currentPlayer'] > $currentGamestates['numPlayers'])
+				{
+					$currentGamestates['currentPlayer'] = 1;
+					$currentGamestates['currentRound'] += 1;
+				}
+
+				if (!$this->playerFinished($currentGamestates['currentPlayer']))
+				{
+					$playerFound = true;
+				}
+			}
 		}
 
 		$currentround = ", race_currentround='" . $currentGamestates['currentRound'] . "'";

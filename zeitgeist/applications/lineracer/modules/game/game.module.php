@@ -32,7 +32,17 @@ class game
 
 		$tpl = new lrTemplate();
 		$tpl->load($this->configuration->getConfiguration('game', 'templates', 'game_index'));
-
+		
+		$userfunctions = new lrUserfunctions();
+		if (!$userfunctions->currentlyPlayingGame())
+		{
+			$this->debug->write('Could not join game: user not part of a game', 'warning');
+			$this->messages->setMessage('Could not game lobby: user not part of a game', 'warning');
+			$this->debug->unguard(false);
+			$tpl->redirect($tpl->createLink('main', 'index'));
+			return false;
+		}		
+		
 		// initialize classes
 		$gamestates = new lrGamestates();
 		$gamecardfunctions = new lrGamecardfunctions();		
@@ -129,6 +139,17 @@ class game
 	{
 		$this->debug->guard();
 
+		$gamestates = new lrGamestates();
+		$gamestates->loadGamestates(1);
+		$currentGamestates = $this->objects->getObject('currentGamestates');
+		
+		if (!$gamestates->raceFinished())
+		{
+			// redirect to game overview
+			$tpl = new lrTemplate();
+			$tpl->redirect($tpl->createLink('game', 'index'));
+		}
+
 		echo "finished!";
 
 		$this->debug->unguard(true);
@@ -165,7 +186,7 @@ class game
 		$sql = "INSERT INTO race_to_users(raceuser_race, raceuser_user) VALUES('1', '1')";
 		$res = $this->database->query($sql);
 		$sql = "INSERT INTO race_to_users(raceuser_race, raceuser_user) VALUES('1', '2')";
-//		$res = $this->database->query($sql);
+		$res = $this->database->query($sql);
 
 		$tpl = new lrTemplate();
 		$tpl->redirect($tpl->createLink('game', 'index'));

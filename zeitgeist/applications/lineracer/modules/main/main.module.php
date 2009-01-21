@@ -46,6 +46,7 @@ class main
 
 		if ($this->user->isLoggedIn())
 		{
+			$this->debug->unguard(false);
 			$tpl->redirect($tpl->createLink('main', 'index'));
 		}
 

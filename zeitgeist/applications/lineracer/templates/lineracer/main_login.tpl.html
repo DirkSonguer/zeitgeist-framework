@@ -60,8 +60,21 @@
 	<!-- TemplateBeginBlock name="logoutbox" -->
 		<div class="textbox" style="width:400px;">
 			<p>Hallo, du bist eingeloggt</p>
-			<p><a href="@@{[player.editplayerdata]}@@">Nutzerdaten ändern</a></p>
+			<p><a href="@@{[main.index]}@@">Hauptseite</a></p>
+			<p><a href="@@{[lobby.index]}@@">Zur Lobby</a></p>
 			<p><a href="@@{[main.logout]}@@">Ausloggen</a></p>
+		</div>
+	<!-- TemplateEndBlock -->	
+
+	<!-- TemplateBeginBlock name="gamebox" -->
+		<div class="textbox" style="width:400px;">
+			<p>Du fährst gerade ein Rennen: <a href="@@{[game.index]}@@">zum Rennen</a></p>
+		</div>
+	<!-- TemplateEndBlock -->	
+
+	<!-- TemplateBeginBlock name="lobbybox" -->
+		<div class="textbox" style="width:400px;">
+			<p>Du wartest bereits auf ein Rennen: <a href="@@{[lobby.showgameroom]}@@">zur Rennvorbereitung</a></p>
 		</div>
 	<!-- TemplateEndBlock -->	
 

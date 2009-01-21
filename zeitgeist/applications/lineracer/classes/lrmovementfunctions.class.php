@@ -101,15 +101,13 @@ class lrMovementfunctions
 		$terrain = array();
 		$terrain = $this->_checkTerrainType($fromX, $fromY, $moveX, $moveY);
 
-/*
-		echo "from: ".$fromX.",".$fromY." to: ".$moveX.",".$moveY."<br />";
-		echo "terrain: ".$terrain."<br />";
+		$debuginfo = '';
+		$debuginfo = "from: ".$fromX.",".$fromY." to: ".$moveX.",".$moveY." | ";
 		foreach($terrain as $step)
 		{
-			echo $step[0];
+			$debuginfo .= $step[0].' ';
 		}
-		echo "<br />";
-//*/
+		$this->debug->write($debuginfo, 'message');
 
 		$correctedMove = array();
 		$correctedMove[0] = $moveX;

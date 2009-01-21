@@ -17,6 +17,7 @@ defined('LINERACER_ACTIVE') or die();
 class lrTemplate extends zgTemplate
 {
 	protected $user;
+	protected $lruser;
 	protected $basepath;
 	protected $templatepath;
 
@@ -26,6 +27,7 @@ class lrTemplate extends zgTemplate
 	public function __construct()
 	{
 		$this->user = zgUserhandler::init();
+		$this->lruser = new lrUserfunctions();
 
 		parent::__construct();
 
@@ -73,6 +75,15 @@ class lrTemplate extends zgTemplate
 		else
 		{
 			parent::insertBlock('loginbox');
+		}
+
+		if ($this->lruser->currentlyPlayingGame())
+		{
+			parent::insertBlock('gamebox');
+		}
+		elseif ($this->lruser->waitingForGame())
+		{
+			parent::insertBlock('lobbybox');
 		}
 
 		$ret = parent::show();
