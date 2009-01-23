@@ -14,16 +14,20 @@
  * @subpackage ZEITGEIST ADMINISTRATOR
  */
 
-	define('PROJECT_ACTIVE', true);
-	
+	define('POCKETKUN_ACTIVE', true);
+	define('DEBUGMODE', true);
+
+	if (!defined('ZEITGEIST_ROOTDIRECTORY')) define('ZEITGEIST_ROOTDIRECTORY', './zeitgeist/');
+	if (!defined('APPLICATION_ROOTDIRECTORY')) define('APPLICATION_ROOTDIRECTORY', './');
+
 	include('zeitgeist/zeitgeist.php');
 	
-	require_once('classes/zgatemplate.class.php');
+	require_once('classes/pktemplate.class.php');
 
 	define(ZG_DB_DBSERVER, 'localhost');
-	define(ZG_DB_USERNAME, 'zeitgeist');
-	define(ZG_DB_USERPASS, 'zeitgeist');
-	define(ZG_DB_DATABASE, 'zeitgeist_administrator');
+	define(ZG_DB_USERNAME, 'root');
+	define(ZG_DB_USERPASS, '');
+	define(ZG_DB_DATABASE, 'pocketkun');
 	define(ZG_DB_CONFIGURATIONCACHE, 'configurationcache');
 	
 	$debug = zgDebug::init();
@@ -34,7 +38,7 @@
 	$eventhandler = new zgEventhandler();
 
 	// load configuration
-	$configuration->loadConfiguration('administrator', 'configuration/project.ini');
+	$configuration->loadConfiguration('pocketkun', 'configuration/pocketkun.ini');
 
 	// set module
 	if (isset($_GET['module']))
