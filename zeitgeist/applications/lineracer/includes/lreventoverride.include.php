@@ -2,6 +2,8 @@
 
 defined('LINERACER_ACTIVE') or die();
 
+// TODO: Zusammenfassen der ganzen Dateiaufrufe
+
 	function lrEventoverride($class)
 	{
 		$debug = zgDebug::init();

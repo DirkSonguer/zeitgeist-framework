@@ -160,24 +160,23 @@ class lrUserfunctions
 	public function getAvailableCircuits()
 	{
 		$this->debug->guard();
-/*		
-		$sql = "SELECT * FROM race_to_users WHERE raceuser_user='" . $this->user->getUserId() . "'";
+
+		$sql = "SELECT * FROM circuits WHERE circuit_public='1' AND circuit_active='1'";
 		$res = $this->database->query($sql);
 		if(!$res)
 		{
-			$this->debug->write('Could validate user play status: could get race data from database', 'warning');
-			$this->messages->setMessage('Could validate play lobby status: could get race data from database', 'warning');
+			$this->debug->write('Could not get available circuits for user: could not read circuit table', 'warning');
+			$this->messages->setMessage('Could not get available circuits for user: could not read circuit table', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
-
-		$playerFound = $this->database->numRows($res);
-		if ($playerFound == 0)
+/*
+		while ($rowPlayers = $this->database->fetchArray($resPlayers))
 		{
-			$this->debug->unguard(false);
-			return false;		
+			$currentGamestates['players'][] = $rowPlayers['raceuser_user'];
 		}
 */
+
 		$this->debug->unguard(true);
 		return true;		
 	}
