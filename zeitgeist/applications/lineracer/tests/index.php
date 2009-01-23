@@ -56,6 +56,7 @@
 	require_once('lrgameeventhandler.test.php');
 	require_once('lrgamecards.test.php');
 	require_once('lrgamefunctions.test.php');
+	require_once('lruserfunctions.test.php');
 
 	$debug = zgDebug::init();
 
@@ -67,6 +68,7 @@
     $test->addTestCase(new testLrmovementfunctions());
     $test->addTestCase(new testLrgameeventhandler());
     $test->addTestCase(new testLrgamefunctions());
+    $test->addTestCase(new testLruserfunctions());
 
     $test->run(new HtmlReporter());
 
