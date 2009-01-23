@@ -57,6 +57,9 @@
 	require_once('lrgamecards.test.php');
 	require_once('lrgamefunctions.test.php');
 	require_once('lruserfunctions.test.php');
+	
+	$user->logout();
+	$user->login('test1', 'test');
 
 	$debug = zgDebug::init();
 
