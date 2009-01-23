@@ -161,24 +161,40 @@ class lrUserfunctions
 	{
 		$this->debug->guard();
 
+		$ret = array();
+
 		$sql = "SELECT * FROM circuits WHERE circuit_public='1' AND circuit_active='1'";
-		$res = $this->database->query($sql);
-		if(!$res)
+		$resCircuits = $this->database->query($sql);
+		if(!$resCircuits)
 		{
 			$this->debug->write('Could not get available circuits for user: could not read circuit table', 'warning');
 			$this->messages->setMessage('Could not get available circuits for user: could not read circuit table', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
-/*
-		while ($rowPlayers = $this->database->fetchArray($resPlayers))
+		
+		while ($rowCircuits = $this->database->fetchArray($resCircuits))
 		{
-			$currentGamestates['players'][] = $rowPlayers['raceuser_user'];
+			$ret[] = $rowCircuits;
 		}
-*/
 
-		$this->debug->unguard(true);
-		return true;		
+		$sql = "SELECT * FROM circuits_to_users c2u LEFT JOIN circuits c ON c2u.usercircuit_circuit = c.circuit_id WHERE c2u.usercircuit_user = '" . $this->user->getUserId() . "' AND c.circuit_active='1'";
+		$resCircuits = $this->database->query($sql);
+		if(!$resCircuits)
+		{
+			$this->debug->write('Could not get available circuits for user: could not read circuit to user table', 'warning');
+			$this->messages->setMessage('Could not get available circuits for user: could not read circuit to user table', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}		
+
+		while ($rowCircuits = $this->database->fetchArray($resCircuits))
+		{
+			$ret[] = $rowCircuits;
+		}
+
+		$this->debug->unguard($ret);
+		return $ret;		
 	}
 }
 ?>
