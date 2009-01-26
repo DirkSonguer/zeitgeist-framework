@@ -74,6 +74,18 @@ class lrLobbyfunctions
 	{
 		$this->debug->guard();
 
+		$sql = "SELECT * FROM lobby_to_users WHERE lobbyuser_lobby='" . $this->user->getUserID() . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not leave gameroom: user not found in a lobby', 'warning');
+			$this->messages->setMessage('Could not leave gameroom: user not found in a lobby', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		$numPlayers = $this->database->numRows($res);
+		$row = $this->database->fetchArray($res);
+
 		$sql = "DELETE FROM lobby_to_users WHERE lobbyuser_user='" . $this->user->getUserID() . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
@@ -84,10 +96,69 @@ class lrLobbyfunctions
 			return false;
 		}
 		
+		if ($numPlayers < 2)
+		{
+			$sql = "DELETE FROM lobby WHERE lobby_id='" . $row['lobbyuser_lobby'] . "'";
+			$res = $this->database->query($sql);
+			if (!$res)
+			{
+				$this->debug->write('Could not leave gameroom: could not delete empty gameroom', 'warning');
+				$this->messages->setMessage('Could not leave gameroom: could not delete empty gameroom', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
+		}
+		
 		$this->debug->unguard(true);
 		return true;
 	}
+	
+	
+	public function createGameroom($circuit, $maxplayers=1, $gamecardsallowed=1)
+	{
+		$this->debug->guard();
 
+		$userfunctions = new lrUserfunctions();
+		if ($userfunctions->waitingForGame())
+		{
+			$this->debug->write('Could not create gameroom: player already waiting for game', 'warning');
+			$this->messages->setMessage('Could not create gameroom: player already waiting for game', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$sql = "INSERT INTO lobby(lobby_circuit, lobby_maxplayers, lobby_gamecardsallowed) VALUES('" . $circuit . "', '" . $maxplayers . "', '" . $gamecardsallowed . "')";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not create gameroom: could not add lobby to database', 'warning');
+			$this->messages->setMessage('Could not create gameroom: could not add lobby to database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$lobby = $this->database->insertId();
+		if (!$lobby)
+		{
+			$this->debug->write('Could not create gameroom: could not get lobby if from database', 'warning');
+			$this->messages->setMessage('Could not create gameroom: could not get lobby if from database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$ret = $this->joinGameroom($lobby);
+		if (!$ret)
+		{
+			$this->debug->write('Could not create gameroom: could not join created gameroom', 'warning');
+			$this->messages->setMessage('Could not create gameroom: could not join created gameroom', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+	
 }
 
 ?>
