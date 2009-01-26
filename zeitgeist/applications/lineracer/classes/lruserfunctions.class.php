@@ -115,7 +115,7 @@ class lrUserfunctions
 			$this->debug->unguard(false);
 			return false;		
 		}
-
+		
 		$this->debug->unguard(true);
 		return true;		
 	}

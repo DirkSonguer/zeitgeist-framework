@@ -29,6 +29,7 @@
 	require_once('../classes/lrgamecardfunctions.class.php');
 	require_once('../classes/lrmovementfunctions.class.php');
 	require_once('../classes/lrgamefunctions.class.php');
+	require_once('../classes/lrlobbyfunctions.class.php');
 
 	include('../configuration/lineracer.config.php');
 
@@ -57,6 +58,7 @@
 	require_once('lrgamecards.test.php');
 	require_once('lrgamefunctions.test.php');
 	require_once('lruserfunctions.test.php');
+	require_once('lrlobbyfunctions.test.php');
 	
 	$user->logout();
 	$user->login('test1', 'test');
@@ -72,6 +74,7 @@
     $test->addTestCase(new testLrgameeventhandler());
     $test->addTestCase(new testLrgamefunctions());
     $test->addTestCase(new testLruserfunctions());
+    $test->addTestCase(new testLrlobbyfunctions());
 
     $test->run(new HtmlReporter());
 

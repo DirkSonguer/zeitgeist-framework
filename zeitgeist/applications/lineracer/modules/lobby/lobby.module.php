@@ -144,16 +144,35 @@ class lobby
 
 
 // TODO: alt
-	public function creategame($parameters=array())
+	public function creategameroom($parameters=array())
 	{
 		$this->debug->guard();
 
 		$tpl = new lrTemplate();
 		$tpl->load($this->configuration->getConfiguration('lobby', 'templates', 'lobby_creategame'));
 
+
+		$creategameroomForm = new zgStaticform();
+		$creategameroomForm->load('forms/creategameroom.form.ini');
+		$formvalid = $creategameroomForm->process($parameters);
+
+		if (!empty($parameters['submit']))
+		{
+			if ($formvalid)
+			{
+				$this->lobbyfunctions->createGameroom($parameters['creategameroom']['race_circuit'], $parameters['creategameroom']['race_maxplayers'], $parameters['creategameroom']['race_gamecardsallowed']);
+				$this->debug->unguard(true);
+				$tpl->redirect($tpl->createLink('lobby', 'showgameroom'));
+				return true;
+			}
+			else
+			{
+				$this->messages->setMessage('Bitte füllen Sie alle Formularfelder korrekt aus.', 'userwarning');
+			}
+		}
+
+		$formcreated = $creategameroomForm->create($tpl);
 		$tpl->show();
-		
-		var_dump($parameters);
 
 		$this->debug->unguard(true);
 		return true;
