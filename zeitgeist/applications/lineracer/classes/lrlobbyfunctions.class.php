@@ -74,7 +74,7 @@ class lrLobbyfunctions
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT * FROM lobby_to_users WHERE lobbyuser_lobby='" . $this->user->getUserID() . "'";
+		$sql = "SELECT * FROM lobby_to_users WHERE lobbyuser_user='" . $this->user->getUserID() . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
