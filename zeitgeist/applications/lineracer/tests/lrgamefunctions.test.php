@@ -36,8 +36,8 @@ class testLrgamefunctions extends UnitTestCase
 		$this->assertEqual($ret, 1);
 
 		$lobby = $this->database->insertId();
-		$res = $this->database->query("INSERT INTO lobby_to_users(lobbyuser_lobby, lobbyuser_user) VALUES('" . $lobby . "', '1')");
-		$res = $this->database->query("INSERT INTO lobby_to_users(lobbyuser_lobby, lobbyuser_user) VALUES('" . $lobby . "', '2')");
+		$res = $this->database->query("INSERT INTO lobby_to_users(lobbyuser_lobby, lobbyuser_user, lobbyuser_ready) VALUES('" . $lobby . "', '1', '1')");
+		$res = $this->database->query("INSERT INTO lobby_to_users(lobbyuser_lobby, lobbyuser_user, lobbyuser_ready) VALUES('" . $lobby . "', '2', '1')");
 		$res = $this->database->query("SELECT * FROM lobby_to_users");
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 2);

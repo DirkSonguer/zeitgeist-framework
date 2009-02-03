@@ -96,6 +96,26 @@ class testLrlobbyfunctions extends UnitTestCase
 
 		unset($lobbyfunctions);
 	}
+
+	function test_checkReadyness()
+	{
+		$lobbyfunctions = new lrLobbyfunctions();
+		
+		$res = $this->database->query("TRUNCATE TABLE lobby");
+		$res = $this->database->query("TRUNCATE TABLE lobby_to_users");
+
+		$ret = $lobbyfunctions->joinGameroom(1);
+		$this->assertEqual($ret, false);
+
+		$res = $this->database->query("INSERT INTO lobby(lobby_circuit, lobby_maxplayers, lobby_gamecardsallowed) VALUES('1', '2', '1')");
+		$ret = $lobbyfunctions->joinGameroom(1);
+		$this->assertEqual($ret, true);
+		
+		$ret = $lobbyfunctions->checkReadyness(1);
+		$this->assertEqual($ret, false);
+		
+		unset($lobbyfunctions);
+	}
 }
 
 ?>
