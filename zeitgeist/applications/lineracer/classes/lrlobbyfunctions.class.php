@@ -62,7 +62,7 @@ class lrLobbyfunctions
 			return false;
 		}
 
-		$sql = "INSERT INTO lobby_to_users(lobbyuser_lobby, lobbyuser_user) VALUES('" . $lobbyid . "', '" . $this->user->getUserID() . "')";
+		$sql = "INSERT INTO lobby_to_users(lobbyuser_lobby, lobbyuser_user, lobbyuser_ready) VALUES('" . $lobbyid . "', '" . $this->user->getUserID() . "', '0')";
 		$res = $this->database->query($sql);
 
 		$this->debug->unguard(true);
@@ -151,6 +151,26 @@ class lrLobbyfunctions
 		{
 			$this->debug->write('Could not create gameroom: could not join created gameroom', 'warning');
 			$this->messages->setMessage('Could not create gameroom: could not join created gameroom', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+	
+	
+	public function checkReadyness($lobbyid)
+	{
+		$this->debug->guard();
+		
+		$sql = "SELECT COUNT(*) as playersNotReady FROM lobby_to_users WHERE lobbyuser_lobby='" . $lobbyid . "' and lobbyuser_ready='0'";
+		$res = $this->database->query($sql);
+		$row = $this->database->fetchArray($res);
+		if ($row['playersNotReady'] > 0)
+		{
+			$this->debug->write('Game is not ready yet: players are still not ready', 'warning');
+			$this->messages->setMessage('Game is not ready yet: players are still not ready', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}

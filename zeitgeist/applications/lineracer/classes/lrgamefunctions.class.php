@@ -165,6 +165,16 @@ class lrGamefunctions
 	{
 		$this->debug->guard();
 
+		// check if players are ready
+		$lobbyfunctions = new lrLobbyfunctions();
+		if(!$lobbyfunctions->checkReadyness($lobbyid))
+		{
+			$this->debug->write('Could not start game: players are not ready yet', 'warning');
+			$this->messages->setMessage('Could not start game: players are not ready yet', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
 		// get lobby data from database
 		$sql = "SELECT * FROM lobby WHERE lobby_id='" . $lobbyid . "'";
 		$res = $this->database->query($sql);
