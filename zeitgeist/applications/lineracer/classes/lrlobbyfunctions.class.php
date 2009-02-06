@@ -30,6 +30,7 @@ class lrLobbyfunctions
 		$this->objects = zgObjects::init();
 		$this->configuration = zgConfiguration::init();
 		$this->user = zgUserhandler::init();
+		$this->lruser = zgUserhandler::init();
 		
 		$this->database = new zgDatabase();
 		$this->database->connect();
@@ -160,7 +161,7 @@ class lrLobbyfunctions
 	}
 	
 	
-	public function checkReadyness($lobbyid)
+	public function checkPlayerConfirmation($lobbyid)
 	{
 		$this->debug->guard();
 		
@@ -171,6 +172,62 @@ class lrLobbyfunctions
 		{
 			$this->debug->write('Game is not ready yet: players are still not ready', 'warning');
 			$this->messages->setMessage('Game is not ready yet: players are still not ready', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function getLobbyID()
+	{
+		$this->debug->guard();
+		
+		$sql = "SELECT lobbyuser_lobby FROM lobby_to_users WHERE lobbyuser_user='" . $this->user->getUserID() . "' and lobbyuser_ready='0'";
+		$res = $this->database->query($sql);
+		$row = $this->database->fetchArray($res);
+		if (empty($row['lobbyuser_lobby']))
+		{
+			$this->debug->write('Could not get lobby id: no lobby found for current player', 'warning');
+			$this->messages->setMessage('Could not get lobby id: no lobby found for current player', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard($row['lobbyuser_lobby']);
+		return $row['lobbyuser_lobby'];
+	}
+	
+	
+	public function setConfirmation($confirmation=true)
+	{
+		$this->debug->guard();
+		
+		$lruserfunctions = new lrUserfunctions();
+		if (!$lruserfunctions->waitingForGame())
+		{
+			$this->debug->write('Could not confirm that the player is ready: player not waiting for game', 'warning');
+			$this->messages->setMessage('Could not confirm that the player is ready: player not waiting for game', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		if (!$confirmation)
+		{
+			$sql = "UPDATE lobby_to_users SET lobbyuser_ready='0' WHERE lobbyuser_user='" . $this->user->getUserID() . "'";
+		}
+		else
+		{
+			$sql = "UPDATE lobby_to_users SET lobbyuser_ready='1' WHERE lobbyuser_user='" . $this->user->getUserID() . "'";
+		}
+		
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not confirm that the player is ready: could not update lobby data', 'warning');
+			$this->messages->setMessage('Could not confirm that the player is ready: could not update lobby data', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
