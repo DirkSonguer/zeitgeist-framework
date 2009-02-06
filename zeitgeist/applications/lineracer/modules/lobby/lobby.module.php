@@ -143,6 +143,49 @@ class lobby
 	}
 
 
+	public function confirmgame($parameters=array())
+	{
+		$this->debug->guard();
+
+		if (!$this->lruser->waitingForGame())
+		{
+			$ret = $this->index($parameters);
+			$this->debug->unguard($ret);
+			return $ret;
+		}
+
+		if (!empty($parameters['confirm']))
+		{
+			$parameters['confirm'] = false;
+		}
+
+		if ($this->lobbyfunctions->setConfirmation($parameters['confirm']))
+		{
+			$tpl = new lrTemplate();
+			$this->debug->unguard(true);
+			$tpl->redirect($tpl->createLink('lobby', 'showgameroom'));
+			return false;
+		}
+		
+		$currentLobby = $this->lobbyfunctions->getLobbyID();
+		if ($this->lobbyfunctions->checkPlayerConfirmation($currentLobby))
+		{
+			$gamefunctions = new lrGamefunctions();
+			$gamefunctions->startGame($currentLobby);
+			
+			$tpl = new lrTemplate();
+			$this->debug->unguard(true);
+			$tpl->redirect($tpl->createLink('game', 'index'));
+			return true;
+		}
+
+		$tpl = new lrTemplate();
+		$this->debug->unguard(true);
+		$tpl->redirect($tpl->createLink('lobby', 'showgameroom'));
+		return true;
+	}
+
+
 // TODO: alt
 	public function creategameroom($parameters=array())
 	{
