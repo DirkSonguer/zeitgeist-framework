@@ -124,10 +124,10 @@ class testLrlobbyfunctions extends UnitTestCase
 		$res = $this->database->query("INSERT INTO lobby(lobby_circuit, lobby_maxplayers, lobby_gamecardsallowed) VALUES('1', '2', '1')");
 		$ret = $lobbyfunctions->joinGameroom(1);
 		$this->assertEqual($ret, true);
-		
+
 		$ret = $lobbyfunctions->checkGameConfirmation(1);
 		$this->assertEqual($ret, false);
-		
+
 		$ret = $lobbyfunctions->setConfirmation();
 		$this->assertEqual($ret, true);
 
@@ -135,11 +135,11 @@ class testLrlobbyfunctions extends UnitTestCase
 		$this->assertEqual($ret, true);
 
 		$ret = $lobbyfunctions->setConfirmation();
-		$this->assertEqual($ret, false);
+		$this->assertEqual($ret, true);
 
 		$ret = $lobbyfunctions->checkGameConfirmation(1);
 		$this->assertEqual($ret, false);
-		
+
 		unset($lobbyfunctions);
 	}
 }

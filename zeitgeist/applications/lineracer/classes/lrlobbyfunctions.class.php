@@ -185,7 +185,7 @@ class lrLobbyfunctions
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT * FROM lobby_to_users WHERE lobbyuser_user='" . $this->user->getUserID() . "' and lobbyuser_confirmation='0' and lobbyuser_confirmation='1'";
+		$sql = "SELECT * FROM lobby_to_users WHERE lobbyuser_user='" . $this->user->getUserID() . "' and lobbyuser_confirmation='1'";
 		$res = $this->database->query($sql);
 		$num = $this->database->numRows($res);
 		if ($num != 1)
@@ -203,7 +203,7 @@ class lrLobbyfunctions
 	{
 		$this->debug->guard();
 		
-		$sql = "SELECT lobbyuser_lobby FROM lobby_to_users WHERE lobbyuser_user='" . $this->user->getUserID() . "' and lobbyuser_confirmation='0'";
+		$sql = "SELECT lobbyuser_lobby FROM lobby_to_users WHERE lobbyuser_user='" . $this->user->getUserID() . "'";
 		$res = $this->database->query($sql);
 		$row = $this->database->fetchArray($res);
 		if (empty($row['lobbyuser_lobby']))
