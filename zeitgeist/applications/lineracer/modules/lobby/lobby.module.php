@@ -154,12 +154,7 @@ class lobby
 			return $ret;
 		}
 
-		if (!empty($parameters['confirm']))
-		{
-			$parameters['confirm'] = false;
-		}
-
-		if ($this->lobbyfunctions->setConfirmation($parameters['confirm']))
+		if ($this->lobbyfunctions->setConfirmation())
 		{
 			$tpl = new lrTemplate();
 			$this->debug->unguard(true);
@@ -168,7 +163,7 @@ class lobby
 		}
 		
 		$currentLobby = $this->lobbyfunctions->getLobbyID();
-		if ($this->lobbyfunctions->checkPlayerConfirmation($currentLobby))
+		if ($this->lobbyfunctions->checkGameConfirmation($currentLobby))
 		{
 			$gamefunctions = new lrGamefunctions();
 			$gamefunctions->startGame($currentLobby);

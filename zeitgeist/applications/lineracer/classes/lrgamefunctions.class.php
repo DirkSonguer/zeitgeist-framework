@@ -167,7 +167,7 @@ class lrGamefunctions
 
 		// check if players are ready
 		$lobbyfunctions = new lrLobbyfunctions();
-		if(!$lobbyfunctions->checkPlayerConfirmation($lobbyid))
+		if(!$lobbyfunctions->checkGameConfirmation($lobbyid))
 		{
 			$this->debug->write('Could not start game: players are not ready yet', 'warning');
 			$this->messages->setMessage('Could not start game: players are not ready yet', 'warning');
