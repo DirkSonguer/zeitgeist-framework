@@ -72,8 +72,10 @@ class lrGamestates
 
 		// get player data
 		$currentGamestates['playerdata'] = array();
+		$currentPlayerID = array();
 		while ($row = $this->database->fetchArray($res))
 		{
+			$currentPlayerID[] = $row['raceaction_user'];
 			// get all moves
 			if ($row['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'move'))
 			{
@@ -100,19 +102,19 @@ class lrGamestates
 		$this->objects->storeObject('currentGamestates', $currentGamestates, true);
 		
 		// get vectors
-		for ($i=1; $i<=$currentGamestates['numPlayers']; $i++)
+		foreach($currentPlayerID as $player)
 		{
-			if (count($movementfunctions->getMovement($i)) > 1)
+			if (count($movementfunctions->getMovement($player)) > 1)
 			{
-				$lastMove = $movementfunctions->getMovement($i, -1);
-				$moveBefore = $movementfunctions->getMovement($i, -2);
-				$currentGamestates['playerdata'][$i]['vector'][0] = $lastMove[0] - $moveBefore[0];
-				$currentGamestates['playerdata'][$i]['vector'][1] = $lastMove[1] - $moveBefore[1];
+				$lastMove = $movementfunctions->getMovement($player, -1);
+				$moveBefore = $movementfunctions->getMovement($player, -2);
+				$currentGamestates['playerdata'][$player]['vector'][0] = $lastMove[0] - $moveBefore[0];
+				$currentGamestates['playerdata'][$player]['vector'][1] = $lastMove[1] - $moveBefore[1];
 			}
 			else
 			{
-				$currentGamestates['playerdata'][$i]['vector'][0] = 0;
-				$currentGamestates['playerdata'][$i]['vector'][1] = 0;
+				$currentGamestates['playerdata'][$player]['vector'][0] = 0;
+				$currentGamestates['playerdata'][$player]['vector'][1] = 0;
 			}
 		}
 		

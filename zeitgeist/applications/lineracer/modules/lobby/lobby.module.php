@@ -156,22 +156,17 @@ class lobby
 
 		if ($this->lobbyfunctions->setConfirmation())
 		{
-			$tpl = new lrTemplate();
-			$this->debug->unguard(true);
-			$tpl->redirect($tpl->createLink('lobby', 'showgameroom'));
-			return false;
-		}
-		
-		$currentLobby = $this->lobbyfunctions->getLobbyID();
-		if ($this->lobbyfunctions->checkGameConfirmation($currentLobby))
-		{
-			$gamefunctions = new lrGamefunctions();
-			$gamefunctions->startGame($currentLobby);
-			
-			$tpl = new lrTemplate();
-			$this->debug->unguard(true);
-			$tpl->redirect($tpl->createLink('game', 'index'));
-			return true;
+			$currentLobby = $this->lobbyfunctions->getLobbyID();
+			if ( ($currentLobby > 0) && ($this->lobbyfunctions->checkGameConfirmation($currentLobby)) )
+			{
+				$gamefunctions = new lrGamefunctions();
+				$gamefunctions->startGame($currentLobby);
+				
+				$tpl = new lrTemplate();
+				$this->debug->unguard(true);
+				$tpl->redirect($tpl->createLink('game', 'index'));
+				return true;
+			}
 		}
 
 		$tpl = new lrTemplate();

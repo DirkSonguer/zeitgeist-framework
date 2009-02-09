@@ -185,11 +185,11 @@ class lrGamefunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-		$row = $this->database->fetchArray($res);
+		$rowLobby = $this->database->fetchArray($res);
 
 		// store new race data
 		$sql = "INSERT INTO races(race_circuit, race_activeplayer, race_currentround, race_gamecardsallowed) ";
-		$sql .= "VALUES('" . $row['lobby_circuit'] ."', '1', '1', '" . $row['lobby_gamecardsallowed'] . "')";
+		$sql .= "VALUES('" . $rowLobby['lobby_circuit'] ."', '1', '1', '" . $rowLobby['lobby_gamecardsallowed'] . "')";
 		$res = $this->database->query($sql);
 		if(!$res)
 		{
@@ -207,7 +207,19 @@ class lrGamefunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
+		// get associated circuit data
+		$sql = "SELECT * FROM circuits WHERE circuit_id = '" . $rowLobby['lobby_circuit'] . "'";
+		$res = $this->database->query($sql);
+		if(!$res)
+		{
+			$this->debug->write('Could not start game: could not find the circuit data', 'warning');
+			$this->messages->setMessage('Could not start game: could not find the circuit data', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		$rowCircuit = $this->database->fetchArray($res);
+
 		// get lobby users from database
 		$sql = "SELECT * FROM lobby_to_users WHERE lobbyuser_lobby='" . $lobbyid . "'";
 		$res = $this->database->query($sql);
@@ -220,15 +232,24 @@ class lrGamefunctions
 		}
 
 		$gameusers = array();
-		while ($row = $this->database->fetchArray($res))
+		while ($rowLobby = $this->database->fetchArray($res))
 		{
-			$gameusers[] = $row['lobbyuser_user'];
+			$gameusers[] = $rowLobby['lobbyuser_user'];
 		}
 		
+		$i = 0;
 		$sql = 'INSERT INTO race_to_users(raceuser_race, raceuser_user) VALUES';
 		foreach ($gameusers as $player)
 		{
+			$currentPosition = explode(',',$rowCircuit['circuit_startposition']);
+			$currentVector = explode(',',$rowCircuit['circuit_startvector']);
+			$currentPosition[0] += $currentVector[0] * $i;
+			$currentPosition[1] += $currentVector[1] * $i;
+			$currentPosition = implode(',',$currentPosition);
+			
+			$this->database->query("INSERT INTO race_actions(raceaction_race, raceaction_user, raceaction_action, raceaction_parameter) VALUES('" . $raceid . "', '" . $player . "', '1', '" . $currentPosition . "')");
 			$sql .= "('" . $raceid . "','" . $player . "'),";
+			$i++;
 		}
 		$sql = substr($sql, 0, -1);
 		$res = $this->database->query($sql);
@@ -239,7 +260,7 @@ class lrGamefunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-
+		
 		$sql = "DELETE FROM lobby WHERE lobby_id='" . $lobbyid . "'";
 		$res = $this->database->query($sql);
 		if(!$res)
@@ -425,95 +446,23 @@ class lrGamefunctions
 	}
 
 
-	public function createLobby($circuit, $maxplayers, $gamecardsallowed)
+	public function getRaceID()
 	{
 		$this->debug->guard();
-
-		// create new lobby
-		$sql = "INSERT INTO lobby(lobby_circuit, lobby_maxplayers, lobby_gamecardsallowed) ";
-		$sql .= "VALUES('" . $circuit . "', '" . $maxplayers . "', '" . $gamecardsallowed . "')";
-		$res = $this->database->query($sql);
-		if(!$res)
-		{
-			$this->debug->write('Could not create lobby: could not enter lobby data into database', 'warning');
-			$this->messages->setMessage('Could not create lobby: could not enter lobby data into database', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$lobbyid = $this->database->insertId();
-		if(!$lobbyid)
-		{
-			$this->debug->write('Could not create lobby: could get lobby id from database', 'warning');
-			$this->messages->setMessage('Could not create lobby: could not get lobby id from database', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		// add current user to lobby
-		$sql = "INSERT INTO lobby_to_users(lobbyuser_lobby, lobbyuser_user) ";
-		$sql .= "VALUES('" . $lobbyid ."', '" . $this->user->getUserId() ."')";
-		$res = $this->database->query($sql);
-		if(!$res)
-		{
-			$this->debug->write('Could not create lobby: could not write lobby creator to database', 'warning');
-			$this->messages->setMessage('Could not create lobby: could not write lobby creator to database', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
 		
-		$this->debug->unguard(true);
-		return true;
-	}
-
-
-	public function joinLobby($lobbyid)
-	{
-		$this->debug->guard();
-
-		$userfunctions = new lrUserfunctions();
-		if ($userfunctions->waitingForGame())
-		{
-			$this->debug->write('Could not join lobby: user already waiting for a game', 'warning');
-			$this->messages->setMessage('Could not join lobby: user already waiting for a game', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}		
-
-		$sql = "SELECT * FROM lobby_to_users l2u LEFT JOIN lobby l ON l2u.lobbyuser_lobby = l.lobby_id WHERE l2u.lobbyuser_lobby='" . $lobbyid . "'";
+		$sql = "SELECT raceuser_race FROM race_to_users WHERE raceuser_user='" . $this->user->getUserID() . "'";
 		$res = $this->database->query($sql);
-		if(!$res)
-		{
-			$this->debug->write('Could not join lobby: could get lobby data from database', 'warning');
-			$this->messages->setMessage('Could not join lobby: could not get lobby data from database', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$numPlayers = $this->database->numRows($res);
 		$row = $this->database->fetchArray($res);
-		if($numPlayers == $row['lobby_maxplayers'])
+		if (empty($row['raceuser_race']))
 		{
-			$this->debug->write('Could not join lobby: lobby already full', 'warning');
-			$this->messages->setMessage('Could not join lobby: lobby already full', 'warning');
+			$this->debug->write('Could not get race id: no race found for current player', 'warning');
+			$this->messages->setMessage('Could not get race id: no race found for current player', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
 
-		// add current user to lobby
-		$sql = "INSERT INTO lobby_to_users(lobbyuser_lobby, lobbyuser_user) ";
-		$sql .= "VALUES('" . $lobbyid ."', '" . $this->user->getUserId() ."')";
-		$res = $this->database->query($sql);
-		if(!$res)
-		{
-			$this->debug->write('Could not join lobby: could not write lobby player to database', 'warning');
-			$this->messages->setMessage('Could not join lobby: could not write lobby player to database', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-		
-		$this->debug->unguard(true);
-		return true;
+		$this->debug->unguard($row['raceuser_race']);
+		return $row['raceuser_race'];
 	}
 
 

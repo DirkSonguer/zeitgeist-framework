@@ -34,9 +34,9 @@ class prototypeRenderer
 			return false;
 		}
 		$offset = $currentGamestates['currentRadius'];
-		
-//		$circuit = imagecreatefrompng(APPLICATION_ROOTDIRECTORY . '/data/circuits/circuit1.png');
-		$circuit = imagecreatefrompng(APPLICATION_ROOTDIRECTORY . '/data/circuits/circuit1_negative.png');
+
+		$circuit = imagecreatefrompng(APPLICATION_ROOTDIRECTORY . '/data/circuits/circuit1.png');
+//		$circuit = imagecreatefrompng(APPLICATION_ROOTDIRECTORY . '/data/circuits/circuit1_negative.png');
 		if (!$circuit) die('1');
 
 		$colorYellow = imagecolorallocate($circuit, 255, 150, 0);
@@ -44,6 +44,18 @@ class prototypeRenderer
 		$colorGreen = imagecolorallocate($circuit, 0, 255, 0);
 		$colorRed = imagecolorallocate($circuit, 255, 0, 0);
 		$colorGray = imagecolorallocate($circuit, 230, 220, 220);
+		
+		$racefunctions = new lrGamefunctions();
+		$raceid = $racefunctions->getRaceID();
+
+		$sqlPlayers = "SELECT * FROM race_to_users WHERE raceuser_race='" . $raceid . "'";
+		$resPlayers = $this->database->query($sqlPlayers);
+		$i = 1;
+		while ($rowPlayers = $this->database->fetchArray($resPlayers))
+		{
+			$currentPlayer[$i] = $rowPlayers['raceuser_user'];
+			$i++;
+		}
 
 		for ($j=1; $j<=$currentGamestates['numPlayers']; $j++)
 		{
@@ -52,7 +64,7 @@ class prototypeRenderer
 			if ($j == 3) $currentColor = $colorBlue;
 			if ($j == 4) $currentColor = $colorYellow;
 
-			$currentMoves = $currentGamestates['playerdata'][$j]['moves'];
+			$currentMoves = $currentGamestates['playerdata'][$currentPlayer[$j]]['moves'];
 			
 			$lastPosition = array(0,0);
 			foreach ($currentMoves as $move)
@@ -68,8 +80,8 @@ class prototypeRenderer
 
 			if ($currentGamestates['currentPlayer'] == $j)
 			{
-				$vect[0] = $currentPosition[0] + $currentGamestates['playerdata'][$j]['vector'][0];
-				$vect[1] = $currentPosition[1] + $currentGamestates['playerdata'][$j]['vector'][1];
+				$vect[0] = $currentPosition[0] + $currentGamestates['playerdata'][$currentPlayer[$j]]['vector'][0];
+				$vect[1] = $currentPosition[1] + $currentGamestates['playerdata'][$currentPlayer[$j]]['vector'][1];
 				imageRectangle($circuit, $vect[0]-$offset, $vect[1]-$offset, $vect[0]+$offset, $vect[1]+$offset, $currentColor);
 				imageRectangle($circuit, $vect[0]-$offset+1, $vect[1]-$offset+1, $vect[0]+$offset+1, $vect[1]+$offset+1, $currentColor);
 			}
