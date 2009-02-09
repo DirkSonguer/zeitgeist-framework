@@ -114,7 +114,7 @@ class testLrlobbyfunctions extends UnitTestCase
 		unset($lobbyfunctions);
 	}
 
-	function test_checkPlayerConfirmation()
+	function test_checkGameConfirmation()
 	{
 		$lobbyfunctions = new lrLobbyfunctions();
 		
@@ -125,19 +125,19 @@ class testLrlobbyfunctions extends UnitTestCase
 		$ret = $lobbyfunctions->joinGameroom(1);
 		$this->assertEqual($ret, true);
 		
-		$ret = $lobbyfunctions->checkPlayerConfirmation(1);
+		$ret = $lobbyfunctions->checkGameConfirmation(1);
 		$this->assertEqual($ret, false);
 		
-		$ret = $lobbyfunctions->setConfirmation(true);
+		$ret = $lobbyfunctions->setConfirmation();
 		$this->assertEqual($ret, true);
 
-		$ret = $lobbyfunctions->checkPlayerConfirmation(1);
+		$ret = $lobbyfunctions->checkGameConfirmation(1);
 		$this->assertEqual($ret, true);
 
-		$ret = $lobbyfunctions->setConfirmation(false);
-		$this->assertEqual($ret, true);
+		$ret = $lobbyfunctions->setConfirmation();
+		$this->assertEqual($ret, false);
 
-		$ret = $lobbyfunctions->checkPlayerConfirmation(1);
+		$ret = $lobbyfunctions->checkGameConfirmation(1);
 		$this->assertEqual($ret, false);
 		
 		unset($lobbyfunctions);

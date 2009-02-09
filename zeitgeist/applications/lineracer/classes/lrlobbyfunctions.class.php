@@ -63,7 +63,7 @@ class lrLobbyfunctions
 			return false;
 		}
 
-		$sql = "INSERT INTO lobby_to_users(lobbyuser_lobby, lobbyuser_user, lobbyuser_ready) VALUES('" . $lobbyid . "', '" . $this->user->getUserID() . "', '0')";
+		$sql = "INSERT INTO lobby_to_users(lobbyuser_lobby, lobbyuser_user, lobbyuser_confirmation) VALUES('" . $lobbyid . "', '" . $this->user->getUserID() . "', '0')";
 		$res = $this->database->query($sql);
 
 		$this->debug->unguard(true);
@@ -161,11 +161,11 @@ class lrLobbyfunctions
 	}
 	
 	
-	public function checkPlayerConfirmation($lobbyid)
+	public function checkGameConfirmation($lobbyid)
 	{
 		$this->debug->guard();
 		
-		$sql = "SELECT COUNT(*) as playersNotReady FROM lobby_to_users WHERE lobbyuser_lobby='" . $lobbyid . "' and lobbyuser_ready='0'";
+		$sql = "SELECT COUNT(*) as playersNotReady FROM lobby_to_users WHERE lobbyuser_lobby='" . $lobbyid . "' and lobbyuser_confirmation='0'";
 		$res = $this->database->query($sql);
 		$row = $this->database->fetchArray($res);
 		if ($row['playersNotReady'] > 0)
@@ -181,11 +181,29 @@ class lrLobbyfunctions
 	}
 
 
+	public function checkPlayerConfirmation()
+	{
+		$this->debug->guard();
+
+		$sql = "SELECT * FROM lobby_to_users WHERE lobbyuser_user='" . $this->user->getUserID() . "' and lobbyuser_confirmation='0' and lobbyuser_confirmation='1'";
+		$res = $this->database->query($sql);
+		$num = $this->database->numRows($res);
+		if ($num != 1)
+		{
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
 	public function getLobbyID()
 	{
 		$this->debug->guard();
 		
-		$sql = "SELECT lobbyuser_lobby FROM lobby_to_users WHERE lobbyuser_user='" . $this->user->getUserID() . "' and lobbyuser_ready='0'";
+		$sql = "SELECT lobbyuser_lobby FROM lobby_to_users WHERE lobbyuser_user='" . $this->user->getUserID() . "' and lobbyuser_confirmation='0'";
 		$res = $this->database->query($sql);
 		$row = $this->database->fetchArray($res);
 		if (empty($row['lobbyuser_lobby']))
@@ -201,7 +219,7 @@ class lrLobbyfunctions
 	}
 	
 	
-	public function setConfirmation($confirmation=true)
+	public function setConfirmation()
 	{
 		$this->debug->guard();
 		
@@ -214,13 +232,13 @@ class lrLobbyfunctions
 			return false;
 		}
 		
-		if (!$confirmation)
+		if (!$this->checkPlayerConfirmation())
 		{
-			$sql = "UPDATE lobby_to_users SET lobbyuser_ready='0' WHERE lobbyuser_user='" . $this->user->getUserID() . "'";
+			$sql = "UPDATE lobby_to_users SET lobbyuser_confirmation='1' WHERE lobbyuser_user='" . $this->user->getUserID() . "'";
 		}
 		else
 		{
-			$sql = "UPDATE lobby_to_users SET lobbyuser_ready='1' WHERE lobbyuser_user='" . $this->user->getUserID() . "'";
+			$sql = "UPDATE lobby_to_users SET lobbyuser_confirmation='0' WHERE lobbyuser_user='" . $this->user->getUserID() . "'";
 		}
 		
 		$res = $this->database->query($sql);

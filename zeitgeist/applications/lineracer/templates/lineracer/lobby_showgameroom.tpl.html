@@ -113,9 +113,11 @@
 	    <table border="0" cellspacing="0" cellpadding="0" width=100%">
 	        <tr class="tablehead">
 				<th><p>Spieler</p></th>
+				<th><p>Bereit</p></th>
 	        </tr>
 	        <tr class="{ds_EvenOddRow}" spry:repeat="dsLobbydata">
 				<td><p>{dsLobbydata::user_username}</p></td>
+				<td><p>{dsLobbydata::lobbyuser_confirmation}</p></td>
 	        </tr>
 	    </table>
 
@@ -127,6 +129,7 @@
 	</div>
 </div>
 
+<p><a href="@@{[lobby.confirmgame]}@@">Spiel bestätigen</a></p>
 <p><a href="@@{[lobby.leavegameroom]}@@">Raum verlassen</a></p>
 <p><a href="@@{[main.index]}@@">Zurück zur Hauptseite</a></p>
 
