@@ -49,7 +49,7 @@ class testLruserfunctions extends UnitTestCase
 
 		$user = zgUserhandler::init();
 
-		$res = $this->database->query("INSERT INTO race_to_users(raceuser_race, raceuser_user) VALUES('1', '" . $user->getUserId() . "')");
+		$res = $this->database->query("INSERT INTO race_to_users(raceuser_race, raceuser_user, raceuser_order) VALUES('1', '" . $user->getUserId() . "', '1')");
 		$ret = $userfunctions->currentlyPlayingGame();
 		$this->assertEqual($ret, true);
 		

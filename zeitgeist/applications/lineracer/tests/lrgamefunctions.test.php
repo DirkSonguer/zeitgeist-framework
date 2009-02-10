@@ -103,52 +103,6 @@ class testLrgamefunctions extends UnitTestCase
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 2);
 	}
-
-	function test_createLobby()
-	{
-		$gamefunctions = new lrGamefunctions();
-		
-		$this->miscfunctions->setupGame();
-
-		$res = $this->database->query("TRUNCATE TABLE lobby");
-		$res = $this->database->query("TRUNCATE TABLE lobby_to_users");
-
-		$ret = $gamefunctions->createLobby(1, 1, 1);
-		$this->assertTrue($ret);
-
-		$res = $this->database->query("SELECT * FROM lobby");
-		$ret = $this->database->numRows($res);
-		$this->assertEqual($ret, 1);
-
-		$res = $this->database->query("SELECT * FROM lobby_to_users");
-		$ret = $this->database->numRows($res);
-		$this->assertEqual($ret, 1);
-	}
-
-	function test_joinLobby()
-	{
-		$gamefunctions = new lrGamefunctions();
-		
-		$this->miscfunctions->setupGame();
-
-		$res = $this->database->query("TRUNCATE TABLE lobby");
-		$res = $this->database->query("TRUNCATE TABLE lobby_to_users");
-
-		$res = $this->database->query("INSERT INTO lobby(lobby_circuit, lobby_maxplayers, lobby_gamecardsallowed) VALUES('1', '2', '1')");
-		$lobby = $this->database->insertId();
-		$res = $this->database->query("INSERT INTO lobby_to_users(lobbyuser_lobby, lobbyuser_user) VALUES('" . $lobby . "', '2')");
-
-		$ret = $gamefunctions->joinLobby(1);
-		$this->assertTrue($ret);
-
-		$ret = $gamefunctions->joinLobby(1);
-		$this->assertFalse($ret);
-
-		$res = $this->database->query("SELECT * FROM lobby_to_users");
-		$ret = $this->database->numRows($res);
-		$this->assertEqual($ret, 2);
-	}
-
 }
 
 ?>
