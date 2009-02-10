@@ -51,11 +51,11 @@ class lrGamestates
 		}
 
 		// get player data from database
-		$sqlPlayers = "SELECT * FROM race_to_users WHERE raceuser_race='" . $raceid . "'";
+		$sqlPlayers = "SELECT * FROM race_to_users WHERE raceuser_race='" . $raceid . "' ORDER BY raceuser_order";
 		$resPlayers = $this->database->query($sqlPlayers);
 		while ($rowPlayers = $this->database->fetchArray($resPlayers))
 		{
-			$currentGamestates['players'][] = $rowPlayers['raceuser_user'];
+			$currentGamestates['players'][$rowPlayers['raceuser_order']] = $rowPlayers['raceuser_user'];
 		}
 		$currentGamestates['numPlayers'] = count($currentGamestates['players']);
 
@@ -72,10 +72,8 @@ class lrGamestates
 
 		// get player data
 		$currentGamestates['playerdata'] = array();
-		$currentPlayerID = array();
 		while ($row = $this->database->fetchArray($res))
 		{
-			$currentPlayerID[] = $row['raceaction_user'];
 			// get all moves
 			if ($row['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'move'))
 			{
@@ -101,8 +99,8 @@ class lrGamestates
 		// temp storing gamedata
 		$this->objects->storeObject('currentGamestates', $currentGamestates, true);
 		
-		// get vectors
-		foreach($currentPlayerID as $player)
+		// get vectors for each player
+		foreach($currentGamestates['players'] as $player)
 		{
 			if (count($movementfunctions->getMovement($player)) > 1)
 			{

@@ -39,9 +39,9 @@ class miscFunctions
 		$sql = "INSERT INTO races(race_id, race_circuit, race_activeplayer, race_currentround, race_gamecardsallowed)";
 		$sql .= "VALUES(1, 1, 1, 1, 0)";
 		$res = $this->database->query($sql);
-		$sql = "INSERT INTO race_to_users(raceuser_race, raceuser_user) VALUES('1', '1')";
+		$sql = "INSERT INTO race_to_users(raceuser_race, raceuser_user, raceuser_order) VALUES('1', '1', '1')";
 		$res = $this->database->query($sql);
-		$sql = "INSERT INTO race_to_users(raceuser_race, raceuser_user) VALUES('1', '2')";
+		$sql = "INSERT INTO race_to_users(raceuser_race, raceuser_user, raceuser_order) VALUES('1', '2', '2')";
 		$res = $this->database->query($sql);
 	}
 

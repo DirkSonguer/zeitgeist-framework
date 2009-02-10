@@ -214,6 +214,7 @@ class lrMovementfunctions
 	 *
 	 * @return boolean
 	 */
+	// TODO: Verbrannt!
 	public function getMovement($player, $history=0)
 	{
 		$this->debug->guard();
@@ -226,6 +227,16 @@ class lrMovementfunctions
 			$this->debug->unguard(false);
 			return false;
 		}
+		
+		// check if player exists and has moves
+		if (empty($currentGamestates['playerdata'][$player]['moves']))
+		{
+			$this->debug->write('Could not move player: moves for player not found', 'warning');
+			$this->messages->setMessage('Could not move player: moves for player not found', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
 
 		$movement = array();
 		foreach ($currentGamestates['playerdata'][$player]['moves'] as $move)

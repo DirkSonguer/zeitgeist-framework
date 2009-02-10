@@ -238,17 +238,20 @@ class lrGamefunctions
 		}
 		
 		$i = 0;
-		$sql = 'INSERT INTO race_to_users(raceuser_race, raceuser_user) VALUES';
+		$sql = 'INSERT INTO race_to_users(raceuser_race, raceuser_user, raceuser_order) VALUES';
 		foreach ($gameusers as $player)
 		{
+			// insert player into race
+			$sql .= "('" . $raceid . "','" . $player . "', '" . ($i+1) . "'),";
+
+			// fill initial position
 			$currentPosition = explode(',',$rowCircuit['circuit_startposition']);
 			$currentVector = explode(',',$rowCircuit['circuit_startvector']);
 			$currentPosition[0] += $currentVector[0] * $i;
 			$currentPosition[1] += $currentVector[1] * $i;
 			$currentPosition = implode(',',$currentPosition);
-			
 			$this->database->query("INSERT INTO race_actions(raceaction_race, raceaction_user, raceaction_action, raceaction_parameter) VALUES('" . $raceid . "', '" . $player . "', '1', '" . $currentPosition . "')");
-			$sql .= "('" . $raceid . "','" . $player . "'),";
+
 			$i++;
 		}
 		$sql = substr($sql, 0, -1);
