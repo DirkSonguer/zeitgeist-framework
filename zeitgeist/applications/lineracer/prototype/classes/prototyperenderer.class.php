@@ -33,7 +33,7 @@ class prototypeRenderer
 			$this->debug->unguard(false);
 			return false;
 		}
-		$offset = $currentGamestates['currentRadius'];
+		$offset = $currentGamestates['move']['currentRadius'];
 
 		$circuit = imagecreatefrompng(APPLICATION_ROOTDIRECTORY . '/data/circuits/circuit1.png');
 //		$circuit = imagecreatefrompng(APPLICATION_ROOTDIRECTORY . '/data/circuits/circuit1_negative.png');
@@ -57,7 +57,7 @@ class prototypeRenderer
 			$i++;
 		}
 
-		for ($j=1; $j<=$currentGamestates['numPlayers']; $j++)
+		for ($j=1; $j<=$currentGamestates['meta']['numPlayers']; $j++)
 		{
 			if ($j == 1) $currentColor = $colorGreen;
 			if ($j == 2) $currentColor = $colorRed;
@@ -78,7 +78,7 @@ class prototypeRenderer
 				}
 			}
 
-			if ($currentGamestates['currentPlayer'] == $j)
+			if ($currentGamestates['move']['currentPlayer'] == $j)
 			{
 				$vect[0] = $currentPosition[0] + $currentGamestates['playerdata'][$currentPlayer[$j]]['vector'][0];
 				$vect[1] = $currentPosition[1] + $currentGamestates['playerdata'][$currentPlayer[$j]]['vector'][1];

@@ -69,7 +69,7 @@ class game
 		$res = $this->database->query($sql);
 		$row = $this->database->fetchArray($res);
 
-		for ($j=1; $j<=$currentGamestates['numPlayers']; $j++)
+		for ($j=1; $j<=$currentGamestates['meta']['numPlayers']; $j++)
 		{
 			if ($j == 1) $currentColor = $colorGreen;
 			if ($j == 2) $currentColor = $colorRed;

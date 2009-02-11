@@ -134,7 +134,7 @@ class lrGamefunctions
 
 		// validate if the player has the right for the gamecard
 		$gamecardfunctions = new lrGamecardfunctions();
-		if (!$gamecardfunctions->checkRights($gamecard, $currentGamestates['currentPlayer']))
+		if (!$gamecardfunctions->checkRights($gamecard))
 		{
 			$this->debug->write('Could not play gamecard: no rights to play gamecard', 'warning');
 			$this->messages->setMessage('Could not play gamecard: no rights to play gamecard', 'warning');
@@ -153,8 +153,8 @@ class lrGamefunctions
 		
 		// save race action and handle post turn events
 		$gameeventhandler->saveRaceaction($this->configuration->getConfiguration('gamedefinitions', 'actions', 'playgamecard'), $gamecard);
-		$gameeventhandler->saveRaceevent($currentGamestates['currentPlayer'], $this->configuration->getConfiguration('gamedefinitions', 'events', 'playgamecard'), $gamecard, ($currentGamestates['currentRound']+$gamecardData['gamecard_roundoffset']));
-		$gamecardfunctions->removeGamecard($gamecard, $currentGamestates['currentPlayer']);
+		$gameeventhandler->saveRaceevent($currentGamestates['move']['currentPlayer'], $this->configuration->getConfiguration('gamedefinitions', 'events', 'playgamecard'), $gamecard, ($currentGamestates['move']['currentRound']+$gamecardData['gamecard_roundoffset']));
+		$gamecardfunctions->removeGamecard($gamecard, $currentGamestates['move']['currentPlayer']);
 		
 		$this->debug->unguard(true);
 		return true;
@@ -380,6 +380,7 @@ class lrGamefunctions
 	// TODO: Punkteverteilung
 	// TODO: Achievements		
 	// TODO: Finish!
+	// TODO: Korrekt erstellen
 	public function assessRace($raceid)
 	{
 		$this->debug->guard();
@@ -397,7 +398,7 @@ class lrGamefunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-
+/*
 		// get player data from database
 		$sqlPlayers = "SELECT * FROM race_to_users_archive WHERE raceuser_race='" . $raceid . "'";
 		$resPlayers = $this->database->query($sqlPlayers);
@@ -443,7 +444,7 @@ class lrGamefunctions
 				$raceGamestates['playerdata'][$row['raceaction_user']]['finished'] = true;
 			}
 		}
-		
+*/
 		$this->debug->unguard(true);
 		return true;
 	}

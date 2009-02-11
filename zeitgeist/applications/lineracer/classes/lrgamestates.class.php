@@ -25,7 +25,8 @@ class lrGamestates
 
 
 	/**
-	 * Loads all the information associated with a running game
+	 * Loads all the information associated with a given game
+	 * Stores all the information in the objectcache in 'currentGamestates'
 	 *
 	 * @param integer $raceid id of the race
 	 *
@@ -39,10 +40,10 @@ class lrGamestates
 		$currentGamestates = array();
 
 		// get race data from database
-		$sql = "SELECT * FROM races r LEFT JOIN circuits c ON r.race_circuit = c.circuit_id WHERE r.race_id='" . $raceid . "'";
-		$res = $this->database->query($sql);
-		$row = $this->database->fetchArray($res);
-		if(!$row)
+		$sqlRacedata = "SELECT * FROM races r LEFT JOIN circuits c ON r.race_circuit = c.circuit_id WHERE r.race_id='" . $raceid . "'";
+		$resRacedata = $this->database->query($sqlRacedata);
+		$rowRacedata = $this->database->fetchArray($resRacedata);
+		if(!$rowRacedata)
 		{
 			$this->debug->write('Could not load gamestates: no race information found', 'warning');
 			$this->messages->setMessage('Could not load gamestates: no race information found', 'warning');
@@ -55,44 +56,42 @@ class lrGamestates
 		$resPlayers = $this->database->query($sqlPlayers);
 		while ($rowPlayers = $this->database->fetchArray($resPlayers))
 		{
-			$currentGamestates['players'][$rowPlayers['raceuser_order']] = $rowPlayers['raceuser_user'];
+			$currentGamestates['meta']['players'][$rowPlayers['raceuser_order']] = $rowPlayers['raceuser_user'];
 		}
-		$currentGamestates['numPlayers'] = count($currentGamestates['players']);
+		$currentGamestates['meta']['numPlayers'] = count($currentGamestates['meta']['players']);
 
-		// fill structure
-		$currentGamestates['currentRace'] = $raceid;
-		$currentGamestates['currentCircuit'] = $row['race_circuit'];
-		$currentGamestates['currentRound'] = $row['race_currentround'];
-		$currentGamestates['currentPlayer'] = $row['race_activeplayer'];
-		$currentGamestates['currentRadius'] = $this->configuration->getConfiguration('gamedefinitions', 'gamelogic', 'movementradius');
+		// fill general info
+		$currentGamestates['meta']['currentRace'] = $raceid;
+		$currentGamestates['meta']['currentCircuit'] = $rowRacedata['race_circuit'];
+		$currentGamestates['move']['currentRound'] = $rowRacedata['race_currentround'];
+		$currentGamestates['move']['currentPlayer'] = $rowRacedata['race_activeplayer'];
+		$currentGamestates['move']['currentRadius'] = $this->configuration->getConfiguration('gamedefinitions', 'gamelogic', 'movementradius');
 
 		// get raceaction from database
-		$sql = "SELECT * FROM race_actions WHERE raceaction_race='" . $raceid . "' ORDER BY raceaction_id";
-		$res = $this->database->query($sql);
+		$sqlActions = "SELECT ra.*, r2u.raceuser_order FROM race_actions ra LEFT JOIN race_to_users r2u on ra.raceaction_user = r2u.raceuser_user WHERE ra.raceaction_race='" . $raceid . "' ORDER BY ra.raceaction_timestamp";
+		$resActions = $this->database->query($sqlActions);
 
 		// get player data
-		$currentGamestates['playerdata'] = array();
-		while ($row = $this->database->fetchArray($res))
+		while ($rowActions = $this->database->fetchArray($resActions))
 		{
-			// get all moves
-			if ($row['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'move'))
+			// action is a move
+			if ($rowActions['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'move'))
 			{
-				$position = explode(',',$row['raceaction_parameter']);
-				$currentGamestates['playerdata'][$row['raceaction_user']]['moves'][] = array($row['raceaction_action'], $row['raceaction_parameter']);
+				$currentGamestates['playerdata'][$rowActions['raceuser_order']]['moves'][] = $rowActions['raceaction_parameter'];
 			}
 
-			// get checkpoints
+			// action is a checkpoint
 			if ( ($row['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint1'))
 			|| ($row['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint2'))
 			|| ($row['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint3')) )
 			{
-				$currentGamestates['playerdata'][$row['raceaction_user']]['checkpoints'][$row['raceaction_parameter']] = true;
+				$currentGamestates['playerdata'][$rowActions['raceuser_order']]['checkpoints'][$rowActions['raceaction_parameter']] = true;
 			}
 
 			// see if player is finished
-			if ($row['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'finish'))
+			if ($rowActions['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'finish'))
 			{
-				$currentGamestates['playerdata'][$row['raceaction_user']]['finished'] = true;
+				$currentGamestates['playerdata'][$rowActions['raceuser_order']]['finished'] = true;
 			}
 		}
 		
@@ -100,19 +99,19 @@ class lrGamestates
 		$this->objects->storeObject('currentGamestates', $currentGamestates, true);
 		
 		// get vectors for each player
-		foreach($currentGamestates['players'] as $player)
+		for($i=1; $i<=$currentGamestates['meta']['numPlayers']; $i++)
 		{
-			if (count($movementfunctions->getMovement($player)) > 1)
+			if (count($movementfunctions->getMovement($i)) > 1)
 			{
-				$lastMove = $movementfunctions->getMovement($player, -1);
-				$moveBefore = $movementfunctions->getMovement($player, -2);
-				$currentGamestates['playerdata'][$player]['vector'][0] = $lastMove[0] - $moveBefore[0];
-				$currentGamestates['playerdata'][$player]['vector'][1] = $lastMove[1] - $moveBefore[1];
+				$lastMove = $movementfunctions->getMovement($i, -1);
+				$moveBefore = $movementfunctions->getMovement($i, -2);
+				$currentGamestates['playerdata'][$i]['vector'][0] = $lastMove[0] - $moveBefore[0];
+				$currentGamestates['playerdata'][$i]['vector'][1] = $lastMove[1] - $moveBefore[1];
 			}
 			else
 			{
-				$currentGamestates['playerdata'][$player]['vector'][0] = 0;
-				$currentGamestates['playerdata'][$player]['vector'][1] = 0;
+				$currentGamestates['playerdata'][$i]['vector'][0] = 0;
+				$currentGamestates['playerdata'][$i]['vector'][1] = 0;
 			}
 		}
 		
@@ -125,7 +124,7 @@ class lrGamestates
 
 
 	/**
-	 * Switches to next player
+	 * Ends the turn of the current player and switches to next one
 	 *
 	 * @return boolean
 	 */
@@ -141,47 +140,57 @@ class lrGamestates
 			return false;
 		}
 
-		$sql = "DELETE FROM race_events WHERE raceevent_race='" . $currentGamestates['currentRace'] . "' AND raceevent_player='" . $currentGamestates['currentPlayer'] . "' AND raceevent_round='" . $currentGamestates['currentRound'] . "'";
+		// delete all race events for the finished turn
+		$sql = "DELETE FROM race_events WHERE raceevent_race='" . $currentGamestates['meta']['currentRace'] . "' AND raceevent_player='" . $currentGamestates['meta']['players'][$currentGamestates['move']['currentPlayer']] . "' AND raceevent_round='" . $currentGamestates['move']['currentRound'] . "'";
 		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not end turn: could not delete race events', 'warning');
+			$this->messages->setMessage('Could not end turn: could not delete race events', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
 
+		// find next player that is not finished
 		$playerFound = false;
 		if (!$this->raceFinished())
 		{
 			while (!$playerFound)
 			{
-				$this->debug->write('current player: '.$currentGamestates['currentPlayer'], 'warning');
+				$this->debug->write('current player: '.$currentGamestates['move']['currentPlayer'], 'warning');
 
-				$currentGamestates['currentPlayer'] += 1;
-				if ($currentGamestates['currentPlayer'] > $currentGamestates['numPlayers'])
+				// next user
+				// switch to next round if needed
+				$currentGamestates['move']['currentPlayer'] += 1;
+				if ($currentGamestates['move']['currentPlayer'] > $currentGamestates['meta']['numPlayers'])
 				{
-					$currentGamestates['currentPlayer'] = 1;
-					$currentGamestates['currentRound'] += 1;
+					$currentGamestates['move']['currentPlayer'] = 1;
+					$currentGamestates['move']['currentRound'] += 1;
 				}
 
-				if (!$this->playerFinished($currentGamestates['currentPlayer']))
+				// found a player
+				if (!$this->playerFinished($currentGamestates['move']['currentPlayer']))
 				{
 					$playerFound = true;
 				}
 			}
 		}
 
-		$currentround = ", race_currentround='" . $currentGamestates['currentRound'] . "'";
-		$sql = "UPDATE races SET race_activeplayer='" . $currentGamestates['currentPlayer'] . "'" . $currentround . "  WHERE race_id='" . $currentGamestates['currentRace'] . "'";
+		// insert new data into into database
+		$sql = "UPDATE races SET race_activeplayer='" . $currentGamestates['move']['currentPlayer'] . "', race_currentround='" . $currentGamestates['move']['currentRound'] . "' WHERE race_id='" . $currentGamestates['meta']['currentRace'] . "'";
 		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not end turn: could not insert new race data', 'warning');
+			$this->messages->setMessage('Could not end turn: could not insert new race data', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
 		
 		$this->debug->unguard(true);
 		return true;
 	}
 	
-	
-	public function endRace()
-	{
-		$this->debug->guard();
-		
-		$this->debug->unguard(true);
-		return true;
-	}
-
 
 	/**
 	 * Checks if race is finished by all players
@@ -199,9 +208,10 @@ class lrGamestates
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
+		// iterate through all players and see if they're finished		
 		$finished = true;
-		for ($i=1; $i<=$currentGamestates['numPlayers']; $i++)
+		for ($i=1; $i<=$currentGamestates['meta']['numPlayers']; $i++)
 		{
 			if (empty($currentGamestates['playerdata'][$i]['finished']))
 			{
@@ -234,7 +244,7 @@ class lrGamestates
 		
 		if (!$player)
 		{
-			$player = $currentGamestates['currentPlayer'];
+			$player = $currentGamestates['meta']['currentPlayer'];
 		}
 		
 		$finished = true;

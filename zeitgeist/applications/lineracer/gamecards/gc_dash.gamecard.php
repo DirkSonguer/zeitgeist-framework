@@ -21,8 +21,8 @@ class gc_dash
 			return false;
 		}
 		
-		$currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['vector'][0] *= 2;
-		$currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['vector'][1] *= 2;
+		$currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][0] *= 2;
+		$currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][1] *= 2;
 
 		$this->objects->storeObject('currentGamestates', $currentGamestates, true);
     }

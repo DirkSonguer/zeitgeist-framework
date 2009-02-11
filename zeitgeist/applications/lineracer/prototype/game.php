@@ -59,9 +59,9 @@
 	$tpl = new lrTemplate();
 	$tpl->load('game_index.tpl.html');
 	
-	if ($currentGamestates['currentPlayer'] == 1) $tpl->assign('bgcolor', '#00ff00');
-	elseif ($currentGamestates['currentPlayer'] == 2) $tpl->assign('bgcolor', '#ff0000');
-	elseif ($currentGamestates['currentPlayer'] == 3) $tpl->assign('bgcolor', '#0000ff');
+	if ($currentGamestates['move']['currentPlayer'] == 1) $tpl->assign('bgcolor', '#00ff00');
+	elseif ($currentGamestates['move']['currentPlayer'] == 2) $tpl->assign('bgcolor', '#ff0000');
+	elseif ($currentGamestates['move']['currentPlayer'] == 3) $tpl->assign('bgcolor', '#0000ff');
 	else $tpl->assign('bgcolor', '#000000');
 
 	$tpl->assign('bgcolor_p1', '#00ff00');

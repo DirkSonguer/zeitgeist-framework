@@ -55,15 +55,15 @@ class lrGamecardfunctions
 	/**
 	 * Gets all gamecards and their data for a given user
 	 *
-	 * @param integer $user user id of the player
+	 * @param integer $userid user id of the player
 	 *
 	 * @return array
 	 */
-	public function getPlayerDeck($user)
+	public function getPlayerDeck($userid)
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT * FROM gamecards_to_users u2g LEFT JOIN gamecards g ON u2g.usergamecard_gamecard = g.gamecard_id WHERE u2g.usergamecard_user='" . $user . "'";
+		$sql = "SELECT * FROM gamecards_to_users u2g LEFT JOIN gamecards g ON u2g.usergamecard_gamecard = g.gamecard_id WHERE u2g.usergamecard_user='" . $userid . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -87,17 +87,20 @@ class lrGamecardfunctions
 
 	/**
 	 * Checks if a given user has the gamecard in his stack
+	 * If no userid is given, the current user will be used
 	 *
 	 * @param integer $gamecard id of the gamecard
-	 * @param integer $user id of the user
+	 * @param integer $userid id of the user
 	 *
 	 * @return boolean
 	 */
-	public function checkRights($gamecard, $user)
+	public function checkRights($gamecard, $userid=0)
 	{
 		$this->debug->guard();
+		
+		if ($user == 0) $user = $this->user->getUserID();
 
-		$sql = "SELECT * FROM gamecards_to_users WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $user . "'";
+		$sql = "SELECT * FROM gamecards_to_users WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $userid . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -123,28 +126,29 @@ class lrGamecardfunctions
 
 	/**
 	 * This removes one instance of the given gamecard from the stack of the given user
+	 * If the user only one instance of the given card, it is removed entirely from his stack
+	 * If no userid is given, the current user will be used
 	 *
 	 * @param integer $gamecard id of the gamecard to remove
-	 * @param integer $user user to remove the gamecard from
+	 * @param integer $userid user to remove the gamecard from
 	 *
 	 * @return boolean
 	 */
-	public function removeGamecard($gamecard, $user)
+	public function removeGamecard($gamecard, $userid=0)
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT * FROM gamecards_to_users WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $user . "'";
+		$sql = "SELECT * FROM gamecards_to_users WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $userid . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
-			$this->debug->write('Could not remove gamecard: could not remove gamecard values from the database', 'warning');
-			$this->messages->setMessage('Could not remove gamecard: could not remove gamecard values from the database', 'warning');
+			$this->debug->write('Could not remove gamecard: could not get gamecard information from the database', 'warning');
+			$this->messages->setMessage('Could not remove gamecard: could not get gamecard information from the database', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
 
 		$count = $this->database->numRows($res);
-		
 		if ($count == 0)
 		{
 			$this->debug->write('Gamecard to remove was not found. Possible problem with interface', 'warning');
@@ -154,10 +158,9 @@ class lrGamecardfunctions
 		}
 			
 		$row = $this->database->fetchArray($res);
-		
 		if ($row['usergamecard_count'] == '1')
 		{
-			$sql = "DELETE FROM gamecards_to_users WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $user . "'";
+			$sql = "DELETE FROM gamecards_to_users WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $userid . "'";
 			$res = $this->database->query($sql);
 			if (!$res)
 			{
@@ -169,7 +172,7 @@ class lrGamecardfunctions
 		}
 		else
 		{
-			$sql = "UPDATE gamecards_to_users SET usergamecard_gamecard='" . $gamecard . "', usergamecard_user='" . $user . "', usergamecard_count='" . ($row['usergamecard_count']-1) . "' WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $user . "'";
+			$sql = "UPDATE gamecards_to_users SET usergamecard_count='" . ($row['usergamecard_count']-1) . "' WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $userid . "'";
 			$res = $this->database->query($sql);
 			if (!$res)
 			{
@@ -187,23 +190,24 @@ class lrGamecardfunctions
 
 	/**
 	 * Adds the given gamecard to the stack of the given user
+	 * If no userid is given, the current user will be used
 	 *
 	 * @param integer $gamecard id of the gamecard to add
-	 * @param integer $user user to add the gamecard to
+	 * @param integer $userid user to add the gamecard to
 	 *
 	 * @return boolean
 	 */
-	public function addGamecard($gamecard, $user)
+	public function addGamecard($gamecard, $userid)
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT * FROM gamecards_to_users WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $user . "'";
+		$sql = "SELECT * FROM gamecards_to_users WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $userid . "'";
 		$res = $this->database->query($sql);
 		$count = $this->database->numRows($res);
 		
 		if ($count == 0)
 		{
-			$sql = "INSERT INTO gamecards_to_users(usergamecard_gamecard, usergamecard_user, usergamecard_count) VALUES('" . $gamecard . "', '" . $user . "', '1')";
+			$sql = "INSERT INTO gamecards_to_users(usergamecard_gamecard, usergamecard_user, usergamecard_count) VALUES('" . $gamecard . "', '" . $userid . "', '1')";
 			$res = $this->database->query($sql);
 			if (!$res)
 			{
@@ -215,7 +219,7 @@ class lrGamecardfunctions
 		}
 		else
 		{
-			$sql = "UPDATE gamecards_to_users SET usergamecard_gamecard='" . $gamecard . "', usergamecard_user='" . $user . "', usergamecard_count='" . ($count+1) . "' WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $user . "'";
+			$sql = "UPDATE gamecards_to_users SET usergamecard_count='" . ($count+1) . "' WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $userid . "'";
 			$res = $this->database->query($sql);
 			if (!$res)
 			{

@@ -21,8 +21,8 @@ class gc_doubleradius
 			return false;
 		}
 		
-		$currentGamestates['currentRadius'] *= 2;
-		$currentGamestates['currentRadius'] *= 2;
+		$currentGamestates['move']['currentRadius'] *= 2;
+		$currentGamestates['move']['currentRadius'] *= 2;
 
 		$this->objects->storeObject('currentGamestates', $currentGamestates, true);
     }

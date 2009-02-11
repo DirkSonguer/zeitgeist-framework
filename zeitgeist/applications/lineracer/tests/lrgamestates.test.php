@@ -51,7 +51,7 @@ class testLrgamestates extends UnitTestCase
 		// this should not contain any data as race 0 does not exist
 		$gamestates->loadGamestates(1);
 		$currentGamestates = $objects->getObject('currentGamestates');
-		$this->assertEqual($currentGamestates['currentPlayer'], '1');
+		$this->assertEqual($currentGamestates['move']['currentPlayer'], '1');
 
 		$ret = $gamestates->endTurn();
 		$this->assertTrue($ret);
@@ -60,7 +60,7 @@ class testLrgamestates extends UnitTestCase
 
 		$gamestates->loadGamestates(1);
 		$currentGamestates = $objects->getObject('currentGamestates');
-		$this->assertEqual($currentGamestates['currentPlayer'], '2');
+		$this->assertEqual($currentGamestates['move']['currentPlayer'], '2');
 	}
 
 	function test_playerFinished()
