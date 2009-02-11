@@ -69,7 +69,7 @@ class lrUserfunctions
 			return false;
 		}
 		
-		if (empty($currentGamestates['players'][($currentGamestates['currentPlayer']-1)]))
+		if (empty($currentGamestates['meta']['players'][($currentGamestates['move']['currentPlayer']-1)]))
 		{
 			$this->debug->write('Could not validate player turn: could not find player data in the game data', 'warning');
 			$this->messages->setMessage('Could not validate player turn: could not find player data in the game data', 'warning');
@@ -77,7 +77,7 @@ class lrUserfunctions
 			return false;
 		}
 
-		if ($currentGamestates['players'][($currentGamestates['currentPlayer']-1)] != $this->user->getUserID())
+		if ($currentGamestates['meta']['players'][($currentGamestates['move']['currentPlayer']-1)] != $this->user->getUserID())
 		{
 			$this->debug->write('Could not validate player turn: player not found active', 'warning');
 			$this->messages->setMessage('Could not validate player turn: player not found active', 'warning');

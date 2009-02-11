@@ -63,12 +63,12 @@ class game
 		$renderer->draw();
 
 		// fill template
-		if ($currentGamestates['currentPlayer'] == 1) $tpl->assign('bgcolor', '#00ff00');
-		elseif ($currentGamestates['currentPlayer'] == 2) $tpl->assign('bgcolor', '#ff0000');
-		elseif ($currentGamestates['currentPlayer'] == 3) $tpl->assign('bgcolor', '#0000ff');
+		if ($currentGamestates['move']['currentPlayer'] == 1) $tpl->assign('bgcolor', '#00ff00');
+		elseif ($currentGamestates['move']['currentPlayer'] == 2) $tpl->assign('bgcolor', '#ff0000');
+		elseif ($currentGamestates['move']['currentPlayer'] == 3) $tpl->assign('bgcolor', '#0000ff');
 		else $tpl->assign('bgcolor', '#000000');
 		
-		$tpl->assign('round', $currentGamestates['currentRound']);
+		$tpl->assign('round', $currentGamestates['move']['currentRound']);
 
 		$userdeck = $gamecardfunctions->getPlayerDeck($this->user->getUserID());
 
