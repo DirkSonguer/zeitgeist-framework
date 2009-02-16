@@ -22,8 +22,8 @@ class testLrgameeventhandler extends UnitTestCase
 		$gameeventhandler = new lrGameeventhandler();
 		$objects = zgObjects::init();
 		
-		$this->miscfunctions->setupGame();
-		$gamestates->loadGamestates(1);
+		$raceid = $this->miscfunctions->setupGame(1);
+		$gamestates->loadGamestates();
 		
 		$ret = $gameeventhandler->saveRaceaction('1', '150,200');
 		$this->assertTrue($ret);
@@ -35,13 +35,12 @@ class testLrgameeventhandler extends UnitTestCase
 		$this->assertTrue($ret);
 
 		$objects->deleteObject('currentGamestates');
-		$ret = $gamestates->loadGamestates(1);
+		$ret = $gamestates->loadGamestates();
 		$this->assertTrue($ret);
 
-		$objects = zgObjects::init();
 		$ret = $objects->getObject('currentGamestates');
 		$this->assertTrue(is_array($ret));
-		$this->assertEqual($ret['playerdata'][1]['moves'][1][1], '155,380');
+		$this->assertEqual($ret['playerdata'][1]['moves'][1], '155,380');
 		$this->assertEqual($ret['playerdata'][1]['vector'][1], '0');
 	}
 	
@@ -51,8 +50,8 @@ class testLrgameeventhandler extends UnitTestCase
 		$gameeventhandler = new lrGameeventhandler();
 		$objects = zgObjects::init();
 		
-		$this->miscfunctions->setupGame();
-		$gamestates->loadGamestates(1);
+		$raceid = $this->miscfunctions->setupGame(1);
+		$gamestates->loadGamestates();
 		
 		$ret = $gameeventhandler->saveRaceevent('1', '2', '3', '1');
 		$this->assertTrue($ret);
@@ -71,9 +70,9 @@ class testLrgameeventhandler extends UnitTestCase
 		$gamestates = new lrGamestates();
 		$gameeventhandler = new lrGameeventhandler();
 		
-		$this->miscfunctions->setupGame();
+		$raceid = $this->miscfunctions->setupGame();
 
-		$gamestates->loadGamestates(1);
+		$gamestates->loadGamestates();
 		$gameeventhandler->saveRaceevent('1', '1', '2');
 
 		$ret = $gameeventhandler->handleRaceeevents();

@@ -59,10 +59,11 @@ class lrGamecardfunctions
 	 *
 	 * @return array
 	 */
-	public function getPlayerDeck($userid)
+	public function getPlayerDeck($userid=0)
 	{
 		$this->debug->guard();
 
+		if ($userid == 0) $userid = $this->user->getUserID();
 		$sql = "SELECT * FROM gamecards_to_users u2g LEFT JOIN gamecards g ON u2g.usergamecard_gamecard = g.gamecard_id WHERE u2g.usergamecard_user='" . $userid . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
@@ -97,8 +98,8 @@ class lrGamecardfunctions
 	public function checkRights($gamecard, $userid=0)
 	{
 		$this->debug->guard();
-		
-		if ($user == 0) $user = $this->user->getUserID();
+
+		if ($userid == 0) $userid = $this->user->getUserID();
 
 		$sql = "SELECT * FROM gamecards_to_users WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $userid . "'";
 		$res = $this->database->query($sql);
@@ -137,6 +138,8 @@ class lrGamecardfunctions
 	public function removeGamecard($gamecard, $userid=0)
 	{
 		$this->debug->guard();
+
+		if ($userid == 0) $userid = $this->user->getUserID();
 
 		$sql = "SELECT * FROM gamecards_to_users WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $userid . "'";
 		$res = $this->database->query($sql);
@@ -197,9 +200,11 @@ class lrGamecardfunctions
 	 *
 	 * @return boolean
 	 */
-	public function addGamecard($gamecard, $userid)
+	public function addGamecard($gamecard, $userid=0)
 	{
 		$this->debug->guard();
+
+		if ($userid == 0) $userid = $this->user->getUserID();
 
 		$sql = "SELECT * FROM gamecards_to_users WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $userid . "'";
 		$res = $this->database->query($sql);

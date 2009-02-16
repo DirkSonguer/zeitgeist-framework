@@ -11,6 +11,7 @@ class lrGamefunctions
 	protected $objects;
 	protected $configuration;
 	protected $user;
+	protected $lruser;
 
 	public function __construct()
 	{
@@ -20,6 +21,8 @@ class lrGamefunctions
 		$this->configuration = zgConfiguration::init();
 		$this->objects = zgObjects::init();
 		$this->user = zgUserhandler::init();
+		
+		$this->lruser = new lrUserfunctions();
 
 		$this->database = new zgDatabase();
 		$this->database->connect();
@@ -40,7 +43,7 @@ class lrGamefunctions
 
 		// load current gamestates
 		$gamestates = new lrGamestates();
-		$currentGamestates = $gamestates->loadGamestates(1);
+		$currentGamestates = $gamestates->loadGamestates();
 		
 		// check status of current gamestates
 		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
@@ -56,8 +59,7 @@ class lrGamefunctions
 		$gameeventhandler->handleRaceeevents();
 
 		// validate if it's the players turn
-		$userfunctions = new lrUserfunctions();
-		if (!$userfunctions->validateTurn())
+		if (!$this->lruser->validateTurn())
 		{
 			$this->debug->write('Could not move player: not the players turn', 'warning');
 			$this->messages->setMessage('Could not move player: not the players turn', 'warning');
@@ -87,7 +89,7 @@ class lrGamefunctions
 		
 		// save race action and handle post turn events
 		$gameeventhandler->saveRaceaction($this->configuration->getConfiguration('gamedefinitions', 'actions', 'move'), $correctedMove[0].','.$correctedMove[1]);
-		$gamestates->endTurn();
+		$this->endTurn();
 
 		$this->debug->unguard(true);
 		return true;
@@ -107,7 +109,7 @@ class lrGamefunctions
 
 		// load current gamestates
 		$gamestates = new lrGamestates();
-		$currentGamestates = $gamestates->loadGamestates(1);
+		$currentGamestates = $gamestates->loadGamestates();
 	
 		// check status of current gamestates		
 		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
@@ -123,8 +125,7 @@ class lrGamefunctions
 		$gameeventhandler->handleRaceeevents();
 
 		// validate if it's the players turn
-		$userfunctions = new lrUserfunctions();
-		if (!$userfunctions->validateTurn())
+		if (!$this->lruser->validateTurn())
 		{
 			$this->debug->write('Could not move player: not the players turn', 'warning');
 			$this->messages->setMessage('Could not move player: not the players turn', 'warning');
@@ -154,16 +155,117 @@ class lrGamefunctions
 		// save race action and handle post turn events
 		$gameeventhandler->saveRaceaction($this->configuration->getConfiguration('gamedefinitions', 'actions', 'playgamecard'), $gamecard);
 		$gameeventhandler->saveRaceevent($currentGamestates['move']['currentPlayer'], $this->configuration->getConfiguration('gamedefinitions', 'events', 'playgamecard'), $gamecard, ($currentGamestates['move']['currentRound']+$gamecardData['gamecard_roundoffset']));
-		$gamecardfunctions->removeGamecard($gamecard, $currentGamestates['move']['currentPlayer']);
+		$gamecardfunctions->removeGamecard($gamecard, $currentGamestates['meta']['players'][$currentGamestates['move']['currentPlayer']]);
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function forfeit()
+	{
+		$this->debug->guard();
+		
+		// load classes
+		$gameeventhandler = new lrGameeventhandler();
+		$gamestates = new lrGamestates();
+		
+		// save race action and handle post turn events
+		$gameeventhandler->saveRaceaction($this->configuration->getConfiguration('gamedefinitions', 'actions', 'forfeit'), '1');
+		$this->endTurn();
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	/**
+	 * Ends the turn of the current player and switches to next one
+	 *
+	 * @return boolean
+	 */
+	public function endTurn()
+	{
+		$this->debug->guard();
+
+		// load current gamestates
+		$gamestates = new lrGamestates();
+		$currentGamestates = $gamestates->loadGamestates();
+
+		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
+		{
+			$this->debug->write('Could not switch to next player: gamestates are not loaded', 'warning');
+			$this->messages->setMessage('Could not switch to next player: gamestates are not loaded', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		// delete all race events for the finished turn
+		$sql = "DELETE FROM race_events WHERE raceevent_race='" . $currentGamestates['meta']['currentRace'] . "' AND raceevent_player='" . $currentGamestates['move']['currentPlayer'] . "' AND raceevent_round='" . $currentGamestates['move']['currentRound'] . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not end turn: could not delete race events', 'warning');
+			$this->messages->setMessage('Could not end turn: could not delete race events', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		// find next player that is not finished
+		$playerFound = false;
+		if (!$gamestates->raceFinished())
+		{
+			while (!$playerFound)
+			{
+				$this->debug->write('current player: '.$currentGamestates['move']['currentPlayer'], 'warning');
+
+				// next user
+				$currentGamestates['move']['currentPlayer'] += 1;
+
+				// switch to next round if needed
+				if ($currentGamestates['move']['currentPlayer'] > $currentGamestates['meta']['numPlayers'])
+				{
+					$currentGamestates['move']['currentPlayer'] = 1;
+					$currentGamestates['move']['currentRound'] += 1;
+				}
+
+				// found a player
+				if (!$gamestates->playerFinished($currentGamestates['move']['currentPlayer']))
+				{
+					$playerFound = true;
+				}
+			}
+		}
+
+		// insert new data into into database
+		$sql = "UPDATE races SET race_activeplayer='" . $currentGamestates['move']['currentPlayer'] . "', race_currentround='" . $currentGamestates['move']['currentRound'] . "' WHERE race_id='" . $currentGamestates['meta']['currentRace'] . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not end turn: could not insert new race data', 'warning');
+			$this->messages->setMessage('Could not end turn: could not insert new race data', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
 		
 		$this->debug->unguard(true);
 		return true;
 	}
 	
 	
-	public function startGame($lobbyid)
+	public function startRace()
 	{
 		$this->debug->guard();
+
+		// get lobby of the user
+		$lobbyid = $this->lruser->getUserLobby();
+		if (!$lobbyid)
+		{
+			$this->debug->write('Could not start race: no active lobby for player found', 'warning');
+			$this->messages->setMessage('Could not start race: no active lobby for player found', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
 
 		// check if players are ready
 		$lobbyfunctions = new lrLobbyfunctions();
@@ -199,6 +301,7 @@ class lrGamefunctions
 			return false;
 		}
 
+		// get race id as we need it
 		$raceid = $this->database->insertId();
 		if(!$raceid)
 		{
@@ -250,7 +353,7 @@ class lrGamefunctions
 			$currentPosition[0] += $currentVector[0] * $i;
 			$currentPosition[1] += $currentVector[1] * $i;
 			$currentPosition = implode(',',$currentPosition);
-			$this->database->query("INSERT INTO race_actions(raceaction_race, raceaction_user, raceaction_action, raceaction_parameter) VALUES('" . $raceid . "', '" . $player . "', '1', '" . $currentPosition . "')");
+			$this->database->query("INSERT INTO race_actions(raceaction_race, raceaction_player, raceaction_action, raceaction_parameter) VALUES('" . $raceid . "', '" . ($i+1) . "', '1', '" . $currentPosition . "')");
 
 			$i++;
 		}
@@ -289,9 +392,19 @@ class lrGamefunctions
 	}
 
 
-	public function endGame($raceid)
+	public function endRace()
 	{
 		$this->debug->guard();
+
+		// get race of the user
+		$raceid = $this->lruser->getUserRace();
+		if (!$raceid)
+		{
+			$this->debug->write('Could not end race: no active race for player found', 'warning');
+			$this->messages->setMessage('Could not end race: no active race for player found', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
 
 		// get race data from database
 		$sql = "SELECT * FROM races WHERE race_id='" . $raceid . "'";
@@ -381,9 +494,21 @@ class lrGamefunctions
 	// TODO: Achievements		
 	// TODO: Finish!
 	// TODO: Korrekt erstellen
-	public function assessRace($raceid)
+	public function assessRace()
 	{
 		$this->debug->guard();
+
+		// get race of the user
+		$raceid = $this->lruser->getUserRace();
+		if (!$raceid)
+		{
+			$this->debug->write('Could not end race: no active race for player found', 'warning');
+			$this->messages->setMessage('Could not end race: no active race for player found', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+/*
 		
 		$raceGamestates = array();
 
@@ -398,7 +523,7 @@ class lrGamefunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-/*
+
 		// get player data from database
 		$sqlPlayers = "SELECT * FROM race_to_users_archive WHERE raceuser_race='" . $raceid . "'";
 		$resPlayers = $this->database->query($sqlPlayers);
@@ -448,27 +573,6 @@ class lrGamefunctions
 		$this->debug->unguard(true);
 		return true;
 	}
-
-
-	public function getRaceID()
-	{
-		$this->debug->guard();
-		
-		$sql = "SELECT raceuser_race FROM race_to_users WHERE raceuser_user='" . $this->user->getUserID() . "'";
-		$res = $this->database->query($sql);
-		$row = $this->database->fetchArray($res);
-		if (empty($row['raceuser_race']))
-		{
-			$this->debug->write('Could not get race id: no race found for current player', 'warning');
-			$this->messages->setMessage('Could not get race id: no race found for current player', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$this->debug->unguard($row['raceuser_race']);
-		return $row['raceuser_race'];
-	}
-
 
 }
 ?>

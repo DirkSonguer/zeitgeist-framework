@@ -9,6 +9,7 @@ class game
 	protected $database;
 	protected $configuration;
 	protected $user;
+	protected $lruser;
 	protected $objects;
 	protected $dataserver;
 
@@ -20,6 +21,8 @@ class game
 		$this->objects = zgObjects::init();
 		$this->user = zgUserhandler::init();
 		$this->dataserver = new zgDataserver();
+		
+		$this->lruser = new lrUserfunctions();
 
 		$this->database = new zgDatabase();
 		$this->database->connect();
@@ -50,7 +53,7 @@ class game
 		$gameeventhandler = new lrGameeventhandler();
 		
 		// load gamestates
-		$gamestates->loadGamestates(1);
+		$gamestates->loadGamestates();
 		$gameeventhandler->handleRaceeevents();
 		$currentGamestates = $this->objects->getObject('currentGamestates');
 
@@ -58,7 +61,7 @@ class game
 		{
 			$tpl->redirect($tpl->createLink('game', 'finished'));			
 		}
-	
+
 		// draw current situation based on the gamestates
 		$renderer->draw();
 
@@ -81,6 +84,8 @@ class game
 		}
 
 		$tpl->show();
+
+		var_dump($currentGamestates);
 
 		$this->debug->unguard(true);
 		return true;
@@ -140,7 +145,7 @@ class game
 		$this->debug->guard();
 
 		$gamestates = new lrGamestates();
-		$gamestates->loadGamestates(1);
+		$gamestates->loadGamestates();
 		$currentGamestates = $this->objects->getObject('currentGamestates');
 		
 		if (!$gamestates->raceFinished())
@@ -151,6 +156,28 @@ class game
 		}
 
 		echo "finished!";
+
+		$this->debug->unguard(true);
+		return true;
+	}
+	
+	
+	public function forfeit($parameters=array())
+	{
+		$this->debug->guard();
+
+		$gamestates = new lrGamestates();
+		$gamestates->loadGamestates();
+		$currentGamestates = $this->objects->getObject('currentGamestates');
+		
+		$gamefunctions = new lrGamefunctions();
+
+		if (!$gamefunctions->forfeit())
+		{
+			// redirect to lobby overview
+			$tpl = new lrTemplate();
+			$tpl->redirect($tpl->createLink('lobby', 'index'));
+		}
 
 		$this->debug->unguard(true);
 		return true;
@@ -174,11 +201,11 @@ class game
 		$res = $this->database->query($sql);
 		$sql = "INSERT INTO gamecards_to_users(usergamecard_user, usergamecard_gamecard, usergamecard_count) VALUES('3', '1', '1'), ('3', '2', '1'), ('3', '3', '1')";
 		$res = $this->database->query($sql);
-		$sql = "INSERT INTO race_actions(raceaction_race, raceaction_user, raceaction_action, raceaction_parameter) VALUES('1', '1', '1', '150,370')";
+		$sql = "INSERT INTO race_actions(raceaction_race, raceaction_player, raceaction_action, raceaction_parameter) VALUES('1', '1', '1', '150,370')";
 		$res = $this->database->query($sql);
-		$sql = "INSERT INTO race_actions(raceaction_race, raceaction_user, raceaction_action, raceaction_parameter) VALUES('1', '2', '1', '170,370')";
+		$sql = "INSERT INTO race_actions(raceaction_race, raceaction_player, raceaction_action, raceaction_parameter) VALUES('1', '2', '1', '170,370')";
 		$res = $this->database->query($sql);
-		$sql = "INSERT INTO race_actions(raceaction_race, raceaction_user, raceaction_action, raceaction_parameter) VALUES('1', '3', '1', '190,370')";
+		$sql = "INSERT INTO race_actions(raceaction_race, raceaction_player, raceaction_action, raceaction_parameter) VALUES('1', '3', '1', '190,370')";
 		$res = $this->database->query($sql);
 		$sql = "INSERT INTO races(race_id, race_circuit, race_activeplayer, race_currentround, race_gamecardsallowed)";
 		$sql .= "VALUES(1, 1, 1, 1, 1)";

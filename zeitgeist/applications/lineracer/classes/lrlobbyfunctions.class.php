@@ -198,26 +198,6 @@ class lrLobbyfunctions
 		return true;
 	}
 
-
-	public function getLobbyID()
-	{
-		$this->debug->guard();
-		
-		$sql = "SELECT lobbyuser_lobby FROM lobby_to_users WHERE lobbyuser_user='" . $this->user->getUserID() . "'";
-		$res = $this->database->query($sql);
-		$row = $this->database->fetchArray($res);
-		if (empty($row['lobbyuser_lobby']))
-		{
-			$this->debug->write('Could not get lobby id: no lobby found for current player', 'warning');
-			$this->messages->setMessage('Could not get lobby id: no lobby found for current player', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$this->debug->unguard($row['lobbyuser_lobby']);
-		return $row['lobbyuser_lobby'];
-	}
-	
 	
 	public function setConfirmation()
 	{

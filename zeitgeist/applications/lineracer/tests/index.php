@@ -2,7 +2,7 @@
 
 	if (! defined('SIMPLE_TEST'))
 	{
-	    define('SIMPLE_TEST', 'simpletest/');
+		define('SIMPLE_TEST', 'simpletest/');
 	}
 
 	require_once(SIMPLE_TEST . 'autorun.php');
@@ -65,18 +65,18 @@
 
 	$debug = zgDebug::init();
 
-    $test = &new TestSuite('Lineracer Unit Tests');
-    $test->addTestCase(new testDatabase());
+	$test = &new TestSuite('Lineracer Unit Tests');
+	$test->addTestCase(new testDatabase());
 
-    $test->addTestCase(new testLrgamestates());
-    $test->addTestCase(new testLrgamecardfunctions());
-    $test->addTestCase(new testLrmovementfunctions());
-    $test->addTestCase(new testLrgameeventhandler());
-    $test->addTestCase(new testLrgamefunctions());
-    $test->addTestCase(new testLruserfunctions());
-    $test->addTestCase(new testLrlobbyfunctions());
+	$test->addTestCase(new testLrgamestates());
+	$test->addTestCase(new testLrgamecardfunctions());
+	$test->addTestCase(new testLrmovementfunctions());
+	$test->addTestCase(new testLrgameeventhandler());
+	$test->addTestCase(new testLrgamefunctions());
+	$test->addTestCase(new testLruserfunctions());
+	$test->addTestCase(new testLrlobbyfunctions());
 
-    $test->run(new HtmlReporter());
+	$test->run(new HtmlReporter());
 
 	$debug->loadStylesheet('debug.css');
 //	$debug->showInnerLoops = true;

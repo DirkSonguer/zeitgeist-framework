@@ -156,11 +156,11 @@ class lobby
 
 		if ($this->lobbyfunctions->setConfirmation())
 		{
-			$currentLobby = $this->lobbyfunctions->getLobbyID();
+			$currentLobby = $this->lruser->getUserLobby();
 			if ( ($currentLobby > 0) && ($this->lobbyfunctions->checkGameConfirmation($currentLobby)) )
 			{
 				$gamefunctions = new lrGamefunctions();
-				$gamefunctions->startGame($currentLobby);
+				$gamefunctions->startRace();
 				
 				$tpl = new lrTemplate();
 				$this->debug->unguard(true);
