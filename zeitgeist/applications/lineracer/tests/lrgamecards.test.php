@@ -23,9 +23,9 @@ class testLrgamecards extends UnitTestCase
 		$objects = zgObjects::init();
 		$configuration = zgConfiguration::init();
 
-		$this->miscfunctions->setupGame();
+		$raceid = $this->miscfunctions->setupGame();
 
-		$gamestates->loadGamestates(1);
+		$gamestates->loadGamestates();
 		$currentGamestates = $objects->getObject('currentGamestates');
 		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][0], 5);
 		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][1], 10);
@@ -33,7 +33,7 @@ class testLrgamecards extends UnitTestCase
 		$gameeventhandler->saveRaceevent('1', $configuration->getConfiguration('gamedefinitions', 'events', 'playgamecard'), '2');
 		$objects->deleteObject('currentGamestates');
 
-		$gamestates->loadGamestates(1);
+		$gamestates->loadGamestates();
 		$currentGamestates = $objects->getObject('currentGamestates');
 		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][0], 10);
 		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][1], 20);
@@ -46,9 +46,9 @@ class testLrgamecards extends UnitTestCase
 		$objects = zgObjects::init();
 		$configuration = zgConfiguration::init();
 
-		$this->miscfunctions->setupGame();
+		$raceid = $this->miscfunctions->setupGame();
 
-		$gamestates->loadGamestates(1);
+		$gamestates->loadGamestates();
 		$currentGamestates = $objects->getObject('currentGamestates');
 		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][0], 5);
 		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][1], 10);
@@ -56,7 +56,7 @@ class testLrgamecards extends UnitTestCase
 		$gameeventhandler->saveRaceevent('1', $configuration->getConfiguration('gamedefinitions', 'events', 'playgamecard'), '3');
 		$objects->deleteObject('currentGamestates');
 
-		$gamestates->loadGamestates(1);
+		$gamestates->loadGamestates();
 		$currentGamestates = $objects->getObject('currentGamestates');
 		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][0], 0);
 		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][1], 0);

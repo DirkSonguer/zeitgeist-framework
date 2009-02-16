@@ -22,9 +22,9 @@ class testLrmovementfunctions extends UnitTestCase
 		$gamestates = new lrGamestates();
 		$movementfunctions = new lrMovementfunctions();
 		
-		$this->miscfunctions->setupGame();
+		$raceid = $this->miscfunctions->setupGame();
 		
-		$gamestates->loadGamestates(1);
+		$gamestates->loadGamestates();
 		
 		$ret = $movementfunctions->validateMove(1,1);
 		$this->assertFalse($ret);
@@ -40,14 +40,18 @@ class testLrmovementfunctions extends UnitTestCase
 		$movementfunctions = new lrMovementfunctions();
 		$gameeventhandler = new lrGameeventhandler();
 		
-		$this->miscfunctions->setupGame();
+		$raceid = $this->miscfunctions->setupGame();
 
-		$gamestates->loadGamestates(1);
+		$gamestates->loadGamestates();
 		$gameeventhandler->saveRaceaction('1', '150,200');
 		$gameeventhandler->saveRaceaction('1', '170,200');
 		$gameeventhandler->saveRaceaction('1', '190,200');
 		$gameeventhandler->saveRaceaction('1', '210,200');
-		$gamestates->loadGamestates(1);
+
+		$objects = zgObjects::init();
+		$objects->deleteObject('currentGamestates');
+
+		$gamestates->loadGamestates();
 
 		$ret = $movementfunctions->getMovement(1, -1);
 		$this->assertEqual($ret[0], '210');
@@ -64,9 +68,9 @@ class testLrmovementfunctions extends UnitTestCase
 		$gamestates = new lrGamestates();
 		$movementfunctions = new lrMovementfunctions();
 		
-		$this->miscfunctions->setupGame();
+		$raceid = $this->miscfunctions->setupGame();
 
-		$gamestates->loadGamestates(1);
+		$gamestates->loadGamestates();
 
 		$ret = $movementfunctions->validateTerrain(150,10);
 		$this->assertEqual($ret[0], '150');

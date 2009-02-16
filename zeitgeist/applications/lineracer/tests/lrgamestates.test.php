@@ -20,47 +20,41 @@ class testLrgamestates extends UnitTestCase
 	{
 		$gamestates = new lrGamestates();
 		$objects = zgObjects::init();
-		
-		$this->miscfunctions->setupGame();
-		
+
 		// this should not contain any data as race 0 does not exist
-		$ret = $gamestates->loadGamestates(0);
+		$ret = $gamestates->loadGamestates();
 		$this->assertFalse($ret);
+		
+		$raceid = $this->miscfunctions->setupGame(2);
 
 		// load gamestates for the newly created match
-		$ret = $gamestates->loadGamestates(1);
+		$ret = $gamestates->loadGamestates();
 		$this->assertTrue($ret);
 
 		// check if data is ok
 		$ret = $objects->getObject('currentGamestates');
 		
 		$this->assertTrue(is_array($ret));		
-		$this->assertEqual($ret['currentPlayer'], '1');		
-		$this->assertEqual($ret['numPlayers'], '2');		
-		$this->assertEqual($ret['playerdata'][1]['moves'][0][1], '150,370');		
+		$this->assertEqual($ret['move']['currentPlayer'], '1');
+		$this->assertEqual($ret['meta']['numPlayers'], '2');		
+		$this->assertEqual($ret['playerdata'][1]['moves'][0], '150,370');
 		$this->assertEqual($ret['playerdata'][1]['vector'][0], '5');
-	}
 
-	function test_endTurn()
-	{
-		$gamestates = new lrGamestates();
-		$objects = zgObjects::init();
-		
-		$this->miscfunctions->setupGame();
-		
-		// this should not contain any data as race 0 does not exist
-		$gamestates->loadGamestates(1);
-		$currentGamestates = $objects->getObject('currentGamestates');
-		$this->assertEqual($currentGamestates['move']['currentPlayer'], '1');
+		$raceid = $this->miscfunctions->setupGame(3);
 
-		$ret = $gamestates->endTurn();
+		// load gamestates for the newly created match
+		$ret = $gamestates->loadGamestates();
 		$this->assertTrue($ret);
 
-		$objects->deleteObject('currentGamestates');
+		// check if data is ok
+		$ret = $objects->getObject('currentGamestates');
+		
+		$this->assertTrue(is_array($ret));		
+		$this->assertEqual($ret['move']['currentPlayer'], '1');
+		$this->assertEqual($ret['meta']['numPlayers'], '3');		
+		$this->assertEqual($ret['playerdata'][2]['moves'][0], '175,380');
+		$this->assertEqual($ret['playerdata'][2]['vector'][0], '-5');
 
-		$gamestates->loadGamestates(1);
-		$currentGamestates = $objects->getObject('currentGamestates');
-		$this->assertEqual($currentGamestates['move']['currentPlayer'], '2');
 	}
 
 	function test_playerFinished()
@@ -70,24 +64,22 @@ class testLrgamestates extends UnitTestCase
 		$gameeventhandler = new lrGameeventhandler();
 		
 		// reset game and load gamestates
-		$this->miscfunctions->setupGame();
-		$gamestates->loadGamestates(1);
+		$raceid = $this->miscfunctions->setupGame(1);
+		$gamestates->loadGamestates();
 		
 		// race should not be finished
-		$ret = $gamestates->raceFinished();
+		$ret = $gamestates->playerFinished();
 		$this->assertFalse($ret);
 
 		// create finished action for player and reload gamestates
 		$configuration = zgConfiguration::init();
 		$gameeventhandler->saveRaceaction($configuration->getConfiguration('gamedefinitions', 'actions', 'finish'), '1');
 		$objects->deleteObject('currentGamestates');
-		$gamestates->loadGamestates(1);
+		$gamestates->loadGamestates();
 
 		// player should now be finished
 		$ret = $gamestates->playerFinished();
 		$this->assertTrue($ret);
-		
-		$gamestates->loadGamestates(1);
 	}
 
 	function test_raceFinished()
@@ -96,10 +88,11 @@ class testLrgamestates extends UnitTestCase
 		$objects = zgObjects::init();
 		$gameeventhandler = new lrGameeventhandler();
 		$configuration = zgConfiguration::init();
+		$gamefunctions = new lrGamefunctions();
 
 		// reset game and load gamestates
-		$this->miscfunctions->setupGame();
-		$gamestates->loadGamestates(1);
+		$raceid = $this->miscfunctions->setupGame(2);
+		$gamestates->loadGamestates();
 
 		// race should not be finished
 		$ret = $gamestates->raceFinished();
@@ -109,14 +102,18 @@ class testLrgamestates extends UnitTestCase
 		$gameeventhandler->saveRaceaction($configuration->getConfiguration('gamedefinitions', 'actions', 'finish'), '1');
 
 		// end turn of player and load data for next one
-		$gamestates->endTurn();
+		$gamefunctions->endTurn();
 		$objects->deleteObject('currentGamestates');
-		$gamestates->loadGamestates(1);
+		$gamestates->loadGamestates();
+
+		// race should not be finished
+		$ret = $gamestates->raceFinished();
+		$this->assertFalse($ret);
 
 		// create finished action for second player and reload gamestates
 		$gameeventhandler->saveRaceaction($configuration->getConfiguration('gamedefinitions', 'actions', 'finish'), '1');
 		$objects->deleteObject('currentGamestates');
-		$gamestates->loadGamestates(1);
+		$gamestates->loadGamestates();
 
 		// race should now be finished
 		$ret = $gamestates->raceFinished();

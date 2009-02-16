@@ -93,7 +93,24 @@ class testLruserfunctions extends UnitTestCase
 		unset($userfunctions);
 	}
 	
+/*
+	function test_getLobbyID()
+	{
+		$lobbyfunctions = new lrLobbyfunctions();
 
+		$res = $this->database->query("TRUNCATE TABLE lobby");
+		$res = $this->database->query("TRUNCATE TABLE lobby_to_users");
+
+		$res = $this->database->query("INSERT INTO lobby(lobby_circuit, lobby_maxplayers, lobby_gamecardsallowed) VALUES('1', '2', '1')");
+		$ret = $lobbyfunctions->joinGameroom(1);
+		$this->assertEqual($ret, true);
+
+		$res = $lobbyfunctions->getLobbyID();
+		$this->assertEqual($ret, 1);
+
+		unset($lobbyfunctions);
+	}
+*/
 }
 
 ?>

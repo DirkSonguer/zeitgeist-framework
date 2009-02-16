@@ -69,7 +69,7 @@ class lrUserfunctions
 			return false;
 		}
 		
-		if (empty($currentGamestates['meta']['players'][($currentGamestates['move']['currentPlayer']-1)]))
+		if (empty($currentGamestates['meta']['players'][$currentGamestates['move']['currentPlayer']]))
 		{
 			$this->debug->write('Could not validate player turn: could not find player data in the game data', 'warning');
 			$this->messages->setMessage('Could not validate player turn: could not find player data in the game data', 'warning');
@@ -77,7 +77,7 @@ class lrUserfunctions
 			return false;
 		}
 
-		if ($currentGamestates['meta']['players'][($currentGamestates['move']['currentPlayer']-1)] != $this->user->getUserID())
+		if ($currentGamestates['meta']['players'][$currentGamestates['move']['currentPlayer']] != $this->user->getUserID())
 		{
 			$this->debug->write('Could not validate player turn: player not found active', 'warning');
 			$this->messages->setMessage('Could not validate player turn: player not found active', 'warning');
@@ -150,7 +150,75 @@ class lrUserfunctions
 		$this->debug->unguard(true);
 		return true;		
 	}
-	
+
+
+	/**
+	 * Gets the race id of a player if he is currently playing
+	 *
+	 * @return boolean
+	 */
+	public function getUserRace()
+	{
+		$this->debug->guard();
+		
+		$sql = "SELECT raceuser_race FROM race_to_users WHERE raceuser_user='" . $this->user->getUserID() . "'";		
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not get race id: no race found for current player', 'warning');
+			$this->messages->setMessage('Could not get race id: no race found for current player', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$row = $this->database->fetchArray($res);
+
+		if (empty($row['raceuser_race']))
+		{
+			$this->debug->write('Could not get race id: race data seems corrupt', 'warning');
+			$this->messages->setMessage('Could not get race id: race data seems corrupt', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard($row['raceuser_race']);
+		return $row['raceuser_race'];
+	}
+
+
+	/**
+	 * Gets the lobby id of a player if he is currently in one
+	 *
+	 * @return boolean
+	 */
+	public function getUserLobby()
+	{
+		$this->debug->guard();
+		
+		$sql = "SELECT lobbyuser_lobby FROM lobby_to_users WHERE lobbyuser_user='" . $this->user->getUserID() . "'";		
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not get lobby id: no lobby found for current player', 'warning');
+			$this->messages->setMessage('Could not get lobby id: no lobby found for current player', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$row = $this->database->fetchArray($res);
+
+		if (empty($row['lobbyuser_lobby']))
+		{
+			$this->debug->write('Could not get lobby id: lobby data seems corrupt', 'warning');
+			$this->messages->setMessage('Could not get lobby id: lobby data seems corrupt', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard($row['lobbyuser_lobby']);
+		return $row['lobbyuser_lobby'];
+	}
+
 	
 	/**
 	 * gets the circuits available for the current player

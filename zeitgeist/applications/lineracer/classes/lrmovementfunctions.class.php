@@ -48,7 +48,7 @@ class lrMovementfunctions
 
 		// gets last move and vector for current player
 		$lastMove = $this->getMovement($currentGamestates['move']['currentPlayer'], -1);
-		$currentVector = $currentGamestates['playerdata'][$currentGamestates['currentPlayer']]['vector'];
+		$currentVector = $currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'];
 
 		// on the basis of the movement radius, calculate a valid region
 		$movementradius = $currentGamestates['move']['currentRadius'];
@@ -134,10 +134,10 @@ class lrMovementfunctions
 				}
 
 				// save event to clear vector
-				$gameeventhandler->saveRaceevent($currentGamestates['move']['currentPlayer'], '2', '1', $currentGamestates['move']['currentRound']+1);
+				$gameeventhandler->saveRaceevent($currentGamestates['move']['currentPlayer'], $this->configuration->getConfiguration('gamedefinitions', 'events', 'crash'), '1', $currentGamestates['move']['currentRound']+1);
 
 				// save crash to game moves
-				$gameeventhandler->saveRaceaction($this->configuration->getConfiguration('gamedefinitions', 'actions', 'playgamecard'), $moveX.",".$moveY);
+				$gameeventhandler->saveRaceaction($this->configuration->getConfiguration('gamedefinitions', 'actions', 'crash'), $moveX.",".$moveY);
 				
 				$this->debug->write("Crash happened with move: ".$moveX.",".$moveY." hit at ".$terrain[$key][1].",".$terrain[$key][2]." corrected to: ".$correctedMove[0].",".$correctedMove[1], 'message');
 				break;
@@ -214,7 +214,7 @@ class lrMovementfunctions
 	 *
 	 * @return boolean
 	 */
-	public function getMovement($playernum, $history=0)
+	public function getMovement($player, $history=0)
 	{
 		$this->debug->guard();
 
@@ -228,7 +228,7 @@ class lrMovementfunctions
 		}
 		
 		// check if player exists and has moves
-		if (empty($currentGamestates['playerdata'][$playernum]['moves']))
+		if (empty($currentGamestates['playerdata'][$player]['moves']))
 		{
 			$this->debug->write('Could not move player: moves for player not found', 'warning');
 			$this->messages->setMessage('Could not move player: moves for player not found', 'warning');
@@ -237,9 +237,9 @@ class lrMovementfunctions
 		}
 
 		$movement = array();
-		foreach ($currentGamestates['playerdata'][$playernum]['moves'] as $move)
+		foreach ($currentGamestates['playerdata'][$player]['moves'] as $move)
 		{
-			$movement[] = explode(',', $move[1]);
+			$movement[] = explode(',', $move);
 		}
 		
 		if ($history == 0)
