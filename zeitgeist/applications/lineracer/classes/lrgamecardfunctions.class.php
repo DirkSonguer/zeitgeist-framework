@@ -53,18 +53,15 @@ class lrGamecardfunctions
 
 
 	/**
-	 * Gets all gamecards and their data for a given user
-	 *
-	 * @param integer $userid user id of the player
+	 * Gets all gamecards and their data for the currently active user
 	 *
 	 * @return array
 	 */
-	public function getPlayerDeck($userid=0)
+	public function getPlayerDeck()
 	{
 		$this->debug->guard();
 
-		if ($userid == 0) $userid = $this->user->getUserID();
-		$sql = "SELECT * FROM gamecards_to_users u2g LEFT JOIN gamecards g ON u2g.usergamecard_gamecard = g.gamecard_id WHERE u2g.usergamecard_user='" . $userid . "'";
+		$sql = "SELECT * FROM gamecards_to_users u2g LEFT JOIN gamecards g ON u2g.usergamecard_gamecard = g.gamecard_id WHERE u2g.usergamecard_user='" . $this->user->getUserID() . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -87,21 +84,17 @@ class lrGamecardfunctions
 	
 
 	/**
-	 * Checks if a given user has the gamecard in his stack
-	 * If no userid is given, the current user will be used
+	 * Checks if the current user has the gamecard in his stack
 	 *
 	 * @param integer $gamecard id of the gamecard
-	 * @param integer $userid id of the user
 	 *
 	 * @return boolean
 	 */
-	public function checkRights($gamecard, $userid=0)
+	public function checkRights($gamecard)
 	{
 		$this->debug->guard();
 
-		if ($userid == 0) $userid = $this->user->getUserID();
-
-		$sql = "SELECT * FROM gamecards_to_users WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $userid . "'";
+		$sql = "SELECT * FROM gamecards_to_users WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $this->user->getUserID() . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -126,20 +119,18 @@ class lrGamecardfunctions
 
 
 	/**
-	 * This removes one instance of the given gamecard from the stack of the given user
+	 * This removes one instance of the given gamecard from the stack of the current user
 	 * If the user only one instance of the given card, it is removed entirely from his stack
-	 * If no userid is given, the current user will be used
 	 *
 	 * @param integer $gamecard id of the gamecard to remove
-	 * @param integer $userid user to remove the gamecard from
 	 *
 	 * @return boolean
 	 */
-	public function removeGamecard($gamecard, $userid=0)
+	public function removeGamecard($gamecard)
 	{
 		$this->debug->guard();
 
-		if ($userid == 0) $userid = $this->user->getUserID();
+		$userid = $this->user->getUserID();
 
 		$sql = "SELECT * FROM gamecards_to_users WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $userid . "'";
 		$res = $this->database->query($sql);
@@ -156,8 +147,8 @@ class lrGamecardfunctions
 		{
 			$this->debug->write('Gamecard to remove was not found. Possible problem with interface', 'warning');
 			$this->messages->setMessage('Gamecard to remove was not found. Possible problem with interface', 'warning');
-			$this->debug->unguard(true);
-			return true;
+			$this->debug->unguard(false);
+			return false;
 		}
 			
 		$row = $this->database->fetchArray($res);
@@ -192,19 +183,17 @@ class lrGamecardfunctions
 
 
 	/**
-	 * Adds the given gamecard to the stack of the given user
-	 * If no userid is given, the current user will be used
+	 * Adds the given gamecard to the stack of the current user
 	 *
 	 * @param integer $gamecard id of the gamecard to add
-	 * @param integer $userid user to add the gamecard to
 	 *
 	 * @return boolean
 	 */
-	public function addGamecard($gamecard, $userid=0)
+	public function addGamecard($gamecard)
 	{
 		$this->debug->guard();
 
-		if ($userid == 0) $userid = $this->user->getUserID();
+		$userid = $this->user->getUserID();
 
 		$sql = "SELECT * FROM gamecards_to_users WHERE usergamecard_gamecard='" . $gamecard . "' AND usergamecard_user='" . $userid . "'";
 		$res = $this->database->query($sql);

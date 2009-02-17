@@ -73,7 +73,7 @@ class game
 		
 		$tpl->assign('round', $currentGamestates['move']['currentRound']);
 
-		$userdeck = $gamecardfunctions->getPlayerDeck($this->user->getUserID());
+		$userdeck = $gamecardfunctions->getPlayerDeck();
 
 		foreach ($userdeck as $gamecard)
 		{
@@ -127,6 +127,8 @@ class game
 			$this->debug->unguard(false);
 			return false;
 		}
+		
+		// TODO check if gamecards are allowed
 		
 		$gamefunctions = new lrGamefunctions();
 		$gamefunctions->playgamecard($parameters['gamecard']);
