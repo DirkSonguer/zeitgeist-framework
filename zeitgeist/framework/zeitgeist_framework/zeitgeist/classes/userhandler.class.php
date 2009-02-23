@@ -242,7 +242,7 @@ class zgUserhandler
 		$this->debug->guard();
 
 		$this->_saveUserrights();
-		// TODO: Add roles!
+		// TODO Add saving roles
 //		$this->saveUserroles();
 		$this->_saveUserdata();
 
