@@ -27,6 +27,7 @@
 	require_once('classes/lrtemplate.class.php');
 	require_once('classes/lrlobbyfunctions.class.php');
 	require_once('classes/lrgameeventhandler.class.php');
+	require_once('classes/lrachievements.class.php');
 	require_once('classes/lrgamestates.class.php');
 	require_once('classes/lrgamecardfunctions.class.php');
 	require_once('classes/lrmovementfunctions.class.php');

@@ -59,6 +59,9 @@ class game
 
 		if ($gamestates->raceFinished())
 		{
+			$gamefunctions = new lrGamefunctions();
+			$gamefunctions->assessRace();
+			$gamefunctions->endRace();
 			$tpl->redirect($tpl->createLink('game', 'finished'));			
 		}
 
@@ -84,8 +87,6 @@ class game
 		}
 
 		$tpl->show();
-
-		var_dump($currentGamestates);
 
 		$this->debug->unguard(true);
 		return true;
@@ -128,7 +129,7 @@ class game
 			return false;
 		}
 		
-		// TODO check if gamecards are allowed
+		// TODO check if gamecards are allowed in the game
 		
 		$gamefunctions = new lrGamefunctions();
 		$gamefunctions->playgamecard($parameters['gamecard']);
@@ -146,18 +147,13 @@ class game
 	{
 		$this->debug->guard();
 
-		$gamestates = new lrGamestates();
-		$gamestates->loadGamestates();
-		$currentGamestates = $this->objects->getObject('currentGamestates');
+		// Show Game results
 		
-		if (!$gamestates->raceFinished())
-		{
-			// redirect to game overview
-			$tpl = new lrTemplate();
-			$tpl->redirect($tpl->createLink('game', 'index'));
-		}
-
-		echo "finished!";
+		echo "Game results<br />";
+		
+		// redirect to index
+		$tpl = new lrTemplate();
+		$tpl->redirect($tpl->createLink('main', 'index'));
 
 		$this->debug->unguard(true);
 		return true;
