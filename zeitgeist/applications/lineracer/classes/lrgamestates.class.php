@@ -212,6 +212,52 @@ class lrGamestates
 		return $finished;
 	}
 
+// TODO Function!
+	public function raceAssessed()
+	{
+		$this->debug->guard();
+
+		// get race of the user
+		$raceid = $this->lruser->getUserRace();
+		if (!$raceid)
+		{
+			$this->debug->write('Could not end race: no active race for player found', 'warning');
+			$this->messages->setMessage('Could not end race: no active race for player found', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+	
+
+	public function playerAssessed()
+	{
+		$this->debug->guard();
+
+		// get race of the user
+		$sql = "SELECT raceuser_assessed FROM race_to_users WHERE raceuser_user='" . $this->user->getUserID() . "'";		
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not get assess info: no race found for current player', 'warning');
+			$this->messages->setMessage('Could not get assess info: no race found for current player', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$row = $this->database->fetchArray($res);
+		if ( (empty($row['raceuser_assessed'])) || ($row['raceuser_assessed'] == 0) )
+		{
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+
 }
 
 ?>

@@ -264,5 +264,6 @@ class lrUserfunctions
 		$this->debug->unguard($ret);
 		return $ret;		
 	}
+
 }
 ?>

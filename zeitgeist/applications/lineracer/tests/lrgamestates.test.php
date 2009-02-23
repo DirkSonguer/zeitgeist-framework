@@ -51,10 +51,9 @@ class testLrgamestates extends UnitTestCase
 		
 		$this->assertTrue(is_array($ret));		
 		$this->assertEqual($ret['move']['currentPlayer'], '1');
-		$this->assertEqual($ret['meta']['numPlayers'], '3');		
+		$this->assertEqual($ret['meta']['numPlayers'], '3');
 		$this->assertEqual($ret['playerdata'][2]['moves'][0], '175,380');
 		$this->assertEqual($ret['playerdata'][2]['vector'][0], '-5');
-
 	}
 
 	function test_playerFinished()
