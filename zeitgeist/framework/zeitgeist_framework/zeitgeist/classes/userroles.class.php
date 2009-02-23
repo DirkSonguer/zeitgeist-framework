@@ -136,13 +136,13 @@ class zgUserroles
 	
 	public function addUserrole()
 	{
-		// TODO: FUNCTION!
+		// TODO addUserrole
 	}
 
 
 	public function deleteUserrole()
 	{
-		// TODO: FUNCTION!
+		// TODO deleteUserrole
 	}
 
 
