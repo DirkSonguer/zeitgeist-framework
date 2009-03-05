@@ -446,6 +446,10 @@ class zgTemplate
 	{
 		$this->debug->guard();
 
+		/* TODO
+		 *  Using $linkurl this way, we prevent Zeitgeist applications to be run
+		 *  in any other place than the webservers documentroot.
+		 */
 		$linkurl = 'index.php';
 
 		$link = array();
