@@ -81,7 +81,7 @@ class lrGamestates
 		$currentGamestates['move']['currentRadius'] = $this->configuration->getConfiguration('gamedefinitions', 'gamelogic', 'movementradius');
 
 		// get raceaction from database
-		$sqlActions = "SELECT ra.*, r2u.raceuser_order FROM race_actions ra LEFT JOIN race_to_users r2u on ra.raceaction_player = r2u.raceuser_order WHERE ra.raceaction_race='" . $raceid . "' ORDER BY ra.raceaction_timestamp";
+		$sqlActions = "SELECT DISTINCT ra.*, r2u.raceuser_order FROM race_actions ra LEFT JOIN race_to_users r2u on ra.raceaction_player = r2u.raceuser_order WHERE ra.raceaction_race='" . $raceid . "' ORDER BY ra.raceaction_timestamp, ra.raceaction_id";
 		$resActions = $this->database->query($sqlActions);
 
 		// get player data

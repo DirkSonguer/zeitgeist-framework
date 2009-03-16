@@ -107,6 +107,9 @@ class game
 
 		$gamefunctions = new lrGamefunctions();
 		$gamefunctions->move($parameters['position_x'], $parameters['position_y']);
+		
+		$currentGamestates = $this->objects->getObject('currentGamestates');
+//		var_dump($currentGamestates);
 
 		// redirect to game overview
 		$tpl = new lrTemplate();
