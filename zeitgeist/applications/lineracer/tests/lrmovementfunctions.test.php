@@ -39,6 +39,7 @@ class testLrmovementfunctions extends UnitTestCase
 		$gamestates = new lrGamestates();
 		$movementfunctions = new lrMovementfunctions();
 		$gameeventhandler = new lrGameeventhandler();
+		$objects = zgObjects::init();
 		
 		$raceid = $this->miscfunctions->setupGame();
 
@@ -52,6 +53,7 @@ class testLrmovementfunctions extends UnitTestCase
 		$objects->deleteObject('currentGamestates');
 
 		$gamestates->loadGamestates();
+		$currentGamestates = $objects->getObject('currentGamestates');
 
 		$ret = $movementfunctions->getMovement(1, -1);
 		$this->assertEqual($ret[0], '210');

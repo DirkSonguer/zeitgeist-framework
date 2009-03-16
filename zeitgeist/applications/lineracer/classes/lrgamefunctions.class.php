@@ -488,8 +488,8 @@ class lrGamefunctions
 		$this->debug->unguard(true);
 		return true;
 	}
-	
-	
+
+
 	// TODO: Punkteverteilung
 	// TODO: Achievements		
 	// TODO: Finish!
