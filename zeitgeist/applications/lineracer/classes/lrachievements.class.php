@@ -26,31 +26,35 @@ class lrAchievements
 	
 	/**
 	 * Gets all achievements of a given user
-	 * If no user is given, the current user is used
 	 *
 	 * @return array
 	 */
-	public function getPlayerAchievements($userid)
+	public function getPlayerAchievements()
 	{
 		$this->debug->guard();
 
-		$this->debug->unguard(true);
-		return true;
+		$userid = $this->user->getUserID();
+
+		$achievements = array();
+
+		$this->debug->unguard($achievements);
+		return $achievements;
 	}
 
 
 	/**
 	 * Add a given achievement to a given user
-	 * If no user is given, the current user is used
 	 *
 	 * @param integer $achievement id of the achievement
-	 * @param integer $userid id of the user
 	 *
 	 * @return array
 	 */
-	public function addAchievement($achievement, $userid)
+	public function addAchievement($achievement)
 	{
 		$this->debug->guard();
+		
+		$userid = $this->user->getUserID();
+		
 
 		$this->debug->unguard(true);
 		return true;
@@ -59,16 +63,16 @@ class lrAchievements
 
 	/**
 	 * Checks if a given user has the given achievement
-	 * If no user is given, the current user is used
 	 *
 	 * @param integer $achievement id of the achievement
-	 * @param integer $userid id of the user
 	 *
 	 * @return array
 	 */
-	public function hasAchievement($achievement, $userid)
+	public function hasAchievement($achievement)
 	{
 		$this->debug->guard();
+
+		$userid = $this->user->getUserID();
 
 		$this->debug->unguard(true);
 		return true;
