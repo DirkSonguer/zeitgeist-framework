@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 16. März 2009 um 07:12
+-- Erstellungszeit: 17. März 2009 um 07:07
 -- Server Version: 5.0.51
 -- PHP-Version: 5.2.6
 
@@ -33,12 +33,16 @@ CREATE TABLE IF NOT EXISTS `achievements` (
   `achievement_level` int(2) NOT NULL default '1',
   `achievement_reward` int(3) NOT NULL default '0',
   PRIMARY KEY  (`achievement_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Daten für Tabelle `achievements`
 --
 
+INSERT INTO `achievements` (`achievement_id`, `achievement_name`, `achievement_description`, `achievement_image`, `achievement_level`, `achievement_reward`) VALUES
+(1, 'Gut unterwegs', 'Eine Spielrunde in weniger als 40 Zügen abgeschlossen', '', 1, 2),
+(2, 'Bleifuß', 'Eine Spielrunde in weniger als 30 Zügen abgeschlossen', '', 2, 4),
+(3, 'Geölter Blitz', 'Eine Spielrunde in weniger als 20 Zügen absolviert', '', 3, 8);
 
 -- --------------------------------------------------------
 
@@ -599,7 +603,7 @@ CREATE TABLE IF NOT EXISTS `sessiondata` (
 --
 
 INSERT INTO `sessiondata` (`sessiondata_id`, `sessiondata_created`, `sessiondata_lastupdate`, `sessiondata_content`, `sessiondata_ip`) VALUES
-('7f911802bb4aefb8f1567bd5f8e9615f', 1237146404, 1237152474, 'user_userid|s:1:"1";user_key|s:32:"098f6bcd4621d373cade4e832627b4f6";user_username|s:5:"test1";', 2130706433);
+('7f911802bb4aefb8f1567bd5f8e9615f', 1237146404, 1237238985, 'user_userid|s:1:"1";user_key|s:32:"098f6bcd4621d373cade4e832627b4f6";user_username|s:5:"test1";', 2130706433);
 
 -- --------------------------------------------------------
 
@@ -774,7 +778,7 @@ CREATE TABLE IF NOT EXISTS `trafficlog` (
   `trafficlog_user` int(12) NOT NULL,
   `trafficlog_ip` int(10) unsigned default NULL,
   PRIMARY KEY  (`trafficlog_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10700 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10747 ;
 
 --
 -- Daten für Tabelle `trafficlog`
@@ -11485,7 +11489,54 @@ INSERT INTO `trafficlog` (`trafficlog_id`, `trafficlog_module`, `trafficlog_acti
 (10696, 19, 4, 1, 2130706433),
 (10697, 19, 4, 1, 2130706433),
 (10698, 19, 4, 1, 2130706433),
-(10699, 19, 4, 1, 2130706433);
+(10699, 19, 4, 1, 2130706433),
+(10700, 1, 3, 1, 2130706433),
+(10701, 19, 4, 1, 2130706433),
+(10702, 19, 4, 1, 2130706433),
+(10703, 19, 4, 1, 2130706433),
+(10704, 19, 4, 1, 2130706433),
+(10705, 19, 4, 1, 2130706433),
+(10706, 19, 4, 1, 2130706433),
+(10707, 19, 4, 1, 2130706433),
+(10708, 19, 4, 1, 2130706433),
+(10709, 19, 4, 1, 2130706433),
+(10710, 19, 4, 1, 2130706433),
+(10711, 19, 4, 1, 2130706433),
+(10712, 19, 4, 1, 2130706433),
+(10713, 19, 4, 1, 2130706433),
+(10714, 19, 4, 1, 2130706433),
+(10715, 19, 4, 1, 2130706433),
+(10716, 19, 4, 1, 2130706433),
+(10717, 19, 4, 1, 2130706433),
+(10718, 19, 4, 1, 2130706433),
+(10719, 19, 4, 1, 2130706433),
+(10720, 19, 4, 1, 2130706433),
+(10721, 19, 4, 1, 2130706433),
+(10722, 19, 4, 1, 2130706433),
+(10723, 19, 4, 1, 2130706433),
+(10724, 19, 4, 1, 2130706433),
+(10725, 19, 4, 1, 2130706433),
+(10726, 19, 4, 1, 2130706433),
+(10727, 19, 4, 1, 2130706433),
+(10728, 19, 4, 1, 2130706433),
+(10729, 19, 4, 1, 2130706433),
+(10730, 19, 4, 1, 2130706433),
+(10731, 19, 4, 1, 2130706433),
+(10732, 19, 4, 1, 2130706433),
+(10733, 19, 4, 1, 2130706433),
+(10734, 19, 4, 1, 2130706433),
+(10735, 19, 4, 1, 2130706433),
+(10736, 19, 4, 1, 2130706433),
+(10737, 19, 4, 1, 2130706433),
+(10738, 19, 4, 1, 2130706433),
+(10739, 19, 4, 1, 2130706433),
+(10740, 19, 4, 1, 2130706433),
+(10741, 19, 4, 1, 2130706433),
+(10742, 19, 4, 1, 2130706433),
+(10743, 1, 3, 1, 2130706433),
+(10744, 20, 9, 1, 2130706433),
+(10745, 19, 4, 1, 2130706433),
+(10746, 1, 3, 1, 2130706433);
 
 -- --------------------------------------------------------
 
