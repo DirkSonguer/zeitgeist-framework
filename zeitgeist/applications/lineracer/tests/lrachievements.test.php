@@ -69,6 +69,35 @@ class testLrachievementfunctions extends UnitTestCase
 
 		$ret = $achievements->hasAchievement($achievement2);
 		$this->assertFalse($ret);
+	}
+	
+	function test_addAchievement()
+	{
+		$achievements = new lrAchievements();
+
+		$achievement1 = rand(100,300);
+		$achievement2 = rand(300,500);
+		$playerid = rand(501,1000);
+
+		$session = zgSession::init();
+		$session->setSessionVariable('user_userid', $playerid);
+
+		$this->database->query('TRUNCATE TABLE achievements');
+		$this->database->query('TRUNCATE TABLE achievements_to_users');
+
+		$ret = $achievements->getPlayerAchievements();
+		$this->assertEqual(count($ret), 0);
+
+		$this->database->query("INSERT INTO achievements(achievement_id, achievement_name, achievement_description, achievement_image, achievement_level, achievement_reward) VALUES('" . $achievement1 . "', 'test1', 'achievement1', '', '1', '2')");
+		$this->database->query("INSERT INTO achievements(achievement_id, achievement_name, achievement_description, achievement_image, achievement_level, achievement_reward) VALUES('" . $achievement2 . "', 'test2', 'achievement2', '', '1', '2')");
+
+		$achievements->addAchievement($achievement1);
+		$ret = $achievements->hasAchievement($achievement1);
+		$this->assertTrue($ret);
+
+		$achievements->addAchievement($achievement2, 5);
+		$ret = $achievements->hasAchievement($achievement2);
+		$this->assertTrue($ret);
 	}	
 }
 
