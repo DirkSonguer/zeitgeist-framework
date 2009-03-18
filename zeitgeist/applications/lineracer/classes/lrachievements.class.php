@@ -60,25 +60,33 @@ class lrAchievements
 	 * Add a given achievement to a given user
 	 *
 	 * @param integer $achievement id of the achievement
+	 * @param integer $race id of the race the achievement was earned
 	 *
 	 * @return array
 	 */
-	public function addAchievement($achievement)
+	public function addAchievement($achievement, $race=0)
 	{
 		$this->debug->guard();
 		
 		if ($this->hasAchievement($achievement))
 		{
-			$this->debug->write('Could not add achievements: player not found', 'warning');
-			$this->messages->setMessage('Could not get player achievements: player not found', 'warning');
+			$this->debug->write('Could not add achievements: player already has the achievement', 'warning');
+			$this->messages->setMessage('Could not add achievements: player already has the achievement', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
+
 		$userid = $this->user->getUserID();
-		
-		
-		
-		$this->database->query("INSERT INTO achievements(achievement_id, achievement_name, achievement_description, achievement_image, achievement_level, achievement_reward) VALUES('" . $achievement1 . "', 'test1', 'achievement1', '', '1', '2')");
+
+		$sql = "INSERT INTO achievements_to_users(userachievement_user, userachievement_achievement, userachievement_race) VALUES('" . $userid . "', '" . $achievement . "', '" . $race . "')";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not add achievement: could not write data to database', 'warning');
+			$this->messages->setMessage('Could not add achievement: could not write data to database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
 
 		$this->debug->unguard(true);
 		return true;
