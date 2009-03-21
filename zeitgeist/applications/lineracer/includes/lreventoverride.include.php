@@ -19,8 +19,8 @@ defined('LINERACER_ACTIVE') or die();
 		}
 
 		$expected = APPLICATION_ROOTDIRECTORY . 'gamecards/' . $class . '.gamecard.php';
-		$debug->write('Error autoloading class: Class ' . $class . ' not found in '.$expected, 'error');
-		$message->setMessage('Error autoloading class: Class ' . $class . ' not found in '.$expected, 'error');
+		$debug->write('Error autoloading class: Class ' . $class . ' not found in '.$expected, 'warning');
+		$message->setMessage('Error autoloading class: Class ' . $class . ' not found in '.$expected, 'warning');
 
 		$debug->unguard(false);
 	}
