@@ -10,6 +10,7 @@ class lrAchievements
 	protected $database;
 	protected $configuration;
 	protected $user;
+	protected $achievementfunctions;
 
 	public function __construct()
 	{
@@ -18,6 +19,7 @@ class lrAchievements
 		$this->objects = zgObjects::init();
 		$this->configuration = zgConfiguration::init();
 		$this->user = zgUserhandler::init();
+		$this->achievementfunctions = new lrAchievementfunctions();
 		
 		$this->database = new zgDatabase();
 		$this->database->connect();
@@ -25,107 +27,67 @@ class lrAchievements
 
 	
 	/**
-	 * Gets all achievements of a given user
-	 *
-	 * @return array
-	 */
-	public function getPlayerAchievements()
-	{
-		$this->debug->guard();
-
-		$userid = $this->user->getUserID();
-		
-		$sql = "SELECT * FROM achievements_to_users WHERE userachievement_user='" . $userid . "'";
-		$res = $this->database->query($sql);
-		if (!$res)
-		{
-			$this->debug->write('Could not get player achievements: player not found', 'warning');
-			$this->messages->setMessage('Could not get player achievements: player not found', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-		
-		$achievements = array();
-		while($row = $this->database->fetchArray($res))
-		{
-			$achievements[] = $row;
-		}
-
-		$this->debug->unguard($achievements);
-		return $achievements;
-	}
-
-
-	/**
-	 * Add a given achievement to a given user
-	 *
-	 * @param integer $achievement id of the achievement
-	 * @param integer $race id of the race the achievement was earned
-	 *
-	 * @return array
-	 */
-	public function addAchievement($achievement, $race=0)
-	{
-		$this->debug->guard();
-		
-		if ($this->hasAchievement($achievement))
-		{
-			$this->debug->write('Could not add achievements: player already has the achievement', 'warning');
-			$this->messages->setMessage('Could not add achievements: player already has the achievement', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$userid = $this->user->getUserID();
-
-		$sql = "INSERT INTO achievements_to_users(userachievement_user, userachievement_achievement, userachievement_race) VALUES('" . $userid . "', '" . $achievement . "', '" . $race . "')";
-		$res = $this->database->query($sql);
-		if (!$res)
-		{
-			$this->debug->write('Could not add achievement: could not write data to database', 'warning');
-			$this->messages->setMessage('Could not add achievement: could not write data to database', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$this->debug->unguard(true);
-		return true;
-	}
-	
-
-	/**
 	 * Checks if a given user has the given achievement
 	 *
 	 * @param integer $achievement id of the achievement
 	 *
 	 * @return array
 	 */
-	public function hasAchievement($achievement)
+	public function assessAchievements()
 	{
 		$this->debug->guard();
-
-		$userid = $this->user->getUserID();
 		
-		$sql = "SELECT * FROM achievements_to_users WHERE userachievement_user='" . $userid . "' AND userachievement_achievement='" . $achievement . "'";
+		$sql = "SELECT * FROM achievements";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
-			$this->debug->write('Could not get player achievements: could not get player achievements from database', 'warning');
-			$this->messages->setMessage('Could not get player achievements: could not get player achievements from database', 'warning');
+			$this->debug->write('Could not assess achievements: could not get achievement list from database', 'warning');
+			$this->messages->setMessage('Could not assess achievements: could not get achievement list from database', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
 		
-		$ret = $this->database->numRows($res);
-		if ($ret != 1)
+		while($row = $this->database->fetchArray($res))
 		{
-			$this->debug->unguard(false);
-			return false;
+			$achievementearned = $this->$row['achievement_function'];
 		}
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+	
+	
+	public function fastround1()
+	{
+		$this->debug->guard();
+
+		echo "1<br />";
 
 		$this->debug->unguard(true);
 		return true;
-	}	
+	}
+	
+	
+	public function fastround2()
+	{
+		$this->debug->guard();
+		
+		echo "2<br />";
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function fastround3()
+	{
+		$this->debug->guard();
+
+		echo "3<br />";
+		
+		$this->debug->unguard(true);
+		return true;
+	}
 }
 
 ?>
