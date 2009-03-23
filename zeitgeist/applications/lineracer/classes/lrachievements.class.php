@@ -49,7 +49,15 @@ class lrAchievements
 		
 		while($row = $this->database->fetchArray($res))
 		{
-			$achievementearned = call_user_func(array(&$this, $row['achievement_function']));
+			if (method_exists(&$this, $row['achievement_function']))
+			{
+				$achievementearned = call_user_func(array(&$this, $row['achievement_function']));
+			}
+			else	
+			{
+				$this->debug->write('Could not assess achievements: achievement function does not exist', 'warning');
+				$this->messages->setMessage('Could not assess achievements: achievement function does not exist', 'warning');
+			}
 		}
 		
 		$this->debug->unguard(true);
