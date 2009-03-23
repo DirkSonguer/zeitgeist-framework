@@ -49,7 +49,7 @@ class lrAchievements
 		
 		while($row = $this->database->fetchArray($res))
 		{
-			$achievementearned = $this->$row['achievement_function'];
+			$achievementearned = call_user_func(array(&$this, $row['achievement_function']));
 		}
 		
 		$this->debug->unguard(true);
