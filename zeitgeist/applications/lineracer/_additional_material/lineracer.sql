@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 21. März 2009 um 22:45
+-- Erstellungszeit: 24. März 2009 um 19:16
 -- Server Version: 5.0.51
 -- PHP-Version: 5.2.5
 
@@ -277,10 +277,7 @@ INSERT INTO `gamecards_to_users` (`usergamecard_user`, `usergamecard_gamecard`, 
 (2, 1, 1),
 (2, 2, 1),
 (2, 3, 1),
-(1, 1, 1),
-(3, 1, 1),
-(3, 2, 1),
-(3, 3, 1);
+(1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -294,7 +291,7 @@ CREATE TABLE IF NOT EXISTS `lobby` (
   `lobby_maxplayers` int(1) NOT NULL default '1',
   `lobby_gamecardsallowed` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`lobby_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=4 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=5 ;
 
 --
 -- Daten für Tabelle `lobby`
@@ -419,16 +416,12 @@ CREATE TABLE IF NOT EXISTS `races` (
   `race_gamecardsallowed` tinyint(1) NOT NULL default '0',
   `race_created` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`race_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=4 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=2 ;
 
 --
 -- Daten für Tabelle `races`
 --
 
-INSERT INTO `races` (`race_id`, `race_circuit`, `race_activeplayer`, `race_currentround`, `race_gamecardsallowed`, `race_created`) VALUES
-(1, 1, 1, 22, 1, '2009-02-22 16:31:04'),
-(2, 1, 1, 22, 1, '2009-03-20 08:20:46'),
-(3, 1, 1, 1, 1, '2009-03-20 08:25:24');
 
 -- --------------------------------------------------------
 
@@ -443,12 +436,14 @@ CREATE TABLE IF NOT EXISTS `races_archive` (
   `race_started` datetime NOT NULL,
   `race_finished` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`race_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=2 ;
 
 --
 -- Daten für Tabelle `races_archive`
 --
 
+INSERT INTO `races_archive` (`race_id`, `race_circuit`, `race_gamecardsallowed`, `race_started`, `race_finished`) VALUES
+(1, 1, 1, '2009-03-24 08:10:45', '2009-03-24 08:10:53');
 
 -- --------------------------------------------------------
 
@@ -464,42 +459,12 @@ CREATE TABLE IF NOT EXISTS `race_actions` (
   `raceaction_parameter` varchar(255) collate latin1_general_ci NOT NULL,
   `raceaction_timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`raceaction_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=86 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=28 ;
 
 --
 -- Daten für Tabelle `race_actions`
 --
 
-INSERT INTO `race_actions` (`raceaction_id`, `raceaction_race`, `raceaction_player`, `raceaction_action`, `raceaction_parameter`, `raceaction_timestamp`) VALUES
-(1, 1, 1, 1, '150,370', '2009-02-15 22:12:17'),
-(78, 2, 1, 1, '534,437', '2009-03-15 22:19:15'),
-(77, 2, 1, 1, '498,468', '2009-03-15 22:19:05'),
-(76, 2, 1, 1, '448,484', '2009-03-15 22:18:19'),
-(75, 2, 1, 1, '415,485', '2009-03-15 22:17:55'),
-(74, 2, 1, 1, '399,484', '2009-03-15 22:04:46'),
-(73, 2, 1, 1, '383,486', '2009-03-15 22:03:16'),
-(72, 2, 1, 1, '365,487', '2009-03-15 22:01:48'),
-(71, 2, 1, 4, '1', '2009-03-15 22:01:48'),
-(70, 2, 1, 1, '347,486', '2009-03-15 22:01:17'),
-(69, 2, 1, 1, '329,486', '2009-03-15 22:00:06'),
-(68, 2, 1, 1, '313,487', '2009-03-15 21:59:23'),
-(67, 2, 1, 1, '296,485', '2009-03-15 21:58:37'),
-(66, 2, 1, 1, '281,476', '2009-03-15 21:55:38'),
-(65, 2, 1, 1, '264,480', '2009-03-15 21:55:30'),
-(64, 2, 1, 1, '247,464', '2009-03-15 21:34:25'),
-(63, 2, 1, 1, '230,449', '2009-03-15 21:32:15'),
-(62, 2, 1, 1, '213,438', '2009-03-15 21:32:08'),
-(61, 2, 1, 1, '196,422', '2009-03-15 21:31:53'),
-(60, 2, 1, 1, '180,405', '2009-03-15 21:31:44'),
-(59, 2, 1, 1, '165,387', '2009-03-15 21:31:35'),
-(58, 2, 1, 1, '150,370', '2009-03-15 20:49:22'),
-(79, 2, 1, 3, '2', '2009-03-20 08:19:41'),
-(80, 2, 1, 5, '2', '2009-03-20 08:20:03'),
-(81, 2, 1, 1, '592,333', '2009-03-20 08:20:03'),
-(82, 2, 1, 3, '3', '2009-03-20 08:20:28'),
-(83, 2, 1, 1, '590,319', '2009-03-20 08:20:46'),
-(84, 3, 1, 1, '150,370', '2009-03-20 08:25:24'),
-(85, 3, 2, 1, '160,370', '2009-03-20 08:25:24');
 
 -- --------------------------------------------------------
 
@@ -510,17 +475,45 @@ INSERT INTO `race_actions` (`raceaction_id`, `raceaction_race`, `raceaction_play
 CREATE TABLE IF NOT EXISTS `race_actions_archive` (
   `raceaction_id` int(12) NOT NULL auto_increment,
   `raceaction_race` int(12) NOT NULL,
-  `raceaction_user` int(12) NOT NULL,
+  `raceaction_player` int(12) NOT NULL,
   `raceaction_action` int(12) NOT NULL,
   `raceaction_parameter` varchar(255) collate latin1_general_ci NOT NULL,
   `raceaction_timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`raceaction_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=28 ;
 
 --
 -- Daten für Tabelle `race_actions_archive`
 --
 
+INSERT INTO `race_actions_archive` (`raceaction_id`, `raceaction_race`, `raceaction_player`, `raceaction_action`, `raceaction_parameter`, `raceaction_timestamp`) VALUES
+(1, 1, 1, 1, '150,370', '2009-03-24 08:06:31'),
+(2, 1, 1, 1, '156,386', '2009-03-24 08:06:49'),
+(3, 1, 1, 1, '178,417', '2009-03-24 08:07:10'),
+(4, 1, 1, 1, '217,450', '2009-03-24 08:07:26'),
+(5, 1, 1, 1, '272,469', '2009-03-24 08:07:46'),
+(6, 1, 1, 1, '343,472', '2009-03-24 08:08:02'),
+(7, 1, 1, 4, '1', '2009-03-24 08:08:15'),
+(8, 1, 1, 1, '429,460', '2009-03-24 08:08:15'),
+(9, 1, 1, 1, '497,444', '2009-03-24 08:08:29'),
+(10, 1, 1, 1, '555,414', '2009-03-24 08:08:47'),
+(11, 1, 1, 1, '600,370', '2009-03-24 08:08:57'),
+(12, 1, 1, 5, '2', '2009-03-24 08:09:07'),
+(13, 1, 1, 1, '629,310', '2009-03-24 08:09:07'),
+(14, 1, 1, 3, '2', '2009-03-24 08:09:18'),
+(15, 1, 1, 1, '583,279', '2009-03-24 08:09:31'),
+(16, 1, 1, 1, '523,258', '2009-03-24 08:09:41'),
+(17, 1, 1, 3, '1', '2009-03-24 08:09:50'),
+(18, 1, 1, 5, '3', '2009-03-24 08:09:58'),
+(19, 1, 1, 1, '388,232', '2009-03-24 08:09:58'),
+(20, 1, 1, 1, '236,214', '2009-03-24 08:10:08'),
+(21, 1, 1, 3, '3', '2009-03-24 08:10:13'),
+(22, 1, 1, 1, '227,227', '2009-03-24 08:10:22'),
+(23, 1, 1, 1, '202,253', '2009-03-24 08:10:29'),
+(24, 1, 1, 1, '162,293', '2009-03-24 08:10:36'),
+(25, 1, 1, 1, '135,344', '2009-03-24 08:10:45'),
+(26, 1, 1, 7, '1', '2009-03-24 08:10:52'),
+(27, 1, 1, 1, '124,414', '2009-03-24 08:10:52');
 
 -- --------------------------------------------------------
 
@@ -536,7 +529,7 @@ CREATE TABLE IF NOT EXISTS `race_events` (
   `raceevent_action` int(12) NOT NULL,
   `raceevent_parameter` varchar(255) NOT NULL,
   PRIMARY KEY  (`raceevent_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Daten für Tabelle `race_events`
@@ -561,10 +554,6 @@ CREATE TABLE IF NOT EXISTS `race_to_users` (
 -- Daten für Tabelle `race_to_users`
 --
 
-INSERT INTO `race_to_users` (`raceuser_race`, `raceuser_user`, `raceuser_order`, `raceuser_assessed`) VALUES
-(3, 2, 1, 0),
-(2, 1, 1, 0),
-(3, 3, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -584,6 +573,8 @@ CREATE TABLE IF NOT EXISTS `race_to_users_archive` (
 -- Daten für Tabelle `race_to_users_archive`
 --
 
+INSERT INTO `race_to_users_archive` (`raceuser_race`, `raceuser_user`, `raceuser_order`, `raceuser_assessed`) VALUES
+(1, 3, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -605,9 +596,7 @@ CREATE TABLE IF NOT EXISTS `sessiondata` (
 --
 
 INSERT INTO `sessiondata` (`sessiondata_id`, `sessiondata_created`, `sessiondata_lastupdate`, `sessiondata_content`, `sessiondata_ip`) VALUES
-('7f911802bb4aefb8f1567bd5f8e9615f', 1237146404, 1237238985, 'user_userid|s:1:"1";user_key|s:32:"098f6bcd4621d373cade4e832627b4f6";user_username|s:5:"test1";', 2130706433),
-('daf230dc34eeed8b6bf344cfdbbe69b5', 1237533802, 1237575718, 'user_userid|s:1:"3";user_key|s:32:"098f6bcd4621d373cade4e832627b4f6";user_username|s:5:"test3";', 2130706433),
-('45305de807be2c9a0c28c9c46039c412', 1237533881, 1237575724, 'user_userid|s:1:"2";user_key|s:32:"098f6bcd4621d373cade4e832627b4f6";user_username|s:5:"test2";', 2130706433);
+('daf230dc34eeed8b6bf344cfdbbe69b5', 1237533802, 1237878656, 'user_userid|s:1:"3";user_key|s:32:"098f6bcd4621d373cade4e832627b4f6";user_username|s:5:"test3";', 2130706433);
 
 -- --------------------------------------------------------
 
@@ -782,7 +771,7 @@ CREATE TABLE IF NOT EXISTS `trafficlog` (
   `trafficlog_user` int(12) NOT NULL,
   `trafficlog_ip` int(10) unsigned default NULL,
   PRIMARY KEY  (`trafficlog_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10849 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10991 ;
 
 --
 -- Daten für Tabelle `trafficlog`
@@ -11642,7 +11631,149 @@ INSERT INTO `trafficlog` (`trafficlog_id`, `trafficlog_module`, `trafficlog_acti
 (10845, 19, 4, 3, 2130706433),
 (10846, 19, 4, 2, 2130706433),
 (10847, 19, 4, 3, 2130706433),
-(10848, 19, 4, 2, 2130706433);
+(10848, 19, 4, 2, 2130706433),
+(10849, 1, 3, 3, 2130706433),
+(10850, 1, 3, 3, 2130706433),
+(10851, 19, 4, 3, 2130706433),
+(10852, 19, 4, 3, 2130706433),
+(10853, 19, 4, 3, 2130706433),
+(10854, 19, 4, 3, 2130706433),
+(10855, 19, 4, 3, 2130706433),
+(10856, 19, 4, 3, 2130706433),
+(10857, 19, 4, 3, 2130706433),
+(10858, 19, 4, 3, 2130706433),
+(10859, 19, 4, 3, 2130706433),
+(10860, 19, 4, 3, 2130706433),
+(10861, 1, 3, 3, 2130706433),
+(10862, 1, 3, 3, 2130706433),
+(10863, 1, 3, 3, 2130706433),
+(10864, 20, 9, 3, 2130706433),
+(10865, 21, 10, 3, 2130706433),
+(10866, 21, 10, 3, 2130706433),
+(10867, 21, 10, 3, 2130706433),
+(10868, 21, 10, 3, 2130706433),
+(10869, 21, 10, 3, 2130706433),
+(10870, 21, 10, 3, 2130706433),
+(10871, 21, 10, 3, 2130706433),
+(10872, 21, 10, 3, 2130706433),
+(10873, 21, 10, 3, 2130706433),
+(10874, 21, 10, 3, 2130706433),
+(10875, 21, 10, 3, 2130706433),
+(10876, 21, 10, 3, 2130706433),
+(10877, 21, 10, 3, 2130706433),
+(10878, 21, 10, 3, 2130706433),
+(10879, 21, 10, 3, 2130706433),
+(10880, 21, 10, 3, 2130706433),
+(10881, 21, 10, 3, 2130706433),
+(10882, 21, 10, 3, 2130706433),
+(10883, 21, 10, 3, 2130706433),
+(10884, 21, 10, 3, 2130706433),
+(10885, 21, 10, 3, 2130706433),
+(10886, 21, 10, 3, 2130706433),
+(10887, 21, 10, 3, 2130706433),
+(10888, 21, 10, 3, 2130706433),
+(10889, 21, 10, 3, 2130706433),
+(10890, 21, 10, 3, 2130706433),
+(10891, 21, 10, 3, 2130706433),
+(10892, 21, 10, 3, 2130706433),
+(10893, 21, 10, 3, 2130706433),
+(10894, 21, 10, 3, 2130706433),
+(10895, 21, 10, 3, 2130706433),
+(10896, 21, 10, 3, 2130706433),
+(10897, 21, 10, 3, 2130706433),
+(10898, 21, 10, 3, 2130706433),
+(10899, 21, 10, 3, 2130706433),
+(10900, 21, 10, 3, 2130706433),
+(10901, 21, 10, 3, 2130706433),
+(10902, 21, 10, 3, 2130706433),
+(10903, 21, 10, 3, 2130706433),
+(10904, 21, 10, 3, 2130706433),
+(10905, 21, 10, 3, 2130706433),
+(10906, 21, 10, 3, 2130706433),
+(10907, 21, 10, 3, 2130706433),
+(10908, 21, 10, 3, 2130706433),
+(10909, 21, 10, 3, 2130706433),
+(10910, 21, 10, 3, 2130706433),
+(10911, 21, 10, 3, 2130706433),
+(10912, 21, 10, 3, 2130706433),
+(10913, 21, 10, 3, 2130706433),
+(10914, 21, 10, 3, 2130706433),
+(10915, 21, 10, 3, 2130706433),
+(10916, 21, 10, 3, 2130706433),
+(10917, 21, 10, 3, 2130706433),
+(10918, 21, 10, 3, 2130706433),
+(10919, 21, 10, 3, 2130706433),
+(10920, 21, 10, 3, 2130706433),
+(10921, 21, 10, 3, 2130706433),
+(10922, 21, 10, 3, 2130706433),
+(10923, 21, 10, 3, 2130706433),
+(10924, 21, 10, 3, 2130706433),
+(10925, 21, 10, 3, 2130706433),
+(10926, 20, 11, 3, 2130706433),
+(10927, 21, 10, 3, 2130706433),
+(10928, 20, 11, 3, 2130706433),
+(10929, 20, 12, 3, 2130706433),
+(10930, 21, 13, 3, 2130706433),
+(10931, 21, 13, 3, 2130706433),
+(10932, 21, 13, 3, 2130706433),
+(10933, 20, 16, 3, 2130706433),
+(10934, 19, 4, 3, 2130706433),
+(10935, 21, 13, 3, 2130706433),
+(10936, 19, 4, 3, 2130706433),
+(10937, 19, 5, 3, 2130706433),
+(10938, 19, 4, 3, 2130706433),
+(10939, 19, 4, 3, 2130706433),
+(10940, 19, 5, 3, 2130706433),
+(10941, 19, 4, 3, 2130706433),
+(10942, 19, 4, 3, 2130706433),
+(10943, 19, 5, 3, 2130706433),
+(10944, 19, 4, 3, 2130706433),
+(10945, 19, 4, 3, 2130706433),
+(10946, 19, 5, 3, 2130706433),
+(10947, 19, 4, 3, 2130706433),
+(10948, 19, 4, 3, 2130706433),
+(10949, 19, 5, 3, 2130706433),
+(10950, 19, 4, 3, 2130706433),
+(10951, 19, 4, 3, 2130706433),
+(10952, 19, 5, 3, 2130706433),
+(10953, 19, 4, 3, 2130706433),
+(10954, 19, 4, 3, 2130706433),
+(10955, 19, 5, 3, 2130706433),
+(10956, 19, 4, 3, 2130706433),
+(10957, 19, 4, 3, 2130706433),
+(10958, 19, 4, 3, 2130706433),
+(10959, 19, 5, 3, 2130706433),
+(10960, 19, 4, 3, 2130706433),
+(10961, 19, 5, 3, 2130706433),
+(10962, 19, 4, 3, 2130706433),
+(10963, 19, 5, 3, 2130706433),
+(10964, 19, 4, 3, 2130706433),
+(10965, 19, 7, 3, 2130706433),
+(10966, 19, 4, 3, 2130706433),
+(10967, 19, 4, 3, 2130706433),
+(10968, 19, 5, 3, 2130706433),
+(10969, 19, 4, 3, 2130706433),
+(10970, 19, 5, 3, 2130706433),
+(10971, 19, 4, 3, 2130706433),
+(10972, 19, 7, 3, 2130706433),
+(10973, 19, 4, 3, 2130706433),
+(10974, 19, 5, 3, 2130706433),
+(10975, 19, 4, 3, 2130706433),
+(10976, 19, 5, 3, 2130706433),
+(10977, 19, 4, 3, 2130706433),
+(10978, 19, 7, 3, 2130706433),
+(10979, 19, 4, 3, 2130706433),
+(10980, 19, 5, 3, 2130706433),
+(10981, 19, 4, 3, 2130706433),
+(10982, 19, 5, 3, 2130706433),
+(10983, 19, 4, 3, 2130706433),
+(10984, 19, 5, 3, 2130706433),
+(10985, 19, 4, 3, 2130706433),
+(10986, 19, 5, 3, 2130706433),
+(10987, 19, 4, 3, 2130706433),
+(10988, 19, 5, 3, 2130706433),
+(10989, 19, 4, 3, 2130706433),
+(10990, 19, 8, 3, 2130706433);
 
 -- --------------------------------------------------------
 
@@ -11656,7 +11787,7 @@ CREATE TABLE IF NOT EXISTS `trafficlog_parameters` (
   `trafficparameters_key` varchar(64) character set latin1 collate latin1_general_ci NOT NULL,
   `trafficparameters_value` text character set latin1 collate latin1_general_ci,
   PRIMARY KEY  (`trafficparameters_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=662 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=705 ;
 
 --
 -- Daten für Tabelle `trafficlog_parameters`
@@ -12323,7 +12454,50 @@ INSERT INTO `trafficlog_parameters` (`trafficparameters_id`, `trafficparameters_
 (658, 10808, 'position_x', '152'),
 (659, 10808, 'position_y', '385'),
 (660, 10817, 'position_x', '153'),
-(661, 10817, 'position_y', '386');
+(661, 10817, 'position_y', '386'),
+(662, 10928, 'creategameroom', 'Array'),
+(663, 10928, 'submit', 'Spiel erstellen'),
+(664, 10937, 'position_x', '156'),
+(665, 10937, 'position_y', '386'),
+(666, 10940, 'position_x', '178'),
+(667, 10940, 'position_y', '417'),
+(668, 10943, 'position_x', '217'),
+(669, 10943, 'position_y', '450'),
+(670, 10946, 'position_x', '272'),
+(671, 10946, 'position_y', '469'),
+(672, 10949, 'position_x', '343'),
+(673, 10949, 'position_y', '472'),
+(674, 10952, 'position_x', '429'),
+(675, 10952, 'position_y', '460'),
+(676, 10955, 'position_x', '497'),
+(677, 10955, 'position_y', '444'),
+(678, 10959, 'position_x', '555'),
+(679, 10959, 'position_y', '414'),
+(680, 10961, 'position_x', '600'),
+(681, 10961, 'position_y', '370'),
+(682, 10963, 'position_x', '629'),
+(683, 10963, 'position_y', '310'),
+(684, 10965, 'gamecard', '2'),
+(685, 10968, 'position_x', '583'),
+(686, 10968, 'position_y', '279'),
+(687, 10970, 'position_x', '523'),
+(688, 10970, 'position_y', '258'),
+(689, 10972, 'gamecard', '1'),
+(690, 10974, 'position_x', '388'),
+(691, 10974, 'position_y', '232'),
+(692, 10976, 'position_x', '236'),
+(693, 10976, 'position_y', '214'),
+(694, 10978, 'gamecard', '3'),
+(695, 10980, 'position_x', '227'),
+(696, 10980, 'position_y', '227'),
+(697, 10982, 'position_x', '202'),
+(698, 10982, 'position_y', '253'),
+(699, 10984, 'position_x', '162'),
+(700, 10984, 'position_y', '293'),
+(701, 10986, 'position_x', '135'),
+(702, 10986, 'position_y', '344'),
+(703, 10988, 'position_x', '124'),
+(704, 10988, 'position_y', '414');
 
 -- --------------------------------------------------------
 
