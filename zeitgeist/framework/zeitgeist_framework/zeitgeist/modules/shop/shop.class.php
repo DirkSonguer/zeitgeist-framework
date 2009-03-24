@@ -14,9 +14,9 @@
 
 defined('ZEITGEIST_ACTIVE') or die();
 
-require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/shop/zgsproductfunctions.class.php');
-require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/shop/zgscategoryfunctions.class.php');
-require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/shop/zgscartfunctions.class.php');
+require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/shop/productfunctions.class.php');
+require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/shop/categoryfunctions.class.php');
+require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/shop/cartfunctions.class.php');
 
 class zgShop
 {
@@ -30,7 +30,7 @@ class zgShop
 	protected $cartfunctions;
 	protected $productfunctions;
 
-	private function __construct()
+	public function __construct()
 	{
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
@@ -40,9 +40,9 @@ class zgShop
 		$this->database = new zgDatabase();
 		$this->database->connect();
 
-		$this->cartfunctions = new zgsCartfunctions();
-		$this->categoryfunctions = new zgsCategoryfunctions();
-		$this->productfunctions = new zgsProductfunctions();
+		$this->cartfunctions = new zgshopCartfunctions();
+		$this->categoryfunctions = new zgshopCategoryfunctions();
+		$this->productfunctions = new zgshopProductfunctions();
 	}
 
 
