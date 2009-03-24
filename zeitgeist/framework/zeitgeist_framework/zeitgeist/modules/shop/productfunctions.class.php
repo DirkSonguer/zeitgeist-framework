@@ -14,7 +14,7 @@
 
 defined('ZEITGEIST_ACTIVE') or die();
 
-class zgsCartfunctions
+class zgshopProductfunctions
 {
 	protected $debug;
 	protected $messages;
@@ -22,7 +22,7 @@ class zgsCartfunctions
 	protected $configuration;
 	protected $database;
 
-	private function __construct()
+	public function __construct()
 	{
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
@@ -34,7 +34,7 @@ class zgsCartfunctions
 	}
 
 
-	public function addToCart($productid, $quantity=1)
+	public function getProductData($productid)
 	{
 		$this->debug->guard(true);
 
@@ -42,37 +42,6 @@ class zgsCartfunctions
 		$this->debug->unguard(true);
 		return true;
 	}
-
-
-	public function deleteFromCart($productid, $quantity=1)
-	{
-		$this->debug->guard(true);
-
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-
-	public function clearCart()
-	{
-		$this->debug->guard(true);
-
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-
-	public function getCartContent()
-	{
-		$this->debug->guard(true);
-
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
 
 }
 ?>

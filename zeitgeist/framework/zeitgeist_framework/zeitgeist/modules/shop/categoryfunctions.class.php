@@ -14,7 +14,7 @@
 
 defined('ZEITGEIST_ACTIVE') or die();
 
-class zgsProductfunctions
+class zgshopCategoryfunctions
 {
 	protected $debug;
 	protected $messages;
@@ -22,7 +22,7 @@ class zgsProductfunctions
 	protected $configuration;
 	protected $database;
 
-	private function __construct()
+	public function __construct()
 	{
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
@@ -34,7 +34,27 @@ class zgsProductfunctions
 	}
 
 
-	public function getProductData($productid)
+	public function getProductsInCategory($categoryid)
+	{
+		$this->debug->guard(true);
+
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function getCategoryData($categoryid)
+	{
+		$this->debug->guard(true);
+
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function getAllCategories()
 	{
 		$this->debug->guard(true);
 

@@ -53,6 +53,7 @@ require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/dataserver.class.php');
 
 // include modules
 require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/staticform/staticform.class.php');
+require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/shop/shop.class.php');
 
 // include misc functions
 require_once (ZEITGEIST_ROOTDIRECTORY . 'includes/autoloader.include.php');

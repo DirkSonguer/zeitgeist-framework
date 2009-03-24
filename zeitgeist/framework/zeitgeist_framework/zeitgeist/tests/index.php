@@ -38,6 +38,7 @@
 	require_once('parameterhandler.test.php');
 	require_once('session.test.php');
 	require_once('messagecache.test.php');
+	require_once('shop.test.php');
 	
 	$debug = zgDebug::init();
 
@@ -55,6 +56,7 @@
     $test->addTestCase(new testParameterhandler());
     $test->addTestCase(new testSession());
     $test->addTestCase(new testMessagecache());
+    $test->addTestCase(new testShop());
     $test->run(new HtmlReporter());
 
 	echo "<h2><a href='index_step2.php'>Step 2</a></h2>";
