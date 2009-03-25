@@ -14,9 +14,9 @@
 
 defined('ZEITGEIST_ACTIVE') or die();
 
-require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/shop/productfunctions.class.php');
-require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/shop/categoryfunctions.class.php');
-require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/shop/cartfunctions.class.php');
+require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/shop/zgshop_productfunctions.class.php');
+require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/shop/zgshop_categoryfunctions.class.php');
+require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/shop/zgshop_cartfunctions.class.php');
 
 class zgShop
 {
@@ -50,18 +50,18 @@ class zgShop
 	{
 		$this->debug->guard(true);
 
-		$ret = $this->cartfunctions->addToCart($productid, $quantity=1);
+		$ret = $this->cartfunctions->addToCart($productid, $quantity);
 
 		$this->debug->unguard($ret);
 		return $ret;
 	}
 
 
-	public function deleteFromCart($productid, $quantity=1)
+	public function deleteFromCart($productid, $quantity=0)
 	{
 		$this->debug->guard(true);
 
-		$ret = $this->cartfunctions->deleteFromCart($productid, $quantity=1);
+		$ret = $this->cartfunctions->deleteFromCart($productid, $quantity);
 
 		$this->debug->unguard($ret);
 		return $ret;
