@@ -14,7 +14,7 @@
 
 defined('ZEITGEIST_ACTIVE') or die();
 
-class zgshopCategoryfunctions
+class zgshopProductfunctions
 {
 	protected $debug;
 	protected $messages;
@@ -34,18 +34,46 @@ class zgshopCategoryfunctions
 	}
 
 
-	public function getProductsInCategory($categoryid)
+	public function getProductData($productid)
 	{
 		$this->debug->guard(true);
 
-		$sql = "SELECT p.* FROM shop_products p ";
-		$sql .= "LEFT JOIN shop_products_to_categories p2c ON p.product_id = p2c.productcategories_product";
-		$sql .= "WHERE p2c.productcategories_category = " . $categoryid . "'";
+		$sql = "SELECT * FROM shop_products WHERE product_id='" . $productid . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
-			$this->debug->write('Could not get product list in category: could not get data from the database', 'warning');
-			$this->messages->setMessage('Could not get product list in category: could not get data from the database', 'warning');
+			$this->debug->write('Could not get product data: could not get data from the database', 'warning');
+			$this->messages->setMessage('Could not get product data: could not get data from the database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$productdata = array();
+		$productdata = $this->database->fetchArray($res);
+
+		if (count($productdata) < 1)
+		{
+			$this->debug->write('Could not get product data: product not found in database', 'warning');
+			$this->messages->setMessage('Could not get product data: product not found in database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard($productdata);
+		return $productdata;
+	}
+
+
+	public function getAllProducts()
+	{
+		$this->debug->guard(true);
+
+		$sql = "SELECT * FROM shop_products";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not get product list: could not get data from the database', 'warning');
+			$this->messages->setMessage('Could not get product list: could not get data from the database', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -60,60 +88,30 @@ class zgshopCategoryfunctions
 		return $productdata;
 	}
 
-
-	public function getCategoryData($categoryid)
+	
+	public function getImagesForProduct($productid)
 	{
 		$this->debug->guard(true);
 
-		$sql = "SELECT * FROM shop_categories WHERE category_id='" . $categoryid . "'";
+		$sql = "SELECT * FROM shop_images WHERE image_product = '" . $productid . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
-			$this->debug->write('Could not get category data: could not get data from the database', 'warning');
-			$this->messages->setMessage('Could not get category data: could not get data from the database', 'warning');
+			$this->debug->write('Could not get image list: could not get data from the database', 'warning');
+			$this->messages->setMessage('Could not get image list: could not get data from the database', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
 
-		$categorydata = array();
-		$categorydata = $this->database->fetchArray($res);
-
-		if (count($categorydata) < 1)
-		{
-			$this->debug->write('Could not get category data: category not found in database', 'warning');
-			$this->messages->setMessage('Could not get category data: category not found in database', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$this->debug->unguard($categorydata);
-		return $categorydata;
-	}
-
-
-	public function getAllCategories()
-	{
-		$this->debug->guard(true);
-
-		$sql = "SELECT * FROM shop_categories";
-		$res = $this->database->query($sql);
-		if (!$res)
-		{
-			$this->debug->write('Could not get category list: could not get data from the database', 'warning');
-			$this->messages->setMessage('Could not get category list: could not get data from the database', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$categorydata = array();
+		$imagedata = array();
 		while ($row = $this->database->fetchArray($res))
 		{
-			$categorydata[] = $row;
+			$imagedata[] = $row;
 		}
 
-		$this->debug->unguard($categorydata);
-		return $categorydata;
+		$this->debug->unguard($imagedata);
+		return $imagedata;
 	}
-
+	
 }
 ?>
