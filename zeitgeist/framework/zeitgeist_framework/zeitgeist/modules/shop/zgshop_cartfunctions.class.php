@@ -208,6 +208,69 @@ class zgshopCartfunctions
 		$this->debug->unguard($cartdata);
 		return $cartdata;
 	}
+	
+	
+	/**
+	 * purchases the contents of the cart
+	 *
+	 * @return boolean
+	 */
+	public function purchaseCartContent()
+	{
+		$this->debug->guard(true);
+		
+		$sql = "INSERT INTO shop_orders(order_user) VALUES('" . $this->user->getUserID() . "')";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not purchase cart content: could not create new order entry', 'warning');
+			$this->messages->setMessage('Could not purchase cart content: could not create new order entry', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$orderid = $this->database->insertId();
+
+		$sqlCart = "SELECT * FROM shop_cart c ";
+		$sqlCart .= "LEFT JOIN shop_products p ON c.cart_product = p.product_id ";
+		$sqlCart .= "WHERE c.cart_user = '" . $this->user->getUserID() . "'";
+		$resCart = $this->database->query($sqlCart);
+		if (!$resCart)
+		{
+			$this->debug->write('Could not purchase cart content: could not get data from database', 'warning');
+			$this->messages->setMessage('Could not purchase cart content: could not get data from database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$cartdata = array();
+		while ($row = $this->database->fetchArray($resCart))
+		{
+			$sqlProduct = "INSERT INTO shop_products_to_orders";
+			$sqlProduct .= "(productorder_order, productorder_name, productorder_description, productorder_qty, productorder_price) ";
+			$sqlProduct .= "VALUES('" . $orderid . "', '" . $row['product_name'] . "', '" . $row['product_description'] . "', '" . $row['cart_qty'] . "', '" . $row['product_price'] . "')";
+			$resProduct = $this->database->query($sqlProduct);
+			if (!$resProduct)
+			{
+				$this->debug->write('Could not purchase cart content: could not get product data for order from database', 'warning');
+				$this->messages->setMessage('Could not purchase cart content: could not get product data for order from database', 'warning');
+			}
+		}
+
+		$sql = "DELETE FROM shop_cart WHERE cart_user = '" . $this->user->getUserID() . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not purchase cart content: could not delete cart data from database', 'warning');
+			$this->messages->setMessage('Could not purchase cart content: could not delete cart data from database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+	
 
 
 }

@@ -3,11 +3,14 @@
 class testShopCart extends UnitTestCase
 {
 	public $database;
+	public $user;
 	
 	function test_init()
 	{
 		$this->database = new zgDatabase();
 		$ret = $this->database->connect();
+
+		$this->user = zgUserhandler::init();
 
 		$shop = new zgShop();
 		$this->assertNotNull($shop);
@@ -18,6 +21,8 @@ class testShopCart extends UnitTestCase
 	{
 		$this->database->query('TRUNCATE TABLE shop_cart');
 		$this->database->query('TRUNCATE TABLE shop_products');
+		$this->database->query('TRUNCATE TABLE shop_orders');
+		$this->database->query('TRUNCATE TABLE shop_products_to_orders');
 	}
 
 	function test_addToCart()
@@ -187,6 +192,43 @@ class testShopCart extends UnitTestCase
 
 		unset($shop);
     }	
+
+	function test_purchaseCartContent()
+	{
+		$shop = new zgShop();
+		$this->assertNotNull($shop);
+		
+		$this->setup_shopdata();
+
+		$productid = rand(100,500);
+		$this->database->query("INSERT INTO shop_products(product_id, product_name, product_description, product_price, product_qty) VALUES('" . $productid . "', 'test1', 'test product', '1,50', '1')");
+		$ret = $shop->addToCart($productid, 1);
+		$this->database->query("INSERT INTO shop_products(product_id, product_name, product_description, product_price, product_qty) VALUES('" . ($productid+1) . "', 'test2', 'test product', '1,50', '5')");
+		$ret = $shop->addToCart($productid+1, 5);
+		$this->database->query("INSERT INTO shop_products(product_id, product_name, product_description, product_price, product_qty) VALUES('" . ($productid+2) . "', 'test3', 'test product', '1,50', '10')");
+		$ret = $shop->addToCart($productid+2, 10);
+		
+		$ret = $shop->purchaseCartContent();
+		$this->assertTrue($ret);
+
+		$res = $this->database->query("SELECT * FROM shop_orders");
+		$row = $this->database->fetchArray($res);
+		$this->assertEqual($row['order_user'], $this->user->getUserID());
+
+		$res = $this->database->query("SELECT * FROM shop_products_to_orders");
+		$row = $this->database->fetchArray($res);
+		$this->assertEqual($row['productorder_name'], 'test1');
+		$row = $this->database->fetchArray($res);
+		$this->assertEqual($row['productorder_name'], 'test2');
+		$row = $this->database->fetchArray($res);
+		$this->assertEqual($row['productorder_name'], 'test3');
+
+		$res = $this->database->query("SELECT * FROM shop_cart");
+		$this->assertEqual($this->database->numRows($res), 0);
+
+		unset($shop);
+    }	
+
 }
 
 ?>
