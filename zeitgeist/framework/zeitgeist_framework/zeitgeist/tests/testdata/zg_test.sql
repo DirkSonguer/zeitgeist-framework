@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 24. März 2009 um 19:07
+-- Erstellungszeit: 26. März 2009 um 19:55
 -- Server Version: 5.0.51
 -- PHP-Version: 5.2.5
 
@@ -285,11 +285,7 @@ CREATE TABLE IF NOT EXISTS `sessiondata` (
 --
 
 INSERT INTO `sessiondata` (`sessiondata_id`, `sessiondata_created`, `sessiondata_lastupdate`, `sessiondata_content`, `sessiondata_ip`) VALUES
-('01d7b4a297f0aff645e68ec954a9634b', 1221200587, 1221387040, 'user_userid|s:1:"1";user_key|s:30:"17d815d30b840a283ef10c5c1f32db";user_username|s:16:"admin@taskkun.de";user_instance|s:1:"1";', 2130706433),
-('a0628f12f00da7eb88d26e9f9c92247b', 1220116917, 1220777849, 'user_userid|s:1:"1";user_key|s:30:"17d815d30b840a283ef10c5c1f32db";user_username|s:16:"admin@taskkun.de";user_instance|s:1:"1";', 2130706433),
-('96d7d5b30cfbf20d71b59decbb9bac11', 1226301361, 1226301361, 'user_username|s:4:"test";user_userid|s:1:"1";user_key|s:32:"1ca0099a6c84c116c7efcdc7d215937b";', 2130706433),
-('d4f9927901141e133d9cccfb1c237007', 1233741586, 1233741586, 'user_username|s:4:"test";user_userid|s:1:"1";user_key|s:32:"289f38ba956666c862cf0acfc6485ebd";', 2130706433),
-('176c17b428296200534f5490068635de', 1237916050, 1237917013, 'user_username|s:4:"test";user_userid|s:1:"1";user_key|s:32:"55e983fb54990013b1fce3e504172bd3";', 2130706433);
+('176c17b428296200534f5490068635de', 1238089951, 1238093676, 'user_username|s:4:"test";user_userid|s:1:"1";user_key|s:32:"b04ac4fcc00eed648ab617169c1f8b4c";', 2130706433);
 
 -- --------------------------------------------------------
 
@@ -321,12 +317,15 @@ CREATE TABLE IF NOT EXISTS `shop_categories` (
   `category_name` varchar(255) collate latin1_general_ci NOT NULL,
   `category_description` text collate latin1_general_ci NOT NULL,
   PRIMARY KEY  (`category_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=294 ;
 
 --
 -- Daten für Tabelle `shop_categories`
 --
 
+INSERT INTO `shop_categories` (`category_id`, `category_name`, `category_description`) VALUES
+(292, 'test1', 'test category'),
+(293, 'test2', 'test category');
 
 -- --------------------------------------------------------
 
@@ -340,12 +339,15 @@ CREATE TABLE IF NOT EXISTS `shop_images` (
   `image_file` varchar(255) collate latin1_general_ci NOT NULL,
   `image_description` text collate latin1_general_ci NOT NULL,
   PRIMARY KEY  (`image_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=3 ;
 
 --
 -- Daten für Tabelle `shop_images`
 --
 
+INSERT INTO `shop_images` (`image_id`, `image_product`, `image_file`, `image_description`) VALUES
+(1, 493, 'test1.jpg', 'test product'),
+(2, 493, 'test2.jpg', 'test product');
 
 -- --------------------------------------------------------
 
@@ -358,12 +360,14 @@ CREATE TABLE IF NOT EXISTS `shop_orders` (
   `order_user` int(12) NOT NULL,
   `order_timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`order_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=2 ;
 
 --
 -- Daten für Tabelle `shop_orders`
 --
 
+INSERT INTO `shop_orders` (`order_id`, `order_user`, `order_timestamp`) VALUES
+(1, 1, '2009-03-26 19:54:32');
 
 -- --------------------------------------------------------
 
@@ -376,6 +380,7 @@ CREATE TABLE IF NOT EXISTS `shop_products` (
   `product_name` varchar(255) collate latin1_general_ci NOT NULL,
   `product_description` text collate latin1_general_ci NOT NULL,
   `product_price` float NOT NULL,
+  `product_qty` int(16) NOT NULL default '0',
   PRIMARY KEY  (`product_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
 
@@ -409,17 +414,22 @@ CREATE TABLE IF NOT EXISTS `shop_products_to_categories` (
 
 CREATE TABLE IF NOT EXISTS `shop_products_to_orders` (
   `productorder_id` int(12) NOT NULL auto_increment,
-  `productorder_product` int(12) NOT NULL,
   `productorder_name` varchar(255) collate latin1_general_ci NOT NULL,
+  `productorder_description` text collate latin1_general_ci NOT NULL,
   `productorder_qty` int(4) NOT NULL,
   `productorder_price` float NOT NULL,
+  `productorder_order` int(12) NOT NULL,
   PRIMARY KEY  (`productorder_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=4 ;
 
 --
 -- Daten für Tabelle `shop_products_to_orders`
 --
 
+INSERT INTO `shop_products_to_orders` (`productorder_id`, `productorder_name`, `productorder_description`, `productorder_qty`, `productorder_price`, `productorder_order`) VALUES
+(1, 'test1', 'test product', 1, 1, 1),
+(2, 'test2', 'test product', 5, 1, 1),
+(3, 'test3', 'test product', 10, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -744,7 +754,7 @@ CREATE TABLE IF NOT EXISTS `userdata` (
 --
 
 INSERT INTO `userdata` (`userdata_id`, `userdata_user`, `userdata_firstname`, `userdata_lastname`, `userdata_url`, `userdata_address1`, `userdata_address2`, `userdata_city`, `userdata_zip`, `userdata_country`, `userdata_im`, `userdata_timestamp`) VALUES
-(1, 1, 'Mr', 'Test', '', '', '', '', '', '', '', '2009-03-24 18:50:12');
+(1, 1, 'Mr', 'Test', '', '', '', '', '', '', '', '2009-03-26 19:54:26');
 
 -- --------------------------------------------------------
 
@@ -858,7 +868,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`user_id`, `user_username`, `user_password`, `user_key`, `user_active`, `user_instance`) VALUES
-(1, 'test', '098f6bcd4621d373cade4e832627b4f6', '55e983fb54990013b1fce3e504172bd3', 1, 0);
+(1, 'test', '098f6bcd4621d373cade4e832627b4f6', 'b04ac4fcc00eed648ab617169c1f8b4c', 1, 0);
 
 -- --------------------------------------------------------
 

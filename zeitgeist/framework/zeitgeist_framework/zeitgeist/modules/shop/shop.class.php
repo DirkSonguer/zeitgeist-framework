@@ -89,6 +89,15 @@ class zgShop
 		return $cartcontent;
 	}
 
+	public function purchaseCartContent()
+	{
+		$this->debug->guard(true);
+
+		$purchase = $this->cartfunctions->purchaseCartContent();
+
+		$this->debug->unguard($purchase);
+		return $purchase;
+	}
 
 	public function getProductData($productid)
 	{
