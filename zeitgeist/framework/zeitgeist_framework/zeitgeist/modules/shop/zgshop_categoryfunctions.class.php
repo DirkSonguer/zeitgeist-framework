@@ -34,6 +34,14 @@ class zgshopCategoryfunctions
 	}
 
 
+	/**
+	 * Gets all products of a given category
+	 * Products will be returned as array of products
+	 *
+	 * @param int $categoryid id of the category
+	 *
+	 * @return array
+	 */
 	public function getProductsInCategory($categoryid)
 	{
 		$this->debug->guard(true);
@@ -69,6 +77,13 @@ class zgshopCategoryfunctions
 	}
 
 
+	/**
+	 * Gets the category description
+	 *
+	 * @param int $categoryid id of the category
+	 *
+	 * @return array
+	 */
 	public function getCategoryData($categoryid)
 	{
 		$this->debug->guard(true);
@@ -99,6 +114,12 @@ class zgshopCategoryfunctions
 	}
 
 
+	/**
+	 * Gets a list of all categories and their data
+	 * Returns an array containing the category data
+	 *
+	 * @return array
+	 */
 	public function getAllCategories()
 	{
 		$this->debug->guard(true);
