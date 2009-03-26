@@ -39,8 +39,8 @@ class zgshopCategoryfunctions
 		$this->debug->guard(true);
 
 		$sql = "SELECT p.* FROM shop_products p ";
-		$sql .= "LEFT JOIN shop_products_to_categories p2c ON p.product_id = p2c.productcategories_product";
-		$sql .= "WHERE p2c.productcategories_category = " . $categoryid . "'";
+		$sql .= "LEFT JOIN shop_products_to_categories p2c ON p.product_id = p2c.productcategories_product ";
+		$sql .= "WHERE p2c.productcategories_category = '" . $categoryid . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -56,6 +56,14 @@ class zgshopCategoryfunctions
 			$productdata[] = $row;
 		}
 
+		if (count($productdata) < 1)
+		{
+			$this->debug->write('Could not get product list in category: category not found in database', 'warning');
+			$this->messages->setMessage('Could not get product list in category: category not found in database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
 		$this->debug->unguard($productdata);
 		return $productdata;
 	}

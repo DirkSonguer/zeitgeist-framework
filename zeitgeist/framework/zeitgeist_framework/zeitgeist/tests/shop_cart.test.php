@@ -1,6 +1,6 @@
 <?php
 
-class testShop extends UnitTestCase
+class testShopCart extends UnitTestCase
 {
 	public $database;
 	

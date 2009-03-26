@@ -101,14 +101,36 @@ class zgShop
 	}
 
 
+	public function getAllProducts()
+	{
+		$this->debug->guard(true);
+
+		$productdata = $this->productfunctions->getAllProducts();
+
+		$this->debug->unguard($productdata);
+		return $productdata;
+	}
+
+
+	public function getImagesForProduct($productid)
+	{
+		$this->debug->guard(true);
+
+		$productdata = $this->productfunctions->getImagesForProduct($productid);
+
+		$this->debug->unguard($productdata);
+		return $productdata;
+	}
+
+
 	public function getProductsInCategory($categoryid)
 	{
 		$this->debug->guard(true);
 
 		$products = $this->categoryfunctions->getProductsInCategory($categoryid);
 
-		$this->debug->unguard(true);
-		return true;
+		$this->debug->unguard($products);
+		return $products;
 	}
 
 
