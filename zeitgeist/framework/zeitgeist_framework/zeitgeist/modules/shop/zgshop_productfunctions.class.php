@@ -34,6 +34,13 @@ class zgshopProductfunctions
 	}
 
 
+	/**
+	 * Gets the data of a given product
+	 *
+	 * @param int $productid id of the product
+	 *
+	 * @return array
+	 */
 	public function getProductData($productid)
 	{
 		$this->debug->guard(true);
@@ -64,6 +71,12 @@ class zgshopProductfunctions
 	}
 
 
+	/**
+	 * Gets the data for all products currently in the shop
+	 * Returns an array containing the products
+	 *
+	 * @return array
+	 */
 	public function getAllProducts()
 	{
 		$this->debug->guard(true);
@@ -89,6 +102,13 @@ class zgshopProductfunctions
 	}
 
 	
+	/**
+	 * Gets the images for a given product
+	 *
+	 * @param int $productid id of the product
+	 *
+	 * @return array
+	 */
 	public function getImagesForProduct($productid)
 	{
 		$this->debug->guard(true);

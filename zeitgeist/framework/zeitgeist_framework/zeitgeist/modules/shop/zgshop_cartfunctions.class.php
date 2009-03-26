@@ -36,6 +36,15 @@ class zgshopCartfunctions
 	}
 
 
+	/**
+	 * Adds a given product in a given quantity to the cart
+	 * If no quantity is given, only one item of the product will be put into the cart
+	 *
+	 * @param int $productid id of the product to put into the cart
+	 * @param int $quantity quantity of product items to put into the cart
+	 *
+	 * @return boolean
+	 */
 	public function addToCart($productid, $quantity=1)
 	{
 		$this->debug->guard(true);
@@ -84,6 +93,16 @@ class zgshopCartfunctions
 	}
 
 
+	/**
+	 * Deletes a given quantity of a product from the cart
+	 * If no quantity is given, only one item of the product will be deleted from the cart
+	 * The number of items to delete is capped to the number currently in the cart
+	 *
+	 * @param int $productid id of the product to delete from the cart
+	 * @param int $quantity quantity of product items to delete from the cart
+	 *
+	 * @return boolean
+	 */
 	public function deleteFromCart($productid, $quantity=0)
 	{
 		$this->debug->guard(true);
@@ -137,6 +156,11 @@ class zgshopCartfunctions
 	}
 
 
+	/**
+	 * Clears all items from the cart
+	 *
+	 * @return boolean
+	 */
 	public function clearCart()
 	{
 		$this->debug->guard(true);
@@ -156,6 +180,11 @@ class zgshopCartfunctions
 	}
 
 
+	/**
+	 * Gets the complete contents of the cart as array of products
+	 *
+	 * @return array
+	 */
 	public function getCartContent()
 	{
 		$this->debug->guard(true);
