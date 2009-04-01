@@ -48,7 +48,7 @@ class lrAchievementfunctions
 		$achievements = array();
 		while($row = $this->database->fetchArray($res))
 		{
-			$achievements[] = $row;
+			$achievements[$row['userachievement_achievement']] = true;
 		}
 
 		$this->debug->unguard($achievements);
@@ -125,5 +125,36 @@ class lrAchievementfunctions
 
 		$this->debug->unguard(true);
 		return true;
-	}	
+	}
+
+
+	/**
+	 * Gets a list of all achievements
+	 *
+	 * @return array
+	 */
+	public function getAllAchievements()
+	{
+		$this->debug->guard();
+
+		$sql = "SELECT * FROM achievements";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not get list of achievements: could not get achievements from database', 'warning');
+			$this->messages->setMessage('Could not get list of achievements: could not get achievements from database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$achievements = array();
+		while ($row = $this->database->fetchArray($res))
+		{
+			$achievements[$row['achievement_id']] = $row;
+		}
+
+		$this->debug->unguard($achievements);
+		return $achievements;
+	}
+
 }

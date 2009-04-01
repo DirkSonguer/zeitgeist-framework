@@ -26,6 +26,10 @@ class testLrachievements extends UnitTestCase
 		$this->database->query('TRUNCATE TABLE race_to_users');
 		$this->database->query('TRUNCATE TABLE race_actions');
 
+		$playerid = rand(501,1000);
+		$session = zgSession::init();
+		$session->setSessionVariable('user_userid', $playerid);
+
 		$sql = "INSERT INTO `race_actions` (`raceaction_id`, `raceaction_race`, `raceaction_player`, `raceaction_action`, `raceaction_parameter`, `raceaction_timestamp`) VALUES";
 		$sql .= "(1, 1, 1, 1, '150,370', '2009-03-24 08:06:31'), (2, 1, 1, 1, '156,386', '2009-03-24 08:06:49'), (3, 1, 1, 1, '178,417', '2009-03-24 08:07:10'), (4, 1, 1, 1, '217,450', '2009-03-24 08:07:26'),";
 		$sql .= "(5, 1, 1, 1, '272,469', '2009-03-24 08:07:46'), (6, 1, 1, 1, '343,472', '2009-03-24 08:08:02'), (7, 1, 1, 4, '1', '2009-03-24 08:08:15'), (8, 1, 1, 1, '429,460', '2009-03-24 08:08:15'),";
@@ -36,16 +40,28 @@ class testLrachievements extends UnitTestCase
 		$sql .= "(25, 1, 1, 1, '135,344', '2009-03-24 08:10:45'), (26, 1, 1, 7, '1', '2009-03-24 08:10:52'), (27, 1, 1, 1, '124,414', '2009-03-24 08:10:52');";
 		$this->database->query($sql);
 		
-		$sql = "INSERT INTO `race_to_users_archive` (`raceuser_race`, `raceuser_user`, `raceuser_order`, `raceuser_assessed`) VALUES (1, 291, 1, 0);";
+		$sql = "INSERT INTO `race_to_users` (`raceuser_race`, `raceuser_user`, `raceuser_order`, `raceuser_assessed`) VALUES ('1', '" . $playerid . "', '1', '0');";
 		$this->database->query($sql);
-
 
 		$sql = "INSERT INTO achievements (achievement_name, achievement_description, achievement_image, achievement_level, achievement_reward, achievement_function) VALUES" ;
 		$sql .= "('test1', 'test one', '', '1', '2', 'fastround1')";
 		$this->database->query($sql);
 
+		$sql = "INSERT INTO achievements (achievement_name, achievement_description, achievement_image, achievement_level, achievement_reward, achievement_function) VALUES" ;
+		$sql .= "('test2', 'test two', '', '1', '4', 'fastround2')";
+		$this->database->query($sql);
+
+		$sql = "INSERT INTO achievements (achievement_name, achievement_description, achievement_image, achievement_level, achievement_reward, achievement_function) VALUES" ;
+		$sql .= "('test3', 'test three', '', '1', '8', 'fastround3')";
+		$this->database->query($sql);
+
 		$ret = $achievements->assessAchievements();
 		$this->assertTrue($ret);
+
+		$sql = "SELECT * FROM `race_to_users`WHERE raceuser_user='" . $playerid . "' AND raceuser_assessed='0'";
+		$res = $this->database->query($sql);
+		$ret = $this->database->numRows($res);
+		$this->assertEqual($ret, 0);
 	}
 
 }
