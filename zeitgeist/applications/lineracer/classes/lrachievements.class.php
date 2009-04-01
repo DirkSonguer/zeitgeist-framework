@@ -50,6 +50,8 @@ class lrAchievements
 			$this->debug->unguard(false);
 			return false;
 		}
+
+		$userachievements = $this->achievementfunctions->getPlayerAchievements();
 		
 		// iterate through all not assessed races
 		while($rowRaces = $this->database->fetchArray($resRaces))
@@ -72,43 +74,42 @@ class lrAchievements
 				$this->playermoves[] = $rowRacedata;
 			}
 
+			// TODO Kann man das nicht aus der Loop rausholen?
 			// get a list of all achievements
-			$sql = "SELECT * FROM achievements";
-			$res = $this->database->query($sql);
-			if (!$res)
-			{
-				$this->debug->write('Could not assess achievements: could not get achievement list from database', 'warning');
-				$this->messages->setMessage('Could not assess achievements: could not get achievement list from database', 'warning');
-				$this->debug->unguard(false);
-				return false;
-			}
-			
+			$achievementlist = $this->achievementfunctions->getAllAchievements();
+
 			// iterate through all achievements and check if the player has earned it
-			while($row = $this->database->fetchArray($res))
+			foreach($achievementlist as $achievementid => $achievement)
 			{
-				if (method_exists(&$this, $row['achievement_function']))
+				if (empty($userachievements[$achievementid]))
 				{
-					$achievementearned = call_user_func(array(&$this, $row['achievement_function']));
+					if (method_exists(&$this, $achievement['achievement_function']))
+					{
+						$achievementearned = call_user_func(array(&$this, $achievement['achievement_function']));
+					}
+					else	
+					{
+						$this->debug->write('Could not assess achievement ' . $achievement['achievement_id'] . ': achievement function does not exist', 'warning');
+						$this->messages->setMessage('Could not assess achievement ' . $achievement['achievement_id'] . ': achievement function does not exist', 'warning');
+					}
 				}
-				else	
+				else
 				{
-					$this->debug->write('Could not assess achievements: achievement function does not exist', 'warning');
-					$this->messages->setMessage('Could not assess achievements: achievement function does not exist', 'warning');
+					$this->debug->write('Could not assess achievement ' . $achievement['achievement_id'] . ': user already has the achievement', 'warning');
+					$this->messages->setMessage('Could not assess achievement ' . $achievement['achievement_id'] . ': user already has the achievement', 'warning');
 				}
 			}
 			
 			// done, now set the race as assessed
-/*
-			$sqlRaces = "SELECT * FROM race_to_users WHERE raceuser_user='" . $this->user->getUserID() . "' AND raceuser_assessed='0'";
-			$resRaces = $this->database->query($sqlRaces);
-			if ((!$resRaces) || ($this->database->numRows($resRaces) < 1))
+			$sqlUpdate = "UPDATE race_to_users SET raceuser_assessed = '1' WHERE raceuser_race='" . $rowRaces['raceuser_race'] . "'";
+			$resUpdate = $this->database->query($sqlUpdate);
+			if (!$resUpdate)
 			{
-				$this->debug->write('Could not assess achievements: could not find user races to assess in the database', 'warning');
-				$this->messages->setMessage('Could not assess achievements: could not find user races to assess in the database', 'warning');
+				$this->debug->write('Could not assess achievements: could not update game assesment information', 'warning');
+				$this->messages->setMessage('Could not assess achievements: could not update game assesment information', 'warning');
 				$this->debug->unguard(false);
 				return false;
 			}
-*/
 		}
 		
 		$this->debug->unguard(true);

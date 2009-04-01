@@ -109,6 +109,27 @@ class testLrachievementfunctions extends UnitTestCase
 		$ret = $achievementfunctions->getPlayerAchievements();
 		$this->assertEqual(count($ret), 2);
 	}	
+
+	function test_getAllAchievements()
+	{
+		$achievementfunctions = new lrAchievementfunctions();
+
+		$achievement1 = rand(100,300);
+		$achievement2 = rand(300,500);
+
+		$this->database->query('TRUNCATE TABLE achievements');
+
+		$ret = $achievementfunctions->getAllAchievements();
+		$this->assertEqual(count($ret), 0);
+
+		$this->database->query("INSERT INTO achievements(achievement_id, achievement_name, achievement_description, achievement_image, achievement_level, achievement_reward) VALUES('" . $achievement1 . "', 'test1', 'achievement1', '', '1', '2')");
+		$this->database->query("INSERT INTO achievements(achievement_id, achievement_name, achievement_description, achievement_image, achievement_level, achievement_reward) VALUES('" . $achievement2 . "', 'test2', 'achievement2', '', '1', '2')");
+
+		$ret = $achievementfunctions->getAllAchievements();
+		$this->assertEqual(count($ret), 2);
+		$this->assertEqual($ret[$achievement1]['achievement_name'], 'test1');
+	}
+
 }
 
 ?>
