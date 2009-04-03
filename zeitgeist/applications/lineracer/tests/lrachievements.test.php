@@ -62,6 +62,10 @@ class testLrachievements extends UnitTestCase
 		$res = $this->database->query($sql);
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 0);
+		
+		$achievementfunctions = new lrAchievementfunctions();
+		$ret = $achievementfunctions->getPlayerAchievements();
+		$this->assertEqual(count($ret), 2);
 	}
 
 }

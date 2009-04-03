@@ -35,6 +35,7 @@ class lrAchievements
 	 *
 	 * @return array
 	 */
+	// TODO Add transactions?
 	public function assessAchievements()
 	{
 		$this->debug->guard();
@@ -83,12 +84,20 @@ class lrAchievements
 			{
 				if (empty($userachievements[$achievementid]))
 				{
+					// user does not have the achievement yet
 					if (method_exists(&$this, $achievement['achievement_function']))
 					{
+						// check if achievement was earned
 						$achievementearned = call_user_func(array(&$this, $achievement['achievement_function']));
+						if ($achievementearned)
+						{
+							// add achievement to list
+							$this->achievementfunctions->addAchievement($achievement['achievement_id'], $rowRaces['raceuser_race']);
+						}
 					}
 					else	
 					{
+						// could not find achievement functions
 						$this->debug->write('Could not assess achievement ' . $achievement['achievement_id'] . ': achievement function does not exist', 'warning');
 						$this->messages->setMessage('Could not assess achievement ' . $achievement['achievement_id'] . ': achievement function does not exist', 'warning');
 					}
@@ -121,21 +130,49 @@ class lrAchievements
 	{
 		$this->debug->guard();
 
-		echo "1<br />";
+		$numberOfMoves = 0;
+		$moveaction = $this->configuration->getConfiguration('gamedefinitions', 'actions', 'move');
+		foreach ($this->playermoves as $move)
+		{
+			if ($move['raceaction_action'] == $moveaction)
+			{
+				$numberOfMoves++;
+			}
+		}
 
-		$this->debug->unguard(true);
-		return true;
+		if ($numberOfMoves < 50)
+		{
+			$this->debug->unguard(true);
+			return true;
+		}
+
+		$this->debug->unguard(false);
+		return false;
 	}
 	
 	
 	public function fastround2()
 	{
 		$this->debug->guard();
-		
-		echo "2<br />";
-		
-		$this->debug->unguard(true);
-		return true;
+
+		$numberOfMoves = 0;
+		$moveaction = $this->configuration->getConfiguration('gamedefinitions', 'actions', 'move');
+		foreach ($this->playermoves as $move)
+		{
+			if ($move['raceaction_action'] == $moveaction)
+			{
+				$numberOfMoves++;
+			}
+		}
+
+		if ($numberOfMoves < 35)
+		{
+			$this->debug->unguard(true);
+			return true;
+		}
+
+		$this->debug->unguard(false);
+		return false;
 	}
 
 
@@ -143,10 +180,24 @@ class lrAchievements
 	{
 		$this->debug->guard();
 
-		echo "3<br />";
-		
-		$this->debug->unguard(true);
-		return true;
+		$numberOfMoves = 0;
+		$moveaction = $this->configuration->getConfiguration('gamedefinitions', 'actions', 'move');
+		foreach ($this->playermoves as $move)
+		{
+			if ($move['raceaction_action'] == $moveaction)
+			{
+				$numberOfMoves++;
+			}
+		}
+
+		if ($numberOfMoves < 5)
+		{
+			$this->debug->unguard(true);
+			return true;
+		}
+
+		$this->debug->unguard(false);
+		return false;
 	}
 }
 
