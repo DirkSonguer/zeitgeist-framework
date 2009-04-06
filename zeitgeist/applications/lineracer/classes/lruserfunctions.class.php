@@ -265,5 +265,35 @@ class lrUserfunctions
 		return $ret;		
 	}
 
+
+	
+	/**
+	 * inserts a transaction for the player
+	 * transactions are permanent records of player actions
+	 *
+	 * @param integer $typeid id of the type to insert
+	 * @param string $value value of the transaction
+	 *
+	 * @return boolean
+	 */
+	public function insertTransaction($typeid, $value)
+	{
+		$this->debug->guard();
+
+		$sql = "INSERT INTO transactions(transaction_user, transaction_type, transaction_value) VALUES";
+		$sql .= "('" . $this->user->getUserID() . "', '" . $typeid . "', '" . $value . "')";
+		$resCircuits = $this->database->query($sql);
+		if(!$resCircuits)
+		{
+			$this->debug->write('Could not insert transaction: could not write to transaction table', 'warning');
+			$this->messages->setMessage('Could not insert transaction: could not write to transaction table', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;		
+	}
+
 }
 ?>

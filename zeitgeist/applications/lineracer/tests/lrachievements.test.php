@@ -58,7 +58,7 @@ class testLrachievements extends UnitTestCase
 		$ret = $achievements->assessAchievements();
 		$this->assertTrue($ret);
 
-		$sql = "SELECT * FROM `race_to_users`WHERE raceuser_user='" . $playerid . "' AND raceuser_assessed='0'";
+		$sql = "SELECT * FROM `race_to_users` WHERE raceuser_user='" . $playerid . "' AND raceuser_assessed='0'";
 		$res = $this->database->query($sql);
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 0);

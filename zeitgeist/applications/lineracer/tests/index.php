@@ -25,6 +25,7 @@
 	require_once('../classes/lruserfunctions.class.php');
 	require_once('../classes/lrtemplate.class.php');
 	require_once('../classes/lrgameeventhandler.class.php');
+	require_once('../classes/lrstatisticfunctions.class.php');
 	require_once('../classes/lrgamestates.class.php');
 	require_once('../classes/lrgamecardfunctions.class.php');
 	require_once('../classes/lrmovementfunctions.class.php');
@@ -63,6 +64,8 @@
 	require_once('lrlobbyfunctions.test.php');
 	require_once('lrachievements.test.php');
 	require_once('lrachievementfunctions.test.php');
+	require_once('lrallachievements.test.php');
+	require_once('lrstatisticfunctions.test.php');
 	
 	$user->logout();
 	$user->login('test1', 'test');
@@ -81,6 +84,8 @@
 	$test->addTestCase(new testLrlobbyfunctions());
 	$test->addTestCase(new testLrachievementfunctions());
 	$test->addTestCase(new testLrachievements());
+	$test->addTestCase(new testLrallachievements());
+	$test->addTestCase(new testLrstatisticfunctions());
 
 	$test->run(new HtmlReporter());
 

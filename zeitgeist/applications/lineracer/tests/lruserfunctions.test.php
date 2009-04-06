@@ -93,24 +93,30 @@ class testLruserfunctions extends UnitTestCase
 		unset($userfunctions);
 	}
 	
-/*
-	function test_getLobbyID()
+
+	function test_insertTransaction()
 	{
-		$lobbyfunctions = new lrLobbyfunctions();
+		$userfunctions = new lrUserfunctions();
 
-		$res = $this->database->query("TRUNCATE TABLE lobby");
-		$res = $this->database->query("TRUNCATE TABLE lobby_to_users");
+		$res = $this->database->query("TRUNCATE TABLE transactions");
 
-		$res = $this->database->query("INSERT INTO lobby(lobby_circuit, lobby_maxplayers, lobby_gamecardsallowed) VALUES('1', '2', '1')");
-		$ret = $lobbyfunctions->joinGameroom(1);
-		$this->assertEqual($ret, true);
 
-		$res = $lobbyfunctions->getLobbyID();
-		$this->assertEqual($ret, 1);
+		$playerid = rand(501,1000);
+		$session = zgSession::init();
+		$session->setSessionVariable('user_userid', $playerid);
 
-		unset($lobbyfunctions);
+		$transactionsid = rand(100, 1000);
+		$value = rand(100, 1000);
+		$ret = $userfunctions->insertTransaction($transactionsid, $value);
+
+		$res = $this->database->query("SELECT * FROM transactions");
+		$ret = $this->database->fetchArray($res);
+		$this->assertEqual($ret['transaction_user'], $playerid);
+		$this->assertEqual($ret['transaction_type'], $transactionsid);
+		$this->assertEqual($ret['transaction_value'], $value);
+
+		unset($userfunctions);
 	}
-*/
 }
 
 ?>
