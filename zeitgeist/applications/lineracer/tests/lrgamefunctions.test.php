@@ -67,7 +67,7 @@ class testLrgamefunctions extends UnitTestCase
 		$this->assertEqual($ret, 2);
 	}
 
-	function test_endRace()
+	function test_archiveRace()
 	{
 		$gamefunctions = new lrGamefunctions();
 		
@@ -81,7 +81,7 @@ class testLrgamefunctions extends UnitTestCase
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 1);
 
-		$ret = $gamefunctions->endRace();
+		$ret = $gamefunctions->archiveRace();
 		$this->assertTrue($ret);
 
 		$res = $this->database->query("SELECT * FROM races");

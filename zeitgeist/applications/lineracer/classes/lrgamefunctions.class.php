@@ -392,7 +392,7 @@ class lrGamefunctions
 	}
 
 
-	public function endRace()
+	public function archiveRace()
 	{
 		$this->debug->guard();
 
@@ -504,6 +504,16 @@ class lrGamefunctions
 		{
 			$this->debug->write('Could not end race: no active race for player found', 'warning');
 			$this->messages->setMessage('Could not end race: no active race for player found', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$achievements = new lrAchievements();
+		$ret = $achievements->assessAchievements();
+		if(!$ret)
+		{
+			$this->debug->write('Could not assess race: could not assess achievements', 'warning');
+			$this->messages->setMessage('Could not assess race: could not assess achievements', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
