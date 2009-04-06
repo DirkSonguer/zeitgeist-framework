@@ -173,6 +173,8 @@ class lrGamefunctions
 		// save race action and handle post turn events
 		$gameeventhandler->saveRaceaction($this->configuration->getConfiguration('gamedefinitions', 'actions', 'forfeit'), '1');
 		$this->endTurn();
+		
+		$this->lruser->insertTransaction($this->configuration->getConfiguration('gamedefinitions', 'transaction_types', 'race_forfeit'), 1);
 
 		$this->debug->unguard(true);
 		return true;
@@ -386,6 +388,8 @@ class lrGamefunctions
 			$this->debug->unguard(false);
 			return false;
 		}		
+
+		$this->lruser->insertTransaction($this->configuration->getConfiguration('gamedefinitions', 'transaction_types', 'race_start'), 1);
 		
 		$this->debug->unguard($raceid);
 		return $raceid;
@@ -580,6 +584,27 @@ class lrGamefunctions
 			}
 		}
 */
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function endRace()
+	{
+		$this->debug->guard();
+
+		// get race of the user
+		$raceid = $this->lruser->getUserRace();
+		if (!$raceid)
+		{
+			$this->debug->write('Could not end race: no active race for player found', 'warning');
+			$this->messages->setMessage('Could not end race: no active race for player found', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->lruser->insertTransaction($this->configuration->getConfiguration('gamedefinitions', 'transaction_types', 'race_finished'), 1);
+
 		$this->debug->unguard(true);
 		return true;
 	}

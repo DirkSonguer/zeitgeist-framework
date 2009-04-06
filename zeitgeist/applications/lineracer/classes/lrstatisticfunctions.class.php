@@ -82,7 +82,7 @@ class lrStatisticfunctions
 			return false;
 		}
 		
-		$this->lruser->insertTransaction($this->configuration->getConfiguration('gamedefinitions', 'transaction_types', 'add_racepoits'), $racepoints);
+		$this->lruser->insertTransaction($this->configuration->getConfiguration('gamedefinitions', 'transaction_types', 'racepoits_add'), $racepoints);
 
 		$this->debug->unguard(true);
 		return true;
@@ -110,7 +110,7 @@ class lrStatisticfunctions
 			return false;
 		}
 
-		$this->lruser->insertTransaction($this->configuration->getConfiguration('gamedefinitions', 'transaction_types', 'substract_racepoints'), $racepoints);
+		$this->lruser->insertTransaction($this->configuration->getConfiguration('gamedefinitions', 'transaction_types', 'racepoints_substract'), $racepoints);
 
 		$this->debug->unguard(true);
 		return true;
