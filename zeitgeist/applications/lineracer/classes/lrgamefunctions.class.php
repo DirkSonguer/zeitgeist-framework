@@ -495,7 +495,6 @@ class lrGamefunctions
 
 
 	// TODO: Punkteverteilung
-	// TODO: Achievements		
 	// TODO: Finish!
 	// TODO: Korrekt erstellen
 	public function assessRace()
@@ -522,68 +521,17 @@ class lrGamefunctions
 			return false;
 		}
 
-/*
-		
-		$raceGamestates = array();
-
-		// get race data from database
-		$sql = "SELECT * FROM races_archive r LEFT JOIN circuits c ON r.race_circuit = c.circuit_id WHERE r.race_id='" . $raceid . "'";
-		$res = $this->database->query($sql);
-		$row = $this->database->fetchArray($res);
-		if(!$row)
+		// done, now set the race as assessed
+		$sqlUpdate = "UPDATE race_to_users SET raceuser_assessed = '1' WHERE raceuser_race='" . $rowRaces['raceuser_race'] . "'";
+		$resUpdate = $this->database->query($sqlUpdate);
+		if (!$resUpdate)
 		{
-			$this->debug->write('Could not assess race: no race information found', 'warning');
-			$this->messages->setMessage('Could not assess race: no race information found', 'warning');
+			$this->debug->write('Could not assess achievements: could not update game assesment information', 'warning');
+			$this->messages->setMessage('Could not assess achievements: could not update game assesment information', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
 
-		// get player data from database
-		$sqlPlayers = "SELECT * FROM race_to_users_archive WHERE raceuser_race='" . $raceid . "'";
-		$resPlayers = $this->database->query($sqlPlayers);
-		while ($rowPlayers = $this->database->fetchArray($resPlayers))
-		{
-			$raceGamestates['players'][] = $rowPlayers['raceuser_user'];
-		}
-		$raceGamestates['numPlayers'] = count($raceGamestates['players']);
-
-		// fill structure
-		$raceGamestates['currentRace'] = $raceid;
-		$raceGamestates['currentCircuit'] = $row['race_circuit'];
-		$raceGamestates['currentRound'] = $row['race_currentround'];
-		$raceGamestates['currentPlayer'] = $row['race_activeplayer'];
-		$raceGamestates['currentRadius'] = $this->configuration->getConfiguration('gamedefinitions', 'gamelogic', 'movementradius');
-
-		// get raceaction from database
-		$sql = "SELECT * FROM race_actions WHERE raceaction_race='" . $raceid . "' ORDER BY raceaction_id";
-		$res = $this->database->query($sql);
-
-		// get player data
-		$raceGamestates['playerdata'] = array();
-		while ($row = $this->database->fetchArray($res))
-		{
-			// get all moves
-			if ($row['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'move'))
-			{
-				$position = explode(',',$row['raceaction_parameter']);
-				$raceGamestates['playerdata'][$row['raceaction_user']]['moves'][] = array($row['raceaction_action'], $row['raceaction_parameter']);
-			}
-
-			// get checkpoints
-			if ( ($row['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint1'))
-			|| ($row['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint2'))
-			|| ($row['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint3')) )
-			{
-				$raceGamestates['playerdata'][$row['raceaction_user']]['checkpoints'][$row['raceaction_parameter']] = true;
-			}
-
-			// see if player is finished
-			if ($row['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'finish'))
-			{
-				$raceGamestates['playerdata'][$row['raceaction_user']]['finished'] = true;
-			}
-		}
-*/
 		$this->debug->unguard(true);
 		return true;
 	}

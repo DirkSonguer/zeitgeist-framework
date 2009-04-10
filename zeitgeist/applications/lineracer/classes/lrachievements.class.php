@@ -108,18 +108,7 @@ class lrAchievements
 					$this->messages->setMessage('Could not assess achievement ' . $achievement['achievement_id'] . ': user already has the achievement', 'warning');
 				}
 			}
-			
-			// done, now set the race as assessed
-			$sqlUpdate = "UPDATE race_to_users SET raceuser_assessed = '1' WHERE raceuser_race='" . $rowRaces['raceuser_race'] . "'";
-			$resUpdate = $this->database->query($sqlUpdate);
-			if (!$resUpdate)
-			{
-				$this->debug->write('Could not assess achievements: could not update game assesment information', 'warning');
-				$this->messages->setMessage('Could not assess achievements: could not update game assesment information', 'warning');
-				$this->debug->unguard(false);
-				return false;
-			}
-		}
+					}
 		
 		$this->debug->unguard(true);
 		return true;
