@@ -108,6 +108,16 @@ class testLrgamefunctions extends UnitTestCase
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 2);
 	}
+
+
+	function test_assessRace()
+	{
+		$gamefunctions = new lrGamefunctions();
+		
+		$raceid = $this->miscfunctions->setupGame(1);
+		
+		// TODO: Test fertig stellen
+	}
 	
 
 	function test_forfeit()
