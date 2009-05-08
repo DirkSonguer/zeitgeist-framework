@@ -50,6 +50,7 @@ require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/eventhandler.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/template.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/trafficlogger.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/dataserver.class.php');
+require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/filehandler.class.php');
 
 // include modules
 require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/staticform/staticform.class.php');
