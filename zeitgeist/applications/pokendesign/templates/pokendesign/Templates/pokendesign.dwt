@@ -1,10 +1,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/pokendesign.dwt" codeOutsideHTMLIsLocked="false" -->
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<!-- InstanceBeginEditable name="doctitle" -->
-<title>Pocketkun</title>
-<!-- InstanceEndEditable -->
+<!-- TemplateBeginEditable name="doctitle" -->
+<title>Lineracer</title>
+<!-- TemplateEndEditable -->
 
 <link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/pokendesign.css" />
 
@@ -12,8 +12,9 @@
 
 </script>
 	
-<!-- InstanceBeginEditable name="head" -->
-<!-- InstanceEndEditable -->
+<!-- TemplateBeginEditable name="head" -->
+
+<!-- TemplateEndEditable -->
 </head>
 
 <body style="background: #1A1915 url(@@{templatepath}@@/images/bg_cafe.jpg) repeat fixed left top;">
@@ -43,29 +44,11 @@
 	</div>
 
 	<div id="content">
-	<!-- InstanceBeginEditable name="body" -->
+	<!-- TemplateBeginEditable name="body" -->
 
-		<p>Bitte melde dich an, um selbst Bilder hochladen zu können:</p>
+		<p>Haupttext</p>
 
-        <form method="post" action="@@{[main.login]}@@" name="login">
-        <table cellspacing="5">
-            <tr>
-                <td>Benutzername</td>
-                <td><input type="text" size="35" maxlength="20" name="username" class="formtext" style="width:200px; margin-right:10px;" /></td>
-            </tr>
-            <tr>
-                <td>Password</td>
-                <td><input type="password" size="35" maxlength="32" name="password" class="formtext" style="width:200px;" /></td>
-            </tr>
-            <tr>
-                <td colspan="2" align="right"><input type="submit" name="login" value="Login" class="formbutton" /></td>
-            </tr>
-        </table>
-        </form>
-        
-        <p>Wenn du noch kein Profil hast, kannst du dich <a href="@@{[main.register]}@@">hier registrieren</a>.</p>
-
-<!-- InstanceEndEditable -->
+	<!-- TemplateEndEditable -->
 	</div>
 
     
@@ -78,4 +61,4 @@
     </div>
 
 </body>
-<!-- InstanceEnd --></html>
+</html>

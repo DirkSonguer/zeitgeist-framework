@@ -1,15 +1,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/lineracer.dwt" codeOutsideHTMLIsLocked="false" -->
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/pokendesign.dwt" codeOutsideHTMLIsLocked="false" -->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Pocketkun - Menü</title>
+<title>Pokendesign</title>
 <!-- InstanceEndEditable -->
 
-<link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/pocketkun.css" />
+<link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/pokendesign.css" />
 
 <script language="javascript" type="text/javascript">
-
 
 </script>
 	
@@ -17,43 +16,59 @@
 <!-- InstanceEndEditable -->
 </head>
 
-<body>
+<body style="background: #1A1915 url(@@{templatepath}@@/images/bg_cafe.jpg) repeat fixed left top;">
 
 	<!-- TemplateBeginBlock name="usermessage" -->
-		<h3 class="usermessage"><img src="@@{templatepath}@@/nuvola/16x16/actions/ok.png" alt="" align="left" style="margin-right:5px;" /> @@{usermessage}@@</h3>
+		<h3 class="usermessage">@@{usermessage}@@</h3>
 	<!-- TemplateEndBlock -->
 
 	<!-- TemplateBeginBlock name="userwarnings" -->
-		<h3 class="userwarning"><img src="@@{templatepath}@@/nuvola/16x16/actions/messagebox_info.png" alt="" align="left" style="margin-right:5px;" /> @@{userwarning}@@</h3>
+		<h3 class="userwarning">@@{userwarning}@@</h3>
 	<!-- TemplateEndBlock -->
 
 	<!-- TemplateBeginBlock name="usererrors" -->
-		<h3 class="usererror"><img src="@@{templatepath}@@/nuvola/16x16/actions/no.png" alt="" align="left" style="margin-right:5px;" /> @@{usererror}@@</h3>
+		<h3 class="usererror">@@{usererror}@@</h3>
 	<!-- TemplateEndBlock -->
-
-	<h1>Pocketkun</h1>
 	
-<!-- InstanceBeginEditable name="body" -->
+    <div id="header">
+        <img alt="Poken" id="logo" src="@@{templatepath}@@/images/poken.png" />
+    
+        <!-- TemplateBeginBlock name="userunknown" -->
+                <div id="message">Willkommen auf Pokendesign! <a href="@@{[main.login]}@@">Du bist nicht eingeloggt..</a></div>
+        <!-- TemplateEndBlock -->
+    
+        <!-- TemplateBeginBlock name="userloggedin" -->
+                <div id="message">Hallo @@{username}@@, schön dich wieder zu sehen!</div>
+        <!-- TemplateEndBlock -->    
+	</div>
 
-		<div class="textbox" style="width:390px;">
-			<h2><a href="@@{[twitter.index]}@@">Twitter</a></h2>
-		</div>
+	<div id="content">
+	<!-- InstanceBeginEditable name="body" -->
 
-		<div class="textbox" style="width:390px;">
-			<h2><a href="@@{[twitpic.index]}@@">Twitpic</a></h2>
-		</div>
+        <h2>Pokendesign - die Plattform für Poken Visitenkarten</h2>
+        
+        <div style="background:#ffffff; width:400px; height:250px;">
+        Poken-Karte (Random)
+        </div>
 
-		<div class="textbox" style="width:390px;">
-			<h2><a href="@@{[flickr.index]}@@">Flickr</a></h2>
-		</div>
+        <form method="GET" action="@@{[main.search]}@@" name="login">
+            <h2>Suche
+            <input type="text" size="35" maxlength="20" name="q" class="formtext" style="width:250px; margin-right:10px;" />
+            <input type="submit" name="Suche" value="Suche" class="formbutton" />
+            </h2>
+        </form>
 
 <!-- InstanceEndEditable -->
+	</div>
 
-	<!-- TemplateBeginBlock name="logoutbox" -->
-		<div class="textbox" style="width:390px;">
-			<p><a href="@@{[main.logout]}@@">Ausloggen</a></p>
-		</div>
-	<!-- TemplateEndBlock -->	
+    
+    <div id="footer">
+        Ein Service von <a id="service" href="http://missionpoken.de/">missionpoken.de</a> und <a id="service" href="http://pokenpokes.de/">pokenpokes.de</a>
+    
+		<a id="impressum" href="http://missionpoken.de/impressum/">Impressum</a>
+		<a id="datenschutz" href="http://missionpoken.de/datenschutzerklaerung/">Datenschutzerklärung</a>
+		<a id="agb" href="http://missionpoken.de/agb-und-wiederrufsbelehrung-von-missionpokende/">AGB und Widerrufsbelehrung</a>
+    </div>
 
 </body>
 <!-- InstanceEnd --></html>

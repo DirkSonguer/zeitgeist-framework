@@ -68,11 +68,11 @@ class pdTemplate extends zgTemplate
 
 		if ($this->user->isLoggedIn())
 		{
-			parent::insertBlock('logoutbox');
+			parent::insertBlock('userloggedin');
 		}
 		else
 		{
-			parent::insertBlock('loginbox');
+			parent::insertBlock('userunknown');
 		}
 
 		$ret = parent::show();
