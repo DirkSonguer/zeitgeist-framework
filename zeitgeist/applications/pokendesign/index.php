@@ -59,14 +59,14 @@
 	{
 		$action = 'index';
 	}	
-		
+	/*
 	// test if user is logged in
 	if(!$user->establishUserSession())
 	{
 		$module = 'main';
 		$action = 'login';
 	}
-	
+	*/
 	// load event
 	$ret = $eventhandler->callEvent($module, $action);
 	
