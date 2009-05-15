@@ -16,7 +16,7 @@
 <!-- InstanceEndEditable -->
 </head>
 
-<body style="background: #1A1915 url(@@{templatepath}@@/images/bg_cafe.jpg) repeat fixed left top;">
+<body>
 
 	<!-- TemplateBeginBlock name="usermessage" -->
 		<h3 class="usermessage">@@{usermessage}@@</h3>
@@ -34,39 +34,54 @@
         <img alt="Poken" id="logo" src="@@{templatepath}@@/images/poken.png" />
     
         <!-- TemplateBeginBlock name="userunknown" -->
-                <div id="message">Willkommen auf Pokendesign! <a href="@@{[main.login]}@@">Du bist nicht eingeloggt..</a></div>
+                <div id="message">Willkommen auf Pokendesign!</div>
+				<div id="messageright"><a href="@@{[main.login]}@@">Du bist nicht eingeloggt..</a></div>
         <!-- TemplateEndBlock -->
     
         <!-- TemplateBeginBlock name="userloggedin" -->
                 <div id="message">Hallo @@{username}@@, schön dich wieder zu sehen!</div>
+				<div id="messageright"><a href="@@{[main.logout]}@@">Ausloggen</a></div>
         <!-- TemplateEndBlock -->    
+	</div>
+
+	<div id="menu">
+		<a href="@@{[main.index]}@@">Index</a>
+		<a href="@@{[cards.addcard]}@@">Add card</a>
 	</div>
 
 	<div id="content">
 	<!-- InstanceBeginEditable name="body" -->
-
-        <h2>Pokendesign - die Plattform für Poken Visitenkarten</h2>
         
-        <div style="background:#ffffff; width:400px; height:250px;">
-        Poken-Karte (Random)
-        </div>
+            <div id="cardoftheday">
+            <img src="@@{templatepath}@@/images/basic_poken_card.png" />
+            </div>
 
-        <form method="GET" action="@@{[main.search]}@@" name="login">
-            <h2>Suche
-            <input type="text" size="35" maxlength="20" name="q" class="formtext" style="width:250px; margin-right:10px;" />
-            <input type="submit" name="Suche" value="Suche" class="formbutton" />
-            </h2>
-        </form>
+			<div id="slogan">
+	        	<h1 style="margin-top:0px;">Hilf uns die Poken-Welt<br />bunter zu machen!</h1>
+
+                <form method="GET" action="@@{[main.search]}@@" name="login">
+                    <h2 id="search">Suche
+                    <input type="text" size="35" maxlength="20" name="q" class="searchfield" style="width:250px; margin-right:10px;" />
+                    <input type="submit" name="Suche" value="Suche" class="searchbutton" />
+                    </h2>
+                </form>
+            </div>
+            
+            <div style="clear:both"></div>
+
+			<div id="frontpageexpl">
+				<p>Pokendesign ist eine Plattform für Poken-Visitenkarten.</p>
+            </div>
+			
 
 <!-- InstanceEndEditable -->
-	</div>
 
+	</div>
     
     <div id="footer">
-        Ein Service von <a id="service" href="http://missionpoken.de/">missionpoken.de</a> und <a id="service" href="http://pokenpokes.de/">pokenpokes.de</a>
-    
-		<a id="impressum" href="http://missionpoken.de/impressum/">Impressum</a>
-		<a id="datenschutz" href="http://missionpoken.de/datenschutzerklaerung/">Datenschutzerklärung</a>
+        Ein Service von <a id="service" href="http://missionpoken.de/">missionpoken.de</a> und <a id="service" href="http://pokenpokes.de/">pokenpokes.de</a> - 
+		<a id="impressum" href="http://missionpoken.de/impressum/">Impressum</a> - 
+		<a id="datenschutz" href="http://missionpoken.de/datenschutzerklaerung/">Datenschutzerklärung</a> - 
 		<a id="agb" href="http://missionpoken.de/agb-und-wiederrufsbelehrung-von-missionpokende/">AGB und Widerrufsbelehrung</a>
     </div>
 
