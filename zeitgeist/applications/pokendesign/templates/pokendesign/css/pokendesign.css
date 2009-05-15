@@ -1,9 +1,9 @@
 body {
 	margin: 0;
 	padding: 0;
-	background: #1A1915 url(images/bg2.jpg) top left repeat fixed;
+	background-color: #ffffff;
 	font: 0.85em Tahoma, Arial, Helvetica, sans-serif; 
-	color: #CCCCCC; 
+	color: #000000; 
 	line-height: 18px;
 	font-size-adjust:none;
 	font-style:normal;
@@ -19,7 +19,7 @@ a, a:visited, a:active {
 
 p {
 	font: 0.85em Tahoma, Arial, Helvetica, sans-serif; 
-	color: #CCCCCC; 
+	color: #000000; 
 	line-height: 18px;
 	font-size-adjust:none;
 	font-style:normal;
@@ -30,10 +30,10 @@ p {
 }
 
 h1 {
-	font-family: Georgia, "Times New Roman", Times, serif;
+	font: 1em Tahoma, Arial, Helvetica, sans-serif; 
 	font-weight: normal;
 	font-size: 36px;
-	color: #FFFFFF;
+	color: #B74718;
 	margin: 35px 0 15px 0;
 	padding: 0;
 }
@@ -98,58 +98,84 @@ blockquote:before,blockquote:after,q:before,q:after {
 
 /*  LAYOUT  */
 
-#content
-{
-	float: left;
-	width: 920px;
-	background-color: transparent;
-	background-image: url(images/bg.png);
-	background-repeat: repeat;
-	background-attachment: scroll;
-	background-position: 0% 0%;
-	padding-top: 20px;
-	padding-right: 20px;
-	padding-bottom: 20px;
-	padding-left: 20px;
+#content {
+	text-align: left;
+	background-color: #ffffff;
+	margin-left: auto;
+	margin-right: auto;
+	width: 960px;
 }
 
 #header {
-	width:100%;
+	width: 100%;
 	height:50px;
-	text-align:center;
-	color:#ccc;
-}
-
-#logo {
-	position: absolute;
-	left: 19px;
-	top: 5px;
+	padding-left:15px;
+	padding-top: 15px;
+	background-color: #2d2113;
+	color:#cccccc;
 }
 
 #message {
 	text-align: left;
-	font-size: 18px;
-	color: #fff;
+	font-size: 24px;
+	color: #B74718;
 	position: absolute;
 	width: 850px;
+	top: 25px;
 	left: 73px;
-	margin-top: 13px;
+//	margin-top: -35px;
+//	margin-left: 90px;
 }
 
-#message a {
+#messageright {
+	text-align: right;
+	font-size: 24px;
+	color: #B74718;
+	position: absolute;
+	width: 95%;
+	top: 25px;
+//	left: 73px;
+//	margin-top: -35px;
+//	margin-right: 40px;
+}
+
+#message a, #messageright a {
 	background-color:#FFFFFC;
 	padding:2px 7px;
 	text-decoration: none;
 }
-
+/*
 #footer {
 	padding-top:12px;
+	background-color: #2d2113;
 	font-size: 12px;	
 	width:100%;
 	height:30px;
 	z-index:100;
 	text-align:center;
 	color:#ccc;
+}
+
+#footer a {
+	color: #fff;
+	text-decoration: underline;
+	padding: 0;
+	margin: 0;
+}
+*/
+#footer {
+	height: 25px;
+	z-index: 100;
+	width: 930px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 45px;
+	background-color: #2d2113;
+	color: #cccccc;
+	text-align: center;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	padding: 5px 0px 0px;
 }
 
 #footer a {
@@ -172,6 +198,37 @@ blockquote:before,blockquote:after,q:before,q:after {
 	#pokens .poken img {
 		display: block;
 	}
+
+/* PAGE SPECIFIC */
+	
+#cardcanvas {
+}
+
+#cardoftheday {
+	float:left;
+}
+
+#slogan {
+	margin-top:35px;
+	text-align:center;
+}
+
+#frontpageexpl {
+	margin-top:35px;
+}	
+
+#loginbox {
+	margin-top:15px;
+	margin-bottom:15px;
+}
+	
+#search {
+	margin-top:55px;
+}
+	
+#searchfield {
+	height:20px;
+}
 	
 #terms {
 	margin-top: 10px;

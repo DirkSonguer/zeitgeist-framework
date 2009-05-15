@@ -59,6 +59,9 @@
 	{
 		$action = 'index';
 	}	
+
+	$user->establishUserSession();
+
 	/*
 	// test if user is logged in
 	if(!$user->establishUserSession())
@@ -74,6 +77,7 @@
 	$debug->showInnerLoops = true;
 	$debug->showMiscInformation();
 	$debug->showDebugMessages();
+	$debug->showQueryMessages();
 	$debug->showGuardMessages();
 	
 ?>
