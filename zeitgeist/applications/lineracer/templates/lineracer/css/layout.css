@@ -1,0 +1,124 @@
+@charset "utf-8";
+/* CSS Document */
+body {
+	text-align:center;
+	margin:0 auto;
+	padding:0;
+	background-color:#151515;
+	background:url(../images/lineracer-body-bg.jpg) top left repeat;
+	font-family:Arial, Helvetica, sans-serif;
+}
+#canvas {
+	width:940px;
+	height:754px;
+	margin: 0 auto;
+	background:url(../images/lineracer-canvas-bg.jpg) top left no-repeat #990000;
+	text-align:left;
+	margin-left:auto;
+	margin-right:auto;
+}
+#header {
+	height:87px;
+	width:940px;
+}
+#logo {
+	float:left;
+	border:none;
+	margin: 15px 0 0 8px;
+}
+#content {
+	height:617px;
+	margin: 0 0 8px 0;
+	width:940px;
+	float:left;
+}
+#footer {
+	height: 42px;
+	background:url(../images/footer-bg.gif) top left no-repeat;
+	clear:both;
+}
+
+.loginarea {
+	width:326px;
+	height:49px;
+	float:right;
+	padding: 10px;
+	background:url(../images/loginarea-bg.gif) top left no-repeat;
+}
+.loginarea .avatar {
+	float:left;
+	margin:0 10px 0 0;
+	width:49px;
+	height:49px;
+}
+.loginarea .playerdata {
+	border-right: 1px solid #000000;
+	float:left;
+	width:240px;
+	height:100%;
+}
+.loginarea .options {
+	border-left: 1px solid #4c4c4c;
+	float:left;
+	height:100%;
+	width:80px;
+}
+.flasharea-default {
+	height:297px;
+	width:940px;
+	margin:0 0 8px 0;
+	float:left;
+}
+.leftbox-default {
+	width:562px;
+	height:296px;
+	float:left;
+	background:url(../images/leftbox-bg.gif) top left no-repeat;
+	padding:8px;
+}
+.rightbox-default {
+	width:338px;
+	height:296px;
+	float:left;
+	margin: 0 0 8px 8px;
+	background:url(../images/rightbox-bg.gif) top left no-repeat;
+	padding:8px;
+}
+.fullscreenbox {
+	width: 924px;
+	height:601px;
+	background:url(../images/fullscreen-bg.gif) top left no-repeat;
+	padding: 8px;
+	margin: 0 0 8px 0;
+}
+/*MAINTABS*/
+.maintabnav {list-style:none; padding:0; margin:60px 0 0 0; height:27px; background:url(tabs/backing.gif) repeat-x left bottom; float:left; position:relative; bottom:-2px}
+.maintabnav li {float:left; margin-right:-21px;}
+.maintabnav li a {display:block; position:relative; text-decoration:none;}
+.maintabnav li a em {display:block; height:27px; float:left; padding:0 33px 0 20px; background:url(../images/maintabs.gif) right top; position:relative; z-index:100; font-size:11px; font-weight:normal; font-style:normal; color:#828282; line-height:27px;}
+.maintabnav li a b {display:block; float:left; width:11px; height:27px; background:url(../images/maintabs.gif) left top; position:relative; z-index:200;}
+
+.maintabnav li a.m1 {z-index:600; margin-left:-1px}
+.maintabnav li a.m2 {z-index:500;}
+.maintabnav li a.m3 {z-index:400;}
+.maintabnav li a.m4 {z-index:300;}
+.maintabnav li a.m5 {z-index:200;}
+.maintabnav li a.m6 {z-index:100;}
+
+.maintabnav li a:hover {border:0; z-index:700; cursor:pointer;}
+.maintabnav li a:hover b {background-position: left center;}
+.maintabnav li a:hover em  {background-position: right center; color:#fff;}
+
+.maintabnav li a.selected, .maintabnav li a.selected:hover {border:0; z-index:800; cursor:default;}
+.maintabnav li a.selected b, .maintabnav li a.selected:hover b {background-position: left bottom;}
+.maintabnav li a.selected em, .maintabnav li a.selected:hover em  {background-position: right bottom; color:#fff;}
+
+/*RIGHTBOX*/
+
+.datatable { color:#FFFFFF; font-size:10px; text-transform:uppercase; width:100%; }
+.datatable th{text-align:left; font-weight:normal;}
+.datatable td{ padding:2px 5px;}
+.datatable .dark{ background-color:#1c1c1c;}
+.datatable .light{ background-color:#282828;}
+
+
