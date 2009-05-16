@@ -1,5 +1,50 @@
 @charset "UTF-8";
 
+/*Breiten und Höhen für kleine Tabsbox*/
+.smallTabs{
+	width:562px;
+	height:296px;
+	background:url(../images/tab-hor-bg.gif) top right no-repeat;
+}
+.smallTabs .TabbedPanelsTabGroup {
+	width: 170px;
+	height: 288px;
+}
+.smallTabs .TabbedPanelsContentGroup {
+	width: 362px;
+	height: 255px;
+}
+/*Breiten und Höhen für mittlere Tabsbox*/
+.mediumTabs{
+	width:562px;
+	height:386px;
+	background:url(../images/mediumTabs-bg.gif) top right no-repeat;
+}
+.mediumTabs .TabbedPanelsTabGroup {
+	width: 170px;
+	height: 378px;
+}
+.mediumTabs .TabbedPanelsContentGroup {
+	width: 362px;
+	height: 345px;
+}
+/*Breiten und Höhen für große Tabsbox*/
+.largeTabs{
+	width:924px;
+	height:601px;
+	background:url(../images/largeTabs-bg.gif) top right no-repeat;
+}
+.largeTabs .TabbedPanelsTabGroup {
+	width: 170px;
+	height: 601px;
+}
+.largeTabs .TabbedPanelsContentGroup {
+	width: 726px;
+	height: 560px;
+}
+
+
+
 
 .VTabbedPanels .TabbedPanelsTabGroup {
 	margin: 0px;
@@ -43,10 +88,7 @@
 
 .VTabbedPanels .TabbedPanelsTabGroup {
 	float: left;
-	width: 170px;
-	height: 288px;
 	position: relative;
-	background:url(../images/tab-hor-bg.gif) top left no-repeat;
 	padding: 8px 0 0 0;
 }
 
@@ -56,9 +98,7 @@
  * the TabGroup, and its top border from the TabGroup or tab button above it.
  */
 .VTabbedPanels{
-	background:url(../images/tab-hor-bg.gif) top right no-repeat;
-	width:562px;
-	height:296px;
+	
 }
 .VTabbedPanels .TabbedPanelsTab {
 	float: none;
@@ -98,8 +138,6 @@
 	float: left;
 	padding: 12px 10px;
 	margin: 7px 0 0 0;
-	width: 362px;
-	height: 255px;
 	background-color: #121212;
 	border-left:1px solid #323232;
 	border-right:1px solid #323232;

@@ -24,7 +24,7 @@ body {
 #logo {
 	float:left;
 	border:none;
-	margin: 15px 0 0 8px;
+	margin: 15px 0 7px 8px;
 }
 #content {
 	height:617px;
@@ -63,26 +63,44 @@ body {
 	height:100%;
 	width:80px;
 }
-.flasharea-default {
-	height:297px;
+
+.flasharea-default, .flasharea-user {
 	width:940px;
 	margin:0 0 8px 0;
 	float:left;
 }
-.leftbox-default {
+.flasharea-default {
+	height:297px;
+}
+.flasharea-user {
+	height:207px;
+}
+.leftbox-default, .leftbox-user {
 	width:562px;
-	height:296px;
 	float:left;
+	padding:8px;
+}
+.leftbox-default {
+	height:296px;
 	background:url(../images/leftbox-bg.gif) top left no-repeat;
+}
+.leftbox-user {
+	height:386px;
+	background:url(../images/leftbox-user-bg.gif) top left no-repeat;
+}
+.rightbox-default, .rightbox-user {
+	width:338px;
+	float:left;
+	margin: 0 0 8px 8px;
 	padding:8px;
 }
 .rightbox-default {
-	width:338px;
 	height:296px;
-	float:left;
-	margin: 0 0 8px 8px;
 	background:url(../images/rightbox-bg.gif) top left no-repeat;
-	padding:8px;
+}
+.rightbox-user {
+	height:386px;
+	background:url(../images/rightbox-user-bg.gif) top left no-repeat;
 }
 .fullscreenbox {
 	width: 924px;

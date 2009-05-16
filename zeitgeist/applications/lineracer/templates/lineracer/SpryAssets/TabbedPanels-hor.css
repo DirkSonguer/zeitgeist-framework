@@ -1,12 +1,22 @@
 @charset "UTF-8";
+.smallHorTabs .TabbedPanelsContentGroup {
+	background:url(../images/tab-vert-bg.gif) top left no-repeat;
+	width:318px;
+	height:254px;
+}
+.mediumHorTabs .TabbedPanelsContentGroup {
+	background:url(../images/tab-vert-user-bg.gif) top left no-repeat;
+	width:318px;
+	height:344px;
+}
+
 
 .TabbedPanels {
-	margin: -1px 0 0 0;
+	margin: 0 0 0 0;
 	padding: 0px;
 	float: left;
 	clear: none;
 	width: 338px; /* IE Hack to force proper layout when preceded by a paragraph. (hasLayout Bug)*/
-	
 }
 .TabbedPanelsTabGroup {
 	margin:0;
@@ -19,7 +29,6 @@
 	-moz-user-select: none;
 	-khtml-user-select: none;
 	cursor: pointer;
-	
 	background:url(../images/tab3.gif) top right no-repeat;
 	height:23px;
 	margin: 0 -15px -1px 0;
@@ -64,11 +73,8 @@
 
 .TabbedPanelsContentGroup {
 	clear: both;
-	background:url(../images/tab-vert-bg.gif) top left no-repeat;
-	margin: -1px 0 0 0;
+	margin: 0 0 0 0;
 	padding:10px;
-	width:318px;
-	height:254px;
 }
 
 .TabbedPanelsContent {
