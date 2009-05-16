@@ -92,9 +92,14 @@ label {
 }
 
 /*BUTTONS*/
+.left {
+	float:left;
+}
+.right {
+	float:right;
+}
 .btn01 {
 	display:block;
-	float:right;
 	line-height:25px;
 	background:url(../images/btn01-left.gif) top left no-repeat;
 	padding: 0 0 0 10px;
@@ -115,4 +120,33 @@ label {
 .btn01:hover span{
 	background:url(../images/btn01-right_over.gif) top right no-repeat;
 	color:#ffffff;
+}
+/*KARTENPACKS*/
+.kartenpack {
+	height:220px;
+	width:334px;
+	background-color:#CCCCCC;
+	margin: 8px;
+	padding:0;
+	float:left;
+}
+.blue {
+	background: url(../images/kartenpack-blue-bg.gif) top left no-repeat;
+}
+
+.packimage {
+	width:145px;
+	height:190px;
+	float:left;
+	margin: 10px 10px 0px 10px;
+}
+.packdescription {
+	float:left;
+	font-size:11px;
+	float:left;
+	width:155px;
+	height:140px;
+	margin: 35px 0 0 0;
+	line-height:1.2em;
+	color:#cccccc;
 }
