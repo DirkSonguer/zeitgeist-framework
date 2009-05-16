@@ -18,7 +18,7 @@ a, a:visited, a:active {
 }
 
 p {
-	font: 0.85em Tahoma, Arial, Helvetica, sans-serif; 
+	font: 1em Tahoma, Arial, Helvetica, sans-serif; 
 	color: #000000; 
 	line-height: 18px;
 	font-size-adjust:none;
@@ -79,9 +79,6 @@ h4 a:hover {
 	text-decoration: underline;
 }
 
-img {
-	border: 0;
-}
 
 ol,ul {
 	list-style:none
@@ -103,66 +100,49 @@ blockquote:before,blockquote:after,q:before,q:after {
 	background-color: #ffffff;
 	margin-left: auto;
 	margin-right: auto;
-	width: 960px;
+	width: 900px;
 }
 
 #header {
 	width: 100%;
-	height:50px;
-	padding-left:15px;
-	padding-top: 15px;
+	height:100px;
+	padding-top: 1px;
 	background-color: #2d2113;
 	color:#cccccc;
 }
 
-#message {
+#menu {
+	width: 930px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#welcomemessage {
 	text-align: left;
-	font-size: 24px;
+	font-size: 20px;
+	line-height:25px;
 	color: #B74718;
-	position: absolute;
-	width: 850px;
-	top: 25px;
-	left: 73px;
-//	margin-top: -35px;
-//	margin-left: 90px;
+	margin-top:0px;
 }
 
-#messageright {
-	text-align: right;
-	font-size: 24px;
+#mainmenu {
+	text-align: left;
+	font-size: 16px;
+	line-height:25px;
 	color: #B74718;
-	position: absolute;
-	width: 95%;
-	top: 25px;
-//	left: 73px;
-//	margin-top: -35px;
-//	margin-right: 40px;
+	margin-top:10px;
 }
 
-#message a, #messageright a {
+#mainmenu a {
 	background-color:#FFFFFC;
 	padding:2px 7px;
 	text-decoration: none;
 }
-/*
-#footer {
-	padding-top:12px;
-	background-color: #2d2113;
-	font-size: 12px;	
-	width:100%;
-	height:30px;
-	z-index:100;
-	text-align:center;
-	color:#ccc;
+
+#logo {
+	margin-top:0px;
 }
 
-#footer a {
-	color: #fff;
-	text-decoration: underline;
-	padding: 0;
-	margin: 0;
-}
-*/
 #footer {
 	height: 25px;
 	z-index: 100;
@@ -185,27 +165,33 @@ blockquote:before,blockquote:after,q:before,q:after {
 	margin: 0;
 }
 
-#pokens {
-	width: 520px;
-}
-
-	#pokens .poken {
-		margin-top: 5px;
-		float: left;
-		width: 90px;
-	}
-	
-	#pokens .poken img {
-		display: block;
-	}
-
 /* PAGE SPECIFIC */
 	
-#cardcanvas {
-}
-
 #cardoftheday {
 	float:left;
+}
+
+#pokenheadline {
+	font-weight:bold;
+	color: #B74718;
+	margin-top:5px;
+	margin-bottom:0px;
+}
+
+#pokendate {
+	color: #B74718;
+	margin-top:0px;
+	margin-left:7px;
+	margin-bottom:10px;
+	font-size:10pt;
+}
+
+#pokencard {
+	float:left;
+	width: 330px;
+	margin-left:20px;
+	margin-right:20px;
+	margin-bottom:20px;
 }
 
 #slogan {

@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Pokendesign - Visitenkarte hochladen</title>
+<title>Pokendesign</title>
 <!-- InstanceEndEditable -->
 
 <link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/pokendesign.css" />
@@ -66,30 +66,26 @@
 
 	<div id="content">
 	<!-- InstanceBeginEditable name="body" -->
-
-		<h2>Bitte gebe die Daten deiner neuen Visitenkarte ein:</h2>
-
-		<form method="post" action="@@{[cards.addcard]}@@" name="login">
-		<table cellspacing="5">
-			<tr>
-				<td>Titel deiner Karte</td>
-				<td><input type="text" size="35" maxlength="20" name="username" class="formtext" style="width:200px; margin-right:10px;" /></td>
-			</tr>
-			<tr>
-				<td>Beschreibung</td>
-				<td><input type="password" size="35" maxlength="32" name="password" class="formtext" style="width:200px;" /></td>
-			</tr>
-			<tr>
-				<td>Passende Tags</td>
-				<td><input type="text" size="35" maxlength="20" name="username" class="formtext" style="width:200px; margin-right:10px;" /></td>
-			</tr>
-			<tr>
-				<td colspan="2" align="right"><input type="submit" name="login" value="Login" class="formbutton" /></td>
-			</tr>
-		</table>
-		</form>
+    
+	<!-- TemplateBeginBlock name="authornolink" -->
+    	<h2>Übersicht der Karten von "@@{authorname}@@"</h2>
+	<!-- TemplateEndBlock -->
 		
-		<p>Wenn du noch kein Profil hast, kannst du dich <a href="@@{[main.register]}@@">hier registrieren</a>.</p>
+	<!-- TemplateBeginBlock name="authorwithlink" -->
+    	<h2>Übersicht der Karten von "<a href="@@{authorlink}@@" target="_blank">@@{authorname}@@</a>"</h2>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="cardlist" -->
+        <div id="pokencard">
+            <p id="pokenheadline">"@@{cardtitle}@@"</p>
+            <p id="pokendate">hochgeladen am @@{carddate}@@</p>
+            <img src="@@{basepath}@@/uploads/@@{cardfile}@@" />
+            <p>@@{carddescription}@@</p>
+        </div>
+	<!-- TemplateEndBlock -->
+    
+	<div style="clear:both"></div>
+    
 
 <!-- InstanceEndEditable -->
 
