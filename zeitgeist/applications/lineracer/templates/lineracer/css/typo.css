@@ -1,0 +1,117 @@
+@charset "utf-8";
+/* CSS Document */
+
+body {
+	font-size:11px;
+	line-height:1.5em;
+	color:#dddddd;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: helvetica, arial, verdana, sans-serif;
+	font-weight: normal;
+}
+
+h1 {
+	font-size: 218%;
+	margin:0 0 10px 0;
+	padding:0 0 7px 0;
+	border-bottom:1px dashed #ffffff;
+}
+
+h2 {
+	font-size: 164%;
+}
+
+h3 {
+	font-size: 145%;
+}
+
+h4 {
+	font-size: 118%;
+}
+
+.talkitem {
+	padding: 0 0 20px 0;
+}
+.talkitem span{
+	font-size:10px;
+}
+.talkitem p{
+	margin:0;
+	padding:0;
+}
+.screenshot {
+	width:83px;
+	height:83px;
+	background:url(../images/screenshot-bg.gif) top left no-repeat;
+	padding: 6px;
+	margin: 0 16px 16px 0;
+	float:left;
+}
+/*ANMELDEFORMULAR*/
+#registerform{
+	width:298px;
+}
+#registerform label {
+	width:100px;
+}
+/*LOGINFORM*/
+#loginform {
+}
+#loginform label{
+	width:60px;
+}
+/*FORMULARELEMENTE ALLGEMEIN*/
+label {
+	float:left;
+	text-align:right;
+	padding: 0 5px 0 0;
+	clear:left;
+	margin: 0 0 10px 0;
+}
+.txtbig, .txtnormal, .txtsmall, .selectmenue{
+	border:1px solid #000000;
+	background:url(../images/text.bg.gif) bottom left repeat-x #1b1b1b;
+	float:left;
+	color:#cf6c35;
+}
+.txtbig:focus, .txtnormal:focus, .txtsmall:focus, .selectmenue:focus{
+	border:1px solid #cf6c35;
+}
+.txtbig {
+	width:190px;
+}
+.txtnormal {
+	width:126px;
+}
+.txtsmall {
+	width:25px;
+	margin: 0 5px 0 0;
+}
+
+/*BUTTONS*/
+.btn01 {
+	display:block;
+	float:right;
+	line-height:25px;
+	background:url(../images/btn01-left.gif) top left no-repeat;
+	padding: 0 0 0 10px;
+	text-decoration:none;
+	margin: 0 0 3px 0;
+}
+.btn01 span{
+	display:block;
+	float:left;
+	line-height:25px;
+	background:url(../images/btn01-right.gif) top right no-repeat;
+	padding: 0 10px 0 0;
+	color:#ababab;
+}
+.btn01:hover {
+	background:url(../images/btn01-left_over.gif) top left no-repeat;
+}
+.btn01:hover span{
+	background:url(../images/btn01-right_over.gif) top right no-repeat;
+	color:#ffffff;
+}
