@@ -18,6 +18,40 @@
 
 <body>
 
+	<div id="header">
+    <div id="menu">
+    	<table border="0">
+        <tr><td>
+		<img alt="Poken" id="logo" src="@@{templatepath}@@/images/logo_poken.png" />
+        </td><td>
+	
+		<!-- TemplateBeginBlock name="userunknown" -->
+				<div id="welcomemessage">Willkommen auf Pokendesign!</div>
+                <div id="mainmenu">
+   				<a href="@@{[main.index]}@@">Home</a>
+				<a href="@@{[main.overview]}@@">Karten entdecken</a>
+				<a href="@@{[main.login]}@@">Karte hinzufügen</a>
+				<a href="@@{[main.login]}@@">Du bist nicht eingeloggt..</a>
+                </div>
+		<!-- TemplateEndBlock -->
+	
+		<!-- TemplateBeginBlock name="userloggedin" -->
+				<div id="welcomemessage">Hallo @@{username}@@, schön dich wieder zu sehen!</div>
+                <div id="mainmenu">
+   				<a href="@@{[main.index]}@@">Home</a>
+				<a href="@@{[main.overview]}@@">Karten entdecken</a>
+				<a href="@@{[cards.index]}@@">Deine Karten</a>
+				<a href="@@{[cards.addcard]}@@">Karte hinzufügen</a>
+				<a href="@@{[cards.editcard]}@@">Karten bearbeiten</a>
+				<a href="@@{[main.logout]}@@">Ausloggen</a>
+                </div>
+		<!-- TemplateEndBlock -->
+        
+        </td>
+        </tr></table>
+    </div>
+	</div>
+
 	<!-- TemplateBeginBlock name="usermessage" -->
 		<h3 class="usermessage">@@{usermessage}@@</h3>
 	<!-- TemplateEndBlock -->
@@ -29,25 +63,6 @@
 	<!-- TemplateBeginBlock name="usererrors" -->
 		<h3 class="usererror">@@{usererror}@@</h3>
 	<!-- TemplateEndBlock -->
-	
-    <div id="header">
-        <img alt="Poken" id="logo" src="@@{templatepath}@@/images/poken.png" />
-    
-        <!-- TemplateBeginBlock name="userunknown" -->
-                <div id="message">Willkommen auf Pokendesign!</div>
-				<div id="messageright"><a href="@@{[main.login]}@@">Du bist nicht eingeloggt..</a></div>
-        <!-- TemplateEndBlock -->
-    
-        <!-- TemplateBeginBlock name="userloggedin" -->
-                <div id="message">Hallo @@{username}@@, schön dich wieder zu sehen!</div>
-				<div id="messageright"><a href="@@{[main.logout]}@@">Ausloggen</a></div>
-        <!-- TemplateEndBlock -->    
-	</div>
-
-	<div id="menu">
-		<a href="@@{[main.index]}@@">Index</a>
-		<a href="@@{[cards.addcard]}@@">Add card</a>
-	</div>
 
 	<div id="content">
 	<!-- InstanceBeginEditable name="body" -->
@@ -55,34 +70,34 @@
 		<h2>Anmeldung</h2>
 		<p>Das Suchen und Herunterladen von Visitenkarten ist möglich ohne sich zu registrieren. Um allerdings selbst Bilder hochladen zu können, musst du dich anmelden:</p>
 
-        <form method="post" action="@@{[main.login]}@@" name="login">
-        <table cellspacing="5" id="loginbox">
-            <tr>
-                <td>Benutzername</td>
-                <td><input type="text" size="35" maxlength="20" name="username" class="formtext" style="width:200px; margin-right:10px;" /></td>
-            </tr>
-            <tr>
-                <td>Password</td>
-                <td><input type="password" size="35" maxlength="32" name="password" class="formtext" style="width:200px;" /></td>
-            </tr>
-            <tr>
-                <td colspan="2" align="right"><input type="submit" name="login" value="Login" class="formbutton" /></td>
-            </tr>
-        </table>
-        </form>
-        
-        <p>Wenn du noch nicht bei Pokendesign registriert bist, kannst du das <a href="@@{[main.register]}@@">hier tun</a>. Danach kannst du beliebig viele Visitenkarten hochladen.</p>
+		<form method="post" action="@@{[main.login]}@@" name="login">
+		<table cellspacing="5" id="loginbox">
+			<tr>
+				<td>Benutzername</td>
+				<td><input type="text" size="35" maxlength="20" name="username" class="formtext" style="width:200px; margin-right:10px;" /></td>
+			</tr>
+			<tr>
+				<td>Password</td>
+				<td><input type="password" size="35" maxlength="32" name="password" class="formtext" style="width:200px;" /></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="right"><input type="submit" name="login" value="Login" class="formbutton" /></td>
+			</tr>
+		</table>
+		</form>
+		
+		<p>Wenn du noch nicht bei Pokendesign registriert bist, kannst du das <a href="@@{[main.register]}@@">hier tun</a>. Danach kannst du beliebig viele Visitenkarten hochladen.</p>
 
 <!-- InstanceEndEditable -->
 
 	</div>
-    
-    <div id="footer">
-        Ein Service von <a id="service" href="http://missionpoken.de/">missionpoken.de</a> und <a id="service" href="http://pokenpokes.de/">pokenpokes.de</a> - 
+	
+	<div id="footer">
+		Ein Service von <a id="service" href="http://missionpoken.de/">missionpoken.de</a> und <a id="service" href="http://pokenpokes.de/">pokenpokes.de</a> - 
 		<a id="impressum" href="http://missionpoken.de/impressum/">Impressum</a> - 
 		<a id="datenschutz" href="http://missionpoken.de/datenschutzerklaerung/">Datenschutzerklärung</a> - 
 		<a id="agb" href="http://missionpoken.de/agb-und-wiederrufsbelehrung-von-missionpokende/">AGB und Widerrufsbelehrung</a>
-    </div>
+	</div>
 
 </body>
 <!-- InstanceEnd --></html>

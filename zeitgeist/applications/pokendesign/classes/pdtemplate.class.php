@@ -8,8 +8,8 @@
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
  *
- * @package ZEITGEIST
- * @subpackage ZEITGEIST TEMPLATE
+ * @package POKENDESIGN
+ * @subpackage POKENDESIGN TEMPLATE
  */
 
 defined('POKENDESIGN_ACTIVE') or die();

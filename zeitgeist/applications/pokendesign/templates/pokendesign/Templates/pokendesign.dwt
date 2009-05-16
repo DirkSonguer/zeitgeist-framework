@@ -19,6 +19,40 @@
 
 <body>
 
+	<div id="header">
+    <div id="menu">
+    	<table border="0">
+        <tr><td>
+		<img alt="Poken" id="logo" src="@@{templatepath}@@/images/logo_poken.png" />
+        </td><td>
+	
+		<!-- TemplateBeginBlock name="userunknown" -->
+				<div id="welcomemessage">Willkommen auf Pokendesign!</div>
+                <div id="mainmenu">
+   				<a href="@@{[main.index]}@@">Home</a>
+				<a href="@@{[main.overview]}@@">Karten entdecken</a>
+				<a href="@@{[main.login]}@@">Karte hinzufügen</a>
+				<a href="@@{[main.login]}@@">Du bist nicht eingeloggt..</a>
+                </div>
+		<!-- TemplateEndBlock -->
+	
+		<!-- TemplateBeginBlock name="userloggedin" -->
+				<div id="welcomemessage">Hallo @@{username}@@, schön dich wieder zu sehen!</div>
+                <div id="mainmenu">
+   				<a href="@@{[main.index]}@@">Home</a>
+				<a href="@@{[main.overview]}@@">Karten entdecken</a>
+				<a href="@@{[cards.index]}@@">Deine Karten</a>
+				<a href="@@{[cards.addcard]}@@">Karte hinzufügen</a>
+				<a href="@@{[cards.editcard]}@@">Karten bearbeiten</a>
+				<a href="@@{[main.logout]}@@">Ausloggen</a>
+                </div>
+		<!-- TemplateEndBlock -->
+        
+        </td>
+        </tr></table>
+    </div>
+	</div>
+
 	<!-- TemplateBeginBlock name="usermessage" -->
 		<h3 class="usermessage">@@{usermessage}@@</h3>
 	<!-- TemplateEndBlock -->
@@ -30,25 +64,6 @@
 	<!-- TemplateBeginBlock name="usererrors" -->
 		<h3 class="usererror">@@{usererror}@@</h3>
 	<!-- TemplateEndBlock -->
-	
-    <div id="header">
-        <img alt="Poken" id="logo" src="@@{templatepath}@@/images/poken.png" />
-    
-        <!-- TemplateBeginBlock name="userunknown" -->
-                <div id="message">Willkommen auf Pokendesign!</div>
-				<div id="messageright"><a href="@@{[main.login]}@@">Du bist nicht eingeloggt..</a></div>
-        <!-- TemplateEndBlock -->
-    
-        <!-- TemplateBeginBlock name="userloggedin" -->
-                <div id="message">Hallo @@{username}@@, schön dich wieder zu sehen!</div>
-				<div id="messageright"><a href="@@{[main.logout]}@@">Ausloggen</a></div>
-        <!-- TemplateEndBlock -->    
-	</div>
-
-	<div id="menu">
-		<a href="@@{[main.index]}@@">Index</a>
-		<a href="@@{[cards.addcard]}@@">Add card</a>
-	</div>
 
 	<div id="content">
 	<!-- TemplateBeginEditable name="body" -->
@@ -58,13 +73,13 @@
 	<!-- TemplateEndEditable -->
 
 	</div>
-    
-    <div id="footer">
-        Ein Service von <a id="service" href="http://missionpoken.de/">missionpoken.de</a> und <a id="service" href="http://pokenpokes.de/">pokenpokes.de</a> - 
+	
+	<div id="footer">
+		Ein Service von <a id="service" href="http://missionpoken.de/">missionpoken.de</a> und <a id="service" href="http://pokenpokes.de/">pokenpokes.de</a> - 
 		<a id="impressum" href="http://missionpoken.de/impressum/">Impressum</a> - 
 		<a id="datenschutz" href="http://missionpoken.de/datenschutzerklaerung/">Datenschutzerklärung</a> - 
 		<a id="agb" href="http://missionpoken.de/agb-und-wiederrufsbelehrung-von-missionpokende/">AGB und Widerrufsbelehrung</a>
-    </div>
+	</div>
 
 </body>
 </html>
