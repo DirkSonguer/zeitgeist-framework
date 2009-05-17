@@ -103,7 +103,7 @@ class pdCards
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT * FROM userdata WHERE userdata_user='" . $author . "'";
+		$sql = "SELECT ud.*, u.user_username FROM userdata ud LEFT JOIN users u ON ud.userdata_user = u.user_id WHERE userdata_user='" . $author . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{

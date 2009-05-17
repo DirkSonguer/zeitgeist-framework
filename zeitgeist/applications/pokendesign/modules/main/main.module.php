@@ -111,7 +111,7 @@ class main
 		if (!$authordata) $tpl->redirect($tpl->createLink('main', 'index'));
 		
 		$tpl->assign('authorname', $authordata['userdata_username']);
-		$tpl->assign('gravatar', md5($this->user->getUsername()));
+		$tpl->assign('gravatar', md5($authordata['user_username']));
 		if ($authordata['userdata_url'] != '')
 		{
 			$tpl->assign('authorlink', $authordata['userdata_url']);
@@ -202,12 +202,12 @@ class main
 				}
 				else
 				{
-					$this->messages->setMessage('Der Benutzername und/oder das Passwort wurde nicht korrekt angegeben. Bitte geben Sie Ihren Benutzernamen und Ihr Passwort sorgf�ltig ein.', 'userwarning');
+					$this->messages->setMessage('Der Benutzername und/oder das Passwort wurde nicht korrekt angegeben. Bitte geben Sie Ihren Benutzernamen und Ihr Passwort sorgfältig ein.', 'userwarning');
 				}
 			}
 			else
 			{
-				$this->messages->setMessage('Bitte geben Sie einen g�ltigen Benutzernamen und das dazugeh�rige Passwort ein.', 'userwarning');
+				$this->messages->setMessage('Bitte geben Sie einen gültigen Benutzernamen und das dazugehörige Passwort ein.', 'userwarning');
 			}
 		}
 
@@ -249,20 +249,42 @@ class main
 		{
 			if ($formvalid)
 			{
-				$carddata = $parameters['addcard'];
-/*
-				if ($this->cards->addCard($carddata))
+				$newUser = $parameters['register'];
+				$registerProblems = false;
+
+				if ($newUser['user_password1'] != $newUser['user_password2'])
 				{
-					$this->messages->setMessage('Die neue Visitenkarte wurden gespeichert.', 'usermessage');
-					$tpl = new pdTemplate();
-					$tpl->redirect($tpl->createLink('main', 'index'));
-					return true;
+					$registerForm->validateElement('user_password1', false);
+					$registerForm->validateElement('user_password2', false);
+					$this->messages->setMessage('Die beiden Passworteingaben stimmen nicht überein.', 'userwarning');
+					$registerProblems = true;
 				}
-				else
+
+				$userdata = array();
+				if (!empty($newUser['userdata_username'])) $userdata['userdata_username'] = $newUser['userdata_username'];
+				if (!empty($newUser['userdata_url'])) $userdata['userdata_url'] = $newUser['userdata_url'];
+
+				if (!$registerProblems)
 				{
-					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator.', 'usererror');
+					$userfunctions = new pdUserfunctions();
+					if ($userfunctions->createUser($newUser['user_username'], $newUser['user_password1'], $userdata))
+					{
+						$this->messages->setMessage('Dein Benutzer wurde angelegt. Du erhälst gleich eine Email, mit der du den Benutzer aktivieren kannst.', 'usermessage');
+						$tpl->redirect($tpl->createLink('main', 'index'));
+					}
+					else
+					{
+						$messages = $this->messages->getAllMessages('userhandler.class.php');
+						
+						foreach ($messages as $message)
+						if ($message->message == 'A user with this name already exists in the database. Please choose another username.')
+						{
+							$this->messages->setMessage('Die EMail ist bereits registriert. Bitte wähle eine andere.', 'userwarning');
+						}
+							
+						$this->messages->setMessage('Der Benutzer wurde nicht angelegt', 'userwarning');
+					}
 				}
-*/				
 			}
 			else
 			{
