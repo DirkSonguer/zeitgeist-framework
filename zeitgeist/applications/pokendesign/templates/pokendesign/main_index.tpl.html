@@ -42,7 +42,6 @@
 				<a href="@@{[main.overview]}@@">Karten entdecken</a>
 				<a href="@@{[cards.index]}@@">Deine Karten</a>
 				<a href="@@{[cards.addcard]}@@">Karte hinzufügen</a>
-				<a href="@@{[cards.editcard]}@@">Karten bearbeiten</a>
 				<a href="@@{[main.logout]}@@">Ausloggen</a>
                 </div>
 		<!-- TemplateEndBlock -->
@@ -61,7 +60,7 @@
 	<!-- TemplateEndBlock -->
 
 	<!-- TemplateBeginBlock name="usererrors" -->
-		<h3 class="usererror">@@{usererror}@@</h3>
+		<h3 class="userwarning">@@{usererror}@@</h3>
 	<!-- TemplateEndBlock -->
 
 	<div id="content">
@@ -69,16 +68,16 @@
 		
 			<div id="cardoftheday">
                 <img src="@@{basepath}@@/uploads/@@{randomcard}@@" />
-                <p>"@@{cardname}@@" by <a href="@@{[main.showauthor]}@@&id=@@{cardauthorid}@@">@@{cardauthorname}@@</a></p>
+                <p>"@@{cardname}@@" von <a href="@@{[main.showauthor]}@@&id=@@{cardauthorid}@@">@@{cardauthorname}@@</a></p>
 			</div>
 
 			<div id="slogan">
 				<h1 style="margin-top:0px;">Hilf uns die Poken-Welt<br />bunter zu machen!</h1>
 
-				<form method="GET" action="@@{[main.search]}@@" name="login">
+				<form method="post" action="@@{[main.search]}@@" name="search">
 					<h2 id="search">Suche
-					<input type="text" size="35" maxlength="20" name="q" class="searchfield" style="width:250px; margin-right:10px;" />
-					<input type="submit" name="Suche" value="Suche" class="searchbutton" />
+					<input type="text" size="35" maxlength="20" name="q" id="formtext" />
+					<input type="submit" name="Suche" value="Suche" class="formbutton" />
 					</h2>
 				</form>
 			</div>

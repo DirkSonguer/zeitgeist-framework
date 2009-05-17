@@ -68,7 +68,7 @@ class pdTemplate extends zgTemplate
 
 		if ($this->user->isLoggedIn())
 		{
-			$this->assign('username', $this->user->getUsername());
+			$this->assign('username', $this->user->getUserdata('userdata_username'));
 			parent::insertBlock('userloggedin');
 		}
 		else

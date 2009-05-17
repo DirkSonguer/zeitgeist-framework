@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Pocketkun</title>
+<title>Pokendesign</title>
 <!-- InstanceEndEditable -->
 
 <link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/pokendesign.css" />
@@ -42,7 +42,6 @@
 				<a href="@@{[main.overview]}@@">Karten entdecken</a>
 				<a href="@@{[cards.index]}@@">Deine Karten</a>
 				<a href="@@{[cards.addcard]}@@">Karte hinzufügen</a>
-				<a href="@@{[cards.editcard]}@@">Karten bearbeiten</a>
 				<a href="@@{[main.logout]}@@">Ausloggen</a>
                 </div>
 		<!-- TemplateEndBlock -->
@@ -61,31 +60,47 @@
 	<!-- TemplateEndBlock -->
 
 	<!-- TemplateBeginBlock name="usererrors" -->
-		<h3 class="usererror">@@{usererror}@@</h3>
+		<h3 class="userwarning">@@{usererror}@@</h3>
 	<!-- TemplateEndBlock -->
 
 	<div id="content">
 	<!-- InstanceBeginEditable name="body" -->
+    
+	<h1>Deine Poken Visitenkarten</h1>
 
-		<p>Bitte melde dich an, um selbst Bilder hochladen zu können:</p>
-
-		<form method="post" action="@@{[main.login]}@@" name="login">
-		<table cellspacing="5">
-			<tr>
-				<td>Benutzername</td>
-				<td><input type="text" size="35" maxlength="20" name="username" class="formtext" style="width:200px; margin-right:10px;" /></td>
-			</tr>
-			<tr>
-				<td>Password</td>
-				<td><input type="password" size="35" maxlength="32" name="password" class="formtext" style="width:200px;" /></td>
-			</tr>
-			<tr>
-				<td colspan="2" align="right"><input type="submit" name="login" value="Login" class="formbutton" /></td>
-			</tr>
-		</table>
-		</form>
-		
-		<p>Wenn du noch kein Profil hast, kannst du dich <a href="@@{[main.register]}@@">hier registrieren</a>.</p>
+	<!-- TemplateBeginBlock name="cardlist" -->    
+        <div id="pokencard">
+        	<table><tr>
+            <td>
+            	<a href="@@{[cards.editcard]}@@&card=@@{cardid}@@"><img src="@@{templatepath}@@/images/edit_card.png" alt="Visitenkarte und Daten ändern" border="0" /></a>
+            	<a href="@@{[cards.deletecard]}@@&card=@@{cardid}@@"><img src="@@{templatepath}@@/images/delete_card.png" alt="Visitenkarte löschen" border="0" /></a>
+            </td>
+            <td>
+                <p id="pokenheadline">@@{cardtitle}@@</p>
+                <p id="pokendate">hochgeladen am @@{carddate}@@</p>
+            </td>
+            </tr></table>
+            <img src="@@{basepath}@@/uploads/@@{cardfile}@@" />
+            <p>@@{carddescription}@@</p>
+        </div>
+	<!-- TemplateEndBlock -->
+    
+	<div style="clear:both"></div>
+    
+    <table width="740" border="0">
+    <tr>
+    	<td align="left">
+            <!-- TemplateBeginBlock name="paginationleft" -->
+            <h1 style="margin-top:0px;"><a href="@@{[main.overview]}@@&page=@@{paginationleft_link}@@">&lt;&lt;</a></h1>
+            <!-- TemplateEndBlock -->
+        </td>
+        <td align="right">
+            <!-- TemplateBeginBlock name="paginationright" -->
+	        <h1 style="margin-top:0px;"><a href="@@{[main.overview]}@@&page=@@{paginationright_link}@@">&gt;&gt;</a></h1>
+            <!-- TemplateEndBlock -->
+        </td>
+    </tr>
+    </table>
 
 <!-- InstanceEndEditable -->
 
