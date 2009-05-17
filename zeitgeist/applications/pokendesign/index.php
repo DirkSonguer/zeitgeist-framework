@@ -23,6 +23,7 @@
 	include('zeitgeist/zeitgeist.php');
 	
 	require_once('classes/pdtemplate.class.php');
+	require_once('classes/pduserfunctions.class.php');
 	require_once('classes/pdcards.class.php');
 
 	define(ZG_DB_DBSERVER, 'localhost');

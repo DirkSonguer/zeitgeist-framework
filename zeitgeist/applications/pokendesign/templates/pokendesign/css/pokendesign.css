@@ -95,7 +95,7 @@ blockquote:before,blockquote:after,q:before,q:after {
 
 .usermessage
 {
-	background:#7fb726;
+	background:#DAEFDA;
 	border:solid 1px #777788;
 	padding:10px;
 }
@@ -246,6 +246,10 @@ blockquote:before,blockquote:after,q:before,q:after {
 
 #search {
 	margin-top: 0px;
+}
+
+#smalltext {
+	font-size:8pt;
 }
 
 
