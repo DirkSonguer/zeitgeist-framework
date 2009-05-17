@@ -93,6 +93,20 @@ blockquote:before,blockquote:after,q:before,q:after {
 	content:none
 }
 
+.usermessage
+{
+	background:#7fb726;
+	border:solid 1px #777788;
+	padding:10px;
+}
+
+.userwarning
+{
+	background:#ffbb00;
+	border:solid 1px #777788;
+	padding:10px;
+}
+
 /*  LAYOUT  */
 
 #content {
@@ -166,7 +180,11 @@ blockquote:before,blockquote:after,q:before,q:after {
 }
 
 /* PAGE SPECIFIC */
-	
+
+#authorimage {
+	border: 1px solid #2d2113;
+}
+
 #cardoftheday {
 	float:left;
 }
@@ -181,7 +199,6 @@ blockquote:before,blockquote:after,q:before,q:after {
 #pokendate {
 	color: #B74718;
 	margin-top:0px;
-	margin-left:7px;
 	margin-bottom:10px;
 	font-size:10pt;
 }
@@ -207,7 +224,11 @@ blockquote:before,blockquote:after,q:before,q:after {
 	margin-top:15px;
 	margin-bottom:15px;
 }
-	
+
+#formlabel {
+	margin-top: 10px;;
+}
+
 #search {
 	margin-top:55px;
 }
@@ -221,5 +242,50 @@ blockquote:before,blockquote:after,q:before,q:after {
 	font-size: 15px;
 	line-height: 1.3em;
 	color: #ccc;
+}
+
+#search {
+	margin-top: 0px;
+}
+
+
+/* FORMS */
+
+#formtext {
+	border:solid 1px #777788;
+	padding: 3px;
+	width:250px;
+    font-family: Osaka,verdana,Sans-Serif;
+    font-size: 12pt;
+}
+
+.disabledformtext {
+	color:#000000;
+	border:solid 1px #777788;
+	padding: 3px;
+	width:280px;
+    font-family: Osaka,verdana,Sans-Serif;
+    font-size: 12pt;
+}
+
+.formbutton {
+	border:solid 1px #777788;
+    font-family: Osaka,verdana,Sans-Serif;
+    font-size: 12pt;
+	height:30px;
+	margin-top:15px;
+}
+
+.formerror
+{
+	background:#ffbb00;
+	border:solid 1px #777788;
+	padding:10px;
+}
+
+.formerrormsg
+{
+	color:#880000;
+	font-size: 8pt;
 }
 

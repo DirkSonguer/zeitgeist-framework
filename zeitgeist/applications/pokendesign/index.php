@@ -61,16 +61,15 @@
 		$action = 'index';
 	}	
 
-	$user->establishUserSession();
+	$loggedin = $user->establishUserSession();
 
-	/*
 	// test if user is logged in
-	if(!$user->establishUserSession())
+	if ( (!$loggedin) && ($module != 'main') )
 	{
 		$module = 'main';
 		$action = 'login';
 	}
-	*/
+
 	// load event
 	$ret = $eventhandler->callEvent($module, $action);
 	

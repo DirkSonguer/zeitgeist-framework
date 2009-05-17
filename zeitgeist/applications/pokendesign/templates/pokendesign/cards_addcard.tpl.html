@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Pokendesign - Visitenkarte hochladen</title>
+<title>Pokendesign - Visitenkarte hinzufügen</title>
 <!-- InstanceEndEditable -->
 
 <link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/pokendesign.css" />
@@ -42,7 +42,6 @@
 				<a href="@@{[main.overview]}@@">Karten entdecken</a>
 				<a href="@@{[cards.index]}@@">Deine Karten</a>
 				<a href="@@{[cards.addcard]}@@">Karte hinzufügen</a>
-				<a href="@@{[cards.editcard]}@@">Karten bearbeiten</a>
 				<a href="@@{[main.logout]}@@">Ausloggen</a>
                 </div>
 		<!-- TemplateEndBlock -->
@@ -61,35 +60,56 @@
 	<!-- TemplateEndBlock -->
 
 	<!-- TemplateBeginBlock name="usererrors" -->
-		<h3 class="usererror">@@{usererror}@@</h3>
+		<h3 class="userwarning">@@{usererror}@@</h3>
 	<!-- TemplateEndBlock -->
 
 	<div id="content">
 	<!-- InstanceBeginEditable name="body" -->
 
-		<h2>Bitte gebe die Daten deiner neuen Visitenkarte ein:</h2>
+		<h1>Visitenkarte hinzufügen</h1>
 
-		<form method="post" action="@@{[cards.addcard]}@@" name="login">
-		<table cellspacing="5">
+		<form method="post" action="@@{[cards.addcard]}@@" name="addcard" enctype="multipart/form-data">
+		<table cellspacing="10" border="0">
+        <tr>
+            <td nowrap="nowrap"><p id="formlabel">Titel deiner Karte*</p></td>
+            <td @@{card_title:formerror}@@ width="350">
+                <input maxlength="128" name="addcard[card_title]" value="@@{card_title:value}@@" id="formtext" type="text" />
+                <!-- TemplateBeginBlock name="card_title:errormsg" -->
+                    <br /><span class="formerrormsg">@@{card_title:errormsg}@@</span>
+                <!-- TemplateEndBlock -->
+            </td>
+            <td rowspan="4" valign="top" align="center">
+            	<img src="@@{templatepath}@@/images/basic_poken_card.png" alt="Visitenkarte Beispiel" />
+                <p style="margin-top:10px;">Die Visitenkarten müssen entweder im <strong>.JPG oder .PNG-Format</strong> hochgeladen werden und eine Abmessung von höchstens <strong>330 x 220 Pixel</strong> haben.</p>
+                <p>Die Datei darf die maximale Größe von <strong>1MB</strong> nicht überschreiben.
+            </td>
+        </tr>
+        <tr>
+            <td nowrap="nowrap" valign="top"><p id="formlabel">Beschreibung*</p></td>
+            <td @@{card_description:formerror}@@>
+				<textarea name="addcard[card_description]" id="formtext" cols="50" rows="4">@@{card_description:value}@@</textarea>
+                <!-- TemplateBeginBlock name="card_description:errormsg" -->
+                    <br /><span class="formerrormsg">@@{card_description:errormsg}@@</span>
+                <!-- TemplateEndBlock -->
+            </td>
+        </tr>
+        <tr>
+            <td nowrap="nowrap"><p id="formlabel">Visitenkarte*</p></td>
+            <td @@{card_file:formerror}@@>
+	            <input name="addcard[card_file]" type="file" maxlength="10000" accept="image/*" id="formtext" />
+                <!-- TemplateBeginBlock name="card_file:errormsg" -->
+                    <br /><span class="formerrormsg">@@{card_file:errormsg}@@</span>
+                <!-- TemplateEndBlock -->
+            </td>
 			<tr>
-				<td>Titel deiner Karte</td>
-				<td><input type="text" size="35" maxlength="20" name="username" class="formtext" style="width:200px; margin-right:10px;" /></td>
+            	<td></td>
+				<td>
+				   <p><input name="submit" value="Visitenkarte speichern" class="formbutton" type="submit" /></p>
+				</td>
 			</tr>
-			<tr>
-				<td>Beschreibung</td>
-				<td><input type="password" size="35" maxlength="32" name="password" class="formtext" style="width:200px;" /></td>
-			</tr>
-			<tr>
-				<td>Passende Tags</td>
-				<td><input type="text" size="35" maxlength="20" name="username" class="formtext" style="width:200px; margin-right:10px;" /></td>
-			</tr>
-			<tr>
-				<td colspan="2" align="right"><input type="submit" name="login" value="Login" class="formbutton" /></td>
-			</tr>
+        </tr>
 		</table>
 		</form>
-		
-		<p>Wenn du noch kein Profil hast, kannst du dich <a href="@@{[main.register]}@@">hier registrieren</a>.</p>
 
 <!-- InstanceEndEditable -->
 

@@ -42,7 +42,6 @@
 				<a href="@@{[main.overview]}@@">Karten entdecken</a>
 				<a href="@@{[cards.index]}@@">Deine Karten</a>
 				<a href="@@{[cards.addcard]}@@">Karte hinzufügen</a>
-				<a href="@@{[cards.editcard]}@@">Karten bearbeiten</a>
 				<a href="@@{[main.logout]}@@">Ausloggen</a>
                 </div>
 		<!-- TemplateEndBlock -->
@@ -61,23 +60,23 @@
 	<!-- TemplateEndBlock -->
 
 	<!-- TemplateBeginBlock name="usererrors" -->
-		<h3 class="usererror">@@{usererror}@@</h3>
+		<h3 class="userwarning">@@{usererror}@@</h3>
 	<!-- TemplateEndBlock -->
 
 	<div id="content">
 	<!-- InstanceBeginEditable name="body" -->
     
 	<!-- TemplateBeginBlock name="authornolink" -->
-    	<h2>Übersicht der Karten von "@@{authorname}@@"</h2>
+    	<h1><img src="http://www.gravatar.com/avatar/@@{gravatar}@@.jpg?s=30" alt="@@{authorname}@@" id="authorimage" /> Übersicht der Karten von "@@{authorname}@@"</h1>
 	<!-- TemplateEndBlock -->
 		
 	<!-- TemplateBeginBlock name="authorwithlink" -->
-    	<h2>Übersicht der Karten von "<a href="@@{authorlink}@@" target="_blank">@@{authorname}@@</a>"</h2>
+    	<h1><img src="http://www.gravatar.com/avatar/@@{gravatar}@@.jpg?s=30" alt="@@{authorname}@@" id="authorimage" /> Übersicht der Karten von "<a href="@@{authorlink}@@" target="_blank">@@{authorname}@@</a>"</h1>
 	<!-- TemplateEndBlock -->
 
 	<!-- TemplateBeginBlock name="cardlist" -->
         <div id="pokencard">
-            <p id="pokenheadline">"@@{cardtitle}@@"</p>
+            <p id="pokenheadline">@@{cardtitle}@@</p>
             <p id="pokendate">hochgeladen am @@{carddate}@@</p>
             <img src="@@{basepath}@@/uploads/@@{cardfile}@@" />
             <p>@@{carddescription}@@</p>
