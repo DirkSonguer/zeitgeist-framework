@@ -124,5 +124,49 @@ class cards
 		return true;
 	}
 
+
+	// ok
+	public function editcard($parameters=array())
+	{
+		$this->debug->guard();
+
+		$tpl = new pdTemplate();
+		$tpl->load($this->configuration->getConfiguration('cards', 'templates', 'cards_editcard'));
+
+		$addcardForm = new zgStaticform();
+		$addcardForm->load('forms/addcard.form.ini');
+		$formvalid = $addcardForm->process($parameters);
+
+		if (!empty($parameters['submit']))
+		{
+			if ($formvalid)
+			{
+				$carddata = $parameters['addcard'];
+
+				if ($this->cards->addCard($carddata))
+				{
+					$this->messages->setMessage('Die neue Visitenkarte wurden gespeichert.', 'usermessage');
+					$tpl = new pdTemplate();
+					$tpl->redirect($tpl->createLink('cards', 'index'));
+					return true;
+				}
+				else
+				{
+					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator.', 'usererror');
+				}
+			}
+			else
+			{
+				$this->messages->setMessage('Fehler bei der Eingabe. Bitte überprüfen Sie Ihre Angaben sorgfältig.', 'userwarning');
+			}
+		}
+
+		$formcreated = $addcardForm->create($tpl);
+		$tpl->show();
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
 }
 ?>
