@@ -133,8 +133,8 @@ class cards
 		$tpl = new pdTemplate();
 		$tpl->load($this->configuration->getConfiguration('cards', 'templates', 'cards_editcard'));
 
-		$addcardForm = new zgStaticform();
-		$addcardForm->load('forms/addcard.form.ini');
+		$editcardForm = new zgStaticform();
+		$editcardForm->load('forms/addcard.form.ini');
 		$formvalid = $addcardForm->process($parameters);
 
 		if (!empty($parameters['submit']))
@@ -142,7 +142,7 @@ class cards
 			if ($formvalid)
 			{
 				$carddata = $parameters['addcard'];
-
+/*
 				if ($this->cards->addCard($carddata))
 				{
 					$this->messages->setMessage('Die neue Visitenkarte wurden gespeichert.', 'usermessage');
@@ -154,14 +154,22 @@ class cards
 				{
 					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator.', 'usererror');
 				}
+*/
 			}
 			else
 			{
 				$this->messages->setMessage('Fehler bei der Eingabe. Bitte überprüfen Sie Ihre Angaben sorgfältig.', 'userwarning');
 			}
 		}
+		else
+		{
+			$cardData = array();
+			$cardData = $this->cards->getCardInformation();
+			$processData['edittask'] = $taskinformation;
+			$formvalid = $edittaskForm->process($cardData);
+		}
 
-		$formcreated = $addcardForm->create($tpl);
+		$formcreated = $editcardForm->create($tpl);
 		$tpl->show();
 
 		$this->debug->unguard(true);
