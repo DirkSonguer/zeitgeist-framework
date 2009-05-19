@@ -68,25 +68,25 @@
 
 		<h1>Visitenkartendaten ändern</h1>
 
-		<form method="post" action="@@{[cards.addcard]}@@" name="addcard" enctype="multipart/form-data">
+		<form method="post" action="@@{[cards.editcard]}@@" name="editcard" enctype="multipart/form-data">
 		<table cellspacing="10" border="0">
         <tr>
             <td nowrap="nowrap"><p id="formlabel">Titel deiner Karte*</p></td>
             <td @@{card_title:formerror}@@ width="350">
-                <input maxlength="128" name="addcard[card_title]" value="@@{card_title:value}@@" id="formtext" type="text" />
+                <input maxlength="128" name="editcard[card_title]" value="@@{card_title:value}@@" id="formtext" type="text" />
                 <!-- TemplateBeginBlock name="card_title:errormsg" -->
                     <br /><span class="formerrormsg">@@{card_title:errormsg}@@</span>
                 <!-- TemplateEndBlock -->
             </td>
             <td rowspan="4" valign="top" align="center">
-                <p style="margin-top:10px;" id="smalltext"><img src="@@{templatepath}@@/images/mail.png" alt="Mail" align="left" style="padding-right:10px;" />
+                <p style="margin-top:10px;" id="smalltext"><img src="@@{templatepath}@@/images/info.png" alt="Mail" align="left" style="padding-right:10px;" />
                 <strong>Nur Titel und die Beschreibung einer Visitenkarte können verändert werden</strong>, nicht aber die Visitenkarte selbst. Falls nötig, lösche die alte Version und lade die neue erneut hoch.</p>
             </td>
         </tr>
         <tr>
             <td nowrap="nowrap" valign="top"><p id="formlabel">Beschreibung*</p></td>
             <td @@{card_description:formerror}@@>
-				<textarea name="addcard[card_description]" id="formtext" cols="50" rows="4">@@{card_description:value}@@</textarea>
+				<textarea name="editcard[card_description]" id="formtext" cols="50" rows="4">@@{card_description:value}@@</textarea>
                 <!-- TemplateBeginBlock name="card_description:errormsg" -->
                     <br /><span class="formerrormsg">@@{card_description:errormsg}@@</span>
                 <!-- TemplateEndBlock -->
