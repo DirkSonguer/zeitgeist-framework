@@ -13,6 +13,21 @@
 </script>
 	
 <!-- InstanceBeginEditable name="head" -->
+	
+	<script type="text/javascript">
+
+		function deleteCard(id, name)
+		{
+			var answer = window.confirm("Wollen Sie die Visitenkarte '" + name + "' wirklich löschen?");
+
+			if (answer == true)
+			{
+			   window.location.href = "@@{[cards.deletecard]}@@"+"&card="+id;
+			}
+		}
+
+	</script>
+	
 <!-- InstanceEndEditable -->
 </head>
 
@@ -73,7 +88,7 @@
         	<table><tr>
             <td>
             	<a href="@@{[cards.editcard]}@@&card=@@{cardid}@@"><img src="@@{templatepath}@@/images/edit_card.png" alt="Visitenkarte und Daten ändern" border="0" /></a>
-            	<a href="@@{[cards.deletecard]}@@&card=@@{cardid}@@"><img src="@@{templatepath}@@/images/delete_card.png" alt="Visitenkarte löschen" border="0" /></a>
+            	<a href="javascript:deleteCard(@@{cardid}@@, '@@{cardtitle}@@');"><img src="@@{templatepath}@@/images/delete_card.png" alt="Visitenkarte löschen" border="0" /></a>
             </td>
             <td>
                 <p id="pokenheadline">@@{cardtitle}@@</p>
