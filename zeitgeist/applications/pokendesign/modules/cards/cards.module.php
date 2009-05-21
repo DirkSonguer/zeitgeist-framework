@@ -101,14 +101,14 @@ class cards
 
 				if ($this->cards->addCard($carddata))
 				{
-					$this->messages->setMessage('Die neue Visitenkarte wurden gespeichert.', 'usermessage');
+					$this->messages->setMessage('Die neue Visitenkarte wurde gespeichert.', 'usermessage');
 					$tpl = new pdTemplate();
 					$tpl->redirect($tpl->createLink('cards', 'index'));
 					return true;
 				}
 				else
 				{
-					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator.', 'usererror');
+					$this->messages->setMessage('Die Visitenkarte wurde nicht gespeichert.', 'usererror');
 				}
 			}
 			else
@@ -134,18 +134,18 @@ class cards
 		$tpl->load($this->configuration->getConfiguration('cards', 'templates', 'cards_editcard'));
 
 		$editcardForm = new zgStaticform();
-		$editcardForm->load('forms/addcard.form.ini');
-		$formvalid = $addcardForm->process($parameters);
+		$editcardForm->load('forms/editcard.form.ini');
+		$formvalid = $editcardForm->process($parameters);
 
 		if (!empty($parameters['submit']))
 		{
 			if ($formvalid)
 			{
-				$carddata = $parameters['addcard'];
-/*
-				if ($this->cards->addCard($carddata))
+				$carddata = $parameters['editcard'];
+
+				if ($this->cards->editCard($carddata))
 				{
-					$this->messages->setMessage('Die neue Visitenkarte wurden gespeichert.', 'usermessage');
+					$this->messages->setMessage('Die neuen Daten wurden gespeichert.', 'usermessage');
 					$tpl = new pdTemplate();
 					$tpl->redirect($tpl->createLink('cards', 'index'));
 					return true;
@@ -154,7 +154,6 @@ class cards
 				{
 					$this->messages->setMessage('Die Informationen konnten nicht gespeichert werden. Bitte verständigen Sie einen Administrator.', 'usererror');
 				}
-*/
 			}
 			else
 			{
@@ -163,10 +162,16 @@ class cards
 		}
 		else
 		{
-			$cardData = array();
-			$cardData = $this->cards->getCardInformation();
-			$processData['edittask'] = $taskinformation;
-			$formvalid = $edittaskForm->process($cardData);
+			if (empty($parameters['card']))
+			{
+				$tpl = new pdTemplate();
+				$tpl->redirect($tpl->createLink('cards', 'index'));
+			}
+
+			$processData = array();
+			$cardData = $this->cards->getCardInformation($parameters['card']);
+			$processData['editcard'] = $cardData;
+			$formvalid = $editcardForm->process($processData);
 		}
 
 		$formcreated = $editcardForm->create($tpl);

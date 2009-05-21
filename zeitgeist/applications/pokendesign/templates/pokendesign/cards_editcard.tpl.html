@@ -69,6 +69,8 @@
 		<h1>Visitenkartendaten ändern</h1>
 
 		<form method="post" action="@@{[cards.editcard]}@@" name="editcard" enctype="multipart/form-data">
+		<input type="hidden" name="editcard[card_id]" value="@@{card_id:value}@@" />
+
 		<table cellspacing="10" border="0">
         <tr>
             <td nowrap="nowrap"><p id="formlabel">Titel deiner Karte*</p></td>

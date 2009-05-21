@@ -118,7 +118,7 @@ class pdCards
 		$this->debug->unguard($author);
 		return $author;
 	}
-	
+
 	
 	/**
 	 * Gets all cards by a given author
@@ -208,11 +208,53 @@ class pdCards
 			$this->debug->unguard(false);
 			return false;
 		}
+		
+		if (filesize($_FILES['addcard']['tmp_name']['card_file']) > 500000)
+		{
+			$this->messages->setMessage('Bitte beachte: Die Visitenkarte darf höchstens 500KB groß sein.', 'usererror');
+			$this->debug->write('Could not add new card: file too big', 'warning');
+			$this->messages->setMessage('Could not add new card: file too big', 'warning');
+			unlink($_FILES['addcard']['tmp_name']['card_file']);
+			$this->debug->unguard(false);
+			return false;			
+		}
 			
 		if ( ($_FILES['addcard']['type']['card_file'] != 'image/jpeg') && ($_FILES['addcard']['type']['card_file'] != 'image/png') )
 		{
+			$this->messages->setMessage('Bitte beachte: Die Visitenkarte muss als JPG oder PNG vorliegen.', 'usererror');
 			$this->debug->write('Could not add new card: image not of the right type', 'warning');
 			$this->messages->setMessage('Could not add new card: image not of the right type', 'warning');
+			unlink($_FILES['addcard']['tmp_name']['card_file']);
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		if (!$imagesize = getimagesize($_FILES['addcard']['tmp_name']['card_file']))
+		{
+			$this->messages->setMessage('Bitte beachte: Die Visitenkarte muss als gültiges JPG oder PNG vorliegen.', 'usererror');
+			$this->debug->write('Could not add new card: image not of the right type', 'warning');
+			$this->messages->setMessage('Could not add new card: image not of the right type', 'warning');
+			unlink($_FILES['addcard']['tmp_name']['card_file']);
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		if ( ($imagesize[0] < 320) || ($imagesize[1] < 210) )
+		{
+			$this->messages->setMessage('Bitte beachte: Die Visitenkarte ist zu klein. Die ideale Poken-Visitenkarte hat die Ausmaße 327x217 Pixel.', 'usererror');
+			$this->debug->write('Could not add new card: image too small', 'warning');
+			$this->messages->setMessage('Could not add new card: image too small', 'warning');
+			unlink($_FILES['addcard']['tmp_name']['card_file']);
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		if ( ($imagesize[0] > 335) || ($imagesize[1] > 225) )
+		{
+			$this->messages->setMessage('Bitte beachte: Die Visitenkarte ist zu groß. Die ideale Poken-Visitenkarte hat die Ausmaße 327x217 Pixel.', 'usererror');
+			$this->debug->write('Could not add new card: image too big', 'warning');
+			$this->messages->setMessage('Could not add new card: image too big', 'warning');
+			unlink($_FILES['addcard']['tmp_name']['card_file']);
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -232,6 +274,44 @@ class pdCards
 		{
 			$this->debug->write('Could not get author cards: could not read card table', 'warning');
 			$this->messages->setMessage('Could not get author cards: could not read card table', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	/**
+	 * Edits a card
+	 * Assumes a valid card id
+	 *
+	 * @param array $carddata array with card data
+	 * 
+	 * @return boolean
+	 */
+	public function editCard($carddata)
+	{
+		$this->debug->guard();
+
+		if (empty($carddata['card_id']))
+		{
+			$this->debug->write('Could not edit card: no card id found', 'warning');
+			$this->messages->setMessage('Could not edit card: no card id found', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+					
+		$sql = "UPDATE cards ";
+		$sql .= "SET card_title='" . $carddata['card_title'] . "', ";
+		$sql .= "card_description='" . $carddata['card_description'] . "' ";
+		$sql .= "WHERE card_user='" . $this->user->getUserID() . "' AND card_id='" . $carddata['card_id'] . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not update card: could not write to card table', 'warning');
+			$this->messages->setMessage('Could not update card: could not write to card table', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -330,6 +410,37 @@ class pdCards
 		$this->debug->unguard($cards);
 		return $cards;
 	}
+
+
+	/**
+	 * Gets the card data for a given card
+	 * Returns an array with the card data
+	 *
+	 * @param integer $card id of the card to load
+	 * 
+	 * @return array
+	 */
+	public function getCardInformation($card)
+	{
+		$this->debug->guard();
+
+		$sql = "SELECT * FROM cards WHERE card_id='" . $card . "' AND card_user='" . $this->user->getUserID() . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not get card information: could not read cards table', 'warning');
+			$this->messages->setMessage('Could not get card information: could not read cards table', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$carddata = $this->database->fetchArray($res);
+
+		$this->debug->unguard($carddata);
+		return $carddata;
+	}
+
+
 }
 
 ?>
