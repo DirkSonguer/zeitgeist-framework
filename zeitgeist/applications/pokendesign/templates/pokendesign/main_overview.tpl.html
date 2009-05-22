@@ -71,8 +71,11 @@
 	<!-- TemplateBeginBlock name="cardlist" -->    
         <div id="pokencard">
             <p id="pokenheadline">@@{cardtitle}@@</p>
-            <p id="pokendate">hochgeladen am @@{carddate}@@ von <a href="@@{[main.showauthor]}@@&id=@@{cardauthorid}@@">@@{cardauthorname}@@</a></p>
-            <img src="@@{basepath}@@/uploads/@@{cardfile}@@" />
+            <p id="pokendate">hochgeladen am @@{carddate}@@ von <a href="@@{[main.showauthor]}@@&id=@@{cardauthorid}@@">@@{cardauthorname}@@</a><br />
+            <img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ Leute mögen diese Visitenkarte.</p>
+            <a href="@@{[main.showdetail]}@@&id=@@{cardid}@@">
+            <img src="@@{basepath}@@/uploads/@@{cardfile}@@" border="0" />
+            </a>
             <p>@@{carddescription}@@</p>
         </div>
 	<!-- TemplateEndBlock -->

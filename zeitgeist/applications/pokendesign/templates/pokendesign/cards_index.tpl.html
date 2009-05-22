@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Pokendesign</title>
+<title>Pokendesign - Deine Visitenkarte</title>
 <!-- InstanceEndEditable -->
 
 <link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/pokendesign.css" />
@@ -95,7 +95,9 @@
                 <p id="pokendate">hochgeladen am @@{carddate}@@</p>
             </td>
             </tr></table>
-            <img src="@@{basepath}@@/uploads/@@{cardfile}@@" />
+            <a href="@@{[main.showdetail]}@@&id=@@{cardid}@@">
+            <img src="@@{basepath}@@/uploads/@@{cardfile}@@" border="0" />
+            </a>
             <p>@@{carddescription}@@</p>
         </div>
 	<!-- TemplateEndBlock -->
