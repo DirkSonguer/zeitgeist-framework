@@ -29,6 +29,10 @@ p {
 	margin: 0 0 15px 0;
 }
 
+em {
+	color:#B74718;
+}
+
 h1 {
 	font: 1em Tahoma, Arial, Helvetica, sans-serif; 
 	font-weight: normal;
@@ -217,7 +221,8 @@ blockquote:before,blockquote:after,q:before,q:after {
 }
 
 #frontpageexpl {
-	margin-top:35px;
+	margin-top:5px;
+	margin-bottom:20px;
 }	
 
 #loginbox {

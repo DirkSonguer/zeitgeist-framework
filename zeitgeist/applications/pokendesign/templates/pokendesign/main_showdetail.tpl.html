@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Pokendesign - Willkommen auf Pokendesign</title>
+<title>Pokendesign</title>
 <!-- InstanceEndEditable -->
 
 <link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/pokendesign.css" />
@@ -65,31 +65,37 @@
 
 	<div id="content">
 	<!-- InstanceBeginEditable name="body" -->
-		
-			<div id="cardoftheday">
-				<a href="@@{[main.showdetail]}@@&id=@@{cardid}@@">
-                	<img src="@@{basepath}@@/uploads/@@{randomcard}@@" border="0" />
-                </a>
-                <p>"@@{cardname}@@" von <a href="@@{[main.showauthor]}@@&id=@@{cardauthorid}@@">@@{cardauthorname}@@</a></p>
-			</div>
 
-			<div id="slogan">
-				<h1 style="margin-top:0px;">Hilf uns die Poken-Welt<br />bunter zu machen!</h1>
+	<h1>Entdecke neue Poken Visitenkarten!</h1>
 
-				<form method="post" action="@@{[main.search]}@@" name="search">
-					<h2 id="search">Suche
-					<input type="text" size="35" maxlength="20" name="q" id="formtext" />
-					<input type="submit" name="Suche" value="Suche" class="formbutton" />
-					</h2>
-				</form>
-			</div>
-			
+			<table cellspacing="10">
+            	<tr>
+                <td valign="top"><img src="@@{basepath}@@/uploads/@@{cardfile}@@" /></td>
+                <td valign="top">
+                    <p id="pokenheadline">@@{cardtitle}@@</p>
+                    <p id="pokendate">hochgeladen am @@{carddate}@@ von <a href="@@{[main.showauthor]}@@&id=@@{cardauthorid}@@">@@{cardauthorname}@@</a></p>
+                    
+                    <p>@@{carddescription}@@</p>
+
+                    <!-- TemplateBeginBlock name="notfaved" -->
+                    	<table cellspacing="5" border="0"><tr>
+                        <td valign="top"><img alt="" src="@@{templatepath}@@/images/services_big.png" /></td>
+                        <td><p id="pokendate">@@{favs}@@ Leute mögen diese Visitenkarte</p>
+                        <h2 style="margin-top:10px;"><a href="@@{[main.addfav]}@@&id=@@{cardid}@@">Ich finde sie gut!</a></h2>
+                        </td>
+                        </tr></table>
+                    <!-- TemplateEndBlock -->
+                    
+                    <!-- TemplateBeginBlock name="faved" -->
+                    	<p id="pokendate"><img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ Leute mögen diese Visitenkarte.</p>
+                        </td>
+                        </tr></table>
+                    <!-- TemplateEndBlock -->                    
+                </td>
+                </tr>
+            </table>
+
 			<div style="clear:both"></div>
-
-			<div id="frontpageexpl">
-				<p>Pokendesign ist eine Plattform für Poken-Visitenkarten (falls du nicht weißt, was ein Poken ist: <a href="http://missionpoken.de/faq/" target="_blank">Hier wird dir geholfen</a>). Du kannst Hintergründe für Visitenkarten suchen, für gut befinden und selbst welche hochladen, damit andere sie finden können. Also: mach mit - <em>hilf uns die Poken-Welt bunter zu machen!</em></p>
-			</div>
-			
 
 <!-- InstanceEndEditable -->
 
