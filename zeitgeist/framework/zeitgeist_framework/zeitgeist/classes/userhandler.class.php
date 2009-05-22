@@ -501,6 +501,49 @@ class zgUserhandler
 	}
 
 
+
+	/**
+	 * Gets the confirmation key for a given user
+	 * Returns the confirmation key if the user is found or false
+	 *
+	 * @param integer $userid id of the user to chek the confirmation key for
+	 *
+	 * @return integer
+	 */
+	public function getConfirmationKey($userid)
+	{
+		$this->debug->guard();
+
+		$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_userconfirmation') . " WHERE userconfirmation_user = '" . $userid . "'";
+		if ($res = $this->database->query($sql))
+		{
+			if ($this->database->numRows($res))
+			{
+				$row = $this->database->fetchArray($res);
+				$this->debug->unguard($row['userconfirmation_key']);
+				return $row['userconfirmation_key'];
+			}
+			else
+			{
+				$this->debug->write('Problem confirming a user: key not found for given user', 'warning');
+				$this->messages->setMessage('Problem confirming a user: key not found for given user', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
+		}
+		else
+		{
+			$this->debug->write('Error searching a user: could not read the user table', 'error');
+			$this->messages->setMessage('Error searching a user: could not read the user table', 'error');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(false);
+		return false;
+	}
+
+
 	/**
 	 * Checks if the confirmation key exists
 	 * Returns the user id if the key is found or false if key is invalid
