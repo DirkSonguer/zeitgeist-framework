@@ -15,8 +15,9 @@
  */
 
 	define('POKENDESIGN_ACTIVE', true);
-//	define('DEBUGMODE', true);
 
+	require_once('configuration/application.configuration.php');	
+	
 	if (!defined('ZEITGEIST_ROOTDIRECTORY')) define('ZEITGEIST_ROOTDIRECTORY', './zeitgeist/');
 	if (!defined('APPLICATION_ROOTDIRECTORY')) define('APPLICATION_ROOTDIRECTORY', './');
 
@@ -26,12 +27,6 @@
 	require_once('classes/pduserfunctions.class.php');
 	require_once('classes/pdcards.class.php');
 
-	define(ZG_DB_DBSERVER, 'localhost');
-	define(ZG_DB_USERNAME, 'root');
-	define(ZG_DB_USERPASS, '');
-	define(ZG_DB_DATABASE, 'pokendesign');
-	define(ZG_DB_CONFIGURATIONCACHE, 'configurationcache');
-	
 	$debug = zgDebug::init();
 	$message = zgMessages::init();
 	$configuration = zgConfiguration::init();
