@@ -417,14 +417,16 @@ class pdCards
 	 * Returns an array with the card data
 	 *
 	 * @param integer $card id of the card to load
+	 * @param boolean $author true if author needs to be checked
 	 * 
 	 * @return array
 	 */
-	public function getCardInformation($card)
+	public function getCardInformation($card, $author=true)
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT * FROM cards WHERE card_id='" . $card . "' AND card_user='" . $this->user->getUserID() . "'";
+		$sql = "SELECT c.*, DATE_FORMAT(c.card_timestamp, '%d.%m.%Y, %H:%m') as card_date, ud.userdata_username FROM cards c LEFT JOIN userdata ud ON c.card_user = ud.userdata_user WHERE card_id='" . $card . "'";
+		if ($author) $sql .= " AND card_user='" . $this->user->getUserID() . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -441,6 +443,89 @@ class pdCards
 	}
 
 
+
+	/**
+	 * Gets the favs of a given card
+	 *
+	 * @param integer $card id of the card to load
+	 * 
+	 * @return integer
+	 */
+	public function getFavs($card)
+	{
+		$this->debug->guard();
+
+		$sql = "SELECT count(*) as favs FROM favs WHERE fav_card='" . $card . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not get fav information: could not read fav table', 'warning');
+			$this->messages->setMessage('Could not get fav information: could not read fav table', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$favs = $this->database->fetchArray($res);
+		$ret = $favs['favs'];
+
+		$this->debug->unguard($ret);
+		return $ret;
+	}
+
+
+	/**
+	 * Adds a fav to a given card
+	 *
+	 * @param integer $card id to add the fav to
+	 * 
+	 * @return boolean
+	 */
+	public function addFav($card)
+	{
+		$this->debug->guard();
+
+		$sql = "INSERT INTO favs(fav_card, fav_ip) VALUES('" . $card . "', INET_ATON('" . getenv('REMOTE_ADDR') . "'))";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not add fav: could not write fav table', 'warning');
+			$this->messages->setMessage('Could not add fav: could not write fav table', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	/**
+	 * Checks if a user has already faved a given card
+	 *
+	 * @param integer $card id to check
+	 * 
+	 * @return boolean
+	 */
+	public function hasFaved($card)
+	{
+		$this->debug->guard();
+
+		$sql = "SELECT count(*) as favs FROM favs WHERE fav_card='" . $card . "' AND fav_ip=INET_ATON('" . getenv('REMOTE_ADDR') . "')";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not get fav informatio: could not read fav table', 'warning');
+			$this->messages->setMessage('Could not get fav informatio: could not read fav table', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$favs = $this->database->fetchArray($res);
+		if ($favs['favs'] == 0) $ret = false; else $ret = true;
+
+		$this->debug->unguard($ret);
+		return $ret;
+	}
 }
 
 ?>

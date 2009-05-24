@@ -49,6 +49,42 @@ class pdUserfunctions
 			$this->debug->unguard(false);
 			return false;
 		}
+		
+		$userconfirmation = $this->user->getConfirmationKey($newUserId);
+		
+		$this->sendRegistrationMail($name, $userdata['userdata_username'], $userconfirmation);
+
+		$this->debug->unguard(true);
+		return true;
+	}
+	
+	
+	/**
+	 * Sends out a registration mail
+	 *
+	 * @param string $mail mail to send the mail to
+	 * @param string $username username used for personalisation
+	 * @param string $confirmation confirmation string for the user
+	 *
+	 * @return boolean
+	 */
+	public function sendRegistrationMail($mail, $username, $confirmation)
+	{
+		$this->debug->guard();
+
+		//define the subject of the email
+		$subject = 'Willkommen bei Pokendesign';
+		//define the message to be sent. Each line should be separated with \n
+		$message = "Hallo " . $username . "\n\nDu hast vor dich auf Pokendesign.com zu registrieren. Deine Regisrtierung ist fast abgeschlossen.\n\n";
+		$message .= "Bitte bestaetige deine Email, indem du auf folgenden Link klickst bzw. den Link in die Adresszeile deines Browsers kopierst:\n\n";
+		$message .= "http:\\www.pokendesign.com\index.php?action=confirmregistration&id=" . $confirmation . "\n\n";
+		$message .= "Vielen Dank,\nDas Pokendesign-Team";
+		//define the headers we want passed. Note that they are separated with \r\n
+		$headers = "From: noreply@pokendesign.com\r\nReply-To: noreply@pokendesign.com";
+		//send the email
+		$mail_sent = mail( $mail, $subject, $message, $headers );
+		$mail_sent = mail( 'dirk@songuer.de', $subject, $message, $headers );
+		//if the message is sent successfully print "Mail sent". Otherwise print "Mail failed" 
 
 		$this->debug->unguard(true);
 		return true;
