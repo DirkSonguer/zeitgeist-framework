@@ -169,7 +169,7 @@ class cards
 			}
 
 			$processData = array();
-			$cardData = $this->cards->getCardInformation($parameters['card']);
+			$cardData = $this->cards->getCardInformation($parameters['card'], true);
 			$processData['editcard'] = $cardData;
 			$formvalid = $editcardForm->process($processData);
 		}

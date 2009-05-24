@@ -6,6 +6,7 @@ class main
 {
 	protected $debug;
 	protected $messages;
+	protected $messagecache;
 	protected $database;
 	protected $configuration;
 	protected $user;
@@ -15,6 +16,7 @@ class main
 	{
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
+		$this->messagecache = zgMessagecache::init();
 		$this->configuration = zgConfiguration::init();
 		$this->user = zgUserhandler::init();
 
@@ -37,6 +39,7 @@ class main
 		
 		$randomcard = $carddata['card_filename'];
 		$tpl->assign('randomcard', $randomcard);
+		$tpl->assign('cardid', $carddata['card_id']);
 		$tpl->assign('cardname', $carddata['card_title']);
 		$tpl->assign('cardauthorname', $carddata['userdata_username']);
 		$tpl->assign('cardauthorid', $carddata['card_user']);
@@ -68,12 +71,17 @@ class main
 		
 		foreach ($carddata as $card)
 		{
+			$tpl->assign('cardid', $card['card_id']);
 			$tpl->assign('cardfile', $card['card_filename']);
 			$tpl->assign('carddate', $card['card_date']);
 			$tpl->assign('cardtitle', $card['card_title']);
 			$tpl->assign('cardauthorname', $card['userdata_username']);
 			$tpl->assign('cardauthorid', $card['card_user']);
 			$tpl->assign('carddescription', $card['card_description']);
+
+			$favs = $this->cards->getFavs($card['card_id']);
+			$tpl->assign('favs', $favs);
+	
 			$tpl->insertBlock('cardlist');
 		}
 		
@@ -131,10 +139,15 @@ class main
 		
 		foreach ($carddata as $card)
 		{
+			$tpl->assign('cardid', $card['card_id']);
 			$tpl->assign('cardfile', $card['card_filename']);
 			$tpl->assign('carddate', $card['card_date']);
 			$tpl->assign('cardtitle', $card['card_title']);
 			$tpl->assign('carddescription', $card['card_description']);
+
+			$favs = $this->cards->getFavs($card['card_id']);
+			$tpl->assign('favs', $favs);
+
 			$tpl->insertBlock('cardlist');
 		}
 
@@ -144,6 +157,64 @@ class main
 		return true;
 	}
 	
+	
+	// ok
+	public function showdetail($parameters=array())
+	{
+		$this->debug->guard();
+
+		$tpl = new pdTemplate();
+		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_showdetail'));
+		
+		if (empty($parameters['id'])) $tpl->redirect($tpl->createLink('main', 'index'));
+		
+		$card = $this->cards->getCardInformation($parameters['id'], false);
+		
+		$tpl->assign('cardfile', $card['card_filename']);
+		$tpl->assign('cardauthorid', $card['card_user']);
+		$tpl->assign('cardid', $card['card_id']);
+		$tpl->assign('cardauthorname', $card['userdata_username']);
+		$tpl->assign('carddate', $card['card_date']);
+		$tpl->assign('cardtitle', $card['card_title']);
+		$tpl->assign('carddescription', $card['card_description']);
+		
+		$favs = $this->cards->getFavs($parameters['id']);
+		$tpl->assign('favs', $favs);
+		
+		if (!$this->cards->hasFaved($parameters['id']))
+		{
+			$tpl->insertBlock('notfaved');
+		}
+		else
+		{
+			$tpl->insertBlock('faved');
+		}
+
+		$tpl->show();
+
+		$this->debug->unguard(true);
+		return true;
+	}
+		
+
+	// ok
+	public function addfav($parameters=array())
+	{
+		$this->debug->guard();
+
+		$tpl = new pdTemplate();
+		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_showdetail'));
+		
+		if (empty($parameters['id'])) $tpl->redirect($tpl->createLink('main', 'index'));
+		
+		$ret = $this->cards->addFav($parameters['id']);
+		
+		$tpl->redirect($tpl->createLink('main', 'showdetail').'&id='.$parameters['id']);
+
+		$this->debug->unguard(true);
+		return true;
+	}
+		
 
 	// ok
 	public function search($parameters=array())
@@ -207,7 +278,7 @@ class main
 			}
 			else
 			{
-				$this->messages->setMessage('Bitte geben Sie einen gültigen Benutzernamen und das dazugehörige Passwort ein.', 'userwarning');
+				$this->messages->setMessage('Bitte gebe einen gültigen Benutzernamen und das dazugehörige Passwort ein.', 'userwarning');
 			}
 		}
 
@@ -232,6 +303,43 @@ class main
 		return true;
 	}
 
+
+
+	// ok
+	public function confirmregistration($parameters=array())
+	{
+		$this->debug->guard();
+
+		$tpl = new pdTemplate();
+		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_index'));
+
+		if (empty($parameters['id'])) $tpl->redirect($tpl->createLink('main', 'index'));
+		
+		if ($userid = $this->user->checkConfirmation($parameters['id']))
+		{
+			$this->user->activateUser($userid);
+			$this->messages->setMessage('Dein Benutzer wurde aktiviert und du kannst dich nun einloggen. Viel Vergnügen!', 'usermessage');
+		}
+		else
+		{
+			$this->messages->setMessage('Es wurde kein dazugehöriger Benutzer gefunden. Bitte überprüfe den Aktivierungscode', 'userwarning');
+		}
+		
+		$carddata = $this->cards->getRandomCard();
+		
+		$randomcard = $carddata['card_filename'];
+		$tpl->assign('randomcard', $randomcard);
+		$tpl->assign('cardid', $carddata['card_id']);
+		$tpl->assign('cardname', $carddata['card_title']);
+		$tpl->assign('cardauthorname', $carddata['userdata_username']);
+		$tpl->assign('cardauthorid', $carddata['card_user']);
+
+		$tpl->show();
+
+		$this->debug->unguard(true);
+		return true;
+	}
+	
 
 	// ok
 	public function register($parameters=array())
@@ -270,7 +378,6 @@ class main
 					if ($userfunctions->createUser($newUser['user_username'], $newUser['user_password1'], $userdata))
 					{
 						$this->messages->setMessage('Dein Benutzer wurde angelegt. Du erhälst gleich eine Email, mit der du den Benutzer aktivieren kannst.', 'usermessage');
-						$tpl->redirect($tpl->createLink('main', 'index'));
 					}
 					else
 					{
