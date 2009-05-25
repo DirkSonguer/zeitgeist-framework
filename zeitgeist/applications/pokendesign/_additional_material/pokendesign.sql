@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 22. Mai 2009 um 19:19
+-- Erstellungszeit: 25. Mai 2009 um 07:10
 -- Server Version: 5.0.51
 -- PHP-Version: 5.2.6
 
@@ -155,6 +155,8 @@ CREATE TABLE IF NOT EXISTS `messagecache` (
 -- Daten für Tabelle `messagecache`
 --
 
+INSERT INTO `messagecache` (`messagecache_user`, `messagecache_content`) VALUES
+(0, 'YTowOnt9');
 
 -- --------------------------------------------------------
 
@@ -238,7 +240,8 @@ CREATE TABLE IF NOT EXISTS `sessiondata` (
 --
 
 INSERT INTO `sessiondata` (`sessiondata_id`, `sessiondata_created`, `sessiondata_lastupdate`, `sessiondata_content`, `sessiondata_ip`) VALUES
-('3cd47f58c1bb5637b8a35138f35d191c', 1243010690, 1243012675, '', 2130706433);
+('3cd47f58c1bb5637b8a35138f35d191c', 1243010690, 1243012675, '', 2130706433),
+('62e3abeb7a6a8ed1f9e274080ae7cd21', 1243194465, 1243194501, '', 2130706433);
 
 -- --------------------------------------------------------
 
@@ -329,12 +332,18 @@ CREATE TABLE IF NOT EXISTS `trafficlog` (
   `trafficlog_user` int(12) NOT NULL,
   `trafficlog_ip` int(10) unsigned default NULL,
   PRIMARY KEY  (`trafficlog_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 --
 -- Daten für Tabelle `trafficlog`
 --
 
+INSERT INTO `trafficlog` (`trafficlog_id`, `trafficlog_module`, `trafficlog_action`, `trafficlog_user`, `trafficlog_ip`) VALUES
+(1, 1, 3, 0, 2130706433),
+(2, 1, 3, 0, 2130706433),
+(3, 1, 1, 0, 2130706433),
+(4, 1, 11, 0, 2130706433),
+(5, 1, 3, 0, 2130706433);
 
 -- --------------------------------------------------------
 
