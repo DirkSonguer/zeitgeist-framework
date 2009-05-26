@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Pokendesign</title>
+<title>Pokendesign - Editiere dein Profil</title>
 <!-- InstanceEndEditable -->
 
 <link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/pokendesign.css" />
@@ -67,20 +67,21 @@
 	<div id="content">
 	<!-- InstanceBeginEditable name="body" -->
 
-		<h1>Registriere dich auf Pokendesign</h1>
+		<h1>Ändere dein Profil</h1>
 
-		<form method="post" action="@@{[main.register]}@@" name="register" enctype="multipart/form-data">
+		<form method="post" action="@@{[main.editprofile]}@@" name="profile" enctype="multipart/form-data">
 		<table cellspacing="10" border="0">
         <tr>
             <td nowrap="nowrap" valign="top"><p id="formlabel">Deine Email*</p></td>
             <td @@{user_username:formerror}@@ width="350">
-                <input maxlength="128" name="register[user_username]" value="@@{user_username:value}@@" id="formtext" type="text" />
+                <input maxlength="128" name="profile[user_username]" value="@@{user_username:value}@@" id="formtext" type="text" />
                 <!-- TemplateBeginBlock name="user_username:errormsg" -->
                     <br /><span class="formerrormsg">@@{user_username:errormsg}@@</span>
                 <!-- TemplateEndBlock -->
             </td>
             <td rowspan="6" valign="top">
-                <h2>Es freut uns, dass du helfen willst, die Poken-Welt bunter zu machen!</h2>
+                <h2>Es freut uns, dass du hilfst, die Poken-Welt bunter zu machen!</h2>
+				<p style="margin-top:10px;" id="smalltext">Um eine oder mehrere Informationen aus deinem Profil zu ändern, trage sie ein und klicke "Daten aktualisieren". <strong>Die geänderten Daten werden automatisch übernommen und sind sofort aktiv.</strong></p>
                 <p style="margin-top:10px;" id="smalltext"><img src="http://www.gravatar.com/avatar/?s=50" alt="Gravatar" align="left" style="padding-right:10px;" />
                 Als Profilbild wird dein <a href="http://www.gravatar.com/">Gravatar</a> verwendet. Wenn du also schon einen Gravatar hast, achte darauf, dass du die entsprechende Email-Adresse verwendest.</p>
                 <p style="margin-top:10px;" id="smalltext"><img src="@@{templatepath}@@/images/mail.png" alt="Mail" align="right" style="padding-right:10px;" />
@@ -92,7 +93,7 @@
         <tr>
             <td nowrap="nowrap" valign="top"><p id="formlabel">Dein Benutzername*</p></td>
             <td @@{userdata_username:formerror}@@>
-                <input maxlength="128" name="register[userdata_username]" value="@@{userdata_username:value}@@" id="formtext" type="text" />
+                <input maxlength="128" name="profile[userdata_username]" value="@@{userdata_username:value}@@" id="formtext" type="text" />
                 <!-- TemplateBeginBlock name="userdata_username:errormsg" -->
                     <br /><span class="formerrormsg">@@{userdata_username:errormsg}@@</span>
                 <!-- TemplateEndBlock -->
@@ -101,25 +102,25 @@
         <tr>
             <td nowrap="nowrap" valign="top"><p id="formlabel">URL</p></td>
             <td @@{userdata_url:formerror}@@>
-                <input maxlength="128" name="register[userdata_url]" value="@@{userdata_url:value}@@" id="formtext" type="text" />
+                <input maxlength="128" name="profile[userdata_url]" value="@@{userdata_url:value}@@" id="formtext" type="text" />
                 <!-- TemplateBeginBlock name="userdata_url:errormsg" -->
                     <br /><span class="formerrormsg">@@{userdata_url:errormsg}@@</span>
                 <!-- TemplateEndBlock -->
             </td>
         </tr>
         <tr>
-            <td nowrap="nowrap" valign="top"><p id="formlabel">Dein Passwort*</p></td>
+            <td nowrap="nowrap" valign="top"><p id="formlabel">Neues Passwort</p></td>
             <td @@{user_password1:formerror}@@>
-                <input maxlength="128" name="register[user_password1]" value="" id="formtext" type="password" />
+                <input maxlength="128" name="profile[user_password1]" value="" id="formtext" type="password" />
                 <!-- TemplateBeginBlock name="user_password1:errormsg" -->
                     <br /><span class="formerrormsg">@@{user_password1:errormsg}@@</span>
                 <!-- TemplateEndBlock -->
             </td>
         </tr>
         <tr>
-            <td nowrap="nowrap" valign="top"><p id="formlabel">Passwort bestätigen*</p></td>
+            <td nowrap="nowrap" valign="top"><p id="formlabel">Passwort bestätigen</p></td>
             <td @@{user_password2:formerror}@@>
-                <input maxlength="128" name="register[user_password2]" value="" id="formtext" type="password" />
+                <input maxlength="128" name="profile[user_password2]" value="" id="formtext" type="password" />
                 <!-- TemplateBeginBlock name="user_password2:errormsg" -->
                     <br /><span class="formerrormsg">@@{user_password2:errormsg}@@</span>
                 <!-- TemplateEndBlock -->
@@ -128,7 +129,7 @@
         <tr>
             <td></td>
             <td>
-               <p><input name="submit" value="Registrieren" class="formbutton" type="submit" /></p>
+               <p><input name="submit" value="Daten aktualisieren" class="formbutton" type="submit" /></p>
             </td>
         </tr>
 		</table>

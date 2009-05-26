@@ -9,6 +9,7 @@ class cards
 	protected $database;
 	protected $configuration;
 	protected $user;
+	protected $pduserfunctions;
 	protected $cards;
 
 	public function __construct()
@@ -17,7 +18,8 @@ class cards
 		$this->messages = zgMessages::init();
 		$this->configuration = zgConfiguration::init();
 		$this->user = zgUserhandler::init();
-
+		
+		$this->pduserfunctions = new pdUserfunctions();
 		$this->cards = new pdCards();
 
 		$this->database = new zgDatabase();

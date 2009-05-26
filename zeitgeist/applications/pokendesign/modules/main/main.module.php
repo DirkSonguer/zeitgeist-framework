@@ -10,6 +10,7 @@ class main
 	protected $database;
 	protected $configuration;
 	protected $user;
+	protected $pduserfunctions;
 	protected $cards;
 
 	public function __construct()
@@ -20,6 +21,7 @@ class main
 		$this->configuration = zgConfiguration::init();
 		$this->user = zgUserhandler::init();
 
+		$this->pduserfunctions = new pdUserfunctions();
 		$this->cards = new pdCards();
 
 		$this->database = new zgDatabase();
@@ -386,7 +388,7 @@ class main
 						foreach ($messages as $message)
 						if ($message->message == 'A user with this name already exists in the database. Please choose another username.')
 						{
-							$this->messages->setMessage('Die EMail ist bereits registriert. Bitte wähle eine andere.', 'userwarning');
+							$this->messages->setMessage('Die Email ist bereits registriert. Bitte wähle eine andere.', 'userwarning');
 						}
 							
 						$this->messages->setMessage('Der Benutzer wurde nicht angelegt', 'userwarning');
@@ -400,6 +402,116 @@ class main
 		}
 
 		$formcreated = $registerForm->create($tpl);
+		$tpl->show();
+				
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	// ok
+	public function editprofile($parameters=array())
+	{
+		$this->debug->guard();
+
+		$tpl = new pdTemplate();
+		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_editprofile'));
+
+		$editprofileForm = new zgStaticform();
+		$editprofileForm->load('forms/editprofile.form.ini');
+		$formvalid = $editprofileForm->process($parameters);
+
+		if (!empty($parameters['submit']))
+		{
+			if ($formvalid)
+			{
+				// email
+				if (!empty($parameters['profile']['user_username']))
+				{
+					if ($parameters['profile']['user_username'] != $this->user->getUsername())
+					{
+						if ($this->user->changeUsername($this->user->getUserID(), $parameters['profile']['user_username']))
+						{
+							$this->messages->setMessage('Deine Email wurde geändert.', 'usermessage');
+						}
+						else
+						{
+							$messages = $this->messages->getAllMessages('userhandler.class.php');
+							
+							foreach ($messages as $message)
+							if ($message->message == 'Problem changing username: username already exists')
+							{
+								$this->messages->setMessage('Die Email ist bereits registriert. Bitte wähle eine andere.', 'userwarning');
+							}
+
+							$this->messages->setMessage('Die Email wurde nicht geändert', 'userwarning');
+						}
+					}
+					
+					// username
+					if ($parameters['profile']['userdata_username'] != $this->user->getUserdata('userdata_username'))
+					{
+						
+						if ($this->user->setUserdata('userdata_username', $parameters['profile']['userdata_username']))
+						{
+							$this->messages->setMessage('Dein Benutzername wurde geändert.', 'usermessage');
+						}
+						else
+						{
+							$this->messages->setMessage('Dein Benutzername konnte nicht geändert werden', 'userwarning');
+						}
+					}
+
+					// URL
+					if ($parameters['profile']['userdata_url'] != $this->user->getUserdata('userdata_url'))
+					{
+						
+						if ($this->user->setUserdata('userdata_url', $parameters['profile']['userdata_url']))
+						{
+							$this->messages->setMessage('Deine URL wurde geändert.', 'usermessage');
+						}
+						else
+						{
+							$this->messages->setMessage('Deine URL konnte nicht geändert werden', 'userwarning');
+						}
+					}
+
+					// Password
+					if ( (!empty($parameters['profile']['user_password1'])) && (!empty($parameters['profile']['user_password2'])) )
+					{
+						if ($parameters['profile']['user_password1'] == $parameters['profile']['user_password2'])
+						{
+							if ($this->user->changePassword($this->user->getUserID(), $parameters['profile']['user_password1']))
+							{
+								$this->messages->setMessage('Das Passwort wurde geändert.', 'usermessage');
+							}
+							else
+							{
+								$this->messages->setMessage('Das Passwort konnte nicht geändert werden', 'userwarning');
+							}
+						}
+						else
+						{
+							$this->messages->setMessage('Die beiden Passworteingaben stimmen nicht überein', 'userwarning');
+						}						
+					}
+					
+				}
+			}
+			else
+			{
+				$this->messages->setMessage('Fehler bei der Eingabe. Bitte überprüfen Sie Ihre Angaben sorgfältig.', 'userwarning');
+			}
+		}
+		else
+		{
+			$userdata = $this->pduserfunctions->getAllUserdata();
+			$processData['profile'] = $userdata;
+			$formvalid = $editprofileForm->process($processData);
+		}
+
+		$formcreated = $editprofileForm->create($tpl);
+
 		$tpl->show();
 				
 		$this->debug->unguard(true);

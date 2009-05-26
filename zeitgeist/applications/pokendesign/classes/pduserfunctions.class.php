@@ -90,5 +90,23 @@ class pdUserfunctions
 		return true;
 	}
 
+
+	/**
+	 * Gets all relevant user data for the current user
+	 *
+	 * @return array
+	 */
+	public function getAllUserdata()
+	{
+		$this->debug->guard();
+		
+		$userdata = array();
+		$userdata = $this->user->getUserdata();
+		$userdata['user_username'] = $this->user->getUsername();
+
+		$this->debug->unguard($userdata);
+		return $userdata;
+	}
+
 }
 ?>
