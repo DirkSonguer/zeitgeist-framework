@@ -348,7 +348,6 @@ class zgUserhandler
 
 	/**
 	 * Creates a new user with a given name and password
-	 * Optional a usergroup and userdata can be given
 	 *
 	 * @param string $name name of the user
 	 * @param string $password password of the user
