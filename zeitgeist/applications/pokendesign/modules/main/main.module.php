@@ -376,8 +376,7 @@ class main
 
 				if (!$registerProblems)
 				{
-					$userfunctions = new pdUserfunctions();
-					if ($userfunctions->createUser($newUser['user_username'], $newUser['user_password1'], $userdata))
+					if ($this->pduserfunctions->createUser($newUser['user_username'], $newUser['user_password1'], $userdata))
 					{
 						$this->messages->setMessage('Dein Benutzer wurde angelegt. Du erhälst gleich eine Email, mit der du den Benutzer aktivieren kannst.', 'usermessage');
 					}

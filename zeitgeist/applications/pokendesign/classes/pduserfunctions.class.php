@@ -50,6 +50,16 @@ class pdUserfunctions
 			return false;
 		}
 		
+		
+		$userrolearray = array();
+		$userrolearray[1] = true;
+		$userrolefunctions = new zgUserroles();
+		if (!$userrolefunctions->saveUserroles($newUserId, $userrolearray))
+		{
+			$this->debug->unguard(false);
+			return false;
+		}		
+		
 		$userconfirmation = $this->user->getConfirmationKey($newUserId);
 		
 		$this->sendRegistrationMail($name, $userdata['userdata_username'], $userconfirmation);
