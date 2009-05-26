@@ -37,14 +37,26 @@ class main
 		$tpl = new pdTemplate();
 		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_index'));
 		
-		$carddata = $this->cards->getRandomCard();
+		$card = $this->cards->getRandomCard();
 		
-		$randomcard = $carddata['card_filename'];
+		$randomcard = $card['card_filename'];
 		$tpl->assign('randomcard', $randomcard);
-		$tpl->assign('cardid', $carddata['card_id']);
-		$tpl->assign('cardname', $carddata['card_title']);
-		$tpl->assign('cardauthorname', $carddata['userdata_username']);
-		$tpl->assign('cardauthorid', $carddata['card_user']);
+		$tpl->assign('cardid', $card['card_id']);
+		$tpl->assign('cardname', $card['card_title']);
+		$tpl->assign('cardauthorname', $card['userdata_username']);
+		$tpl->assign('cardauthorid', $card['card_user']);
+
+		$favs = $this->cards->getFavs($card['card_id']);
+		$tpl->assign('favs', $favs);
+		
+		if (!$this->cards->hasFaved($card['card_id']))
+		{
+			$tpl->insertBlock('notfaved');
+		}
+		else
+		{
+			$tpl->insertBlock('faved');
+		}
 
 		$tpl->show();
 
