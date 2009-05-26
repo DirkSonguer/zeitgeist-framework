@@ -71,11 +71,20 @@
 				<a href="@@{[main.showdetail]}@@&id=@@{cardid}@@">
                 	<img src="@@{basepath}@@/uploads/@@{randomcard}@@" border="0" />
                 </a>
-                <p>"@@{cardname}@@" von <a href="@@{[main.showauthor]}@@&id=@@{cardauthorid}@@">@@{cardauthorname}@@</a></p>
+
+                <p style="margin-bottom:0px;"><span id="pokenheadline">"@@{cardname}@@"</span> von <a href="@@{[main.showauthor]}@@&id=@@{cardauthorid}@@">@@{cardauthorname}@@</a></p>
+                <!-- TemplateBeginBlock name="notfaved" -->
+                    <p id="pokendate"><img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ Leute mögen diese Visitenkarte. <a href="@@{[main.addfav]}@@&id=@@{cardid}@@">Ich finde sie gut!</a></p>
+                <!-- TemplateEndBlock -->
+                
+                <!-- TemplateBeginBlock name="faved" -->
+                    <p id="pokendate"><img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ Leute mögen diese Visitenkarte.</p>
+                <!-- TemplateEndBlock -->                    
+
 			</div>
 
 			<div id="slogan">
-				<h1 style="margin-top:0px;">Hilf uns die Poken-Welt<br />bunter zu machen!</h1>
+				<h1 style="margin-top:0px; margin-bottom:45px;">Hilf uns die Poken-Welt<br />bunter zu machen!</h1>
 
 				<form method="post" action="@@{[main.search]}@@" name="search">
 					<h2 id="search">Suche

@@ -221,8 +221,9 @@ blockquote:before,blockquote:after,q:before,q:after {
 }
 
 #frontpageexpl {
-	margin-top:5px;
+	margin-top:15px;
 	margin-bottom:20px;
+	font-size:12pt;
 }	
 
 #loginbox {
@@ -235,7 +236,7 @@ blockquote:before,blockquote:after,q:before,q:after {
 }
 
 #search {
-	margin-top:55px;
+	margin-top:175px;
 }
 	
 #searchfield {
