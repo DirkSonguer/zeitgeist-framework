@@ -514,8 +514,8 @@ class pdCards
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
-			$this->debug->write('Could not get fav informatio: could not read fav table', 'warning');
-			$this->messages->setMessage('Could not get fav informatio: could not read fav table', 'warning');
+			$this->debug->write('Could not get fav information: could not read fav table', 'warning');
+			$this->messages->setMessage('Could not get fav information: could not read fav table', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -526,6 +526,59 @@ class pdCards
 		$this->debug->unguard($ret);
 		return $ret;
 	}
+	
+	
+	/**
+	 * Adds a view to a given card
+	 *
+	 * @param integer $card id to add view
+	 * 
+	 * @return boolean
+	 */
+	public function addCardView($card)
+	{
+		$this->debug->guard();
+
+		$sql = "UPDATE cards SET card_viewed = card_viewed + 1 WHERE card_id = '" . $card . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not update card views: could not update card table', 'warning');
+			$this->messages->setMessage('Could not update card views: could not update card table', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	/**
+	 * Adds a click to a given card
+	 *
+	 * @param integer $card id to add click
+	 * 
+	 * @return boolean
+	 */
+	public function addCardClick($card)
+	{
+		$this->debug->guard();
+
+		$sql = "UPDATE cards SET card_clicked = card_clicked + 1 WHERE card_id = '" . $card . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not update card clicks: could not update card table', 'warning');
+			$this->messages->setMessage('Could not update card clicks: could not update card table', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+	
 }
 
 ?>

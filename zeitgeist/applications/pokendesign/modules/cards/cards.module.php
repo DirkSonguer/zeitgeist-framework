@@ -48,6 +48,8 @@ class cards
 			$tpl->assign('cardid', $card['card_id']);
 			$tpl->assign('carddate', $card['card_date']);
 			$tpl->assign('cardtitle', $card['card_title']);
+			$tpl->assign('cardviews', $card['card_viewed']);
+			$tpl->assign('cardclicks', $card['card_clicked']);
 			$tpl->assign('carddescription', $card['card_description']);
 			$tpl->insertBlock('cardlist');
 		}

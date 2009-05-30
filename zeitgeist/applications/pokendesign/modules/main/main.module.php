@@ -45,6 +45,11 @@ class main
 		$tpl->assign('cardname', $card['card_title']);
 		$tpl->assign('cardauthorname', $card['userdata_username']);
 		$tpl->assign('cardauthorid', $card['card_user']);
+		
+		if ($card['card_user'] != $this->user->getUserID() )
+		{
+			$this->cards->addCardView($card['card_id']);
+		}
 
 		$favs = $this->cards->getFavs($card['card_id']);
 		$tpl->assign('favs', $favs);
@@ -92,6 +97,11 @@ class main
 			$tpl->assign('cardauthorname', $card['userdata_username']);
 			$tpl->assign('cardauthorid', $card['card_user']);
 			$tpl->assign('carddescription', $card['card_description']);
+
+			if ($card['card_user'] != $this->user->getUserID() )
+			{
+				$this->cards->addCardView($card['card_id']);
+			}
 
 			$favs = $this->cards->getFavs($card['card_id']);
 			$tpl->assign('favs', $favs);
@@ -159,6 +169,11 @@ class main
 			$tpl->assign('cardtitle', $card['card_title']);
 			$tpl->assign('carddescription', $card['card_description']);
 
+			if ($card['card_user'] != $this->user->getUserID() )
+			{
+				$this->cards->addCardView($card['card_id']);
+			}
+
 			$favs = $this->cards->getFavs($card['card_id']);
 			$tpl->assign('favs', $favs);
 
@@ -191,6 +206,11 @@ class main
 		$tpl->assign('carddate', $card['card_date']);
 		$tpl->assign('cardtitle', $card['card_title']);
 		$tpl->assign('carddescription', $card['card_description']);
+
+		if ($card['card_user'] != $this->user->getUserID() )
+		{
+			$this->cards->addCardView($card['card_id']);
+		}
 		
 		$favs = $this->cards->getFavs($parameters['id']);
 		$tpl->assign('favs', $favs);
@@ -254,6 +274,11 @@ class main
 			$tpl->assign('cardtitle', $card['card_title']);
 			$tpl->assign('carddescription', $card['card_description']);
 			$tpl->insertBlock('cardlist');
+
+			if ($card['card_user'] != $this->user->getUserID() )
+			{
+				$this->cards->addCardView($card['card_id']);
+			}
 		}
 
 		$tpl->assign('search', $parameters['q']);
