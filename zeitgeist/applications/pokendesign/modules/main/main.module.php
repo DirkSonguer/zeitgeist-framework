@@ -209,7 +209,7 @@ class main
 
 		if ($card['card_user'] != $this->user->getUserID() )
 		{
-			$this->cards->addCardView($card['card_id']);
+			$this->cards->addCardClick($card['card_id']);
 		}
 		
 		$favs = $this->cards->getFavs($parameters['id']);
@@ -270,15 +270,31 @@ class main
 		foreach ($carddata as $card)
 		{
 			$tpl->assign('cardfile', $card['card_filename']);
+			$tpl->assign('cardauthorid', $card['card_user']);
+			$tpl->assign('cardid', $card['card_id']);
+			$tpl->assign('cardauthorname', $card['userdata_username']);
 			$tpl->assign('carddate', $card['card_date']);
 			$tpl->assign('cardtitle', $card['card_title']);
 			$tpl->assign('carddescription', $card['card_description']);
-			$tpl->insertBlock('cardlist');
 
 			if ($card['card_user'] != $this->user->getUserID() )
 			{
 				$this->cards->addCardView($card['card_id']);
 			}
+			
+			$favs = $this->cards->getFavs($card['card_id']);
+			$tpl->assign('favs', $favs);
+
+			if (!$this->cards->hasFaved($card['card_id']))
+			{
+				$tpl->insertBlock('notfaved');
+			}
+			else
+			{
+				$tpl->insertBlock('faved');
+			}
+
+			$tpl->insertBlock('cardlist');
 		}
 
 		$tpl->assign('search', $parameters['q']);
@@ -419,14 +435,16 @@ class main
 					}
 					else
 					{
-						$messages = $this->messages->getAllMessages('userhandler.class.php');
+						$messages = $this->messages->getAllMessages();
 						
 						foreach ($messages as $message)
-						if ($message->message == 'A user with this name already exists in the database. Please choose another username.')
 						{
-							$this->messages->setMessage('Die Email ist bereits registriert. Bitte wähle eine andere.', 'userwarning');
+							if ($message->message == 'A user with this name already exists in the database. Please choose another username.')
+							{
+								$this->messages->setMessage('Die Email ist bereits registriert. Bitte wähle eine andere.', 'userwarning');
+							}
 						}
-							
+
 						$this->messages->setMessage('Der Benutzer wurde nicht angelegt', 'userwarning');
 					}
 				}

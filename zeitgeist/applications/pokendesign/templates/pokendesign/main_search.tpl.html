@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Pokendesign</title>
+<title>Pokendesign - Entdecke neue Poken Visitenkarten</title>
 <!-- InstanceEndEditable -->
 
 <link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/pokendesign.css" />
@@ -22,7 +22,7 @@
     <div id="menu">
     	<table border="0">
         <tr><td>
-		<img alt="Poken" id="logo" src="@@{templatepath}@@/images/logo_poken.png" />
+		<img alt="Poken" id="logo" src="@@{templatepath}@@/images/missionpoken-weiss.png" />
         </td><td>
 	
 		<!-- TemplateBeginBlock name="userunknown" -->
@@ -83,8 +83,18 @@
 	<!-- TemplateBeginBlock name="cardlist" -->
         <div id="pokencard">
             <p id="pokenheadline">@@{cardtitle}@@</p>
-            <p id="pokendate">hochgeladen am @@{carddate}@@</p>
-            <img src="@@{basepath}@@/uploads/@@{cardfile}@@" />
+            <p id="pokendate">hochgeladen am @@{carddate}@@ von <a href="@@{[main.showauthor]}@@&id=@@{cardauthorid}@@">@@{cardauthorname}@@</a><br />
+                <!-- TemplateBeginBlock name="notfaved" -->
+                    <img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ Leute mögen diese Visitenkarte. <a href="@@{[main.addfav]}@@&id=@@{cardid}@@">Ich finde sie gut!</a></p>
+                <!-- TemplateEndBlock -->
+                
+                <!-- TemplateBeginBlock name="faved" -->
+                    <img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ Leute mögen diese Visitenkarte.</p>
+                <!-- TemplateEndBlock -->                    
+            
+            <a href="@@{[main.showdetail]}@@&id=@@{cardid}@@">
+            <img src="@@{basepath}@@/uploads/@@{cardfile}@@" border="0" />
+            </a>
             <p>@@{carddescription}@@</p>
         </div>
 	<!-- TemplateEndBlock -->
