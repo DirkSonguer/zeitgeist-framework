@@ -132,7 +132,7 @@ class pdCards
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT *, DATE_FORMAT(card_timestamp, '%d.%m.%Y, %H:%m') as card_date FROM cards WHERE card_user='" . $author . "' ORDER BY card_timestamp DESC";
+		$sql = "SELECT *, DATE_FORMAT(card_timestamp, '%d.%m.%Y, %H:%i') as card_date FROM cards WHERE card_user='" . $author . "' ORDER BY card_timestamp DESC";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -168,7 +168,7 @@ class pdCards
 		
 		$pagination = ($this->pagination_items*($page-1)).', '.$this->pagination_items;
 
-		$sql = "SELECT c.*, DATE_FORMAT(c.card_timestamp, '%d.%m.%Y, %H:%m') as card_date, ud.userdata_username FROM cards c LEFT JOIN userdata ud ON c.card_user = ud.userdata_user ORDER BY card_timestamp DESC LIMIT ".$pagination;
+		$sql = "SELECT c.*, DATE_FORMAT(c.card_timestamp, '%d.%m.%Y, %H:%i') as card_date, ud.userdata_username FROM cards c LEFT JOIN userdata ud ON c.card_user = ud.userdata_user ORDER BY card_timestamp DESC LIMIT ".$pagination;
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -391,7 +391,7 @@ class pdCards
 		
 		mysql_real_escape_string($search);
 
-		$sql = "SELECT c.*, DATE_FORMAT(c.card_timestamp, '%d.%m.%Y, %H:%m') as card_date, ud.userdata_username FROM cards c LEFT JOIN userdata ud ON c.card_user = ud.userdata_user WHERE c.card_title LIKE '%" . $search . "%' or c.card_description LIKE '%" . $search . "%'";
+		$sql = "SELECT c.*, DATE_FORMAT(c.card_timestamp, '%d.%m.%Y, %H:%i') as card_date, ud.userdata_username FROM cards c LEFT JOIN userdata ud ON c.card_user = ud.userdata_user WHERE c.card_title LIKE '%" . $search . "%' or c.card_description LIKE '%" . $search . "%'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -425,7 +425,7 @@ class pdCards
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT c.*, DATE_FORMAT(c.card_timestamp, '%d.%m.%Y, %H:%m') as card_date, ud.userdata_username FROM cards c LEFT JOIN userdata ud ON c.card_user = ud.userdata_user WHERE card_id='" . $card . "'";
+		$sql = "SELECT c.*, DATE_FORMAT(c.card_timestamp, '%d.%m.%Y, %H:%i') as card_date, ud.userdata_username FROM cards c LEFT JOIN userdata ud ON c.card_user = ud.userdata_user WHERE card_id='" . $card . "'";
 		if ($author) $sql .= " AND card_user='" . $this->user->getUserID() . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
