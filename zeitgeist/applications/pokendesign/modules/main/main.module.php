@@ -29,7 +29,7 @@ class main
 	}
 
 
-	// ok
+	// show start page
 	public function index($parameters=array())
 	{
 		$this->debug->guard();
@@ -69,243 +69,8 @@ class main
 		return true;
 	}
 
-
-
-	// ok
-	public function overview($parameters=array())
-	{
-		$this->debug->guard();
-
-		$tpl = new pdTemplate();
-		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_overview'));
 		
-		if (empty($parameters['page'])) $parameters['page'] = 1;
-		
-		// cards		
-		$carddata = $this->cards->getAllCards($parameters['page']);
-		if (count($carddata) == 0)
-		{
-			$tpl->insertBlock('nocardsfound');
-		}
-		
-		foreach ($carddata as $card)
-		{
-			$tpl->assign('cardid', $card['card_id']);
-			$tpl->assign('cardfile', $card['card_filename']);
-			$tpl->assign('carddate', $card['card_date']);
-			$tpl->assign('cardtitle', $card['card_title']);
-			$tpl->assign('cardauthorname', $card['userdata_username']);
-			$tpl->assign('cardauthorid', $card['card_user']);
-			$tpl->assign('carddescription', $card['card_description']);
-
-			if ($card['card_user'] != $this->user->getUserID() )
-			{
-				$this->cards->addCardView($card['card_id']);
-			}
-
-			$favs = $this->cards->getFavs($card['card_id']);
-			$tpl->assign('favs', $favs);
-	
-			$tpl->insertBlock('cardlist');
-		}
-		
-		if ($parameters['page'] > 1)
-		{
-			$tpl->assign('paginationleft_link', ($parameters['page']-1));
-			$tpl->insertBlock('paginationleft');
-		}
-		
-		if ((($parameters['page']) * $this->cards->pagination_items) < $this->cards->getNumberOfCards())
-		{
-			$tpl->assign('paginationright_link', ($parameters['page']+1));
-			$tpl->insertBlock('paginationright');
-		}
-
-		$tpl->show();
-
-		$this->debug->unguard(true);
-		return true;
-	}
-	
-
-	// ok
-	public function showauthor($parameters=array())
-	{
-		$this->debug->guard();
-
-		$tpl = new pdTemplate();
-		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_showauthor'));
-		
-		if (empty($parameters['id'])) $tpl->redirect($tpl->createLink('main', 'index'));
-		
-		// author
-		$authordata = $this->cards->getAuthorData($parameters['id']);
-		if (!$authordata) $tpl->redirect($tpl->createLink('main', 'index'));
-		
-		$tpl->assign('authorname', $authordata['userdata_username']);
-		$tpl->assign('gravatar', md5($authordata['user_username']));
-		if ($authordata['userdata_url'] != '')
-		{
-			$tpl->assign('authorlink', $authordata['userdata_url']);
-			$tpl->insertBlock('authorwithlink');
-		}
-		else
-		{
-			$tpl->insertBlock('authornolink');
-		}
-		
-		// cards		
-		$carddata = $this->cards->getAuthorCards($parameters['id']);
-		if (count($carddata) == 0)
-		{
-			$tpl->insertBlock('nocardsfound');
-		}
-		
-		foreach ($carddata as $card)
-		{
-			$tpl->assign('cardid', $card['card_id']);
-			$tpl->assign('cardfile', $card['card_filename']);
-			$tpl->assign('carddate', $card['card_date']);
-			$tpl->assign('cardtitle', $card['card_title']);
-			$tpl->assign('carddescription', $card['card_description']);
-
-			if ($card['card_user'] != $this->user->getUserID() )
-			{
-				$this->cards->addCardView($card['card_id']);
-			}
-
-			$favs = $this->cards->getFavs($card['card_id']);
-			$tpl->assign('favs', $favs);
-
-			$tpl->insertBlock('cardlist');
-		}
-
-		$tpl->show();
-
-		$this->debug->unguard(true);
-		return true;
-	}
-	
-	
-	// ok
-	public function showdetail($parameters=array())
-	{
-		$this->debug->guard();
-
-		$tpl = new pdTemplate();
-		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_showdetail'));
-		
-		if (empty($parameters['id'])) $tpl->redirect($tpl->createLink('main', 'index'));
-		
-		$card = $this->cards->getCardInformation($parameters['id'], false);
-		
-		$tpl->assign('cardfile', $card['card_filename']);
-		$tpl->assign('cardauthorid', $card['card_user']);
-		$tpl->assign('cardid', $card['card_id']);
-		$tpl->assign('cardauthorname', $card['userdata_username']);
-		$tpl->assign('carddate', $card['card_date']);
-		$tpl->assign('cardtitle', $card['card_title']);
-		$tpl->assign('carddescription', $card['card_description']);
-
-		if ($card['card_user'] != $this->user->getUserID() )
-		{
-			$this->cards->addCardClick($card['card_id']);
-		}
-		
-		$favs = $this->cards->getFavs($parameters['id']);
-		$tpl->assign('favs', $favs);
-		
-		if (!$this->cards->hasFaved($parameters['id']))
-		{
-			$tpl->insertBlock('notfaved');
-		}
-		else
-		{
-			$tpl->insertBlock('faved');
-		}
-
-		$tpl->show();
-
-		$this->debug->unguard(true);
-		return true;
-	}
-		
-
-	// ok
-	public function addfav($parameters=array())
-	{
-		$this->debug->guard();
-
-		$tpl = new pdTemplate();
-		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_showdetail'));
-		
-		if (empty($parameters['id'])) $tpl->redirect($tpl->createLink('main', 'index'));
-		
-		$ret = $this->cards->addFav($parameters['id']);
-		
-		$tpl->redirect($tpl->createLink('main', 'showdetail').'&id='.$parameters['id']);
-
-		$this->debug->unguard(true);
-		return true;
-	}
-		
-
-	// ok
-	public function search($parameters=array())
-	{
-		$this->debug->guard();
-
-		$tpl = new pdTemplate();
-		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_search'));
-
-		if (empty($parameters['q'])) $tpl->redirect($tpl->createLink('main', 'index'));
-
-		// cards		
-		$carddata = $this->cards->searchCards($parameters['q']);
-		if (count($carddata) == 0)
-		{
-			$tpl->insertBlock('noresultsfound');
-		}
-		
-		foreach ($carddata as $card)
-		{
-			$tpl->assign('cardfile', $card['card_filename']);
-			$tpl->assign('cardauthorid', $card['card_user']);
-			$tpl->assign('cardid', $card['card_id']);
-			$tpl->assign('cardauthorname', $card['userdata_username']);
-			$tpl->assign('carddate', $card['card_date']);
-			$tpl->assign('cardtitle', $card['card_title']);
-			$tpl->assign('carddescription', $card['card_description']);
-
-			if ($card['card_user'] != $this->user->getUserID() )
-			{
-				$this->cards->addCardView($card['card_id']);
-			}
-			
-			$favs = $this->cards->getFavs($card['card_id']);
-			$tpl->assign('favs', $favs);
-
-			if (!$this->cards->hasFaved($card['card_id']))
-			{
-				$tpl->insertBlock('notfaved');
-			}
-			else
-			{
-				$tpl->insertBlock('faved');
-			}
-
-			$tpl->insertBlock('cardlist');
-		}
-
-		$tpl->assign('search', $parameters['q']);
-		$tpl->show();
-
-		$this->debug->unguard(true);
-		return true;
-	}
-	
-		
-	// ok
+	// login screen
 	public function login($parameters=array())
 	{
 		$this->debug->guard();
@@ -314,7 +79,7 @@ class main
 
 		if ($this->user->isLoggedIn())
 		{
-			$tpl->redirect($tpl->createLink('main', 'index'));
+			$tpl->redirect($tpl->createLink('member', 'index'));
 		}
 
 		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_login'));
@@ -324,7 +89,7 @@ class main
 			{
 				if ($this->user->login($parameters['username'], $parameters['password']))
 				{
-					$tpl->redirect($tpl->createLink('main', 'index'));
+					$tpl->redirect($tpl->createLink('member', 'index'));
 				}
 				else
 				{
@@ -344,7 +109,7 @@ class main
 	}
 
 
-	// ok
+	// logout functionality
 	public function logout($parameters=array())
 	{
 		$this->debug->guard();
@@ -359,44 +124,7 @@ class main
 	}
 
 
-
-	// ok
-	public function confirmregistration($parameters=array())
-	{
-		$this->debug->guard();
-
-		$tpl = new pdTemplate();
-		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_index'));
-
-		if (empty($parameters['id'])) $tpl->redirect($tpl->createLink('main', 'index'));
-		
-		if ($userid = $this->user->checkConfirmation($parameters['id']))
-		{
-			$this->user->activateUser($userid);
-			$this->messages->setMessage('Dein Benutzer wurde aktiviert und du kannst dich nun einloggen. Viel Vergnügen!', 'usermessage');
-		}
-		else
-		{
-			$this->messages->setMessage('Es wurde kein dazugehöriger Benutzer gefunden. Bitte überprüfe den Aktivierungscode', 'userwarning');
-		}
-		
-		$carddata = $this->cards->getRandomCard();
-		
-		$randomcard = $carddata['card_filename'];
-		$tpl->assign('randomcard', $randomcard);
-		$tpl->assign('cardid', $carddata['card_id']);
-		$tpl->assign('cardname', $carddata['card_title']);
-		$tpl->assign('cardauthorname', $carddata['userdata_username']);
-		$tpl->assign('cardauthorid', $carddata['card_user']);
-
-		$tpl->show();
-
-		$this->debug->unguard(true);
-		return true;
-	}
-	
-
-	// ok
+	// register a new user
 	public function register($parameters=array())
 	{
 		$this->debug->guard();
@@ -463,111 +191,37 @@ class main
 	}
 
 
-	// ok
-	public function editprofile($parameters=array())
+	// confirms the registration of a new user and activate it
+	public function confirmregistration($parameters=array())
 	{
 		$this->debug->guard();
 
 		$tpl = new pdTemplate();
-		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_editprofile'));
+		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_index'));
 
-		$editprofileForm = new zgStaticform();
-		$editprofileForm->load('forms/editprofile.form.ini');
-		$formvalid = $editprofileForm->process($parameters);
-
-		if (!empty($parameters['submit']))
+		if (empty($parameters['id'])) $tpl->redirect($tpl->createLink('main', 'index'));
+		
+		if ($userid = $this->user->checkConfirmation($parameters['id']))
 		{
-			if ($formvalid)
-			{
-				// email
-				if (!empty($parameters['profile']['user_username']))
-				{
-					if ($parameters['profile']['user_username'] != $this->user->getUsername())
-					{
-						if ($this->user->changeUsername($this->user->getUserID(), $parameters['profile']['user_username']))
-						{
-							$this->messages->setMessage('Deine Email wurde geändert.', 'usermessage');
-						}
-						else
-						{
-							$messages = $this->messages->getAllMessages('userhandler.class.php');
-							
-							foreach ($messages as $message)
-							if ($message->message == 'Problem changing username: username already exists')
-							{
-								$this->messages->setMessage('Die Email ist bereits registriert. Bitte wähle eine andere.', 'userwarning');
-							}
-
-							$this->messages->setMessage('Die Email wurde nicht geändert', 'userwarning');
-						}
-					}
-					
-					// username
-					if ($parameters['profile']['userdata_username'] != $this->user->getUserdata('userdata_username'))
-					{
-						
-						if ($this->user->setUserdata('userdata_username', $parameters['profile']['userdata_username']))
-						{
-							$this->messages->setMessage('Dein Benutzername wurde geändert.', 'usermessage');
-						}
-						else
-						{
-							$this->messages->setMessage('Dein Benutzername konnte nicht geändert werden', 'userwarning');
-						}
-					}
-
-					// URL
-					if ($parameters['profile']['userdata_url'] != $this->user->getUserdata('userdata_url'))
-					{
-						
-						if ($this->user->setUserdata('userdata_url', $parameters['profile']['userdata_url']))
-						{
-							$this->messages->setMessage('Deine URL wurde geändert.', 'usermessage');
-						}
-						else
-						{
-							$this->messages->setMessage('Deine URL konnte nicht geändert werden', 'userwarning');
-						}
-					}
-
-					// Password
-					if ( (!empty($parameters['profile']['user_password1'])) && (!empty($parameters['profile']['user_password2'])) )
-					{
-						if ($parameters['profile']['user_password1'] == $parameters['profile']['user_password2'])
-						{
-							if ($this->user->changePassword($this->user->getUserID(), $parameters['profile']['user_password1']))
-							{
-								$this->messages->setMessage('Das Passwort wurde geändert.', 'usermessage');
-							}
-							else
-							{
-								$this->messages->setMessage('Das Passwort konnte nicht geändert werden', 'userwarning');
-							}
-						}
-						else
-						{
-							$this->messages->setMessage('Die beiden Passworteingaben stimmen nicht überein', 'userwarning');
-						}						
-					}
-					
-				}
-			}
-			else
-			{
-				$this->messages->setMessage('Fehler bei der Eingabe. Bitte überprüfen Sie Ihre Angaben sorgfältig.', 'userwarning');
-			}
+			$this->user->activateUser($userid);
+			$this->messages->setMessage('Dein Benutzer wurde aktiviert und du kannst dich nun einloggen. Viel Vergnügen!', 'usermessage');
 		}
 		else
 		{
-			$userdata = $this->pduserfunctions->getAllUserdata();
-			$processData['profile'] = $userdata;
-			$formvalid = $editprofileForm->process($processData);
+			$this->messages->setMessage('Es wurde kein dazugehöriger Benutzer gefunden. Bitte überprüfe den Aktivierungscode', 'userwarning');
 		}
-
-		$formcreated = $editprofileForm->create($tpl);
+		
+		$carddata = $this->cards->getRandomCard();
+		
+		$randomcard = $carddata['card_filename'];
+		$tpl->assign('randomcard', $randomcard);
+		$tpl->assign('cardid', $carddata['card_id']);
+		$tpl->assign('cardname', $carddata['card_title']);
+		$tpl->assign('cardauthorname', $carddata['userdata_username']);
+		$tpl->assign('cardauthorid', $carddata['card_user']);
 
 		$tpl->show();
-				
+
 		$this->debug->unguard(true);
 		return true;
 	}

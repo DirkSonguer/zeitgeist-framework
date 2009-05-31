@@ -8,32 +8,20 @@
 	require_once(SIMPLE_TEST . 'autorun.php');
 
 	define('DEBUGMODE', true);
-	define('LINERACER_ACTIVE', true);
+	define('POKENDESIGN_ACTIVE', true);
 	if (!defined('ZEITGEIST_ROOTDIRECTORY')) define('ZEITGEIST_ROOTDIRECTORY', '../zeitgeist/');
 	if (!defined('APPLICATION_ROOTDIRECTORY')) define('APPLICATION_ROOTDIRECTORY', '../');
 
-	define('ZG_DB_DBSERVER', 'localhost');
-	define('ZG_DB_USERNAME', 'root');
-	define('ZG_DB_USERPASS', '');
-	define('ZG_DB_DATABASE', 'lineracer_test');
-	define('ZG_DB_CONFIGURATIONCACHE', 'configurationcache');
+	define(ZG_DB_DBSERVER, 'localhost');
+	define(ZG_DB_USERNAME, 'root');
+	define(ZG_DB_USERPASS, '');
+	define(ZG_DB_DATABASE, 'pokendesign_test');
+	define(ZG_DB_CONFIGURATIONCACHE, 'configurationcache');
 
 	require_once('../zeitgeist/zeitgeist.php');
 	include('../zeitgeist/zeitgeist.php');
 
-	require_once('../includes/lreventoverride.include.php');
-	require_once('../classes/lruserfunctions.class.php');
-	require_once('../classes/lrtemplate.class.php');
-	require_once('../classes/lrgameeventhandler.class.php');
-	require_once('../classes/lrgamestates.class.php');
-	require_once('../classes/lrgamecardfunctions.class.php');
-	require_once('../classes/lrmovementfunctions.class.php');
-	require_once('../classes/lrgamefunctions.class.php');
-
-	include('../configuration/lineracer.config.php');
-
-	spl_autoload_register ('__autoload');
-	spl_autoload_register('lrEventoverride');
+	require_once('../classes/pdcards.class.php');
 
 	$debug = zgDebug::init();
 	$message = zgMessages::init();
@@ -44,29 +32,16 @@
 	$locale = zgLocale::init();
 
 	// load configuration
-	$configuration->loadConfiguration('lineracer', '../configuration/lineracer.ini');
-	$configuration->loadConfiguration('gamedefinitions', '../configuration/gamedefinitions.ini');
-	
-	require_once('miscfunctions.php');
+	$configuration->loadConfiguration('pokendesign', '../configuration/pokendesign.ini');
+
 	require_once('database.test.php');
-	require_once('lrgamestates.test.php');
-	require_once('lrgamecardfunctions.test.php');
-	require_once('lrmovementfunctions.test.php');
-	require_once('lrmovementfunctions.test.php');
-	require_once('lrgameeventhandler.test.php');
-	require_once('lrgamecards.test.php');
-	require_once('lrgamefunctions.test.php');
+	require_once('pdcards.test.php');
 
 	$debug = zgDebug::init();
 
-    $test = &new TestSuite('Lineracer Unit Tests');
+    $test = &new TestSuite('Pokendesign Unit Tests');
     $test->addTestCase(new testDatabase());
-
-    $test->addTestCase(new testLrgamestates());
-    $test->addTestCase(new testLrgamecardfunctions());
-    $test->addTestCase(new testLrmovementfunctions());
-    $test->addTestCase(new testLrgameeventhandler());
-    $test->addTestCase(new testLrgamefunctions());
+    $test->addTestCase(new testPdcards());
 
     $test->run(new HtmlReporter());
 

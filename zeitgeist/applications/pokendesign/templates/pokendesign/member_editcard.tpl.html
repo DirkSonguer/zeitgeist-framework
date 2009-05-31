@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Pokendesign</title>
+<title>Pokendesign - Visitenkartendaten ändern</title>
 <!-- InstanceEndEditable -->
 
 <script src="http://missionpoken.de/mint/?js" type="text/javascript"></script>
@@ -32,7 +32,7 @@
 				<div id="welcomemessage">Willkommen auf Pokendesign!</div>
                 <div id="mainmenu">
    				<a href="@@{[main.index]}@@">Home</a>
-				<a href="@@{[main.overview]}@@">Karten entdecken</a>
+				<a href="@@{[cards.index]}@@">Karten entdecken</a>
 				<a href="@@{[main.login]}@@">Karte hinzufügen</a>
 				<a href="@@{[main.login]}@@">Du bist nicht eingeloggt</a>
                 </div>
@@ -42,10 +42,10 @@
 				<div id="welcomemessage">Hallo @@{username}@@, schön dich wieder zu sehen!</div>
                 <div id="mainmenu">
    				<a href="@@{[main.index]}@@">Home</a>
-				<a href="@@{[main.overview]}@@">Karten entdecken</a>
-				<a href="@@{[cards.index]}@@">Deine Karten</a>
-				<a href="@@{[cards.addcard]}@@">Karte hinzufügen</a>
-				<a href="@@{[main.editprofile]}@@">Dein Profil</a>
+				<a href="@@{[cards.index]}@@">Karten entdecken</a>
+				<a href="@@{[member.index]}@@">Deine Karten</a>
+				<a href="@@{[member.addcard]}@@">Karte hinzufügen</a>
+				<a href="@@{[member.editprofile]}@@">Dein Profil</a>
 				<a href="@@{[main.logout]}@@">Ausloggen</a>
                 </div>
 		<!-- TemplateEndBlock -->
@@ -70,34 +70,42 @@
 	<div id="content">
 	<!-- InstanceBeginEditable name="body" -->
 
-	<h1>Entdecke neue Poken Visitenkarten!</h1>
+		<h1>Visitenkartendaten ändern</h1>
 
-			<table cellspacing="10">
-            	<tr>
-                <td valign="top"><img src="@@{basepath}@@/uploads/@@{cardfile}@@" /></td>
-                <td valign="top">
-                    <p id="pokenheadline">@@{cardtitle}@@</p>
-                    <p id="pokendate">hochgeladen am @@{carddate}@@ von <a href="@@{[main.showauthor]}@@&id=@@{cardauthorid}@@">@@{cardauthorname}@@</a></p>
-                    
-                    <p>@@{carddescription}@@</p>
+		<form method="post" action="@@{[member.editcard]}@@" name="editcard" enctype="multipart/form-data">
+		<input type="hidden" name="editcard[card_id]" value="@@{card_id:value}@@" />
 
-                    <!-- TemplateBeginBlock name="notfaved" -->
-                    	<table cellspacing="5" border="0"><tr>
-                        <td valign="top"><img alt="" src="@@{templatepath}@@/images/services_big.png" /></td>
-                        <td><p id="pokendate">@@{favs}@@ Leute mögen diese Visitenkarte</p>
-                        <h2 style="margin-top:10px;"><a href="@@{[main.addfav]}@@&id=@@{cardid}@@">Ich finde sie gut!</a></h2>
-                        </td>
-                        </tr></table>
-                    <!-- TemplateEndBlock -->
-                    
-                    <!-- TemplateBeginBlock name="faved" -->
-                    	<p id="pokendate"><img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ Leute mögen diese Visitenkarte.</p>
-                    <!-- TemplateEndBlock -->                    
-                </td>
-                </tr>
-            </table>
-
-			<div style="clear:both"></div>
+		<table cellspacing="10" border="0">
+        <tr>
+            <td nowrap="nowrap"><p id="formlabel">Titel deiner Karte*</p></td>
+            <td @@{card_title:formerror}@@ width="350">
+                <input maxlength="128" name="editcard[card_title]" value="@@{card_title:value}@@" id="formtext" type="text" />
+                <!-- TemplateBeginBlock name="card_title:errormsg" -->
+                    <br /><span class="formerrormsg">@@{card_title:errormsg}@@</span>
+                <!-- TemplateEndBlock -->
+            </td>
+            <td rowspan="4" valign="top" align="center">
+                <p style="margin-top:10px;" id="smalltext"><img src="@@{templatepath}@@/images/info.png" alt="Mail" align="left" style="padding-right:10px;" />
+                <strong>Nur Titel und die Beschreibung einer Visitenkarte können verändert werden</strong>, nicht aber die Visitenkarte selbst. Falls nötig, lösche die alte Version und lade die neue erneut hoch.</p>
+            </td>
+        </tr>
+        <tr>
+            <td nowrap="nowrap" valign="top"><p id="formlabel">Beschreibung*</p></td>
+            <td @@{card_description:formerror}@@>
+				<textarea name="editcard[card_description]" id="formtext" cols="50" rows="4">@@{card_description:value}@@</textarea>
+                <!-- TemplateBeginBlock name="card_description:errormsg" -->
+                    <br /><span class="formerrormsg">@@{card_description:errormsg}@@</span>
+                <!-- TemplateEndBlock -->
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+               <p><input name="submit" value="Visitenkarte speichern" class="formbutton" type="submit" /></p>
+            </td>
+        </tr>
+		</table>
+		</form>
 
 <!-- InstanceEndEditable -->
 

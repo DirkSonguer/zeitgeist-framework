@@ -363,6 +363,16 @@ class pdCards
 			$this->debug->unguard(false);
 			return false;
 		}
+
+		$sql = "DELETE FROM favs WHERE fav_card='" . $card . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not delete card: could not delete favs table', 'warning');
+			$this->messages->setMessage('Could not delete card: could not delete favs table', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
 		
 		if (!unlink(getcwd() . '/uploads/'.$filename['card_filename']))
 		{
@@ -494,6 +504,16 @@ class pdCards
 			return false;
 		}
 
+		$sql = "INSERT INTO transactions(transaction_user, transaction_type, transaction_value) VALUES('" . $this->user->getUserID() . "', '3', '" . $card . "')";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not add fav: could not write transaction table', 'warning');
+			$this->messages->setMessage('Could not add fav: could not write transaction table', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -549,6 +569,16 @@ class pdCards
 			return false;
 		}
 		
+		$sql = "INSERT INTO transactions(transaction_user, transaction_type, transaction_value) VALUES('" . $this->user->getUserID() . "', '1', '" . $card . "')";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not update card views: could not write transaction table', 'warning');
+			$this->messages->setMessage('Could not update card views: could not write transaction table', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -575,10 +605,141 @@ class pdCards
 			return false;
 		}
 		
+		$sql = "INSERT INTO transactions(transaction_user, transaction_type, transaction_value) VALUES('" . $this->user->getUserID() . "', '2', '" . $card . "')";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not update card clicks: could not write transaction table', 'warning');
+			$this->messages->setMessage('Could not update card clicks: could not write transaction table', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+				
 		$this->debug->unguard(true);
 		return true;
 	}
 	
+/**
+	 * gets the list of tags associated with a card
+	 *
+	 * @param integer $card id of the card to associate the tags with
+	 *
+	 * @return array
+	 */
+	public function getTags($card)
+	{
+		$this->debug->guard();
+
+		$sql = "SELECT * FROM tags_to_cards tc LEFT JOIN tags t on tc.cardtag_tag = t.tag_id WHERE tc.cardtag_card='" . $card . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not get tags: problem reading from tag table', 'warning');
+			$this->messages->setMessage('Could not get tags: problem reading from tag table', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$tags = array();
+		while ($tag = $this->database->fetchArray($res))
+		{
+			$tags[$tag['tag_id']] = $tag['tag_text'];
+		}
+
+		$this->debug->unguard($tags);
+		return $tags;
+	}	
+
+
+/**
+	 * gets the list of all existing tags
+	 *
+	 * @return array
+	 */
+	public function getAllTags()
+	{
+		$this->debug->guard();
+
+		$sql = "SELECT * FROM tags ORDER BY tag_text";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not get tags: problem reading from tag table', 'warning');
+			$this->messages->setMessage('Could not get tags: problem reading from tag table', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$tags = array();
+		while ($tag = $this->database->fetchArray($res))
+		{
+			$tags[$tag['tag_id']] = $tag['tag_text'];
+		}
+
+		$this->debug->unguard($tags);
+		return $tags;
+	}	
+	
+	
+/**
+	 * stores a given string of tags into the database
+	 * tags will be separated and stored individually
+	 *
+	 * @param string $tagstring string containing all tags to store
+	 * @param integer $card id of the card to associate the tags with
+	 *
+	 * @return boolean
+	 */
+	public function addTags($tagstring, $card)
+	{
+		$this->debug->guard();
+
+		if ($tagstring == '')
+		{
+			$this->debug->write('Tagstring is empty: no tags found', 'warning');
+			$this->messages->setMessage('Tagstring is empty: no tags found', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$newtags = explode(',', $tagstring);
+		$existingtags = $this->getAllTags();
+		$alreadyboundtags = $this->getTags($card);
+		
+		foreach($newtags as $newtag)
+		{
+			$newtag = rtrim($newtag);
+			$newtag = ltrim($newtag);
+			
+			if (!in_array($newtag, $alreadyboundtags))
+			{
+				$sql = "INSERT INTO tags(tag_text) VALUES('" . $newtag . "') ON DUPLICATE KEY UPDATE tag_id=LAST_INSERT_ID(tag_id), tag_text='" . $newtag . "'";				
+				$res = $this->database->query($sql);
+				if (!$res)
+				{
+					$this->debug->write('Problem writing tags to the database', 'warning');
+					$this->messages->setMessage('Problem writing tags to the database', 'warning');
+					$this->debug->unguard(false);
+					return false;
+				}
+				$insertid = $this->database->insertId();
+	
+				$sql = "INSERT INTO tags_to_cards(cardtag_tag, cardtag_card) VALUES('" . $insertid . "', '" . $card . "')";
+				$res = $this->database->query($sql);
+				if (!$res)
+				{
+					$this->debug->write('Problem writing tags to the database', 'warning');
+					$this->messages->setMessage('Problem writing tags to the database', 'warning');
+					$this->debug->unguard(false);
+					return false;
+				}			
+			}
+		}
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+
 }
 
 ?>
