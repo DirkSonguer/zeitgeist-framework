@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Pocketkun</title>
+<title>Pokendesign - @@{cardtitle}@@</title>
 <!-- InstanceEndEditable -->
 
 <script src="http://missionpoken.de/mint/?js" type="text/javascript"></script>
@@ -32,7 +32,7 @@
 				<div id="welcomemessage">Willkommen auf Pokendesign!</div>
                 <div id="mainmenu">
    				<a href="@@{[main.index]}@@">Home</a>
-				<a href="@@{[main.overview]}@@">Karten entdecken</a>
+				<a href="@@{[cards.index]}@@">Karten entdecken</a>
 				<a href="@@{[main.login]}@@">Karte hinzufügen</a>
 				<a href="@@{[main.login]}@@">Du bist nicht eingeloggt</a>
                 </div>
@@ -42,10 +42,10 @@
 				<div id="welcomemessage">Hallo @@{username}@@, schön dich wieder zu sehen!</div>
                 <div id="mainmenu">
    				<a href="@@{[main.index]}@@">Home</a>
-				<a href="@@{[main.overview]}@@">Karten entdecken</a>
-				<a href="@@{[cards.index]}@@">Deine Karten</a>
-				<a href="@@{[cards.addcard]}@@">Karte hinzufügen</a>
-				<a href="@@{[main.editprofile]}@@">Dein Profil</a>
+				<a href="@@{[cards.index]}@@">Karten entdecken</a>
+				<a href="@@{[member.index]}@@">Deine Karten</a>
+				<a href="@@{[member.addcard]}@@">Karte hinzufügen</a>
+				<a href="@@{[member.editprofile]}@@">Dein Profil</a>
 				<a href="@@{[main.logout]}@@">Ausloggen</a>
                 </div>
 		<!-- TemplateEndBlock -->
@@ -70,25 +70,34 @@
 	<div id="content">
 	<!-- InstanceBeginEditable name="body" -->
 
-		<p>Bitte melde dich an, um selbst Bilder hochladen zu können:</p>
+	<h1>Entdecke neue Poken Visitenkarten!</h1>
 
-		<form method="post" action="@@{[main.login]}@@" name="login">
-		<table cellspacing="5">
-			<tr>
-				<td>Benutzername</td>
-				<td><input type="text" size="35" maxlength="20" name="username" class="formtext" style="width:200px; margin-right:10px;" /></td>
-			</tr>
-			<tr>
-				<td>Password</td>
-				<td><input type="password" size="35" maxlength="32" name="password" class="formtext" style="width:200px;" /></td>
-			</tr>
-			<tr>
-				<td colspan="2" align="right"><input type="submit" name="login" value="Login" class="formbutton" /></td>
-			</tr>
-		</table>
-		</form>
-		
-		<p>Wenn du noch kein Profil hast, kannst du dich <a href="@@{[main.register]}@@">hier registrieren</a>.</p>
+			<table cellspacing="10">
+            	<tr>
+                <td valign="top"><img src="@@{basepath}@@/uploads/@@{cardfile}@@" /></td>
+                <td valign="top">
+                    <p id="pokenheadline">@@{cardtitle}@@</p>
+                    <p id="pokendate">hochgeladen am @@{carddate}@@ von <a href="@@{[main.showauthor]}@@&id=@@{cardauthorid}@@">@@{cardauthorname}@@</a></p>
+                    
+                    <p>@@{carddescription}@@</p>
+
+                    <!-- TemplateBeginBlock name="notfaved" -->
+                    	<table cellspacing="5" border="0"><tr>
+                        <td valign="top"><img alt="" src="@@{templatepath}@@/images/services_big.png" /></td>
+                        <td><p id="pokendate">@@{favs}@@ Leute mögen diese Visitenkarte</p>
+                        <h2 style="margin-top:10px;"><a href="@@{[cards.addfav]}@@&id=@@{cardid}@@">Ich finde sie gut!</a></h2>
+                        </td>
+                        </tr></table>
+                    <!-- TemplateEndBlock -->
+                    
+                    <!-- TemplateBeginBlock name="faved" -->
+                    	<p id="pokendate"><img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ Leute mögen diese Visitenkarte.</p>
+                    <!-- TemplateEndBlock -->                    
+                </td>
+                </tr>
+            </table>
+
+			<div style="clear:both"></div>
 
 <!-- InstanceEndEditable -->
 

@@ -32,7 +32,7 @@
 				<div id="welcomemessage">Willkommen auf Pokendesign!</div>
                 <div id="mainmenu">
    				<a href="@@{[main.index]}@@">Home</a>
-				<a href="@@{[main.overview]}@@">Karten entdecken</a>
+				<a href="@@{[cards.index]}@@">Karten entdecken</a>
 				<a href="@@{[main.login]}@@">Karte hinzufügen</a>
 				<a href="@@{[main.login]}@@">Du bist nicht eingeloggt</a>
                 </div>
@@ -42,10 +42,10 @@
 				<div id="welcomemessage">Hallo @@{username}@@, schön dich wieder zu sehen!</div>
                 <div id="mainmenu">
    				<a href="@@{[main.index]}@@">Home</a>
-				<a href="@@{[main.overview]}@@">Karten entdecken</a>
-				<a href="@@{[cards.index]}@@">Deine Karten</a>
-				<a href="@@{[cards.addcard]}@@">Karte hinzufügen</a>
-				<a href="@@{[main.editprofile]}@@">Dein Profil</a>
+				<a href="@@{[cards.index]}@@">Karten entdecken</a>
+				<a href="@@{[member.index]}@@">Deine Karten</a>
+				<a href="@@{[member.addcard]}@@">Karte hinzufügen</a>
+				<a href="@@{[member.editprofile]}@@">Dein Profil</a>
 				<a href="@@{[main.logout]}@@">Ausloggen</a>
                 </div>
 		<!-- TemplateEndBlock -->
@@ -72,7 +72,7 @@
 
 		<h1>Ändere dein Profil</h1>
 
-		<form method="post" action="@@{[main.editprofile]}@@" name="profile" enctype="multipart/form-data">
+		<form method="post" action="@@{[member.editprofile]}@@" name="profile" enctype="multipart/form-data">
 		<table cellspacing="10" border="0">
         <tr>
             <td nowrap="nowrap" valign="top"><p id="formlabel">Deine Email*</p></td>

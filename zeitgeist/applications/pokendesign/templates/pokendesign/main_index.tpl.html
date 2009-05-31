@@ -32,7 +32,7 @@
 				<div id="welcomemessage">Willkommen auf Pokendesign!</div>
                 <div id="mainmenu">
    				<a href="@@{[main.index]}@@">Home</a>
-				<a href="@@{[main.overview]}@@">Karten entdecken</a>
+				<a href="@@{[cards.index]}@@">Karten entdecken</a>
 				<a href="@@{[main.login]}@@">Karte hinzufügen</a>
 				<a href="@@{[main.login]}@@">Du bist nicht eingeloggt</a>
                 </div>
@@ -42,10 +42,10 @@
 				<div id="welcomemessage">Hallo @@{username}@@, schön dich wieder zu sehen!</div>
                 <div id="mainmenu">
    				<a href="@@{[main.index]}@@">Home</a>
-				<a href="@@{[main.overview]}@@">Karten entdecken</a>
-				<a href="@@{[cards.index]}@@">Deine Karten</a>
-				<a href="@@{[cards.addcard]}@@">Karte hinzufügen</a>
-				<a href="@@{[main.editprofile]}@@">Dein Profil</a>
+				<a href="@@{[cards.index]}@@">Karten entdecken</a>
+				<a href="@@{[member.index]}@@">Deine Karten</a>
+				<a href="@@{[member.addcard]}@@">Karte hinzufügen</a>
+				<a href="@@{[member.editprofile]}@@">Dein Profil</a>
 				<a href="@@{[main.logout]}@@">Ausloggen</a>
                 </div>
 		<!-- TemplateEndBlock -->
@@ -71,13 +71,13 @@
 	<!-- InstanceBeginEditable name="body" -->
 		
 			<div id="cardoftheday">
-				<a href="@@{[main.showdetail]}@@&id=@@{cardid}@@">
+				<a href="@@{[cards.showdetail]}@@&id=@@{cardid}@@">
                 	<img src="@@{basepath}@@/uploads/@@{randomcard}@@" border="0" />
                 </a>
 
-                <p style="margin-bottom:0px;"><span id="pokenheadline">"@@{cardname}@@"</span> von <a href="@@{[main.showauthor]}@@&id=@@{cardauthorid}@@">@@{cardauthorname}@@</a></p>
+                <p style="margin-bottom:0px;"><span id="pokenheadline">"@@{cardname}@@"</span> von <a href="@@{[cards.showauthor]}@@&id=@@{cardauthorid}@@">@@{cardauthorname}@@</a></p>
                 <!-- TemplateBeginBlock name="notfaved" -->
-                    <p id="pokendate"><img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ Leute mögen diese Visitenkarte. <a href="@@{[main.addfav]}@@&id=@@{cardid}@@">Ich finde sie gut!</a></p>
+                    <p id="pokendate"><img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ Leute mögen diese Visitenkarte. <a href="@@{[cards.addfav]}@@&id=@@{cardid}@@">Ich finde sie gut!</a></p>
                 <!-- TemplateEndBlock -->
                 
                 <!-- TemplateBeginBlock name="faved" -->
@@ -89,7 +89,7 @@
 			<div id="slogan">
 				<h1 style="margin-top:0px; margin-bottom:45px;">Hilf uns die Poken-Welt<br />bunter zu machen!</h1>
 
-				<form method="post" action="@@{[main.search]}@@" name="search">
+				<form method="post" action="@@{[cards.search]}@@" name="search">
 					<h2 id="search">Suche
 					<input type="text" size="35" maxlength="20" name="q" id="formtext" />
 					<input type="submit" name="Suche" value="Suche" class="formbutton" />
