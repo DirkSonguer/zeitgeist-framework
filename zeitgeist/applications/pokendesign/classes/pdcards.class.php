@@ -315,6 +315,11 @@ class pdCards
 			$this->debug->unguard(false);
 			return false;
 		}
+		
+		if (!empty($carddata['card_tags']))
+		{
+			$this->addTags($carddata['card_tags'], $carddata['card_id'], true);
+		}
 
 		$this->debug->unguard(true);
 		return true;
@@ -687,10 +692,11 @@ class pdCards
 	 *
 	 * @param string $tagstring string containing all tags to store
 	 * @param integer $card id of the card to associate the tags with
+	 * @param boolean $clearexisting flag if the existing tag bindings should be cleared
 	 *
 	 * @return boolean
 	 */
-	public function addTags($tagstring, $card)
+	public function addTags($tagstring, $card, $clearexisting=false)
 	{
 		$this->debug->guard();
 
@@ -700,6 +706,12 @@ class pdCards
 			$this->messages->setMessage('Tagstring is empty: no tags found', 'warning');
 			$this->debug->unguard(false);
 			return false;
+		}
+		
+		if ($clearexisting)
+		{
+			$sql = "DELETE FROM tags_to_cards WHERE cardtag_card='" . $card . "'";
+			$res = $this->database->query($sql);
 		}
 
 		$newtags = explode(',', $tagstring);

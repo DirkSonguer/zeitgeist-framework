@@ -25,7 +25,7 @@
     <div id="menu">
     	<table border="0">
         <tr><td>
-		<img alt="Poken" id="logo" src="@@{templatepath}@@/images/missionpoken-weiss.png" />
+			<a href="@@{[main.index]}@@"><img alt="Poken" id="logo" src="@@{templatepath}@@/images/missionpoken-weiss.png" border="0" /></a>
         </td><td>
 	
 		<!-- TemplateBeginBlock name="userunknown" -->
@@ -82,10 +82,10 @@
                     <br /><span class="formerrormsg">@@{card_title:errormsg}@@</span>
                 <!-- TemplateEndBlock -->
             </td>
-            <td rowspan="4" valign="top" align="center">
+            <td rowspan="5" valign="top" align="center">
             	<img src="@@{templatepath}@@/images/basic_poken_card.png" alt="Visitenkarte Beispiel" />
-                <p style="margin-top:10px;">Die Visitenkarten müssen entweder im <strong>.JPG oder .PNG-Format</strong> hochgeladen werden und eine Abmessung von idealerweise <strong>327 x 217 Pixel</strong> haben.</p>
-                <p>Die Datei darf die maximale Größe von <strong>500KB</strong> nicht überschreiben.</p>
+                <p style="margin-top:10px;" id="smalltext">Die Visitenkarten müssen entweder im <strong>.JPG oder .PNG-Format</strong> hochgeladen werden und eine Abmessung von idealerweise <strong>327 x 217 Pixel</strong> haben. Die Datei darf die maximale Größe von <strong>500KB</strong> nicht überschreiben.</p>
+                <p style="margin-top:10px;" id="smalltext">Die Beschreibung und Tags dienen dazu deine Karte für die Suche erfassbar zu machen. <strong>Verwende also möglichst viele passende Begriffe</strong>, damit andere deine Karte finden können.</p>
             </td>
         </tr>
         <tr>
@@ -98,9 +98,18 @@
             </td>
         </tr>
         <tr>
+            <td nowrap="nowrap"><p id="formlabel">Tags</p></td>
+            <td @@{card_tags:formerror}@@ width="350">
+                <input maxlength="256" name="editcard[card_tags]" value="@@{card_tags:value}@@" id="formtext" type="text" />
+                <!-- TemplateBeginBlock name="card_tags:errormsg" -->
+                    <br /><span class="formerrormsg">@@{card_tags:errormsg}@@</span>
+                <!-- TemplateEndBlock -->
+            </td>
+        </tr>
+        <tr>
             <td nowrap="nowrap"><p id="formlabel">Visitenkarte*</p></td>
             <td @@{card_file:formerror}@@>
-	            <input name="addcard[card_file]" type="file" maxlength="10000" accept="image/*" id="formtext" />
+	            <input name="addcard[card_file]" type="file" maxlength="" accept="image/*" id="formtext" />
                 <!-- TemplateBeginBlock name="card_file:errormsg" -->
                     <br /><span class="formerrormsg">@@{card_file:errormsg}@@</span>
                 <!-- TemplateEndBlock -->

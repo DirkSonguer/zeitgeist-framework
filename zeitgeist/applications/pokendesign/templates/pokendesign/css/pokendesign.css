@@ -266,7 +266,7 @@ blockquote:before,blockquote:after,q:before,q:after {
 #formtext {
 	border:solid 1px #777788;
 	padding: 3px;
-	width:250px;
+	width:300px;
     font-family: Osaka,verdana,Sans-Serif;
     font-size: 12pt;
 }

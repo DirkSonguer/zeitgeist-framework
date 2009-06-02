@@ -92,6 +92,13 @@ class testPdcards extends UnitTestCase
 		$this->assertTrue(in_array('test2',$ret));
 		$this->assertTrue(in_array('test3',$ret));
 		$this->assertTrue(in_array('test4',$ret));
+		
+		$ret = $pdCards->addTags('test1, test2', $card, true);
+		$this->assertTrue($ret);
+		$ret = $pdCards->getTags($card);
+		$this->assertTrue(count($ret), 2);
+		$this->assertTrue(in_array('test1',$ret));
+		$this->assertTrue(in_array('test2',$ret));
 	}
 
 }
