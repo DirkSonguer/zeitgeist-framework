@@ -40,7 +40,7 @@
     <div id="menu">
     	<table border="0">
         <tr><td>
-		<img alt="Poken" id="logo" src="@@{templatepath}@@/images/missionpoken-weiss.png" />
+			<a href="@@{[main.index]}@@"><img alt="Poken" id="logo" src="@@{templatepath}@@/images/missionpoken-weiss.png" border="0" /></a>
         </td><td>
 	
 		<!-- TemplateBeginBlock name="userunknown" -->
@@ -91,13 +91,16 @@
         <div id="pokencard">
         	<table><tr>
             <td>
-            	<a href="@@{[member.editcard]}@@&card=@@{cardid}@@"><img src="@@{templatepath}@@/images/edit_card.png" alt="Visitenkarte und Daten ändern" border="0" /></a>
-            	<a href="javascript:deleteCard(@@{cardid}@@, '@@{cardtitle}@@');"><img src="@@{templatepath}@@/images/delete_card.png" alt="Visitenkarte löschen" border="0" /></a>
-            </td>
-            <td>
                 <p id="pokenheadline">@@{cardtitle}@@</p>
                 <p id="pokendate">hochgeladen am @@{carddate}@@<br />
-				@@{cardviews}@@ mal angezeigt, @@{cardclicks}@@ mal geklickt</p>
+				<img alt="" src="@@{templatepath}@@/images/stats.png" /> @@{cardviews}@@ mal angezeigt, @@{cardclicks}@@ mal geklickt<br />
+	            <img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ Leute mögen diese Visitenkarte</p>
+            </td>
+            <td>
+            	<p style="margin-top:20px; margin-left:5px;">
+                <a href="@@{[member.editcard]}@@&card=@@{cardid}@@"><img src="@@{templatepath}@@/images/edit_card.png" alt="Visitenkarte und Daten ändern" border="0" /></a>
+            	<a href="javascript:deleteCard(@@{cardid}@@, '@@{cardtitle}@@');"><img src="@@{templatepath}@@/images/delete_card.png" alt="Visitenkarte löschen" border="0" /></a>
+                </p>
             </td>
             </tr></table>
             <a href="@@{[cards.showdetail]}@@&id=@@{cardid}@@">

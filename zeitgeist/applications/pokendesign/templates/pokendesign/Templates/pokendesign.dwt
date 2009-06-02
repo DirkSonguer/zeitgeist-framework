@@ -26,7 +26,7 @@
     <div id="menu">
     	<table border="0">
         <tr><td>
-		<img alt="Poken" id="logo" src="@@{templatepath}@@/images/missionpoken-weiss.png" />
+			<a href="@@{[main.index]}@@"><img alt="Poken" id="logo" src="@@{templatepath}@@/images/missionpoken-weiss.png" border="0" /></a>
         </td><td>
 	
 		<!-- TemplateBeginBlock name="userunknown" -->

@@ -25,7 +25,7 @@
     <div id="menu">
     	<table border="0">
         <tr><td>
-		<img alt="Poken" id="logo" src="@@{templatepath}@@/images/missionpoken-weiss.png" />
+			<a href="@@{[main.index]}@@"><img alt="Poken" id="logo" src="@@{templatepath}@@/images/missionpoken-weiss.png" border="0" /></a>
         </td><td>
 	
 		<!-- TemplateBeginBlock name="userunknown" -->
@@ -85,8 +85,10 @@
                 <!-- TemplateEndBlock -->
             </td>
             <td rowspan="4" valign="top" align="center">
-                <p style="margin-top:10px;" id="smalltext"><img src="@@{templatepath}@@/images/info.png" alt="Mail" align="left" style="padding-right:10px;" />
-                <strong>Nur Titel und die Beschreibung einer Visitenkarte können verändert werden</strong>, nicht aber die Visitenkarte selbst. Falls nötig, lösche die alte Version und lade die neue erneut hoch.</p>
+                <p style="margin-top:10px;" id="smalltext"><img src="@@{templatepath}@@/images/info.png" alt="Info" align="left" style="padding-right:10px;" />
+                <strong>Nur Titel, Beschreibung und die Tags einer Visitenkarte können verändert werden</strong>, nicht aber die Visitenkarte selbst. Falls nötig, lösche die alte Version und lade die neue erneut hoch.</p>
+                <p style="margin-top:10px;" id="smalltext"><img src="@@{templatepath}@@/images/browser.png" alt="Tags" align="right" style="padding-right:10px;" />
+                Tags dienen dazu deine Karte zu beschreiben. Dadurch können andere über die Suche deine Karte wieder finden. <strong>Verwende also möglichst viele passende Begriffe</strong>.</p>
             </td>
         </tr>
         <tr>
@@ -95,6 +97,15 @@
 				<textarea name="editcard[card_description]" id="formtext" cols="50" rows="4">@@{card_description:value}@@</textarea>
                 <!-- TemplateBeginBlock name="card_description:errormsg" -->
                     <br /><span class="formerrormsg">@@{card_description:errormsg}@@</span>
+                <!-- TemplateEndBlock -->
+            </td>
+        </tr>
+        <tr>
+            <td nowrap="nowrap"><p id="formlabel">Tags</p></td>
+            <td @@{card_tags:formerror}@@ width="350">
+                <input maxlength="256" name="editcard[card_tags]" value="@@{card_tags:value}@@" id="formtext" type="text" />
+                <!-- TemplateBeginBlock name="card_tags:errormsg" -->
+                    <br /><span class="formerrormsg">@@{card_tags:errormsg}@@</span>
                 <!-- TemplateEndBlock -->
             </td>
         </tr>
