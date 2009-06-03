@@ -190,6 +190,38 @@ class pdCards
 
 
 	/**
+	 * Gets the top ten cards
+	 * Returns an array with the card information
+	 * 
+	 * @return array
+	 */
+	public function getTopTen()
+	{
+		$this->debug->guard();
+
+		$sql = "SELECT f.fav_card, ((count(*)*20)+(c.card_clicked*5)+(c.card_viewed)) as favcount, c.*, DATE_FORMAT(c.card_timestamp, '%d.%m.%Y, %H:%i') as card_date, ud.userdata_username from favs f ";
+		$sql .= "LEFT JOIN cards c ON f.fav_card = c.card_id LEFT JOIN userdata ud ON c.card_user = ud.userdata_user GROUP BY fav_card ORDER BY favcount DESC LIMIT 10";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not get author cards: could not read card table', 'warning');
+			$this->messages->setMessage('Could not get author cards: could not read card table', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$cards = array();
+		while ($card = $this->database->fetchArray($res))
+		{
+			$cards[] = $card;
+		}
+
+		$this->debug->unguard($cards);
+		return $cards;
+	}
+
+
+	/**
 	 * Adds a card
 	 * Assumes a valid card file as FILE
 	 *

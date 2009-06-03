@@ -1,10 +1,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/pokendesign.dwt" codeOutsideHTMLIsLocked="false" -->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<!-- TemplateBeginEditable name="doctitle" -->
-<title>Pokendesign - High Four in Style</title>
-<!-- TemplateEndEditable -->
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>Pokendesign - Top10 Liste</title>
+<!-- InstanceEndEditable -->
 
 <script src="http://missionpoken.de/mint/?js" type="text/javascript"></script>
 <link rel="icon" type="image/png" href="favicon.png" />
@@ -15,9 +15,8 @@
 
 </script>
 	
-<!-- TemplateBeginEditable name="head" -->
-
-<!-- TemplateEndEditable -->
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
 </head>
 
 <body>
@@ -69,11 +68,49 @@
 	<!-- TemplateEndBlock -->
 
 	<div id="content">
-	<!-- TemplateBeginEditable name="body" -->
+	<!-- InstanceBeginEditable name="body" -->
 
-		<p>Haupttext</p>
+	<h1>Die aktuelle Top10 Liste</h1>
+	
+	<p>Die Top 10 Liste basiert auf den Aktivitäten der Benutzer: wie viel Zuspruch die Visitenkarte erhält und wie oft sie angezeigt und angeklickt wird.</p>
+	
+	<!-- TemplateBeginBlock name="cardlist" -->
+			<table cellspacing="10" border="0">
+            	<tr>
+                <td valign="middle" width="45"><h1>@@{cardranking}@@.</h1></td>
+                <td valign="top">
+					<a href="@@{[cards.showdetail]}@@&id=@@{cardid}@@">
+					<img src="@@{basepath}@@/uploads/@@{cardfile}@@" border="0" />
+					</a>
+				</td>
+                <td valign="top" width="400">
+                    <p id="pokenheadline">@@{cardtitle}@@</p>
+                    <p id="pokendate">hochgeladen am @@{carddate}@@ von <a href="@@{[main.showauthor]}@@&id=@@{cardauthorid}@@">@@{cardauthorname}@@</a></p>
+                    
+                    <p>@@{carddescription}@@</p>
+					
+					<p id="pokendate"><img alt="" src="@@{templatepath}@@/images/stats.png" /> @@{cardviews}@@ mal angezeigt, @@{cardclicks}@@ mal geklickt</p>
 
-	<!-- TemplateEndEditable -->
+                    <!-- TemplateBeginBlock name="notfaved" -->
+                    	<table cellspacing="5" border="0"><tr>
+                        <td valign="top"><img alt="" src="@@{templatepath}@@/images/services_big.png" /></td>
+                        <td><p id="pokendate">@@{favs}@@ Leute mögen diese Visitenkarte</p>
+                        <h2 style="margin-top:10px;"><a href="@@{[cards.addfav]}@@&id=@@{cardid}@@">Ich finde sie gut!</a></h2>
+                        </td>
+                        </tr></table>
+                    <!-- TemplateEndBlock -->
+                    
+                    <!-- TemplateBeginBlock name="faved" -->
+                    	<p id="pokendate"><img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ Leute mögen diese Visitenkarte</p>
+                    <!-- TemplateEndBlock -->                    
+                </td>
+                </tr>
+            </table>
+	<!-- TemplateEndBlock -->
+
+			<div style="clear:both"></div>
+			
+<!-- InstanceEndEditable -->
 
 	</div>
 	
@@ -85,4 +122,4 @@
 	</div>
 
 </body>
-</html>
+<!-- InstanceEnd --></html>

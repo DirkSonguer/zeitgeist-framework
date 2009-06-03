@@ -31,8 +31,8 @@
 		<!-- TemplateBeginBlock name="userunknown" -->
 				<div id="welcomemessage">Willkommen auf Pokendesign!</div>
                 <div id="mainmenu">
-   				<a href="@@{[main.index]}@@">Home</a>
 				<a href="@@{[cards.index]}@@">Karten entdecken</a>
+   				<a href="@@{[cards.topten]}@@">Top 10</a>
 				<a href="@@{[main.login]}@@">Karte hinzufügen</a>
 				<a href="@@{[main.login]}@@">Du bist nicht eingeloggt</a>
                 </div>
@@ -41,8 +41,8 @@
 		<!-- TemplateBeginBlock name="userloggedin" -->
 				<div id="welcomemessage">Hallo @@{username}@@, schön dich wieder zu sehen!</div>
                 <div id="mainmenu">
-   				<a href="@@{[main.index]}@@">Home</a>
 				<a href="@@{[cards.index]}@@">Karten entdecken</a>
+   				<a href="@@{[cârds.topten]}@@">Home</a>
 				<a href="@@{[member.index]}@@">Deine Karten</a>
 				<a href="@@{[member.addcard]}@@">Karte hinzufügen</a>
 				<a href="@@{[member.editprofile]}@@">Dein Profil</a>
@@ -91,7 +91,7 @@
                     <!-- TemplateEndBlock -->
                     
                     <!-- TemplateBeginBlock name="faved" -->
-                    	<p id="pokendate"><img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ Leute mögen diese Visitenkarte.</p>
+                    	<p id="pokendate"><img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ Leute mögen diese Visitenkarte</p>
                     <!-- TemplateEndBlock -->                    
                 </td>
                 </tr>

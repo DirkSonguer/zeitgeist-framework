@@ -197,6 +197,59 @@ class cards
 		return true;
 	}
 	
+
+	// show top ten list
+	public function topten($parameters=array())
+	{
+		$this->debug->guard();
+
+		$tpl = new pdTemplate();
+		$tpl->load($this->configuration->getConfiguration('cards', 'templates', 'cards_topten'));
+
+		// cards
+		$carddata = $this->cards->getTopTen();
+		
+		$i = 0;
+		foreach ($carddata as $card)
+		{
+			$i++;
+			$tpl->assign('cardranking', $i);
+			$tpl->assign('cardfile', $card['card_filename']);
+			$tpl->assign('cardauthorid', $card['card_user']);
+			$tpl->assign('cardid', $card['card_id']);
+			$tpl->assign('cardauthorname', $card['userdata_username']);
+			$tpl->assign('carddate', $card['card_date']);
+			$tpl->assign('cardviews', $card['card_viewed']);
+			$tpl->assign('cardclicks', $card['card_clicked']);
+			$tpl->assign('cardtitle', $card['card_title']);
+			$tpl->assign('carddescription', $card['card_description']);
+	
+			if ($card['card_user'] != $this->user->getUserID() )
+			{
+				$this->cards->addCardView($card['card_id']);
+			}
+			
+			$favs = $this->cards->getFavs($card['card_id']);
+			$tpl->assign('favs', $favs);
+			
+			if (!$this->cards->hasFaved($card['card_id']))
+			{
+				$tpl->insertBlock('notfaved');
+			}
+			else
+			{
+				$tpl->insertBlock('faved');
+			}
+
+			$tpl->insertBlock('cardlist');
+		}
+
+		$tpl->show();
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
 	
 	// shows the detail page of a card
 	public function showdetail($parameters=array())
