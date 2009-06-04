@@ -42,7 +42,7 @@
 				<div id="welcomemessage">Hallo @@{username}@@, schön dich wieder zu sehen!</div>
                 <div id="mainmenu">
 				<a href="@@{[cards.index]}@@">Karten entdecken</a>
-   				<a href="@@{[cârds.topten]}@@">Home</a>
+   				<a href="@@{[cards.topten]}@@">Top 10</a>
 				<a href="@@{[member.index]}@@">Deine Karten</a>
 				<a href="@@{[member.addcard]}@@">Karte hinzufügen</a>
 				<a href="@@{[member.editprofile]}@@">Dein Profil</a>
@@ -72,17 +72,30 @@
 
 	<h1>Entdecke neue Poken Visitenkarten!</h1>
 
-			<table cellspacing="10">
+			<table cellspacing="10" border="0">
             	<tr>
-                <td valign="top"><img src="@@{basepath}@@/uploads/@@{cardfile}@@" /></td>
                 <td valign="top">
+					<a href="@@{[cards.showdetail]}@@&id=@@{cardid}@@">
+					<img src="@@{basepath}@@/uploads/@@{cardfile}@@" border="0" />
+					</a>
+				</td>
+                <td valign="top" width="400">
                     <p id="pokenheadline">@@{cardtitle}@@</p>
                     <p id="pokendate">hochgeladen am @@{carddate}@@ von <a href="@@{[main.showauthor]}@@&id=@@{cardauthorid}@@">@@{cardauthorname}@@</a></p>
                     
                     <p>@@{carddescription}@@</p>
 
+                    <!-- TemplateBeginBlock name="taglist" -->
+	                    <p id="smalltext">Tags:
+					   <!-- TemplateBeginBlock name="tag" -->
+							<a href="@@{[cards.search]}@@&t=@@{tag}@@">@@{tag}@@</a>
+						<!-- TemplateEndBlock -->
+						</p>
+                    <!-- TemplateEndBlock -->
+					
                     <!-- TemplateBeginBlock name="notfaved" -->
-                    	<table cellspacing="5" border="0"><tr>
+						<p id="pokendate"><img alt="" src="@@{templatepath}@@/images/stats.png" /> @@{cardviews}@@ mal angezeigt, @@{cardclicks}@@ mal geklickt</p>
+	                   	<table cellspacing="5" border="0"><tr>
                         <td valign="top"><img alt="" src="@@{templatepath}@@/images/services_big.png" /></td>
                         <td><p id="pokendate">@@{favs}@@ Leute mögen diese Visitenkarte</p>
                         <h2 style="margin-top:10px;"><a href="@@{[cards.addfav]}@@&id=@@{cardid}@@">Ich finde sie gut!</a></h2>
@@ -91,12 +104,13 @@
                     <!-- TemplateEndBlock -->
                     
                     <!-- TemplateBeginBlock name="faved" -->
-                    	<p id="pokendate"><img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ Leute mögen diese Visitenkarte</p>
+						<p id="pokendate"><img alt="" src="@@{templatepath}@@/images/stats.png" /> @@{cardviews}@@ mal angezeigt, @@{cardclicks}@@ mal geklickt<br />
+						<img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ Leute mögen diese Visitenkarte</p>
                     <!-- TemplateEndBlock -->                    
                 </td>
                 </tr>
             </table>
-
+			
 			<div style="clear:both"></div>
 
 <!-- InstanceEndEditable -->

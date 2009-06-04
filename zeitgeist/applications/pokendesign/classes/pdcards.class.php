@@ -199,7 +199,7 @@ class pdCards
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT f.fav_card, ((count(*)*20)+(c.card_clicked*5)+(c.card_viewed)) as favcount, c.*, DATE_FORMAT(c.card_timestamp, '%d.%m.%Y, %H:%i') as card_date, ud.userdata_username from favs f ";
+		$sql = "SELECT f.fav_card, count(*) as card_favs, ((count(*)*20)+(c.card_clicked*3)+(c.card_viewed/2)) as favcount, c.*, DATE_FORMAT(c.card_timestamp, '%d.%m.%Y, %H:%i') as card_date, ud.userdata_username from favs f ";
 		$sql .= "LEFT JOIN cards c ON f.fav_card = c.card_id LEFT JOIN userdata ud ON c.card_user = ud.userdata_user GROUP BY fav_card ORDER BY favcount DESC LIMIT 10";
 		$res = $this->database->query($sql);
 		if (!$res)
