@@ -42,7 +42,7 @@
 				<div id="welcomemessage">Hallo @@{username}@@, schön dich wieder zu sehen!</div>
                 <div id="mainmenu">
 				<a href="@@{[cards.index]}@@">Karten entdecken</a>
-   				<a href="@@{[cârds.topten]}@@">Home</a>
+   				<a href="@@{[cards.topten]}@@">Top 10</a>
 				<a href="@@{[member.index]}@@">Deine Karten</a>
 				<a href="@@{[member.addcard]}@@">Karte hinzufügen</a>
 				<a href="@@{[member.editprofile]}@@">Dein Profil</a>
@@ -76,7 +76,15 @@
         <div id="pokencard">
             <p id="pokenheadline">@@{cardtitle}@@</p>
             <p id="pokendate">hochgeladen am @@{carddate}@@ von <a href="@@{[cards.showauthor]}@@&id=@@{cardauthorid}@@">@@{cardauthorname}@@</a><br />
-            <img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ Leute mögen diese Visitenkarte</p>
+			
+                    <!-- TemplateBeginBlock name="notfaved" -->
+                        <img alt="" src="@@{templatepath}@@/images/services_small.png" /> <a href="@@{[cards.addfav]}@@&id=@@{cardid}@@">Ich mag diese Visitenkarte!</a></p>
+                    <!-- TemplateEndBlock -->
+                    
+                    <!-- TemplateBeginBlock name="faved" -->
+			            <img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ Leute mögen diese Visitenkarte</p>
+                    <!-- TemplateEndBlock -->                    
+
             <a href="@@{[cards.showdetail]}@@&id=@@{cardid}@@">
             <img src="@@{basepath}@@/uploads/@@{cardfile}@@" border="0" />
             </a>

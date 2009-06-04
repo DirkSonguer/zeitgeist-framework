@@ -59,8 +59,16 @@ class cards
 				$this->cards->addCardView($card['card_id']);
 			}
 
-			$favs = $this->cards->getFavs($card['card_id']);
-			$tpl->assign('favs', $favs);
+			if (!$this->cards->hasFaved($card['card_id']))
+			{
+				$tpl->insertBlock('notfaved');
+			}
+			else
+			{
+				$favs = $this->cards->getFavs($card['card_id']);
+				$tpl->assign('favs', $favs);
+				$tpl->insertBlock('faved');
+			}
 	
 			$tpl->insertBlock('cardlist');
 		}
@@ -92,7 +100,9 @@ class cards
 		$tpl = new pdTemplate();
 		$tpl->load($this->configuration->getConfiguration('cards', 'templates', 'cards_search'));
 
-		if (empty($parameters['q'])) $tpl->redirect($tpl->createLink('main', 'index'));
+		if ( (empty($parameters['q'])) || (empty($parameters['t'])) ) $tpl->redirect($tpl->createLink('main', 'index'));
+
+		// TODO: Suche nach Tags
 
 		// cards		
 		$carddata = $this->cards->searchCards($parameters['q']);
@@ -223,15 +233,24 @@ class cards
 			$tpl->assign('cardclicks', $card['card_clicked']);
 			$tpl->assign('cardtitle', $card['card_title']);
 			$tpl->assign('carddescription', $card['card_description']);
+			$tpl->assign('favs', $card['card_favs']);
+			
+			$taglist = $this->cards->getTags($card['card_id']);
+			if (count($taglist) > 0)
+			{
+				foreach ($taglist as $tag)
+				{
+					$tpl->assign('tag', $tag);
+					$tpl->insertBlock('tag');
+				}
+				$tpl->insertBlock('taglist');
+			}
 	
 			if ($card['card_user'] != $this->user->getUserID() )
 			{
 				$this->cards->addCardView($card['card_id']);
 			}
-			
-			$favs = $this->cards->getFavs($card['card_id']);
-			$tpl->assign('favs', $favs);
-			
+						
 			if (!$this->cards->hasFaved($card['card_id']))
 			{
 				$tpl->insertBlock('notfaved');
@@ -268,18 +287,31 @@ class cards
 		$tpl->assign('cardid', $card['card_id']);
 		$tpl->assign('cardauthorname', $card['userdata_username']);
 		$tpl->assign('carddate', $card['card_date']);
+		$tpl->assign('cardviews', $card['card_viewed']);
+		$tpl->assign('cardclicks', $card['card_clicked']);
 		$tpl->assign('cardtitle', $card['card_title']);
 		$tpl->assign('carddescription', $card['card_description']);
 
-		if ($card['card_user'] != $this->user->getUserID() )
-		{
-			$this->cards->addCardClick($card['card_id']);
-		}
-		
-		$favs = $this->cards->getFavs($parameters['id']);
+		$favs = $this->cards->getFavs($card['card_id']);
 		$tpl->assign('favs', $favs);
 		
-		if (!$this->cards->hasFaved($parameters['id']))
+		$taglist = $this->cards->getTags($card['card_id']);
+		if (count($taglist) > 0)
+		{
+			foreach ($taglist as $tag)
+			{
+				$tpl->assign('tag', $tag);
+				$tpl->insertBlock('tag');
+			}
+			$tpl->insertBlock('taglist');
+		}
+
+		if ($card['card_user'] != $this->user->getUserID() )
+		{
+			$this->cards->addCardView($card['card_id']);
+		}
+					
+		if (!$this->cards->hasFaved($card['card_id']))
 		{
 			$tpl->insertBlock('notfaved');
 		}
