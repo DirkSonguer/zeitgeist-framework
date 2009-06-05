@@ -62,6 +62,10 @@ class main
 		{
 			$tpl->insertBlock('faved');
 		}
+		
+		$tagcloud = $this->cards->getTagcloud();
+		
+		// TODO: Implement Tagcloud
 
 		$tpl->show();
 
