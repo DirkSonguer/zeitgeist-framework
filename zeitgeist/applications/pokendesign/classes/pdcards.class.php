@@ -199,7 +199,7 @@ class pdCards
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT f.fav_card, count(*) as card_favs, ((count(*)*20)+(c.card_clicked*3)+(c.card_viewed/2)) as favcount, c.*, DATE_FORMAT(c.card_timestamp, '%d.%m.%Y, %H:%i') as card_date, ud.userdata_username from favs f ";
+		$sql = "SELECT f.fav_card, count(*) as card_favs, ((count(*)*30)+(c.card_clicked*3)+(c.card_viewed/5)) as favcount, c.*, DATE_FORMAT(c.card_timestamp, '%d.%m.%Y, %H:%i') as card_date, ud.userdata_username from favs f ";
 		$sql .= "LEFT JOIN cards c ON f.fav_card = c.card_id LEFT JOIN userdata ud ON c.card_user = ud.userdata_user GROUP BY fav_card ORDER BY favcount DESC LIMIT 10";
 		$res = $this->database->query($sql);
 		if (!$res)
@@ -309,6 +309,20 @@ class pdCards
 			$this->debug->unguard(false);
 			return false;
 		}
+		
+		$cardid = $this->database->insertId();
+
+		if (!empty($carddata['card_tags']))
+		{
+			$ret = $this->addTags($carddata['card_tags'], $cardid);
+			if (!$ret)
+			{
+				$this->debug->write('Could not add card: could not add tags', 'warning');
+				$this->messages->setMessage('Could not add card: could not add tags', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
+		}
 
 		$this->debug->unguard(true);
 		return true;
@@ -350,7 +364,14 @@ class pdCards
 		
 		if (!empty($carddata['card_tags']))
 		{
-			$this->addTags($carddata['card_tags'], $carddata['card_id'], true);
+			$ret = $this->addTags($carddata['card_tags'], $carddata['card_id'], true);
+			if (!$ret)
+			{
+				$this->debug->write('Could not add card: could not add tags', 'warning');
+				$this->messages->setMessage('Could not add card: could not add tags', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
 		}
 
 		$this->debug->unguard(true);
@@ -410,7 +431,17 @@ class pdCards
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
+		$sql = "DELETE FROM tags_to_cards WHERE cardtag_card='" . $card . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not delete card: could not delete tag table', 'warning');
+			$this->messages->setMessage('Could not delete card: could not delete tag table', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+				
 		if (!unlink(getcwd() . '/uploads/'.$filename['card_filename']))
 		{
 			$this->debug->write('Could not delete card: could not delete card from filesystem', 'warning');
@@ -803,6 +834,8 @@ class pdCards
 		{
 			$newtag = rtrim($newtag);
 			$newtag = ltrim($newtag);
+			
+			$newtag = strtolower($newtag);
 			
 			if (!in_array($newtag, $alreadyboundtags))
 			{

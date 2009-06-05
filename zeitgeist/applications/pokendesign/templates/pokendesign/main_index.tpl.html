@@ -89,14 +89,13 @@
 			</div>
 
 			<div id="slogan">
-				<h1 style="margin-top:0px; margin-bottom:45px;">Hilf uns die Poken-Welt<br />bunter zu machen!</h1>
+				<h1 style="margin-top:0px; margin-bottom:45px; color:#701008;">Hilf uns die Poken-Welt<br />bunter zu machen!</h1>
 
-				<form method="post" action="@@{[cards.search]}@@" name="search">
-					<h2 id="search">Suche
-					<input type="text" size="35" maxlength="20" name="q" id="formtext" />
-					<input type="submit" name="Suche" value="Suche" class="formbutton" />
-					</h2>
-				</form>
+				<div id="tagcloud">
+                <!-- TemplateBeginBlock name="tag" -->
+                    <span id="tag_@@{tagclass}@@"><a href="@@{[cards.search]}@@&t=@@{tag}@@">@@{tag}@@</a></span>
+                <!-- TemplateEndBlock -->
+                </div>
 			</div>
 			
 			<div style="clear:both"></div>

@@ -78,18 +78,30 @@
             <p id="pokendate">hochgeladen am @@{carddate}@@ von <a href="@@{[cards.showauthor]}@@&id=@@{cardauthorid}@@">@@{cardauthorname}@@</a><br />
 			
                     <!-- TemplateBeginBlock name="notfaved" -->
-                        <img alt="" src="@@{templatepath}@@/images/services_small.png" /> <a href="@@{[cards.addfav]}@@&id=@@{cardid}@@">Ich mag diese Visitenkarte!</a></p>
+                        <img alt="Sterne" src="@@{templatepath}@@/images/services_small.png" /> <a href="@@{[cards.addfav]}@@&id=@@{cardid}@@">Ich mag diese Visitenkarte!</a></p>
                     <!-- TemplateEndBlock -->
                     
                     <!-- TemplateBeginBlock name="faved" -->
-			            <img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ Leute mögen diese Visitenkarte</p>
+			            <img alt="Favoriten" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ Leute mögen diese Visitenkarte</p>
                     <!-- TemplateEndBlock -->                    
 
             <a href="@@{[cards.showdetail]}@@&id=@@{cardid}@@">
             <img src="@@{basepath}@@/uploads/@@{cardfile}@@" border="0" />
             </a>
+            <!-- TemplateBeginBlock name="taglist" -->
+                <p id="smalltext_tags">Tags: 
+               <!-- TemplateBeginBlock name="tag" -->
+                    <a href="@@{[cards.search]}@@&t=@@{tag}@@">@@{tag}@@</a>
+                <!-- TemplateEndBlock -->
+                </p>
+            <!-- TemplateEndBlock -->
             <p>@@{carddescription}@@</p>
         </div>
+
+        <!-- TemplateBeginBlock name="nextline" -->
+	        <div style="clear:both"></div> 
+        <!-- TemplateEndBlock -->
+
 	<!-- TemplateEndBlock -->
     
 	<div style="clear:both"></div>
