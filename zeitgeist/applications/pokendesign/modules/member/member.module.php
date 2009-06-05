@@ -42,8 +42,12 @@ class member
 			$tpl->insertBlock('nocardsfound');
 		}
 		
+		$i = 0;
 		foreach ($carddata as $card)
 		{
+			$i++;
+			if ( ($i%2) == 0) $tpl->insertBlock('nextline');
+
 			$tpl->assign('cardfile', $card['card_filename']);
 			$tpl->assign('cardid', $card['card_id']);
 			$tpl->assign('carddate', $card['card_date']);
@@ -54,6 +58,17 @@ class member
 
 			$favs = $this->cards->getFavs($card['card_id']);
 			$tpl->assign('favs', $favs);
+
+			$taglist = $this->cards->getTags($card['card_id']);
+			if (count($taglist) > 0)
+			{
+				foreach ($taglist as $tag)
+				{
+					$tpl->assign('tag', $tag);
+					$tpl->insertBlock('tag');
+				}
+				$tpl->insertBlock('taglist');
+			}
 
 			$tpl->insertBlock('cardlist');
 		}

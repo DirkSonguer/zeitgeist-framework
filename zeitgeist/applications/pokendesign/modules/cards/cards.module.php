@@ -44,8 +44,12 @@ class cards
 			$tpl->insertBlock('nocardsfound');
 		}
 		
+		$i = 0;
 		foreach ($carddata as $card)
 		{
+			$i++;
+			if ( ($i%2) == 0) $tpl->insertBlock('nextline');
+			
 			$tpl->assign('cardid', $card['card_id']);
 			$tpl->assign('cardfile', $card['card_filename']);
 			$tpl->assign('carddate', $card['card_date']);
@@ -69,7 +73,18 @@ class cards
 				$tpl->assign('favs', $favs);
 				$tpl->insertBlock('faved');
 			}
-	
+
+			$taglist = $this->cards->getTags($card['card_id']);
+			if (count($taglist) > 0)
+			{
+				foreach ($taglist as $tag)
+				{
+					$tpl->assign('tag', $tag);
+					$tpl->insertBlock('tag');
+				}
+				$tpl->insertBlock('taglist');
+			}
+
 			$tpl->insertBlock('cardlist');
 		}
 		
@@ -113,8 +128,12 @@ class cards
 			$tpl->insertBlock('noresultsfound');
 		}
 		
+		$i = 0;
 		foreach ($carddata as $card)
 		{
+			$i++;
+			if ( ($i%2) == 0) $tpl->insertBlock('nextline');
+
 			$tpl->assign('cardfile', $card['card_filename']);
 			$tpl->assign('cardauthorid', $card['card_user']);
 			$tpl->assign('cardid', $card['card_id']);
@@ -143,6 +162,18 @@ class cards
 			$tpl->insertBlock('cardlist');
 		}
 
+		$tagcloud = $this->cards->getTagcloud();
+		
+		foreach ($tagcloud as $tag => $tagcount)
+		{
+			$maxcount = max($tagcloud);
+			$pokenclass = ceil(($tagcount/$maxcount)*4);
+			if ($pokenclass == 4) $pokenclass = 3;
+			$tpl->assign('tagclass', $pokenclass);
+			$tpl->assign('tag', $tag);
+			$tpl->insertBlock('tag');
+		}
+		
 		$tpl->assign('search', $searchterm);
 		$tpl->show();
 

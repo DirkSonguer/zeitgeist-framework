@@ -64,8 +64,15 @@ class main
 		}
 		
 		$tagcloud = $this->cards->getTagcloud();
-		
-		// TODO: Implement Tagcloud
+		foreach ($tagcloud as $tag => $tagcount)
+		{
+			$maxcount = max($tagcloud);
+			$pokenclass = ceil(($tagcount/$maxcount)*4);
+			if ($pokenclass == 4) $pokenclass = 3;
+			$tpl->assign('tagclass', $pokenclass);
+			$tpl->assign('tag', $tag);
+			$tpl->insertBlock('tag');
+		}
 
 		$tpl->show();
 
