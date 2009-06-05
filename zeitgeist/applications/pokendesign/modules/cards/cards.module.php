@@ -100,12 +100,14 @@ class cards
 		$tpl = new pdTemplate();
 		$tpl->load($this->configuration->getConfiguration('cards', 'templates', 'cards_search'));
 
-		if ( (empty($parameters['q'])) || (empty($parameters['t'])) ) $tpl->redirect($tpl->createLink('main', 'index'));
+		$searchterm = '';
+		if (!empty($parameters['q'])) $searchterm = $parameters['q'];
+		if (!empty($parameters['t'])) $searchterm = $parameters['t'];
 
-		// TODO: Suche nach Tags
+		if ($searchterm == '') $tpl->redirect($tpl->createLink('main', 'index'));
 
-		// cards		
-		$carddata = $this->cards->searchCards($parameters['q']);
+		// cards
+		$carddata = $this->cards->searchCards($searchterm);
 		if (count($carddata) == 0)
 		{
 			$tpl->insertBlock('noresultsfound');
@@ -141,7 +143,7 @@ class cards
 			$tpl->insertBlock('cardlist');
 		}
 
-		$tpl->assign('search', $parameters['q']);
+		$tpl->assign('search', $searchterm);
 		$tpl->show();
 
 		$this->debug->unguard(true);

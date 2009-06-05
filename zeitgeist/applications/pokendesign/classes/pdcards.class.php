@@ -451,11 +451,60 @@ class pdCards
 		$cards = array();
 		while ($card = $this->database->fetchArray($res))
 		{
-			$cards[] = $card;
+			$cards[$card['card_id']] = $card;
+		}
+
+		$sql = "SELECT c.*, DATE_FORMAT(c.card_timestamp, '%d.%m.%Y, %H:%i') as card_date, ud.userdata_username FROM tags_to_cards t2c ";
+		$sql .= "LEFT JOIN tags t ON t2c.cardtag_tag = t.tag_id LEFT JOIN cards c ON t2c.cardtag_card = c.card_id LEFT JOIN userdata ud ON c.card_user = ud.userdata_user ";
+		$sql .= "WHERE t.tag_text LIKE '%" . $search . "%'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not search for cards: could not read tag tables', 'warning');
+			$this->messages->setMessage('Could not search for cards: could not read tag tables', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$cards = array();
+		while ($card = $this->database->fetchArray($res))
+		{
+			$cards[$card['card_id']] = $card;
 		}
 
 		$this->debug->unguard($cards);
 		return $cards;
+	}
+
+
+	
+	/**
+	 * Returns an array with all tags, ordered by name, ranked
+	 *
+	 * @return array
+	 */
+	public function getTagcloud()
+	{
+		$this->debug->guard();
+
+		$sql = "SELECT t.tag_text, count(*) as tagcount FROM tags_to_cards t2c LEFT JOIN tags t ON t2c.cardtag_tag = t.tag_id GROUP BY t.tag_text ORDER BY t.tag_text";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not search for tags: could not read tag tables', 'warning');
+			$this->messages->setMessage('Could not search for tags: could not read tag tables', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$tagcloud = array();
+		while ($tag = $this->database->fetchArray($res))
+		{
+			$tagcloud[$tag['tag_text']] = $tag['tagcount'];
+		}
+
+		$this->debug->unguard($tagcloud);
+		return $tagcloud;
 	}
 
 
