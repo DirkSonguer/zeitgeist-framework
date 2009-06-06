@@ -341,7 +341,7 @@ class cards
 
 		if ($card['card_user'] != $this->user->getUserID() )
 		{
-			$this->cards->addCardView($card['card_id']);
+			$this->cards->addCardClick($card['card_id']);
 		}
 					
 		if (!$this->cards->hasFaved($card['card_id']))
