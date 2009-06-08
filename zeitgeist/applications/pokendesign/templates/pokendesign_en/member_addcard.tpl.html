@@ -29,24 +29,24 @@
         </td><td>
 	
 		<!-- TemplateBeginBlock name="userunknown" -->
-				<div id="welcomemessage">Welcome to Pokendesign!</div>
+				<div id="welcomemessage">Willkommen auf Pokendesign!</div>
                 <div id="mainmenu">
-				<a href="@@{[cards.index]}@@">Discover cards</a>
-   				<a href="@@{[cards.topten]}@@">Top Ten</a>
-				<a href="@@{[main.login]}@@">Add card</a>
-				<a href="@@{[main.login]}@@">You are not logged in</a>
+				<a href="@@{[cards.index]}@@">Karten entdecken</a>
+   				<a href="@@{[cards.topten]}@@">Top 10</a>
+				<a href="@@{[main.login]}@@">Karte hinzufügen</a>
+				<a href="@@{[main.login]}@@">Du bist nicht eingeloggt</a>
                 </div>
 		<!-- TemplateEndBlock -->
 	
 		<!-- TemplateBeginBlock name="userloggedin" -->
-				<div id="welcomemessage">Hi @@{username}@@, welcome back!</div>
+				<div id="welcomemessage">Hallo @@{username}@@, schön dich wieder zu sehen!</div>
                 <div id="mainmenu">
-				<a href="@@{[cards.index]}@@">Discover cards</a>
-   				<a href="@@{[cards.topten]}@@">Top ten</a>
-				<a href="@@{[member.index]}@@">Your cards</a>
-				<a href="@@{[member.addcard]}@@">Add card</a>
-				<a href="@@{[member.editprofile]}@@">Your profile</a>
-				<a href="@@{[main.logout]}@@">Log out</a>
+				<a href="@@{[cards.index]}@@">Karten entdecken</a>
+   				<a href="@@{[cards.topten]}@@">Top 10</a>
+				<a href="@@{[member.index]}@@">Deine Karten</a>
+				<a href="@@{[member.addcard]}@@">Karte hinzufügen</a>
+				<a href="@@{[member.editprofile]}@@">Dein Profil</a>
+				<a href="@@{[main.logout]}@@">Ausloggen</a>
                 </div>
 		<!-- TemplateEndBlock -->
         
@@ -85,7 +85,7 @@
             <td rowspan="5" valign="top" align="center">
             	<img src="@@{templatepath}@@/images/basic_poken_card.png" alt="Visitenkarte Beispiel" />
                 <p style="margin-top:10px;" id="smalltext">Die Visitenkarten müssen entweder im <strong>.JPG oder .PNG-Format</strong> hochgeladen werden und eine Abmessung von idealerweise <strong>327 x 217 Pixel</strong> haben. Die Datei darf die maximale Größe von <strong>500KB</strong> nicht überschreiben.</p>
-                <p style="margin-top:10px;" id="smalltext">Die Beschreibung und Tags dienen dazu deine Karte für die Suche erfassbar zu machen. <strong>Verwende also möglichst viele passende Begriffe</strong>, damit andere deine Karte finden können.</p>
+                <p style="margin-top:10px;" id="smalltext">Die Tags dienen dazu deine Karte zu kategorisieren. <strong>Verwende also möglichst viele passende Begriffe</strong>, damit andere deine Karte finden können. <strong>Tags mit Komma trennen</strong>.</p>
             </td>
         </tr>
         <tr>
@@ -100,7 +100,7 @@
         <tr>
             <td nowrap="nowrap"><p id="formlabel">Tags</p></td>
             <td @@{card_tags:formerror}@@ width="350">
-                <input maxlength="256" name="editcard[card_tags]" value="@@{card_tags:value}@@" id="formtext" type="text" />
+                <input maxlength="256" name="addcard[card_tags]" value="@@{card_tags:value}@@" id="formtext" type="text" />
                 <!-- TemplateBeginBlock name="card_tags:errormsg" -->
                     <br /><span class="formerrormsg">@@{card_tags:errormsg}@@</span>
                 <!-- TemplateEndBlock -->
@@ -129,8 +129,8 @@
 	</div>
 	
 	<div id="footer">
-		Service provided by <a id="service" href="http://missionpoken.de/">missionpoken.de</a> and <a id="service" href="http://pokenpokes.de/">pokenpokes.de</a> - 
-		<a id="impressum" href="http://missionpoken.de/impressum/">Imprint</a> - 
+		Ein Service von <a id="service" href="http://missionpoken.de/">missionpoken.de</a> und <a id="service" href="http://pokenpokes.de/">pokenpokes.de</a> - 
+		<a id="impressum" href="http://missionpoken.de/impressum/">Impressum</a> - 
 		<a id="datenschutz" href="http://missionpoken.de/datenschutzerklaerung/">Datenschutzerklärung</a> - 
 		<a id="agb" href="http://missionpoken.de/agb-und-wiederrufsbelehrung-von-missionpokende/">AGB und Widerrufsbelehrung</a>
 	</div>
