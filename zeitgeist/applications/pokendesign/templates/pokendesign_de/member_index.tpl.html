@@ -106,8 +106,20 @@
             <a href="@@{[cards.showdetail]}@@&id=@@{cardid}@@">
             <img src="@@{basepath}@@/uploads/@@{cardfile}@@" border="0" />
             </a>
+            <!-- TemplateBeginBlock name="taglist" -->
+                <p id="smalltext_tags">Tags: 
+               <!-- TemplateBeginBlock name="tag" -->
+                    <a href="@@{[cards.search]}@@&t=@@{tag}@@">@@{tag}@@</a>
+                <!-- TemplateEndBlock -->
+                </p>
+            <!-- TemplateEndBlock -->
             <p>@@{carddescription}@@</p>
         </div>
+
+        <!-- TemplateBeginBlock name="nextline" -->
+	        <div style="clear:both"></div> 
+        <!-- TemplateEndBlock -->
+        
 	<!-- TemplateEndBlock -->
     
 	<div style="clear:both"></div>

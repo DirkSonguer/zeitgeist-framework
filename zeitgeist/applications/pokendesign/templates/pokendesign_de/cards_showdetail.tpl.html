@@ -85,16 +85,17 @@
                     
                     <p>@@{carddescription}@@</p>
 
+					<p id="pokendate">
                     <!-- TemplateBeginBlock name="taglist" -->
-	                    <p id="smalltext">Tags:
-					   <!-- TemplateBeginBlock name="tag" -->
+	                	<img alt="Tags" src="@@{templatepath}@@/images/tags.png" />
+					    <!-- TemplateBeginBlock name="tag" -->
 							<a href="@@{[cards.search]}@@&t=@@{tag}@@">@@{tag}@@</a>
 						<!-- TemplateEndBlock -->
-						</p>
+                        <br />
                     <!-- TemplateEndBlock -->
 					
                     <!-- TemplateBeginBlock name="notfaved" -->
-						<p id="pokendate"><img alt="" src="@@{templatepath}@@/images/stats.png" /> @@{cardviews}@@ mal angezeigt, @@{cardclicks}@@ mal geklickt</p>
+						<img alt="" src="@@{templatepath}@@/images/stats.png" /> @@{cardviews}@@ mal angezeigt, @@{cardclicks}@@ mal geklickt<br />
 	                   	<table cellspacing="5" border="0"><tr>
                         <td valign="top"><img alt="" src="@@{templatepath}@@/images/services_big.png" /></td>
                         <td><p id="pokendate">@@{favs}@@ Leute mögen diese Visitenkarte</p>
@@ -104,9 +105,10 @@
                     <!-- TemplateEndBlock -->
                     
                     <!-- TemplateBeginBlock name="faved" -->
-						<p id="pokendate"><img alt="" src="@@{templatepath}@@/images/stats.png" /> @@{cardviews}@@ mal angezeigt, @@{cardclicks}@@ mal geklickt<br />
-						<img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ Leute mögen diese Visitenkarte</p>
-                    <!-- TemplateEndBlock -->                    
+						<img alt="" src="@@{templatepath}@@/images/stats.png" /> @@{cardviews}@@ mal angezeigt, @@{cardclicks}@@ mal geklickt<br />
+						<img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ Leute mögen diese Visitenkarte
+                    <!-- TemplateEndBlock -->
+                    </p>                 
                 </td>
                 </tr>
             </table>
