@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- TemplateBeginEditable name="doctitle" -->
+<title>Pokendesign - High Four in Style</title>
+<!-- TemplateEndEditable -->
+
+<script src="http://missionpoken.de/mint/?js" type="text/javascript"></script>
+<link rel="icon" type="image/png" href="favicon.png" />
+      
+<link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/pokendesign.css" />
+
+<script language="javascript" type="text/javascript">
+
+</script>
+	
+<!-- TemplateBeginEditable name="head" -->
+
+<!-- TemplateEndEditable -->
+</head>
+
+<body>
+
+	<div id="header">
+    <div id="menu">
+    	<table border="0">
+        <tr><td>
+			<a href="@@{[main.index]}@@"><img alt="Poken" id="logo" src="@@{templatepath}@@/images/missionpoken-weiss.png" border="0" /></a>
+        </td><td>
+	
+		<!-- TemplateBeginBlock name="userunknown" -->
+				<div id="welcomemessage">Welcome to Pokendesign!</div>
+                <div id="mainmenu">
+				<a href="@@{[cards.index]}@@">Discover cards</a>
+   				<a href="@@{[cards.topten]}@@">Top Ten</a>
+				<a href="@@{[main.login]}@@">Add card</a>
+				<a href="@@{[main.login]}@@">You are not logged in</a>
+                </div>
+		<!-- TemplateEndBlock -->
+	
+		<!-- TemplateBeginBlock name="userloggedin" -->
+				<div id="welcomemessage">Hi @@{username}@@, welcome back!</div>
+                <div id="mainmenu">
+				<a href="@@{[cards.index]}@@">Discover cards</a>
+   				<a href="@@{[cards.topten]}@@">Top ten</a>
+				<a href="@@{[member.index]}@@">Your cards</a>
+				<a href="@@{[member.addcard]}@@">Add card</a>
+				<a href="@@{[member.editprofile]}@@">Your profile</a>
+				<a href="@@{[main.logout]}@@">Log out</a>
+                </div>
+		<!-- TemplateEndBlock -->
+        
+        </td>
+        </tr></table>
+    </div>
+	</div>
+
+	<!-- TemplateBeginBlock name="usermessage" -->
+		<h3 class="usermessage">@@{usermessage}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="userwarnings" -->
+		<h3 class="userwarning">@@{userwarning}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="usererrors" -->
+		<h3 class="userwarning">@@{usererror}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<div id="content">
+	<!-- TemplateBeginEditable name="body" -->
+
+		<p>Haupttext</p>
+
+	<!-- TemplateEndEditable -->
+
+	</div>
+	
+	<div id="footer">
+		Service provided by <a id="service" href="http://missionpoken.de/">missionpoken.de</a> and <a id="service" href="http://pokenpokes.de/">pokenpokes.de</a> - 
+		<a id="impressum" href="http://missionpoken.de/impressum/">Imprint</a> - 
+		<a id="datenschutz" href="http://missionpoken.de/datenschutzerklaerung/">Datenschutzerklärung</a> - 
+		<a id="agb" href="http://missionpoken.de/agb-und-wiederrufsbelehrung-von-missionpokende/">AGB und Widerrufsbelehrung</a>
+	</div>
+
+</body>
+</html>

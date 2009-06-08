@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/pokendesign.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>Pokendesign - Anmeldung</title>
+<!-- InstanceEndEditable -->
+
+<script src="http://missionpoken.de/mint/?js" type="text/javascript"></script>
+<link rel="icon" type="image/png" href="favicon.png" />
+      
+<link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/pokendesign.css" />
+
+<script language="javascript" type="text/javascript">
+
+</script>
+	
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
+</head>
+
+<body>
+
+	<div id="header">
+    <div id="menu">
+    	<table border="0">
+        <tr><td>
+			<a href="@@{[main.index]}@@"><img alt="Poken" id="logo" src="@@{templatepath}@@/images/missionpoken-weiss.png" border="0" /></a>
+        </td><td>
+	
+		<!-- TemplateBeginBlock name="userunknown" -->
+				<div id="welcomemessage">Welcome to Pokendesign!</div>
+                <div id="mainmenu">
+				<a href="@@{[cards.index]}@@">Discover cards</a>
+   				<a href="@@{[cards.topten]}@@">Top Ten</a>
+				<a href="@@{[main.login]}@@">Add card</a>
+				<a href="@@{[main.login]}@@">You are not logged in</a>
+                </div>
+		<!-- TemplateEndBlock -->
+	
+		<!-- TemplateBeginBlock name="userloggedin" -->
+				<div id="welcomemessage">Hi @@{username}@@, welcome back!</div>
+                <div id="mainmenu">
+				<a href="@@{[cards.index]}@@">Discover cards</a>
+   				<a href="@@{[cards.topten]}@@">Top ten</a>
+				<a href="@@{[member.index]}@@">Your cards</a>
+				<a href="@@{[member.addcard]}@@">Add card</a>
+				<a href="@@{[member.editprofile]}@@">Your profile</a>
+				<a href="@@{[main.logout]}@@">Log out</a>
+                </div>
+		<!-- TemplateEndBlock -->
+        
+        </td>
+        </tr></table>
+    </div>
+	</div>
+
+	<!-- TemplateBeginBlock name="usermessage" -->
+		<h3 class="usermessage">@@{usermessage}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="userwarnings" -->
+		<h3 class="userwarning">@@{userwarning}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="usererrors" -->
+		<h3 class="userwarning">@@{usererror}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<div id="content">
+	<!-- InstanceBeginEditable name="body" -->
+
+		<h1>Registriere dich auf Pokendesign</h1>
+
+		<form method="post" action="@@{[main.register]}@@" name="register" enctype="multipart/form-data">
+		<table cellspacing="10" border="0">
+        <tr>
+            <td nowrap="nowrap" valign="top"><p id="formlabel">Deine Email*</p></td>
+            <td @@{user_username:formerror}@@ width="350">
+                <input maxlength="128" name="register[user_username]" value="@@{user_username:value}@@" id="formtext" type="text" />
+                <!-- TemplateBeginBlock name="user_username:errormsg" -->
+                    <br /><span class="formerrormsg">@@{user_username:errormsg}@@</span>
+                <!-- TemplateEndBlock -->
+            </td>
+            <td rowspan="6" valign="top">
+                <h2>Es freut uns, dass du helfen willst, die Poken-Welt bunter zu machen!</h2>
+                <p style="margin-top:10px;" id="smalltext"><img src="http://www.gravatar.com/avatar/?s=50" alt="Gravatar" align="left" style="padding-right:10px;" />
+                Als Profilbild wird dein <a href="http://www.gravatar.com/">Gravatar</a> verwendet. Wenn du also schon einen Gravatar hast, achte darauf, dass du die entsprechende Email-Adresse verwendest.</p>
+                <p style="margin-top:10px;" id="smalltext"><img src="@@{templatepath}@@/images/mail.png" alt="Mail" align="right" style="padding-right:10px;" />
+                Deine <strong>Email</strong> wird auschließlich zur Authentifizierung, Anmeldung und für deinen Gravatar genutzt. Sie wird auf der Plattform weder angezeigt noch an Dritte weitergegeben.</p>
+                <p style="margin-top:10px;" id="smalltext"><img src="@@{templatepath}@@/images/browser.png" alt="URL" align="left" style="padding-right:10px;" />
+                Als <strong>URL</strong> kannst du ein beliebiges Profil von dir im Netz angeben. Dein Benutzername auf Pokenpokes wird auf diese URL linken.</p>
+            </td>
+        </tr>
+        <tr>
+            <td nowrap="nowrap" valign="top"><p id="formlabel">Dein Benutzername*</p></td>
+            <td @@{userdata_username:formerror}@@>
+                <input maxlength="128" name="register[userdata_username]" value="@@{userdata_username:value}@@" id="formtext" type="text" />
+                <!-- TemplateBeginBlock name="userdata_username:errormsg" -->
+                    <br /><span class="formerrormsg">@@{userdata_username:errormsg}@@</span>
+                <!-- TemplateEndBlock -->
+            </td>
+        </tr>
+        <tr>
+            <td nowrap="nowrap" valign="top"><p id="formlabel">URL</p></td>
+            <td @@{userdata_url:formerror}@@>
+                <input maxlength="128" name="register[userdata_url]" value="@@{userdata_url:value}@@" id="formtext" type="text" />
+                <!-- TemplateBeginBlock name="userdata_url:errormsg" -->
+                    <br /><span class="formerrormsg">@@{userdata_url:errormsg}@@</span>
+                <!-- TemplateEndBlock -->
+            </td>
+        </tr>
+        <tr>
+            <td nowrap="nowrap" valign="top"><p id="formlabel">Dein Passwort*</p></td>
+            <td @@{user_password1:formerror}@@>
+                <input maxlength="128" name="register[user_password1]" value="" id="formtext" type="password" />
+                <!-- TemplateBeginBlock name="user_password1:errormsg" -->
+                    <br /><span class="formerrormsg">@@{user_password1:errormsg}@@</span>
+                <!-- TemplateEndBlock -->
+            </td>
+        </tr>
+        <tr>
+            <td nowrap="nowrap" valign="top"><p id="formlabel">Passwort bestätigen*</p></td>
+            <td @@{user_password2:formerror}@@>
+                <input maxlength="128" name="register[user_password2]" value="" id="formtext" type="password" />
+                <!-- TemplateBeginBlock name="user_password2:errormsg" -->
+                    <br /><span class="formerrormsg">@@{user_password2:errormsg}@@</span>
+                <!-- TemplateEndBlock -->
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+               <p><input name="submit" value="Registrieren" class="formbutton" type="submit" /></p>
+            </td>
+        </tr>
+		</table>
+		</form>
+
+<!-- InstanceEndEditable -->
+
+	</div>
+	
+	<div id="footer">
+		Service provided by <a id="service" href="http://missionpoken.de/">missionpoken.de</a> and <a id="service" href="http://pokenpokes.de/">pokenpokes.de</a> - 
+		<a id="impressum" href="http://missionpoken.de/impressum/">Imprint</a> - 
+		<a id="datenschutz" href="http://missionpoken.de/datenschutzerklaerung/">Datenschutzerklärung</a> - 
+		<a id="agb" href="http://missionpoken.de/agb-und-wiederrufsbelehrung-von-missionpokende/">AGB und Widerrufsbelehrung</a>
+	</div>
+
+</body>
+<!-- InstanceEnd --></html>
