@@ -211,7 +211,7 @@ blockquote:before,blockquote:after,q:before,q:after {
 
 #pokencard {
 	float:left;
-	width: 350px;
+	width: 330px;
 	margin-left:20px;
 	margin-right:20px;
 	margin-bottom:20px;
@@ -256,42 +256,8 @@ blockquote:before,blockquote:after,q:before,q:after {
 	margin-top: 0px;
 }
 
-#tagcloud {
-	width:500px;
-	float:right;
-	margin-right:30px;
-	line-height:15pt;
-}
-
-#tagcloud_search {
-	text-align:center;
-	width:700px;
-	margin-bottom:25px;
-	line-height:20pt;
-}
-
-#tag_1 {
-	font-size:110%;
-	padding:3px;
-}
-
-#tag_2 {
-	font-size:150%;
-	padding:3px;
-}
-
-#tag_3 {
-	font-size:200%;
-	padding:3px;
-}
-
 #smalltext {
 	font-size:8pt;
-}
-
-#smalltext_tags {
-	font-size:8pt;
-	margin-bottom:5px;
 }
 
 

@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/pokendesign.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>Pokendesign - Visitenkarte hinzufügen</title>
+<!-- InstanceEndEditable -->
+
+<script src="http://missionpoken.de/mint/?js" type="text/javascript"></script>
+<link rel="icon" type="image/png" href="favicon.png" />
+      
+<link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/pokendesign.css" />
+
+<script language="javascript" type="text/javascript">
+
+</script>
+	
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
+</head>
+
+<body>
+
+	<div id="header">
+    <div id="menu">
+    	<table border="0">
+        <tr><td>
+			<a href="@@{[main.index]}@@"><img alt="Poken" id="logo" src="@@{templatepath}@@/images/missionpoken-weiss.png" border="0" /></a>
+        </td><td>
+	
+		<!-- TemplateBeginBlock name="userunknown" -->
+				<div id="welcomemessage">Willkommen auf Pokendesign!</div>
+                <div id="mainmenu">
+				<a href="@@{[cards.index]}@@">Karten entdecken</a>
+   				<a href="@@{[cards.topten]}@@">Top 10</a>
+				<a href="@@{[main.login]}@@">Karte hinzufügen</a>
+				<a href="@@{[main.login]}@@">Du bist nicht eingeloggt</a>
+                </div>
+		<!-- TemplateEndBlock -->
+	
+		<!-- TemplateBeginBlock name="userloggedin" -->
+				<div id="welcomemessage">Hallo @@{username}@@, schön dich wieder zu sehen!</div>
+                <div id="mainmenu">
+				<a href="@@{[cards.index]}@@">Karten entdecken</a>
+   				<a href="@@{[cards.topten]}@@">Top 10</a>
+				<a href="@@{[member.index]}@@">Deine Karten</a>
+				<a href="@@{[member.addcard]}@@">Karte hinzufügen</a>
+				<a href="@@{[member.editprofile]}@@">Dein Profil</a>
+				<a href="@@{[main.logout]}@@">Ausloggen</a>
+                </div>
+		<!-- TemplateEndBlock -->
+        
+        </td>
+        </tr></table>
+    </div>
+	</div>
+
+	<!-- TemplateBeginBlock name="usermessage" -->
+		<h3 class="usermessage">@@{usermessage}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="userwarnings" -->
+		<h3 class="userwarning">@@{userwarning}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="usererrors" -->
+		<h3 class="userwarning">@@{usererror}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<div id="content">
+	<!-- InstanceBeginEditable name="body" -->
+
+		<h1>Visitenkarte hinzufügen</h1>
+
+		<form method="post" action="@@{[member.addcard]}@@" name="addcard" enctype="multipart/form-data">
+		<table cellspacing="10" border="0">
+        <tr>
+            <td nowrap="nowrap"><p id="formlabel">Titel deiner Karte*</p></td>
+            <td @@{card_title:formerror}@@ width="350">
+                <input maxlength="128" name="addcard[card_title]" value="@@{card_title:value}@@" id="formtext" type="text" />
+                <!-- TemplateBeginBlock name="card_title:errormsg" -->
+                    <br /><span class="formerrormsg">@@{card_title:errormsg}@@</span>
+                <!-- TemplateEndBlock -->
+            </td>
+            <td rowspan="5" valign="top" align="center">
+            	<img src="@@{templatepath}@@/images/basic_poken_card.png" alt="Visitenkarte Beispiel" />
+                <p style="margin-top:10px;" id="smalltext">Die Visitenkarten müssen entweder im <strong>.JPG oder .PNG-Format</strong> hochgeladen werden und eine Abmessung von idealerweise <strong>327 x 217 Pixel</strong> haben. Die Datei darf die maximale Größe von <strong>500KB</strong> nicht überschreiben.</p>
+                <p style="margin-top:10px;" id="smalltext">Die Beschreibung und Tags dienen dazu deine Karte für die Suche erfassbar zu machen. <strong>Verwende also möglichst viele passende Begriffe</strong>, damit andere deine Karte finden können.</p>
+            </td>
+        </tr>
+        <tr>
+            <td nowrap="nowrap" valign="top"><p id="formlabel">Beschreibung*</p></td>
+            <td @@{card_description:formerror}@@>
+				<textarea name="addcard[card_description]" id="formtext" cols="50" rows="4">@@{card_description:value}@@</textarea>
+                <!-- TemplateBeginBlock name="card_description:errormsg" -->
+                    <br /><span class="formerrormsg">@@{card_description:errormsg}@@</span>
+                <!-- TemplateEndBlock -->
+            </td>
+        </tr>
+        <tr>
+            <td nowrap="nowrap"><p id="formlabel">Tags</p></td>
+            <td @@{card_tags:formerror}@@ width="350">
+                <input maxlength="256" name="editcard[card_tags]" value="@@{card_tags:value}@@" id="formtext" type="text" />
+                <!-- TemplateBeginBlock name="card_tags:errormsg" -->
+                    <br /><span class="formerrormsg">@@{card_tags:errormsg}@@</span>
+                <!-- TemplateEndBlock -->
+            </td>
+        </tr>
+        <tr>
+            <td nowrap="nowrap"><p id="formlabel">Visitenkarte*</p></td>
+            <td @@{card_file:formerror}@@>
+	            <input name="addcard[card_file]" type="file" maxlength="" accept="image/*" id="formtext" />
+                <!-- TemplateBeginBlock name="card_file:errormsg" -->
+                    <br /><span class="formerrormsg">@@{card_file:errormsg}@@</span>
+                <!-- TemplateEndBlock -->
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+               <p><input name="submit" value="Visitenkarte speichern" class="formbutton" type="submit" /></p>
+            </td>
+        </tr>
+		</table>
+		</form>
+
+<!-- InstanceEndEditable -->
+
+	</div>
+	
+	<div id="footer">
+		Ein Service von <a id="service" href="http://missionpoken.de/">missionpoken.de</a> und <a id="service" href="http://pokenpokes.de/">pokenpokes.de</a> - 
+		<a id="impressum" href="http://missionpoken.de/impressum/">Impressum</a> - 
+		<a id="datenschutz" href="http://missionpoken.de/datenschutzerklaerung/">Datenschutzerklärung</a> - 
+		<a id="agb" href="http://missionpoken.de/agb-und-wiederrufsbelehrung-von-missionpokende/">AGB und Widerrufsbelehrung</a>
+	</div>
+
+</body>
+<!-- InstanceEnd --></html>
