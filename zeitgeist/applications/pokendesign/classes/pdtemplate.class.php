@@ -19,6 +19,8 @@ class pdTemplate extends zgTemplate
 	protected $user;
 	protected $basepath;
 	protected $templatepath;
+	protected $localpath;
+	protected $session;
 
 	/**
 	 * Class constructor
@@ -26,11 +28,22 @@ class pdTemplate extends zgTemplate
 	public function __construct()
 	{
 		$this->user = zgUserhandler::init();
+		$this->session = zgSession::init();
 
 		parent::__construct();
 
 		$this->basepath = $this->configuration->getConfiguration('pokendesign', 'application', 'basepath');
+		$this->localpath = 'templates/' . $this->configuration->getConfiguration('pokendesign', 'application', 'templatepath');
 		$this->templatepath = $this->basepath . '/templates/' . $this->configuration->getConfiguration('pokendesign', 'application', 'templatepath');
+
+		$language = $this->session->getSessionVariable('language');
+		if (!$language)
+		{
+			$this->session->setSessionVariable('language', '_en');
+			$language = '_en';
+		}
+		$this->localpath .= $language;
+		$this->templatepath .= $language;
 	}
 
 
@@ -44,7 +57,8 @@ class pdTemplate extends zgTemplate
 	public function load($filename)
 	{
 		$this->debug->guard();
-
+		
+		$filename = $this->localpath . '/' . $filename;
 		$ret = parent::load($filename);
 
 		$this->assign('basepath', $this->basepath);
