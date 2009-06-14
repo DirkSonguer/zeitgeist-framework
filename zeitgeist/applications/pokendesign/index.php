@@ -33,6 +33,7 @@
 	$error = zgErrorhandler::init();
 	$user = zgUserhandler::init();
 	$eventhandler = new zgEventhandler();
+	$locale = zgLocale::init();
 
 	// load configuration
 	$configuration->loadConfiguration('pokendesign', 'configuration/pokendesign.ini');

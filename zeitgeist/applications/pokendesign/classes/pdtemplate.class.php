@@ -21,6 +21,7 @@ class pdTemplate extends zgTemplate
 	protected $templatepath;
 	protected $localpath;
 	protected $session;
+	protected $locale;
 
 	/**
 	 * Class constructor
@@ -29,6 +30,8 @@ class pdTemplate extends zgTemplate
 	{
 		$this->user = zgUserhandler::init();
 		$this->session = zgSession::init();
+
+		$this->locale = zgLocale::init();
 
 		parent::__construct();
 
@@ -42,6 +45,9 @@ class pdTemplate extends zgTemplate
 			$this->session->setSessionVariable('language', '_en');
 			$language = '_en';
 		}
+
+		$this->locale->loadLocale($language, 'configuration/locales.ini');
+		$this->locale->setLocale($language);
 		$this->localpath .= $language;
 		$this->templatepath .= $language;
 	}

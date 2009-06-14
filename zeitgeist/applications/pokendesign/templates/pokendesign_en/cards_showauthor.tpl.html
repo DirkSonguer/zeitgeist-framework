@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Pokendesign - Visitenkarten von @@{authorname}@@</title>
+<title>Pokendesign - Cards by @@{authorname}@@</title>
 <!-- InstanceEndEditable -->
 
 <script src="http://missionpoken.de/mint/?js" type="text/javascript"></script>
@@ -29,24 +29,24 @@
         </td><td>
 	
 		<!-- TemplateBeginBlock name="userunknown" -->
-				<div id="welcomemessage">Willkommen auf Pokendesign!</div>
+				<div id="welcomemessage">Welcome to Pokendesign!</div>
                 <div id="mainmenu">
-				<a href="@@{[cards.index]}@@">Karten entdecken</a>
-   				<a href="@@{[cards.topten]}@@">Top 10</a>
-				<a href="@@{[main.login]}@@">Karte hinzufügen</a>
-				<a href="@@{[main.login]}@@">Du bist nicht eingeloggt</a>
+				<a href="@@{[cards.index]}@@">Discover new cards</a>
+   				<a href="@@{[cards.topten]}@@">Top Ten</a>
+				<a href="@@{[main.login]}@@">Add card</a>
+				<a href="@@{[main.login]}@@">You're not logged in</a>
                 </div>
 		<!-- TemplateEndBlock -->
 	
 		<!-- TemplateBeginBlock name="userloggedin" -->
-				<div id="welcomemessage">Hallo @@{username}@@, schön dich wieder zu sehen!</div>
+				<div id="welcomemessage">Hi @@{username}@@, nice to see you!</div>
                 <div id="mainmenu">
-				<a href="@@{[cards.index]}@@">Karten entdecken</a>
-   				<a href="@@{[cards.topten]}@@">Top 10</a>
-				<a href="@@{[member.index]}@@">Deine Karten</a>
-				<a href="@@{[member.addcard]}@@">Karte hinzufügen</a>
-				<a href="@@{[member.editprofile]}@@">Dein Profil</a>
-				<a href="@@{[main.logout]}@@">Ausloggen</a>
+				<a href="@@{[cards.index]}@@">Discover new cards</a>
+   				<a href="@@{[cards.topten]}@@">Top Ten</a>
+				<a href="@@{[member.index]}@@">Your cards</a>
+				<a href="@@{[member.addcard]}@@">Add card</a>
+				<a href="@@{[member.editprofile]}@@">Your profile</a>
+				<a href="@@{[main.logout]}@@">Log out</a>
                 </div>
 		<!-- TemplateEndBlock -->
         
@@ -71,18 +71,18 @@
 	<!-- InstanceBeginEditable name="body" -->
     
 	<!-- TemplateBeginBlock name="authornolink" -->
-    	<h1><img src="http://www.gravatar.com/avatar/@@{gravatar}@@.jpg?s=30" alt="" id="authorimage" /> Übersicht der Karten von "@@{authorname}@@"</h1>
+    	<h1><img src="http://www.gravatar.com/avatar/@@{gravatar}@@.jpg?s=30" alt="" id="authorimage" /> Cards by "@@{authorname}@@"</h1>
 	<!-- TemplateEndBlock -->
 		
 	<!-- TemplateBeginBlock name="authorwithlink" -->
-    	<h1><img src="http://www.gravatar.com/avatar/@@{gravatar}@@.jpg?s=30" alt="@@{authorname}@@" id="authorimage" /> Übersicht der Karten von "<a href="@@{authorlink}@@" target="_blank">@@{authorname}@@</a>"</h1>
+    	<h1><img src="http://www.gravatar.com/avatar/@@{gravatar}@@.jpg?s=30" alt="@@{authorname}@@" id="authorimage" /> Cards by "<a href="@@{authorlink}@@" target="_blank">@@{authorname}@@</a>"</h1>
 	<!-- TemplateEndBlock -->
 
 	<!-- TemplateBeginBlock name="cardlist" -->
         <div id="pokencard">
             <p id="pokenheadline">@@{cardtitle}@@</p>
-            <p id="pokendate">hochgeladen am @@{carddate}@@<br />
-            <img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ Leute mögen diese Visitenkarte</p>
+            <p id="pokendate">uploaded @@{carddate}@@<br />
+            <img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ people love this card</p>
             <a href="@@{[cards.showdetail]}@@&id=@@{cardid}@@">
             <img src="@@{basepath}@@/uploads/@@{cardfile}@@" border="0" />
             </a>
@@ -98,10 +98,12 @@
 	</div>
 	
 	<div id="footer">
-		Ein Service von <a id="service" href="http://missionpoken.de/">missionpoken.de</a> und <a id="service" href="http://pokenpokes.de/">pokenpokes.de</a> - 
-		<a id="impressum" href="http://missionpoken.de/impressum/">Impressum</a> - 
-		<a id="datenschutz" href="http://missionpoken.de/datenschutzerklaerung/">Datenschutzerklärung</a> - 
-		<a id="agb" href="http://missionpoken.de/agb-und-wiederrufsbelehrung-von-missionpokende/">AGB und Widerrufsbelehrung</a>
+		A service by <a id="service" href="http://missionpoken.de/">missionpoken.de</a> und <a id="service" href="http://pokenpokes.de/">pokenpokes.de</a> - 
+		<a id="impressum" href="http://missionpoken.de/impressum/">Imprint</a> - 
+		<a id="datenschutz" href="http://missionpoken.de/datenschutzerklaerung/">Privacy Policy</a> - 
+		<a id="agb" href="http://missionpoken.de/agb-und-wiederrufsbelehrung-von-missionpokende/">Terms and Conditions</a>
+		<a id="english" href="http://www.pokendesign.com"><img alt="English" id="localeflag1" src="@@{templatepath}@@/images/uk.gif" border="0" /></a>
+		<a id="german" href="http://www.pokendesign.de"><img alt="German" id="localeflag2" src="@@{templatepath}@@/images/de.gif" border="0" /></a>
 	</div>
 
 </body>

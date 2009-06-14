@@ -163,6 +163,18 @@ blockquote:before,blockquote:after,q:before,q:after {
 	margin-right:10px;
 }
 
+#localeflag1 {
+	margin-top:0px;
+	margin-left:15px;
+	margin-right:5px;
+}
+
+#localeflag2 {
+	margin-top:0px;
+	margin-left:5px;
+	margin-right:5px;
+}
+
 #footer {
 	height: 25px;
 	z-index: 100;
