@@ -11,6 +11,7 @@ class member
 	protected $user;
 	protected $pduserfunctions;
 	protected $cards;
+	protected $locale;
 
 	public function __construct()
 	{
@@ -18,6 +19,8 @@ class member
 		$this->messages = zgMessages::init();
 		$this->configuration = zgConfiguration::init();
 		$this->user = zgUserhandler::init();
+		
+		$this->locale = zgLocale::init();
 		
 		$this->pduserfunctions = new pdUserfunctions();
 		$this->cards = new pdCards();
@@ -88,11 +91,11 @@ class member
 		{
 			if ($this->cards->deleteCard($parameters['card']))
 			{
-				$this->messages->setMessage('Die Visitenkarte wurde gelöscht', 'usermessage');
+				$this->messages->setMessage('Die Visitenkarte wurde gelöscht.', 'usermessage');
 			}
 			else
 			{
-				$this->messages->setMessage('Die Visitenkarte konnte nicht glöscht werden!', 'userwarning');
+				$this->messages->setMessage('Die Visitenkarte konnte nicht glöscht werden.', 'userwarning');
 			}			
 		}
 

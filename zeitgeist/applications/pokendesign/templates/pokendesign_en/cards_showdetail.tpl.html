@@ -29,24 +29,24 @@
         </td><td>
 	
 		<!-- TemplateBeginBlock name="userunknown" -->
-				<div id="welcomemessage">Willkommen auf Pokendesign!</div>
+				<div id="welcomemessage">Welcome to Pokendesign!</div>
                 <div id="mainmenu">
-				<a href="@@{[cards.index]}@@">Karten entdecken</a>
-   				<a href="@@{[cards.topten]}@@">Top 10</a>
-				<a href="@@{[main.login]}@@">Karte hinzufügen</a>
-				<a href="@@{[main.login]}@@">Du bist nicht eingeloggt</a>
+				<a href="@@{[cards.index]}@@">Discover new cards</a>
+   				<a href="@@{[cards.topten]}@@">Top Ten</a>
+				<a href="@@{[main.login]}@@">Add card</a>
+				<a href="@@{[main.login]}@@">You're not logged in</a>
                 </div>
 		<!-- TemplateEndBlock -->
 	
 		<!-- TemplateBeginBlock name="userloggedin" -->
-				<div id="welcomemessage">Hallo @@{username}@@, schön dich wieder zu sehen!</div>
+				<div id="welcomemessage">Hi @@{username}@@, nice to see you!</div>
                 <div id="mainmenu">
-				<a href="@@{[cards.index]}@@">Karten entdecken</a>
-   				<a href="@@{[cards.topten]}@@">Top 10</a>
-				<a href="@@{[member.index]}@@">Deine Karten</a>
-				<a href="@@{[member.addcard]}@@">Karte hinzufügen</a>
-				<a href="@@{[member.editprofile]}@@">Dein Profil</a>
-				<a href="@@{[main.logout]}@@">Ausloggen</a>
+				<a href="@@{[cards.index]}@@">Discover new cards</a>
+   				<a href="@@{[cards.topten]}@@">Top Ten</a>
+				<a href="@@{[member.index]}@@">Your cards</a>
+				<a href="@@{[member.addcard]}@@">Add card</a>
+				<a href="@@{[member.editprofile]}@@">Your profile</a>
+				<a href="@@{[main.logout]}@@">Log out</a>
                 </div>
 		<!-- TemplateEndBlock -->
         
@@ -70,7 +70,7 @@
 	<div id="content">
 	<!-- InstanceBeginEditable name="body" -->
 
-	<h1>Entdecke neue Poken Visitenkarten!</h1>
+	<h1>Discover new Poken cards!</h1>
 
 			<table cellspacing="10" border="0">
             	<tr>
@@ -81,7 +81,7 @@
 				</td>
                 <td valign="top" width="400">
                     <p id="pokenheadline">@@{cardtitle}@@</p>
-                    <p id="pokendate">hochgeladen am @@{carddate}@@ von <a href="@@{[main.showauthor]}@@&id=@@{cardauthorid}@@">@@{cardauthorname}@@</a></p>
+                    <p id="pokendate">uploaded @@{carddate}@@ von <a href="@@{[main.showauthor]}@@&id=@@{cardauthorid}@@">@@{cardauthorname}@@</a></p>
                     
                     <p>@@{carddescription}@@</p>
 
@@ -95,18 +95,18 @@
                     <!-- TemplateEndBlock -->
 					
                     <!-- TemplateBeginBlock name="notfaved" -->
-						<img alt="" src="@@{templatepath}@@/images/stats.png" /> @@{cardviews}@@ mal angezeigt, @@{cardclicks}@@ mal geklickt<br />
+						<img alt="" src="@@{templatepath}@@/images/stats.png" /> shown @@{cardviews}@@ times, clicked @@{cardclicks}@@ times<br />
 	                   	<table cellspacing="5" border="0"><tr>
                         <td valign="top"><img alt="" src="@@{templatepath}@@/images/services_big.png" /></td>
-                        <td><p id="pokendate">@@{favs}@@ Leute mögen diese Visitenkarte</p>
-                        <h2 style="margin-top:10px;"><a href="@@{[cards.addfav]}@@&id=@@{cardid}@@">Ich finde sie gut!</a></h2>
+                        <td><p id="pokendate">@@{favs}@@ people love this card</p>
+                        <h2 style="margin-top:10px;"><a href="@@{[cards.addfav]}@@&id=@@{cardid}@@">I love it, too!</a></h2>
                         </td>
                         </tr></table>
                     <!-- TemplateEndBlock -->
                     
                     <!-- TemplateBeginBlock name="faved" -->
-						<img alt="" src="@@{templatepath}@@/images/stats.png" /> @@{cardviews}@@ mal angezeigt, @@{cardclicks}@@ mal geklickt<br />
-						<img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ Leute mögen diese Visitenkarte
+						<img alt="" src="@@{templatepath}@@/images/stats.png" /> shown @@{cardviews}@@ times, clicked @@{cardclicks}@@ times<br />
+						<img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ people love this card
                     <!-- TemplateEndBlock -->
                     </p>                 
                 </td>
@@ -120,10 +120,12 @@
 	</div>
 	
 	<div id="footer">
-		Ein Service von <a id="service" href="http://missionpoken.de/">missionpoken.de</a> und <a id="service" href="http://pokenpokes.de/">pokenpokes.de</a> - 
-		<a id="impressum" href="http://missionpoken.de/impressum/">Impressum</a> - 
-		<a id="datenschutz" href="http://missionpoken.de/datenschutzerklaerung/">Datenschutzerklärung</a> - 
-		<a id="agb" href="http://missionpoken.de/agb-und-wiederrufsbelehrung-von-missionpokende/">AGB und Widerrufsbelehrung</a>
+		A service by <a id="service" href="http://missionpoken.de/">missionpoken.de</a> und <a id="service" href="http://pokenpokes.de/">pokenpokes.de</a> - 
+		<a id="impressum" href="http://missionpoken.de/impressum/">Imprint</a> - 
+		<a id="datenschutz" href="http://missionpoken.de/datenschutzerklaerung/">Privacy Policy</a> - 
+		<a id="agb" href="http://missionpoken.de/agb-und-wiederrufsbelehrung-von-missionpokende/">Terms and Conditions</a>
+		<a id="english" href="http://www.pokendesign.com"><img alt="English" id="localeflag1" src="@@{templatepath}@@/images/uk.gif" border="0" /></a>
+		<a id="german" href="http://www.pokendesign.de"><img alt="German" id="localeflag2" src="@@{templatepath}@@/images/de.gif" border="0" /></a>
 	</div>
 
 </body>

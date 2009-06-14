@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Pokendesign - Visitenkarte hinzufügen</title>
+<title>Pokendesign - Add card</title>
 <!-- InstanceEndEditable -->
 
 <script src="http://missionpoken.de/mint/?js" type="text/javascript"></script>
@@ -29,24 +29,24 @@
         </td><td>
 	
 		<!-- TemplateBeginBlock name="userunknown" -->
-				<div id="welcomemessage">Willkommen auf Pokendesign!</div>
+				<div id="welcomemessage">Welcome to Pokendesign!</div>
                 <div id="mainmenu">
-				<a href="@@{[cards.index]}@@">Karten entdecken</a>
-   				<a href="@@{[cards.topten]}@@">Top 10</a>
-				<a href="@@{[main.login]}@@">Karte hinzufügen</a>
-				<a href="@@{[main.login]}@@">Du bist nicht eingeloggt</a>
+				<a href="@@{[cards.index]}@@">Discover new cards</a>
+   				<a href="@@{[cards.topten]}@@">Top Ten</a>
+				<a href="@@{[main.login]}@@">Add card</a>
+				<a href="@@{[main.login]}@@">You're not logged in</a>
                 </div>
 		<!-- TemplateEndBlock -->
 	
 		<!-- TemplateBeginBlock name="userloggedin" -->
-				<div id="welcomemessage">Hallo @@{username}@@, schön dich wieder zu sehen!</div>
+				<div id="welcomemessage">Hi @@{username}@@, nice to see you!</div>
                 <div id="mainmenu">
-				<a href="@@{[cards.index]}@@">Karten entdecken</a>
-   				<a href="@@{[cards.topten]}@@">Top 10</a>
-				<a href="@@{[member.index]}@@">Deine Karten</a>
-				<a href="@@{[member.addcard]}@@">Karte hinzufügen</a>
-				<a href="@@{[member.editprofile]}@@">Dein Profil</a>
-				<a href="@@{[main.logout]}@@">Ausloggen</a>
+				<a href="@@{[cards.index]}@@">Discover new cards</a>
+   				<a href="@@{[cards.topten]}@@">Top Ten</a>
+				<a href="@@{[member.index]}@@">Your cards</a>
+				<a href="@@{[member.addcard]}@@">Add card</a>
+				<a href="@@{[member.editprofile]}@@">Your profile</a>
+				<a href="@@{[main.logout]}@@">Log out</a>
                 </div>
 		<!-- TemplateEndBlock -->
         
@@ -70,12 +70,12 @@
 	<div id="content">
 	<!-- InstanceBeginEditable name="body" -->
 
-		<h1>Visitenkarte hinzufügen</h1>
+		<h1>Add card</h1>
 
 		<form method="post" action="@@{[member.addcard]}@@" name="addcard" enctype="multipart/form-data">
 		<table cellspacing="10" border="0">
         <tr>
-            <td nowrap="nowrap"><p id="formlabel">Titel deiner Karte*</p></td>
+            <td nowrap="nowrap"><p id="formlabel">Title of your card*</p></td>
             <td @@{card_title:formerror}@@ width="350">
                 <input maxlength="128" name="addcard[card_title]" value="@@{card_title:value}@@" id="formtext" type="text" />
                 <!-- TemplateBeginBlock name="card_title:errormsg" -->
@@ -84,12 +84,12 @@
             </td>
             <td rowspan="5" valign="top" align="center">
             	<img src="@@{templatepath}@@/images/basic_poken_card.png" alt="Visitenkarte Beispiel" />
-                <p style="margin-top:10px;" id="smalltext">Die Visitenkarten müssen entweder im <strong>.JPG oder .PNG-Format</strong> hochgeladen werden und eine Abmessung von idealerweise <strong>327 x 217 Pixel</strong> haben. Die Datei darf die maximale Größe von <strong>500KB</strong> nicht überschreiben.</p>
-                <p style="margin-top:10px;" id="smalltext">Die Tags dienen dazu deine Karte zu kategorisieren. <strong>Verwende also möglichst viele passende Begriffe</strong>, damit andere deine Karte finden können. <strong>Tags mit Komma trennen</strong>.</p>
+                <p style="margin-top:10px;" id="smalltext">Cards have to be uploaded either in <strong>.JPG or .PNG-format</strong>. They also have to be something around <strong>327 x 217 pixels</strong>. Maximum filesize is <strong>500KB</strong>.</p>
+                <p style="margin-top:10px;" id="smalltext">Tags are used to categorize a card. <strong>Use as many fitting tags as possible</strong>, so that others are able to find your card. <em>Tags are comma separated</em>.</p>
             </td>
         </tr>
         <tr>
-            <td nowrap="nowrap" valign="top"><p id="formlabel">Beschreibung*</p></td>
+            <td nowrap="nowrap" valign="top"><p id="formlabel">Description*</p></td>
             <td @@{card_description:formerror}@@>
 				<textarea name="addcard[card_description]" id="formtext" cols="50" rows="4">@@{card_description:value}@@</textarea>
                 <!-- TemplateBeginBlock name="card_description:errormsg" -->
@@ -107,7 +107,7 @@
             </td>
         </tr>
         <tr>
-            <td nowrap="nowrap"><p id="formlabel">Visitenkarte*</p></td>
+            <td nowrap="nowrap"><p id="formlabel">Card*</p></td>
             <td @@{card_file:formerror}@@>
 	            <input name="addcard[card_file]" type="file" maxlength="" accept="image/*" id="formtext" />
                 <!-- TemplateBeginBlock name="card_file:errormsg" -->
@@ -118,7 +118,7 @@
         <tr>
             <td></td>
             <td>
-               <p><input name="submit" value="Visitenkarte speichern" class="formbutton" type="submit" /></p>
+               <p><input name="submit" value="Save card" class="formbutton" type="submit" /></p>
             </td>
         </tr>
 		</table>
@@ -129,10 +129,12 @@
 	</div>
 	
 	<div id="footer">
-		Ein Service von <a id="service" href="http://missionpoken.de/">missionpoken.de</a> und <a id="service" href="http://pokenpokes.de/">pokenpokes.de</a> - 
-		<a id="impressum" href="http://missionpoken.de/impressum/">Impressum</a> - 
-		<a id="datenschutz" href="http://missionpoken.de/datenschutzerklaerung/">Datenschutzerklärung</a> - 
-		<a id="agb" href="http://missionpoken.de/agb-und-wiederrufsbelehrung-von-missionpokende/">AGB und Widerrufsbelehrung</a>
+		A service by <a id="service" href="http://missionpoken.de/">missionpoken.de</a> und <a id="service" href="http://pokenpokes.de/">pokenpokes.de</a> - 
+		<a id="impressum" href="http://missionpoken.de/impressum/">Imprint</a> - 
+		<a id="datenschutz" href="http://missionpoken.de/datenschutzerklaerung/">Privacy Policy</a> - 
+		<a id="agb" href="http://missionpoken.de/agb-und-wiederrufsbelehrung-von-missionpokende/">Terms and Conditions</a>
+		<a id="english" href="http://www.pokendesign.com"><img alt="English" id="localeflag1" src="@@{templatepath}@@/images/uk.gif" border="0" /></a>
+		<a id="german" href="http://www.pokendesign.de"><img alt="German" id="localeflag2" src="@@{templatepath}@@/images/de.gif" border="0" /></a>
 	</div>
 
 </body>
