@@ -369,7 +369,7 @@ class zgTemplate
 		{
 			foreach ($currentUsermessages as $message)
 			{
-				$this->assign($this->locale->write('usermessage'), $message->message);
+				$this->assign('usermessage', $this->locale->write($message->message));
 				$this->insertBlock($messageblock);
 			}
 		}
@@ -380,7 +380,7 @@ class zgTemplate
 		{
 			foreach ($currentUserwarnings as $warning)
 			{
-				$this->assign($this->locale->write('userwarning'), $warning->message);
+				$this->assign('userwarning', $this->locale->write($warning->message));
 				$this->insertBlock($warningblock);
 			}
 		}
@@ -391,7 +391,7 @@ class zgTemplate
 		{
 			foreach ($currentUsererrors as $error)
 			{
-				$this->assign($this->locale->write('usererror'), $error->message);
+				$this->assign('usererror', $this->locale->write($error->message));
 				$this->insertBlock($errorblock);
 			}
 		}
