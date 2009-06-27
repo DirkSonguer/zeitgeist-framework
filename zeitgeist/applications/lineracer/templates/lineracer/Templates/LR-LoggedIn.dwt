@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/LR-Master.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>LineRacer - Startseite</title>
+<!-- InstanceEndEditable -->
+<link href="../css/layout.css" rel="stylesheet" type="text/css" />
+<link href="../css/typo.css" rel="stylesheet" type="text/css" />
+<script src="../SpryAssets/SpryTabbedPanels.js" type="text/javascript"></script>
+<link href="../SpryAssets/TabbedPanels-ver.css" rel="stylesheet" type="text/css" />
+<link href="../SpryAssets/TabbedPanels-hor.css" rel="stylesheet" type="text/css" />
+<!-- InstanceParam name="LoggedIn" type="boolean" value="true" --><!-- InstanceParam name="Startseite" type="boolean" value="false" passthrough="true" --><!-- InstanceBeginEditable name="head" -->
+<!-- TemplateBeginEditable name="head" -->
+<!-- TemplateEndEditable --><!-- InstanceEndEditable --><!-- InstanceParam name="TabBoxengasse" type="text" value="m1" passthrough="true" --><!-- InstanceParam name="TabLobby" type="text" value="m2" passthrough="true" --><!-- InstanceParam name="TabStatistikCenter" type="text" value="m3" passthrough="true" --><!-- InstanceParam name="TabShop" type="text" value="m4" passthrough="true" -->
+</head>
+<body>
+<div id="canvas">
+<div id="header">
+      <div class="loginarea">
+        
+        
+        <div class="playerdata">
+        	<img src="../images/dummy-avatar.gif"  alt="Playerbild" class="avatar"  />
+        	<b>Playername</b><br />
+            Punkte: 873467pt<br />
+            Gesamtwertung: Platz 34
+        </div>
+        <div class="options">
+        	<a href="#" class="btn01 right"><span>Mein Profil</span></a>
+            <a href="../TPL-Startseite.html" class="btn01 right"><span>Abmelden</span></a>        </div>
+		
+      </div>
+      <a href="#"><img src="../images/logo-lineracer.png" alt="LineRacer - Das Strategierennen" id="logo" /></a>
+      
+      <ul class="maintabnav">
+        <li><a href="../TPL-Boxengasse.html" class="@@@(TabBoxengasse)@@@"><b></b><em>Boxengasse</em></a></li>
+        <li><a href="../TPL-Lobby.html" class="@@@(TabLobby)@@@"><b></b><em>Lobby</em></a></li>
+        <li><a href="../TPL-StatistikCenter.html" class="@@@(TabStatistikCenter)@@@"><b></b><em>Statistik-Center</em></a></li>
+        <li><a href="../TPL-Shop.html" class="@@@(TabShop)@@@"><b></b><em>Shop</em></a></li>
+      </ul>
+      
+    <div id="content">
+      <!-- InstanceBeginEditable name="MasterContent" -->
+      <!-- TemplateBeginIf cond="Startseite==true" -->
+      <div class="flasharea-user"><!-- TemplateBeginEditable name="Flashbanner" --><img src="../images/noflash-user.gif" alt="LineRacer - News für User" /><!-- TemplateEndEditable --></div>
+      <div class="leftbox-user">
+        <div id="TabbedPanels1" class="VTabbedPanels mediumTabs">
+          <ul class="TabbedPanelsTabGroup">
+            <li class="TabbedPanelsTab" tabindex="0">Boxentalk</li>
+            </ul>
+          <div class="TabbedPanelsContentGroup">
+            <div class="TabbedPanelsContent">
+              <!-- TemplateBeginEditable name="ContentBoxentalk" -->
+           	  <h1>Boxentalk</h1>
+                <div class="talkitem">
+                	<span>17:25 Uhr - Mr. X schreibt:</span>
+                    <p>
+                    Wer hat Lust auf ein Rennen so gegen 18:30 Uhr?
+                    </p>
+                </div>
+                <div class="talkitem">
+                	<span>17:25 Uhr - Mr. X schreibt:</span>
+                    <p>
+                    Wer hat Lust auf ein Rennen so gegen 18:30 Uhr?
+                    </p>
+                </div>
+                <div class="talkitem">
+                	<span>17:25 Uhr - Mr. X schreibt:</span>
+                    <p>
+                    Wer hat Lust auf ein Rennen so gegen 18:30 Uhr?
+                    </p>
+                </div>
+                <div class="talkitem">
+                	<span>17:25 Uhr - Mr. X schreibt:</span>
+                    <p>
+                    Wer hat Lust auf ein Rennen so gegen 18:30 Uhr?
+                    </p>
+                </div>
+                <!-- TemplateEndEditable -->
+            </div>
+          </div>
+        </div>
+</div>
+      <div class="rightbox-user">
+      <div id="TabbedPanels2" class="TabbedPanels mediumHorTabs">
+          <ul class="TabbedPanelsTabGroup">
+            <li class="TabbedPanelsTab" tabindex="0" id="tab1" ><b></b>Leaderboard</li>
+            <li class="TabbedPanelsTab" tabindex="0"><b></b>Fahrerlager</li>
+          </ul>
+          <div class="TabbedPanelsContentGroup">
+            <div class="TabbedPanelsContent">
+              <!-- TemplateBeginEditable name="Content-Leaderboard" -->
+            <label>Sortieren nach :</label> <select class="txtbig"><option>Strecke</option><option>Punkte</option></select>
+            <table border="0" cellpadding="0" cellspacing="1" class="datatable">
+                  <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Punkte</th>
+                  </tr>
+                  <tr>
+                    <td class="light">1</td>
+                    <td class="dark">Jonny Deep</td>
+                    <td class="light">32456</td>
+                  </tr>
+                  <tr>
+                    <td class="light">1</td>
+                    <td class="dark">Jonny Deep</td>
+                    <td class="light">32456</td>
+                  </tr>
+                  <tr>
+                    <td class="light">1</td>
+                    <td class="dark">Jonny Deep</td>
+                    <td class="light">32456</td>
+                  </tr>
+                  <tr>
+                    <td class="light">1</td>
+                    <td class="dark">Jonny Deep</td>
+                    <td class="light">32456</td>
+                  </tr>
+                  <tr>
+                    <td class="light">1</td>
+                    <td class="dark">Jonny Deep</td>
+                    <td class="light">32456</td>
+                  </tr>
+                  <tr>
+                    <td class="light">1</td>
+                    <td class="dark">Jonny Deep</td>
+                    <td class="light">32456</td>
+                  </tr>
+                  <tr>
+                    <td class="light">1</td>
+                    <td class="dark">Jonny Deep</td>
+                    <td class="light">32456</td>
+                  </tr>
+                  <tr>
+                    <td class="light">1</td>
+                    <td class="dark">Jonny Deep</td>
+                    <td class="light">32456</td>
+                  </tr>
+                  <tr>
+                    <td class="light">1</td>
+                    <td class="dark">Jonny Deep</td>
+                    <td class="light">32456</td>
+                  </tr>
+                  <tr>
+                    <td class="light">1</td>
+                    <td class="dark">Jonny Deep</td>
+                    <td class="light">32456</td>
+                  </tr>
+                  <tr>
+                    <td class="light">1</td>
+                    <td class="dark">Jonny Deep</td>
+                    <td class="light">32456</td>
+                  </tr>
+                  <tr>
+                    <td class="light">1</td>
+                    <td class="dark">Jonny Deep</td>
+                    <td class="light">32456</td>
+                  </tr>
+                  <tr>
+                    <td class="light">1</td>
+                    <td class="dark">Jonny Deep</td>
+                    <td class="light">32456</td>
+                  </tr>
+                  <tr>
+                    <td class="light">1</td>
+                    <td class="dark">Jonny Deep</td>
+                    <td class="light">32456</td>
+                  </tr>
+              </table>
+              <!-- TemplateEndEditable -->
+            </div>
+            <div class="TabbedPanelsContent"><!-- TemplateBeginEditable name="Content-Fahrerlager" -->Content Fahrerlager<!-- TemplateEndEditable --></div>
+          </div>
+        </div>
+      </div>
+      	<script type="text/javascript">
+		<!--
+		var TabbedPanels1 = new Spry.Widget.TabbedPanels("TabbedPanels1");
+		var TabbedPanels2 = new Spry.Widget.TabbedPanels("TabbedPanels2");
+		//-->
+		</script>
+      <!-- TemplateEndIf -->
+      <!-- TemplateBeginIf cond="Startseite==false" -->
+      <div class="fullscreenbox">
+        <!-- TemplateBeginEditable name="FullscreenContent" -->FullscreenContent<!-- TemplateEndEditable -->      </div>
+      <!-- TemplateEndIf -->
+        <!-- InstanceEndEditable -->
+      <div id="footer"></div>
+    </div>
+</div>
+</body>
+<!-- InstanceEnd --></html>
