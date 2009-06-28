@@ -80,6 +80,21 @@ class main
 		return true;
 	}
 
+
+	// show howto page
+	public function howto($parameters=array())
+	{
+		$this->debug->guard();
+
+		$tpl = new pdTemplate();
+		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_howto'));
+
+		$tpl->show();
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
 		
 	// login screen
 	public function login($parameters=array())

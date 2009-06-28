@@ -264,6 +264,7 @@ class cards
 			$tpl->assign('carddate', $card['card_date']);
 			$tpl->assign('cardviews', $card['card_viewed']);
 			$tpl->assign('cardclicks', $card['card_clicked']);
+			$tpl->assign('carddownloads', $card['card_downloaded']);
 			$tpl->assign('cardtitle', $card['card_title']);
 			$tpl->assign('carddescription', $card['card_description']);
 			$tpl->assign('favs', $card['card_favs']);
@@ -322,6 +323,7 @@ class cards
 		$tpl->assign('carddate', $card['card_date']);
 		$tpl->assign('cardviews', $card['card_viewed']);
 		$tpl->assign('cardclicks', $card['card_clicked']);
+		$tpl->assign('carddownloads', $card['card_downloaded']);
 		$tpl->assign('cardtitle', $card['card_title']);
 		$tpl->assign('carddescription', $card['card_description']);
 
@@ -376,6 +378,48 @@ class cards
 		$this->debug->unguard(true);
 		return true;
 	}
+		
 
+	// dowbloads a card
+	public function download($parameters=array())
+	{
+		$this->debug->guard();
+
+		$tpl = new pdTemplate();
+		
+		if (empty($parameters['id'])) $tpl->redirect($tpl->createLink('main', 'index'));
+		
+		$this->cards->addCardDownload($parameters['id']);
+		$carddata = $this->cards->getCardInformation($parameters['id'], false);
+
+		$filename = 'uploads/'.$carddata["card_filename"];
+		if (!file_exists($filename)) $tpl->redirect($tpl->createLink('main', 'index'));			 
+		
+		// required for IE, otherwise Content-disposition is ignored
+		if (ini_get('zlib.output_compression'))
+		{
+			ini_set('zlib.output_compression', 'Off');
+		}
+		
+		// addition by Jorg Weske
+		$file_extension = strtolower(substr(strrchr($filename,"."), 1));
+		
+		header("Pragma: public"); // required
+		header("Expires: 0");
+		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+		header("Cache-Control: private",false); // required for certain browsers
+		header("Content-Type: application/force-download");
+		// change, added quotes to allow spaces in filenames, by Rajkumar Singh
+		header("Content-Disposition: attachment; filename=\"".basename($filename)."\";" );
+		header("Content-Transfer-Encoding: binary");
+		header("Content-Length: ".filesize($filename));
+		readfile("$filename"); 
+		
+		$tpl->redirect($tpl->createLink('cards', 'showdetail').'&id='.$parameters['id']);
+
+		$this->debug->unguard(true);
+		return true;
+	}
+	
 }
 ?>

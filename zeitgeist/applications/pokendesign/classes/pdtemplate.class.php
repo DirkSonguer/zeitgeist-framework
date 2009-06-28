@@ -55,6 +55,9 @@ class pdTemplate extends zgTemplate
 			}
 		}
 
+				$this->session->setSessionVariable('language', '_de');
+				$language = '_de';
+
 		$this->locale->loadLocale($language, 'configuration/locales.ini');
 		$this->locale->setLocale($language);
 		$this->localpath .= $language;

@@ -57,6 +57,7 @@ class member
 			$tpl->assign('cardtitle', $card['card_title']);
 			$tpl->assign('cardviews', $card['card_viewed']);
 			$tpl->assign('cardclicks', $card['card_clicked']);
+			$tpl->assign('carddownloads', $card['card_downloaded']);
 			$tpl->assign('carddescription', $card['card_description']);
 
 			$favs = $this->cards->getFavs($card['card_id']);

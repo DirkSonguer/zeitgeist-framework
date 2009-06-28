@@ -866,6 +866,43 @@ class pdCards
 		return true;
 	}
 
+
+	/**
+	 * Adds a download to a given card
+	 *
+	 * @param integer $card id to add the download to
+	 * 
+	 * @return boolean
+	 */
+	public function addCardDownload($card)
+	{
+		$this->debug->guard();
+
+		$sql = "UPDATE cards SET card_downloaded = card_downloaded + 1 WHERE card_id = '" . $card . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not update card clicks: could not update card table', 'warning');
+			$this->messages->setMessage('Could not update card clicks: could not update card table', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$sql = "INSERT INTO transactions(transaction_user, transaction_type, transaction_value) VALUES('" . $this->user->getUserID() . "', '4', '" . $card . "')";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not add fav: could not write transaction table', 'warning');
+			$this->messages->setMessage('Could not add fav: could not write transaction table', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
 }
 
 ?>

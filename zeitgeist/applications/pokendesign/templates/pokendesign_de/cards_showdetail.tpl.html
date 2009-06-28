@@ -33,6 +33,7 @@
                 <div id="mainmenu">
 				<a href="@@{[cards.index]}@@">Karten entdecken</a>
    				<a href="@@{[cards.topten]}@@">Top 10</a>
+				<a href="@@{[main.howto]}@@">Pokendesigns nutzen</a>
 				<a href="@@{[main.login]}@@">Karte hinzufügen</a>
 				<a href="@@{[main.login]}@@">Du bist nicht eingeloggt</a>
                 </div>
@@ -43,6 +44,7 @@
                 <div id="mainmenu">
 				<a href="@@{[cards.index]}@@">Karten entdecken</a>
    				<a href="@@{[cards.topten]}@@">Top 10</a>
+				<a href="@@{[main.howto]}@@">Pokendesigns nutzen</a>
 				<a href="@@{[member.index]}@@">Deine Karten</a>
 				<a href="@@{[member.addcard]}@@">Karte hinzufügen</a>
 				<a href="@@{[member.editprofile]}@@">Dein Profil</a>
@@ -75,7 +77,7 @@
 			<table cellspacing="10" border="0">
             	<tr>
                 <td valign="top">
-					<a href="@@{[cards.showdetail]}@@&id=@@{cardid}@@">
+					<a href="@@{[cards.download]}@@&id=@@{cardid}@@">
 					<img src="@@{basepath}@@/uploads/@@{cardfile}@@" border="0" />
 					</a>
 				</td>
@@ -96,17 +98,23 @@
 					
                     <!-- TemplateBeginBlock name="notfaved" -->
 						<img alt="" src="@@{templatepath}@@/images/stats.png" /> @@{cardviews}@@ mal angezeigt, @@{cardclicks}@@ mal geklickt<br />
-	                   	<table cellspacing="5" border="0"><tr>
-                        <td valign="top"><img alt="" src="@@{templatepath}@@/images/services_big.png" /></td>
-                        <td><p id="pokendate">@@{favs}@@ Leute mögen diese Visitenkarte</p>
-                        <h2 style="margin-top:10px;"><a href="@@{[cards.addfav]}@@&id=@@{cardid}@@">Ich finde sie gut!</a></h2>
-                        </td>
+	                   	<table cellspacing="0" border="0"><tr>
+                            <td valign="top" width="40"><img alt="" src="@@{templatepath}@@/images/services_big.png" /></td>
+                            <td><h2 style="margin-top:10px;"><a href="@@{[cards.addfav]}@@&id=@@{cardid}@@">Ich finde sie gut!</a></h2></td>
+                        </tr><tr>
+                            <td valign="top" width="40"><img alt="" src="@@{templatepath}@@/images/download.png" /></td>
+	                        <td><p id="pokendate"><h2 style="margin-top:10px;"><a href="@@{[cards.download]}@@&id=@@{cardid}@@">Download</a></h2></td>
                         </tr></table>
                     <!-- TemplateEndBlock -->
                     
                     <!-- TemplateBeginBlock name="faved" -->
 						<img alt="" src="@@{templatepath}@@/images/stats.png" /> @@{cardviews}@@ mal angezeigt, @@{cardclicks}@@ mal geklickt<br />
 						<img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ Leute mögen diese Visitenkarte
+
+	                   	<table cellspacing="0" border="0"><tr>
+                            <td valign="top" width="40"><img alt="" src="@@{templatepath}@@/images/download.png" /></td>
+	                        <td><p id="pokendate"><h2 style="margin-top:10px;"><a href="@@{[cards.download]}@@&id=@@{cardid}@@">Download</a></h2></td>
+                        </tr></table>
                     <!-- TemplateEndBlock -->
                     </p>                 
                 </td>
