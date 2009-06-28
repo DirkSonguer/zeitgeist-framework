@@ -33,6 +33,7 @@
                 <div id="mainmenu">
 				<a href="@@{[cards.index]}@@">Discover new cards</a>
    				<a href="@@{[cards.topten]}@@">Top Ten</a>
+				<a href="@@{[main.howto]}@@">How to use cards</a>
 				<a href="@@{[main.login]}@@">Add card</a>
 				<a href="@@{[main.login]}@@">You're not logged in</a>
                 </div>
@@ -43,6 +44,7 @@
                 <div id="mainmenu">
 				<a href="@@{[cards.index]}@@">Discover new cards</a>
    				<a href="@@{[cards.topten]}@@">Top Ten</a>
+				<a href="@@{[main.howto]}@@">How to use cards</a>
 				<a href="@@{[member.index]}@@">Your cards</a>
 				<a href="@@{[member.addcard]}@@">Add card</a>
 				<a href="@@{[member.editprofile]}@@">Your profile</a>
@@ -99,7 +101,7 @@
                     <!-- TemplateEndBlock -->
 					
                     <!-- TemplateBeginBlock name="notfaved" -->
-						<img alt="" src="@@{templatepath}@@/images/stats.png" /> shown @@{cardviews}@@ times, clicked @@{cardclicks}@@ times<br />
+						<img alt="" src="@@{templatepath}@@/images/stats.png" /> shown @@{cardviews}@@, clicked @@{cardclicks}@@, downloaded @@{carddownloads}@@ times<br />
 	                   	<table cellspacing="5" border="0"><tr>
                         <td valign="top"><img alt="" src="@@{templatepath}@@/images/services_big.png" /></td>
                         <td><p id="pokendate"> @@{favs}@@ people love this card</p>
@@ -109,7 +111,7 @@
                     <!-- TemplateEndBlock -->
                     
                     <!-- TemplateBeginBlock name="faved" -->
-						<img alt="" src="@@{templatepath}@@/images/stats.png" /> shown @@{cardviews}@@ times, clicked @@{cardclicks}@@ times<br />
+						<img alt="" src="@@{templatepath}@@/images/stats.png" /> shown @@{cardviews}@@, clicked @@{cardclicks}@@, downloaded @@{carddownloads}@@ times<br />
 						<img alt="" src="@@{templatepath}@@/images/services_small.png" /> @@{favs}@@ people love this card
                     <!-- TemplateEndBlock -->
                     </p>
