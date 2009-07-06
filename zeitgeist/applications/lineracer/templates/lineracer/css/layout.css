@@ -139,4 +139,136 @@ body {
 .datatable .dark{ background-color:#1c1c1c;}
 .datatable .light{ background-color:#282828;}
 
+/*HORIZONTAL TABS*/
+.tabs {list-style:none; padding:0; margin:0; height:23px; background:url(../tabs/backing.gif) repeat-x left bottom;}
+.tabs li {float:left; margin-right:-10px;}
+.tabs li a {display:block; position:relative; text-decoration:none;}
+.tabs li a em {display:block; height:23px; float:left; padding:0 23px 0 10px; background:url(../images/tab3.gif) right top; position:relative; z-index:100; font-size:11px; font-weight:normal; font-style:normal; color:#828282; line-height:23px;}
+.tabs li a b {display:block; float:left; width:10px; height:23px; background:url(../images/tab3.gif) left top; position:relative; z-index:200;}
+.tabs li a.m1 {z-index:600; margin-left:-1px}
+.tabs li a.m2 {z-index:500;}
+.tabs li a.m3 {z-index:400;}
+.tabs li a.m4 {z-index:300;}
+.tabs li a.m5 {z-index:200;}
+.tabs li a.m6 {z-index:100;}
+.tabs li a:hover {border:0; z-index:700; cursor:pointer;}
+.tabs li a:hover b {background-position: left center;}
+.tabs li a:hover em  {background-position: right center; color:#fff;}
+.tabs li a.selected, .tabs li a.selected:hover {border:0; z-index:800; cursor:default;}
+.tabs li a.selected b, .tabs li a.selected:hover b {background-position: left bottom;}
+.tabs li a.selected em, .tabs li a.selected:hover em  {background-position: right bottom; color:#fff;}
+.tabs li.ui-tabs-selected a, .tabs li.ui-tabs-selected a:hover {border:0; z-index:800; cursor:default;}
+.tabs li.ui-tabs-selected a b, .tabs li.ui-tabs-selected a:hover b {background-position: left bottom;}
+.tabs li.ui-tabs-selected a em, .tabs li.ui-tabs-selected a:hover em  {background-position: right bottom; color:#fff;}
+.tabcontent {display:block; padding: 10px; width:318px; float:left; margin:-1px 0 0 0; overflow:auto;}
+
+.smallHorTabs .tabcontent {
+	background:url(../images/tab-vert-bg.gif) top left no-repeat;
+	height:254px;
+}
+.mediumHorTabs .tabcontent {
+	background:url(../images/tab-vert-user-bg.gif) top left no-repeat;
+	height:344px;
+}
+.ui-tabs .ui-tabs-hide {
+     display: none;
+}
+
+/* Vertical Tabs*/
+.ui-tabs-vertical { }
+.ui-tabs-vertical .ui-tabs-nav {float: left;}
+.ui-tabs-vertical .ui-tabs-nav li { clear: left; width: 100%; margin: 0 -1px .0 0; }
+.ui-tabs-vertical .ui-tabs-nav li a { display:block; }
+.ui-tabs-vertical .ui-tabs-nav li.ui-tabs-selected {}
+.ui-tabs-vertical .ui-tabs-panel { padding: 1em; float: right; width: 300px;}
+
+#vtabs .tabs {
+	list-style:none;
+	margin: 0px;
+	padding: 8px 0 0 0;
+}
+#vtabs .tabs li a { 	
+	float: none;
+	margin: -1px 0 0 8px;
+	padding: 0 10px 0 10px;
+	border-right: none;
+	border-top: 1px solid #000000;
+	border-left: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+	height:39px;
+	width:142px;
+	line-height:39px;
+	color:#FFFFFF;
+	background:url(../images/tabbtn-hor-bg.gif) top left no-repeat;
+}
+#vtabs .tabs li a:hover {
+	background:url(../images/tabbtn-hor-bg_hover.gif) top left no-repeat;
+}
+#vtabs .tabs li.ui-tabs-selected a { 
+	background-color: #121212;
+	background-image:none;
+}
+#vtabs .tabs li.ui-tabs-selected a:focus {
+	outline:none;
+}
+#vtabs .tabs li.ui-tabs-selected a:hover { background-color:#121212;}
+#vtabs .tabcontent { 
+	clear: none;
+	float: left;
+	padding: 12px 10px;
+	margin: 7px 0 0 0;
+	background-color: #121212;
+	border-left:1px solid #323232;
+	border-right:1px solid #323232;
+	border-bottom:1px solid #323232;
+	border-top:1px solid #000000;
+	color:#FFFFFF;
+	overflow:auto;
+	background-image:none;
+}
+
+/*Breiten und Höhen für kleine Tabsbox*/
+.smallTabs{
+	width:562px;
+	height:296px;
+	background:url(../images/tab-hor-bg.gif) top right no-repeat;
+}
+.smallTabs .tabs {
+	width: 170px;
+	height: 288px;
+}
+.smallTabs .tabcontent {
+	width: 362px;
+	height: 255px;
+}
+/*Breiten und Höhen für mittlere Tabsbox*/
+.mediumTabs{
+	width:562px;
+	height:386px;
+	background:url(../images/mediumTabs-bg.gif) top right no-repeat;
+}
+.mediumTabs .tabs {
+	width: 170px;
+	height: 378px;
+}
+.mediumTabs .tabcontent {
+	width: 362px;
+	height: 345px;
+}
+/*Breiten und Höhen für große Tabsbox*/
+.largeTabs{
+	width:924px;
+	height:601px;
+	background:url(../images/largeTabs-bg.gif) top right no-repeat;
+}
+.largeTabs .tabs {
+	width: 170px;
+	height: 601px;
+}
+.largeTabs .tabcontent {
+	width: 726px;
+	height: 560px;
+}
+
+
 
