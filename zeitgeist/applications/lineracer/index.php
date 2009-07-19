@@ -28,6 +28,7 @@
 	require_once('classes/lrlobbyfunctions.class.php');
 	require_once('classes/lrgameeventhandler.class.php');
 	require_once('classes/lrstatisticfunctions.class.php');
+	require_once('classes/lrachievementfunctions.class.php');
 	require_once('classes/lrachievements.class.php');
 	require_once('classes/lrgamestates.class.php');
 	require_once('classes/lrgamecardfunctions.class.php');
@@ -77,6 +78,12 @@
 
 	// load event
 	$ret = $eventhandler->callEvent($module, $action);
+	
+	if ($ret != 1)
+	{
+		$tpl = new lrTemplate();
+		$tpl->redirect($tpl->createLink('main', 'index'));
+	}
 
 	$debug->loadStylesheet('debug.css');
 	$debug->showInnerLoops = true;

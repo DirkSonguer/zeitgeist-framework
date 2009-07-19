@@ -50,8 +50,20 @@ class lobby
 			return true;
 		}
 
-		$tpl->load($this->configuration->getConfiguration('lobby', 'templates', 'lobby_showlobby'));
+		$tpl->load($this->configuration->getConfiguration('lobby', 'templates', 'lobby_index'));
 
+		$sql = 'SELECT l.lobby_id, l.lobby_maxplayers, c.circuit_name, c.circuit_description, COUNT(lu.lobbyuser_user) as lobby_currentplayers ';
+		$sql .= 'FROM lobby l LEFT JOIN circuits c ON l.lobby_circuit = c.circuit_id LEFT JOIN lobby_to_users lu ON l.lobby_id = lu.lobbyuser_lobby ';
+		$sql .= 'GROUP BY l.lobby_id';
+		
+		$res = $this->database->query($sql);
+		
+		while ($lobby = $this->database->fetchArray($res))
+		{
+			$tpl->assignDataset($lobby);
+			$tpl->insertBlock('lobby_row');
+		}
+		
 		$tpl->show();
 
 		$this->debug->unguard(true);
@@ -115,6 +127,21 @@ class lobby
 		}
 
 		$tpl->load($this->configuration->getConfiguration('lobby', 'templates', 'lobby_showgameroom'));
+
+		$sql = 'SELECT l.*, lu.*, u.user_username, c.circuit_name, c.circuit_description FROM lobby l ';
+		$sql .= 'LEFT JOIN lobby_to_users lu ON l.lobby_id = lu.lobbyuser_lobby ';
+		$sql .= 'LEFT JOIN users u ON lu.lobbyuser_user = u.user_id ';
+		$sql .= 'LEFT JOIN circuits c ON l.lobby_circuit = c.circuit_id ';
+		$sql .= "WHERE l.lobby_id = (SELECT lobbyuser_lobby FROM lobby_to_users WHERE lobbyuser_user = '" . $this->user->getUserID() . "')";
+		
+		$res = $this->database->query($sql);
+		
+		while ($gameroom = $this->database->fetchArray($res))
+		{
+			$tpl->assignDataset($gameroom);
+			$tpl->insertBlock('player');
+		}
+		
 
 		$tpl->show();
 

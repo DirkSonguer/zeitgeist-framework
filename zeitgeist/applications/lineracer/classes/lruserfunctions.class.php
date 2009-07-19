@@ -130,7 +130,7 @@ class lrUserfunctions
 	{
 		$this->debug->guard();
 		
-		$sql = "SELECT * FROM race_to_users WHERE raceuser_user='" . $this->user->getUserId() . "'";
+		$sql = "SELECT * FROM race_to_users WHERE raceuser_user='" . $this->user->getUserId() . "' AND raceuser_assessed='0'";
 		$res = $this->database->query($sql);
 		if(!$res)
 		{
@@ -161,7 +161,7 @@ class lrUserfunctions
 	{
 		$this->debug->guard();
 		
-		$sql = "SELECT raceuser_race FROM race_to_users WHERE raceuser_user='" . $this->user->getUserID() . "'";		
+		$sql = "SELECT raceuser_race FROM race_to_users WHERE raceuser_user='" . $this->user->getUserID() . "' AND raceuser_assessed='0'";		
 		$res = $this->database->query($sql);
 		if (!$res)
 		{

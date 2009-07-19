@@ -38,6 +38,26 @@ body {
 	clear:both;
 }
 
+
+p a {
+	color: #cf6c35;
+}
+
+.usermessage, .userwarning, .usererror {
+	color: #cf6c35;
+}
+
+.usermessagearea {
+	width:326px;
+	height:49px;
+	float:right;
+	padding: 10px;
+	color: #cf6c35;
+	margin-right:25px;
+	text-align:left;
+	background:url(../images/loginarea-bg.gif) top left no-repeat;
+}
+
 .loginarea {
 	width:326px;
 	height:49px;

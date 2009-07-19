@@ -1,128 +1,140 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/lineracer.dwt" codeOutsideHTMLIsLocked="false" -->
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/LR-LoggedIn.dwt" codeOutsideHTMLIsLocked="false" -->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Lineracer</title>
+<title>LineRacer - Lobby</title>
 <!-- InstanceEndEditable -->
 
-<link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/lineracer.css" />
+<script type="text/javascript" src="@@{templatepath}@@//js/jquery-1.3.2.min.js"></script>
+<script type="text/javascript" src="@@{templatepath}@@//js/ui.core.js"></script>
+<script type="text/javascript" src="@@{templatepath}@@//js/ui.tabs.js"></script>
+<link href="@@{templatepath}@@//css/layout.css" rel="stylesheet" type="text/css" />
+<link href="@@{templatepath}@@//css/typo.css" rel="stylesheet" type="text/css" />
 
-<script language="javascript" type="text/javascript">
-
-
-</script>
-	
+<!-- InstanceParam name="Startseite" type="boolean" value="false" -->
 <!-- InstanceBeginEditable name="head" -->
-<!-- InstanceEndEditable -->
+<!-- InstanceEndEditable --><!-- InstanceParam name="TabBoxengasse" type="text" value="m1" --><!-- InstanceParam name="TabLobby" type="text" value="m2 selected" --><!-- InstanceParam name="TabStatistikCenter" type="text" value="m3" --><!-- InstanceParam name="TabShop" type="text" value="m4" -->
 </head>
-
 <body>
+<div id="canvas">
+<div id="header">
 
-	<!-- TemplateBeginBlock name="usermessage" -->
-		<h3 class="usermessage"><img src="@@{templatepath}@@/nuvola/16x16/actions/ok.png" alt="" align="left" style="margin-right:5px;" /> @@{usermessage}@@</h3>
+      <div class="loginarea">
+      
+		<!-- TemplateBeginBlock name="loginbox" -->
+		<form method="post" action="@@{[main.login]}@@" name="login" id="loginform">
+        	<label>Username</label><input type="text" name="username" class="txtbig" />
+            <label>Passwort</label><input type="text" name="password" class="txtbig" />
+			<input type="submit" name="login" value="Login" class="formbutton" />
+            <a href="#" class="btn01 right"><span>Login</span></a>
+        </form>
+		<!-- TemplateEndBlock -->
+		
+		<!-- TemplateBeginBlock name="logoutbox" -->
+		<div class="playerdata">
+        	<img src="@@{templatepath}@@/images/dummy-avatar.gif"  alt="Playerbild" class="avatar"  />
+        	<b>@@{playername}@@</b><br />
+            Punkte: @@{racepoints}@@<br />
+            Gesamtwertung: Platz @@{playerposition}@@
+        </div>
+        
+        <div class="options">
+        	<a href="@@{[main.profile]}@@" class="btn01 right"><span>Mein Profil</span></a>
+            <a href="@@{[main.logout]}@@" class="btn01 right"><span>Abmelden</span></a>
+        </div>
+		<!-- TemplateEndBlock -->
+
+      </div>
+
+	<div class="usermessagearea">
+    
+	<!-- TemplateBeginBlock name="lobbybox" -->
+		<div class="textbox" style="width:400px;">
+			<p><img src="@@{templatepath}@@/images/messagebox_info.png" alt="" align="left" style="margin-right:5px;margin-left:5px;" /> Du wartest bereits auf ein Rennen: <a href="@@{[lobby.showgameroom]}@@">zur Rennvorbereitung</a></p>
+		</div>
+	<!-- TemplateEndBlock -->	
+       
+	<!-- TemplateBeginBlock name="gamebox" -->
+		<div class="textbox" style="width:400px;">
+			<p><img src="@@{templatepath}@@/images/messagebox_info.png" alt="" align="left" style="margin-right:5px;margin-left:5px;" /> Du fährst gerade ein Rennen: <a href="@@{[game.index]}@@">zum Rennen</a></p>
+		</div>
+	<!-- TemplateEndBlock -->
+        
+	<!-- TemplateBeginBlock name="usermessages" -->
+		<div class="usermessage"><p><img src="@@{templatepath}@@/images/ok.png" alt="" align="left" style="margin-right:5px;margin-left:5px;" /> @@{usermessage}@@</p></div>
 	<!-- TemplateEndBlock -->
 
 	<!-- TemplateBeginBlock name="userwarnings" -->
-		<h3 class="userwarning"><img src="@@{templatepath}@@/nuvola/16x16/actions/messagebox_info.png" alt="" align="left" style="margin-right:5px;" /> @@{userwarning}@@</h3>
+		<div class="userwarning"><p><img src="@@{templatepath}@@/images/messagebox_info.png" alt="" align="left" style="margin-right:5px;margin-left:5px;" /> @@{userwarning}@@</p></div>
 	<!-- TemplateEndBlock -->
 
 	<!-- TemplateBeginBlock name="usererrors" -->
-		<h3 class="usererror"><img src="@@{templatepath}@@/nuvola/16x16/actions/no.png" alt="" align="left" style="margin-right:5px;" /> @@{usererror}@@</h3>
+		<div class="usererror"><p><img src="@@{templatepath}@@/images/no.png" alt="" align="left" style="margin-right:5px;margin-left:5px;" /> @@{usererror}@@</p></div>
 	<!-- TemplateEndBlock -->
-
-	<h1>Lineracer</h1>
-
-	<!-- TemplateBeginBlock name="loginbox" -->
-		<div class="textbox" style="width:400px;">
-			<form method="post" action="@@{[main.login]}@@" name="login">
-
-				<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
-					<tr>
-						<td align="right" nowrap width="110"><p>Username</p></td>
-						<td align="left" valign="middle" nowrap><input type="text" size="35" maxlength="20" name="username" class="formtext" style="width:250px;" /></td>
-					</tr>
-					<tr>
-						<td align="right" nowrap><p>Password</p></td>
-						<td align="left" valign="middle" nowrap><input type="password" size="35" maxlength="32" name="password" class="formtext" style="width:250px;" /></td>
-
-					</tr>
-					<tr>
-						<td align="left" nowrap>&nbsp;</td>
-						<td align="right" valign="middle" nowrap><input type="submit" name="login" value="Login" class="formbutton" /></td>
-					</tr>
-				</table>
-				<p><a href="@@{[main.register]}@@">Neuen Nutzer erstellen</a></p>
-			</form>		
-		</div>
-	<!-- TemplateEndBlock -->
-	
-	<!-- TemplateBeginBlock name="logoutbox" -->
-		<div class="textbox" style="width:400px;">
-			<p>Hallo, du bist eingeloggt</p>
-			<p><a href="@@{[main.index]}@@">Hauptseite</a></p>
-			<p><a href="@@{[lobby.index]}@@">Zur Lobby</a></p>
-			<p><a href="@@{[main.logout]}@@">Ausloggen</a></p>
-		</div>
-	<!-- TemplateEndBlock -->	
-
-	<!-- TemplateBeginBlock name="gamebox" -->
-		<div class="textbox" style="width:400px;">
-			<p>Du fährst gerade ein Rennen: <a href="@@{[game.index]}@@">zum Rennen</a></p>
-		</div>
-	<!-- TemplateEndBlock -->	
-
-	<!-- TemplateBeginBlock name="lobbybox" -->
-		<div class="textbox" style="width:400px;">
-			<p>Du wartest bereits auf ein Rennen: <a href="@@{[lobby.showgameroom]}@@">zur Rennvorbereitung</a></p>
-		</div>
-	<!-- TemplateEndBlock -->	
-
-<!-- InstanceBeginEditable name="body" -->
-
-<p>Main Index</p>
-
-<form method="post" action="@@{[lobby.creategameroom]}@@" name="creategameroom" enctype="multipart/form-data; charset=utf-8">
-	
-	<div id="CreateGameroom" class="textbox">
-		
-		<table cellspacing="5" cellpadding="5" border="0">
-			<tr>
-				<td valign="top" nowrap="nowrap" width="200"><p class="formlabel">Max Players</p></td>
-				<td valign="middle" @@{race_maxplayers:formerror}@@><input type="text" maxlength="1" name="creategameroom[race_maxplayers]" value="@@{race_maxplayers:value}@@" class="formtext" />
-				<!-- TemplateBeginBlock name="race_maxplayers:errormsg" -->
-					<br /><span class="formerrormsg">@@{race_maxplayers:errormsg}@@</span>
-				<!-- TemplateEndBlock -->
-			</td>
-			</tr>
-			<tr>
-				<td valign="top" nowrap="nowrap"><p class="formlabel">Circuit</p></td>
-				<td valign="middle" @@{race_circuit:formerror}@@><input type="text" maxlength="60" name="creategameroom[race_circuit]" value="@@{race_circuit:value}@@" class="formtext" />
-				<!-- TemplateBeginBlock name="race_circuit:errormsg" -->
-					<br /><span class="formerrormsg">@@{race_circuit:errormsg}@@</span>
-				<!-- TemplateEndBlock -->
-			</td>
-			</tr>
-			<tr>
-				<td valign="top" nowrap="nowrap"><p class="formlabel">Gamecards allowed</p></td>
-				<td valign="middle" @@{race_gamecardsallowed:formerror}@@><input type="text" maxlength="60" name="creategameroom[race_gamecardsallowed]" value="@@{race_gamecardsallowed:value}@@" class="formtext" />
-				<!-- TemplateBeginBlock name="race_gamecardsallowed:errormsg" -->
-					<br /><span class="formerrormsg">@@{race_gamecardsallowed:errormsg}@@</span>
-				<!-- TemplateEndBlock -->
-			</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-				   <p style="text-align:right; margin-right:0px;"><input name="submit" value="Spiel erstellen" class="formbutton" type="submit" /></p>
-				</td>
-			</tr>
-		</table>
 	</div>
-	
-</form>
 
+      <a href="#"><img src="@@{templatepath}@@/images/logo-lineracer.png" alt="LineRacer - Das Strategierennen" id="logo" /></a>
+      
+      <ul class="maintabnav">
+        <li><a href="@@{[main.index]}@@" class="m1"><b></b><em>Boxengasse</em></a></li>
+        <li><a href="@@{[lobby.index]}@@" class="m2 selected"><b></b><em>Lobby</em></a></li>
+        <li><a href="@@{[statistics.index]}@@" class="m3"><b></b><em>Statistik-Center</em></a></li>
+        <li><a href="@@{[shop.index]}@@" class="m4"><b></b><em>Shop</em></a></li>
+      </ul>
 
-<!-- InstanceEndEditable -->
-
+    <div id="content">
+      
+      
+      
+      <div class="fullscreenbox">
+        <!-- InstanceBeginEditable name="FullscreenContent" -->
+				<h1>Spiel Erstellen</h1>
+		
+                <form method="post" action="@@{[lobby.creategameroom]}@@" name="creategameroom" enctype="multipart/form-data; charset=utf-8">
+                    
+                    <div id="CreateGameroom" class="textbox">
+                        
+                        <table cellspacing="5" cellpadding="5" border="0">
+                            <tr>
+                                <td valign="top" nowrap="nowrap" width="200"><p class="formlabel">Max Players</p></td>
+                                <td valign="middle" @@{race_maxplayers:formerror}@@><input type="text" maxlength="1" name="creategameroom[race_maxplayers]" value="@@{race_maxplayers:value}@@" class="formtext" />
+                                <!-- TemplateBeginBlock name="race_maxplayers:errormsg" -->
+                                    <br /><span class="formerrormsg">@@{race_maxplayers:errormsg}@@</span>
+                                <!-- TemplateEndBlock -->
+                            </td>
+                            </tr>
+                            <tr>
+                                <td valign="top" nowrap="nowrap"><p class="formlabel">Circuit</p></td>
+                                <td valign="middle" @@{race_circuit:formerror}@@><input type="text" maxlength="60" name="creategameroom[race_circuit]" value="@@{race_circuit:value}@@" class="formtext" />
+                                <!-- TemplateBeginBlock name="race_circuit:errormsg" -->
+                                    <br /><span class="formerrormsg">@@{race_circuit:errormsg}@@</span>
+                                <!-- TemplateEndBlock -->
+                            </td>
+                            </tr>
+                            <tr>
+                                <td valign="top" nowrap="nowrap"><p class="formlabel">Gamecards allowed</p></td>
+                                <td valign="middle" @@{race_gamecardsallowed:formerror}@@><input type="text" maxlength="60" name="creategameroom[race_gamecardsallowed]" value="@@{race_gamecardsallowed:value}@@" class="formtext" />
+                                <!-- TemplateBeginBlock name="race_gamecardsallowed:errormsg" -->
+                                    <br /><span class="formerrormsg">@@{race_gamecardsallowed:errormsg}@@</span>
+                                <!-- TemplateEndBlock -->
+                            </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                   <p style="text-align:right; margin-right:0px;"><input name="submit" value="Spiel erstellen" class="formbutton" type="submit" /></p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                </form>
+		
+		<!-- InstanceEndEditable -->      </div>
+      
+        
+      <div id="footer"></div>
+    </div>
+</div>
 </body>
 <!-- InstanceEnd --></html>

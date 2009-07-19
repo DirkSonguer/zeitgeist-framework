@@ -522,7 +522,7 @@ class lrGamefunctions
 		}
 
 		// done, now set the race as assessed
-		$sqlUpdate = "UPDATE race_to_users SET raceuser_assessed = '1' WHERE raceuser_race='" . $rowRaces['raceuser_race'] . "'";
+		$sqlUpdate = "UPDATE race_to_users SET raceuser_assessed = '1' WHERE raceuser_race='" . $raceid . "'";
 		$resUpdate = $this->database->query($sqlUpdate);
 		if (!$resUpdate)
 		{

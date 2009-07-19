@@ -50,7 +50,7 @@ class main
 			$tpl->redirect($tpl->createLink('main', 'index'));
 		}
 
-		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_login'));
+		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_index'));
 		if (!empty($parameters['login']))
 		{
 			if ( (!empty($parameters['username'])) && (!empty($parameters['password'])) )
