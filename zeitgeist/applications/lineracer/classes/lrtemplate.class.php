@@ -70,6 +70,8 @@ class lrTemplate extends zgTemplate
 
 		if ($this->user->isLoggedIn())
 		{
+			$playername = $this->user->getUsername();
+			parent::assign('playername', $playername);
 			parent::insertBlock('logoutbox');
 		}
 		else

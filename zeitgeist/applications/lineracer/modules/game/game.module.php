@@ -150,13 +150,12 @@ class game
 	{
 		$this->debug->guard();
 
-		// Show Game results
-		
-		echo "Game results<br />";
-		
 		// redirect to index
 		$tpl = new lrTemplate();
 		$tpl->redirect($tpl->createLink('main', 'index'));
+
+		// Show Game results
+		echo "Game results<br />";
 
 		$this->debug->unguard(true);
 		return true;

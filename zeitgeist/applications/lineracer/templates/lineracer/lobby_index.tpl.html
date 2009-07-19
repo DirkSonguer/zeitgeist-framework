@@ -91,30 +91,29 @@
         <!-- InstanceBeginEditable name="FullscreenContent" -->
 				<h1>Lobby</h1>
 		
-                <div style="text-align:left;">
-                <p>Max Spieler: @@{lobby_maxplayers}@@</p>
-                <p>Strecke: @@{circuit_name}@@</p>
-            
-                    <table border="0" cellspacing="0" cellpadding="0" width=100%">
-                        <th><p>Spieler</p></th>
-                        <th><p>Bereit</p></th>
-						<!-- TemplateBeginBlock name="player" -->
-                            <tr>
-                                <td><p>@@{user_username}@@</p></td>
-                                <td><p>@@{lobbyuser_confirmation}@@</p></td>
-                            </tr>
-						<!-- TemplateEndBlock -->		
-                    </table>
-            
-                    <div spry:choose="spry:choose">
-                        <div spry:when="'@@{circuit_name}@@' == ''"></div>
-                        <div spry:default="spry:default"><script type="text/javascript">Spry.Utils.addLoadListener(startGame('{circuit_name}'));</script></div>
-                    </div>
-                </div>
-                
-                <p><a href="@@{[lobby.confirmgame]}@@">Spiel bestätigen</a></p>
-                <p><a href="@@{[lobby.leavegameroom]}@@">Raum verlassen</a></p>
-                <p><a href="@@{[main.index]}@@">Zurück zur Hauptseite</a></p>
+				<table border="0" cellpadding="0" cellspacing="1" class="datatable">
+				<tr>
+					<th>ID</th>
+					<th>Aktuelle Spieler</th>
+					<th>Max Spieler</th>
+					<th>Strecke</th>
+					<th>Streckenbeschreibung</th>
+					<th>Teilnehmen</th>
+				</tr>
+
+				<!-- TemplateBeginBlock name="lobby_row" -->
+					<tr>
+						<td class="light">@@{lobby_id}@@</td>
+						<td class="dark">@@{lobby_currentplayers}@@</td>
+						<td class="light">@@{lobby_maxplayers}@@</td>
+						<td class="dark">@@{circuit_name}@@</td>
+						<td class="light">@@{circuit_description}@@</td>
+						<td class="dark"><p><a href="@@{[lobby.joingameroom]}@@&lobbyid=@@{lobby_id}@@" alt="Spiel beitreten">beitreten</a></p></td>
+					</tr>
+				<!-- TemplateEndBlock -->		
+				</table>
+
+				<p><a href="@@{[lobby.creategameroom]}@@">Neues Spiel erstellen</a></p>
 		
 		<!-- InstanceEndEditable -->      </div>
       
