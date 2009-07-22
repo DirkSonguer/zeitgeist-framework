@@ -33,7 +33,11 @@ class testLrgamecards extends UnitTestCase
 		$gameeventhandler->saveRaceevent('1', $configuration->getConfiguration('gamedefinitions', 'events', 'playgamecard'), '2');
 		$objects->deleteObject('currentGamestates');
 
+		$gameeventhandler = new lrGameeventhandler();
+		
 		$gamestates->loadGamestates();
+		$gameeventhandler->handleRaceeevents();
+
 		$currentGamestates = $objects->getObject('currentGamestates');
 		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][0], 10);
 		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][1], 20);
