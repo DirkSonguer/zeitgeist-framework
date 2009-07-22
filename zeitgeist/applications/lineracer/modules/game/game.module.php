@@ -179,6 +179,9 @@ class game
 			$tpl->redirect($tpl->createLink('lobby', 'index'));
 		}
 
+		$tpl = new lrTemplate();
+		$tpl->redirect($tpl->createLink('game', 'index'));
+
 		$this->debug->unguard(true);
 		return true;
 	}

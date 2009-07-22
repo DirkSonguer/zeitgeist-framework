@@ -15,7 +15,7 @@
  */
 
 	define('LINERACER_ACTIVE', true);
-//	define('DEBUGMODE', true);
+	define('DEBUGMODE', true);
 
 	if (!defined('ZEITGEIST_ROOTDIRECTORY')) define('ZEITGEIST_ROOTDIRECTORY', './zeitgeist/');
 	if (!defined('APPLICATION_ROOTDIRECTORY')) define('APPLICATION_ROOTDIRECTORY', './');
@@ -89,7 +89,7 @@
 	$debug->showInnerLoops = true;
 	$debug->showMiscInformation();
 	$debug->showDebugMessages();
-	$debug->showQueryMessages();
+//	$debug->showQueryMessages();
 	$debug->showGuardMessages();
 
 ?>

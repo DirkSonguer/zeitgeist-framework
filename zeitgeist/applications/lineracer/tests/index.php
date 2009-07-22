@@ -78,7 +78,7 @@
 	$test->addTestCase(new testLrgamestates());
 	$test->addTestCase(new testLrgamecardfunctions());
 	$test->addTestCase(new testLrmovementfunctions());
-	$test->addTestCase(new testLrgameeventhandler());
+//	$test->addTestCase(new testLrgameeventhandler());
 	$test->addTestCase(new testLrgamefunctions());
 	$test->addTestCase(new testLrgamecards());
 	$test->addTestCase(new testLruserfunctions());
@@ -93,9 +93,9 @@
 	$debug->loadStylesheet('debug.css');
 //	$debug->showInnerLoops = true;
 //	$debug->showMiscInformation();
-	$debug->showDebugMessages();
-	$debug->showQueryMessages();
-//	$debug->showGuardMessages();
+//	$debug->showDebugMessages();
+//	$debug->showQueryMessages();
+	$debug->showGuardMessages();
 	
 ?>
 
