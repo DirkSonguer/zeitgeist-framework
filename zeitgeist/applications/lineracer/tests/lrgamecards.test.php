@@ -13,7 +13,7 @@ class testLrgamecards extends UnitTestCase
 
 		$gameeventhandler = new lrGameeventhandler();
 		$this->assertNotNull($gameeventhandler);
-		unset($gameeventhandler);
+		unset($gameeventhandler);		
     }
 
 	function test_dash()
@@ -30,13 +30,12 @@ class testLrgamecards extends UnitTestCase
 		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][0], 5);
 		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][1], 10);
 
-		$gameeventhandler->saveRaceevent('1', $configuration->getConfiguration('gamedefinitions', 'events', 'playgamecard'), '2');
+		$ret = $gameeventhandler->saveRaceevent('1', $configuration->getConfiguration('gamedefinitions', 'events', 'playgamecard'), '1');
 		$objects->deleteObject('currentGamestates');
-
 		$gameeventhandler = new lrGameeventhandler();
 		
 		$gamestates->loadGamestates();
-		$gameeventhandler->handleRaceeevents();
+		$test = $gameeventhandler->handleRaceeevents();
 
 		$currentGamestates = $objects->getObject('currentGamestates');
 		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][0], 10);
@@ -59,8 +58,11 @@ class testLrgamecards extends UnitTestCase
 
 		$gameeventhandler->saveRaceevent('1', $configuration->getConfiguration('gamedefinitions', 'events', 'playgamecard'), '3');
 		$objects->deleteObject('currentGamestates');
-
+		$gameeventhandler = new lrGameeventhandler();
+		
 		$gamestates->loadGamestates();
+		$test = $gameeventhandler->handleRaceeevents();
+
 		$currentGamestates = $objects->getObject('currentGamestates');
 		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][0], 0);
 		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][1], 0);

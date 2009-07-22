@@ -29,7 +29,6 @@ class lrGamestates
 
 	/**
 	 * Loads all the information associated with a given game
-	 * Stores all the information in the objectcache in 'currentGamestates'
 	 *
 	 * @param integer $raceid id of the race
 	 *
