@@ -228,7 +228,7 @@ class lrMovementfunctions
 		}
 		
 		// check if player exists and has moves
-		if (empty($currentGamestates['playerdata'][$player]['moves']))
+		if (empty($currentGamestates['playerdata'][$player]['actions']))
 		{
 			$this->debug->write('Could not move player: moves for player not found', 'warning');
 			$this->messages->setMessage('Could not move player: moves for player not found', 'warning');
@@ -237,9 +237,15 @@ class lrMovementfunctions
 		}
 
 		$movement = array();
-		foreach ($currentGamestates['playerdata'][$player]['moves'] as $move)
+		$movement_definition = $this->configuration->getConfiguration('gamedefinitions', 'actions', 'move');
+		echo $movement_definition."<br />";
+		foreach ($currentGamestates['playerdata'][$player]['actions'] as $move)
 		{
-			$movement[] = explode(',', $move);
+//			var_dump($move);
+			if ($move['action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'move'))
+			{
+				$movement[] = explode(',', $move['parameter']);
+			}
 		}
 		
 		if ($history == 0)
@@ -256,6 +262,7 @@ class lrMovementfunctions
 				$this->debug->unguard(false);
 				return false;
 			}
+			
 			$return = $movement[count($movement)+$history];
 		}
 

@@ -86,33 +86,13 @@ class lrGamestates
 		// get player data
 		while ($rowActions = $this->database->fetchArray($resActions))
 		{
-			// action is a move
-			if ($rowActions['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'move'))
-			{
-				$currentGamestates['playerdata'][$rowActions['raceuser_order']]['moves'][] = $rowActions['raceaction_parameter'];
-			}
+			$action = array();
+			$action['action'] = $rowActions['raceaction_action'];
+			$action['parameter'] = $rowActions['raceaction_parameter'];
 
-			// action is a checkpoint
-			if ( ($rowActions['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint1'))
-			|| ($rowActions['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint2'))
-			|| ($rowActions['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint3')) )
-			{
-				$currentGamestates['playerdata'][$rowActions['raceuser_order']]['checkpoints'][$rowActions['raceaction_parameter']] = true;
-			}
-
-			// see if player is finished
-			if ($rowActions['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'finish'))
-			{
-				$currentGamestates['playerdata'][$rowActions['raceuser_order']]['finished'] = true;
-			}
-
-			// see if player forfeited
-			if ($rowActions['raceaction_action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'forfeit'))
-			{
-				$currentGamestates['playerdata'][$rowActions['raceuser_order']]['forfeited'] = true;
-			}
+			$currentGamestates['playerdata'][$rowActions['raceuser_order']]['actions'][] =$action;
 		}
-		
+
 		// temp storing gamedata
 		$this->objects->storeObject('currentGamestates', $currentGamestates, true);
 		
