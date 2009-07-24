@@ -154,8 +154,8 @@ class lrGamefunctions
 		
 		// save race action and handle post turn events
 		$gameeventhandler->saveRaceaction($this->configuration->getConfiguration('gamedefinitions', 'actions', 'playgamecard'), $gamecard);
-		$gameeventhandler->saveRaceevent($currentGamestates['move']['currentPlayer'], $this->configuration->getConfiguration('gamedefinitions', 'events', 'playgamecard'), $gamecard, ($currentGamestates['move']['currentRound']+$gamecardData['gamecard_roundoffset']));
-		$gamecardfunctions->removeGamecard($gamecard, $currentGamestates['meta']['players'][$currentGamestates['move']['currentPlayer']]);
+		$gameeventhandler->saveRaceevent($currentGamestates['round']['currentPlayer'], $this->configuration->getConfiguration('gamedefinitions', 'events', 'playgamecard'), $gamecard, ($currentGamestates['round']['currentRound']+$gamecardData['gamecard_roundoffset']));
+		$gamecardfunctions->removeGamecard($gamecard, $currentGamestates['race']['players'][$currentGamestates['round']['currentPlayer']]);
 		
 		$this->debug->unguard(true);
 		return true;
@@ -203,7 +203,7 @@ class lrGamefunctions
 		}
 
 		// delete all race events for the finished turn
-		$sql = "DELETE FROM race_events WHERE raceevent_race='" . $currentGamestates['meta']['currentRace'] . "' AND raceevent_player='" . $currentGamestates['move']['currentPlayer'] . "' AND raceevent_round='" . $currentGamestates['move']['currentRound'] . "'";
+		$sql = "DELETE FROM race_events WHERE raceevent_race='" . $currentGamestates['race']['currentRace'] . "' AND raceevent_player='" . $currentGamestates['round']['currentPlayer'] . "' AND raceevent_round='" . $currentGamestates['round']['currentRound'] . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -219,20 +219,20 @@ class lrGamefunctions
 		{
 			while (!$playerFound)
 			{
-				$this->debug->write('current player: '.$currentGamestates['move']['currentPlayer'], 'warning');
+				$this->debug->write('current player: '.$currentGamestates['round']['currentPlayer'], 'warning');
 
 				// next user
-				$currentGamestates['move']['currentPlayer'] += 1;
+				$currentGamestates['round']['currentPlayer'] += 1;
 
 				// switch to next round if needed
-				if ($currentGamestates['move']['currentPlayer'] > $currentGamestates['meta']['numPlayers'])
+				if ($currentGamestates['round']['currentPlayer'] > $currentGamestates['race']['numPlayers'])
 				{
-					$currentGamestates['move']['currentPlayer'] = 1;
-					$currentGamestates['move']['currentRound'] += 1;
+					$currentGamestates['round']['currentPlayer'] = 1;
+					$currentGamestates['round']['currentRound'] += 1;
 				}
 
 				// found a player
-				if (!$gamestates->playerFinished($currentGamestates['move']['currentPlayer']))
+				if (!$gamestates->playerFinished($currentGamestates['round']['currentPlayer']))
 				{
 					$playerFound = true;
 				}
@@ -240,7 +240,7 @@ class lrGamefunctions
 		}
 
 		// insert new data into into database
-		$sql = "UPDATE races SET race_activeplayer='" . $currentGamestates['move']['currentPlayer'] . "', race_currentround='" . $currentGamestates['move']['currentRound'] . "' WHERE race_id='" . $currentGamestates['meta']['currentRace'] . "'";
+		$sql = "UPDATE races SET race_activeplayer='" . $currentGamestates['round']['currentPlayer'] . "', race_currentround='" . $currentGamestates['round']['currentRound'] . "' WHERE race_id='" . $currentGamestates['race']['currentRace'] . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{

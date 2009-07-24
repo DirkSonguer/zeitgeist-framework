@@ -35,7 +35,7 @@ class prototypeRenderer
 			$this->debug->unguard(false);
 			return false;
 		}
-		$offset = $currentGamestates['move']['currentRadius'];
+		$offset = $currentGamestates['round']['currentRadius'];
 
 //		$circuit = imagecreatefrompng(APPLICATION_ROOTDIRECTORY . '/data/circuits/circuit1.png');
 		$circuit = imagecreatefrompng(APPLICATION_ROOTDIRECTORY . '/data/circuits/circuit1_negative.png');
@@ -49,7 +49,7 @@ class prototypeRenderer
 		
 		$raceid = $this->lruser->getUserRace();
 
-		for ($j=1; $j<=$currentGamestates['meta']['numPlayers']; $j++)
+		for ($j=1; $j<=$currentGamestates['race']['numPlayers']; $j++)
 		{
 			if ($j == 1) $currentColor = $colorGreen;
 			if ($j == 2) $currentColor = $colorRed;
@@ -67,7 +67,7 @@ class prototypeRenderer
 				$lastPosition = $currentPosition;
 			}
 
-			if ($currentGamestates['move']['currentPlayer'] == $j)
+			if ($currentGamestates['round']['currentPlayer'] == $j)
 			{
 				$vect[0] = $currentPosition[0] + $currentGamestates['playerdata'][$j]['vector'][0];
 				$vect[1] = $currentPosition[1] + $currentGamestates['playerdata'][$j]['vector'][1];

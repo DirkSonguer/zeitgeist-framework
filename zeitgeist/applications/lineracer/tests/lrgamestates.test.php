@@ -35,9 +35,9 @@ class testLrgamestates extends UnitTestCase
 		$ret = $objects->getObject('currentGamestates');
 		
 		$this->assertTrue(is_array($ret));		
-		$this->assertEqual($ret['move']['currentPlayer'], '1');
-		$this->assertEqual($ret['meta']['numPlayers'], '2');		
-		$this->assertEqual($ret['playerdata'][1]['moves'][0], '150,370');
+		$this->assertEqual($ret['round']['currentPlayer'], '1');
+		$this->assertEqual($ret['race']['numPlayers'], '2');
+		$this->assertEqual($ret['playerdata'][1]['actions'][0]['parameter'], '150,370');
 		$this->assertEqual($ret['playerdata'][1]['vector'][0], '5');
 
 		$raceid = $this->miscfunctions->setupGame(3);
@@ -50,9 +50,9 @@ class testLrgamestates extends UnitTestCase
 		$ret = $objects->getObject('currentGamestates');
 		
 		$this->assertTrue(is_array($ret));		
-		$this->assertEqual($ret['move']['currentPlayer'], '1');
-		$this->assertEqual($ret['meta']['numPlayers'], '3');
-		$this->assertEqual($ret['playerdata'][2]['moves'][0], '175,380');
+		$this->assertEqual($ret['round']['currentPlayer'], '1');
+		$this->assertEqual($ret['race']['numPlayers'], '3');
+		$this->assertEqual($ret['playerdata'][2]['actions'][0]['parameter'], '175,380');
 		$this->assertEqual($ret['playerdata'][2]['vector'][0], '-5');
 	}
 

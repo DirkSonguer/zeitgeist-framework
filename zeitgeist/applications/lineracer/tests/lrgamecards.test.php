@@ -27,8 +27,8 @@ class testLrgamecards extends UnitTestCase
 
 		$gamestates->loadGamestates();
 		$currentGamestates = $objects->getObject('currentGamestates');
-		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][0], 5);
-		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][1], 10);
+		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['vector'][0], 5);
+		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['vector'][1], 10);
 
 		$ret = $gameeventhandler->saveRaceevent('1', $configuration->getConfiguration('gamedefinitions', 'events', 'playgamecard'), '1');
 		$objects->deleteObject('currentGamestates');
@@ -38,8 +38,8 @@ class testLrgamecards extends UnitTestCase
 		$test = $gameeventhandler->handleRaceeevents();
 
 		$currentGamestates = $objects->getObject('currentGamestates');
-		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][0], 10);
-		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][1], 20);
+		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['vector'][0], 10);
+		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['vector'][1], 20);
 	}
 
 	function test_fullbreak()
@@ -53,8 +53,8 @@ class testLrgamecards extends UnitTestCase
 
 		$gamestates->loadGamestates();
 		$currentGamestates = $objects->getObject('currentGamestates');
-		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][0], 5);
-		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][1], 10);
+		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['vector'][0], 5);
+		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['vector'][1], 10);
 
 		$gameeventhandler->saveRaceevent('1', $configuration->getConfiguration('gamedefinitions', 'events', 'playgamecard'), '3');
 		$objects->deleteObject('currentGamestates');
@@ -64,8 +64,8 @@ class testLrgamecards extends UnitTestCase
 		$test = $gameeventhandler->handleRaceeevents();
 
 		$currentGamestates = $objects->getObject('currentGamestates');
-		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][0], 0);
-		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][1], 0);
+		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['vector'][0], 0);
+		$this->assertEqual($currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['vector'][1], 0);
 	}
 }
 
