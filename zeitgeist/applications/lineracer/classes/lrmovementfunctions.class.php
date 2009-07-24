@@ -47,11 +47,11 @@ class lrMovementfunctions
 		}
 
 		// gets last move and vector for current player
-		$lastMove = $this->getMovement($currentGamestates['move']['currentPlayer'], -1);
-		$currentVector = $currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'];
+		$lastMove = $this->getMovement($currentGamestates['round']['currentPlayer'], -1);
+		$currentVector = $currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['vector'];
 
 		// on the basis of the movement radius, calculate a valid region
-		$movementradius = $currentGamestates['move']['currentRadius'];
+		$movementradius = $currentGamestates['round']['currentRadius'];
 		$minX = $lastMove[0]+$currentVector[0]-$movementradius;
 		$maxX = $lastMove[0]+$currentVector[0]+$movementradius;
 		$minY = $lastMove[1]+$currentVector[1]-$movementradius;
@@ -93,7 +93,7 @@ class lrMovementfunctions
 		$gameeventhandler = new lrGameeventhandler();
 		
 		// get last move
-		$lastMove = $this->getMovement($currentGamestates['move']['currentPlayer'], -1);
+		$lastMove = $this->getMovement($currentGamestates['round']['currentPlayer'], -1);
 		$fromX = $lastMove[0];
 		$fromY = $lastMove[1];
 
@@ -134,7 +134,7 @@ class lrMovementfunctions
 				}
 
 				// save event to clear vector
-				$gameeventhandler->saveRaceevent($currentGamestates['move']['currentPlayer'], $this->configuration->getConfiguration('gamedefinitions', 'events', 'crash'), '1', $currentGamestates['move']['currentRound']+1);
+				$gameeventhandler->saveRaceevent($currentGamestates['round']['currentPlayer'], $this->configuration->getConfiguration('gamedefinitions', 'events', 'crash'), '1', $currentGamestates['round']['currentRound']+1);
 
 				// save crash to game moves
 				$gameeventhandler->saveRaceaction($this->configuration->getConfiguration('gamedefinitions', 'actions', 'crash'), $moveX.",".$moveY);
@@ -146,11 +146,11 @@ class lrMovementfunctions
 			// check for checkpoint1
 			if ($step[0] == $this->configuration->getConfiguration('gamedefinitions', 'game_surfaces', 'checkpoint1')) 
 			{
-				if (empty($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['checkpoints']['1']))
+				if (empty($currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['checkpoints']['1']))
 				{
 					// save action
 					$gameeventhandler->saveRaceaction($this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint1'), '1');
-					$currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['checkpoints']['1'] = true;
+					$currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['checkpoints']['1'] = true;
 					$this->objects->storeObject('currentGamestates', $currentGamestates, true);
 					$this->debug->write("Checkpoint 1 hit with move: ".$moveX.",".$moveY." hit at ".$terrain[$key][1].",".$terrain[$key][2], 'message');
 				}
@@ -159,12 +159,12 @@ class lrMovementfunctions
 			// check for checkpoint2
 			if ($step[0] == $this->configuration->getConfiguration('gamedefinitions', 'game_surfaces', 'checkpoint2')) 
 			{
-				if ( (empty($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['checkpoints']['2']))
-				&& (!empty($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['checkpoints']['1'])) )
+				if ( (empty($currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['checkpoints']['2']))
+				&& (!empty($currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['checkpoints']['1'])) )
 				{
 					// save action
 					$gameeventhandler->saveRaceaction($this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint2'), '2');
-					$currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['checkpoints']['2'] = true;
+					$currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['checkpoints']['2'] = true;
 					$this->objects->storeObject('currentGamestates', $currentGamestates, true);
 					$this->debug->write("Checkpoint 2 hit with move: ".$moveX.",".$moveY." hit at ".$terrain[$key][1].",".$terrain[$key][2], 'message');
 				}
@@ -173,12 +173,12 @@ class lrMovementfunctions
 			// check for checkpoint3
 			if ($step[0] == $this->configuration->getConfiguration('gamedefinitions', 'game_surfaces', 'checkpoint3')) 
 			{
-				if ( (empty($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['checkpoints']['3']))
-				&& (!empty($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['checkpoints']['2'])) )
+				if ( (empty($currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['checkpoints']['3']))
+				&& (!empty($currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['checkpoints']['2'])) )
 				{
 					// save action
 					$gameeventhandler->saveRaceaction($this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint2'), '3');
-					$currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['checkpoints']['3'] = true;
+					$currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['checkpoints']['3'] = true;
 					$this->objects->storeObject('currentGamestates', $currentGamestates, true);
 					$this->debug->write("Checkpoint 3 hit with move: ".$moveX.",".$moveY." hit at ".$terrain[$key][1].",".$terrain[$key][2], 'message');
 				}
@@ -187,12 +187,12 @@ class lrMovementfunctions
 			// check for finish line
 			if ($step[0] == $this->configuration->getConfiguration('gamedefinitions', 'game_surfaces', 'finish')) 
 			{
-				if ( (empty($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['finish']))
-				&& (!empty($currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['checkpoints']['3'])) )
+				if ( (empty($currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['finish']))
+				&& (!empty($currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['checkpoints']['3'])) )
 				{
 					// save action
 					$gameeventhandler->saveRaceaction($this->configuration->getConfiguration('gamedefinitions', 'actions', 'finish'), '1');
-					$currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['finished'] = true;
+					$currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['finished'] = true;
 					$this->objects->storeObject('currentGamestates', $currentGamestates, true);
 					$this->debug->write("Player finished with move: ".$moveX.",".$moveY." hit at ".$terrain[$key][1].",".$terrain[$key][2], 'message');
 					break;
@@ -238,10 +238,8 @@ class lrMovementfunctions
 
 		$movement = array();
 		$movement_definition = $this->configuration->getConfiguration('gamedefinitions', 'actions', 'move');
-		echo $movement_definition."<br />";
 		foreach ($currentGamestates['playerdata'][$player]['actions'] as $move)
 		{
-//			var_dump($move);
 			if ($move['action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'move'))
 			{
 				$movement[] = explode(',', $move['parameter']);
@@ -299,7 +297,7 @@ class lrMovementfunctions
 		}
 
 		// load circuit data and attributes from database
-		$circuitData = $this->_getCircuitData($currentGamestates['meta']['currentCircuit']);
+		$circuitData = $this->_getCircuitData($currentGamestates['race']['currentCircuit']);
 		$circuitSize = explode(',', $circuitData['circuitdata_size']);
 		$circuitData = $circuitData['circuitdata_data'];
 		

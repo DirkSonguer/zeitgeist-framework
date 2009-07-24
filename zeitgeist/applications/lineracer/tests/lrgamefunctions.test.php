@@ -131,7 +131,7 @@ class testLrgamefunctions extends UnitTestCase
 		$raceid = $this->miscfunctions->setupGame(2);
 		$gamestates->loadGamestates();
 		$currentGamestates = $objects->getObject('currentGamestates');
-		$this->assertEqual($currentGamestates['move']['currentPlayer'], 1);
+		$this->assertEqual($currentGamestates['round']['currentPlayer'], 1);
 
 		$ret = $gamefunctions->forfeit();
 		$this->assertTrue($ret);
@@ -143,7 +143,7 @@ class testLrgamefunctions extends UnitTestCase
 		$objects->deleteObject('currentGamestates');
 		$gamestates->loadGamestates();
 		$currentGamestates = $objects->getObject('currentGamestates');
-		$this->assertEqual($currentGamestates['move']['currentPlayer'], 2);
+		$this->assertEqual($currentGamestates['round']['currentPlayer'], 2);
 
 		$gameeventhandler->saveRaceaction($configuration->getConfiguration('gamedefinitions', 'actions', 'finish'), '1');
 		$objects->deleteObject('currentGamestates');
@@ -169,8 +169,8 @@ class testLrgamefunctions extends UnitTestCase
 		// first turn, player 1, round 1
 		$gamestates->loadGamestates();
 		$currentGamestates = $objects->getObject('currentGamestates');
-		$this->assertEqual($currentGamestates['move']['currentPlayer'], '1');
-		$this->assertEqual($currentGamestates['move']['currentRound'], '1');
+		$this->assertEqual($currentGamestates['round']['currentPlayer'], '1');
+		$this->assertEqual($currentGamestates['round']['currentRound'], '1');
 
 		// end turn, get next player
 		$ret = $gamefunctions->endTurn();
@@ -181,8 +181,8 @@ class testLrgamefunctions extends UnitTestCase
 		// second turn, player 2, round 1
 		$gamestates->loadGamestates();
 		$currentGamestates = $objects->getObject('currentGamestates');
-		$this->assertEqual($currentGamestates['move']['currentPlayer'], '2');
-		$this->assertEqual($currentGamestates['move']['currentRound'], '1');
+		$this->assertEqual($currentGamestates['round']['currentPlayer'], '2');
+		$this->assertEqual($currentGamestates['round']['currentRound'], '1');
 
 		// end turn, get next player
 		$ret = $gamefunctions->endTurn();
@@ -193,8 +193,8 @@ class testLrgamefunctions extends UnitTestCase
 		// third turn, player 1, round 2
 		$gamestates->loadGamestates();
 		$currentGamestates = $objects->getObject('currentGamestates');
-		$this->assertEqual($currentGamestates['move']['currentPlayer'], '1');
-		$this->assertEqual($currentGamestates['move']['currentRound'], '2');
+		$this->assertEqual($currentGamestates['round']['currentPlayer'], '1');
+		$this->assertEqual($currentGamestates['round']['currentRound'], '2');
 	}
 	
 }

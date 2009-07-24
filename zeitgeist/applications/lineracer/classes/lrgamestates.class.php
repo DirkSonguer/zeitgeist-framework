@@ -68,16 +68,16 @@ class lrGamestates
 		$resPlayers = $this->database->query($sqlPlayers);
 		while ($rowPlayers = $this->database->fetchArray($resPlayers))
 		{
-			$currentGamestates['meta']['players'][$rowPlayers['raceuser_order']] = $rowPlayers['raceuser_user'];
+			$currentGamestates['race']['players'][$rowPlayers['raceuser_order']] = $rowPlayers['raceuser_user'];
 		}
-		$currentGamestates['meta']['numPlayers'] = count($currentGamestates['meta']['players']);
+		$currentGamestates['race']['numPlayers'] = count($currentGamestates['race']['players']);
 
 		// fill general info
-		$currentGamestates['meta']['currentRace'] = $raceid;
-		$currentGamestates['meta']['currentCircuit'] = $rowRacedata['race_circuit'];
-		$currentGamestates['move']['currentRound'] = $rowRacedata['race_currentround'];
-		$currentGamestates['move']['currentPlayer'] = $rowRacedata['race_activeplayer'];
-		$currentGamestates['move']['currentRadius'] = $this->configuration->getConfiguration('gamedefinitions', 'gamelogic', 'movementradius');
+		$currentGamestates['race']['currentRace'] = $raceid;
+		$currentGamestates['race']['currentCircuit'] = $rowRacedata['race_circuit'];
+		$currentGamestates['round']['currentRound'] = $rowRacedata['race_currentround'];
+		$currentGamestates['round']['currentPlayer'] = $rowRacedata['race_activeplayer'];
+		$currentGamestates['round']['currentRadius'] = $this->configuration->getConfiguration('gamedefinitions', 'gamelogic', 'movementradius');
 
 		// get raceaction from database
 		$sqlActions = "SELECT DISTINCT ra.*, r2u.raceuser_order FROM race_actions ra LEFT JOIN race_to_users r2u on ra.raceaction_player = r2u.raceuser_order WHERE ra.raceaction_race='" . $raceid . "' ORDER BY ra.raceaction_timestamp, ra.raceaction_id";
@@ -97,7 +97,7 @@ class lrGamestates
 		$this->objects->storeObject('currentGamestates', $currentGamestates, true);
 		
 		// get vectors for each player
-		for($i=1; $i<=$currentGamestates['meta']['numPlayers']; $i++)
+		for($i=1; $i<=$currentGamestates['race']['numPlayers']; $i++)
 		{
 			if (count($movementfunctions->getMovement($i)) > 1)
 			{
@@ -140,7 +140,7 @@ class lrGamestates
 
 		// iterate through all players and see if they're finished		
 		$finished = true;
-		for ($i=1; $i<=$currentGamestates['meta']['numPlayers']; $i++)
+		for ($i=1; $i<=$currentGamestates['race']['numPlayers']; $i++)
 		{
 			if (!$this->playerFinished($i))
 			{
@@ -173,7 +173,7 @@ class lrGamestates
 		
 		if (!$player)
 		{
-			$player = $currentGamestates['move']['currentPlayer'];
+			$player = $currentGamestates['round']['currentPlayer'];
 		}
 		
 		$finished = false;

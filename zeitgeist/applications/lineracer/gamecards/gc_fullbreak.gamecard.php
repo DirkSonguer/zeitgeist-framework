@@ -21,8 +21,8 @@ class gc_fullbreak
 			return false;
 		}
 		
-		$currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][0] = 0;
-		$currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][1] = 0;
+		$currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['vector'][0] = 0;
+		$currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['vector'][1] = 0;
 
 		$this->objects->storeObject('currentGamestates', $currentGamestates, true);
     }

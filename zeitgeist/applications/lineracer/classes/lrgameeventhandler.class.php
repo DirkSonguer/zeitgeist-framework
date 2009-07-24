@@ -45,7 +45,7 @@ class lrGameeventhandler
 			return false;
 		}
 
-		$sql = "INSERT INTO race_actions(raceaction_race, raceaction_player, raceaction_action, raceaction_parameter) VALUES('" . $currentGamestates['meta']['currentRace'] . "', '" . $currentGamestates['move']['currentPlayer'] . "', '" . $action . "', '" . $parameter . "')";
+		$sql = "INSERT INTO race_actions(raceaction_race, raceaction_player, raceaction_action, raceaction_parameter) VALUES('" . $currentGamestates['race']['currentRace'] . "', '" . $currentGamestates['round']['currentPlayer'] . "', '" . $action . "', '" . $parameter . "')";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -84,10 +84,10 @@ class lrGameeventhandler
 			return false;
 		}
 		
-		if ($round == 0) $round = $currentGamestates['move']['currentRound'];
-		if ($player < $currentGamestates['move']['currentPlayer']) $round += 1;
+		if ($round == 0) $round = $currentGamestates['round']['currentRound'];
+		if ($player < $currentGamestates['round']['currentPlayer']) $round += 1;
 
-		$sql  = "INSERT INTO race_events(raceevent_race, raceevent_round, raceevent_action, raceevent_parameter, raceevent_player) VALUES('" . $currentGamestates['meta']['currentRace'] . "', '" . $round . "', '" . $action . "', '" . $parameter . "', '" . $player . "')";
+		$sql  = "INSERT INTO race_events(raceevent_race, raceevent_round, raceevent_action, raceevent_parameter, raceevent_player) VALUES('" . $currentGamestates['race']['currentRace'] . "', '" . $round . "', '" . $action . "', '" . $parameter . "', '" . $player . "')";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -120,7 +120,7 @@ class lrGameeventhandler
 		}
 
 		// get all events for the active player and the current round
-		$sql = "SELECT raceevent_action, raceevent_parameter FROM race_events WHERE raceevent_race='" . $currentGamestates['meta']['currentRace'] . "' AND raceevent_round='" . $currentGamestates['move']['currentRound'] . "' AND raceevent_player='" . $currentGamestates['move']['currentPlayer'] . "'";
+		$sql = "SELECT raceevent_action, raceevent_parameter FROM race_events WHERE raceevent_race='" . $currentGamestates['race']['currentRace'] . "' AND raceevent_round='" . $currentGamestates['round']['currentRound'] . "' AND raceevent_player='" . $currentGamestates['round']['currentPlayer'] . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -170,8 +170,8 @@ class lrGameeventhandler
 			// player crashed
 			if ($event == $this->configuration->getConfiguration('gamedefinitions', 'events', 'crash'))
 			{
-				$currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][0] = 0;
-				$currentGamestates['playerdata'][$currentGamestates['move']['currentPlayer']]['vector'][1] = 0;
+				$currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['vector'][0] = 0;
+				$currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['vector'][1] = 0;
 
 				$this->objects->storeObject('currentGamestates', $currentGamestates, true);
 			}

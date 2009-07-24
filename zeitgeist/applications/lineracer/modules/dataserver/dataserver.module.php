@@ -14,12 +14,14 @@ class dataserver
 	protected $user;
 	protected $lruser;
 	protected $dataserver;
+	protected $objects;
 
 	public function __construct()
 	{
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
 		$this->configuration = zgConfiguration::init();
+		$this->objects = zgObjects::init();
 		$this->user = zgUserhandler::init();
 		$this->lruser = new lrUserfunctions();
 		$this->dataserver = new zgDataserver();
@@ -70,5 +72,28 @@ class dataserver
 		die();
 	}
 
+
+	public function getgamestates($parameters=array())
+	{
+		$this->debug->guard();
+
+		// load gamestates
+		$gamestates = new lrGamestates();
+		$gamestates->loadGamestates();
+
+		// check if gamestates are loaded
+		if ( (!$currentGamestates = $this->objects->getObject('currentGamestates')) )
+		{
+			$this->debug->write('Could not move player: gamestates are not loaded', 'warning');
+			$this->messages->setMessage('Could not move player: gamestates are not loaded', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$xmlData = $this->dataserver->createXMLDatasetFromArray($currentGamestates);
+		$this->dataserver->streamXMLDataset($xmlData);
+		die();
+	}
+	
 }
 ?>
