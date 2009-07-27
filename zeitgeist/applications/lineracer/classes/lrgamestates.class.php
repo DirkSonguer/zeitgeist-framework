@@ -80,8 +80,10 @@ class lrGamestates
 		$currentGamestates['round']['currentRadius'] = $this->configuration->getConfiguration('gamedefinitions', 'gamelogic', 'movementradius');
 
 		// get raceaction from database
-		$sqlActions = "SELECT DISTINCT ra.*, r2u.raceuser_order FROM race_actions ra LEFT JOIN race_to_users r2u on ra.raceaction_player = r2u.raceuser_order WHERE ra.raceaction_race='" . $raceid . "' ORDER BY ra.raceaction_timestamp, ra.raceaction_id";
+		$sqlActions = "SELECT DISTINCT ra.*, UNIX_TIMESTAMP(ra.raceaction_timestamp) as timestamp, r2u.raceuser_order FROM race_actions ra LEFT JOIN race_to_users r2u on ra.raceaction_player = r2u.raceuser_order WHERE ra.raceaction_race='" . $raceid . "' ORDER BY ra.raceaction_timestamp, ra.raceaction_id";
 		$resActions = $this->database->query($sqlActions);
+
+		$lastTimestamp = 0;
 
 		// get player data
 		while ($rowActions = $this->database->fetchArray($resActions))
@@ -89,9 +91,15 @@ class lrGamestates
 			$action = array();
 			$action['action'] = $rowActions['raceaction_action'];
 			$action['parameter'] = $rowActions['raceaction_parameter'];
+			if ($lastTimestamp < $rowActions['timestamp'])
+			{			
+				$lastTimestamp = $rowActions['timestamp'];
+			}
 
-			$currentGamestates['playerdata'][$rowActions['raceuser_order']]['actions'][] =$action;
+			$currentGamestates['playerdata'][$rowActions['raceuser_order']]['actions'][] = $action;
 		}
+
+		$currentGamestates['race']['updateTimestamp'] = $lastTimestamp;
 
 		// temp storing gamedata
 		$this->objects->storeObject('currentGamestates', $currentGamestates, true);
@@ -177,9 +185,25 @@ class lrGamestates
 		}
 		
 		$finished = false;
-		if (!empty($currentGamestates['playerdata'][$player]['finished']))
+		
+		$test = $currentGamestates['playerdata'][$player]['actions'];
+		
+//		var_dump($test);
+		
+		$test = array();
+		$test ['action'] = '7';
+		$test ['parameter'] = '1';
+		if ( !in_array($test, $currentGamestates['playerdata'][$player]['actions']) )
+//		empty($currentGamestates['playerdata'][$player]['finished']))
 		{
+			$out = in_array($test, $currentGamestates['playerdata'][$player]['actions']);
+			echo "true: $out<br />";
 			$finished = true;
+		}
+		else
+		{
+			$out = in_array($test, $currentGamestates['playerdata'][$player]['actions']);
+			echo "false: $out<br />";
 		}
 
 		if (!empty($currentGamestates['playerdata'][$player]['forfeited']))
