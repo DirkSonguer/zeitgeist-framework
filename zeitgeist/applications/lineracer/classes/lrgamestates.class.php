@@ -188,25 +188,16 @@ class lrGamestates
 		
 		$test = $currentGamestates['playerdata'][$player]['actions'];
 		
-//		var_dump($test);
-		
-		$test = array();
-		$test ['action'] = '7';
-		$test ['parameter'] = '1';
-		if ( !in_array($test, $currentGamestates['playerdata'][$player]['actions']) )
-//		empty($currentGamestates['playerdata'][$player]['finished']))
+		$testArray = array();
+		$testArray['action'] = $this->configuration->getConfiguration('gamedefinitions', 'actions', 'finish');
+		$testArray['parameter'] = '1';
+		if ( in_array($testArray, $currentGamestates['playerdata'][$player]['actions']) )
 		{
-			$out = in_array($test, $currentGamestates['playerdata'][$player]['actions']);
-			echo "true: $out<br />";
 			$finished = true;
 		}
-		else
-		{
-			$out = in_array($test, $currentGamestates['playerdata'][$player]['actions']);
-			echo "false: $out<br />";
-		}
 
-		if (!empty($currentGamestates['playerdata'][$player]['forfeited']))
+		$testArray['action'] = $this->configuration->getConfiguration('gamedefinitions', 'actions', 'forfeit');
+		if ( in_array($testArray, $currentGamestates['playerdata'][$player]['actions']) )
 		{
 			$finished = true;
 		}

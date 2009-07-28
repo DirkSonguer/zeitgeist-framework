@@ -56,9 +56,6 @@ class game
 		$gamestates->loadGamestates();
 
 		$currentGamestates = $this->objects->getObject('currentGamestates');
-		var_dump($currentGamestates);
-		die();
-
 		
 		$gameeventhandler->handleRaceeevents();
 		$currentGamestates = $this->objects->getObject('currentGamestates');
