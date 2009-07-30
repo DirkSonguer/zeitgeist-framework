@@ -84,8 +84,8 @@ class lrLobbyfunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-		$numPlayers = $this->database->numRows($res);
-		$row = $this->database->fetchArray($res);
+//		$numPlayers = $this->database->numRows($res);
+		$usergameroom = $this->database->fetchArray($res);
 
 		$sql = "DELETE FROM lobby_to_users WHERE lobbyuser_user='" . $this->user->getUserID() . "'";
 		$res = $this->database->query($sql);
@@ -96,10 +96,21 @@ class lrLobbyfunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-		
-		if ($numPlayers < 2)
+
+		$sql = "SELECT * FROM lobby_to_users WHERE lobbyuser_lobby='" . $usergameroom['lobbyuser_lobby'] . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
 		{
-			$sql = "DELETE FROM lobby WHERE lobby_id='" . $row['lobbyuser_lobby'] . "'";
+			$this->debug->write('Could not leave gameroom: user not found in a lobby', 'warning');
+			$this->messages->setMessage('Could not leave gameroom: user not found in a lobby', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		$numPlayers = $this->database->numRows($res);
+		
+		if ($numPlayers < 1)
+		{
+			$sql = "DELETE FROM lobby WHERE lobby_id='" . $usergameroom['lobbyuser_lobby'] . "'";
 			$res = $this->database->query($sql);
 			if (!$res)
 			{
