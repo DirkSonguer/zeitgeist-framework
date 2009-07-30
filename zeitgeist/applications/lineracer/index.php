@@ -81,6 +81,19 @@
 	
 	if ($ret != 1)
 	{
+		$msg = $message->getAllMessages('eventhandler.class.php');
+		if (strpos($msg[0]->message, 'has no rights for action') !== false)
+		{
+			$message->setMessage('Du musst dich anmelden, um dies tun zu können.', 'userwarning');
+
+			// save message data for user
+			if ($configuration->getConfiguration('zeitgeist', 'messages', 'use_persistent_messages'))
+			{
+				$messagecache = zgMessagecache::init();
+				$messagecache->saveMessagesToDatabase();
+			}
+		}
+
 		$tpl = new lrTemplate();
 		$tpl->redirect($tpl->createLink('main', 'index'));
 	}

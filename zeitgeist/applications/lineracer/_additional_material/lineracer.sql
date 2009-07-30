@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 28. Juli 2009 um 19:53
+-- Erstellungszeit: 30. Juli 2009 um 07:11
 -- Server Version: 5.1.33
 -- PHP-Version: 5.2.9
 
@@ -222,15 +222,15 @@ CREATE TABLE IF NOT EXISTS `configurationcache` (
   `configurationcache_content` text NOT NULL,
   PRIMARY KEY (`configurationcache_id`),
   UNIQUE KEY `configuration_cache_modulename` (`configurationcache_name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=93 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=95 ;
 
 --
 -- Daten für Tabelle `configurationcache`
 --
 
 INSERT INTO `configurationcache` (`configurationcache_id`, `configurationcache_name`, `configurationcache_timestamp`, `configurationcache_content`) VALUES
-(91, './zeitgeist/configuration/zeitgeist.ini', '1248239167', 'YToxMDp7czo3OiJtb2R1bGVzIjthOjI6e3M6MTE6ImZvcm1jcmVhdG9yIjtzOjQ6InRydWUiO3M6NDoic2hvcCI7czo0OiJ0cnVlIjt9czo2OiJ0YWJsZXMiO2E6MTQ6e3M6MTE6InRhYmxlX3VzZXJzIjtzOjU6InVzZXJzIjtzOjE0OiJ0YWJsZV91c2VyZGF0YSI7czo4OiJ1c2VyZGF0YSI7czoxNjoidGFibGVfdXNlcnJpZ2h0cyI7czoxMDoidXNlcnJpZ2h0cyI7czoxNToidGFibGVfdXNlcnJvbGVzIjtzOjk6InVzZXJyb2xlcyI7czoyMDoidGFibGVfdXNlcmNoYXJhY3RlcnMiO3M6MTQ6InVzZXJjaGFyYWN0ZXJzIjtzOjI0OiJ0YWJsZV91c2Vycm9sZXNfdG9fdXNlcnMiO3M6MTg6InVzZXJyb2xlc190b191c2VycyI7czoyNjoidGFibGVfdXNlcnJvbGVzX3RvX2FjdGlvbnMiO3M6MjA6InVzZXJyb2xlc190b19hY3Rpb25zIjtzOjE4OiJ0YWJsZV91c2Vyc2Vzc2lvbnMiO3M6MTI6InVzZXJzZXNzaW9ucyI7czoyMjoidGFibGVfdXNlcmNvbmZpcm1hdGlvbiI7czoxNjoidXNlcmNvbmZpcm1hdGlvbiI7czoxNzoidGFibGVfc2Vzc2lvbmRhdGEiO3M6MTE6InNlc3Npb25kYXRhIjtzOjEzOiJ0YWJsZV9tb2R1bGVzIjtzOjc6Im1vZHVsZXMiO3M6MTM6InRhYmxlX2FjdGlvbnMiO3M6NzoiYWN0aW9ucyI7czoxOToidGFibGVfdGVtcGxhdGVjYWNoZSI7czoxMzoidGVtcGxhdGVjYWNoZSI7czoxODoidGFibGVfbWVzc2FnZWNhY2hlIjtzOjEyOiJtZXNzYWdlY2FjaGUiO31zOjc6InNlc3Npb24iO2E6Mzp7czoxNToic2Vzc2lvbl9zdG9yYWdlIjtzOjg6ImRhdGFiYXNlIjtzOjEyOiJzZXNzaW9uX25hbWUiO3M6MTk6IlpFSVRHRUlTVF9TRVNTSU9OSUQiO3M6MTY6InNlc3Npb25fbGlmZXRpbWUiO3M6MToiMCI7fXM6ODoibWVzc2FnZXMiO2E6MTp7czoyMzoidXNlX3BlcnNpc3RlbnRfbWVzc2FnZXMiO3M6MToiMSI7fXM6ODoidGVtcGxhdGUiO2E6MTU6e3M6MTI6InJld3JpdGVfdXJscyI7czoxOiIwIjtzOjE4OiJ2YXJpYWJsZVN1YnN0QmVnaW4iO3M6NToiPCEtLUAiO3M6MTY6InZhcmlhYmxlU3Vic3RFbmQiO3M6NDoiQC0tPiI7czoxNToiYmxvY2tTdWJzdEJlZ2luIjtzOjU6IjwhLS0jIjtzOjEzOiJibG9ja1N1YnN0RW5kIjtzOjQ6IiMtLT4iO3M6OToibGlua0JlZ2luIjtzOjQ6IkBAe1siO3M6NzoibGlua0VuZCI7czo0OiJdfUBAIjtzOjEzOiJ2YXJpYWJsZUJlZ2luIjtzOjM6IkBAeyI7czoxMToidmFyaWFibGVFbmQiO3M6MzoifUBAIjtzOjE0OiJibG9ja09wZW5CZWdpbiI7czozMDoiPCEtLSBUZW1wbGF0ZUJlZ2luQmxvY2sgbmFtZT0iIjtzOjEyOiJibG9ja09wZW5FbmQiO3M6NToiIiAtLT4iO3M6MTA6ImJsb2NrQ2xvc2UiO3M6MjU6IjwhLS0gVGVtcGxhdGVFbmRCbG9jayAtLT4iO3M6MTk6IlVzZXJtZXNzYWdlV2FybmluZ3MiO3M6MTI6InVzZXJ3YXJuaW5ncyI7czoxNzoiVXNlcm1lc3NhZ2VFcnJvcnMiO3M6MTA6InVzZXJlcnJvcnMiO3M6MTk6IlVzZXJtZXNzYWdlTWVzc2FnZXMiO3M6MTI6InVzZXJtZXNzYWdlcyI7fXM6MTI6ImV2ZW50aGFuZGxlciI7YTozOntzOjI0OiJub191c2VycmlnaHRzX2Zvcl9hY3Rpb24iO3M6MjoiLTEiO3M6Mjg6InJlcXVpcmVkX3BhcmFtZXRlcl9ub3RfZm91bmQiO3M6MjoiLTIiO3M6OToibWV0aG9kX29rIjtzOjE6IjEiO31zOjEzOiJ0cmFmZmljbG9nZ2VyIjthOjE6e3M6MjA6InRyYWZmaWNsb2dnZXJfYWN0aXZlIjtzOjE6IjAiO31zOjEyOiJlcnJvcmhhbmRsZXIiO2E6MTp7czoxNzoiZXJyb3JfcmVwb3J0bGV2ZWwiO3M6MToiMiI7fXM6MTE6InVzZXJoYW5kbGVyIjthOjE6e3M6MTU6InVzZV9kb3VibGVvcHRpbiI7czoxOiIxIjt9czoxNjoicGFyYW1ldGVyaGFuZGxlciI7YTo4OntzOjE3OiJlc2NhcGVfcGFyYW1ldGVycyI7czoxOiIxIjtzOjU6ImVtYWlsIjtzOjY2OiIvXltcd1wtXCtcJlwqXSsoPzpcLltcd1wtXF9cK1wmXCpdKykqQCg/Oltcdy1dK1wuKStbYS16QS1aXXsyLDd9JC8iO3M6MzoidXJsIjtzOjg1OiIvXihmdHB8aHR0cHxodHRwcyk6XC9cLyhcdys6ezAsMX1cdypAKT8oXFMrKSg6WzAtOV0rKT8oXC98XC8oW1x3IyE6Lj8rPSYlQCFcLVwvXSkpPyQvIjtzOjM6InppcCI7czoxMToiL15cZHszLDV9JC8iO3M6Njoic3RyaW5nIjtzOjY3OiIvXltcd8O8w5zDpMOEw7bDliBdKygoW1wsXC5cOlwtXC9cKFwpXCFcPyBdKT9bXHfDvMOcw6TDhMO2w5YgXSopKiQvIjtzOjQ6InRleHQiO3M6Nzc6Ii9eW1x3w7zDnMOkw4TDtsOWIF0rKChbXFxcIlwsXC5cOlwtXC9cclxuXHRcIVw/XChcKSBdKT9bXHfDvMOcw6TDhMO2w5YgXSopKiQvIjtzOjY6Im51bWJlciI7czoyNDoiL15bMC05XSooXC58XCwpP1swLTldKyQvIjtzOjQ6ImRhdGUiO3M6Mzg6Ii9eWzAtOV17Mn0oXC4pP1swLTldezJ9KFwuKT9bMC05XXs0fSQvIjt9fQ=='),
-(83, './configuration/zeitgeist.ini', '1198895916', 'YToyOntzOjc6InNlc3Npb24iO2E6Mzp7czoxNToic2Vzc2lvbl9zdG9yYWdlIjtzOjg6ImRhdGFiYXNlIjtzOjEyOiJzZXNzaW9uX25hbWUiO3M6OToiTElORVJBQ0VSIjtzOjE2OiJzZXNzaW9uX2xpZmV0aW1lIjtzOjE6IjAiO31zOjEzOiJ0cmFmZmljbG9nZ2VyIjthOjE6e3M6MjA6InRyYWZmaWNsb2dnZXJfYWN0aXZlIjtzOjE6IjEiO319'),
+(94, './zeitgeist/configuration/zeitgeist.ini', '1248895302', 'YToxMDp7czo3OiJtb2R1bGVzIjthOjI6e3M6MTE6ImZvcm1jcmVhdG9yIjtzOjQ6InRydWUiO3M6NDoic2hvcCI7czo0OiJ0cnVlIjt9czo2OiJ0YWJsZXMiO2E6MTQ6e3M6MTM6InRhYmxlX2FjdGlvbnMiO3M6NzoiYWN0aW9ucyI7czoxODoidGFibGVfbWVzc2FnZWNhY2hlIjtzOjEyOiJtZXNzYWdlY2FjaGUiO3M6MTM6InRhYmxlX21vZHVsZXMiO3M6NzoibW9kdWxlcyI7czoxNzoidGFibGVfc2Vzc2lvbmRhdGEiO3M6MTE6InNlc3Npb25kYXRhIjtzOjE5OiJ0YWJsZV90ZW1wbGF0ZWNhY2hlIjtzOjEzOiJ0ZW1wbGF0ZWNhY2hlIjtzOjExOiJ0YWJsZV91c2VycyI7czo1OiJ1c2VycyI7czoxNDoidGFibGVfdXNlcmRhdGEiO3M6ODoidXNlcmRhdGEiO3M6MTY6InRhYmxlX3VzZXJyaWdodHMiO3M6MTA6InVzZXJyaWdodHMiO3M6MTU6InRhYmxlX3VzZXJyb2xlcyI7czo5OiJ1c2Vycm9sZXMiO3M6MjA6InRhYmxlX3VzZXJjaGFyYWN0ZXJzIjtzOjE0OiJ1c2VyY2hhcmFjdGVycyI7czoyNDoidGFibGVfdXNlcnJvbGVzX3RvX3VzZXJzIjtzOjE4OiJ1c2Vycm9sZXNfdG9fdXNlcnMiO3M6MjY6InRhYmxlX3VzZXJyb2xlc190b19hY3Rpb25zIjtzOjIwOiJ1c2Vycm9sZXNfdG9fYWN0aW9ucyI7czoxODoidGFibGVfdXNlcnNlc3Npb25zIjtzOjEyOiJ1c2Vyc2Vzc2lvbnMiO3M6MjI6InRhYmxlX3VzZXJjb25maXJtYXRpb24iO3M6MTY6InVzZXJjb25maXJtYXRpb24iO31zOjc6InNlc3Npb24iO2E6Mzp7czoxNToic2Vzc2lvbl9zdG9yYWdlIjtzOjg6ImRhdGFiYXNlIjtzOjEyOiJzZXNzaW9uX25hbWUiO3M6MTk6IlpFSVRHRUlTVF9TRVNTSU9OSUQiO3M6MTY6InNlc3Npb25fbGlmZXRpbWUiO3M6MToiMCI7fXM6ODoibWVzc2FnZXMiO2E6MTp7czoyMzoidXNlX3BlcnNpc3RlbnRfbWVzc2FnZXMiO3M6MToiMSI7fXM6ODoidGVtcGxhdGUiO2E6MTU6e3M6MTI6InJld3JpdGVfdXJscyI7czoxOiIwIjtzOjE4OiJ2YXJpYWJsZVN1YnN0QmVnaW4iO3M6NToiPCEtLUAiO3M6MTY6InZhcmlhYmxlU3Vic3RFbmQiO3M6NDoiQC0tPiI7czoxNToiYmxvY2tTdWJzdEJlZ2luIjtzOjU6IjwhLS0jIjtzOjEzOiJibG9ja1N1YnN0RW5kIjtzOjQ6IiMtLT4iO3M6OToibGlua0JlZ2luIjtzOjQ6IkBAe1siO3M6NzoibGlua0VuZCI7czo0OiJdfUBAIjtzOjEzOiJ2YXJpYWJsZUJlZ2luIjtzOjM6IkBAeyI7czoxMToidmFyaWFibGVFbmQiO3M6MzoifUBAIjtzOjE0OiJibG9ja09wZW5CZWdpbiI7czozMDoiPCEtLSBUZW1wbGF0ZUJlZ2luQmxvY2sgbmFtZT0iIjtzOjEyOiJibG9ja09wZW5FbmQiO3M6NToiIiAtLT4iO3M6MTA6ImJsb2NrQ2xvc2UiO3M6MjU6IjwhLS0gVGVtcGxhdGVFbmRCbG9jayAtLT4iO3M6MTk6IlVzZXJtZXNzYWdlV2FybmluZ3MiO3M6MTI6InVzZXJ3YXJuaW5ncyI7czoxNzoiVXNlcm1lc3NhZ2VFcnJvcnMiO3M6MTA6InVzZXJlcnJvcnMiO3M6MTk6IlVzZXJtZXNzYWdlTWVzc2FnZXMiO3M6MTI6InVzZXJtZXNzYWdlcyI7fXM6MTI6ImV2ZW50aGFuZGxlciI7YTozOntzOjI0OiJub191c2VycmlnaHRzX2Zvcl9hY3Rpb24iO3M6MjoiLTEiO3M6Mjg6InJlcXVpcmVkX3BhcmFtZXRlcl9ub3RfZm91bmQiO3M6MjoiLTIiO3M6OToibWV0aG9kX29rIjtzOjE6IjEiO31zOjEzOiJ0cmFmZmljbG9nZ2VyIjthOjE6e3M6MjA6InRyYWZmaWNsb2dnZXJfYWN0aXZlIjtzOjE6IjAiO31zOjEyOiJlcnJvcmhhbmRsZXIiO2E6MTp7czoxNzoiZXJyb3JfcmVwb3J0bGV2ZWwiO3M6MToiMiI7fXM6MTE6InVzZXJoYW5kbGVyIjthOjE6e3M6MTU6InVzZV9kb3VibGVvcHRpbiI7czoxOiIxIjt9czoxNjoicGFyYW1ldGVyaGFuZGxlciI7YTo4OntzOjE3OiJlc2NhcGVfcGFyYW1ldGVycyI7czoxOiIxIjtzOjU6ImVtYWlsIjtzOjY2OiIvXltcd1wtXCtcJlwqXSsoPzpcLltcd1wtXF9cK1wmXCpdKykqQCg/Oltcdy1dK1wuKStbYS16QS1aXXsyLDd9JC8iO3M6MzoidXJsIjtzOjg1OiIvXihmdHB8aHR0cHxodHRwcyk6XC9cLyhcdys6ezAsMX1cdypAKT8oXFMrKSg6WzAtOV0rKT8oXC98XC8oW1x3IyE6Lj8rPSYlQCFcLVwvXSkpPyQvIjtzOjM6InppcCI7czoxMToiL15cZHszLDV9JC8iO3M6Njoic3RyaW5nIjtzOjY3OiIvXltcd8O8w5zDpMOEw7bDliBdKygoW1wsXC5cOlwtXC9cKFwpXCFcPyBdKT9bXHfDvMOcw6TDhMO2w5YgXSopKiQvIjtzOjQ6InRleHQiO3M6Nzc6Ii9eW1x3w7zDnMOkw4TDtsOWIF0rKChbXFxcIlwsXC5cOlwtXC9cclxuXHRcIVw/XChcKSBdKT9bXHfDvMOcw6TDhMO2w5YgXSopKiQvIjtzOjY6Im51bWJlciI7czoyNDoiL15bMC05XSooXC58XCwpP1swLTldKyQvIjtzOjQ6ImRhdGUiO3M6Mzg6Ii9eWzAtOV17Mn0oXC4pP1swLTldezJ9KFwuKT9bMC05XXs0fSQvIjt9fQ=='),
+(93, './configuration/zeitgeist.ini', '1248849733', 'YTozOntzOjc6InNlc3Npb24iO2E6Mzp7czoxNToic2Vzc2lvbl9zdG9yYWdlIjtzOjg6ImRhdGFiYXNlIjtzOjEyOiJzZXNzaW9uX25hbWUiO3M6OToiTElORVJBQ0VSIjtzOjE2OiJzZXNzaW9uX2xpZmV0aW1lIjtzOjE6IjAiO31zOjg6Im1lc3NhZ2VzIjthOjE6e3M6MjM6InVzZV9wZXJzaXN0ZW50X21lc3NhZ2VzIjtzOjE6IjEiO31zOjEzOiJ0cmFmZmljbG9nZ2VyIjthOjE6e3M6MjA6InRyYWZmaWNsb2dnZXJfYWN0aXZlIjtzOjE6IjEiO319'),
 (84, 'configuration/lineracer.ini', '1225085024', 'YToyOntzOjExOiJhcHBsaWNhdGlvbiI7YTozOntzOjg6ImJhc2VwYXRoIjtzOjI2OiJodHRwOi8vMTI3LjAuMC4xL2xpbmVyYWNlciI7czoxMjoidGVtcGxhdGVwYXRoIjtzOjk6ImxpbmVyYWNlciI7czoxMToidmVyc2lvbmluZm8iO3M6MzY6IkxpbmVyYWNlciBWZXJzaW9uIGIxNTg7IDIwMDctMjAwOCBNVyI7fXM6MTQ6InBhcmFtZXRlcnR5cGVzIjthOjI6e3M6ODoidXNlcm5hbWUiO3M6Mjc6Ii9eW1x3w7zDnMOkw4TDtsOWIF17NCwxNn0kLyI7czoxMjoidXNlcnBhc3N3b3JkIjtzOjExOiIvXi57NCwxNn0kLyI7fX0='),
 (86, './modules/main/main.ini', '1212245878', 'YTozOntzOjU6ImluZGV4IjthOjE6e3M6MjE6Imhhc0V4dGVybmFsUGFyYW1ldGVycyI7czo1OiJmYWxzZSI7fXM6NToibG9naW4iO2E6NDp7czoyMToiaGFzRXh0ZXJuYWxQYXJhbWV0ZXJzIjtzOjQ6InRydWUiO3M6ODoidXNlcm5hbWUiO2E6Mzp7czo5OiJwYXJhbWV0ZXIiO3M6NDoidHJ1ZSI7czo2OiJzb3VyY2UiO3M6NDoiUE9TVCI7czo0OiJ0eXBlIjtzOjExOiIvXi57NCwzMn0kLyI7fXM6ODoicGFzc3dvcmQiO2E6Mzp7czo5OiJwYXJhbWV0ZXIiO3M6NDoidHJ1ZSI7czo2OiJzb3VyY2UiO3M6NDoiUE9TVCI7czo0OiJ0eXBlIjtzOjExOiIvXi57NCwzMn0kLyI7fXM6NToibG9naW4iO2E6NDp7czo5OiJwYXJhbWV0ZXIiO3M6NDoidHJ1ZSI7czo2OiJzb3VyY2UiO3M6NDoiUE9TVCI7czo0OiJ0eXBlIjtzOjg6IkNPTlNUQU5UIjtzOjU6InZhbHVlIjtzOjU6IkxvZ2luIjt9fXM6OToidGVtcGxhdGVzIjthOjI6e3M6MTA6Im1haW5faW5kZXgiO3M6Njg6InRlbXBsYXRlcy9bW2xpbmVyYWNlci5hcHBsaWNhdGlvbi50ZW1wbGF0ZXBhdGhdXS9tYWluX2luZGV4LnRwbC5odG1sIjtzOjEwOiJtYWluX2xvZ2luIjtzOjY4OiJ0ZW1wbGF0ZXMvW1tsaW5lcmFjZXIuYXBwbGljYXRpb24udGVtcGxhdGVwYXRoXV0vbWFpbl9sb2dpbi50cGwuaHRtbCI7fX0='),
 (90, './modules/game/game.ini', '1225171962', 'YTozOntzOjQ6Im1vdmUiO2E6Mzp7czoyMToiaGFzRXh0ZXJuYWxQYXJhbWV0ZXJzIjtzOjQ6InRydWUiO3M6MTA6InBvc2l0aW9uX3giO2E6Mzp7czo5OiJwYXJhbWV0ZXIiO3M6NDoidHJ1ZSI7czo2OiJzb3VyY2UiO3M6NDoiUE9TVCI7czo0OiJ0eXBlIjtzOjEwOiIvXlswLTldKiQvIjt9czoxMDoicG9zaXRpb25feSI7YTozOntzOjk6InBhcmFtZXRlciI7czo0OiJ0cnVlIjtzOjY6InNvdXJjZSI7czo0OiJQT1NUIjtzOjQ6InR5cGUiO3M6MTA6Ii9eWzAtOV0qJC8iO319czoxMjoicGxheWdhbWVjYXJkIjthOjI6e3M6MjE6Imhhc0V4dGVybmFsUGFyYW1ldGVycyI7czo0OiJ0cnVlIjtzOjg6ImdhbWVjYXJkIjthOjM6e3M6OToicGFyYW1ldGVyIjtzOjQ6InRydWUiO3M6Njoic291cmNlIjtzOjM6IkdFVCI7czo0OiJ0eXBlIjtzOjEwOiIvXlswLTldKiQvIjt9fXM6OToidGVtcGxhdGVzIjthOjE6e3M6MTA6ImdhbWVfaW5kZXgiO3M6Njg6InRlbXBsYXRlcy9bW2xpbmVyYWNlci5hcHBsaWNhdGlvbi50ZW1wbGF0ZXBhdGhdXS9nYW1lX2luZGV4LnRwbC5odG1sIjt9fQ=='),
@@ -304,14 +304,14 @@ CREATE TABLE IF NOT EXISTS `lobby` (
   `lobby_maxplayers` int(1) NOT NULL DEFAULT '1',
   `lobby_gamecardsallowed` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`lobby_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=14 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=16 ;
 
 --
 -- Daten für Tabelle `lobby`
 --
 
 INSERT INTO `lobby` (`lobby_id`, `lobby_circuit`, `lobby_maxplayers`, `lobby_gamecardsallowed`) VALUES
-(13, 1, 2, 1);
+(15, 1, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -331,7 +331,7 @@ CREATE TABLE IF NOT EXISTS `lobby_to_users` (
 --
 
 INSERT INTO `lobby_to_users` (`lobbyuser_lobby`, `lobbyuser_user`, `lobbyuser_confirmation`) VALUES
-(13, 1, 0);
+(15, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -340,20 +340,17 @@ INSERT INTO `lobby_to_users` (`lobbyuser_lobby`, `lobbyuser_user`, `lobbyuser_co
 --
 
 CREATE TABLE IF NOT EXISTS `messagecache` (
-  `messagecache_user` int(12) NOT NULL,
+  `messagecache_session` varchar(32) NOT NULL,
   `messagecache_content` text CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
-  PRIMARY KEY (`messagecache_user`)
+  PRIMARY KEY (`messagecache_session`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `messagecache`
 --
 
-INSERT INTO `messagecache` (`messagecache_user`, `messagecache_content`) VALUES
-(0, 'YTowOnt9'),
-(1, 'YTowOnt9'),
-(2, 'YTowOnt9'),
-(3, 'YTowOnt9');
+INSERT INTO `messagecache` (`messagecache_session`, `messagecache_content`) VALUES
+('fd0efe245bbdf37679d5c3e3a5c32f1f', 'YTowOnt9');
 
 -- --------------------------------------------------------
 
@@ -669,7 +666,8 @@ CREATE TABLE IF NOT EXISTS `sessiondata` (
 INSERT INTO `sessiondata` (`sessiondata_id`, `sessiondata_created`, `sessiondata_lastupdate`, `sessiondata_content`, `sessiondata_ip`) VALUES
 ('b3fb3b9f0c44efa6b07c91e17985e143', 1248798477, 1248798821, 'user_userid|s:1:"2";user_key|s:32:"098f6bcd4621d373cade4e832627b4f6";user_username|s:5:"test2";', 2130706433),
 ('9b70915c6b3a403de56b37ae1a04e55d', 1248798871, 1248799199, '', 2130706433),
-('a044d6832bed8fefdffbd473ac168572', 1248798026, 1248798860, 'user_userid|s:1:"1";user_key|s:32:"098f6bcd4621d373cade4e832627b4f6";user_username|s:5:"test1";', 2130706433);
+('fd0efe245bbdf37679d5c3e3a5c32f1f', 1248895408, 1248895768, '', 2130706433),
+('a044d6832bed8fefdffbd473ac168572', 1248798026, 1248895423, 'user_userid|s:1:"1";user_key|s:32:"098f6bcd4621d373cade4e832627b4f6";user_username|s:5:"test1";', 2130706433);
 
 -- --------------------------------------------------------
 
@@ -845,7 +843,7 @@ CREATE TABLE IF NOT EXISTS `trafficlog` (
   `trafficlog_user` int(12) NOT NULL,
   `trafficlog_ip` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`trafficlog_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11258 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11316 ;
 
 --
 -- Daten für Tabelle `trafficlog`
@@ -12114,7 +12112,65 @@ INSERT INTO `trafficlog` (`trafficlog_id`, `trafficlog_module`, `trafficlog_acti
 (11254, 20, 12, 1, 2130706433),
 (11255, 1, 3, 0, 2130706433),
 (11256, 20, 9, 0, 2130706433),
-(11257, 1, 3, 0, 2130706433);
+(11257, 1, 3, 0, 2130706433),
+(11258, 20, 12, 1, 2130706433),
+(11259, 1, 3, 0, 2130706433),
+(11260, 20, 9, 0, 2130706433),
+(11261, 1, 3, 0, 2130706433),
+(11262, 20, 9, 0, 2130706433),
+(11263, 20, 12, 1, 2130706433),
+(11264, 1, 3, 0, 2130706433),
+(11265, 20, 9, 0, 2130706433),
+(11266, 1, 3, 0, 2130706433),
+(11267, 20, 9, 0, 2130706433),
+(11268, 1, 3, 0, 2130706433),
+(11269, 1, 1, 0, 2130706433),
+(11270, 1, 3, 2, 2130706433),
+(11271, 20, 9, 2, 2130706433),
+(11272, 20, 15, 2, 2130706433),
+(11273, 20, 12, 2, 2130706433),
+(11274, 20, 12, 1, 2130706433),
+(11275, 20, 16, 1, 2130706433),
+(11276, 20, 12, 1, 2130706433),
+(11277, 20, 12, 2, 2130706433),
+(11278, 20, 14, 2, 2130706433),
+(11279, 20, 9, 2, 2130706433),
+(11280, 20, 9, 2, 2130706433),
+(11281, 20, 12, 1, 2130706433),
+(11282, 20, 14, 1, 2130706433),
+(11283, 1, 3, 1, 2130706433),
+(11284, 20, 9, 1, 2130706433),
+(11285, 20, 11, 1, 2130706433),
+(11286, 20, 11, 1, 2130706433),
+(11287, 20, 12, 1, 2130706433),
+(11288, 20, 9, 2, 2130706433),
+(11289, 20, 15, 2, 2130706433),
+(11290, 20, 12, 2, 2130706433),
+(11291, 20, 12, 2, 2130706433),
+(11292, 20, 14, 2, 2130706433),
+(11293, 20, 9, 2, 2130706433),
+(11294, 20, 9, 2, 2130706433),
+(11295, 20, 12, 1, 2130706433),
+(11296, 20, 14, 1, 2130706433),
+(11297, 20, 14, 1, 2130706433),
+(11298, 20, 14, 1, 2130706433),
+(11299, 20, 15, 1, 2130706433),
+(11300, 20, 12, 1, 2130706433),
+(11301, 20, 14, 1, 2130706433),
+(11302, 20, 9, 1, 2130706433),
+(11303, 1, 2, 2, 2130706433),
+(11304, 1, 3, 0, 2130706433),
+(11305, 20, 9, 0, 2130706433),
+(11306, 20, 11, 1, 2130706433),
+(11307, 20, 11, 1, 2130706433),
+(11308, 20, 12, 1, 2130706433),
+(11309, 20, 9, 0, 2130706433),
+(11310, 1, 3, 0, 2130706433),
+(11311, 20, 9, 0, 2130706433),
+(11312, 20, 9, 0, 2130706433),
+(11313, 1, 3, 0, 2130706433),
+(11314, 20, 9, 0, 2130706433),
+(11315, 1, 3, 0, 2130706433);
 
 -- --------------------------------------------------------
 
@@ -12128,7 +12184,7 @@ CREATE TABLE IF NOT EXISTS `trafficlog_parameters` (
   `trafficparameters_key` varchar(64) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   `trafficparameters_value` text CHARACTER SET latin1 COLLATE latin1_general_ci,
   PRIMARY KEY (`trafficparameters_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=781 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=791 ;
 
 --
 -- Daten für Tabelle `trafficlog_parameters`
@@ -12914,7 +12970,17 @@ INSERT INTO `trafficlog_parameters` (`trafficparameters_id`, `trafficparameters_
 (777, 11243, 'position_x', '203'),
 (778, 11243, 'position_y', '418'),
 (779, 11253, 'creategameroom', 'Array'),
-(780, 11253, 'submit', 'Spiel erstellen');
+(780, 11253, 'submit', 'Spiel erstellen'),
+(781, 11269, 'username', 'test2'),
+(782, 11269, 'password', 'test'),
+(783, 11269, 'login', 'Login'),
+(784, 11272, 'lobbyid', '13'),
+(785, 11286, 'creategameroom', 'Array'),
+(786, 11286, 'submit', 'Spiel erstellen'),
+(787, 11289, 'lobbyid', '14'),
+(788, 11299, 'lobbyid', '14'),
+(789, 11307, 'creategameroom', 'Array'),
+(790, 11307, 'submit', 'Spiel erstellen');
 
 -- --------------------------------------------------------
 
