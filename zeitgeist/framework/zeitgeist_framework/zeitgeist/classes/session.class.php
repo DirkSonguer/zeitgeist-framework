@@ -403,6 +403,12 @@ class zgSession
 		$sessionTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_sessiondata');
 		$sql = "DELETE FROM " . $sessionTablename . " WHERE sessiondata_lastupdate < '" . $old . "'";
 
+		if ($this->configuration->getConfiguration('zeitgeist', 'messages', 'use_persistent_messages'))
+		{
+			$messagecacheTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_messagecache');
+			$sql = "DELETE FROM " . $messagecacheTablename . " WHERE messagecache_lastupdate < '" . $old . "'";
+		}
+		
 		$ret = $this->database->query($sql);
 		$this->debug->guard($ret);
 		return $ret;

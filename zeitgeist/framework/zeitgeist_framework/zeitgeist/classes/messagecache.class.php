@@ -37,6 +37,7 @@ class zgMessagecache
 	{
 		$this->debug = zgDebug::init();
 		$this->user = zgUserhandler::init();
+		$this->session = zgSession::init();
 		$this->messages = zgMessages::init();
 		$this->configuration = zgConfiguration::init();
 
@@ -73,8 +74,7 @@ class zgMessagecache
 		$this->debug->guard();
 
 		$messagecacheTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_messagecache');
-		$res = $this->database->query("SELECT messagecache_content FROM " . $messagecacheTablename . " WHERE messagecache_user = '" . $this->user->getUserID() . "'");
-
+		$res = $this->database->query("SELECT messagecache_content FROM " . $messagecacheTablename . " WHERE messagecache_session = '" . $this->session->getSessionId() . "'");
 		if ($this->database->numRows($res) == 1)
 		{
 			$row = $this->database->fetchArray($res);
@@ -132,8 +132,8 @@ class zgMessagecache
 			return false;
 		}
 
-		$sql = "INSERT INTO " . $messagecacheTablename . "(messagecache_user, messagecache_content) ";
-		$sql .= "VALUES('" . $this->user->getUserID() . "', '" . $serializedMessages . "') ";
+		$sql = "INSERT INTO " . $messagecacheTablename . "(messagecache_session, messagecache_content) ";
+		$sql .= "VALUES('" . $this->session->getSessionId() . "', '" . $serializedMessages . "') ";
 		$sql .= "ON DUPLICATE KEY UPDATE messagecache_content='" . $serializedMessages . "'";
 		$res = $this->database->query($sql);
 
