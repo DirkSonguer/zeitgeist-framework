@@ -369,7 +369,7 @@ class zgUserhandler
 		}
 
 		$active = 1;
-		$key = md5(uniqid());
+		$key = '';
 		if ($this->configuration->getConfiguration('zeitgeist', 'userhandler', 'use_doubleoptin') == '1')
 		{
 			$active = 0;
