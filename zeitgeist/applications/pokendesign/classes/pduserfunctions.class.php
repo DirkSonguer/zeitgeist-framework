@@ -17,7 +17,7 @@ class pdUserfunctions
 		$this->messages = zgMessages::init();
 		$this->session = zgSession::init();
 		$this->configuration = zgConfiguration::init();
-		$this->user = zgUserhandler::init();
+		$this->user = zgFacebookUserhandler::init();
 
 		$this->database = new zgDatabase();
 		$this->database->connect();

@@ -27,7 +27,7 @@
 	$message = zgMessages::init();
 	$configuration = zgConfiguration::init();
 	$error = zgErrorhandler::init();
-	$user = zgUserhandler::init();
+	$user = zgFacebookUserhandler::init();
 	$eventhandler = new zgEventhandler();
 	$locale = zgLocale::init();
 

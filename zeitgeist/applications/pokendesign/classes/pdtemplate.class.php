@@ -28,7 +28,7 @@ class pdTemplate extends zgTemplate
 	 */
 	public function __construct()
 	{
-		$this->user = zgUserhandler::init();
+		$this->user = zgFacebookUserhandler::init();
 		$this->session = zgSession::init();
 
 		$this->locale = zgLocale::init();
@@ -100,11 +100,13 @@ class pdTemplate extends zgTemplate
 
 		if ($this->user->isLoggedIn())
 		{
+			$this->debug->write('login 1', 'message');
 			$this->assign('username', $this->user->getUserdata('userdata_username'));
 			parent::insertBlock('userloggedin');
 		}
 		else
 		{
+			$this->debug->write('login 0', 'message');
 			parent::insertBlock('userunknown');
 		}
 

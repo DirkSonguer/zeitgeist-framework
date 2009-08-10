@@ -19,7 +19,7 @@ class main
 		$this->messages = zgMessages::init();
 		$this->messagecache = zgMessagecache::init();
 		$this->configuration = zgConfiguration::init();
-		$this->user = zgUserhandler::init();
+		$this->user = zgFacebookUserhandler::init();
 
 		$this->pduserfunctions = new pdUserfunctions();
 		$this->cards = new pdCards();

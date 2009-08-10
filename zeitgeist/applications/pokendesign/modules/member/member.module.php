@@ -18,7 +18,7 @@ class member
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
 		$this->configuration = zgConfiguration::init();
-		$this->user = zgUserhandler::init();
+		$this->user = zgFacebookUserhandler::init();
 		
 		$this->locale = zgLocale::init();
 		
