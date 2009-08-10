@@ -58,7 +58,7 @@ class zgshopCartfunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		$row = $this->database->fetchArray($res);
 		if ( (empty($row['product_qty'])) || ($row['product_qty'] < $quantity) )
 		{

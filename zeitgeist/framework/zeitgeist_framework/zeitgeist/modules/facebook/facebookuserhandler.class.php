@@ -61,6 +61,55 @@ class zgFacebookUserhandler extends zgUserhandler
 
 
 	/**
+	 * Tries to establish a login for a user from the session data
+	 * Only works if the user was correctly logged in while the current session is active
+	 *
+	 * @return boolean
+	 */
+	public function establishUserSession()
+	{
+		$this->debug->guard();
+
+		if (!$this->session->getSessionId())
+		{
+			$this->debug->write('Problem establishing user session: could not find a session id', 'warning');
+			$this->messages->setMessage('Problem establishing user session: could not find a session id', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		if (!$this->session->getSessionVariable('user_userid'))
+		{
+			$this->debug->write('Could not establish user session: user id not found in session', 'warning');
+			$this->messages->setMessage('Could not establish user session: user id not found in session', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		if (!$this->facebook->getUserID())
+		{
+			$this->debug->write('Could not establish user session: User not logged into facebook', 'warning');
+			$this->messages->setMessage('Could not establish user session: User not logged into facebook', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		if (!$this->_validateUserSession())
+		{
+			$this->debug->write('Could not validate the user session: session is not safe!', 'warning');
+			$this->messages->setMessage('Could not validate the user session: session is not safe!', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->loggedIn = true;
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	/**
 	 * Login a user with username and password
 	 * If successfull it will gather the user specific data and tie it to the session
 	 *
@@ -73,7 +122,7 @@ class zgFacebookUserhandler extends zgUserhandler
 	{
 		$this->debug->guard();
 
-		if (!$this->facebook->getUserID())
+		if (!$fbid = $this->facebook->getUserID())
 		{
 			$this->debug->write('User not logged into facebook', 'warning');
 			$this->messages->setMessage('User not logged into facebook', 'warning');
@@ -83,7 +132,9 @@ class zgFacebookUserhandler extends zgUserhandler
 
 		if (!$this->loggedIn)
 		{
-			$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " WHERE user_username = '" . $username . "' AND user_password = '". md5($password) . "' AND user_active='1'";
+			$sql = "SELECT u.user_id, u.user_key, u.user_username FROM " . $this->configuration->getConfiguration('facebook','tables','table_facebookusers') . " fb ";
+			$sql .= "LEFT JOIN " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " u ON fb.facebookuser_user = u.user_id ";
+			$sql .= "WHERE fb.facebookuser_fbid = '" . $fbid . "' AND u.user_active='1'";
 
 			if ($res = $this->database->query($sql))
 			{
@@ -101,8 +152,8 @@ class zgFacebookUserhandler extends zgUserhandler
 				}
 				else
 				{
-					$this->debug->write('Problem validating a user: user not found/is inactive or password is wrong', 'warning');
-					$this->messages->setMessage('Problem validating a user: user not found/is inactive or password is wrong', 'warning');
+					$this->debug->write('Problem validating a user: user not found or is inactive', 'warning');
+					$this->messages->setMessage('Problem validating a user: user not found or is inactive', 'warning');
 					$this->debug->unguard(false);
 					return false;
 				}
@@ -140,6 +191,7 @@ class zgFacebookUserhandler extends zgUserhandler
 		if ($this->loggedIn)
 		{
 			$this->session->unsetAllSessionVariables();
+			$this->facebook->logout($this->configuration->getConfiguration('facebook', 'userhandler', 'logouturl'));
 		}
 		else
 		{
@@ -165,28 +217,34 @@ class zgFacebookUserhandler extends zgUserhandler
 	 *
 	 * @return boolean
 	 */
-	public function createUser($name, $password)
+	public function createUser()
 	{
 		$this->debug->guard();
+		
+		if (!$fbid = $this->facebook->getUserID())
+		{
+			$this->debug->write('User not logged into facebook', 'warning');
+			$this->messages->setMessage('User not logged into facebook', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
 
-		$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " WHERE user_username = '" . $name . "'";
+		$sql = "SELECT * FROM " . $this->configuration->getConfiguration('facebook','tables','table_facebookusers') . " WHERE facebookuser_fbid = '" . $fbid . "'";
 		$res = $this->database->query($sql);
 		if ($this->database->numRows($res) > 0)
 		{
-			$this->debug->write('A user with this name already exists in the database. Please choose another username.', 'warning');
-			$this->messages->setMessage('A user with this name already exists in the database. Please choose another username.', 'warning');
+			$this->debug->write('A user with this facebook id already exists in the database.', 'warning');
+			$this->messages->setMessage('A user with this facebook id already exists in the database.', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
 
 		$active = 1;
 		$key = md5(uniqid());
-		if ($this->configuration->getConfiguration('zeitgeist', 'userhandler', 'use_doubleoptin') == '1')
-		{
-			$active = 0;
-		}
+		
+		$fbuserdata = $this->facebook->getUserInfo();
 
-		$sql = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . "(user_username, user_key, user_password, user_active) VALUES('" . $name . "', '" . $key . "', '" . md5($password) . "', '" . $active . "')";
+		$sql = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . "(user_username, user_key, user_password, user_active) VALUES('" . $fbuserdata['name'] . "', '" . $key . "', '" . '' . "', '" . $active . "')";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -195,16 +253,49 @@ class zgFacebookUserhandler extends zgUserhandler
 			$this->debug->unguard(false);
 			return false;
 		}
-
-		$currentId = $this->database->insertId();
-
-		// insert confirmation key
-		$confirmationkey = md5(uniqid());
-		$sqlUser = "INSERT INTO " . $this->configuration->getConfiguration('zeitgeist','tables','table_userconfirmation') . "(userconfirmation_user, userconfirmation_key) VALUES('" . $currentId . "', '" . $confirmationkey . "')";
-		$resUser = $this->database->query($sqlUser);
 		
 		$this->debug->unguard($currentId);
 		return $currentId;
+	}
+
+
+
+	/**
+	 * Stores Facebook Userdata 
+	 *
+	 * @return boolean
+	 */
+	public function storeFacebookUserdata()
+	{
+		$this->debug->guard();
+		
+		if (!$fbid = $this->facebook->getUserID())
+		{
+			$this->debug->write('User not logged into facebook', 'warning');
+			$this->messages->setMessage('User not logged into facebook', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$usermapping = $this->configuration->getConfiguration('facebook','userdata');
+		
+		foreach ($usermapping as $facebookmapping)
+		{
+			$fbarray[] = $facebookmapping;
+		}
+
+		$fbUserdata = $this->facebook->getUserdata($fbarray);
+
+		$insertarray = array();
+		foreach ($usermapping as $userdatakey => $facebookkey)
+		{
+			$ret = parent::setUserdata($userdatakey, $fbUserdata[0][$facebookkey], false, true);
+		}
+		
+		parent::_saveUserdata();
+
+		$this->debug->unguard(true);
+		return true;
 	}
 
 }

@@ -139,7 +139,7 @@ class zgUserhandler
 
 		if (!$this->loggedIn)
 		{
-			$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " WHERE user_username = '" . $username . "' AND user_password = '". md5($password) . "' AND user_active='1'";
+			$sql = "SELECT user_userid, user_key, user_username FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " WHERE user_username = '" . $username . "' AND user_password = '". md5($password) . "' AND user_active='1'";
 
 			if ($res = $this->database->query($sql))
 			{
@@ -369,7 +369,7 @@ class zgUserhandler
 		}
 
 		$active = 1;
-		$key = '';
+		$key = md5(uniqid());
 		if ($this->configuration->getConfiguration('zeitgeist', 'userhandler', 'use_doubleoptin') == '1')
 		{
 			$active = 0;
@@ -800,7 +800,7 @@ class zgUserhandler
 	 *
 	 * @return boolean
 	 */
-	public function setUserdata($userdata, $value, $saveuserdata=true)
+	public function setUserdata($userdata, $value, $saveuserdata=true, $forceupdate=false)
 	{
 		$this->debug->guard();
 
@@ -810,6 +810,15 @@ class zgUserhandler
 		}
 
 		if (isset($this->userdata[$userdata]))
+		{
+			$this->userdata[$userdata] = $value;
+			if ($saveuserdata) $this->_saveUserdata();
+
+			$this->debug->unguard(true);
+			return true;
+		}
+
+		if ($forceupdate)
 		{
 			$this->userdata[$userdata] = $value;
 			if ($saveuserdata) $this->_saveUserdata();
