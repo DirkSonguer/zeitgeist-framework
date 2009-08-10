@@ -31,7 +31,7 @@ class pdCards
 		$this->messages = zgMessages::init();
 		$this->objects = zgObjects::init();
 		$this->configuration = zgConfiguration::init();
-		$this->user = zgUserhandler::init();
+		$this->user = zgFacebookUserhandler::init();
 		
 		$this->database = new zgDatabase();
 		$this->database->connect();
