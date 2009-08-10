@@ -26,7 +26,6 @@ class zgMessagecache
 	protected $messages;
 	protected $database;
 	protected $configuration;
-	protected $user;
 
 	/**
 	 * Class constructor
@@ -36,7 +35,6 @@ class zgMessagecache
 	protected function __construct()
 	{
 		$this->debug = zgDebug::init();
-		$this->user = zgUserhandler::init();
 		$this->session = zgSession::init();
 		$this->messages = zgMessages::init();
 		$this->configuration = zgConfiguration::init();

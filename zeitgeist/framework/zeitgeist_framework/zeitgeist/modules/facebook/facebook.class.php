@@ -130,10 +130,9 @@ class zgFacebook
 		$this->debug->guard();
 		
 		$userdata = $this->facebookObject->api_client->users_getInfo($this->getUserID(), $keys);
-		
-		var_dump($userdata);
 
 		$this->debug->unguard(true);
+		return $userdata;
 	}
 		
 }
