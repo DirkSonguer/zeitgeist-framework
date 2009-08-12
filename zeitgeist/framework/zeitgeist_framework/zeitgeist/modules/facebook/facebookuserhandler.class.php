@@ -190,8 +190,8 @@ class zgFacebookUserhandler extends zgUserhandler
 
 		if ($this->loggedIn)
 		{
-			$this->session->unsetAllSessionVariables();
 			$this->facebook->logout($this->configuration->getConfiguration('facebook', 'userhandler', 'logouturl'));
+			$this->session->unsetAllSessionVariables();
 		}
 		else
 		{
@@ -210,10 +210,7 @@ class zgFacebookUserhandler extends zgUserhandler
 	
 
 	/**
-	 * Creates a new user with a given name and password
-	 *
-	 * @param string $name name of the user
-	 * @param string $password password of the user
+	 * Create a user from its facebook profile
 	 *
 	 * @return boolean
 	 */
