@@ -33,8 +33,10 @@
 	$configuration = zgConfiguration::init();
 	$error = zgErrorhandler::init();
 	$user = zgFacebookUserhandler::init();
-	$eventhandler = new zgEventhandler();
 	$locale = zgLocale::init();
+
+	$eventhandler = new zgEventhandler();
+	$eventhandler->init($user);
 
 	// load configuration
 	$configuration->loadConfiguration('pokendesign', 'configuration/pokendesign.ini');
@@ -59,29 +61,8 @@
 		$action = 'index';
 	}
 
-/*	
-	$facebook = new zgFacebook(); //start a new instance of the facebook object
-	$fb_id= $facebook->getUserID();  //get the user’s Facebook ID
-		
-	$tpl = new zgTemplate();
-	$tpl->load('fbtest.tpl.html');
-	$tpl->show();
-
-	echo "<br />User ID: ".$fb_id."<br />";
-
-//	$loggedin = $user->establishUserSession();
-	
-	$facebookuser = zgFacebookUserhandler::init();
-
-	$test = $facebookuser->login();
-	$test = $facebookuser->establishUserSession();
-	
-	echo "<br />Test: ".$test."<br />";
-
-	$test = $facebookuser->storeFacebookUserdata();
-*/
-
 	$loggedin = $user->establishUserSession();
+	if (!$loggedin) $user->login();
 
 	$session = zgSession::init();
 	$userid = $session->getSessionVariable('user_userid');
