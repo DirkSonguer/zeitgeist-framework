@@ -45,6 +45,24 @@ class zgEventhandler
 
 
 	/**
+	 * Initializes the Eventhandler with a current user object
+	 *
+	 * @param object $userhandlerObject user object
+	 *
+	 * @return boolean
+	 */
+	public function init($userhandlerObject)
+	{
+		$this->debug->guard();
+
+		$this->user = $userhandlerObject;
+
+		$this->debug->unguard(false);
+		return false;
+	}
+
+
+	/**
 	 * Loads all relevant data for a module from the database
 	 *
 	 * @param string $module name of the module
