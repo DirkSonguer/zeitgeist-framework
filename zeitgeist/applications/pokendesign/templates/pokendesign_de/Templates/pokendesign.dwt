@@ -53,8 +53,6 @@
 				<a href="@@{[main.howto]}@@">Pokendesigns nutzen</a>
 				<a href="@@{[member.index]}@@">Deine Karten</a>
 				<a href="@@{[member.addcard]}@@">Karte hinzufügen</a>
-				<a href="@@{[member.editprofile]}@@">Dein Profil</a>
-				<a href="@@{[main.logout]}@@">Ausloggen</a>
                 </div>
 		<!-- TemplateEndBlock -->
         
