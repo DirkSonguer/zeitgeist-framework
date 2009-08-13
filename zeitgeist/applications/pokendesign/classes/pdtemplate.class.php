@@ -35,7 +35,7 @@ class pdTemplate extends zgTemplate
 
 		parent::__construct();
 
-		$this->basepath = 'http://' . $_SERVER["SERVER_NAME"] . $this->configuration->getConfiguration('pokendesign', 'application', 'basepath');
+		$this->basepath = 'http://www.' . $_SERVER["SERVER_NAME"] . $this->configuration->getConfiguration('pokendesign', 'application', 'basepath');
 		$this->localpath = 'templates/' . $this->configuration->getConfiguration('pokendesign', 'application', 'templatepath');
 		$this->templatepath = $this->basepath . '/templates/' . $this->configuration->getConfiguration('pokendesign', 'application', 'templatepath');
 
@@ -43,7 +43,7 @@ class pdTemplate extends zgTemplate
 		if (!$language)
 		{
 			$url = $_SERVER["SERVER_NAME"];
-			if (strpos(strtolower($url), 'design.de') > 0)
+			if (strpos(strtolower($url), 'design.de') !== false)
 			{
 				$this->session->setSessionVariable('language', '_de');
 				$language = '_de';
@@ -54,9 +54,6 @@ class pdTemplate extends zgTemplate
 				$language = '_en';
 			}
 		}
-
-				$this->session->setSessionVariable('language', '_de');
-				$language = '_de';
 
 		$this->locale->loadLocale($language, 'configuration/locales.ini');
 		$this->locale->setLocale($language);
