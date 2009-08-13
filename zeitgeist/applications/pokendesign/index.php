@@ -15,7 +15,7 @@
  */
 
 	define('POKENDESIGN_ACTIVE', true);
-	define('DEBUGMODE', true);
+//	define('DEBUGMODE', true);
 
 	require_once('configuration/application.configuration.php');	
 	
