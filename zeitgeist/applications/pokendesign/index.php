@@ -29,17 +29,36 @@
 	require_once('classes/pdcards.class.php');
 
 	$debug = zgDebug::init();
+	$session = zgSession::init();
 	$message = zgMessages::init();
 	$configuration = zgConfiguration::init();
 	$error = zgErrorhandler::init();
-	$user = zgFacebookUserhandler::init();
 	$locale = zgLocale::init();
+
+	$user = zgFacebookUserhandler::init();
 
 	$eventhandler = new zgEventhandler();
 	$eventhandler->init($user);
 
 	// load configuration
 	$configuration->loadConfiguration('pokendesign', 'configuration/pokendesign.ini');
+
+
+	$language = $session->getSessionVariable('language');
+	if (!$language)
+	{
+		$url = $_SERVER["SERVER_NAME"];
+		if (strpos(strtolower($url), 'design.de') !== false)
+		{
+			$session->setSessionVariable('language', '_de');
+		}
+		else
+		{
+			$session->setSessionVariable('language', '_en');
+		}
+	}
+
+	$user->facebook->initFacebookObject($configuration->getConfiguration('facebook','api'.$session->getSessionVariable('language'),'api_key'), $configuration->getConfiguration('facebook','api'.$session->getSessionVariable('language'),'secret_key'));
 
 	// set module
 	if (isset($_GET['module']))

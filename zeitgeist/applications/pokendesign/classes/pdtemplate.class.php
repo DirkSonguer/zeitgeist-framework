@@ -40,20 +40,6 @@ class pdTemplate extends zgTemplate
 		$this->templatepath = $this->basepath . '/templates/' . $this->configuration->getConfiguration('pokendesign', 'application', 'templatepath');
 
 		$language = $this->session->getSessionVariable('language');
-		if (!$language)
-		{
-			$url = $_SERVER["SERVER_NAME"];
-			if (strpos(strtolower($url), 'design.de') !== false)
-			{
-				$this->session->setSessionVariable('language', '_de');
-				$language = '_de';
-			}
-			else
-			{
-				$this->session->setSessionVariable('language', '_en');
-				$language = '_en';
-			}
-		}
 
 		$this->locale->loadLocale($language, 'configuration/locales.ini');
 		$this->locale->setLocale($language);
@@ -104,6 +90,7 @@ class pdTemplate extends zgTemplate
 		else
 		{
 			$this->debug->write('login 0', 'message');
+			parent::assign('fb_apikey', $this->configuration->getConfiguration('facebook', 'api'.$this->session->getSessionVariable('language'), 'api_key'));
 			parent::insertBlock('userunknown');
 		}
 

@@ -23,7 +23,7 @@
 <body>
 
 <script type="text/javascript">
-    FB.init("d97bffa46e6502450d458215b5afd05e", "xd_receiver.htm");
+    FB.init("@@{fb_apikey}@@", "xd_receiver.htm");
 </script>
 
 	<div id="header">
@@ -76,25 +76,14 @@
 	<!-- InstanceBeginEditable name="body" -->
 
 		<h1>Anmeldung</h1>
-		<p>Das Suchen und Herunterladen von Visitenkarten ist möglich ohne sich zu registrieren. Um allerdings selbst Bilder hochladen zu können, musst du dich anmelden:</p>
+		<p>Das Suchen und Herunterladen von Visitenkarten ist möglich ohne sich zu registrieren. Um allerdings selbst Bilder hochladen zu können, musst du dich per Facebook Connect anmelden:</p>
 
-		<form method="post" action="@@{[main.login]}@@" name="login">
-		<table cellspacing="5" id="loginbox" border="0">
-			<tr>
-				<td width="75">Email</td>
-				<td><input type="text" size="35" maxlength="128" name="username" id="formtext" /></td>
-			</tr>
-			<tr>
-				<td>Passwort</td>
-				<td><input type="password" size="35" maxlength="32" name="password" id="formtext" /></td>
-			</tr>
-			<tr>
-				<td colspan="2" align="right"><input type="submit" name="login" value="Login" class="formbutton" /></td>
-			</tr>
-		</table>
-		</form>
+	<div class="white" style="margin-top:15px; margin-bottom:15px; text-align:center;">
+		<fb:login-button size="large" background="white" length="long">
+		</fb:login-button>
+	</div>
 		
-		<p>Wenn du noch nicht bei Pokendesign registriert bist, kannst du das <a href="@@{[main.register]}@@">hier tun</a>. Danach kannst du beliebig viele Visitenkarten hochladen.</p>
+		<p>Wenn du noch nicht bei Facebook registriert bist, kannst du das <a href="http://www.facebook.de" target="_blank">hier tun</a>. Danach kannst du beliebig viele Visitenkarten hochladen.</p>
 
 <!-- InstanceEndEditable -->
 
