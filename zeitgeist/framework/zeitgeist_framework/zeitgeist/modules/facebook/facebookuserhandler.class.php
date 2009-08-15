@@ -27,7 +27,7 @@ class zgFacebookUserhandler extends zgUserhandler
 	protected $session;
 	protected $database;
 	protected $configuration;
-	protected $facebook;
+	public $facebook;
 
 	protected $loggedIn;
 
@@ -78,20 +78,23 @@ class zgFacebookUserhandler extends zgUserhandler
 			return false;
 		}
 
-		if (!$this->session->getSessionVariable('user_userid'))
-		{
-			$this->debug->write('Could not establish user session: user id not found in session', 'warning');
-			$this->messages->setMessage('Could not establish user session: user id not found in session', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
 		if (!$this->facebook->getUserID())
 		{
 			$this->debug->write('Could not establish user session: User not logged into facebook', 'warning');
 			$this->messages->setMessage('Could not establish user session: User not logged into facebook', 'warning');
 			$this->debug->unguard(false);
 			return false;
+		}
+
+		if (!$this->session->getSessionVariable('user_userid'))
+		{
+			if (!$this->login())
+			{
+				$this->debug->write('Could not establish user session: user id not found in session', 'warning');
+				$this->messages->setMessage('Could not establish user session: user id not found in session', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
 		}
 
 		if (!$this->_validateUserSession())
