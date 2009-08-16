@@ -35,7 +35,7 @@ class pdTemplate extends zgTemplate
 
 		parent::__construct();
 
-		$this->basepath = 'http://www.' . $_SERVER["SERVER_NAME"] . $this->configuration->getConfiguration('pokendesign', 'application', 'basepath');
+		$this->basepath = 'http://' . $_SERVER["SERVER_NAME"] . $this->configuration->getConfiguration('pokendesign', 'application', 'basepath');
 		$this->localpath = 'templates/' . $this->configuration->getConfiguration('pokendesign', 'application', 'templatepath');
 		$this->templatepath = $this->basepath . '/templates/' . $this->configuration->getConfiguration('pokendesign', 'application', 'templatepath');
 
