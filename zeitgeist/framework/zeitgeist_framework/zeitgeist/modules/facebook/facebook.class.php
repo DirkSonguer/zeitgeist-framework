@@ -47,28 +47,18 @@ class zgFacebook
 
 		$this->database = new zgDatabase();
 		$this->database->connect();
-
-		if ( ($this->configuration->getConfiguration('facebook','api','api_key')) && ($this->configuration->getConfiguration('facebook','api','secret_key')) )
-		{
-			// get API keys
-			$api_key = $this->configuration->getConfiguration('facebook','api','api_key');
-			$secret_key = $this->configuration->getConfiguration('facebook','api','secret_key');
-
-			// connect to facebook API
-			$this->facebookObject = new Facebook($api_key, $secret_key);
-		}
-
 	}
 	
 	
 	/**
 	 * Initializes a new facebook api connection
 	 *
-	 * @param array $keys array with keys
+	 * @param array $api_key public key for your application
+	 * @param array $secret_key secret key for your application
 	 * 
-	 * @return array
+	 * @return boolean
 	 */
-	public function initFacebookObject($api_key, $secret_key)
+	public function connectToFacebook($api_key, $secret_key)
 	{
 		$this->debug->guard();	
 
