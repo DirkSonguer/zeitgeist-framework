@@ -15,7 +15,7 @@
  */
 
 	define('POKENDESIGN_ACTIVE', true);
-//	define('DEBUGMODE', true);
+	define('DEBUGMODE', true);
 
 	require_once('configuration/application.configuration.php');	
 	
@@ -34,15 +34,15 @@
 	$configuration = zgConfiguration::init();
 	$error = zgErrorhandler::init();
 	$locale = zgLocale::init();
-
+	
 	$user = zgFacebookUserhandler::init();
-
 	$eventhandler = new zgEventhandler();
 	$eventhandler->init($user);
+	
+	$pduser = new pdUserfunctions();
 
 	// load configuration
 	$configuration->loadConfiguration('pokendesign', 'configuration/pokendesign.ini');
-
 
 	$language = $session->getSessionVariable('language');
 	if (!$language)
@@ -58,7 +58,7 @@
 		}
 	}
 
-	$user->facebook->initFacebookObject($configuration->getConfiguration('facebook','api'.$session->getSessionVariable('language'),'api_key'), $configuration->getConfiguration('facebook','api'.$session->getSessionVariable('language'),'secret_key'));
+	$user->connectToFacebook($configuration->getConfiguration('facebook','api'.$session->getSessionVariable('language'),'api_key'), $configuration->getConfiguration('facebook','api'.$session->getSessionVariable('language'),'secret_key'));
 
 	// set module
 	if (isset($_GET['module']))
@@ -80,9 +80,24 @@
 		$action = 'index';
 	}
 
-	$loggedin = $user->establishUserSession();
-	if (!$loggedin) $user->login();
+	$activesession = $user->establishUserSession();
+	
+	if (!$activesession)
+	{
+		if ($user->getFacebookID())
+		{
+			$loggedin = $user->login();
+			if (!$loggedin)
+			{
+				
+			}
+			
+			$message->setMessage('Dein Account wurde angelegt. Viel Vergnügen bei Pokendesign.', 'usermessage');
+		}
+	}
 
+
+///*
 	$session = zgSession::init();
 	$userid = $session->getSessionVariable('user_userid');
 	$key = $session->getSessionVariable('user_key');
@@ -90,6 +105,7 @@
 
 	$test = $user->isLoggedIn();
 	$debug->write('Logged in: '.$test.' user: '.$userid.' key: '.$key.' name: '.$name, 'message');
+//*/
 
 	// load event
 	$ret = $eventhandler->callEvent($module, $action);
