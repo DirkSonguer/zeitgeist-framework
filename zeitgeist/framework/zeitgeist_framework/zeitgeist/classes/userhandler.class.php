@@ -139,7 +139,7 @@ class zgUserhandler
 
 		if (!$this->loggedIn)
 		{
-			$sql = "SELECT user_userid, user_key, user_username FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " WHERE user_username = '" . $username . "' AND user_password = '". md5($password) . "' AND user_active='1'";
+			$sql = "SELECT user_id, user_key, user_username FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " WHERE user_username = '" . $username . "' AND user_password = '". md5($password) . "' AND user_active='1'";
 
 			if ($res = $this->database->query($sql))
 			{
