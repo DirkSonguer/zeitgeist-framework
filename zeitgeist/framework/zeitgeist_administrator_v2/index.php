@@ -9,12 +9,12 @@
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
  * 
- * @package ZEITGEIST PROJECT
- * @subpackage ZEITGEIST PROJECT MAIN
+ * @package ZEITGEIST ADMINISTRATOR
+ * @subpackage MAIN
  */
 
 	// set define for application
-	define('APPLICATION_ACTIVE', true);
+	define('ZGADMIN_ACTIVE', true);
 	
 	// activate debugging
 	define('DEBUGMODE', true);
