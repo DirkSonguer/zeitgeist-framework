@@ -186,7 +186,7 @@ input.button {
 ************************/
 
 #header, #nav, #content, #footer-wrap {
-	width: 910px;
+	width: 80%;
 }
 
 /* header */
@@ -194,17 +194,15 @@ input.button {
 	clear: both;
 	position: relative;
 	margin: 0 auto; padding: 0;
-	background: transparent url(../images/header-image.jpg) no-repeat right top;
-	height: 419px;
+	height: 219px;
 	text-align: left;	
 }
 #header #clouds {
 	position: absolute;
-	background: transparent url(../images/clouds.gif) no-repeat;
 	top: 150px;
 	left: 45px;
 	width: 309px;
-	height: 163px;
+	height: 100px;
 }
 #header h1#logo-text a {
 	position: absolute;
@@ -328,7 +326,7 @@ input.button {
 
 /* main */
 #main {
-	margin: 10px 26em 10px 0; 
+	margin: 10px 10px 10px 0; 
 	padding: 0;		
 }
 #main h2 { 
