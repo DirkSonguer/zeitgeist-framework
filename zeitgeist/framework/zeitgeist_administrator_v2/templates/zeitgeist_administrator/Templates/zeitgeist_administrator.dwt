@@ -18,13 +18,7 @@
 	<!-- navigation starts here -->
 	<div id="nav">
 		
-		<ul>
-			<li id="current"><a href="index.html">Home</a></li>
-			<li><a href="index.html">News</a></li>
-			<li><a href="index.html">Downloads</a></li>
-			<li><a href="index.html">Support</a></li>
-			<li><a href="index.html">About</a></li>			
-		</ul>
+		<h3>Zeitgeist Admninistrator v2 - Manage your Zeitgeist projects</h3>
 	
 	</div>
 
