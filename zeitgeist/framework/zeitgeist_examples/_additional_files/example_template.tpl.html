@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title> Template example </title>
+	</head>
+
+	<body>
+
+		<!-- variables in a template are defined Dreamweaver-style: @@{VARNAME}@@ -->
+		<!-- Use the name to address it from the application -->
+		<p>This content is assigned by the application: @@{examplecontent}@@</p>
+
+		<!-- links inside the application can be defined like this: @@{[MODULE.ACTION]}@@ -->
+		<!-- they will be automatically generated with the correct paths -->
+		<p>This is a <a href="@@{[main.index]}@@">link to the home page</a>. It's created automatically.</p>
+
+		<!-- links can also be created by the application. use a variable to assign it into the template -->
+		<p>This is a <a href="@@{manuallink}@@">link to the home page</a>. It's created manually.</p>
+  
+		<!-- blocks in a template are also defined Dreamweaver-style -->
+		<!-- Use the name to address it from the application -->
+		<!-- TemplateBeginBlock name="exampleblock" -->
+			<p>This is content inside a block</p>
+		<!-- TemplateEndBlock -->
+
+		<!-- These are used to show dataset handling -->
+		<p>@@{hello}@@, @@{template}@@</p>
+
+	</body>
+</html>
