@@ -72,7 +72,7 @@
 	// for more information about this parameters, see eventhandler
 	$ret = $eventhandler->callEvent($module, $action);
 
-///*	
+///*
 	$debug->loadStylesheet('debug.css');
 	$debug->showInnerLoops = true;
 	$debug->showMiscInformation();
