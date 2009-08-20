@@ -6,7 +6,7 @@
 <title>Unbenanntes Dokument</title>
 <!-- TemplateEndEditable -->
 
-<link rel="stylesheet" href="css/main.css" type="text/css" />
+<link rel="stylesheet" href="@@{templatepath}@@/css/main.css" type="text/css" />
 
 
 <!-- TemplateBeginEditable name="head" -->
@@ -23,18 +23,40 @@
 	</div>
 
 	<!-- header starts here -->
+	<!-- TemplateBeginBlock name="mainmenu" -->
 	<div id="header">	
 	
-		<div id="clouds"></div>
-		
-		<h1 id="logo-text"><a href="index.html" title="">new horizon</a></h1>	
-		<p id="slogan">Put your site slogan here...</p>				
-	
+        	<div id="topnavleft">
+                <a href="@@{[main.index]}@@"><img src="@@{templatepath}@@/images/icons/home_128.png" id="naviconleft"  alt="Home" border="0"/></a>
+                <a href="@@{[setup.index]}@@"><img src="@@{templatepath}@@/images/icons/setup_128.png" id="naviconleft"  alt="Setup application" border="0" /></a>
+                <a href="@@{[user.index]}@@"><img src="@@{templatepath}@@/images/icons/user_128.png" id="naviconleft"  alt="Configure users, roles & rights" border="0" /></a>
+                <a href="@@{[configure.index]}@@"><img src="@@{templatepath}@@/images/icons/configure_128.png" id="naviconleft"  alt="Configure Zeitgeist Administrator" border="0" /></a>
+            </div>
+
+        	<div id="topnavright">
+                <a href="@@{[main.info]}@@"><img src="@@{templatepath}@@/images/icons/info_128.png" id="naviconright"  alt="Info" border="0" /></a>
+                <a href="@@{[main.logout]}@@"><img src="@@{templatepath}@@/images/icons/exit_128.png" id="naviconright"  alt="Logout" border="0" /></a>
+			</div>
+            <div style="clear:both;"></div>
+
 	</div>	
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="usermessages" -->
+		<h3 class="usermessage"><img src="@@{templatepath}@@/images/icons/ok_32.png" alt="" align="left" style="margin-right:5px;" /> @@{usermessage}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="userwarnings" -->
+		<h3 class="userwarning"><img src="@@{templatepath}@@/images/icons/warning_32.png" alt="" align="left" style="margin-right:5px;" /> @@{userwarning}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="usererrors" -->
+		<h3 class="usererror"><img src="@@{templatepath}@@/images/icons/error_32.png" alt="" align="left" style="margin-right:5px;" /> @@{usererror}@@</h3>
+	<!-- TemplateEndBlock -->	
 				
 	<!-- content-wrap starts here -->
 	<div id="content-wrap"><div id="content">	 
-	
+
 		<div id="sidebar" >	
         <!-- TemplateBeginEditable name="sidebar" -->
 
@@ -59,25 +81,12 @@
 
 	<!-- footer starts here-->	
 	<div id="footer-wrap">
-	
-		<!-- columns starts here-->		
-		<div id="columns">
-	
-        <!-- TemplateBeginEditable name="footer" -->
-
-			<h2>Example Headline</h2>
-			
-			<p>Example Text</p>
-
-		<!-- TemplateEndEditable -->
 		
-		<!-- columns ends -->
-		</div>	
-	
 		<div id="footer-bottom">		
 			<p>
-			&copy; 2009 <strong>Menschenwerk.net</strong> | 
-			Design by: <a href="http://www.styleshout.com/">styleshout</a> | 
+			&copy; 2009 <strong><a href="http://www.menschenwerk.net">Menschenwerk.net</a></strong> | 
+			Original template design: <a href="http://www.styleshout.com/">styleshout</a> | 
+            Icons by: <a href="http://www.icon-king.com/projects/nuvola/">David Vignoni</a> |
 			</p>		
 		</div>	
 	
