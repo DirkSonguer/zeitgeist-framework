@@ -17,17 +17,19 @@
 	define('ZGADMIN_ACTIVE', true);
 	
 	// activate debugging
-	define('DEBUGMODE', true);
+//	define('DEBUGMODE', true);
 
 	// require basic configuration
 	require_once('configuration/application.configuration.php');	
-	
+
 	// define zeitgeist specific path values
 	if (!defined('ZEITGEIST_ROOTDIRECTORY')) define('ZEITGEIST_ROOTDIRECTORY', './zeitgeist/');
 	if (!defined('APPLICATION_ROOTDIRECTORY')) define('APPLICATION_ROOTDIRECTORY', './');
 
 	// include framework
 	include('zeitgeist/zeitgeist.php');
+
+	require_once('classes/zgatemplate.class.php');
 	
 	// define some general classes
 	$debug = zgDebug::init();
@@ -42,7 +44,7 @@
 	$eventhandler->init($user);
 	
 	// load application configuration
-	$configuration->loadConfiguration('application', 'configuration/application.ini');
+	$configuration->loadConfiguration('administrator', 'configuration/application.ini');
 
 	// set module to input or defult value
 	if (isset($_GET['module']))
@@ -63,6 +65,13 @@
 	{
 		$action = 'index';
 	}
+	
+	// test if user is logged in
+	if (!$user->establishUserSession())
+	{
+		$module = 'main';
+		$action = 'login';
+	}	
 
 	// establish user session if possible
 	$activesession = $user->establishUserSession();

@@ -57,7 +57,6 @@ ul, ol {
 /* images */
 img {
 	background: transparent;
-   border: 3px solid #383735;	
 }
 img.float-right {
    margin: .5em 0 1em 1em;   
@@ -92,7 +91,7 @@ blockquote {
 /* start - table */
 table {
 	margin: 10px 15px; 
-	border-collapse: collapse;			
+/*	border-collapse: collapse; */
 }
 th strong {
 	color: #fff;
@@ -104,10 +103,10 @@ th {
 	padding-left: 12px;
 	padding-right: 12px;	
 	text-align: left;
-	border-left: 1px solid #211E20;
+/*	border-left: 1px solid #211E20;
 	border-right: 1px solid #211E20;
 	border-bottom: 1px solid #211E20; 
-	border-top: 2px solid #8EB200;
+	border-top: 2px solid #8EB200;*/
 }
 tr {
 	color: #707070;
@@ -116,7 +115,7 @@ tr {
 td {
 	padding-left: 12px;
 	padding-right: 12px;
-	border: 1px solid #211E20;	
+/*	border: 1px solid #211E20;	*/
 }
 /* end - table */
 
@@ -125,7 +124,7 @@ form {
 	margin: 10px 15px; 
 	padding: 10px;
 	background: transparent;
-	border: 1px solid #211E20;  
+/*	border: 1px solid #211E20;  */
 }
 fieldset {
 	margin: 0;
@@ -194,7 +193,7 @@ input.button {
 	clear: both;
 	position: relative;
 	margin: 0 auto; padding: 0;
-	height: 219px;
+	height: 231px;
 	text-align: left;	
 }
 #header #clouds {
@@ -204,19 +203,28 @@ input.button {
 	width: 309px;
 	height: 100px;
 }
-#header h1#logo-text a {
-	position: absolute;
-	margin: 0; padding: 0;
-	font: bold 58px 'Trebuchet MS', Tahoma, Arial, Sans-serif;
-	letter-spacing: -3px;
-	color: #0a1e53;
-	text-decoration: none;
-	z-index: 9998;
-	background: transparent;
-	
-	/* change the values of top and left to adjust the position of the logo*/
-	top: 33px; left: 10px;	
+
+#naviconleft {
+	margin-top: 10px;
+	margin-right: 30px;
 }
+
+#naviconright {
+	margin-top: 10px;
+	margin-left: 5px;
+}
+	
+	
+#topnavleft {
+	float:left;
+	margin-top:10px;
+}
+
+#topnavright {
+	float:right;
+	margin-top:10px;
+}
+
 #header p#slogan {
 	position: absolute;	
 	font: normal 19px 'Trebuchet Ms', Sans-serif;
@@ -227,6 +235,30 @@ input.button {
 	
 	/* change the values of left and top to adjust the position of the slogan */
 	top: 95px; left: 25px;
+}
+
+.usermessage
+{
+	color:#333333;
+	padding:5px;
+	background:#99cc33;
+	font-size:19pt;
+}
+
+.userwarning
+{
+	color:#333333;
+	padding:5px;
+	background:#ffbb00;
+	font-size:19pt;
+}
+
+.usererror
+{
+	color:#cccccc;
+	padding:5px;
+	background:#990000;
+	font-size:19pt;
 }
 
 /* Navigation */

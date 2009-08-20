@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Zeitgeist Administrator - Home</title>
+<title>Zeitgeist Administrator - Login</title>
 <!-- InstanceEndEditable -->
 
 <link rel="stylesheet" href="@@{templatepath}@@/css/main.css" type="text/css" />
@@ -60,25 +60,41 @@
 		<div id="sidebar" >	
         <!-- InstanceBeginEditable name="sidebar" -->
 
-			<h3>Info</h3>			
-			<p>This is the main page of the Zeitgeist Administrator v2.</p>	
-            
 		<!-- InstanceEndEditable -->
 		</div>	
 	
 		<div id="main">		
         <!-- InstanceBeginEditable name="main" -->
 
-			<h2>Home</h2>
-
-			<h3><a href="@@{[setup.index]}@@" alt="">Setup application</a></h3>
-            <p>This section helps you setting up your application, for example adding actions and modules to the database etc.</p>
-
-			<h3><a href="@@{[users.index]}@@" alt="">Manage application users</a></h3>
-            <p>This section lets you manage the users of your application as well as manage their rights and roles.</p>
-
-			<h3><a href="@@{[configure.index]}@@" alt="">Configure ZGA</a></h3>
-            <p>Here you can manage the Zeitgeist administrator tool.</p>
+            <table border="0" cellpadding="0" cellspacing="5" width="950">
+                <tr>
+                    <td width="140">
+                        <p><img src="@@{templatepath}@@/images/icons/important_128.png" alt="Authentication required" border="0" /></p>
+            
+                    </td>
+                    <td valign="middle">
+                        <h2>Authentication required</h2>
+                        <p>Please enter your username and password to use the Zeitgeist Administrator v2.</p>
+            
+                        <form method="post" action="@@{[main.login]}@@" name="login">
+                            <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+                                <tr>
+                                    <td align="right" nowrap width="110"><p>Username</p></td>
+                                    <td align="left" valign="middle" nowrap><input type="text" size="35" maxlength="20" name="username" class="formtext" style="width:250px;" /></td>
+                                </tr>
+                                <tr>
+                                    <td align="right" nowrap><p>Password</p></td>
+                                    <td align="left" valign="middle" nowrap><input type="password" size="35" maxlength="32" name="password" class="formtext" style="width:250px;" /></td>
+                                </tr>
+                                <tr>
+                                    <td align="left" nowrap>&nbsp;</td>
+                                    <td align="right" valign="middle" nowrap><input type="submit" name="login" value="Login" class="formbutton" /></td>
+                                </tr>
+                            </table>
+                        </form>
+                    </td>
+                </tr>
+            </table>
 
 		<!-- InstanceEndEditable -->
 		</div>					
