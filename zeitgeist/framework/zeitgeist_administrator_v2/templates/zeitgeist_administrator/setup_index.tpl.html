@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Zeitgeist Administrator - Home</title>
+<title>Zeitgeist Administrator - Setup application</title>
 <!-- InstanceEndEditable -->
 
 <link rel="stylesheet" href="@@{templatepath}@@/css/main.css" type="text/css" />
@@ -60,8 +60,9 @@
 		<div id="sidebar" >	
         <!-- InstanceBeginEditable name="sidebar" -->
 
-			<h3>Info</h3>			
-			<p>This is the main page of the Zeitgeist Administrator v2.</p>	
+			<h3>Setup application</h3>			
+			<p>Here you can set up and configure your Zeitgeist projects.</p>
+            <p>
             
 		<!-- InstanceEndEditable -->
 		</div>	
@@ -69,40 +70,52 @@
 		<div id="main">		
         <!-- InstanceBeginEditable name="main" -->
 
-			<h2>Home</h2>
+			<h2>Setup application</h2>
             
-            <table border="0" cellpadding="0" cellspacing="5" width="950">
+            <table border="0" cellpadding="0" cellspacing="5">
                 <tr>
-                    <td width="80">
-                        <p><img src="@@{templatepath}@@/images/icons/setup_64.png" alt="Setup application" border="0" /></p>
+                    <td width="90">
+                        <p><img src="@@{templatepath}@@/images/icons/setup_modules_64.png" alt="Manage modules" border="0" /></p>
                     </td>
                     <td>
-                        <h3><a href="@@{[setup.index]}@@" alt="">Setup application</a></h3>
-                        <p>This section helps you setting up your application, for example adding actions and modules to the database etc.</p>
+                        <h3><a href="@@{[setup.managemodules]}@@" alt="">Manage modules</a></h3>
+                        <p>Manage the modules that are available for your application.</p>
                     </td>
                 </tr>
             </table>
             
-            <table border="0" cellpadding="0" cellspacing="5" width="950">
+            <table border="0" cellpadding="0" cellspacing="5">
                 <tr>
-                    <td width="80">
-                        <p><img src="@@{templatepath}@@/images/icons/user_64.png" alt="Application users" border="0" /></p>
+                    <td width="90">
+                        <p><img src="@@{templatepath}@@/images/icons/setup_actions_64.png" alt="Manage actions" border="0" /></p>
                     </td>
                     <td>
-                        <h3><a href="@@{[users.index]}@@" alt="">Manage application users</a></h3>
-                        <p>This section lets you manage the users of your application as well as manage their rights and roles.</p>
+                        <h3><a href="@@{[setup.manageactions]}@@" alt="">Manage actions</a></h3>
+                        <p>Manage the actions within the modules that are available for your application.</p>
                     </td>
                 </tr>
             </table>
             
-            <table border="0" cellpadding="0" cellspacing="5" width="950">
+            <table border="0" cellpadding="0" cellspacing="5">
                 <tr>
-                    <td width="80">
-                        <p><img src="@@{templatepath}@@/images/icons/configure_64.png" alt="Configure ZGA" border="0" /></p>
+                    <td width="90">
+                        <p><img src="@@{templatepath}@@/images/icons/setup_userroles_64.png" alt="Manage userroles" border="0" /></p>
                     </td>
                     <td>
-                        <h3><a href="@@{[configure.index]}@@" alt="">Configure ZGA</a></h3>
-                        <p>Here you can manage the Zeitgeist administrator tool.</p>
+                        <h3><a href="@@{[setup.manageuserroles]}@@" alt="">Manage userroles</a></h3>
+                        <p>Manage the userroles that should be available for your application.</p>
+                    </td>
+                </tr>
+            </table>
+            
+            <table border="0" cellpadding="0" cellspacing="5">
+                <tr>
+                    <td width="90">
+                        <p><img src="@@{templatepath}@@/images/icons/setup_userdata_64.png" alt="Manage userdata" border="0" /></p>
+                    </td>
+                    <td>
+                        <h3><a href="@@{[setup.manageusedata]}@@" alt="">Manage userdata</a></h3>
+                        <p>Manage what userdata should be used in your application.</p>
                     </td>
                 </tr>
             </table>
