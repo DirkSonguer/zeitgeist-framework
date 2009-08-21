@@ -89,10 +89,15 @@
 			$loggedin = $user->login();
 			if (!$loggedin)
 			{
-				
+				if ($user->createUser())
+				{
+					$message->setMessage('Dein Account wurde angelegt. Viel Vergnügen bei Pokendesign.', 'usermessage');			
+				}
+				else
+				{
+					$message->setMessage('Dein Account konnte nicht angelegt werden. Bitte melde dich bei bei uns, damit wir das Problem lösen können.', 'usermessage');			
+				}				
 			}
-			
-			$message->setMessage('Dein Account wurde angelegt. Viel Vergnügen bei Pokendesign.', 'usermessage');
 		}
 	}
 
