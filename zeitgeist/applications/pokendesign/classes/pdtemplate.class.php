@@ -35,11 +35,11 @@ class pdTemplate extends zgTemplate
 
 		parent::__construct();
 
-		$this->basepath = 'http://' . $_SERVER["SERVER_NAME"] . $this->configuration->getConfiguration('pokendesign', 'application', 'basepath');
+		$language = $this->session->getSessionVariable('language');
+
+		$this->basepath = $this->configuration->getConfiguration('pokendesign', 'application', 'basepath'.$language);
 		$this->localpath = 'templates/' . $this->configuration->getConfiguration('pokendesign', 'application', 'templatepath');
 		$this->templatepath = $this->basepath . '/templates/' . $this->configuration->getConfiguration('pokendesign', 'application', 'templatepath');
-
-		$language = $this->session->getSessionVariable('language');
 
 		$this->locale->loadLocale($language, 'configuration/locales.ini');
 		$this->locale->setLocale($language);
