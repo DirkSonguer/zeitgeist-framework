@@ -89,8 +89,17 @@
 			$loggedin = $user->login();
 			if (!$loggedin)
 			{
-				if ($user->createUser())
+				if ($newUserId = $user->createUser())
 				{
+					$userrolearray = array();
+					$userrolearray[1] = true;
+					$userrolefunctions = new zgUserroles();
+					if (!$userrolefunctions->saveUserroles($newUserId, $userrolearray))
+					{
+						$this->debug->unguard(false);
+						return false;
+					}		
+					
 					$message->setMessage('Dein Account wurde angelegt. Viel Vergnügen bei Pokendesign.', 'usermessage');			
 				}
 				else
