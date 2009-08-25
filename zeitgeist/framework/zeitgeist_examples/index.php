@@ -71,6 +71,12 @@
 	// call the event
 	// for more information about this parameters, see eventhandler
 	$ret = $eventhandler->callEvent($module, $action);
+	
+	// If you don't know where to look next, take a look into
+	// ./modules/main/main.php
+	// This is where the eventhandler jumps next if no further
+	// parameters are used
+	
 
 ///*
 	$debug->loadStylesheet('debug.css');

@@ -8,23 +8,23 @@
 
 		<!-- variables in a template are defined Dreamweaver-style: @@{VARNAME}@@ -->
 		<!-- Use the name to address it from the application -->
-		<p>This content is assigned by the application: @@{examplecontent}@@</p>
+		<p>This content is assigned by the application: <b>@@{examplecontent}@@</b></p>
 
 		<!-- links inside the application can be defined like this: @@{[MODULE.ACTION]}@@ -->
 		<!-- they will be automatically generated with the correct paths -->
-		<p>This is a <a href="@@{[main.index]}@@">link to the home page</a>. It's created automatically.</p>
+		<p>This is a <b><a href="@@{[main.index]}@@">link to the home page</a></b>. It's created automatically.</p>
 
 		<!-- links can also be created by the application. use a variable to assign it into the template -->
-		<p>This is a <a href="@@{manuallink}@@">link to the home page</a>. It's created manually.</p>
+		<p>This is a <b><a href="@@{manuallink}@@">link to the home page</a></b>. It's created manually.</p>
   
 		<!-- blocks in a template are also defined Dreamweaver-style -->
 		<!-- Use the name to address it from the application -->
 		<!-- TemplateBeginBlock name="exampleblock" -->
-			<p>This is content inside a block</p>
+			<p>This is content inside a block: <b>@@{blockcontent}@@</b></p>
 		<!-- TemplateEndBlock -->
 
 		<!-- These are used to show dataset handling -->
-		<p>@@{hello}@@, @@{template}@@</p>
+		<p><b>@@{hello}@@, @@{template}@@</b></p>
 
 	</body>
 </html>

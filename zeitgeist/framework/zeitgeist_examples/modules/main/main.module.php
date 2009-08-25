@@ -13,42 +13,50 @@ class main
 	public function __construct()
 	{
 		$this->debug = zgDebug::init();
-		$this->messages = zgMessages::init();
-		$this->configuration = zgConfiguration::init();
-		
-		$this->database = new zgDatabase();
-		$this->database->connect();
 	}
 	
 
 	// this is the main action for this module - the home page	
 	public function index($parameters=array())
 	{
-		// simply create a new template, load and show it
-		// more on using templates later
-		$tpl = new zgTemplate();
-		$tpl->load('templates/zgexamples/main_index.tpl.html');		
-		$tpl->show();
-		
+		/*
+		 * Welcome to Zeitgeist, a PHP based multi purpose framework for 
+		 * web applications.
+		 * 
+		 * Following are examples to show you how to use Zeitgeist. 
+		 * This collection serves as tutorial as well as reference manual 
+		 * and style guide.
+		 * 
+		 * The idea is that you read through the source code to understand
+		 * how Zeitgeist works.
+		 * 
+		 * However, keep in mind, that:
+		 * 
+		 * 1. This is not a real application but merely a collection of 
+		 * examples and tutorials.
+		 * 
+		 * 2. Many functionalities are used in a dumbed down way.
+		 * These are examples after all. However they try to present a good 
+		 * approach of how to use framework module.
+		 * 
+		 * 3. If you want to see a more "real world" application, take a look 
+		 * at the Zeitgeist Administrator application.
+		 * 
+		*/
+
+		echo '<h1>Zeitgeist Examples</h1>';
+		echo '<p>Take a look at the source.</p>';
+
+		echo '<ul>';
+		echo '<li><a href="./index.php?module=debug">Debug examples</a></li>';
+		echo '<li><a href="./index.php?module=messages">Message examples</a></li>';
+		echo '<li><a href="./index.php?module=configuration">Configuration examples</a></li>';
+		echo '<li><a href="./index.php?module=templates">Template examples</a></li>';
+		echo '<li><a href="./index.php?module=dataserver">Dataserver examples</a></li>';
+		echo '</ul>';
+	
 		return true;
 	}
-
-
-	// this is the action for "basics".
-	// as you can see the class name matches the module and the method matches the action
-	// additionally the class and method has to be defined in the application database
-	public function basics($parameters=array())
-	{
-		// simply create a new template, load and show it
-		// more on using templates later
-		$tpl = new zgTemplate();
-		$tpl->load('templates/zgexamples/main_basics.tpl.html');	
-		$tpl->show();
-		
-		return true;
-	}
-
-
 
 }
 ?>
