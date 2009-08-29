@@ -10,6 +10,7 @@ class users
 	protected $database;
 	protected $configuration;
 	protected $user;
+	protected $userfunctions;
 
 	public function __construct()
 	{
@@ -18,6 +19,8 @@ class users
 		$this->messagecache = zgMessagecache::init();
 		$this->configuration = zgConfiguration::init();
 		$this->user = zgUserhandler::init();
+		
+		$this->userfunctions = new zgaUserfunctions();
 
 		$this->database = new zgDatabase();
 		$this->database->connect();
@@ -30,6 +33,14 @@ class users
 		
 		$tpl = new zgaTemplate();
 		$tpl->load($this->configuration->getConfiguration('users', 'templates', 'users_index'));
+		
+		$userdata = $this->userfunctions->getAllUsers();
+		
+		foreach ($userdata as $user)
+		{
+			$tpl->assignDataset($user);
+			$tpl->insertBlock('applicationuser');
+		}
 
 		$tpl->show();
 

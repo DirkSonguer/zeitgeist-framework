@@ -93,6 +93,19 @@ table {
 	margin: 10px 15px; 
 /*	border-collapse: collapse; */
 }
+
+#pagertable {
+	margin-bottom: 0px;
+}
+
+#pagertable td {
+	background: #090807;
+	color: #fff;
+	height: 3em;
+	padding-left: 12px;
+	padding-right: 12px;	
+}
+
 th strong {
 	color: #fff;
 }
@@ -110,13 +123,24 @@ th {
 }
 tr {
 	color: #707070;
-	height: 2.5em;	
+	height: 2.5em;
 }
 td {
 	padding-left: 12px;
 	padding-right: 12px;
 /*	border: 1px solid #211E20;	*/
 }
+
+#listtable {
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #211e20;	
+}
+
+#pagertable td {
+	border-bottom-width: 0px;
+}
+
 /* end - table */
 
 /* form elements */
@@ -126,6 +150,12 @@ form {
 	background: transparent;
 /*	border: 1px solid #211E20;  */
 }
+
+form.noborder {
+	padding:0px;
+	margin: 0px 0px;
+}
+
 fieldset {
 	margin: 0;
 	padding: 0;
@@ -136,7 +166,7 @@ label {
 	font-weight:bold;
 	margin: .4em 0;	
 }
-input {
+input, select {
 	padding: .3em;
 	border: 1px solid #eee;
 	font: normal 1em Verdana, sans-serif;
@@ -193,7 +223,7 @@ input.button {
 	clear: both;
 	position: relative;
 	margin: 0 auto; padding: 0;
-	height: 231px;
+	height: 190px;
 	text-align: left;	
 }
 #header #clouds {
