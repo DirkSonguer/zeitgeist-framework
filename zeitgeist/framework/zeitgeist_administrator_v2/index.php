@@ -17,7 +17,7 @@
 	define('ZGADMIN_ACTIVE', true);
 	
 	// activate debugging
-//	define('DEBUGMODE', true);
+	define('DEBUGMODE', true);
 
 	// require basic configuration
 	require_once('configuration/application.configuration.php');	
@@ -30,6 +30,8 @@
 	include('zeitgeist/zeitgeist.php');
 
 	require_once('classes/zgatemplate.class.php');
+	require_once('classes/zgasetupfunctions.class.php');
+	require_once('classes/zgauserfunctions.class.php');
 	
 	// define some general classes
 	$debug = zgDebug::init();
