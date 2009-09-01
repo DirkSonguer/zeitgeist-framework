@@ -15,26 +15,28 @@
  */
 
 
-	// sets a define that the application itself is running
-	// by defining this, the modules & actions can't be called directly
+	// Sets a define that the application itself is running
+	// By defining this, the modules & actions can't be called directly
+	// if they each check for this define.
 	define('ZGEXAMPLES_ACTIVE', true);
 
-	// if DEBUGMODE is defined (with whatever content), debugging will be activated
+	// If DEBUGMODE is defined (with whatever content), debugging will be activated
 	define('DEBUGMODE', true);
 
-	// load basic configuration for the application
+	// Load basic configuration for the application
+	// See ./modules/configuration/configuration.module.php for details
 	require_once('configuration/application.configuration.php');	
 	
-	// define root of the framework as well as for the application
-	// this is used throughout the framework to determine paths
+	// Define root of the framework as well as for the application.
+	// This is used throughout the framework to determine paths
 	if (!defined('ZEITGEIST_ROOTDIRECTORY')) define('ZEITGEIST_ROOTDIRECTORY', './zeitgeist/');
 	if (!defined('APPLICATION_ROOTDIRECTORY')) define('APPLICATION_ROOTDIRECTORY', './');
 
-	// include the framework itself
+	// Include the framework itself
 	include('zeitgeist/zeitgeist.php');
 
-	// define some misc classes
-	// to know what each of these classes do, please refer to the according examples
+	// Define some misc classes
+	// To know what each of these classes do, please refer to the according examples
 	$debug = zgDebug::init();					// use debugging
 	$message = zgMessages::init();				// use the message system
 	$configuration = zgConfiguration::init();	// use configuration
@@ -42,8 +44,9 @@
 	$user = zgUserhandler::init();				// use user handling
 	$eventhandler = new zgEventhandler();		// use the event handler
 
-	// set standard module if none is defined
-	// for more information about module parameters, see eventhandler
+	// Set standard module if none is defined
+	// Bascially modules are collections of actions. Each module is represented by
+	// a class in the folder /modules/MODULENAME/
 	if (isset($_GET['module']))
 	{
 		$module = $_GET['module'];
@@ -53,8 +56,9 @@
 		$module = 'main';
 	}
 	
-	// set standard action if none is defined
-	// for more information about action parameters, see eventhandler
+	// Set standard action if none is defined
+	// Actions are exactly what the name suggests: one specific action for the
+	// application. They represent one method in their according module class.
 	if (isset($_GET['action']))
 	{
 		$action = $_GET['action'];
@@ -64,19 +68,23 @@
 		$action = 'index';
 	}	
 
-	// this picks up a user session, if there is one
-	// for more information about user handling, see userhandler
+	// This picks up a user session, if there is one
+	// In this example you don't need this, but it's here for the sake of
+	// completeness. 
+	// For more information about user handling,
+	// see ./modules/userhandler/userhandler.module.php
 	$loggedin = $user->establishUserSession();
 
-	// call the event
-	// for more information about this parameters, see eventhandler
+	// Call the event
+	// This calls the Eventhandler (controller) which in turn does a lot of
+	// magic (verifiy that the module and action exist, are active and that
+	// the user has the right to call the action, filter the input and so on.
 	$ret = $eventhandler->callEvent($module, $action);
 	
 	// If you don't know where to look next, take a look into
 	// ./modules/main/main.php
-	// This is where the eventhandler jumps next if no further
-	// parameters are used
-	
+	// This is where the eventhandler jumps if no further
+	// parameters are used	
 
 ///*
 	$debug->loadStylesheet('debug.css');

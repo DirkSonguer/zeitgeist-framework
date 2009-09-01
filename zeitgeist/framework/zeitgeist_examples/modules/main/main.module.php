@@ -50,9 +50,12 @@ class main
 		echo '<ul>';
 		echo '<li><a href="./index.php?module=debug">Debug examples</a></li>';
 		echo '<li><a href="./index.php?module=messages">Message examples</a></li>';
+		echo '<li><a href="./index.php?module=objects">Objects examples</a></li>';
 		echo '<li><a href="./index.php?module=configuration">Configuration examples</a></li>';
 		echo '<li><a href="./index.php?module=templates">Template examples</a></li>';
 		echo '<li><a href="./index.php?module=dataserver">Dataserver examples</a></li>';
+		echo '<li><a href="./index.php?module=parameterhandler">Parameterhandler examples</a></li>';
+		echo '<li><a href="./index.php?module=userhandler">Userhandler examples</a></li>';
 		echo '</ul>';
 	
 		return true;
