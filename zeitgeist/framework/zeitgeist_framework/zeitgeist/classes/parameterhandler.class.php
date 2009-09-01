@@ -196,22 +196,19 @@ class zgParameterhandler
 			if ($this->_checkParameter($parametername, $parameterdefinition))
 			{
 				$safeParameters[$parametername] = $this->rawParameters[$parameterdefinition['source']][$parametername];
-				if ($this->configuration->getConfiguration('zeitgeist', 'parameterhandler', 'escape_parameters') == '1')
-				{
-					if (is_string($safeParameters[$parametername]))
-					{
-						$safeParameters[$parametername] = mysql_escape_string($safeParameters[$parametername]);
-					}
 
+				if ( (!empty($parameterdefinition['escape'])) && ($parameterdefinition['escape'] == 'true') )
+				{
 					if (is_array($safeParameters[$parametername]))
 					{
 						foreach ($safeParameters[$parametername] as $key => $value)
 						{
-							if (is_string($value))
-							{
-								$safeParameters[$parametername][$key] = mysql_escape_string($value);
-							}
+							$safeParameters[$parametername][$key] = mysql_escape_string($value);
 						}
+					}
+					else
+					{
+						$safeParameters[$parametername] = mysql_escape_string($safeParameters[$parametername]);
 					}
 				}
 
