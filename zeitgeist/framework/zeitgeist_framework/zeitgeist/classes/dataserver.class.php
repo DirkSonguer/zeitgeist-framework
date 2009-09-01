@@ -23,8 +23,6 @@ class zgDataserver
 
 	/**
 	 * Class constructor
-	 *
-	 * The constructor is set to private to prevent files from calling the class as a class instead of a singleton.
 	 */
 	public  function __construct()
 	{

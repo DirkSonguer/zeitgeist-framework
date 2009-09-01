@@ -181,14 +181,12 @@ class zgMessage
 	public $message;
 	public $type;
 	public $from;
-	public $to;
 
 	public function __construct()
 	{
 		$message = '';
 		$type = '';
 		$from = '';
-		$to = '';
 	}
 
 }
