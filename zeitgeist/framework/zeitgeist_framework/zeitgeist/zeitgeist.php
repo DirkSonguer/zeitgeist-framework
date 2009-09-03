@@ -23,7 +23,7 @@ if (!defined('APPLICATION_ROOTDIRECTORY')) define('APPLICATION_ROOTDIRECTORY', '
 // configuration
 require_once (ZEITGEIST_ROOTDIRECTORY . 'configuration/zeitgeist.config.php');
 
-// include core classes
+// check for debug mode
 if (!defined('DEBUGMODE'))
 {
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/debugdummy.class.php');
@@ -33,6 +33,7 @@ else
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/debug.class.php');
 }
 
+// include core classes
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/messages.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/database.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/configuration.class.php');
