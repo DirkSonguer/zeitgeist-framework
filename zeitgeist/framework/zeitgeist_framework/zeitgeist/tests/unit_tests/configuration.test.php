@@ -1,19 +1,7 @@
 <?php
 
-
-
-define('DEBUGMODE', true);
-if (!defined('ZEITGEIST_ROOTDIRECTORY')) define('ZEITGEIST_ROOTDIRECTORY', '../');
-
-define('ZG_DB_DBSERVER', 'localhost');
-define('ZG_DB_USERNAME', 'root');
-define('ZG_DB_USERPASS', '');
-define('ZG_DB_DATABASE', 'zg_test');
-define('ZG_DB_CONFIGURATIONCACHE', 'configurationcache');
-
-require_once($_SERVER['SCRIPT_FILENAME'].'../zeitgeist.php');
+if (!defined('MULTITEST')) include(dirname(__FILE__).'/../test_configuration.php');
 	
-/*
 class testConfiguration extends UnitTestCase
 {
 
@@ -23,45 +11,78 @@ class testConfiguration extends UnitTestCase
 		$this->assertNotNull($configuration);
 		unset($configuration);
     }
-	
-	function test_loadConfiguration()
+
+
+	// Try to load a configuration from a non existant file
+	function test_loadConfiguration_wrongfilename()
 	{
 		$configuration = zgConfiguration::init();
-		$ret = $configuration->loadConfiguration('testconfig', 'false');
+		$ret = $configuration->loadConfiguration('testconfiguration', 'false');
+
 		$this->assertFalse($ret);
-		unset($ret);
 
-		$ret = $configuration->loadConfiguration('testconfig', 'testdata/testconfig.ini');
+		unset($ret);
+		unset($configuration);
+	}
+
+
+	// Load a configuration from an existing and valid file
+	function test_loadConfiguration_success()
+	{
+		$configuration = zgConfiguration::init();
+		$ret = $configuration->loadConfiguration('testconfiguration', ZEITGEIST_ROOTDIRECTORY.'/tests/testdata/testconfiguration.ini');
+
 		$this->assertTrue($ret);
-		unset($ret);
 
-		$ret = $configuration->loadConfiguration('testconfig', 'testdata/testconfig.ini', false);
+		unset($ret);
+		unset($configuration);
+	}
+
+
+	// Load a configuration from an existing file but into an already defined ID
+	function test_loadConfiguration_namecollision()
+	{
+		$configuration = zgConfiguration::init();
+		$ret = $configuration->loadConfiguration('testconfiguration', ZEITGEIST_ROOTDIRECTORY.'/tests/testdata/testconfiguration.ini', false);
+
 		$this->assertFalse($ret);
-		unset($ret);
 
-		$ret = $configuration->loadConfiguration('testconfig', 'testdata/testconfig.ini', true);
-		$this->assertTrue($ret);
 		unset($ret);
+		unset($configuration);
+	}
+
+
+	// Reload a configuration from an existing file into an already defined ID
+	function test_loadConfiguration_forceoverwrite()
+	{
+		$configuration = zgConfiguration::init();
+		$ret = $configuration->loadConfiguration('testconfiguration', ZEITGEIST_ROOTDIRECTORY.'/tests/testdata/testconfiguration.ini', true);
+
+		$this->assertTrue($ret);
+
+		unset($ret);
+		unset($configuration);
 	}
 	
-	function test_getConfiguration()
+	
+	// Check if the contents of the test configuration are ok
+	function test_getConfiguration_correctitems()
 	{
 		$configuration = zgConfiguration::init();
-		$ret = $configuration->loadConfiguration('testconfig', 'testdata/testconfig.ini');
+		$ret = $configuration->loadConfiguration('testconfiguration', ZEITGEIST_ROOTDIRECTORY.'/tests/testdata/testconfiguration.ini');
 
-		$ret = $configuration->getConfiguration('testconfig');
-		$this->assertEqual(count($ret), 2);
-		unset($ret);
+		$testblock1 = array('testvar1' => 'true', 'testvar2' => '1', 'testvar3' => 'test3');
+		$testblock2 = array('testvar4' => 'false', 'testvar5' => '2', 'testvar6' => 'test4');
+		$testconfiguration['testblock1'] = $testblock1;
+		$testconfiguration['testblock2'] = $testblock2;
+
+		$ret = $configuration->getConfiguration('testconfiguration');
+		$this->assertEqual($ret, $testconfiguration);
 		
-		$ret = $configuration->getConfiguration('testconfig', 'test1');
-		$this->assertEqual(count($ret), 3);
-		$this->assertEqual($ret['test1'], 'true');
-		$this->assertEqual($ret['test2'], '1');
-		$this->assertEqual($ret['test3'], 'test3');
-
-		$ret = $configuration->getConfiguration('testconfig', 'test2', 'test1');
-		$this->assertEqual($ret, 'true');
+		unset($ret);
+		unset($configuration);
 	}
+
 }
-*/
+
 ?>
