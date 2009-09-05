@@ -52,6 +52,7 @@ class zgUserhandler
 		$this->database->connect();
 
 		$this->session = zgSession::init();
+		$this->session->startSession();
 
 		$this->userrights = array();
 		$this->userrightsLoaded = false;
