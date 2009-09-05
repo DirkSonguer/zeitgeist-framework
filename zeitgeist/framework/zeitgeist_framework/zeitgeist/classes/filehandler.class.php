@@ -36,6 +36,24 @@ class zgFilehandler
 
 
 	/**
+	 * Checks if a given file exists
+	 *
+	 * @param string $filename name of the file to check for
+	 *
+	 * @return boolean
+	 */
+	protected function _fileAvailable($filename)
+	{
+		$this->debug->guard(true);
+
+		$ret = file_exists($filename);
+
+		$this->debug->unguard($ret);
+		return $ret;
+	}
+
+
+	/**
 	 * Returns the content of the given file
 	 *
 	 * @param string $filename name of the file to get content from
@@ -46,8 +64,16 @@ class zgFilehandler
 	{
 		$this->debug->guard(true);
 
+		if (!$this->_fileAvailable($filename))
+		{
+			$this->debug->write('Could not open file: "' . $filename . '"', 'warning');
+			$this->messages->setMessage('Could not open file: "' . $filename . '"', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
 		$filehandle = fopen ($filename, "r");
-		$content = fread ($filehandle, filesize($filename));
+		$content = @fread ($filehandle, filesize($filename));
 		fclose ($filehandle);
 
 		$this->debug->unguard($content);
@@ -67,7 +93,7 @@ class zgFilehandler
 		$this->debug->guard(true);
 		
 		$dirContents = array();
-		$directoryhandle = opendir($path);
+		$directoryhandle = @opendir($path);
 
 		if (!$directoryhandle)
 		{

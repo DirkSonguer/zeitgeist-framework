@@ -19,7 +19,6 @@ class zgEventhandler
 	protected $debug;
 	protected $messages;
 	protected $database;
-	protected $messagecache;
 	protected $configuration;
 	protected $user;
 	protected $traffic;
@@ -34,7 +33,6 @@ class zgEventhandler
 	{
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
-		$this->messagecache = zgMessagecache::init();
 		$this->configuration = zgConfiguration::init();
 		$this->user = zgUserhandler::init();
 		$this->traffic = new zgTrafficlogger();
@@ -170,7 +168,7 @@ class zgEventhandler
 		// load message data for user
 		if ($this->configuration->getConfiguration('zeitgeist', 'messages', 'use_persistent_messages'))
 		{
-			$this->messagecache->loadMessagesFromDatabase();
+			$this->messages->loadMessagesFromSession();
 		}
 
 		// check if module is installed and get module data
@@ -254,7 +252,7 @@ class zgEventhandler
 		// save message data for user
 		if ($this->configuration->getConfiguration('zeitgeist', 'messages', 'use_persistent_messages'))
 		{
-			$this->messagecache->saveMessagesToDatabase();
+			$this->messages->saveMessagesToSession();
 		}
 
 		$this->debug->unguard(true);
