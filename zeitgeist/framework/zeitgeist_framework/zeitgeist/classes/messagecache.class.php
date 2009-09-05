@@ -63,8 +63,6 @@ class zgMessagecache
 	/**
 	 * Loads the messages from the message cache
 	 *
-	 * @param string $filename name of the file/ template to load
-	 *
 	 * @return boolean
 	 */
 	public function loadMessagesFromDatabase()
