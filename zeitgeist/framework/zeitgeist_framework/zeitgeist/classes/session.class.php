@@ -55,7 +55,7 @@ class zgSession
 		$this->lifetime = $this->configuration->getConfiguration('zeitgeist','session','session_lifetime');
 		$this->sessionName = $this->configuration->getConfiguration('zeitgeist','session','session_name');
 
-		$this->_startSession();
+		$this->sessionStarted = false;
 	}
 
 
@@ -80,7 +80,7 @@ class zgSession
 	 *
 	 * @return boolean
 	 */
-	private function _startSession()
+	public function startSession()
 	{
 		$this->debug->guard();
 

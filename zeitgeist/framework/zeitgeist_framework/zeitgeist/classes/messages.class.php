@@ -24,7 +24,6 @@ class zgMessages
 
 	protected $debug;
 	protected $messages;
-	protected $session;
 
 	/**
 	 * Class constructor
@@ -34,7 +33,6 @@ class zgMessages
 	protected function __construct()
 	{
 		$this->debug = zgDebug::init();
-		$this->session = zgSession::init();
 		$this->messages = array();
 	}
 
@@ -175,67 +173,6 @@ class zgMessages
 		return true;
 	}
 
-
-	/**
-	 * Save all messages of the user into the session
-	 *
-	 * @return boolean
-	 */
-	public function saveMessagesToSession()
-	{
-		$this->debug->guard();
-
-		$messages = $this->messages->getAllMessages();
-		$serializedMessages = serialize($messages);
-		if ($serializedMessages == '')
-		{
-			$this->debug->unguard(false);
-			return false;
-		}
-		
-		$this->session->setSessionVariable('messagecache_session', $serializedMessages);
-
-		$this->debug->unguard(true);
-		return true;
-	}
-	
-
-	/**
-	 * Loads the messages from the message cache
-	 *
-	 * @return boolean
-	 */
-	public function loadMessagesFromSession()
-	{
-		$this->debug->guard();
-
-		if ($messagecache = $this->session->getSessionVariable('messagecache_session'))
-		{
-			$serializedMessages = $messagecache;
-			$messages = unserialize($serializedMessages);
-
-			if ( ($messages === false) || (!is_array($messages)) )
-			{
-				$this->debug->write('Error unserializing message content from the database', 'error');
-				$this->messages->setMessage('Error unserializing message content from the database', 'error');
-				$this->debug->unguard(false);
-				return false;
-			}
-
-			$this->importMessages($messages);
-		}
-		else
-		{
-			$this->debug->write('No messagedata is stored in database for this user', 'warning');
-			$this->messages->setMessage('No messagedata is stored in database for this user', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$this->debug->unguard(true);
-		return true;
-	}
-	
 }
 
 
@@ -244,12 +181,14 @@ class zgMessage
 	public $message;
 	public $type;
 	public $from;
+	public $to;
 
 	public function __construct()
 	{
 		$message = '';
 		$type = '';
 		$from = '';
+		$to = '';
 	}
 
 }
