@@ -173,6 +173,69 @@ class zgMessages
 		return true;
 	}
 
+
+	/**
+	 * Save all messages of the user into the session
+	 *
+	 * @return boolean
+	 */
+	public function saveMessagesToSession()
+	{
+		$this->debug->guard();
+
+		$messages = $this->getAllMessages();
+		$serializedMessages = serialize($messages);
+		if ($serializedMessages == '')
+		{
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$session = zgSession::init();
+		$session->setSessionVariable('messagecache_session', $serializedMessages);
+
+		$this->debug->unguard(true);
+		return true;
+	}
+	
+
+	/**
+	 * Loads the messages from the message cache
+	 *
+	 * @return boolean
+	 */
+	public function loadMessagesFromSession()
+	{
+		$this->debug->guard();
+
+		$session = zgSession::init();
+		if ($messagecache = $session->getSessionVariable('messagecache_session'))
+		{
+			$serializedMessages = $messagecache;
+			$messages = unserialize($serializedMessages);
+
+			if ( ($messages === false) || (!is_array($messages)) )
+			{
+				$this->debug->write('Error unserializing message content from the database', 'error');
+				$this->setMessage('Error unserializing message content from the database', 'error');
+				$this->debug->unguard(false);
+				return false;
+			}
+
+			$this->importMessages($messages);
+		}
+		else
+		{
+			$this->debug->write('No messagedata is stored in database for this user', 'warning');
+			$this->setMessage('No messagedata is stored in database for this user', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+	
 }
 
 
