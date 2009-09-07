@@ -17,8 +17,9 @@ class testConfiguration extends UnitTestCase
 	function test_loadConfiguration_wrongfilename()
 	{
 		$configuration = zgConfiguration::init();
-		$ret = $configuration->loadConfiguration('testconfiguration', 'false');
+		$randomid = uniqid();
 
+		$ret = $configuration->loadConfiguration($randomid, 'false');
 		$this->assertFalse($ret);
 
 		unset($ret);
@@ -30,8 +31,9 @@ class testConfiguration extends UnitTestCase
 	function test_loadConfiguration_success()
 	{
 		$configuration = zgConfiguration::init();
-		$ret = $configuration->loadConfiguration('testconfiguration', ZEITGEIST_ROOTDIRECTORY.'/tests/testdata/testconfiguration.ini');
-
+		$randomid = uniqid();
+		
+		$ret = $configuration->loadConfiguration($randomid, ZEITGEIST_ROOTDIRECTORY.'tests/testdata/testconfiguration.ini');
 		$this->assertTrue($ret);
 
 		unset($ret);
@@ -43,8 +45,10 @@ class testConfiguration extends UnitTestCase
 	function test_loadConfiguration_namecollision()
 	{
 		$configuration = zgConfiguration::init();
-		$ret = $configuration->loadConfiguration('testconfiguration', ZEITGEIST_ROOTDIRECTORY.'/tests/testdata/testconfiguration.ini', false);
+		$randomid = uniqid();
 
+		$configuration->loadConfiguration($randomid, ZEITGEIST_ROOTDIRECTORY.'tests/testdata/testconfiguration.ini');
+		$ret = $configuration->loadConfiguration($randomid, ZEITGEIST_ROOTDIRECTORY.'tests/testdata/testconfiguration.ini');
 		$this->assertFalse($ret);
 
 		unset($ret);
@@ -56,8 +60,10 @@ class testConfiguration extends UnitTestCase
 	function test_loadConfiguration_forceoverwrite()
 	{
 		$configuration = zgConfiguration::init();
-		$ret = $configuration->loadConfiguration('testconfiguration', ZEITGEIST_ROOTDIRECTORY.'/tests/testdata/testconfiguration.ini', true);
+		$randomid = uniqid();
 
+		$configuration->loadConfiguration($randomid, ZEITGEIST_ROOTDIRECTORY.'tests/testdata/testconfiguration.ini');
+		$ret = $configuration->loadConfiguration($randomid, ZEITGEIST_ROOTDIRECTORY.'tests/testdata/testconfiguration.ini', true);
 		$this->assertTrue($ret);
 
 		unset($ret);
@@ -69,14 +75,16 @@ class testConfiguration extends UnitTestCase
 	function test_getConfiguration_correctitems()
 	{
 		$configuration = zgConfiguration::init();
-		$ret = $configuration->loadConfiguration('testconfiguration', ZEITGEIST_ROOTDIRECTORY.'/tests/testdata/testconfiguration.ini');
+		$randomid = uniqid();
+
+		$ret = $configuration->loadConfiguration($randomid, ZEITGEIST_ROOTDIRECTORY.'tests/testdata/testconfiguration.ini');
 
 		$testblock1 = array('testvar1' => 'true', 'testvar2' => '1', 'testvar3' => 'test3');
 		$testblock2 = array('testvar4' => 'false', 'testvar5' => '2', 'testvar6' => 'test4');
 		$testconfiguration['testblock1'] = $testblock1;
 		$testconfiguration['testblock2'] = $testblock2;
 
-		$ret = $configuration->getConfiguration('testconfiguration');
+		$ret = $configuration->getConfiguration($randomid);
 		$this->assertEqual($ret, $testconfiguration);
 		
 		unset($ret);

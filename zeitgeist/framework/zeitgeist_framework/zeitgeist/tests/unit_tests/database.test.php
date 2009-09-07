@@ -24,21 +24,24 @@ class testDatabase extends UnitTestCase
 
 		unset($database);
     }
-	
-	
+
+
 	function test_close()
 	{
 		$database = new zgDatabase();
 		$ret = $database->connect();
 
-		$ret = $database->close();
-		$this->assertTrue($ret);
-		unset($ret);
+		if (!defined('MULTITEST'))
+		{
+			$ret = $database->close();
+			$this->assertTrue($ret);
+		}
 		
+		unset($ret);
 		unset($database);
     }	
 
-	
+
 	// Test an illegal query to the database
 	function test_query_illegalquery()
 	{
@@ -52,8 +55,8 @@ class testDatabase extends UnitTestCase
 		$database->close();
 		unset($database);
     }
-	
-	
+
+
 	// Test create, insert, select and drop
 	function test_query_createinsertselectdrop()
 	{
@@ -79,8 +82,8 @@ class testDatabase extends UnitTestCase
 		$database->close();
 		unset($database);
     }
-	
-	
+
+
 	// Test fetching array without query
 	function test_fetchArray_withoutquery()
 	{
@@ -94,8 +97,8 @@ class testDatabase extends UnitTestCase
 		$database->close();
 		unset($database);
     }
-	
-	
+
+
 	// Test fetching array
 	function test_fetchArray()
 	{
@@ -122,8 +125,7 @@ class testDatabase extends UnitTestCase
 		$database->close();
 		unset($database);
     }
-	
-	
+
 	// Test counting rows without query
 	function test_numRows_withoutquery()
 	{
@@ -137,7 +139,7 @@ class testDatabase extends UnitTestCase
 		$database->close();
 		unset($database);
     }
-	
+
 	
 	// Test counting rows
 	function test_numRows()
@@ -196,7 +198,7 @@ class testDatabase extends UnitTestCase
 		$database->close();
 		unset($database);
     }
-	
+
 	
 	// Test insert id
 	function test_insertId()

@@ -17,6 +17,7 @@ class testMessages extends UnitTestCase
 	function test_setMessage_without_type()
 	{
 		$message = zgMessages::init();
+		
 		$ret = $message->setMessage('hello world');
 		$this->assertTrue($ret);
 
