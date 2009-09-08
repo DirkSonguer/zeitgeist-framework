@@ -32,6 +32,8 @@
 	require_once('./unit_tests/database.test.php');
 	require_once('./unit_tests/configuration.test.php');
 	require_once('./unit_tests/filehandler.test.php');
+	require_once('./unit_tests/trafficlogger.test.php');
+	require_once('./unit_tests/parameterhandler.test.php');
 	
 	$debug = zgDebug::init();
 
@@ -41,6 +43,9 @@
 //	$test->addTestCase(new testDatabase());
 	$test->addTestCase(new testConfiguration());
 	$test->addTestCase(new testFilehandler());
+	$test->addTestCase(new testTrafficlogger());
+	$test->addTestCase(new testParameterhandler());
+	
 	$test->run(new HtmlReporter());
 
 	$debug->loadStylesheet('debug.css');
