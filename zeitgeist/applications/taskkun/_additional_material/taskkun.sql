@@ -1,13 +1,19 @@
 -- phpMyAdmin SQL Dump
--- version 2.11.1
+-- version 2.11.7
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 16. September 2008 um 07:33
--- Server Version: 5.0.45
--- PHP-Version: 5.2.4
+-- Erstellungszeit: 08. September 2009 um 22:12
+-- Server Version: 5.0.51
+-- PHP-Version: 5.2.6
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
 
 --
 -- Datenbank: `taskkun`
@@ -19,7 +25,7 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- Tabellenstruktur für Tabelle `actions`
 --
 
-CREATE TABLE `actions` (
+CREATE TABLE IF NOT EXISTS `actions` (
   `action_id` int(12) NOT NULL auto_increment,
   `action_module` int(12) NOT NULL default '0',
   `action_name` varchar(30) NOT NULL default '',
@@ -93,7 +99,7 @@ INSERT INTO `actions` (`action_id`, `action_module`, `action_name`, `action_desc
 -- Tabellenstruktur für Tabelle `configurationcache`
 --
 
-CREATE TABLE `configurationcache` (
+CREATE TABLE IF NOT EXISTS `configurationcache` (
   `configurationcache_id` int(12) NOT NULL auto_increment,
   `configurationcache_name` varchar(128) NOT NULL,
   `configurationcache_timestamp` varchar(32) NOT NULL,
@@ -130,7 +136,7 @@ INSERT INTO `configurationcache` (`configurationcache_id`, `configurationcache_n
 -- Tabellenstruktur für Tabelle `groups`
 --
 
-CREATE TABLE `groups` (
+CREATE TABLE IF NOT EXISTS `groups` (
   `group_id` int(12) NOT NULL auto_increment,
   `group_name` varchar(128) character set latin1 collate latin1_general_ci NOT NULL,
   `group_description` text character set latin1 collate latin1_general_ci NOT NULL,
@@ -156,7 +162,7 @@ INSERT INTO `groups` (`group_id`, `group_name`, `group_description`, `group_inst
 -- Tabellenstruktur für Tabelle `instances`
 --
 
-CREATE TABLE `instances` (
+CREATE TABLE IF NOT EXISTS `instances` (
   `instance_id` int(12) NOT NULL auto_increment,
   `instance_name` varchar(256) character set latin1 collate latin1_general_ci NOT NULL,
   `instance_type` int(12) NOT NULL,
@@ -176,7 +182,7 @@ INSERT INTO `instances` (`instance_id`, `instance_name`, `instance_type`) VALUES
 -- Tabellenstruktur für Tabelle `messagecache`
 --
 
-CREATE TABLE `messagecache` (
+CREATE TABLE IF NOT EXISTS `messagecache` (
   `messagecache_user` int(12) NOT NULL,
   `messagecache_content` text character set latin1 collate latin1_general_ci NOT NULL,
   PRIMARY KEY  (`messagecache_user`)
@@ -200,7 +206,7 @@ INSERT INTO `messagecache` (`messagecache_user`, `messagecache_content`) VALUES
 -- Tabellenstruktur für Tabelle `modules`
 --
 
-CREATE TABLE `modules` (
+CREATE TABLE IF NOT EXISTS `modules` (
   `module_id` int(12) NOT NULL auto_increment,
   `module_name` varchar(30) NOT NULL default '',
   `module_description` text NOT NULL,
@@ -232,7 +238,7 @@ INSERT INTO `modules` (`module_id`, `module_name`, `module_description`, `module
 -- Tabellenstruktur für Tabelle `preferences`
 --
 
-CREATE TABLE `preferences` (
+CREATE TABLE IF NOT EXISTS `preferences` (
   `preference_id` int(12) NOT NULL auto_increment,
   `preference_key` varchar(30) NOT NULL default '',
   `preference_value` varchar(30) NOT NULL default '',
@@ -252,7 +258,7 @@ CREATE TABLE `preferences` (
 -- Tabellenstruktur für Tabelle `preferences_to_users`
 --
 
-CREATE TABLE `preferences_to_users` (
+CREATE TABLE IF NOT EXISTS `preferences_to_users` (
   `preferencesusers_id` int(12) NOT NULL auto_increment,
   `preferencesusers_user` int(12) NOT NULL default '0',
   `preferencesusers_preference` int(12) NOT NULL default '0',
@@ -272,7 +278,7 @@ CREATE TABLE `preferences_to_users` (
 -- Tabellenstruktur für Tabelle `sessiondata`
 --
 
-CREATE TABLE `sessiondata` (
+CREATE TABLE IF NOT EXISTS `sessiondata` (
   `sessiondata_id` varchar(32) character set latin1 NOT NULL,
   `sessiondata_created` int(11) NOT NULL default '0',
   `sessiondata_lastupdate` int(11) NOT NULL default '0',
@@ -287,7 +293,22 @@ CREATE TABLE `sessiondata` (
 
 INSERT INTO `sessiondata` (`sessiondata_id`, `sessiondata_created`, `sessiondata_lastupdate`, `sessiondata_content`, `sessiondata_ip`) VALUES
 ('01d7b4a297f0aff645e68ec954a9634b', 1221200587, 1221387040, 'user_userid|s:1:"1";user_key|s:30:"17d815d30b840a283ef10c5c1f32db";user_username|s:16:"admin@taskkun.de";user_instance|s:1:"1";', 2130706433),
-('a0628f12f00da7eb88d26e9f9c92247b', 1220116917, 1220777849, 'user_userid|s:1:"1";user_key|s:30:"17d815d30b840a283ef10c5c1f32db";user_username|s:16:"admin@taskkun.de";user_instance|s:1:"1";', 2130706433);
+('a0628f12f00da7eb88d26e9f9c92247b', 1220116917, 1220777849, 'user_userid|s:1:"1";user_key|s:30:"17d815d30b840a283ef10c5c1f32db";user_username|s:16:"admin@taskkun.de";user_instance|s:1:"1";', 2130706433),
+('e8b4dbbcb2bff2ba19335c8dde93dca9', 1222114366, 1222114366, '', 2130706433),
+('815b1122c57587d3a35de8bd9f64c642', 1222114371, 1222114371, '', 2130706433),
+('3b83f9126e9499f7685bd24268b5f59f', 1222114430, 1222114430, '', 2130706433),
+('e30f77db60827b9dd0d9216bd44ee04c', 1222114529, 1222114529, '', 2130706433),
+('caf6fd6e007ade68a57c237fffda7811', 1222114534, 1222114534, '', 2130706433),
+('feaa52987a7ef933be96ec8e77c33d68', 1222114568, 1222114568, '', 2130706433),
+('77e50f3dd2eb0794bf4e25d3781d0c24', 1222114574, 1222114574, '', 2130706433),
+('e6040172d2c011c59ea606f30bc4747c', 1222114596, 1222114596, '', 2130706433),
+('b8dc2f27e4b8db5bb3f4f9594e1c94d9', 1222114601, 1222114601, '', 2130706433),
+('c883adacfca946590fc10505c7cd85cc', 1222114612, 1222114612, 'user_userid|s:1:"1";user_key|s:30:"17d815d30b840a283ef10c5c1f32db";user_username|s:16:"admin@taskkun.de";', 2130706433),
+('27635b809b7600187bc1f1148c146bc2', 1222114614, 1222114614, '', 2130706433),
+('e7a2148ebf11ceef463ac2f480310440', 1222114860, 1222114860, '', 2130706433),
+('46dc2609a2af3a6dd8792410d48aaae3', 1222115509, 1222115509, '', 2130706433),
+('40eac0a0216888c0f4c87b28926273dd', 1222115562, 1222115562, '', 2130706433),
+('5d2b2f96a601c3276f6c5399c967a50e', 1233524547, 1233524547, '', 2130706433);
 
 -- --------------------------------------------------------
 
@@ -295,7 +316,7 @@ INSERT INTO `sessiondata` (`sessiondata_id`, `sessiondata_created`, `sessiondata
 -- Tabellenstruktur für Tabelle `tags`
 --
 
-CREATE TABLE `tags` (
+CREATE TABLE IF NOT EXISTS `tags` (
   `tag_id` int(12) NOT NULL auto_increment,
   `tag_text` varchar(128) character set latin1 collate latin1_general_ci NOT NULL,
   PRIMARY KEY  (`tag_id`),
@@ -337,7 +358,7 @@ INSERT INTO `tags` (`tag_id`, `tag_text`) VALUES
 -- Tabellenstruktur für Tabelle `tags_to_tasks`
 --
 
-CREATE TABLE `tags_to_tasks` (
+CREATE TABLE IF NOT EXISTS `tags_to_tasks` (
   `tagtasks_tag` int(12) NOT NULL,
   `tagtasks_task` int(12) NOT NULL,
   PRIMARY KEY  (`tagtasks_tag`,`tagtasks_task`)
@@ -387,7 +408,7 @@ INSERT INTO `tags_to_tasks` (`tagtasks_tag`, `tagtasks_task`) VALUES
 -- Tabellenstruktur für Tabelle `tasklogs`
 --
 
-CREATE TABLE `tasklogs` (
+CREATE TABLE IF NOT EXISTS `tasklogs` (
   `tasklog_id` int(12) NOT NULL auto_increment,
   `tasklog_creator` int(12) NOT NULL,
   `tasklog_workflowgroup` int(12) NOT NULL,
@@ -419,7 +440,7 @@ INSERT INTO `tasklogs` (`tasklog_id`, `tasklog_creator`, `tasklog_workflowgroup`
 -- Tabellenstruktur für Tabelle `tasks`
 --
 
-CREATE TABLE `tasks` (
+CREATE TABLE IF NOT EXISTS `tasks` (
   `task_id` int(12) NOT NULL auto_increment,
   `task_creator` int(12) NOT NULL,
   `task_name` varchar(128) character set latin1 collate latin1_general_ci NOT NULL,
@@ -458,7 +479,7 @@ INSERT INTO `tasks` (`task_id`, `task_creator`, `task_name`, `task_description`,
 -- Tabellenstruktur für Tabelle `tasks_to_users`
 --
 
-CREATE TABLE `tasks_to_users` (
+CREATE TABLE IF NOT EXISTS `tasks_to_users` (
   `taskusers_task` int(12) NOT NULL,
   `taskusers_user` int(12) NOT NULL,
   PRIMARY KEY  (`taskusers_task`,`taskusers_user`)
@@ -477,7 +498,7 @@ INSERT INTO `tasks_to_users` (`taskusers_task`, `taskusers_user`) VALUES
 -- Tabellenstruktur für Tabelle `templatecache`
 --
 
-CREATE TABLE `templatecache` (
+CREATE TABLE IF NOT EXISTS `templatecache` (
   `templatecache_id` int(12) NOT NULL auto_increment,
   `templatecache_name` varchar(128) character set latin1 collate latin1_general_ci NOT NULL,
   `templatecache_timestamp` varchar(32) character set latin1 collate latin1_general_ci NOT NULL,
@@ -528,14 +549,14 @@ INSERT INTO `templatecache` (`templatecache_id`, `templatecache_name`, `template
 -- Tabellenstruktur für Tabelle `trafficlog`
 --
 
-CREATE TABLE `trafficlog` (
+CREATE TABLE IF NOT EXISTS `trafficlog` (
   `trafficlog_id` int(12) NOT NULL auto_increment,
   `trafficlog_module` int(12) NOT NULL,
   `trafficlog_action` int(12) NOT NULL,
   `trafficlog_user` int(12) NOT NULL,
   `trafficlog_ip` int(10) unsigned default NULL,
   PRIMARY KEY  (`trafficlog_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8609 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8657 ;
 
 --
 -- Daten für Tabelle `trafficlog`
@@ -9153,7 +9174,55 @@ INSERT INTO `trafficlog` (`trafficlog_id`, `trafficlog_module`, `trafficlog_acti
 (8605, 2, 44, 1, 2130706433),
 (8606, 2, 40, 1, 2130706433),
 (8607, 3, 43, 1, 2130706433),
-(8608, 3, 42, 1, 2130706433);
+(8608, 3, 42, 1, 2130706433),
+(8609, 1, 1, 0, 2130706433),
+(8610, 1, 1, 0, 2130706433),
+(8611, 1, 1, 0, 2130706433),
+(8612, 1, 1, 0, 2130706433),
+(8613, 1, 1, 0, 2130706433),
+(8614, 1, 1, 0, 2130706433),
+(8615, 1, 1, 0, 2130706433),
+(8616, 1, 1, 0, 2130706433),
+(8617, 1, 1, 0, 2130706433),
+(8618, 1, 1, 0, 2130706433),
+(8619, 1, 1, 0, 2130706433),
+(8620, 1, 1, 0, 2130706433),
+(8621, 1, 1, 0, 2130706433),
+(8622, 1, 1, 0, 2130706433),
+(8623, 1, 1, 0, 2130706433),
+(8624, 1, 1, 0, 2130706433),
+(8625, 1, 1, 0, 2130706433),
+(8626, 1, 1, 0, 2130706433),
+(8627, 1, 1, 0, 2130706433),
+(8628, 1, 1, 0, 2130706433),
+(8629, 1, 1, 0, 2130706433),
+(8630, 1, 1, 0, 2130706433),
+(8631, 1, 1, 0, 2130706433),
+(8632, 1, 1, 0, 2130706433),
+(8633, 1, 1, 0, 2130706433),
+(8634, 1, 1, 0, 2130706433),
+(8635, 1, 3, 1, 2130706433),
+(8636, 2, 40, 1, 2130706433),
+(8637, 3, 42, 1, 2130706433),
+(8638, 3, 43, 1, 2130706433),
+(8639, 1, 2, 1, 2130706433),
+(8640, 1, 1, 0, 2130706433),
+(8641, 1, 1, 0, 2130706433),
+(8642, 1, 1, 0, 2130706433),
+(8643, 1, 3, 2, 2130706433),
+(8644, 2, 40, 2, 2130706433),
+(8645, 3, 42, 2, 2130706433),
+(8646, 3, 43, 2, 2130706433),
+(8647, 2, 40, 2, 2130706433),
+(8648, 3, 42, 2, 2130706433),
+(8649, 3, 43, 2, 2130706433),
+(8650, 11, 63, 2, 2130706433),
+(8651, 2, 41, 2, 2130706433),
+(8652, 2, 41, 2, 2130706433),
+(8653, 11, 63, 2, 2130706433),
+(8654, 1, 3, 2, 2130706433),
+(8655, 1, 2, 2, 2130706433),
+(8656, 1, 1, 0, 2130706433);
 
 -- --------------------------------------------------------
 
@@ -9161,13 +9230,13 @@ INSERT INTO `trafficlog` (`trafficlog_id`, `trafficlog_module`, `trafficlog_acti
 -- Tabellenstruktur für Tabelle `trafficlog_parameters`
 --
 
-CREATE TABLE `trafficlog_parameters` (
+CREATE TABLE IF NOT EXISTS `trafficlog_parameters` (
   `trafficparameters_id` int(12) NOT NULL auto_increment,
   `trafficparameters_trafficid` int(12) NOT NULL,
   `trafficparameters_key` varchar(64) character set latin1 collate latin1_general_ci NOT NULL,
   `trafficparameters_value` text character set latin1 collate latin1_general_ci,
   PRIMARY KEY  (`trafficparameters_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3369 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3378 ;
 
 --
 -- Daten für Tabelle `trafficlog_parameters`
@@ -12543,7 +12612,16 @@ INSERT INTO `trafficlog_parameters` (`trafficparameters_id`, `trafficparameters_
 (3365, 8600, 'workflow', '29'),
 (3366, 8601, 'databegin', '31.08.2008'),
 (3367, 8601, 'dataend', '14.09.2008'),
-(3368, 8605, 'id', '1');
+(3368, 8605, 'id', '1'),
+(3369, 8618, 'username', 'admin@taskkun.de'),
+(3370, 8618, 'password', 'test'),
+(3371, 8618, 'login', 'Login'),
+(3372, 8634, 'username', 'admin@taskkun.de'),
+(3373, 8634, 'password', 'test'),
+(3374, 8634, 'login', 'Login'),
+(3375, 8642, 'username', 'manager@taskkun.de'),
+(3376, 8642, 'password', 'test'),
+(3377, 8642, 'login', 'Login');
 
 -- --------------------------------------------------------
 
@@ -12551,7 +12629,7 @@ INSERT INTO `trafficlog_parameters` (`trafficparameters_id`, `trafficparameters_
 -- Tabellenstruktur für Tabelle `userconfirmation`
 --
 
-CREATE TABLE `userconfirmation` (
+CREATE TABLE IF NOT EXISTS `userconfirmation` (
   `userconfirmation_id` int(12) NOT NULL auto_increment,
   `userconfirmation_user` int(12) NOT NULL,
   `userconfirmation_key` varchar(100) character set latin1 collate latin1_general_ci NOT NULL,
@@ -12594,7 +12672,7 @@ INSERT INTO `userconfirmation` (`userconfirmation_id`, `userconfirmation_user`, 
 -- Tabellenstruktur für Tabelle `userdata`
 --
 
-CREATE TABLE `userdata` (
+CREATE TABLE IF NOT EXISTS `userdata` (
   `userdata_id` int(12) NOT NULL auto_increment,
   `userdata_user` int(12) NOT NULL default '0',
   `userdata_firstname` varchar(100) default NULL,
@@ -12627,7 +12705,7 @@ INSERT INTO `userdata` (`userdata_id`, `userdata_user`, `userdata_firstname`, `u
 -- Tabellenstruktur für Tabelle `userrights`
 --
 
-CREATE TABLE `userrights` (
+CREATE TABLE IF NOT EXISTS `userrights` (
   `userright_id` int(12) NOT NULL auto_increment,
   `userright_action` int(12) NOT NULL default '0',
   `userright_user` int(12) NOT NULL default '0',
@@ -12650,7 +12728,7 @@ INSERT INTO `userrights` (`userright_id`, `userright_action`, `userright_user`) 
 -- Tabellenstruktur für Tabelle `userroles`
 --
 
-CREATE TABLE `userroles` (
+CREATE TABLE IF NOT EXISTS `userroles` (
   `userrole_id` int(12) NOT NULL auto_increment,
   `userrole_name` varchar(30) NOT NULL default '',
   `userrole_description` text,
@@ -12672,7 +12750,7 @@ INSERT INTO `userroles` (`userrole_id`, `userrole_name`, `userrole_description`)
 -- Tabellenstruktur für Tabelle `userroles_to_actions`
 --
 
-CREATE TABLE `userroles_to_actions` (
+CREATE TABLE IF NOT EXISTS `userroles_to_actions` (
   `userroleaction_id` int(12) NOT NULL auto_increment,
   `userroleaction_userrole` int(12) NOT NULL default '0',
   `userroleaction_action` int(12) NOT NULL default '0',
@@ -12778,7 +12856,7 @@ INSERT INTO `userroles_to_actions` (`userroleaction_id`, `userroleaction_userrol
 -- Tabellenstruktur für Tabelle `userroles_to_users`
 --
 
-CREATE TABLE `userroles_to_users` (
+CREATE TABLE IF NOT EXISTS `userroles_to_users` (
   `userroleuser_id` int(12) NOT NULL auto_increment,
   `userroleuser_userrole` int(12) NOT NULL default '0',
   `userroleuser_user` int(12) NOT NULL default '0',
@@ -12803,7 +12881,7 @@ INSERT INTO `userroles_to_users` (`userroleuser_id`, `userroleuser_userrole`, `u
 -- Tabellenstruktur für Tabelle `users`
 --
 
-CREATE TABLE `users` (
+CREATE TABLE IF NOT EXISTS `users` (
   `user_id` int(12) NOT NULL auto_increment,
   `user_username` varchar(255) NOT NULL,
   `user_password` varchar(255) NOT NULL default '',
@@ -12829,7 +12907,7 @@ INSERT INTO `users` (`user_id`, `user_username`, `user_password`, `user_key`, `u
 -- Tabellenstruktur für Tabelle `users_to_groups`
 --
 
-CREATE TABLE `users_to_groups` (
+CREATE TABLE IF NOT EXISTS `users_to_groups` (
   `usergroup_user` int(12) NOT NULL,
   `usergroup_group` int(12) NOT NULL,
   PRIMARY KEY  (`usergroup_user`,`usergroup_group`)
@@ -12854,7 +12932,7 @@ INSERT INTO `users_to_groups` (`usergroup_user`, `usergroup_group`) VALUES
 -- Tabellenstruktur für Tabelle `workflows`
 --
 
-CREATE TABLE `workflows` (
+CREATE TABLE IF NOT EXISTS `workflows` (
   `workflow_id` int(12) NOT NULL auto_increment,
   `workflow_name` varchar(128) character set latin1 collate latin1_general_ci NOT NULL,
   `workflow_description` text character set latin1 collate latin1_general_ci,
@@ -12882,7 +12960,7 @@ INSERT INTO `workflows` (`workflow_id`, `workflow_name`, `workflow_description`,
 -- Tabellenstruktur für Tabelle `workflows_to_groups`
 --
 
-CREATE TABLE `workflows_to_groups` (
+CREATE TABLE IF NOT EXISTS `workflows_to_groups` (
   `workflowgroup_id` int(12) NOT NULL auto_increment,
   `workflowgroup_title` varchar(128) character set latin1 collate latin1_general_ci NOT NULL,
   `workflowgroup_workflow` int(12) NOT NULL,
