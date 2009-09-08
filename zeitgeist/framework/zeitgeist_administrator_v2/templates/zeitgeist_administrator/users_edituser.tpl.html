@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/zeitgeist_administrator.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>Zeitgeist Administrator - Edit user</title>
+<!-- InstanceEndEditable -->
+
+<link rel="stylesheet" href="@@{templatepath}@@/css/main.css" type="text/css" />
+
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery-1.3.2.min.js"></script>
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery.tooltip.min.js"></script>
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery.tablesorter.js"></script>
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery.tablesorter.filter.js"></script>
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery.tablesorter.pager.js"></script>
+
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/chili-1.7.pack.js"></script>
+
+<script language="JavaScript" type="text/javascript">
+
+	$(function() {
+		$('#set1 *').tooltip();
+
+		$("#block").click($.tooltip.block);
+	});
+	
+</script>
+
+<!-- InstanceBeginEditable name="head" -->
+
+<!-- InstanceEndEditable -->
+</head>
+
+<body>
+
+	<!-- navigation starts here -->
+	<div id="nav">
+		
+		<h3>Zeitgeist Administrator v2 - Manage your Zeitgeist projects</h3>
+	
+	</div>
+
+	<!-- header starts here -->
+	<!-- TemplateBeginBlock name="mainmenu" -->
+	<div id="header">	
+	
+			<div id="topnavleft">
+				<a href="@@{[main.index]}@@"><img src="@@{templatepath}@@/images/icons/home_128.png" id="naviconleft" alt="Home" title="Home" border="0"/></a>
+				<a href="@@{[setup.index]}@@"><img src="@@{templatepath}@@/images/icons/setup_128.png" id="naviconleft" alt="Setup application" title="Setup application" border="0" /></a>
+				<a href="@@{[users.index]}@@"><img src="@@{templatepath}@@/images/icons/user_128.png" id="naviconleft" alt="Manage users" title="Manage users" border="0" /></a>
+				<a href="@@{[configure.index]}@@"><img src="@@{templatepath}@@/images/icons/configure_128.png" id="naviconleft" alt="Configure Zeitgeist Administrator" title="Configure Zeitgeist Administrator" border="0" /></a>
+			</div>
+
+			<div id="topnavright">
+				<a href="@@{[main.info]}@@"><img src="@@{templatepath}@@/images/icons/info_128.png" id="naviconright" alt="Info" border="0" /></a>
+				<a href="@@{[main.logout]}@@"><img src="@@{templatepath}@@/images/icons/exit_128.png" id="naviconright" alt="Logout" title="Logout" border="0" /></a>
+			</div>
+			<div style="clear:both;"></div>
+
+	</div>	
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="usermessages" -->
+		<h3 class="usermessage"><img src="@@{templatepath}@@/images/icons/ok_32.png" alt="" align="left" style="margin-right:5px;" /> @@{usermessage}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="userwarnings" -->
+		<h3 class="userwarning"><img src="@@{templatepath}@@/images/icons/warning_32.png" alt="" align="left" style="margin-right:5px;" /> @@{userwarning}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="usererrors" -->
+		<h3 class="usererror"><img src="@@{templatepath}@@/images/icons/error_32.png" alt="" align="left" style="margin-right:5px;" /> @@{usererror}@@</h3>
+	<!-- TemplateEndBlock -->	
+				
+	<!-- content-wrap starts here -->
+	<div id="content-wrap">
+	<div id="content">	 
+
+		<div id="sidebar" >	
+		<!-- InstanceBeginEditable name="sidebar" -->
+
+			<h3>Quickhelp</h3>			
+			<p>Here you can see all the users of your application.</p>
+			<p>By default the list is sorted by ID, which should in most cases also represent the order of creation in descending order. Use the row titles to sort the list to your liking.</p>
+			<p>Use the icons to the right to either edit a user or delete it. Notice that you can't restore deleted users with this tool.<p>
+			<p>The search will filter by ID as well as the username as you type. Note that it's case insensitive. Use the "Clear" button to reset the filter and show all users.</p>
+			
+		<!-- InstanceEndEditable -->
+		</div>	
+	
+		<div id="main">		
+		<!-- InstanceBeginEditable name="main" -->
+
+			<h2>Edit user</h2>
+			
+			<form method="post" action="@@{[users.edituser]}@@" name="editaction" enctype="multipart/form-data; charset=utf-8">
+			<input type="hidden" value="@@{user_id}@@" name="user_id" />
+
+			<div id="contentbox">
+			<h3>Edit user</h3>
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td align="right" valign="top" nowrap width="150"><p>Username*</p></td>
+					<td align="left" valign="middle" nowrap width="250"><input type="text" maxlength="20" name="user_username" value="@@{user_username}@@" class="formtext" /></td>
+                    <td align="left" valign="top" rowspan="2">
+		                <h3><img src="@@{templatepath}@@/nuvola/22x22/mimetypes/wordprocessing.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[users.edituserdata]}@@&id=@@{user_id}@@" alt="Edit userdata">Edit userdata for this user</a></h3>
+		                <h3><img src="@@{templatepath}@@/nuvola/22x22/actions/kgpg.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[users.edituserrights]}@@&id=@@{user_id}@@" alt="Edit userrights">Edit userrights for this user</a></h3>
+                    </td>
+				</tr>
+				<tr>
+					<td align="right" valign="top" nowrap width="150"><p>Key*</p></td>
+					<td align="left" valign="middle" nowrap><input type="text" maxlength="30" name="user_key" value="@@{user_key}@@" class="formtext" /></td>
+				</tr>
+			</table>
+			</div>
+    
+			<div id="contentbox">
+            <h3>Change password</h3>
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td align="right" valign="top" nowrap width="150"><p> New Password</p></td>
+                    <td align="left" valign="middle" nowrap width="250"><input type="password" maxlength="30" name="user_password" class="formtext" /></td>
+                    <td align="left" valign="top" rowspan="2">
+		                <h3><img src="@@{templatepath}@@/nuvola/22x22/actions/2leftarrow.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[users.index]}@@" alt="Back to user overview">Back to user overview</a><br />(changes will not be saved)</h3>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right" valign="top" nowrap width="150"><p> Confirm Password</p></td>
+                    <td align="left" valign="middle" nowrap><input type="password" maxlength="30" name="user_password2" class="formtext" /></td>
+                </tr>
+            </table>
+			</div>
+
+			</form>
+
+		<!-- InstanceEndEditable -->
+		</div>					
+		
+	<!-- content-wrap ends here -->		
+	</div>
+	</div>
+
+	<!-- footer starts here-->	
+	<div id="footer-wrap">
+		
+		<div id="footer-bottom">		
+			<p>
+			&copy; 2009 <strong><a href="http://www.menschenwerk.net">Menschenwerk.net</a></strong> | 
+			Original template design: <a href="http://www.styleshout.com/">styleshout</a> | 
+			Icons by: <a href="http://www.icon-king.com/projects/nuvola/">David Vignoni</a>
+			</p>		
+		</div>	
+	
+	<!-- footer ends-->		
+	</div>
+
+</body>
+<!-- InstanceEnd --></html>

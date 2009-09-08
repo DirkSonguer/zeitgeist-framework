@@ -62,5 +62,50 @@ class setup
 		$this->debug->unguard(true);
 		return true;
 	}
+	
+	
+	public function showactions($parameters=array())
+	{
+		$this->debug->guard();
+		
+		$tpl = new zgaTemplate();
+		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_showactions'));
+
+		$actiondata = $this->setupfunctions->getAllActions();
+		
+		foreach ($actiondata as $action)
+		{
+			$tpl->assignDataset($action);
+			$tpl->insertBlock('applicationaction');
+		}
+
+		$tpl->show();
+
+		$this->debug->unguard(true);
+		return true;
+	}
+	
+	
+	public function showuserroles($parameters=array())
+	{
+		$this->debug->guard();
+		
+		$tpl = new zgaTemplate();
+		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_showuserroles'));
+
+		$roledata = $this->setupfunctions->getAllUserroles();
+		
+		foreach ($roledata as $userrole)
+		{
+			$tpl->assignDataset($userrole);
+			$tpl->insertBlock('applicationuserrole');
+		}
+
+		$tpl->show();
+
+		$this->debug->unguard(true);
+		return true;
+	}	
+	
 }
 ?>
