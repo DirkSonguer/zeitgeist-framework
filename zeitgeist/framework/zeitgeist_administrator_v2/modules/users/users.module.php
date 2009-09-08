@@ -48,5 +48,27 @@ class users
 		return true;
 	}
 
+
+	public function edituser($parameters=array())
+	{
+		$this->debug->guard();
+		
+		$tpl = new zgaTemplate();
+		$tpl->load($this->configuration->getConfiguration('users', 'templates', 'users_edituser'));
+/*
+		$userdata = $this->userfunctions->getAllUsers();
+		
+		foreach ($userdata as $user)
+		{
+			$tpl->assignDataset($user);
+			$tpl->insertBlock('applicationuser');
+		}
+*/
+		$tpl->show();
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
 }
 ?>

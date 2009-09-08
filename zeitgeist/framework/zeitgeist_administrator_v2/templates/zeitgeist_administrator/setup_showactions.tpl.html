@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Zeitgeist Administrator - Manage application modules</title>
+<title>Zeitgeist Administrator - Manage application actions</title>
 <!-- InstanceEndEditable -->
 
 <link rel="stylesheet" href="@@{templatepath}@@/css/main.css" type="text/css" />
@@ -44,16 +44,16 @@ $(document).ready(function()
     } 
 ); 
 
-	function deleteModule(id, name)
+	function deleteAction(id, name)
 	{
-		var answer = window.confirm("Do you really want to delete the module '" + name + "'?");
+		var answer = window.confirm("Do you really want to delete the action '" + name + "'?");
 
 		/* Question icon, Yes/No button. */
 		/* 0 = error, 1 = OK, 2 = Cancel, 3 = No, 4 = Yes */
 
 		if (answer == true)
 		{
-		   window.location.href = "@@{[setup.deletemodule]}@@"+"&id="+id;
+		   window.location.href = "@@{[setup.deleteaction]}@@"+"&id="+id;
 		}
 	}	
 
@@ -111,10 +111,10 @@ $(document).ready(function()
         <!-- InstanceBeginEditable name="sidebar" -->
 
 			<h3>Quickhelp</h3>			
-			<p>Here you can see all the modules of your application.</p>
+			<p>Here you can see all the actions of your application.</p>
             <p>By default the list is sorted by ID, which should in most cases also represent the order of creation in descending order. Use the row titles to sort the list to your liking.</p>
-            <p>Use the icons to the right to either edit a module or delete it. Notice that you can't restore deleted users with this tool.<p>
-            <p>The search will filter by ID as well as the module name and description as you type. Note that it's case insensitive. Use the "Clear" button to reset the filter and show all modules.</p>
+            <p>Use the icons to the right to either edit a action or delete it. Notice that you can't restore deleted users with this tool.<p>
+            <p>The search will filter by ID as well as the action name and description as you type. Note that it's case insensitive. Use the "Clear" button to reset the filter and show all actions.</p>
             
 		<!-- InstanceEndEditable -->
 		</div>	
@@ -122,18 +122,18 @@ $(document).ready(function()
 		<div id="main">		
         <!-- InstanceBeginEditable name="main" -->
 
-			<h2>Manage application modules</h2>
+			<h2>Manage application actions</h2>
                         
             <table id="usertable" border="0" cellpadding="0" cellspacing="5" width="100%">
 	       	<thead>
         <tr>
             <td colspan="2">
             <p>
-                <img src="@@{templatepath}@@/images/icons/new_22.png" alt="Create new module" title="Create new module'" border="0" align="absmiddle" />
-                <a href="@@{[setup.createmodule]}@@" alt="Create new module">Create new module</a>
+                <img src="@@{templatepath}@@/images/icons/new_22.png" alt="Create new action" title="Create new action'" border="0" align="absmiddle" />
+                <a href="@@{[setup.createaction]}@@" alt="Create new action">Create new action</a>
             </p>
             </td>
-            <td colspan="3" class="filter">
+            <td colspan="4" class="filter">
             <p style="text-align:right;">
                 Search: <input name="filter" id="filter-box" value="" maxlength="50" size="30" type="text">
                 <input id="filter-clear-button" type="submit" value="Clear"/>
@@ -142,25 +142,27 @@ $(document).ready(function()
         </tr>             
 	        <tr>
 				<th><p>ID</p></th>
-				<th><p>Module name</p></th>
+				<th><p>Action name</p></th>
 				<th><p>Description</p></th>
-				<th><p style="text-align:center;">Active</p></th>
+				<th><p>Module</p></th>
+				<th><p style="text-align:center;">Requires rights</p></th>
 				<th><p style="text-align:center;">Actions</p></th>
 	        </tr>
             </thead>
             <tbody>
-            <!-- TemplateBeginBlock name="applicationmodule" -->            
+            <!-- TemplateBeginBlock name="applicationaction" -->            
                 <tr>
-				<td id="listtable"><p>@@{module_id}@@</a></p></td>
+				<td id="listtable"><p>@@{action_id}@@</a></p></td>
+				<td id="listtable"><p>@@{action_name}@@</a></p></td>
+				<td id="listtable"><p>@@{action_description}@@</a></p></td>
 				<td id="listtable"><p>@@{module_name}@@</a></p></td>
-				<td id="listtable"><p>@@{module_description}@@</a></p></td>
-				<td id="listtable" align="center"><p>@@{module_active}@@</a></p></td>
+				<td id="listtable" align="center"><p>@@{action_requiresuserright}@@</a></p></td>
 				<td id="listtable" align="center"><p>
-					<a href="@@{[setup.editmodule]}@@&id=@@{module_id}@@" alt="Edit module">
-						<img src="@@{templatepath}@@/images/icons/edit_22.png" alt="Edit module" title="Edit module '@@{module_name}@@'" border="0" />
+					<a href="@@{[setup.editaction]}@@&id=@@{action_id}@@" alt="Edit action">
+						<img src="@@{templatepath}@@/images/icons/edit_22.png" alt="Edit action" title="Edit action '@@{action_name}@@'" border="0" />
 					</a> &nbsp; 
-					<a href="javascript:deleteModule(@@{module_id}@@, '@@{module_name}@@')" alt="Delete module">
-						<img src="@@{templatepath}@@/images/icons/delete_22.png" alt="Delete module" title="Delete module '@@{module_name}@@'" border="0" />
+					<a href="javascript:deleteModule(@@{action_id}@@, '@@{action_name}@@')" alt="Delete action">
+						<img src="@@{templatepath}@@/images/icons/delete_22.png" alt="Delete action" title="Delete action '@@{action_name}@@'" border="0" />
 					</a>
 				</p></td>
                 </tr>
