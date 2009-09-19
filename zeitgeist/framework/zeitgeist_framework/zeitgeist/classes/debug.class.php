@@ -4,6 +4,9 @@
  * http://www.zeitgeist-framework.com
  *
  * Debug class
+ * 
+ * This is the debug class of Zeitgeist. It provides all debugging
+ * functionality like debug messages, SQL querylog and tracing
  *
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt

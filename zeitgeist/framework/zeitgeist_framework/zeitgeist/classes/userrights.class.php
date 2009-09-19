@@ -107,7 +107,7 @@ class zgUserrights
 	{
 		$this->debug->guard();
 		
-		if ((is_array($userrights)) && (count($userrights) < 1))
+		if ((!is_array($userrights)) || (count($userrights) < 1))
 		{
 			$this->debug->write('Problem setting the user rights: array not valid', 'warning');
 			$this->messages->setMessage('Problem setting the user rights: array not valid', 'warning');
@@ -185,8 +185,8 @@ class zgUserrights
 			return false;
 		}
 
-		$this->debug->unguard(true);
-		return true;
+		$this->debug->unguard(false);
+		return false;
 	}
 
 }

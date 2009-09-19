@@ -28,8 +28,6 @@ class zgStaticform
 
 	/**
 	 * Class constructor
-	 *
-	 * The constructor is set to private to prevent files from calling the class as a class instead of a singleton.
 	 */
 	public function __construct()
 	{
@@ -165,7 +163,7 @@ class zgStaticform
 
 
 	/**
-	 * Setup the form, basically doing the initializing
+	 * Setup the form, basically doing the initialisation
 	 *
 	 * @access protected
 	 *

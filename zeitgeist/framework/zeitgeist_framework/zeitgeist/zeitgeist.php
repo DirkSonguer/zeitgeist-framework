@@ -37,20 +37,21 @@ else
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/messages.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/database.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/configuration.class.php');
-require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/locale.class.php');
+require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/localisation.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/objects.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/session.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/userroles.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/userrights.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/userdata.class.php');
+require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/userfunctions.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/userhandler.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/errorhandler.class.php');
-require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/parameterhandler.class.php');
-require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/eventhandler.class.php');
+require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/parameters.class.php');
+require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/controller.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/template.class.php');
-require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/trafficlogger.class.php');
+require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/actionlog.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/dataserver.class.php');
-require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/filehandler.class.php');
+require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/files.class.php');
 
 // include modules
 require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/staticform/staticform.class.php');

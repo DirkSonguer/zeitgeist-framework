@@ -3,26 +3,30 @@
  * Zeitgeist Application Framework
  * http://www.zeitgeist-framework.com
  *
- * Eventhandler class
+ * Controller class
+ * 
+ * This class acts as a simple front controller to call modules and
+ * actions
+ * It also handles the usual tasks like checking user and security related
+ * issues
  *
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
  *
  * @package ZEITGEIST
- * @subpackage ZEITGEIST EVENTHANDLER
+ * @subpackage ZEITGEIST CONTROLLER
  */
 
 defined('ZEITGEIST_ACTIVE') or die();
 
-class zgEventhandler
+class zgController
 {
 	protected $debug;
 	protected $messages;
 	protected $database;
 	protected $configuration;
 	protected $user;
-	protected $traffic;
-
+	protected $actionlog;
 
 	/**
 	 * Class constructor
@@ -35,28 +39,10 @@ class zgEventhandler
 		$this->messages = zgMessages::init();
 		$this->configuration = zgConfiguration::init();
 		$this->user = zgUserhandler::init();
-		$this->traffic = new zgTrafficlogger();
+		$this->actionlog = new zgActionlog();
 
 		$this->database = new zgDatabase();
 		$this->database->connect();
-	}
-
-
-	/**
-	 * Initializes the Eventhandler with a current user object
-	 *
-	 * @param object $userhandlerObject user object
-	 *
-	 * @return boolean
-	 */
-	public function init($userhandlerObject)
-	{
-		$this->debug->guard();
-
-		$this->user = $userhandlerObject;
-
-		$this->debug->unguard(false);
-		return false;
 	}
 
 
@@ -218,8 +204,8 @@ class zgEventhandler
 				$this->debug->write('User (' . $this->user->getUserID() . ') has no rights for action (' . $action . ') in module (' . $module . ')', 'warning');
 				$this->messages->setMessage('User (' . $this->user->getUserID() . ') has no rights for action (' . $action . ') in module (' . $module . ')', 'warning');
 
-				$this->debug->unguard($this->configuration->getConfiguration('zeitgeist', 'eventhandler', 'no_userrights_for_action'));
-				return $this->configuration->getConfiguration('zeitgeist', 'eventhandler', 'no_userrights_for_action');
+				$this->debug->unguard($this->configuration->getConfiguration('zeitgeist', 'controller', 'no_userrights_for_action'));
+				return $this->configuration->getConfiguration('zeitgeist', 'controller', 'no_userrights_for_action');
 			}
 		}
 
@@ -232,17 +218,17 @@ class zgEventhandler
 		}
 
 		// filter parameters and get safe ones
-		$parameterhandler = new zgParameterhandler();
-		$parameters = $parameterhandler->getSafeParameters($module, $action);
+		$parameters = new zgParameters();
+		$safeparameters = $parameters->getSafeParameters($module, $action);
 
 		// log the pageview if logging is active
-		if ($this->configuration->getConfiguration('zeitgeist','trafficlogger','trafficlogger_active') == '1')
+		if ($this->configuration->getConfiguration('zeitgeist','actionlog','actionlog_active') == '1')
 		{
-			$this->traffic->logPageview($moduleData['module_id'], $actionData['action_id'], $this->user->getUserID(), $parameters);
+			$this->actionlog->logAction($moduleData['module_id'], $actionData['action_id'], $parameters);
 		}
 
 		// execute action in module
-		$ret = call_user_func(array(&$moduleClass, $action), $parameters);
+		$ret = call_user_func(array(&$moduleClass, $action), $safeparameters);
 		if ($ret !== true)
 		{
 			$this->debug->unguard($ret);
