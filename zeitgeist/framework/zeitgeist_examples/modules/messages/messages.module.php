@@ -24,6 +24,9 @@ class messages
 	{
 		$this->debug->guard();
 
+		// First clear all messages that might already be in the system		
+		$this->messages->clearAllMessages();
+
 		// Enter something into the message system		
 		// notice that "my_type" as type
 		$this->messages->setMessage('Hello Messages', 'my_type');

@@ -49,7 +49,7 @@ class configuration
 		// Each module has an associated configuration file with the name
 		// of the module. It can be accessed like any other configuration
 		$configArray = $this->configuration->getConfiguration('configuration');
-		echo '<p>M configuration:</p>';
+		echo '<p>Module configuration:</p>';
 		var_dump($configArray);
 		
 		// Note that the ./_additional_files/example_configuration.ini contains
