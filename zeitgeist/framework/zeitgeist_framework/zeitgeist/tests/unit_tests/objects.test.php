@@ -14,7 +14,7 @@ class testObjects extends UnitTestCase
 
 
 	// Test store object
-	function test_storeObject()
+	function test_storeObject_success()
 	{
 		$objectcache = zgObjects::init();
 		
@@ -66,7 +66,7 @@ class testObjects extends UnitTestCase
 
 
 	// Testing getting object data back
-	function test_getObject()
+	function test_getObject_success()
 	{
 		$objectcache = zgObjects::init();
 		
@@ -84,7 +84,7 @@ class testObjects extends UnitTestCase
 
 
 	// Testing deleting object data
-	function test_deleteObject()
+	function test_deleteObject_success()
 	{
 		$objectcache = zgObjects::init();
 
@@ -106,7 +106,7 @@ class testObjects extends UnitTestCase
 	
 	
 	// Test deleting all objects from the system
-	function test_deleteAllObjects()
+	function test_deleteAllObjects_success()
 	{
 		$objectcache = zgObjects::init();
 

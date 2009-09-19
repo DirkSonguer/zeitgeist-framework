@@ -97,7 +97,7 @@ class zgUserroles
 	{
 		$this->debug->guard();
 
-		if (!is_array($userroles) && (count($userroles) < 1))
+		if (!is_array($userroles) || (count($userroles) < 1))
 		{
 			$this->debug->write('Problem setting the user roles: array not valid', 'warning');
 			$this->messages->setMessage('Problem setting the user roles: array not valid', 'warning');
@@ -134,18 +134,50 @@ class zgUserroles
 	}
 	
 	
-	public function addUserrole()
+
+	/**
+	 * Gets the role id for a given rolename
+	 *
+	 * @param string $rolename name of the role
+	 *
+	 * @return integer
+	 */
+	public function identifyRole($rolename)
 	{
-		// TODO addUserrole
+		$this->debug->guard();
+
+		$userrolesTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userroles');
+		$sql = "SELECT userrole_id FROM " . $userrolesTablename . " WHERE userrole_name = '" . $rolename . "'";
+
+		if ($res = $this->database->query($sql))
+		{
+			if ($this->database->numRows($res))
+			{
+				$row = $this->database->fetchArray($res);
+				$ret = $row['userrole_id'];
+
+				$this->debug->unguard($ret);
+				return $ret;
+			}
+			else
+			{
+				$this->debug->write('Problem getting role id: could not find the userrole', 'warning');
+				$this->messages->setMessage('Problem getting role id: could not find the userrole', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
+		}
+		else
+		{
+			$this->debug->write('Problem getting role id: could not access roles in database', 'warning');
+			$this->messages->setMessage('Problem getting role id: could not access roles in database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(false);
+		return false;
 	}
-
-
-	public function deleteUserrole()
-	{
-		// TODO deleteUserrole
-	}
-
-
 
 }
 ?>

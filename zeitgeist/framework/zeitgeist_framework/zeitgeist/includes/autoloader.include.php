@@ -17,7 +17,7 @@ defined('ZEITGEIST_ACTIVE') or die();
 	/**
 	 * This is an autoloader superfunction
 	 * It tries to catch unknown classes that are called and tries to load them
-	 * It is used by the eventhandler to load modules
+	 * It is used by the controller to load modules
 	 *
 	 * Note that if this function fails, a fatal error will occur!
 	 *

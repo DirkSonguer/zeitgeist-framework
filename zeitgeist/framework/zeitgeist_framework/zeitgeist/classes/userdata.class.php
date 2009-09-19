@@ -99,7 +99,7 @@ class zgUserdata
 	{
 		$this->debug->guard();
 
-		if ((is_array($userdata)) && (count($userdata) < 1))
+		if ((!is_array($userdata)) || (count($userdata) < 1))
 		{
 			$this->debug->write('Problem setting the user data: array not valid', 'warning');
 			$this->messages->setMessage('Problem setting the user data: array not valid', 'warning');

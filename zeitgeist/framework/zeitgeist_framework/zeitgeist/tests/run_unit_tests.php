@@ -24,16 +24,21 @@
 	$configuration = zgConfiguration::init();
 	$error = zgErrorhandler::init();
 	$user = zgUserhandler::init();
-	$eventhandler = new zgEventhandler();
-	$locale = zgLocale::init();
+	$controller = new zgController();
 	
 	require_once('./unit_tests/messages.test.php');
 	require_once('./unit_tests/objects.test.php');
 	require_once('./unit_tests/database.test.php');
 	require_once('./unit_tests/configuration.test.php');
-	require_once('./unit_tests/filehandler.test.php');
-	require_once('./unit_tests/trafficlogger.test.php');
-	require_once('./unit_tests/parameterhandler.test.php');
+	require_once('./unit_tests/files.test.php');
+	require_once('./unit_tests/actionlog.test.php');
+	require_once('./unit_tests/parameters.test.php');
+	require_once('./unit_tests/userfunctions.test.php');
+	require_once('./unit_tests/userdata.test.php');
+	require_once('./unit_tests/userroles.test.php');
+	require_once('./unit_tests/userrights.test.php');
+	require_once('./unit_tests/userhandler.test.php');
+	require_once('./unit_tests/localisation.test.php');
 	
 	$debug = zgDebug::init();
 
@@ -42,9 +47,15 @@
 	$test->addTestCase(new testObjects());
 //	$test->addTestCase(new testDatabase());
 	$test->addTestCase(new testConfiguration());
-	$test->addTestCase(new testFilehandler());
-	$test->addTestCase(new testTrafficlogger());
-	$test->addTestCase(new testParameterhandler());
+	$test->addTestCase(new testFiles());
+	$test->addTestCase(new testactionlog());
+	$test->addTestCase(new testParameters());
+	$test->addTestCase(new testUserfunctions());
+	$test->addTestCase(new testUserdata());
+	$test->addTestCase(new testUserroles());
+	$test->addTestCase(new testUserrights());
+	$test->addTestCase(new testUserhandler());
+	$test->addTestCase(new testLocalisation());
 	
 	$test->run(new HtmlReporter());
 

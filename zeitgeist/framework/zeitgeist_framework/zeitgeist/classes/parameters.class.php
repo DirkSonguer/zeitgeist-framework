@@ -3,18 +3,18 @@
  * Zeitgeist Application Framework
  * http://www.zeitgeist-framework.com
  *
- * Parameterhandler class
+ * Parameter class
  *
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
  *
  * @package ZEITGEIST
- * @subpackage ZEITGEIST PARAMETERHANDLER
+ * @subpackage ZEITGEIST PARAMETERS
  */
 
 defined('ZEITGEIST_ACTIVE') or die();
 
-class zgParameterhandler
+class zgParameters
 {
 	protected $debug;
 	protected $messages;

@@ -3,25 +3,22 @@
  * Zeitgeist Application Framework
  * http://www.zeitgeist-framework.com
  *
- * Locale/Translator class
+ * Localisation class
+ * 
+ * This class handles multiple language variants of system messages
+ * and is able to convert one variant into another
  *
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
  *
  * @package ZEITGEIST
- * @subpackage ZEITGEIST LOCALE
+ * @subpackage ZEITGEIST LOCALISATION
  */
 
 defined('ZEITGEIST_ACTIVE') or die();
 
-/**
- * NOTE: This class is a singleton.
- * Other classes or files may initialize it with zgLocale::init();
- */
-class zgLocale
+class zgLocalisation
 {
-	private static $instance = false;
-
 	protected $debug;
 	protected $messages;
 	protected $configuration;
@@ -31,31 +28,14 @@ class zgLocale
 	/**
 	 * Class constructor
 	 *
-	 * The constructor is set to private to prevent files from calling the class as a class instead of a singleton.
 	 */
-	protected function __construct()
+	public function __construct()
 	{
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
 		$this->configuration = zgConfiguration::init();
 		
 		$this->currentLocale = '';
-	}
-
-
-	/**
-	 * Initialize the singleton
-	 *
-	 * @return object
-	 */
-	public static function init()
-	{
-		if (self::$instance === false)
-		{
-			self::$instance = new zgLocale();
-		}
-
-		return self::$instance;
 	}
 
 
@@ -123,8 +103,8 @@ class zgLocale
 
 		if ($this->currentLocale == '')
 		{
-			$this->debug->write('No locale active. Using default locale', 'message');
-			$this->messages->setMessage('No locale active. Using default locale', 'message');
+			$this->debug->write('No locale active. Returning original text', 'message');
+			$this->messages->setMessage('No locale active. Returning original text', 'message');
 			$this->debug->unguard(false);
 			return $message;
 		}
@@ -137,8 +117,8 @@ class zgLocale
 			return $localeMessage;
 		}
 		
-		$this->debug->write('Message string could not be found in the current locale', 'warning');
-		$this->messages->setMessage('Message string could not be found in the current locale', 'warning');
+		$this->debug->write('Message string could not be found in the current locale. Returning original text', 'warning');
+		$this->messages->setMessage('Message string could not be found in the current locale. Returning original text', 'warning');
 		$this->debug->unguard(false);
 		return $message;
 	}

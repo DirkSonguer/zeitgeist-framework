@@ -35,7 +35,7 @@ class zgTemplate
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
 		$this->configuration = zgConfiguration::init();
-		$this->locale = zgLocale::init();
+		$this->locale = new zgLocalisation();
 		
 		$this->database = new zgDatabase();
 		$this->database->connect();
@@ -446,7 +446,7 @@ class zgTemplate
 	{
 		$this->debug->guard();
 
-		/* TODO
+		/*
 		 *  Using $linkurl this way, we prevent Zeitgeist applications to be run
 		 *  in any other place than the webservers documentroot.
 		 */

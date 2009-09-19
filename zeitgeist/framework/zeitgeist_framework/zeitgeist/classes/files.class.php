@@ -14,7 +14,7 @@
 
 defined('ZEITGEIST_ACTIVE') or die();
 
-class zgFilehandler
+class zgFiles
 {
 	private static $instance = false;
 

@@ -53,7 +53,7 @@ class testMessages extends UnitTestCase
 	
 
 	// Test getting all messages
-	function test_getAllMessages()
+	function test_getAllMessages_success()
 	{
 		$message = zgMessages::init();
 		$ret = $message->clearAllMessages();
@@ -85,7 +85,7 @@ class testMessages extends UnitTestCase
 
 
 	// Test getting messages by type
-	function test_getMessagesByType()
+	function test_getMessagesByType_success()
 	{
 		$message = zgMessages::init();
 		$message->clearAllMessages();
@@ -131,7 +131,7 @@ class testMessages extends UnitTestCase
     }	
 
 	
-	function test_importMessages()
+	function test_importMessages_success()
 	{
 		$message = zgMessages::init();
 		$ret = $message->clearAllMessages();
