@@ -54,7 +54,7 @@ class zgDatabase
 	 * @param string $servername servername to connect to
 	 * @param string $username username to connect with
 	 * @param string $userpass userpassword to connect with
-	 * @param boolean $$persistent set true if connection should be persistent
+	 * @param boolean $persistent set true if connection should be persistent
 	 * @param boolean $newconnection set true if new link should be created for this connection
 	 *
 	 * @return boolean
@@ -66,11 +66,11 @@ class zgDatabase
 		if ($persistent)
 		{
 			$this->persistent = true;
-			$this->dblink = mysql_pconnect($servername, $username, $userpass);
+			$this->dblink = @mysql_pconnect($servername, $username, $userpass);
 		}
 		else
 		{
-			$this->dblink = mysql_connect($servername, $username, $userpass, $newconnection);
+			$this->dblink = @mysql_connect($servername, $username, $userpass, $newconnection);
 		}
 
 		if (!$this->dblink)

@@ -114,8 +114,19 @@ class zgStaticform
 
 		foreach ($this->formelements as $elementname => $elementdata)
 		{
+			switch ($elementdata->inputtype)
+			{					
+				case "checkbox":
+					if ($elementdata->value)
+					{
+						$template->assign($elementname . ':value', 'checked="checked"');
+					}
+					break;
 
-			$template->assign($elementname . ':value', $elementdata->value);
+				default:
+					$template->assign($elementname . ':value', $elementdata->value);
+					break;
+			}
 
 			if ( ($elementdata->valid == false) && ($this->_showError($elementdata) != '') && (!$this->initial) )
 			{
@@ -189,7 +200,7 @@ class zgStaticform
 			if (is_array($elementdata))
 			{
 				$this->formelements[$elementname] = new zgStaticFormelement();
-				if (!empty($elementdata['type'])) $this->formelements[$elementname]->type = $elementdata['type'];
+				if (!empty($elementdata['inputtype'])) $this->formelements[$elementname]->inputtype = $elementdata['inputtype'];
 				if (!empty($elementdata['value'])) $this->formelements[$elementname]->value = $elementdata['value'];
 				if (!empty($elementdata['required'])) $this->formelements[$elementname]->required = $elementdata['required'];
 				if (!empty($elementdata['minlength'])) $this->formelements[$elementname]->minlength = $elementdata['minlength'];
@@ -330,7 +341,7 @@ class zgStaticform
 
 class zgStaticFormelement
 {
-	public $type;
+	public $inputtype;
 	public $value;
 	public $required;
 	public $minlength;
@@ -343,7 +354,7 @@ class zgStaticFormelement
 
 	public function __construct()
 	{
-		$this->type = '';
+		$this->inputtype = '';
 		$this->value = '';
 		$this->required = 0;
 		$this->minlength = 0;
