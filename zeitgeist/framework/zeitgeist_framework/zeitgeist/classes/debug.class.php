@@ -78,6 +78,14 @@ class zgDebug
 	 */
 	public function write($message, $type='message')
 	{
+		if (is_array($message))
+		{
+			ob_start();
+			var_dump($message);
+			$message = ob_get_contents();
+			ob_end_clean();
+		}
+
 		$newDebugMessage = array();
 
 		$newDebugMessage['executionTime'] = $this->_getExecutionTime();
@@ -250,12 +258,28 @@ class zgDebug
 		echo '<h2>_GET:</h2>';
 		foreach ($_GET as $key => $value)
 		{
+			if (is_array($value))
+			{
+				ob_start();
+				var_dump($value);
+				$value = ob_get_contents();
+				ob_end_clean();
+			}
+
 			echo '<p>' . $key . ' : ' . $value;
 		}
 
 		echo '<h2>_POST:</h2>';
 		foreach ($_POST as $key => $value)
 		{
+			if (is_array($value))
+			{
+				ob_start();
+				var_dump($value);
+				$value = ob_get_contents();
+				ob_end_clean();
+			}
+
 			echo '<p>' . $key . ' : ' . $value;
 		}
 
