@@ -35,7 +35,7 @@
 	<!-- navigation starts here -->
 	<div id="nav">
 		
-		<h3>Zeitgeist Administrator v2 - Manage your Zeitgeist projects</h3>
+		<h3>Zeitgeist Administrator v2 - <a href="@@{[projects.index]}@@" id="projectlink">@@{activeproject}@@</a></h3>
 	
 	</div>
 
@@ -47,7 +47,7 @@
                 <a href="@@{[main.index]}@@"><img src="@@{templatepath}@@/images/icons/home_128.png" id="naviconleft" alt="Home" title="Home" border="0"/></a>
                 <a href="@@{[setup.index]}@@"><img src="@@{templatepath}@@/images/icons/setup_128.png" id="naviconleft" alt="Setup application" title="Setup application" border="0" /></a>
                 <a href="@@{[users.index]}@@"><img src="@@{templatepath}@@/images/icons/user_128.png" id="naviconleft" alt="Manage users" title="Manage users" border="0" /></a>
-                <a href="@@{[configure.index]}@@"><img src="@@{templatepath}@@/images/icons/configure_128.png" id="naviconleft" alt="Configure Zeitgeist Administrator" title="Configure Zeitgeist Administrator" border="0" /></a>
+                <a href="@@{[projects.index]}@@"><img src="@@{templatepath}@@/images/icons/projects_128.png" id="naviconleft" alt="Manage Zeitgeist Administrator projects" title="Manage Zeitgeist projects" border="0" /></a>
             </div>
 
         	<div id="topnavright">
@@ -78,10 +78,10 @@
 		<div id="sidebar" >	
         <!-- InstanceBeginEditable name="sidebar" -->
 
-			<h3>Info</h3>			
-			<p>This is the main page of the Zeitgeist Administrator v2.</p>	
-			<p>This is the main page of the Zeitgeist Administrator v2.</p>	
-			<p>This is the main page of the Zeitgeist Administrator v2.</p>	
+			<h3>About the Zeitgeist Administrator</h3>			
+			<p>This is the main page of the Zeitgeist Administrator v2. This tool will help you create and manage projects based on the Zeitgeist framework.</p>
+			<p>Note that this is a pretty simple tool with very little failsafes. So be careful when editing or it will bring down your application!</p>
+			<p>Note that you have to <a href="@@{[projects.index]}@@" id="projectlink">link and configure your Zeitgeist projects</a> before you can use them.</p>
             
 		<!-- InstanceEndEditable -->
 		</div>	
@@ -89,15 +89,17 @@
 		<div id="main">		
         <!-- InstanceBeginEditable name="main" -->
 
-			<h2>Home</h2>
+			<h2>Zeitgeist Administrator</h2>
             
             <table border="0" cellpadding="0" cellspacing="5">
                 <tr>
                     <td width="80">
-                        <p><img src="@@{templatepath}@@/images/icons/setup_64.png" alt="Setup application" border="0" /></p>
+                        <p><a href="@@{[setup.index]}@@" alt="Setup application">
+							<img src="@@{templatepath}@@/images/icons/setup_64.png" alt="Setup application" border="0" />
+						</a></p>
                     </td>
                     <td>
-                        <h3><a href="@@{[setup.index]}@@" alt="">Setup application</a></h3>
+                        <h3><a href="@@{[setup.index]}@@" alt="Configure Zeitgeist application">Configure Zeitgeist application</a></h3>
                         <p>This section helps you setting up your application, for example adding actions and modules to the database etc.</p>
                     </td>
                 </tr>
@@ -106,10 +108,12 @@
             <table border="0" cellpadding="0" cellspacing="5">
                 <tr>
                     <td width="80">
-                        <p><img src="@@{templatepath}@@/images/icons/user_64.png" alt="Application users" border="0" /></p>
+                        <p><a href="@@{[users.index]}@@" alt="Manage application users">
+							<img src="@@{templatepath}@@/images/icons/user_64.png" alt="Application users" border="0" />
+						</a></p>
                     </td>
                     <td>
-                        <h3><a href="@@{[users.index]}@@" alt="">Manage application users</a></h3>
+                        <h3><a href="@@{[users.index]}@@" alt="Manage application users">Manage application users</a></h3>
                         <p>This section lets you manage the users of your application as well as manage their rights and roles.</p>
                     </td>
                 </tr>
@@ -118,11 +122,13 @@
             <table border="0" cellpadding="0" cellspacing="5">
                 <tr>
                     <td width="80">
-                        <p><img src="@@{templatepath}@@/images/icons/configure_64.png" alt="Configure ZGA" border="0" /></p>
+                        <p><a href="@@{[projects.index]}@@" alt="Manage Zeitgeist Administrator projects">
+							<img src="@@{templatepath}@@/images/icons/projects_64.png" alt="Manage Zeitgeist Administrator projects" border="0" />
+						</a></p>
                     </td>
                     <td>
-                        <h3><a href="@@{[configure.index]}@@" alt="">Configure ZGA</a></h3>
-                        <p>Here you can manage the Zeitgeist administrator tool.</p>
+                        <h3><a href="@@{[projects.index]}@@" alt="Manage Zeitgeist Administrator projects">Manage Zeitgeist Administrator projects</a></h3>
+                        <p>Here you can manage the projects you want to access with the Zeitgeist Administrator.</p>
                     </td>
                 </tr>
             </table>

@@ -29,21 +29,20 @@
 	// include framework
 	include('zeitgeist/zeitgeist.php');
 
+	// include application classes
 	require_once('classes/zgatemplate.class.php');
 	require_once('classes/zgasetupfunctions.class.php');
 	require_once('classes/zgauserfunctions.class.php');
+	require_once('classes/zgaprojectfunctions.class.php');
 	
 	// define some general classes
 	$debug = zgDebug::init();
 	$session = zgSession::init();
 	$message = zgMessages::init();
 	$configuration = zgConfiguration::init();
-	$error = zgErrorhandler::init();
-	
-	// define a user and bind him to the application pipeline
+	$error = zgErrorhandler::init();	
 	$user = zgUserhandler::init();
-	$eventhandler = new zgEventhandler();
-	$eventhandler->init($user);
+	$controller = new zgController();
 	
 	// load application configuration
 	$configuration->loadConfiguration('administrator', 'configuration/application.ini');
@@ -79,7 +78,7 @@
 	$activesession = $user->establishUserSession();
 
 	// hand over to applicaton pipeline
-	$ret = $eventhandler->callEvent($module, $action);
+	$ret = $controller->callEvent($module, $action);
 
 	// output all debug information
 	$debug->loadStylesheet('debug.css');

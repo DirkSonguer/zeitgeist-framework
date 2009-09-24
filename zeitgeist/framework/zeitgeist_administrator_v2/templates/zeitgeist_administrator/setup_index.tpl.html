@@ -35,7 +35,7 @@
 	<!-- navigation starts here -->
 	<div id="nav">
 		
-		<h3>Zeitgeist Administrator v2 - Manage your Zeitgeist projects</h3>
+		<h3>Zeitgeist Administrator v2 - <a href="@@{[projects.index]}@@" id="projectlink">@@{activeproject}@@</a></h3>
 	
 	</div>
 
@@ -47,7 +47,7 @@
                 <a href="@@{[main.index]}@@"><img src="@@{templatepath}@@/images/icons/home_128.png" id="naviconleft" alt="Home" title="Home" border="0"/></a>
                 <a href="@@{[setup.index]}@@"><img src="@@{templatepath}@@/images/icons/setup_128.png" id="naviconleft" alt="Setup application" title="Setup application" border="0" /></a>
                 <a href="@@{[users.index]}@@"><img src="@@{templatepath}@@/images/icons/user_128.png" id="naviconleft" alt="Manage users" title="Manage users" border="0" /></a>
-                <a href="@@{[configure.index]}@@"><img src="@@{templatepath}@@/images/icons/configure_128.png" id="naviconleft" alt="Configure Zeitgeist Administrator" title="Configure Zeitgeist Administrator" border="0" /></a>
+                <a href="@@{[projects.index]}@@"><img src="@@{templatepath}@@/images/icons/projects_128.png" id="naviconleft" alt="Manage Zeitgeist Administrator projects" title="Manage Zeitgeist projects" border="0" /></a>
             </div>
 
         	<div id="topnavright">
@@ -79,7 +79,10 @@
         <!-- InstanceBeginEditable name="sidebar" -->
 
 			<h3>Setup application</h3>			
-			<p>Here you can set up and configure your Zeitgeist projects.</p>
+			<p>Here you can set up and configure your Zeitgeist project.</p>
+			<p>You will see the currently active project in the headline. You can configure and set the currently active project in the <a href="@@{[projects.index]}@@" id="projectlink">ZGA configuration</a>.</p>
+			<p>On this global scale you can define what kind of userdata and what userroles are available to your application. This should be designed during development as your application has to interface the userdata or check for userroles in order to work. Refactoring the data structures on a live set of users and their data might have unforseen consequences in your application.</p>
+</p>
             <p>
             
 		<!-- InstanceEndEditable -->
@@ -88,12 +91,14 @@
 		<div id="main">		
         <!-- InstanceBeginEditable name="main" -->
 
-			<h2>Setup application</h2>
+			<h2>Setup application '@@{activeproject}@@'</h2>
             
             <table border="0" cellpadding="0" cellspacing="5">
                 <tr>
                     <td width="90">
-                        <p><img src="@@{templatepath}@@/images/icons/setup_modules_64.png" alt="Manage modules" border="0" /></p>
+                        <p><a href="@@{[setup.showmodules]}@@" alt="Manage modules">
+							<img src="@@{templatepath}@@/images/icons/setup_modules_64.png" alt="Manage modules" border="0" />
+						</a></p>
                     </td>
                     <td>
                         <h3><a href="@@{[setup.showmodules]}@@" alt="Manage modules">Manage modules</a></h3>
@@ -105,7 +110,9 @@
             <table border="0" cellpadding="0" cellspacing="5">
                 <tr>
                     <td width="90">
-                        <p><img src="@@{templatepath}@@/images/icons/setup_actions_64.png" alt="Manage actions" border="0" /></p>
+                        <p><a href="@@{[setup.showactions]}@@" alt="Manage actions">
+							<img src="@@{templatepath}@@/images/icons/setup_actions_64.png" alt="Manage actions" border="0" />
+						</a></p>
                     </td>
                     <td>
                         <h3><a href="@@{[setup.showactions]}@@" alt="Manage actions">Manage actions</a></h3>
@@ -117,7 +124,9 @@
             <table border="0" cellpadding="0" cellspacing="5">
                 <tr>
                     <td width="90">
-                        <p><img src="@@{templatepath}@@/images/icons/setup_userroles_64.png" alt="Manage userroles" border="0" /></p>
+                        <p><a href="@@{[setup.showuserroles]}@@" alt="Manage userroles">
+							<img src="@@{templatepath}@@/images/icons/setup_userroles_64.png" alt="Manage userroles" border="0" />
+						</a></p>
                     </td>
                     <td>
                         <h3><a href="@@{[setup.showuserroles]}@@" alt="Manage userroles">Manage userroles</a></h3>
@@ -129,7 +138,9 @@
             <table border="0" cellpadding="0" cellspacing="5">
                 <tr>
                     <td width="90">
-                        <p><img src="@@{templatepath}@@/images/icons/setup_userdata_64.png" alt="Manage userdata" border="0" /></p>
+                        <p><a href="@@{[setup.showusedata]}@@" alt="Manage userdata">
+							<img src="@@{templatepath}@@/images/icons/setup_userdata_64.png" alt="Manage userdata" border="0" />
+						</a></p>
                     </td>
                     <td>
                         <h3><a href="@@{[setup.showusedata]}@@" alt="Manage userdata">Manage userdata</a></h3>

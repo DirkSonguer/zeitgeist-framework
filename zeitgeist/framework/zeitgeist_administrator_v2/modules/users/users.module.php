@@ -6,7 +6,6 @@ class users
 {
 	protected $debug;
 	protected $messages;
-	protected $messagecache;
 	protected $database;
 	protected $configuration;
 	protected $user;
@@ -16,7 +15,6 @@ class users
 	{
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
-		$this->messagecache = zgMessagecache::init();
 		$this->configuration = zgConfiguration::init();
 		$this->user = zgUserhandler::init();
 		
