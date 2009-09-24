@@ -14,15 +14,12 @@
 
 defined('ZEITGEIST_ACTIVE') or die();
 
-/**
- * NOTE: This class is a singleton.
- * Other classes or files may initialize it with zgObjects::init();
- */
 class zgaUserfunctions
 {
 	protected $debug;
 	protected $messages;
-	protected $projDatabase;
+	protected $projectfunctions;
+	protected $projectDatabase;
 	protected $configuration;
 
 	/**
@@ -34,8 +31,11 @@ class zgaUserfunctions
 		$this->messages = zgMessages::init();
 		$this->configuration = zgConfiguration::init();
 
+		$this->projectfunctions = new zgaProjectfunctions();
+		$activeproject = $this->projectfunctions->getActiveProject();
+
 		$this->projectDatabase = new zgDatabase();
-		$this->projectDatabase->connect('localhost', 'root', '', 'pokendesign', true, true);
+		$this->projectDatabase->connect($activeproject['project_dbserver'], $activeproject['project_dbuser'], $activeproject['project_dbpassword'], $activeproject['project_dbdatabase'], false, true);
 	}
 	
 	

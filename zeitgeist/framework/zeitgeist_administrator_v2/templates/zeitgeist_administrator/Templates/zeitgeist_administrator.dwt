@@ -35,7 +35,7 @@
 	<!-- navigation starts here -->
 	<div id="nav">
 		
-		<h3>Zeitgeist Administrator v2 - Manage your Zeitgeist projects</h3>
+		<h3>Zeitgeist Administrator v2 - <a href="@@{[projects.index]}@@" id="projectlink">@@{activeproject}@@</a></h3>
 	
 	</div>
 
@@ -47,7 +47,7 @@
                 <a href="@@{[main.index]}@@"><img src="@@{templatepath}@@/images/icons/home_128.png" id="naviconleft" alt="Home" title="Home" border="0"/></a>
                 <a href="@@{[setup.index]}@@"><img src="@@{templatepath}@@/images/icons/setup_128.png" id="naviconleft" alt="Setup application" title="Setup application" border="0" /></a>
                 <a href="@@{[users.index]}@@"><img src="@@{templatepath}@@/images/icons/user_128.png" id="naviconleft" alt="Manage users" title="Manage users" border="0" /></a>
-                <a href="@@{[configure.index]}@@"><img src="@@{templatepath}@@/images/icons/configure_128.png" id="naviconleft" alt="Configure Zeitgeist Administrator" title="Configure Zeitgeist Administrator" border="0" /></a>
+                <a href="@@{[projects.index]}@@"><img src="@@{templatepath}@@/images/icons/projects_128.png" id="naviconleft" alt="Manage Zeitgeist Administrator projects" title="Manage Zeitgeist projects" border="0" /></a>
             </div>
 
         	<div id="topnavright">

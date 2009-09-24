@@ -16,7 +16,8 @@
 * { padding: 0; margin: 0; outline: 0; }
 
 body {
-	margin: 10px 0 0 0; 	padding: 0;
+	margin: 10px 0 0 0;
+	padding: 0;
 	font: normal 13px/1.6em  verdana, tahoma, sans-serif;	 
 	text-align: left;
 	background: #090807 url(../images/bg.jpg) repeat-x;
@@ -39,9 +40,9 @@ h1, h2, h3, h4 {
 	font: normal 1em 'Trebuchet MS', Tahoma, Arial, Sans-serif;
 	color: #eee;
 }
-h1 { font-size: 3em; color: #84A5DA; letter-spacing: -2px;	} 
-h2 { font-size: 2.5em; }
-h3 { font-size: 1.8em; }
+h1 { font-size: 2.5em; color: #84A5DA; letter-spacing: -2px;	} 
+h2 { font-size: 2.0em; }
+h3 { font-size: 1.4em; }
 h4 { font-size: 1.5em; }
 
 p, h1, h2, h3, h4 {
@@ -132,9 +133,15 @@ td {
 }
 
 #listtable {
+	font-size:11pt;
 	border-bottom-width: 1px;
 	border-bottom-style: solid;
-	border-bottom-color: #211e20;	
+	border-bottom-color: #211e20;
+	vertical-align: top;
+}
+
+#controltable {
+	margin-bottom: 0px;
 }
 
 #pagertable td {
@@ -173,11 +180,10 @@ input, select {
 	color:#777;
 }
 textarea {
-	width: 55%;
 	padding: .3em;
 	font: normal 1em/1.5em Verdana, sans-serif;
 	border: 1px solid #eee;
-	height: 10em;
+	height: 175px;
 	display:block;
 	color:#777;
 }
@@ -188,6 +194,11 @@ input.button {
 	color: #fff;
 	background: #000;
 	border: 2px solid #211E20; 
+}
+
+.formtext
+{
+	width:200px;
 }
 
 /* search form */
@@ -215,7 +226,7 @@ input.button {
 ************************/
 
 #header, #nav, #content, #footer-wrap {
-	width: 80%;
+	width: 1000px;
 }
 
 /* header */
@@ -265,6 +276,11 @@ input.button {
 	
 	/* change the values of left and top to adjust the position of the slogan */
 	top: 95px; left: 25px;
+}
+
+#projectlink
+{
+	color: #99CC33;	
 }
 
 #contentbox
@@ -348,16 +364,19 @@ input.button {
 /* sidebar */
 #sidebar {
 	float: right;
-	width: 24em;
+	width: 260px;
 	margin: 10px 0 10px -21em; 
-	padding: 0;		
+	padding: 0;
+	text-align:justify;
 }
+
 #sidebar h3 {
-	font: normal 1.6em 'Trebuchet MS', Tahoma, Arial, Sans-serif;
+	font: normal 12pt; 'Trebuchet MS', Tahoma, Arial, Sans-serif;
 	padding: .3em 0 .5em 10px; 
 	color: #99CC33;			
 	text-transform: none;
 	letter-spacing: -1px;	
+	text-align:left;
 }
 
 #sidebar ul.sidemenu {
@@ -392,7 +411,7 @@ input.button {
 
 /* main */
 #main {
-	margin: 10px 26em 10px 0; 
+	margin: 10px 280px 10px 0; 
 	padding: 0;
 }
 #main h2 { 

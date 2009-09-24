@@ -22,6 +22,7 @@ class zgaTemplate extends zgTemplate
 	protected $localpath;
 	protected $session;
 	protected $locale;
+	protected $projectfunctions;
 
 	/**
 	 * Class constructor
@@ -31,7 +32,8 @@ class zgaTemplate extends zgTemplate
 		$this->user = zgUserhandler::init();
 		$this->session = zgSession::init();
 
-		$this->locale = zgLocale::init();
+		$this->locale = new zgLocalisation();
+		$this->projectfunctions = new zgaProjectfunctions();
 
 		parent::__construct();
 
@@ -78,9 +80,12 @@ class zgaTemplate extends zgTemplate
 		{
 			parent::insertBlock('mainmenu');
 		}
-		else
+
+		if ($activeproject = $this->projectfunctions->getActiveProject())
 		{
+			parent::assign('activeproject', $activeproject['project_name']);
 		}
+
 
 		$ret = parent::show();
 

@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Zeitgeist Administrator - Login</title>
+<title>Zeitgeist Administrator - Edit Zeitgeist project</title>
 <!-- InstanceEndEditable -->
 
 <link rel="stylesheet" href="@@{templatepath}@@/css/main.css" type="text/css" />
@@ -27,6 +27,16 @@
 </script>
 
 <!-- InstanceBeginEditable name="head" -->
+
+<script language="JavaScript" type="text/javascript">
+
+	function showOverview()
+	{
+		window.location.href = "@@{[projects.index]}@@";
+	}
+	
+</script>
+
 <!-- InstanceEndEditable -->
 </head>
 
@@ -78,41 +88,74 @@
 		<div id="sidebar" >	
         <!-- InstanceBeginEditable name="sidebar" -->
 
+			<h3>Configure a Zeitgeist project link</h3>			
+			<p>To configure a Zeitgeist project, this tool needs to connect to the database of your project.</p>
+			<p>Please enter the credentials of your database carefully to avoid configuring the wrong application. It might be a good idea to create seperate users for every project. On submit the database will be checked for compatibility.</p>
+			<p>Use the buttons to either submit your changes or get back to the project overview without saving.</p>
+
 		<!-- InstanceEndEditable -->
 		</div>	
 	
 		<div id="main">		
         <!-- InstanceBeginEditable name="main" -->
 
-            <table border="0" cellpadding="0" cellspacing="5">
-                <tr>
-                    <td width="140">
-                        <p><img src="@@{templatepath}@@/images/icons/important_128.png" alt="Authentication required" border="0" /></p>
-            
-                    </td>
-                    <td valign="middle">
-                        <h2>Authentication required</h2>
-                        <p>Please enter your username and password to use the Zeitgeist Administrator v2.</p>
-            
-                        <form method="post" action="@@{[main.login]}@@" name="login">
-                            <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
-                                <tr>
-                                    <td align="right" nowrap width="110"><p>Username</p></td>
-                                    <td align="left" valign="middle" nowrap><input type="text" size="35" maxlength="20" name="username" class="formtext" style="width:250px;" /></td>
-                                </tr>
-                                <tr>
-                                    <td align="right" nowrap><p>Password</p></td>
-                                    <td align="left" valign="middle" nowrap><input type="password" size="35" maxlength="32" name="password" class="formtext" style="width:250px;" /></td>
-                                </tr>
-                                <tr>
-                                    <td align="left" nowrap>&nbsp;</td>
-                                    <td align="right" valign="middle" nowrap><input type="submit" name="login" value="Login" class="formbutton" /></td>
-                                </tr>
-                            </table>
-                        </form>
-                    </td>
-                </tr>
-            </table>
+			<h2>Configure a Zeitgeist project link</h2>
+			
+			<form method="post" action="@@{[projects.editproject]}@@" name="editproject" enctype="multipart/form-data; charset=utf-8">
+			<input type="hidden" value="@@{project_id:value}@@" name="editproject[project_id]" />
+
+			<table border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">Project name*</p></td>
+				<td valign="middle" @@{project_name:formerror}@@><input type="text" maxlength="60" name="editproject[project_name]" value="@@{project_name:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="project_name:errormsg" -->
+					<br /><span class="formerrormsg">@@{project_name:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+				</td>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">Database server*</p></td>
+				<td valign="middle" @@{project_dbserver:formerror}@@><input type="text" maxlength="60" name="editproject[project_dbserver]" value="@@{project_dbserver:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="project_dbserver:errormsg" -->
+					<br /><span class="formerrormsg">@@{project_dbserver:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+				</td>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">Name of the database*</p></td>
+				<td valign="middle" @@{project_dbdatabase:formerror}@@><input type="text" maxlength="60" name="editproject[project_dbdatabase]" value="@@{project_dbdatabase:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="project_dbdatabase:errormsg" -->
+					<br /><span class="formerrormsg">@@{project_dbdatabase:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+				</td>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">Database user*</p></td>
+				<td valign="middle" @@{project_dbuser:formerror}@@><input type="text" maxlength="60" name="editproject[project_dbuser]" value="@@{project_dbuser:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="project_dbuser:errormsg" -->
+					<br /><span class="formerrormsg">@@{project_dbuser:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+				</td>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">Password of db user</p></td>
+				<td valign="middle" @@{project_dbpassword:formerror}@@><input type="text" maxlength="60" name="editproject[project_dbpassword]" value="@@{project_dbpassword:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="project_dbpassword:errormsg" -->
+					<br /><span class="formerrormsg">@@{project_dbpassword:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+				   <p style="text-align:center;">
+				   <input name="back" value="Back to overview" class="formbutton" type="button" onclick="javascript:showOverview();" />
+				   <input name="submit" value="Submit data" class="formbutton" type="submit" />
+				   </p>
+				</td>
+			</tr>
+			</table>
+
+			</form>
 
 		<!-- InstanceEndEditable -->
 		</div>					

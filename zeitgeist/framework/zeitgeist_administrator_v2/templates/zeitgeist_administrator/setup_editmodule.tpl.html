@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Zeitgeist Administrator - Login</title>
+<title>Zeitgeist Administrator - Edit project module</title>
 <!-- InstanceEndEditable -->
 
 <link rel="stylesheet" href="@@{templatepath}@@/css/main.css" type="text/css" />
@@ -27,6 +27,16 @@
 </script>
 
 <!-- InstanceBeginEditable name="head" -->
+
+<script language="JavaScript" type="text/javascript">
+
+	function showOverview()
+	{
+		window.location.href = "@@{[setup.showmodules]}@@";
+	}
+	
+</script>
+
 <!-- InstanceEndEditable -->
 </head>
 
@@ -78,41 +88,60 @@
 		<div id="sidebar" >	
         <!-- InstanceBeginEditable name="sidebar" -->
 
+			<h3>Editing modules</h3>			
+			<p>The name of the module acts as the identifier for the controller. It tries to call a class with the same name as the module. Therefor you should not choose weird module names - remember you have to name your classes accordingly.</p>
+			<p>The description of a module just acts as a reminder for yourself and is not used by the framework.</p>
+			<p>Inactive modules are ignored by the controller. If a user tries to use an inactive module, an error is thrown.</p>
+
 		<!-- InstanceEndEditable -->
 		</div>	
 	
 		<div id="main">		
         <!-- InstanceBeginEditable name="main" -->
 
-            <table border="0" cellpadding="0" cellspacing="5">
-                <tr>
-                    <td width="140">
-                        <p><img src="@@{templatepath}@@/images/icons/important_128.png" alt="Authentication required" border="0" /></p>
-            
-                    </td>
-                    <td valign="middle">
-                        <h2>Authentication required</h2>
-                        <p>Please enter your username and password to use the Zeitgeist Administrator v2.</p>
-            
-                        <form method="post" action="@@{[main.login]}@@" name="login">
-                            <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
-                                <tr>
-                                    <td align="right" nowrap width="110"><p>Username</p></td>
-                                    <td align="left" valign="middle" nowrap><input type="text" size="35" maxlength="20" name="username" class="formtext" style="width:250px;" /></td>
-                                </tr>
-                                <tr>
-                                    <td align="right" nowrap><p>Password</p></td>
-                                    <td align="left" valign="middle" nowrap><input type="password" size="35" maxlength="32" name="password" class="formtext" style="width:250px;" /></td>
-                                </tr>
-                                <tr>
-                                    <td align="left" nowrap>&nbsp;</td>
-                                    <td align="right" valign="middle" nowrap><input type="submit" name="login" value="Login" class="formbutton" /></td>
-                                </tr>
-                            </table>
-                        </form>
-                    </td>
-                </tr>
-            </table>
+			<h2>Edit project module</h2>
+			
+			<form method="post" action="@@{[setup.editmodule]}@@" name="editmodule" enctype="multipart/form-data; charset=utf-8">
+			<input type="hidden" value="@@{module_id:value}@@" name="editmodule[module_id]" />
+
+			<table border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">Module name*</p></td>
+				<td valign="middle" @@{module_name:formerror}@@><input type="text" maxlength="60" name="editmodule[module_name]" value="@@{module_name:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="module_name:errormsg" -->
+					<br /><span class="formerrormsg">@@{module_name:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+				</td>
+			</tr>
+			<tr>
+				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Description*</p></td>
+				<td align="left" valign="middle" @@{module_description:formerror}@@>
+					<textarea rows="5" name="editmodule[module_description]" class="formtext">@@{module_description:value}@@</textarea>
+					<!-- TemplateBeginBlock name="module_description:errormsg" -->
+						<br /><span class="formerrormsg">@@{module_description:errormsg}@@</span>
+					<!-- TemplateEndBlock -->				
+				</td>
+			</tr>
+			<tr>
+				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Module active</p></td>
+				<td align="left" valign="middle" @@{module_active:formerror}@@>
+					<input type="checkbox" name="editmodule[module_active]" @@{module_active:value}@@ />
+					<!-- TemplateBeginBlock name="module_active:errormsg" -->
+						<br /><span class="formerrormsg">@@{module_active:errormsg}@@</span>
+					<!-- TemplateEndBlock -->				
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+				   <p style="text-align:center;">
+				   <input name="back" value="Back to overview" class="formbutton" type="button" onclick="javascript:showOverview();" />
+				   <input name="submit" value="Submit data" class="formbutton" type="submit" />
+				   </p>
+				</td>
+			</tr>
+			</table>
+
+			</form>
 
 		<!-- InstanceEndEditable -->
 		</div>					
