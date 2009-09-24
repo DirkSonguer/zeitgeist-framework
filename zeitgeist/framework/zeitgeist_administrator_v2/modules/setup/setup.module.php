@@ -39,7 +39,6 @@ class setup
 	}
 
 
-
 	public function showmodules($parameters=array())
 	{
 		$this->debug->guard();
@@ -185,8 +184,6 @@ class setup
 		else
 		{
 			$moduledata = $this->setupfunctions->getModule($currentId);
-			
-			$this->debug->write($moduledata,"error");
 
 			$processData = array();
 			$processData['editmodule'] = $moduledata;
@@ -280,6 +277,152 @@ class setup
 
 		$tpl->show();
 
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function createaction($parameters=array())
+	{
+		$this->debug->guard();
+
+		if (!empty($parameters['createaction']['action_requiresuserright'])) $parameters['createaction']['action_requiresuserright'] = 1;
+		if (!empty($parameters['createaction']['action_module']))
+		{
+			$currentModuleId = $parameters['createaction']['action_module'];
+		}
+		else
+		{
+			$currentModuleId = 0;
+		}
+
+		$tpl = new zgaTemplate();
+		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_createaction'));
+
+		$createactionForm = new zgStaticform();
+		$createactionForm->load('forms/createaction.form.ini');
+
+		if (!empty($parameters['submit']))
+		{
+			$formvalid = $createactionForm->process($parameters);
+
+			if ($formvalid)
+			{
+				$ret = $this->setupfunctions->saveAction($parameters['createaction']);
+				if (!$ret)
+				{
+					$this->messages->setMessage('Could not save action data to database', 'userwarning');
+				}
+				else
+				{
+					$this->messages->setMessage('Action was created', 'usermessage');
+				}
+
+				$tpl->redirect($tpl->createLink('setup', 'showactions'));
+				$this->debug->unguard(true);
+				return true;
+			}
+
+			$formcreated = $createactionForm->create($tpl);
+		}
+
+		$modules = $this->setupfunctions->getAllModules();
+		foreach ($modules as $module)
+		{
+			$tpl->assign('module_id', $module['module_id']);
+			$tpl->assign('module_name', $module['module_name']);
+
+			if ($module['module_id'] != $currentModuleId)
+			{
+				$tpl->assign('module_isactive', '');
+			}
+			else
+			{
+				$tpl->assign('module_isactive', 'selected="selected"');
+			}
+			
+
+			$tpl->insertBlock('module_loop');
+		}
+
+		$tpl->show();
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function editaction($parameters=array())
+	{
+		$this->debug->guard();
+
+		$currentId = 1;
+		if (!empty($parameters['id'])) $currentId = $parameters['id'];
+		if (!empty($parameters['editaction']['action_id'])) $currentId = $parameters['editaction']['action_id'];
+		if (!empty($parameters['editaction']['action_requiresuserright'])) $parameters['editaction']['action_requiresuserright'] = 1;
+
+		$tpl = new zgaTemplate();
+		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_editaction'));
+
+		$editactionForm = new zgStaticform();
+		$editactionForm->load('forms/editaction.form.ini');
+
+		if (!empty($parameters['submit']))
+		{
+			$formvalid = $editactionForm->process($parameters);
+			$currentModuleId = $parameters['editaction']['action_module'];
+
+			if ($formvalid)
+			{
+				$ret = $this->setupfunctions->saveAction($parameters['editaction']);
+				if (!$ret)
+				{
+					$this->messages->setMessage('Could not save action data to database', 'userwarning');
+				}
+				else
+				{
+					$this->messages->setMessage('Action data was changed', 'usermessage');
+				}
+
+				$tpl->redirect($tpl->createLink('setup', 'showactions'));
+				$this->debug->unguard(true);
+				return true;
+			}
+		}
+		else
+		{
+			$actiondata = $this->setupfunctions->getAction($currentId);
+			$currentModuleId = $actiondata['action_module'];
+
+			$processData = array();
+			$processData['editaction'] = $actiondata;
+			$formvalid = $editactionForm->process($processData);
+		}
+
+		$formcreated = $editactionForm->create($tpl);
+
+		$modules = $this->setupfunctions->getAllModules();
+		foreach ($modules as $module)
+		{
+			$tpl->assign('module_id', $module['module_id']);
+			$tpl->assign('module_name', $module['module_name']);
+
+			if ($module['module_id'] != $currentModuleId)
+			{
+				$tpl->assign('module_isactive', '');
+			}
+			else
+			{
+				$tpl->assign('module_isactive', 'selected="selected"');
+			}
+			
+
+			$tpl->insertBlock('module_loop');
+		}
+
+		$tpl->assign('action_id:value', $currentId);
+		$tpl->show();
+		
 		$this->debug->unguard(true);
 		return true;
 	}

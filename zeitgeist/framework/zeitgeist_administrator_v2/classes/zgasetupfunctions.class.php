@@ -128,7 +128,7 @@ class zgaSetupfunctions
 	{
 		$this->debug->guard();
 
-		if ( (empty($moduledata['module_name'])) || (empty($moduledata['module_description']))  )
+		if ( (empty($moduledata['module_name'])) || (empty($moduledata['module_description'])) )
 		{
 			$this->debug->write('Could not save module data: missing module information', 'warning');
 			$this->messages->setMessage('Could not save module data: missing module information', 'warning');
@@ -237,6 +237,86 @@ class zgaSetupfunctions
 	}
 	
 	
+	public function getAction($actionid)
+	{
+		$this->debug->guard();
+		
+		$sql = "SELECT * FROM actions WHERE action_id = '" . $actionid . "'";
+		$res = $this->projectDatabase->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not get action data from project database: could not connect to database', 'warning');
+			$this->messages->setMessage('Could not get action data from project database: could not connect to database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$ret = $this->projectDatabase->fetchArray($res);
+
+		$this->debug->unguard($ret);
+		return $ret;
+	}
+
+
+	public function saveAction($actiondata)
+	{
+		$this->debug->guard();
+
+		if ( (empty($actiondata['action_name'])) || (empty($actiondata['action_description']))
+		|| (empty($actiondata['action_module'])) )
+		{
+			$this->debug->write('Could not save action data: missing action information', 'warning');
+			$this->messages->setMessage('Could not save action data: missing action information', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		if (!empty($actiondata['action_requiresuserright']))
+		{
+			$actiondata['action_requiresuserright'] = '1';
+		}
+		else
+		{
+			$actiondata['action_requiresuserright'] = '0';
+		}
+		
+		if (empty($actiondata['action_id']))
+		{
+			$sql = "INSERT INTO actions(action_name, action_description, action_module, action_requiresuserright)";
+			$sql .= " VALUES('" . $actiondata['action_name'] . "', '" . $actiondata['action_description'] . "', '" . $actiondata['action_module'] . "', '" . $actiondata['action_requiresuserright'] . "')";
+
+			$res = $this->projectDatabase->query($sql);
+			if (!$res)
+			{
+				$this->debug->write('Could not save active data: could not save active data to database', 'warning');
+				$this->messages->setMessage('Could not save active data: could not save active data to database', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
+		}
+		else
+		{
+			$sql = "UPDATE actions SET action_name = '" . $actiondata['action_name'] . "', ";
+			$sql .= "action_description = '" . $actiondata['action_description'] . "', ";
+			$sql .= "action_module = '" . $actiondata['action_module'] . "', ";
+			$sql .= "action_requiresuserright = '" . $actiondata['action_requiresuserright'] . "' ";
+			$sql .= "WHERE action_id = '" . $actiondata['action_id'] . "' ";
+
+			$res = $this->projectDatabase->query($sql);
+			if (!$res)
+			{
+				$this->debug->write('Could not save active data: could not update active data in database', 'warning');
+				$this->messages->setMessage('Could not save active data: could not update active data in database', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
 	public function getAllUserroles()
 	{
 		$this->debug->guard();
