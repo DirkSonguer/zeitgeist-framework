@@ -426,6 +426,37 @@ class setup
 		$this->debug->unguard(true);
 		return true;
 	}
+
+
+	public function deleteaction($parameters=array())
+	{
+		$this->debug->guard();
+		
+		$tpl = new zgaTemplate();
+
+		if (empty($parameters['id']))
+		{
+			$tpl->redirect($tpl->createLink('setup', 'showactions'));
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$ret = $this->setupfunctions->deleteAction($parameters['id']);
+
+		if (!$ret)
+		{
+			$this->messages->setMessage('Could not delete action, it\'s is still available', 'userwarning');
+		}
+		else
+		{
+			$this->messages->setMessage('Action deleted', 'usermessage');
+		}
+		
+		$tpl->redirect($tpl->createLink('setup', 'showactions'));
+		
+		$this->debug->unguard(true);
+		return true;
+	}
 	
 	
 	public function showuserroles($parameters=array())
@@ -448,6 +479,84 @@ class setup
 		$this->debug->unguard(true);
 		return true;
 	}	
+
+	public function edituserrole($parameters=array())
+	{
+		$this->debug->guard();
+
+		$currentId = 1;
+		if (!empty($parameters['id'])) $currentId = $parameters['id'];
+		if (!empty($parameters['edituserrole']['userrole_id'])) $currentId = $parameters['edituserrole']['userrole_id'];
+
+		$tpl = new zgaTemplate();
+		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_edituserrole'));
+
+		$edituserroleForm = new zgStaticform();
+		$edituserroleForm->load('forms/edituserrole.form.ini');
+
+		if (!empty($parameters['submit']))
+		{
+/*			
+			$formvalid = $edituserroleForm->process($parameters);
+			$currentModuleId = $parameters['edituserrole']['userrole_module'];
+
+			if ($formvalid)
+			{
+				$ret = $this->setupfunctions->saveuserrole($parameters['edituserrole']);
+				if (!$ret)
+				{
+					$this->messages->setMessage('Could not save userrole data to database', 'userwarning');
+				}
+				else
+				{
+					$this->messages->setMessage('userrole data was changed', 'usermessage');
+				}
+
+				$tpl->redirect($tpl->createLink('setup', 'showuserroles'));
+				$this->debug->unguard(true);
+				return true;
+			}
+*/
+		}
+		else
+		{
+/*
+			$userroledata = $this->setupfunctions->getuserrole($currentId);
+			$currentModuleId = $userroledata['userrole_module'];
+
+			$processData = array();
+			$processData['edituserrole'] = $userroledata;
+			$formvalid = $edituserroleForm->process($processData);
+*/			
+		}
+
+		$formcreated = $edituserroleForm->create($tpl);
+/*
+		$modules = $this->setupfunctions->getAllModules();
+		foreach ($modules as $module)
+		{
+			$tpl->assign('module_id', $module['module_id']);
+			$tpl->assign('module_name', $module['module_name']);
+
+			if ($module['module_id'] != $currentModuleId)
+			{
+				$tpl->assign('module_isactive', '');
+			}
+			else
+			{
+				$tpl->assign('module_isactive', 'selected="selected"');
+			}
+			
+
+			$tpl->insertBlock('module_loop');
+		}
+*/
+		$tpl->assign('userrole_id:value', $currentId);
+		$tpl->show();
+		
+		$this->debug->unguard(true);
+		return true;
+	}
 	
 }
 ?>

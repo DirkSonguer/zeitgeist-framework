@@ -317,6 +317,45 @@ class zgaSetupfunctions
 	}
 
 
+	public function deleteAction($actionid)
+	{
+		$this->debug->guard();
+
+		$sql = "DELETE FROM actions WHERE action_id = '" . $actionid . "'";
+		$res = $this->projectDatabase->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not delete action data from project database: could not connect to database', 'warning');
+			$this->messages->setMessage('Could not get action data from project database: could not connect to database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$sql = "DELETE FROM userrights WHERE userright_action = '" . $actionid . "'";
+		$res = $this->projectDatabase->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not delete rights for action from project database: could not connect to database', 'warning');
+			$this->messages->setMessage('Could not delete rights for action from project database: could not connect to database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$sql = "DELETE FROM userroles_to_actions WHERE userroleaction_action = '" . $actionid . "'";
+		$res = $this->projectDatabase->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not delete roles for action from project database: could not connect to database', 'warning');
+			$this->messages->setMessage('Could not delete roles for action from project database: could not connect to database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+	
+
 	public function getAllUserroles()
 	{
 		$this->debug->guard();
