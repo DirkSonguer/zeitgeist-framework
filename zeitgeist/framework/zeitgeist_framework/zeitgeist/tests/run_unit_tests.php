@@ -26,19 +26,19 @@
 	$user = zgUserhandler::init();
 	$controller = new zgController();
 	
-	require_once('./unit_tests/messages.test.php');
-	require_once('./unit_tests/objects.test.php');
-	require_once('./unit_tests/database.test.php');
-	require_once('./unit_tests/configuration.test.php');
-	require_once('./unit_tests/files.test.php');
-	require_once('./unit_tests/actionlog.test.php');
-	require_once('./unit_tests/parameters.test.php');
-	require_once('./unit_tests/userfunctions.test.php');
-	require_once('./unit_tests/userdata.test.php');
-	require_once('./unit_tests/userroles.test.php');
-	require_once('./unit_tests/userrights.test.php');
-	require_once('./unit_tests/userhandler.test.php');
-	require_once('./unit_tests/localisation.test.php');
+	require_once('./unittests/messages.test.php');
+	require_once('./unittests/objects.test.php');
+	require_once('./unittests/database.test.php');
+	require_once('./unittests/configuration.test.php');
+	require_once('./unittests/files.test.php');
+	require_once('./unittests/actionlog.test.php');
+	require_once('./unittests/parameters.test.php');
+	require_once('./unittests/userfunctions.test.php');
+	require_once('./unittests/userdata.test.php');
+	require_once('./unittests/userroles.test.php');
+	require_once('./unittests/userrights.test.php');
+	require_once('./unittests/userhandler.test.php');
+	require_once('./unittests/localisation.test.php');
 	
 	$debug = zgDebug::init();
 

@@ -123,7 +123,7 @@ class zgFacebookUserhandler extends zgUserhandler
 			return false;
 		}
 
-		if (!$this->session->getSessionVariable('user_userid'))
+		if (!$this->session->getSessionVariable('user_id'))
 		{
 			$this->debug->write('Could not establish user session: User session not initialized', 'warning');
 			$this->messages->setMessage('Could not establish user session: User session not initialized', 'warning');
@@ -196,7 +196,7 @@ class zgFacebookUserhandler extends zgUserhandler
 		}
 
 		$row = $this->database->fetchArray($res);
-		$this->session->setSessionVariable('user_userid', $row['user_id']);
+		$this->session->setSessionVariable('user_id', $row['user_id']);
 		$this->session->setSessionVariable('user_key', $row['user_key']);
 		$this->session->setSessionVariable('user_username', $row['user_username']);
 

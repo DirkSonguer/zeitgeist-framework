@@ -209,7 +209,6 @@ class zgController
 			}
 		}
 
-
 		// load configuration
 		if (!$this->configuration->loadConfiguration($module, APPLICATION_ROOTDIRECTORY . 'modules/' . $module . '/' . $module . '.ini'))
 		{

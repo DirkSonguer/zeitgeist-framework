@@ -794,7 +794,7 @@ class zgUserhandler
 
 		if ($this->session->getBoundIP() != getenv('REMOTE_ADDR'))
 		{
-			$this->session->unsetSessionVariable('user_userid');
+			$this->session->unsetSessionVariable('user_id');
 			$this->session->unsetSessionVariable('user_key');
 			$this->session->stopSession();
 
