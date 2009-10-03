@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Zeitgeist Administrator - Edit userrole</title>
+<title>Zeitgeist Administrator - Create a new userrole</title>
 <!-- InstanceEndEditable -->
 
 <link rel="stylesheet" href="@@{templatepath}@@/css/main.css" type="text/css" />
@@ -101,7 +101,7 @@
 		<div id="sidebar" >	
         <!-- InstanceBeginEditable name="sidebar" -->
 
-			<h3>Editing userroles</h3>
+			<h3>Creatinging userroles</h3>
 			<p></p>
 
 		<!-- InstanceEndEditable -->
@@ -110,15 +110,14 @@
 		<div id="main">		
         <!-- InstanceBeginEditable name="main" -->
 
-			<h2>Edit userrole</h2>
+			<h2>Create a new userrole</h2>
 			
-			<form method="post" userrole="@@{[setup.edituserrole]}@@" name="edituserrole" enctype="multipart/form-data; charset=utf-8">
-			<input type="hidden" value="@@{userrole_id:value}@@" name="edituserrole[userrole_id]" />
+			<form method="post" userrole="@@{[setup.createuserrole]}@@" name="createuserrole" enctype="multipart/form-data; charset=utf-8">
 
 			<table border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Userrole name*</p></td>
-				<td valign="middle" @@{userrole_name:formerror}@@><input type="text" maxlength="60" name="edituserrole[userrole_name]" value="@@{userrole_name:value}@@" class="formtext" />
+				<td valign="middle" @@{userrole_name:formerror}@@><input type="text" maxlength="60" name="createuserrole[userrole_name]" value="@@{userrole_name:value}@@" class="formtext" />
 				<!-- TemplateBeginBlock name="userrole_name:errormsg" -->
 					<br /><span class="formerrormsg">@@{userrole_name:errormsg}@@</span>
 				<!-- TemplateEndBlock -->
@@ -127,7 +126,7 @@
 			<tr>
 				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Description*</p></td>
 				<td align="left" valign="middle" @@{userrole_description:formerror}@@>
-					<textarea rows="5" name="edituserrole[userrole_description]" class="formtext">@@{userrole_description:value}@@</textarea>
+					<textarea rows="5" name="createuserrole[userrole_description]" class="formtext">@@{userrole_description:value}@@</textarea>
 					<!-- TemplateBeginBlock name="userrole_description:errormsg" -->
 						<br /><span class="formerrormsg">@@{userrole_description:errormsg}@@</span>
 					<!-- TemplateEndBlock -->				

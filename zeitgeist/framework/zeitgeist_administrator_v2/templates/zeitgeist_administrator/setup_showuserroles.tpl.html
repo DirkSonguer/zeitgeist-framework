@@ -113,7 +113,7 @@ $(document).ready(function()
 			<h3>Editing userroles</h3>
 			<p>Here you can see all the userroles of your application. Roles represent a collection of rights to call given actions.</p>
             <p>By default the list is sorted by ID, which should in most cases also represent the order of creation in descending order. Use the row titles to sort the list to your liking.</p>
-            <p>Use the icons to the right to either edit a userrole or delete it. Notice that you can't restore deleted users with this tool.<p>
+            <p>Use the icons to the right to either edit a userrole or delete it. Notice that you can't restore deleted users with this tool.</p>
             <p>The search will filter by ID as well as the userrole name and description as you type. Note that it's case insensitive. Use the "Clear" button to reset the filter and show all userroles.</p>
             
 		<!-- InstanceEndEditable -->
@@ -159,7 +159,7 @@ $(document).ready(function()
 					<a href="@@{[setup.edituserrole]}@@&id=@@{userrole_id}@@" alt="Edit userrole">
 						<img src="@@{templatepath}@@/images/icons/edit_22.png" alt="Edit userrole" title="Edit userrole '@@{userrole_name}@@'" border="0" />
 					</a> &nbsp; 
-					<a href="javascript:deleteModule(@@{userrole_id}@@, '@@{userrole_name}@@')" alt="Delete userrole">
+					<a href="javascript:deleteUserrole(@@{userrole_id}@@, '@@{userrole_name}@@')" alt="Delete userrole">
 						<img src="@@{templatepath}@@/images/icons/delete_22.png" alt="Delete userrole" title="Delete userrole '@@{userrole_name}@@'" border="0" />
 					</a>
 				</p></td>

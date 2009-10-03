@@ -326,7 +326,7 @@ class zgaSetupfunctions
 		if (!$res)
 		{
 			$this->debug->write('Could not delete action data from project database: could not connect to database', 'warning');
-			$this->messages->setMessage('Could not get action data from project database: could not connect to database', 'warning');
+			$this->messages->setMessage('Could not delete action data from project database: could not connect to database', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -380,6 +380,156 @@ class zgaSetupfunctions
 		$this->debug->unguard($userroles);
 		return $userroles;
 	}
+
+	public function getUserrole($userroleid)
+	{
+		$this->debug->guard();
 		
+		$sql = "SELECT * FROM userroles WHERE userrole_id = '" . $userroleid . "'";
+		$res = $this->projectDatabase->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not get userrole data from project database: could not connect to database', 'warning');
+			$this->messages->setMessage('Could not get userrole data from project database: could not connect to database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$ret = $this->projectDatabase->fetchArray($res);
+
+		$this->debug->unguard($ret);
+		return $ret;
+	}
+
+	public function getUserroleActions($userroleid)
+	{
+		$this->debug->guard();
+		
+		$sql = "SELECT * FROM userroles_to_actions WHERE userroleaction_userrole = '" . $userroleid . "'";
+		$res = $this->projectDatabase->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not get userrole to action data from project database: could not connect to database', 'warning');
+			$this->messages->setMessage('Could not get userrole to action data from project database: could not connect to database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$ret = array();
+		while ($row = $this->projectDatabase->fetchArray($res))
+		{
+			$ret[] = $row['userroleaction_action'];
+		}
+
+		$this->debug->unguard($ret);
+		return $ret;
+	}
+
+
+	public function saveUserrole($roledata, $actiondata)
+	{
+		$this->debug->guard();
+
+		if ( (!is_array($roledata)) || (!is_array($actiondata)) ||
+		(empty($roledata['userrole_name'])) || (empty($roledata['userrole_description'])) )
+		{
+			$this->debug->write('Could not save userrole data: missing userrole information', 'warning');
+			$this->messages->setMessage('Could not save userrole data: userrole module information', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		if (empty($roledata['userrole_id']))
+		{
+			$sql = "INSERT INTO userroles(userrole_name, userrole_description)";
+			$sql .= " VALUES('" . $roledata['userrole_name'] . "', '" . $roledata['userrole_description'] . "')";
+
+			$res = $this->projectDatabase->query($sql);
+			if (!$res)
+			{
+				$this->debug->write('Could not save userrole data: could not save userrole data to database', 'warning');
+				$this->messages->setMessage('Could not save userrole data: could not save userrole data to database', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
+			
+			$userroleID = $this->projectDatabase->insertId();
+		}
+		else
+		{
+			$sql = "UPDATE userroles SET userrole_name = '" . $roledata['userrole_name'] . "', ";
+			$sql .= "userrole_description = '" . $roledata['userrole_description'] . "'";
+			$sql .= "WHERE userrole_id = '" . $roledata['userrole_id'] . "' ";
+
+			$res = $this->projectDatabase->query($sql);
+			if (!$res)
+			{
+				$this->debug->write('Could not save userrole data: could not update userrole data in database', 'warning');
+				$this->messages->setMessage('Could not save userrole data: could not update userrole data in database', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
+
+			$sql = "DELETE FROM userroles_to_actions WHERE userroleaction_userrole = '" . $roledata['userrole_id'] . "'";
+			$res = $this->projectDatabase->query($sql);
+			if (!$res)
+			{
+				$this->debug->write('Could not save userrole data: could not delete userrole actions', 'warning');
+				$this->messages->setMessage('Could not save userrole data: could not delete userrole actions', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
+
+			$userroleID = $roledata['userrole_id'];
+		}
+
+		foreach ($actiondata as $action => $confirmation)
+		{
+			$sql = "INSERT INTO userroles_to_actions(userroleaction_userrole, userroleaction_action) ";
+			$sql .= "VALUES('" . $userroleID . "', '" . $action . "')";
+			$res = $this->projectDatabase->query($sql);
+			if (!$res)
+			{
+				$this->debug->write('Could not save userrole data: could not insert userrole actions', 'warning');
+				$this->messages->setMessage('Could not save userrole data: could not insert userrole actions', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function deleteUserrole($userroleid)
+	{
+		$this->debug->guard();
+
+		$sql = "DELETE FROM userroles WHERE userrole_id = '" . $userroleid . "'";
+		$res = $this->projectDatabase->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not delete userrole from project database: could not connect to database', 'warning');
+			$this->messages->setMessage('Could not delete userrole from project database: could not connect to database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$sql = "DELETE FROM userroles_to_actions WHERE userroleaction_userrole = '" . $userroleid . "'";
+		$res = $this->projectDatabase->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not delete roles for action from project database: could not connect to database', 'warning');
+			$this->messages->setMessage('Could not delete roles for action from project database: could not connect to database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+	
+
 }
 ?>
