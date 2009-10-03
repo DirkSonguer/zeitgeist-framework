@@ -124,8 +124,6 @@ class lrGamestates
 		// store complete gamestates in object
 		$this->objects->storeObject('currentGamestates', $currentGamestates, true);
 		
-		var_dump($currentGamestates);die();
-
 		$this->debug->unguard(true);
 		return true;
 	}
