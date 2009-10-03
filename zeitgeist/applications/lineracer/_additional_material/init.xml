@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container>
+	<race>
+		<players>
+			<element id="1">236</element>
+			<element id="2">2393</element>
+		</players>
+		<numPlayers>2</numPlayers>
+		<currentRace>174834</currentRace>
+
+		<currentCircuit>123</currentCircuit>
+		<updateTimestamp>1254569664</updateTimestamp>
+	</race>
+	<playerdata>
+		<element id="1">
+			<actions>
+				<element id="0">
+					<action>1</action>
+					<parameter>150,370</parameter>
+				</element>
+			</actions>
+			<radius>
+				<element id="0">20</element>
+			</radius>
+		</element>
+		<element id="2">
+			<actions>
+				<element id="0">
+					<action>1</action>
+					<parameter>160,370</parameter>
+				</element>
+			</actions>
+			<radius>
+				<element id="0">20</element>
+			</radius>
+		</element>
+	</playerdata>
+</container>
