@@ -22,8 +22,7 @@
 	$configuration = zgConfiguration::init();
 	$error = zgErrorhandler::init();
 	$user = zgUserhandler::init();
-	$eventhandler = new zgEventhandler();
-	$locale = zgLocale::init();
+	$controller = new zgController();
 	
 	require_once('userhandler_step2.test.php');
 	require_once('messagecache_step2.test.php');

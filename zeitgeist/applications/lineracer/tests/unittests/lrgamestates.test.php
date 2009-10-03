@@ -1,5 +1,7 @@
 <?php
 
+if (!defined('MULTITEST')) include(dirname(__FILE__).'/../test_configuration.php');
+
 class testLrgamestates extends UnitTestCase
 {
 	public $database;
@@ -15,8 +17,10 @@ class testLrgamestates extends UnitTestCase
 		$this->assertNotNull($gamestates);
 		unset($gamestates);
     }
-	
-	function test_loadGamestates()
+
+
+	// negative test for loading gamestates	
+	function test_loadGamestates_nodata()
 	{
 		$gamestates = new lrGamestates();
 		$objects = zgObjects::init();
@@ -24,6 +28,14 @@ class testLrgamestates extends UnitTestCase
 		// this should not contain any data as race 0 does not exist
 		$ret = $gamestates->loadGamestates();
 		$this->assertFalse($ret);
+	}
+
+
+	// load gamestates from testdata
+	function test_loadGamestates_testdata()
+	{
+		$gamestates = new lrGamestates();
+		$objects = zgObjects::init();
 		
 		$raceid = $this->miscfunctions->setupGame(2);
 
@@ -55,6 +67,7 @@ class testLrgamestates extends UnitTestCase
 		$this->assertEqual($ret['playerdata'][2]['actions'][0]['parameter'], '175,380');
 		$this->assertEqual($ret['playerdata'][2]['vector'][0], '-5');
 	}
+
 
 	function test_playerFinished()
 	{

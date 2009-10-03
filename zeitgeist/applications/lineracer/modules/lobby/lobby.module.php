@@ -211,7 +211,6 @@ class lobby
 		$tpl = new lrTemplate();
 		$tpl->load($this->configuration->getConfiguration('lobby', 'templates', 'lobby_creategame'));
 
-
 		$creategameroomForm = new zgStaticform();
 		$creategameroomForm->load('forms/creategameroom.form.ini');
 		$formvalid = $creategameroomForm->process($parameters);

@@ -15,7 +15,7 @@
  */
 
 	define('LINERACER_ACTIVE', true);
-//	define('DEBUGMODE', true);
+	define('DEBUGMODE', true);
 
 	if (!defined('ZEITGEIST_ROOTDIRECTORY')) define('ZEITGEIST_ROOTDIRECTORY', './zeitgeist/');
 	if (!defined('APPLICATION_ROOTDIRECTORY')) define('APPLICATION_ROOTDIRECTORY', './');
@@ -47,7 +47,7 @@
 	$configuration = zgConfiguration::init();
 	$error = zgErrorhandler::init();
 	$user = zgUserhandler::init();
-	$eventhandler = new zgEventhandler();
+	$controller = new zgController();
 
 	// load configuration
 	$configuration->loadConfiguration('lineracer', 'configuration/lineracer.ini');
@@ -77,8 +77,9 @@
 	}
 
 	// load event
-	$ret = $eventhandler->callEvent($module, $action);
-	
+	$ret = $controller->callEvent($module, $action);
+
+/*	
 	if ($ret != 1)
 	{
 		$msg = $message->getAllMessages('eventhandler.class.php');
@@ -97,12 +98,16 @@
 		$tpl = new lrTemplate();
 		$tpl->redirect($tpl->createLink('main', 'index'));
 	}
-
+*/
 	$debug->loadStylesheet('debug.css');
 	$debug->showInnerLoops = true;
+	$debug->saveToFile('./_additional_material/debug.html');
+
+/*	
 	$debug->showMiscInformation();
 	$debug->showDebugMessages();
-//	$debug->showQueryMessages();
+	$debug->showQueryMessages();
 	$debug->showGuardMessages();
+*/
 
 ?>

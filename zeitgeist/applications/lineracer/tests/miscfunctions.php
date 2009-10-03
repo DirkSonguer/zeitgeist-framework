@@ -87,7 +87,7 @@ class miscFunctions
 		$user->setLoginStatus(true);
 
 		$session = zgSession::init();
-		$session->setSessionVariable('user_userid', $player1);
+		$session->setSessionVariable('user_id', $player1);
 
 		return $raceid;
 	}

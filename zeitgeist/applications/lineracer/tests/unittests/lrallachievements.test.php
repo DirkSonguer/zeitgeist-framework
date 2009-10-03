@@ -29,7 +29,7 @@ class testLrallachievements extends UnitTestCase
 		$playerid = rand(501,1000);
 		$achievementid = rand(501,1000);
 		$session = zgSession::init();
-		$session->setSessionVariable('user_userid', $playerid);
+		$session->setSessionVariable('user_id', $playerid);
 
 		$sql = "INSERT INTO `race_actions` (`raceaction_id`, `raceaction_race`, `raceaction_player`, `raceaction_action`, `raceaction_parameter`, `raceaction_timestamp`) VALUES";
 		$sql .= "(1, 1, 1, 1, '150,370', '2009-03-24 08:06:31');";
