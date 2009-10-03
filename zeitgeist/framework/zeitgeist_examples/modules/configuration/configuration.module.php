@@ -13,7 +13,7 @@ class configuration
 		
 		// The configuration system is a singleton as we only need one global 
 		// configuration system to hold all configurations
-		
+
 		// You can bind it by calling the init() method
 		$this->configuration = zgConfiguration::init();
 	}
