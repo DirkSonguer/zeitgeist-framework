@@ -89,8 +89,9 @@ class lrGamestates
 		while ($rowActions = $this->database->fetchArray($resActions))
 		{
 			$action = array();
-			$action['action'] = $rowActions['raceaction_action'];
+			$action['type'] = $rowActions['raceaction_action'];
 			$action['parameter'] = $rowActions['raceaction_parameter'];
+//			$action['timestamp'] = $rowActions['timestamp'];
 			if ($lastTimestamp < $rowActions['timestamp'])
 			{			
 				$lastTimestamp = $rowActions['timestamp'];
@@ -99,7 +100,7 @@ class lrGamestates
 			$currentGamestates['playerdata'][$rowActions['raceuser_order']]['actions'][] = $action;
 		}
 
-		$currentGamestates['race']['updateTimestamp'] = $lastTimestamp;
+		$currentGamestates['race']['currentTimestamp'] = $lastTimestamp;
 
 		// temp storing gamedata
 		$this->objects->storeObject('currentGamestates', $currentGamestates, true);
@@ -189,14 +190,14 @@ class lrGamestates
 		$test = $currentGamestates['playerdata'][$player]['actions'];
 		
 		$testArray = array();
-		$testArray['action'] = $this->configuration->getConfiguration('gamedefinitions', 'actions', 'finish');
+		$testArray['type'] = $this->configuration->getConfiguration('gamedefinitions', 'actions', 'finish');
 		$testArray['parameter'] = '1';
 		if ( in_array($testArray, $currentGamestates['playerdata'][$player]['actions']) )
 		{
 			$finished = true;
 		}
 
-		$testArray['action'] = $this->configuration->getConfiguration('gamedefinitions', 'actions', 'forfeit');
+		$testArray['type'] = $this->configuration->getConfiguration('gamedefinitions', 'actions', 'forfeit');
 		if ( in_array($testArray, $currentGamestates['playerdata'][$player]['actions']) )
 		{
 			$finished = true;

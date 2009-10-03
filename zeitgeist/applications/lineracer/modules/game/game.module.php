@@ -101,7 +101,7 @@ class game
 		$this->debug->guard();
 
 		$tpl = new lrTemplate();
-		
+
 		$userfunctions = new lrUserfunctions();
 		if (!$userfunctions->currentlyPlayingGame())
 		{
@@ -116,61 +116,47 @@ class game
 		// initialize classes
 		$gamestates = new lrGamestates();
 		$dataserver = new zgDataserver();
-		
+
 		// load gamestates
 		$gamestates->loadGamestates();
 		$currentGamestates = $this->objects->getObject('currentGamestates');
 		
 		$xmlData = $dataserver->createXMLDatasetFromArray($currentGamestates);
 		$dataserver->streamXMLDataset($xmlData);
-		die();
-		
-/*		
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function update($parameters=array())
+	{
+		$this->debug->guard();
+
+		$tpl = new lrTemplate();
+
+		$userfunctions = new lrUserfunctions();
+		if (!$userfunctions->currentlyPlayingGame())
+		{
+			$this->debug->write('Could not init game: user not part of a game', 'warning');
+			$this->messages->setMessage('Could not init game: user not part of a game', 'warning');
+
+			$this->debug->unguard(false);
+			$tpl->redirect($tpl->createLink('main', 'index'));
+			return false;
+		}
+
 		// initialize classes
 		$gamestates = new lrGamestates();
-		$gamecardfunctions = new lrGamecardfunctions();		
-		$renderer = new prototypeRenderer();
-		$gameeventhandler = new lrGameeventhandler();
-		
+		$dataserver = new zgDataserver();
+
 		// load gamestates
 		$gamestates->loadGamestates();
-
 		$currentGamestates = $this->objects->getObject('currentGamestates');
 		
-		$gameeventhandler->handleRaceeevents();
-		$currentGamestates = $this->objects->getObject('currentGamestates');
+		$xmlData = $dataserver->createXMLDatasetFromArray($currentGamestates);
+		$dataserver->streamXMLDataset($xmlData);
 
-		if ($gamestates->raceFinished())
-		{
-			$gamefunctions = new lrGamefunctions();
-			$gamefunctions->assessRace();
-			$gamefunctions->endRace();
-			$tpl->redirect($tpl->createLink('game', 'finished'));			
-		}
-
-		// draw current situation based on the gamestates
-		$renderer->draw();
-
-		// fill template
-		if ($currentGamestates['round']['currentPlayer'] == 1) $tpl->assign('bgcolor', '#00ff00');
-		elseif ($currentGamestates['round']['currentPlayer'] == 2) $tpl->assign('bgcolor', '#ff0000');
-		elseif ($currentGamestates['round']['currentPlayer'] == 3) $tpl->assign('bgcolor', '#0000ff');
-		else $tpl->assign('bgcolor', '#000000');
-		
-		$tpl->assign('round', $currentGamestates['round']['currentRound']);
-
-		$userdeck = $gamecardfunctions->getPlayerDeck();
-
-		foreach ($userdeck as $gamecard)
-		{
-			$tpl->assign('gamecard_id', $gamecard['gamecard_id']);
-			$tpl->assign('gamecard_name', $gamecard['gamecard_name']);
-			$tpl->assign('gamecard_description', $gamecard['gamecard_description']);
-			$tpl->insertBlock('gamecard');
-		}
-
-		$tpl->show();
-*/
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -192,11 +178,10 @@ class game
 		$gamefunctions->move($parameters['position_x'], $parameters['position_y']);
 		
 		$currentGamestates = $this->objects->getObject('currentGamestates');
-//		var_dump($currentGamestates);
 
 		// redirect to game overview
-		$tpl = new lrTemplate();
-		$tpl->redirect($tpl->createLink('game', 'index'));
+//		$tpl = new lrTemplate();
+//		$tpl->redirect($tpl->createLink('game', 'index'));
 
 		$this->debug->unguard(true);
 		return true;
