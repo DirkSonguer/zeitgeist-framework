@@ -153,7 +153,7 @@ class lrMovementfunctions
 			if ($step[0] == $this->configuration->getConfiguration('gamedefinitions', 'game_surfaces', 'checkpoint1')) 
 			{
 				$testCheckpoint1 = array();
-				$testCheckpoint1['action'] = $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint1');
+				$testCheckpoint1['type'] = $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint1');
 				$testCheckpoint1['parameter'] = '1';
 				
 				if ( (!in_array($testCheckpoint1, $currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['actions']) )
@@ -171,11 +171,11 @@ class lrMovementfunctions
 			if ($step[0] == $this->configuration->getConfiguration('gamedefinitions', 'game_surfaces', 'checkpoint2')) 
 			{
 				$testCheckpoint1 = array();
-				$testCheckpoint1['action'] = $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint1');
+				$testCheckpoint1['type'] = $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint1');
 				$testCheckpoint1['parameter'] = '1';
 
 				$testCheckpoint2 = array();
-				$testCheckpoint2['action'] = $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint2');
+				$testCheckpoint2['type'] = $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint2');
 				$testCheckpoint2['parameter'] = '1';
 
 				if ( (in_array($testCheckpoint1, $currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['actions']))
@@ -194,11 +194,11 @@ class lrMovementfunctions
 			if ($step[0] == $this->configuration->getConfiguration('gamedefinitions', 'game_surfaces', 'checkpoint3')) 
 			{
 				$testCheckpoint2 = array();
-				$testCheckpoint2['action'] = $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint2');
+				$testCheckpoint2['type'] = $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint2');
 				$testCheckpoint2['parameter'] = '1';
 
 				$testCheckpoint3 = array();
-				$testCheckpoint3['action'] = $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint3');
+				$testCheckpoint3['type'] = $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint3');
 				$testCheckpoint3['parameter'] = '1';
 
 				if ( (in_array($testCheckpoint2, $currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['actions']))
@@ -217,11 +217,11 @@ class lrMovementfunctions
 			if ($step[0] == $this->configuration->getConfiguration('gamedefinitions', 'game_surfaces', 'finish')) 
 			{
 				$testCheckpoint3 = array();
-				$testCheckpoint3['action'] = $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint3');
+				$testCheckpoint3['type'] = $this->configuration->getConfiguration('gamedefinitions', 'actions', 'checkpoint3');
 				$testCheckpoint3['parameter'] = '1';
 
 				$testCheckpoint4 = array();
-				$testCheckpoint4['action'] = $this->configuration->getConfiguration('gamedefinitions', 'actions', 'finish');
+				$testCheckpoint4['type'] = $this->configuration->getConfiguration('gamedefinitions', 'actions', 'finish');
 				$testCheckpoint4['parameter'] = '1';
 
 				if ( (in_array($testCheckpoint3, $currentGamestates['playerdata'][$currentGamestates['round']['currentPlayer']]['actions']))
@@ -278,7 +278,7 @@ class lrMovementfunctions
 		$movement_definition = $this->configuration->getConfiguration('gamedefinitions', 'actions', 'move');
 		foreach ($currentGamestates['playerdata'][$player]['actions'] as $move)
 		{
-			if ($move['action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'move'))
+			if ($move['type'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'move'))
 			{
 				$movement[] = explode(',', $move['parameter']);
 			}

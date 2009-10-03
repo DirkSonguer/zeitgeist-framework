@@ -99,9 +99,8 @@
 		$tpl->redirect($tpl->createLink('main', 'index'));
 	}
 */
-	$debug->loadStylesheet('debug.css');
-	$debug->showInnerLoops = true;
-	$debug->saveToFile('./_additional_material/debug.html');
+
+	$debug->saveToFile('./_additional_material/debug.html', 'debug.css');
 
 /*	
 	$debug->showMiscInformation();

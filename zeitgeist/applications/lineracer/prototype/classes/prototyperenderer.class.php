@@ -61,7 +61,7 @@ class prototypeRenderer
 			$lastPosition = array(0,0);
 			foreach ($currentMoves as $move)
 			{
-				if ($move['action'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'move'))
+				if ($move['type'] == $this->configuration->getConfiguration('gamedefinitions', 'actions', 'move'))
 				{
 					$currentPosition = explode(',', $move['parameter']);
 					imagefilledellipse($circuit, $currentPosition[0], $currentPosition[1], 6, 6, $currentColor);
