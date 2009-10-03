@@ -426,7 +426,7 @@ class zgTemplate
 		}
 		else
 		{
-			echo '<p style="background:#00ff00;">Should redirect now to: <a href="'.$url.'">'.$url.'</a>';
+			echo '<p style="background:#00ff00;">Should redirect now to: <a href="'.$url.'">'.$url.'</a></p>';
 		}
 
 		$this->debug->unguard(true);

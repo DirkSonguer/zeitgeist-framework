@@ -488,6 +488,36 @@ class zgDebug
 
 
 	/**
+	 * Saves debug information to file
+	 *
+	 * @param string $filename file to save the debug information to
+	 *
+	 * @return boolean
+	 */
+	public function saveToFile($filename, $cssfile)
+	{
+		$filehandle = fopen($filename, "w");
+		ob_start();
+
+		$this->loadStylesheet($cssfile);
+		$this->showInnerLoops = true;
+		
+		$this->showMiscInformation();
+		$this->showDebugMessages();
+		$this->showQueryMessages();
+		$this->showGuardMessages();
+
+		$content = ob_get_contents();
+		fwrite($filehandle, $content);
+
+		ob_end_clean();
+		fclose($filehandle);
+
+		return true;
+	}
+
+
+	/**
 	 * Gets the current execution time
 	 *
 	 * @return integer

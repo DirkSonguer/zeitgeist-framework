@@ -155,6 +155,18 @@ class zgDebug
 
 
 	/**
+	 * Saves debug information to file
+	 *
+	 * @param string $filename file to save the debug information to
+	 *
+	 * @return boolean
+	 */
+	public function saveToFile($filename)
+	{
+	}
+
+
+	/**
 	 * Gets the current execution time
 	 *
 	 * @return integer
