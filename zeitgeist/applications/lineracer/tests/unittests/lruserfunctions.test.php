@@ -103,7 +103,7 @@ class testLruserfunctions extends UnitTestCase
 
 		$playerid = rand(501,1000);
 		$session = zgSession::init();
-		$session->setSessionVariable('user_userid', $playerid);
+		$session->setSessionVariable('user_id', $playerid);
 
 		$transactionsid = rand(100, 1000);
 		$value = rand(100, 1000);

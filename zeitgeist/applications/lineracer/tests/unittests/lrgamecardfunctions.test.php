@@ -27,7 +27,7 @@ class testLrgamecardfunctions extends UnitTestCase
 		$user = zgUserhandler::init();
 		$user->setLoginStatus(true);
 		$session = zgSession::init();
-		$session->setSessionVariable('user_userid', $player1);
+		$session->setSessionVariable('user_id', $player1);
 
 		$ret = $gamecardfunctions->addGamecard('1');
 		$ret = $gamecardfunctions->addGamecard('2');
@@ -59,7 +59,7 @@ class testLrgamecardfunctions extends UnitTestCase
 		$user = zgUserhandler::init();
 		$user->setLoginStatus(true);
 		$session = zgSession::init();
-		$session->setSessionVariable('user_userid', $player1);
+		$session->setSessionVariable('user_id', $player1);
 
 		$ret = $gamecardfunctions->removeGamecard('1');
 		$this->assertFalse($ret);
@@ -100,7 +100,7 @@ class testLrgamecardfunctions extends UnitTestCase
 		$user = zgUserhandler::init();
 		$user->setLoginStatus(true);
 		$session = zgSession::init();
-		$session->setSessionVariable('user_userid', $player1);
+		$session->setSessionVariable('user_id', $player1);
 
 		$ret = $gamecardfunctions->addGamecard('1');
 		

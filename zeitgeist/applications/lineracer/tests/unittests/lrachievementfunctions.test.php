@@ -25,7 +25,7 @@ class testLrachievementfunctions extends UnitTestCase
 		$playerid = rand(501,1000);
 
 		$session = zgSession::init();
-		$session->setSessionVariable('user_userid', $playerid);
+		$session->setSessionVariable('user_id', $playerid);
 
 		$this->database->query('TRUNCATE TABLE achievements');
 		$this->database->query('TRUNCATE TABLE achievements_to_users');
@@ -53,7 +53,7 @@ class testLrachievementfunctions extends UnitTestCase
 		$playerid = rand(501,1000);
 
 		$session = zgSession::init();
-		$session->setSessionVariable('user_userid', $playerid);
+		$session->setSessionVariable('user_id', $playerid);
 
 		$this->database->query('TRUNCATE TABLE achievements');
 		$this->database->query('TRUNCATE TABLE achievements_to_users');
@@ -80,7 +80,7 @@ class testLrachievementfunctions extends UnitTestCase
 		$playerid = rand(501,1000);
 
 		$session = zgSession::init();
-		$session->setSessionVariable('user_userid', $playerid);
+		$session->setSessionVariable('user_id', $playerid);
 
 		$this->database->query('TRUNCATE TABLE achievements');
 		$this->database->query('TRUNCATE TABLE achievements_to_users');

@@ -26,7 +26,7 @@ class testLrstatisticfunctions extends UnitTestCase
 
 		$playerid = rand(501,1000);
 		$session = zgSession::init();
-		$session->setSessionVariable('user_userid', $playerid);
+		$session->setSessionVariable('user_id', $playerid);
 
 		$sql = "INSERT INTO `userdata` (`userdata_id`, `userdata_user`, `userdata_firstname`, `userdata_racepoints`, `userdata_raceswon`, `userdata_raceslost`, `userdata_currentcar`) ";
 		$sql .= "VALUES(1, '" . $playerid . "', 'test', 100, 2, 3, 0);";
@@ -45,7 +45,7 @@ class testLrstatisticfunctions extends UnitTestCase
 
 		$playerid = rand(501,1000);
 		$session = zgSession::init();
-		$session->setSessionVariable('user_userid', $playerid);
+		$session->setSessionVariable('user_id', $playerid);
 
 		$sql = "INSERT INTO `userdata` (`userdata_id`, `userdata_user`, `userdata_firstname`, `userdata_racepoints`, `userdata_raceswon`, `userdata_raceslost`, `userdata_currentcar`) ";
 		$sql .= "VALUES(1, '" . $playerid . "', 'test', 100, 2, 3, 0);";
@@ -68,7 +68,7 @@ class testLrstatisticfunctions extends UnitTestCase
 
 		$playerid = rand(501,1000);
 		$session = zgSession::init();
-		$session->setSessionVariable('user_userid', $playerid);
+		$session->setSessionVariable('user_id', $playerid);
 
 		$sql = "INSERT INTO `userdata` (`userdata_id`, `userdata_user`, `userdata_firstname`, `userdata_racepoints`, `userdata_raceswon`, `userdata_raceslost`, `userdata_currentcar`) ";
 		$sql .= "VALUES(1, '" . $playerid . "', 'test', 100, 2, 3, 0);";
@@ -92,7 +92,7 @@ class testLrstatisticfunctions extends UnitTestCase
 
 		$playerid = rand(501,1000);
 		$session = zgSession::init();
-		$session->setSessionVariable('user_userid', $playerid);
+		$session->setSessionVariable('user_id', $playerid);
 
 		$sql = "INSERT INTO `userdata` (`userdata_id`, `userdata_user`, `userdata_firstname`, `userdata_racepoints`, `userdata_raceswon`, `userdata_raceslost`, `userdata_currentcar`) ";
 		$sql .= "VALUES(1, '" . $playerid . "', 'test', 100, 2, 3, 0);";
@@ -118,7 +118,7 @@ class testLrstatisticfunctions extends UnitTestCase
 
 		$playerid = rand(501,1000);
 		$session = zgSession::init();
-		$session->setSessionVariable('user_userid', $playerid);
+		$session->setSessionVariable('user_id', $playerid);
 
 		$sql = "INSERT INTO `userdata` (`userdata_id`, `userdata_user`, `userdata_firstname`, `userdata_racepoints`, `userdata_raceswon`, `userdata_raceslost`, `userdata_currentcar`) ";
 		$sql .= "VALUES(1, '" . $playerid . "', 'test', 100, 2, 3, 0);";

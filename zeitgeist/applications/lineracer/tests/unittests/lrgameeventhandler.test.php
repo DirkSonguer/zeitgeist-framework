@@ -40,8 +40,9 @@ class testLrgameeventhandler extends UnitTestCase
 
 		$ret = $objects->getObject('currentGamestates');
 		$this->assertTrue(is_array($ret));
-		$this->assertEqual($ret['playerdata'][1]['moves'][1], '155,380');
-		$this->assertEqual($ret['playerdata'][1]['vector'][1], '0');
+
+		$this->assertEqual($ret['playerdata'][1]['actions'][0]["action"], '1');
+		$this->assertEqual($ret['playerdata'][1]['actions'][0]["parameter"], '150,370');
 	}
 	
 	function test_saveRaceevent()

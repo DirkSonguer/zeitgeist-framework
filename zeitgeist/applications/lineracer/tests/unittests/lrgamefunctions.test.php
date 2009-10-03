@@ -45,7 +45,7 @@ class testLrgamefunctions extends UnitTestCase
 		$this->assertEqual($ret, 2);
 
 		$session = zgSession::init();
-		$session->setSessionVariable('user_userid', $player1);
+		$session->setSessionVariable('user_id', $player1);
 
 		$ret = $gamefunctions->startRace();
 		$this->assertEqual($ret, ($raceid+1));

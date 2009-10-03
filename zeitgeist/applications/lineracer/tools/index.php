@@ -30,7 +30,7 @@
 	$configuration = zgConfiguration::init();
 	$error = zgErrorhandler::init();
 	$user = zgUserhandler::init();
-	$eventhandler = new zgEventhandler();
+	$controller = new zgController();
 
 	// load configuration
 	$configuration->loadConfiguration('lineracer', '../configuration/lineracer.ini');
