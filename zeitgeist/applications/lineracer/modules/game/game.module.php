@@ -54,7 +54,6 @@ class game
 		
 		// load gamestates
 		$gamestates->loadGamestates();
-
 		$currentGamestates = $this->objects->getObject('currentGamestates');
 		
 		$gameeventhandler->handleRaceeevents();
@@ -116,9 +115,13 @@ class game
 		// initialize classes
 		$gamestates = new lrGamestates();
 		$dataserver = new zgDataserver();
+		$gameeventhandler = new lrGameeventhandler();
 
 		// load gamestates
 		$gamestates->loadGamestates();
+		$currentGamestates = $this->objects->getObject('currentGamestates');
+		
+		$gameeventhandler->handleRaceeevents();
 		$currentGamestates = $this->objects->getObject('currentGamestates');
 		
 		$xmlData = $dataserver->createXMLDatasetFromArray($currentGamestates);
@@ -149,9 +152,13 @@ class game
 		// initialize classes
 		$gamestates = new lrGamestates();
 		$dataserver = new zgDataserver();
+		$gameeventhandler = new lrGameeventhandler();
 
 		// load gamestates
 		$gamestates->loadGamestates();
+		$currentGamestates = $this->objects->getObject('currentGamestates');
+		
+		$gameeventhandler->handleRaceeevents();
 		$currentGamestates = $this->objects->getObject('currentGamestates');
 		
 		$xmlData = $dataserver->createXMLDatasetFromArray($currentGamestates);
