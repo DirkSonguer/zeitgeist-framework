@@ -28,6 +28,34 @@
 
 <!-- InstanceBeginEditable name="head" -->
 
+<script language="JavaScript" type="text/javascript">
+
+	function showOverview()
+	{
+		window.location.href = "@@{[users.index]}@@";
+	}
+
+	$(document).ready(function() 
+		{ 
+	
+			$("#userrightstable")
+			.tablesorter({widthFixed: true, widgets: ['zebra']}) 
+			.tablesorterFilter({filterContainer: "#filter-box",
+								filterClearContainer: "#filter-clear-button",
+								filterColumns: [0, 1]});
+
+			$("#userrolestable")
+			.tablesorter({widthFixed: true, widgets: ['zebra']}) 
+			.tablesorterFilter({filterContainer: "#filter-box",
+								filterClearContainer: "#filter-clear-button",
+								filterColumns: [0, 1]});
+	
+			; 
+		} 
+	); 
+	
+</script>
+
 <!-- InstanceEndEditable -->
 </head>
 
@@ -79,11 +107,7 @@
 		<div id="sidebar" >	
         <!-- InstanceBeginEditable name="sidebar" -->
 
-			<h3>Quickhelp</h3>			
-			<p>Here you can see all the users of your application.</p>
-			<p>By default the list is sorted by ID, which should in most cases also represent the order of creation in descending order. Use the row titles to sort the list to your liking.</p>
-			<p>Use the icons to the right to either edit a user or delete it. Notice that you can't restore deleted users with this tool.<p>
-			<p>The search will filter by ID as well as the username as you type. Note that it's case insensitive. Use the "Clear" button to reset the filter and show all users.</p>
+			<h3>Quickhelp</h3>
 			
 		<!-- InstanceEndEditable -->
 		</div>	
@@ -91,45 +115,102 @@
 		<div id="main">		
         <!-- InstanceBeginEditable name="main" -->
 
-			<h2>Edit user</h2>
-			
 			<form method="post" action="@@{[users.edituser]}@@" name="editaction" enctype="multipart/form-data; charset=utf-8">
 			<input type="hidden" value="@@{user_id}@@" name="user_id" />
 
-			<div id="contentbox">
-			<h3>Edit user</h3>
+			<h2>Edit user</h2>
 			<table border="0" cellpadding="0" cellspacing="0">
-				<tr>
-					<td align="right" valign="top" nowrap width="150"><p>Username*</p></td>
-					<td align="left" valign="middle" nowrap width="250"><input type="text" maxlength="20" name="user_username" value="@@{user_username}@@" class="formtext" /></td>
-                    <td align="left" valign="top" rowspan="2">
-		                <h3><img src="@@{templatepath}@@/nuvola/22x22/mimetypes/wordprocessing.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[users.edituserdata]}@@&id=@@{user_id}@@" alt="Edit userdata">Edit userdata for this user</a></h3>
-		                <h3><img src="@@{templatepath}@@/nuvola/22x22/actions/kgpg.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[users.edituserrights]}@@&id=@@{user_id}@@" alt="Edit userrights">Edit userrights for this user</a></h3>
-                    </td>
-				</tr>
-				<tr>
-					<td align="right" valign="top" nowrap width="150"><p>Key*</p></td>
-					<td align="left" valign="middle" nowrap><input type="text" maxlength="30" name="user_key" value="@@{user_key}@@" class="formtext" /></td>
-				</tr>
+			<tr>
+				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Username*</p></td>
+				<td valign="middle" @@{user_name:formerror}@@><input type="text" maxlength="60" name="edituser[user_name]" value="@@{user_name:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="user_name:errormsg" -->
+					<br /><span class="formerrormsg">@@{user_name:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+				</td>
+			</tr>
+			<tr>
+				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">User key*</p></td>
+				<td align="left" valign="middle" @@{user_key:formerror}@@>
+					<input type="text" maxlength="60" name="edituser[user_key]" value="@@{user_key:value}@@" class="formtext" />
+					<!-- TemplateBeginBlock name="user_key:errormsg" -->
+						<br /><span class="formerrormsg">@@{user_key:errormsg}@@</span>
+					<!-- TemplateEndBlock -->				
+				</td>
+			</tr>
 			</table>
-			</div>
-    
-			<div id="contentbox">
-            <h3>Change password</h3>
-            <table border="0" cellpadding="0" cellspacing="0">
+
+			<h3>Change Password</h3>
+			<table border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Password</p></td>
+				<td valign="middle" @@{user_password:formerror}@@><input type="text" maxlength="60" name="edituser[user_password]" value="@@{user_password:value}@@" class="formtext" />
+				<!-- TemplateBeginBlock name="user_password:errormsg" -->
+					<br /><span class="formerrormsg">@@{user_password:errormsg}@@</span>
+				<!-- TemplateEndBlock -->
+				</td>
+			</tr>
+			<tr>
+				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Confirmation</p></td>
+				<td align="left" valign="middle" @@{user_pwconfirmation:formerror}@@>
+					<input type="text" maxlength="60" name="edituser[user_pwconfirmation]" value="@@{user_pwconfirmation:value}@@" class="formtext" />
+					<!-- TemplateBeginBlock name="user_pwconfirmation:errormsg" -->
+						<br /><span class="formerrormsg">@@{user_pwconfirmation:errormsg}@@</span>
+					<!-- TemplateEndBlock -->				
+				</td>
+			</tr>
+			</table>
+
+			<h2>Userdata</h2>
+
+			<h2>Userroles</h2>
+            <table id="userrolestable" border="0" cellpadding="0" cellspacing="5" width="100%">
+	       	<thead>
+	        <tr>
+				<th><p>Userrole</p></th>
+				<th><p>Description</p></th>
+				<th><p>Has Userrole</p></th>
+	        </tr>
+            </thead>
+            <tbody>
+			<!-- TemplateBeginBlock name="userroles" -->
                 <tr>
-                    <td align="right" valign="top" nowrap width="150"><p> New Password</p></td>
-                    <td align="left" valign="middle" nowrap width="250"><input type="password" maxlength="30" name="user_password" class="formtext" /></td>
-                    <td align="left" valign="top" rowspan="2">
-		                <h3><img src="@@{templatepath}@@/nuvola/22x22/actions/2leftarrow.png" alt="" align="left" style="margin-right:10px;" /> <a href="@@{[users.index]}@@" alt="Back to user overview">Back to user overview</a><br />(changes will not be saved)</h3>
-                    </td>
-                </tr>
+				<td id="listtable"><p>@@{userrole_name}@@</a></p></td>
+				<td id="listtable"><p>@@{userrole_description}@@</a></p></td>
+				<td id="listtable"><p><input type="checkbox" name="userrights[@@{action_id}@@]" @@{action_active}@@ /></p></td>
+			<!-- TemplateEndBlock -->				
+			</tr>
+			</table>
+
+			<h2>Userrights</h2>
+            <table id="userrightstable" border="0" cellpadding="0" cellspacing="5" width="100%">
+	       	<thead>
+	        <tr>
+				<th><p>Module</p></th>
+				<th><p>Action Name</p></th>
+				<th><p>Has Userright</p></th>
+	        </tr>
+            </thead>
+            <tbody>
+			<!-- TemplateBeginBlock name="userrights" -->
                 <tr>
-                    <td align="right" valign="top" nowrap width="150"><p> Confirm Password</p></td>
-                    <td align="left" valign="middle" nowrap><input type="password" maxlength="30" name="user_password2" class="formtext" /></td>
-                </tr>
-            </table>
-			</div>
+				<td id="listtable"><p>@@{module_name}@@</a></p></td>
+				<td id="listtable"><p>@@{action_name}@@</a></p></td>
+				<td id="listtable"><p><input type="checkbox" name="userrights[@@{action_id}@@]" @@{action_active}@@ /></p></td>
+			<!-- TemplateEndBlock -->				
+			</tr>
+			</table>
+
+			<table border="0" cellpadding="0" cellspacing="0">
+			<tr>
+			<tr>
+				<td colspan="2">
+				   <p style="text-align:center;">
+				   <input name="back" value="Back to overview" class="formbutton" type="button" onclick="javascript:showOverview();" />
+				   <input name="submit" value="Submit data" class="formbutton" type="submit" />
+				   </p>
+				</td>
+			</tr>
+			</table>
 
 			</form>
 
