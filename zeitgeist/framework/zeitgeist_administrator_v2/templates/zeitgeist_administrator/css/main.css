@@ -107,8 +107,10 @@ table {
 	padding-right: 12px;	
 }
 
-td.formerror {
+.formerrormsg {
 	background: #ff0000;
+	color:#FFFFFF;
+	padding:5px;
 }
 
 th strong {

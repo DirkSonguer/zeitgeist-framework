@@ -539,6 +539,19 @@ class setup
 
 			$formcreated = $edituserroleForm->create($tpl);
 		}
+		else
+		{
+			$actions = $this->setupfunctions->getAllActions();
+	
+			foreach ($actions as $action)
+			{
+				$tpl->assign('action_id', $action['action_id']);
+				$tpl->assign('action_name', $action['action_name']);
+				$tpl->assign('module_name', $action['module_name']);
+				
+				$tpl->insertBlock('userrole_action');
+			}
+		}
 
 		$tpl->show();
 		
