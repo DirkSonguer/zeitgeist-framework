@@ -223,7 +223,7 @@ class zgController
 		// log the pageview if logging is active
 		if ($this->configuration->getConfiguration('zeitgeist','actionlog','actionlog_active') == '1')
 		{
-			$this->actionlog->logAction($moduleData['module_id'], $actionData['action_id'], $parameters);
+			$this->actionlog->logAction($moduleData['module_id'], $actionData['action_id'], $safeparameters);
 		}
 
 		// execute action in module
