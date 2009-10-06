@@ -63,7 +63,6 @@ class zgActionlog
 
 		if (count($parameters) > 0)
 		{
-//			var_dump($parameters);
 			$sql = "INSERT INTO actionlog_parameters(actionparameter_trafficid, actionparameter_key, actionparameter_value) VALUES";
 			$sqlinserts = '';
 			foreach ($parameters as $key => $value)
