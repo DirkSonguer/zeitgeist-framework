@@ -79,10 +79,9 @@
 	// load event
 	$ret = $controller->callEvent($module, $action);
 
-/*	
 	if ($ret != 1)
 	{
-		$msg = $message->getAllMessages('eventhandler.class.php');
+		$msg = $message->getAllMessages('controller.class.php');
 		if (strpos($msg[0]->message, 'has no rights for action') !== false)
 		{
 			$message->setMessage('Du musst dich anmelden, um dies tun zu können.', 'userwarning');
@@ -90,15 +89,14 @@
 			// save message data for user
 			if ($configuration->getConfiguration('zeitgeist', 'messages', 'use_persistent_messages'))
 			{
-				$messagecache = zgMessagecache::init();
-				$messagecache->saveMessagesToDatabase();
+				$messages = zgMessages::init();
+				$messages->saveMessagesToSession();
 			}
 		}
 
 		$tpl = new lrTemplate();
 		$tpl->redirect($tpl->createLink('main', 'index'));
 	}
-*/
 
 	$debug->saveToFile('./_additional_material/debug.html', 'debug.css');
 

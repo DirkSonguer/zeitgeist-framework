@@ -12,6 +12,15 @@
 <link href="@@{templatepath}@@//css/layout.css" rel="stylesheet" type="text/css" />
 <link href="@@{templatepath}@@//css/typo.css" rel="stylesheet" type="text/css" />
 
+<script type="text/javascript">
+
+function login()
+{
+  document.loginform.submit();
+}
+
+</script> 
+
 <!-- InstanceParam name="Startseite" type="boolean" value="true" -->
 <!-- InstanceBeginEditable name="head" -->
 <!-- InstanceEndEditable --><!-- InstanceParam name="TabBoxengasse" type="text" value="m1 selected" --><!-- InstanceParam name="TabLobby" type="text" value="m2" --><!-- InstanceParam name="TabStatistikCenter" type="text" value="m3" --><!-- InstanceParam name="TabShop" type="text" value="m4" -->
@@ -23,11 +32,11 @@
       <div class="loginarea">
       
 		<!-- TemplateBeginBlock name="loginbox" -->
-		<form method="post" action="@@{[main.login]}@@" name="login" id="loginform">
+		<form method="post" action="@@{[main.login]}@@" name="loginform" id="loginform">
         	<label>Username</label><input type="text" name="username" class="txtbig" />
             <label>Passwort</label><input type="text" name="password" class="txtbig" />
-			<input type="submit" name="login" value="Login" class="formbutton" />
-            <a href="#" class="btn01 right"><span>Login</span></a>
+			<input type="hidden" name="login" value="Login" />
+            <a href="javascript:login()" class="btn01 right"><span>Login</span></a>
         </form>
 		<!-- TemplateEndBlock -->
 		
@@ -102,7 +111,12 @@
                 <li ><a href="#vtabs-1" class="m1">Boxentalk</a></li>
                 <li ><a href="#vtabs-2" class="m2">Spielbeschreibung</a></li>
                 <li ><a href="#vtabs-3" class="m3">Screenshots</a></li>
+                <!-- TemplateBeginBlock name="registertab" -->
                 <li ><a href="#vtabs-4" class="m3">Neu anmelden</a></li>
+                <!-- TemplateEndBlock -->
+                <!-- TemplateBeginBlock name="newgametab" -->
+                <li ><a href="#vtabs-4" class="m3">Neues Spiel erstellen</a></li>
+                <!-- TemplateEndBlock -->
         	</ul>
             <div class="tabcontent" id="vtabs-1">
 				<!-- InstanceBeginEditable name="Content-Boxentalk" -->
@@ -160,6 +174,7 @@
                 <img class="screenshot" src="images/dummy-screenshot.jpg" alt="LineRacer - InGame Screenshot"  />
                 <!-- InstanceEndEditable -->
             </div>
+       		<!-- TemplateBeginBlock name="registercontent" -->
             <div class="tabcontent" id="vtabs-4">
 				<!-- InstanceBeginEditable name="Content-Neuanmelden" -->
                 <h1>Neu anmelden</h1>
@@ -189,6 +204,38 @@
                 </p>
                 <!-- InstanceEndEditable -->
             </div>  
+			<!-- TemplateEndBlock -->
+       		<!-- TemplateBeginBlock name="newgamecontent" -->
+            <div class="tabcontent" id="vtabs-4">
+				<!-- InstanceBeginEditable name="Content-NeuesSpiel" -->
+                <h1>Neu anmelden</h1>
+                <p>
+                <form action="#" id="registerform">
+                  <label>Username</label>
+                  <input type="text" id="username" class="txtbig" />
+                  <label>Passwort</label>
+                  <input type="text" class="txtbig" />
+                  <label>Passwort bestätigen</label>
+                  <input type="text" class="txtbig" />
+                  <label>E-Mail Adresse</label>
+                  <input type="text" class="txtbig" />
+                  <label>Geburtsdatum</label>
+                  <input type="text" class="txtsmall" />
+                  <input type="text" class="txtsmall" />
+                  <input type="text" class="txtnormal" />
+                  <label>Land</label>
+                  <select class="txtbig">
+                    <option>Deutschland</option>
+                    <option>Österreich</option>
+                    <option>Schweiz</option>
+                    <option>Sonstiges</option>
+                  </select>
+                  <a href="#" class="btn01 right"><span>Registrieren</span></a>
+                </form>
+                </p>
+                <!-- InstanceEndEditable -->
+            </div>  
+			<!-- TemplateEndBlock -->            
         </div>
 </div>
       <div class="rightbox-user">
