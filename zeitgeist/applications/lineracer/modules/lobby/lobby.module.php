@@ -215,7 +215,7 @@ class lobby
 		$creategameroomForm->load('forms/creategameroom.form.ini');
 		$formvalid = $creategameroomForm->process($parameters);
 
-		if (!empty($parameters['submit']))
+		if ( (!empty($parameters['submit'])) || (!empty($parameters['createGame'])) )
 		{
 			if ($formvalid)
 			{
