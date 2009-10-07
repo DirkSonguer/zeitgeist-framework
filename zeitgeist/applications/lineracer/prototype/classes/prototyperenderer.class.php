@@ -37,8 +37,8 @@ class prototypeRenderer
 		}
 		$offset = $currentGamestates['round']['currentRadius'];
 
-//		$circuit = imagecreatefrompng(APPLICATION_ROOTDIRECTORY . '/data/circuits/circuit1.png');
-		$circuit = imagecreatefrompng(APPLICATION_ROOTDIRECTORY . '/data/circuits/circuit1_negative.png');
+		$circuit = imagecreatefrompng(APPLICATION_ROOTDIRECTORY . '/data/circuits/circuit1.png');
+//		$circuit = imagecreatefrompng(APPLICATION_ROOTDIRECTORY . '/data/circuits/circuit1_negative.png');
 		if (!$circuit) die('1');
 
 		$colorYellow = imagecolorallocate($circuit, 255, 150, 0);

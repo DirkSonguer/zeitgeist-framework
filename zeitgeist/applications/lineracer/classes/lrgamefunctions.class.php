@@ -396,6 +396,80 @@ class lrGamefunctions
 	}
 
 
+	// TODO: function
+	public function startDemoRace()
+	{
+		$this->debug->guard();
+
+		if(!$this->user->isLoggedIn())
+		{
+			$this->debug->write('Could not start demo game: player is not logged in', 'warning');
+			$this->messages->setMessage('Could not start demo game: player is not logged in', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		// store new race data
+		$sql = "INSERT INTO races(race_circuit, race_activeplayer, race_currentround, race_gamecardsallowed, race_demo) ";
+		$sql .= "VALUES('1', '1', '1', '1', '1')";
+		$res = $this->database->query($sql);
+		if(!$res)
+		{
+			$this->debug->write('Could not start demo game: could not write race data to database', 'warning');
+			$this->messages->setMessage('Could not start demo game: could not write race data to database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		// get race id as we need it
+		$raceid = $this->database->insertId();
+		if(!$raceid)
+		{
+			$this->debug->write('Could not start demo game: could not get race id from database', 'warning');
+			$this->messages->setMessage('Could not start demo game: could not get race id from database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		// get associated circuit data
+		$sql = "SELECT * FROM circuits WHERE circuit_id = '1'";
+		$res = $this->database->query($sql);
+		if(!$res)
+		{
+			$this->debug->write('Could not start game: could not find the circuit data', 'warning');
+			$this->messages->setMessage('Could not start game: could not find the circuit data', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		$rowCircuit = $this->database->fetchArray($res);
+
+		$sql = 'INSERT INTO race_to_users(raceuser_race, raceuser_user, raceuser_order) VALUES';
+		$sql .= "('" . $raceid . "','" . $this->user->getUserID() . "', '1')";
+
+		// fill initial position
+		$currentPosition = explode(',',$rowCircuit['circuit_startposition']);
+		$currentVector = explode(',',$rowCircuit['circuit_startvector']);
+		$currentPosition[0] += $currentVector[0];
+		$currentPosition[1] += $currentVector[1];
+		$currentPosition = implode(',',$currentPosition);
+		$this->database->query("INSERT INTO race_actions(raceaction_race, raceaction_player, raceaction_action, raceaction_parameter) VALUES('" . $raceid . "', '1', '1', '" . $currentPosition . "')");
+
+		$res = $this->database->query($sql);
+		if(!$res)
+		{
+			$this->debug->write('Could not start demo game: could not insert player data', 'warning');
+			$this->messages->setMessage('Could not start demo game: could not insert player data', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$this->lruser->insertTransaction($this->configuration->getConfiguration('gamedefinitions', 'transaction_types', 'demo_start'), 1);
+		
+		$this->debug->unguard($raceid);
+		return $raceid;
+	}
+
+
 	public function archiveRace()
 	{
 		$this->debug->guard();
