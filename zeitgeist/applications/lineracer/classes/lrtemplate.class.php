@@ -73,14 +73,10 @@ class lrTemplate extends zgTemplate
 			$playername = $this->user->getUsername();
 			parent::assign('playername', $playername);
 			parent::insertBlock('logoutbox');
-			parent::insertBlock('newgametab');
-			parent::insertBlock('newgamecontent');
 		}
 		else
 		{
 			parent::insertBlock('loginbox');
-			parent::insertBlock('registertab');
-			parent::insertBlock('registercontent');
 		}
 
 		if ($this->lruser->currentlyPlayingGame())

@@ -28,7 +28,15 @@ class main
 		$this->debug->guard();
 
 		$tpl = new lrTemplate();
-		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_index'));
+		
+		if ($this->user->isLoggedIn())
+		{
+			$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_boxengasse'));
+		}
+		else
+		{
+			$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_index'));
+		}
 
 		$tpl->show();
 

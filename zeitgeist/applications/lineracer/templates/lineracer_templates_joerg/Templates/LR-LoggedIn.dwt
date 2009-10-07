@@ -6,20 +6,12 @@
 <title>LineRacer - Startseite</title>
 <!-- InstanceEndEditable -->
 
-<script type="text/javascript" src="@@{templatepath}@@//js/jquery-1.3.2.min.js"></script>
-<script type="text/javascript" src="@@{templatepath}@@//js/ui.core.js"></script>
-<script type="text/javascript" src="@@{templatepath}@@//js/ui.tabs.js"></script>
-<link href="@@{templatepath}@@//css/layout.css" rel="stylesheet" type="text/css" />
-<link href="@@{templatepath}@@//css/typo.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/jquery-1.3.2.min.js"></script>
+<script type="text/javascript" src="js/ui.core.js"></script>
+<script type="text/javascript" src="js/ui.tabs.js"></script>
+<link href="css/layout.css" rel="stylesheet" type="text/css" />
+<link href="css/typo.css" rel="stylesheet" type="text/css" />
 
-<script type="text/javascript">
-
-function login()
-{
-  document.loginform.submit();
-}
-
-</script> 
 
 <!-- InstanceParam name="LoggedIn" type="boolean" value="true" --><!-- InstanceParam name="Startseite" type="boolean" value="false" passthrough="true" --><!-- InstanceBeginEditable name="head" -->
 <!-- TemplateBeginEditable name="head" -->
@@ -39,7 +31,7 @@ function login()
 <div id="header">
 
       <div class="loginarea">
-      
+
 		<!-- TemplateBeginBlock name="loginbox" -->
 		<form method="post" action="@@{[main.login]}@@" name="loginform" id="loginform">
         	<label>Username</label><input type="text" name="username" class="txtbig" />
@@ -51,7 +43,7 @@ function login()
 		
 		<!-- TemplateBeginBlock name="logoutbox" -->
 		<div class="playerdata">
-        	<img src="@@{templatepath}@@/images/dummy-avatar.gif"  alt="Playerbild" class="avatar"  />
+        	<img src="images/dummy-avatar.gif"  alt="Playerbild" class="avatar"  />
         	<b>@@{playername}@@</b><br />
             Punkte: @@{racepoints}@@<br />
             Gesamtwertung: Platz @@{playerposition}@@
@@ -69,30 +61,30 @@ function login()
     
 	<!-- TemplateBeginBlock name="lobbybox" -->
 		<div class="textbox" style="width:400px;">
-			<p><img src="@@{templatepath}@@/images/messagebox_info.png" alt="" align="left" style="margin-right:5px;margin-left:5px;" /> Du wartest bereits auf ein Rennen: <a href="@@{[lobby.showgameroom]}@@">zur Rennvorbereitung</a></p>
+			<p><img src="images/messagebox_info.png" alt="" align="left" style="margin-right:5px;margin-left:5px;" /> Du wartest bereits auf ein Rennen: <a href="@@{[lobby.showgameroom]}@@">zur Rennvorbereitung</a></p>
 		</div>
 	<!-- TemplateEndBlock -->	
        
 	<!-- TemplateBeginBlock name="gamebox" -->
 		<div class="textbox" style="width:400px;">
-			<p><img src="@@{templatepath}@@/images/messagebox_info.png" alt="" align="left" style="margin-right:5px;margin-left:5px;" /> Du fährst gerade ein Rennen: <a href="@@{[game.index]}@@">zum Rennen</a></p>
+			<p><img src="images/messagebox_info.png" alt="" align="left" style="margin-right:5px;margin-left:5px;" /> Du fährst gerade ein Rennen: <a href="@@{[game.index]}@@">zum Rennen</a></p>
 		</div>
 	<!-- TemplateEndBlock -->
         
 	<!-- TemplateBeginBlock name="usermessages" -->
-		<div class="usermessage"><p><img src="@@{templatepath}@@/images/ok.png" alt="" align="left" style="margin-right:5px;margin-left:5px;" /> @@{usermessage}@@</p></div>
+		<div class="usermessage"><p><img src="images/ok.png" alt="" align="left" style="margin-right:5px;margin-left:5px;" /> @@{usermessage}@@</p></div>
 	<!-- TemplateEndBlock -->
 
 	<!-- TemplateBeginBlock name="userwarnings" -->
-		<div class="userwarning"><p><img src="@@{templatepath}@@/images/messagebox_info.png" alt="" align="left" style="margin-right:5px;margin-left:5px;" /> @@{userwarning}@@</p></div>
+		<div class="userwarning"><p><img src="images/messagebox_info.png" alt="" align="left" style="margin-right:5px;margin-left:5px;" /> @@{userwarning}@@</p></div>
 	<!-- TemplateEndBlock -->
 
 	<!-- TemplateBeginBlock name="usererrors" -->
-		<div class="usererror"><p><img src="@@{templatepath}@@/images/no.png" alt="" align="left" style="margin-right:5px;margin-left:5px;" /> @@{usererror}@@</p></div>
+		<div class="usererror"><p><img src="images/no.png" alt="" align="left" style="margin-right:5px;margin-left:5px;" /> @@{usererror}@@</p></div>
 	<!-- TemplateEndBlock -->
 	</div>
 
-      <a href="#"><img src="@@{templatepath}@@/images/logo-lineracer.png" alt="LineRacer - Das Strategierennen" id="logo" /></a>
+      <a href="#"><img src="images/logo-lineracer.png" alt="LineRacer - Das Strategierennen" id="logo" /></a>
       
       <ul class="maintabnav">
         <li><a href="@@{[main.index]}@@" class="@@@(TabBoxengasse)@@@"><b></b><em>Boxengasse</em></a></li>
