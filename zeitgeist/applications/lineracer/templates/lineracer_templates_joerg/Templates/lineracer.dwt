@@ -1,10 +1,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/lineracer.dwt" codeOutsideHTMLIsLocked="false" -->
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<!-- InstanceBeginEditable name="doctitle" -->
+<!-- TemplateBeginEditable name="doctitle" -->
 <title>Lineracer</title>
-<!-- InstanceEndEditable -->
+<!-- TemplateEndEditable -->
 
 <link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/lineracer.css" />
 
@@ -13,8 +13,8 @@
 
 </script>
 	
-<!-- InstanceBeginEditable name="head" -->
-<!-- InstanceEndEditable -->
+<!-- TemplateBeginEditable name="head" -->
+<!-- TemplateEndEditable -->
 </head>
 
 <body>
@@ -78,51 +78,11 @@
 		</div>
 	<!-- TemplateEndBlock -->	
 
-<!-- InstanceBeginEditable name="body" -->
+<!-- TemplateBeginEditable name="body" -->
 
-<p>Main Index</p>
+<p>Haupttext</p>
 
-<form method="post" action="@@{[lobby.creategameroom]}@@" name="creategameroom" enctype="multipart/form-data; charset=utf-8">
-	
-	<div id="CreateGameroom" class="textbox">
-		
-		<table cellspacing="5" cellpadding="5" border="0">
-			<tr>
-				<td valign="top" nowrap="nowrap" width="200"><p class="formlabel">Max Players</p></td>
-				<td valign="middle" @@{race_maxplayers:formerror}@@><input type="text" maxlength="1" name="creategameroom[race_maxplayers]" value="@@{race_maxplayers:value}@@" class="formtext" />
-				<!-- TemplateBeginBlock name="race_maxplayers:errormsg" -->
-					<br /><span class="formerrormsg">@@{race_maxplayers:errormsg}@@</span>
-				<!-- TemplateEndBlock -->
-			</td>
-			</tr>
-			<tr>
-				<td valign="top" nowrap="nowrap"><p class="formlabel">Circuit</p></td>
-				<td valign="middle" @@{race_circuit:formerror}@@><input type="text" maxlength="60" name="creategameroom[race_circuit]" value="@@{race_circuit:value}@@" class="formtext" />
-				<!-- TemplateBeginBlock name="race_circuit:errormsg" -->
-					<br /><span class="formerrormsg">@@{race_circuit:errormsg}@@</span>
-				<!-- TemplateEndBlock -->
-			</td>
-			</tr>
-			<tr>
-				<td valign="top" nowrap="nowrap"><p class="formlabel">Gamecards allowed</p></td>
-				<td valign="middle" @@{race_gamecardsallowed:formerror}@@><input type="text" maxlength="60" name="creategameroom[race_gamecardsallowed]" value="@@{race_gamecardsallowed:value}@@" class="formtext" />
-				<!-- TemplateBeginBlock name="race_gamecardsallowed:errormsg" -->
-					<br /><span class="formerrormsg">@@{race_gamecardsallowed:errormsg}@@</span>
-				<!-- TemplateEndBlock -->
-			</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-				   <p style="text-align:right; margin-right:0px;"><input name="submit" value="Spiel erstellen" class="formbutton" type="submit" /></p>
-				</td>
-			</tr>
-		</table>
-	</div>
-	
-</form>
-
-
-<!-- InstanceEndEditable -->
+<!-- TemplateEndEditable -->
 
 </body>
-<!-- InstanceEnd --></html>
+</html>
