@@ -203,6 +203,55 @@ class lobby
 	}
 
 
+	public function playdemogame($parameters=array())
+	{
+		$this->debug->guard();
+
+		// Users that aren't logged in can't play a game
+		// This simulates a logged in user
+		if (!$this->user->isLoggedIn())
+		{
+			$session = zgSession::init();
+			$session->setSessionVariable('user_id', 'T_'.uniqid());
+			$session->setSessionVariable('user_key', '');
+			$session->setSessionVariable('user_username', 'Temp User');
+			$this->user->setLoginStatus(true);
+		}
+		
+		$gamefunctions = new lrGamefunctions();
+		$gamefunctions->startDemoRace();
+
+		$tpl = new lrTemplate();
+		$this->debug->unguard(true);
+		$tpl->redirect($tpl->createLink('game', 'index'));
+		return true;
+
+
+/*
+		if ($this->lobbyfunctions->setConfirmation())
+		{
+			$currentLobby = $this->lruser->getUserLobby();
+			if ( ($currentLobby > 0) && ($this->lobbyfunctions->checkGameConfirmation($currentLobby)) )
+			{
+				$gamefunctions = new lrGamefunctions();
+				$gamefunctions->startRace();
+				
+				$tpl = new lrTemplate();
+				$this->debug->unguard(true);
+				$tpl->redirect($tpl->createLink('game', 'index'));
+				return true;
+			}
+		}
+
+		$tpl = new lrTemplate();
+		$this->debug->unguard(true);
+		$tpl->redirect($tpl->createLink('lobby', 'showgameroom'));
+		return true;
+*/
+		return true;
+	}
+
+
 // TODO: alt
 	public function creategameroom($parameters=array())
 	{

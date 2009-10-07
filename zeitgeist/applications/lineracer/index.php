@@ -82,7 +82,7 @@
 	if ($ret != 1)
 	{
 		$msg = $message->getAllMessages('controller.class.php');
-		if (strpos($msg[0]->message, 'has no rights for action') !== false)
+		if ( ($msg) && (strpos($msg[0]->message, 'has no rights for action') !== false) )
 		{
 			$message->setMessage('Du musst dich anmelden, um dies tun zu können.', 'userwarning');
 
