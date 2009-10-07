@@ -6,7 +6,7 @@
 <title>Lineracer</title>
 <!-- TemplateEndEditable -->
 
-<link rel="stylesheet" type="text/css" href="@@{templatepath}@@/css/lineracer.css" />
+<link rel="stylesheet" type="text/css" href="css/lineracer.css" />
 
 <script language="javascript" type="text/javascript">
 
