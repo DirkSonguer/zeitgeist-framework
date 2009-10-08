@@ -211,11 +211,7 @@ class lobby
 		// This simulates a logged in user
 		if (!$this->user->isLoggedIn())
 		{
-			$session = zgSession::init();
-			$session->setSessionVariable('user_id', 'T_'.uniqid());
-			$session->setSessionVariable('user_key', '');
-			$session->setSessionVariable('user_username', 'Temp User');
-			$this->user->setLoginStatus(true);
+			$this->lruser->createDemoUser();
 		}
 		
 		$gamefunctions = new lrGamefunctions();

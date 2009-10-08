@@ -11,6 +11,7 @@ class lrUserfunctions
 	protected $objects;
 	protected $configuration;
 	protected $user;
+	protected $userfunctions;
 
 	public function __construct()
 	{
@@ -20,6 +21,7 @@ class lrUserfunctions
 		$this->configuration = zgConfiguration::init();
 		$this->objects = zgObjects::init();
 		$this->user = zgUserhandler::init();
+		$this->userfunctions = new zgUserfunctions();
 
 		$this->database = new zgDatabase();
 		$this->database->connect();
@@ -294,6 +296,38 @@ class lrUserfunctions
 		$this->debug->unguard(true);
 		return true;		
 	}
+	
+	
+	/**
+	 * creates a new demo user
+	 *
+	 * @return boolean
+	 */
+	public function createDemoUser()
+	{
+		$this->debug->guard();
+
+		$demoUserId = 'T_'.uniqid();
+
+		$this->session->setSessionVariable('user_id', $demoUserId);
+		$this->session->setSessionVariable('user_key', '');
+		$this->session->setSessionVariable('user_username', 'Temp User');
+		$this->user->setLoginStatus(true);
+
+		$sql = "INSERT INTO userroles_to_users(userroleuser_userrole, userroleuser_user) VALUES('1', '" . $demoUserId . "')";
+		$res = $this->database->query($sql);
+		if(!$res)
+		{
+			$this->debug->write('Could not create demo user: could not set userrole', 'warning');
+			$this->messages->setMessage('Could not create demo user: could not set userrole', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;		
+	}
+	
 
 }
 ?>
