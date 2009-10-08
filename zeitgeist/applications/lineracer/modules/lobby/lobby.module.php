@@ -211,7 +211,7 @@ class lobby
 		// This simulates a logged in user
 		if (!$this->user->isLoggedIn())
 		{
-			$this->lruser->createDemoUser();
+			$this->lruser->createDemouser();
 		}
 		
 		$gamefunctions = new lrGamefunctions();

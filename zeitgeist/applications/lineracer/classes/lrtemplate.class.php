@@ -68,7 +68,7 @@ class lrTemplate extends zgTemplate
 
 		parent::insertUsermessages();
 
-		if ($this->user->isLoggedIn())
+		if (($this->user->isLoggedIn()) && (!$this->lruser->isDemouser()) )
 		{
 			$playername = $this->user->getUsername();
 			parent::assign('playername', $playername);

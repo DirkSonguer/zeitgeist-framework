@@ -11,7 +11,6 @@ class lrUserfunctions
 	protected $objects;
 	protected $configuration;
 	protected $user;
-	protected $userfunctions;
 
 	public function __construct()
 	{
@@ -21,7 +20,6 @@ class lrUserfunctions
 		$this->configuration = zgConfiguration::init();
 		$this->objects = zgObjects::init();
 		$this->user = zgUserhandler::init();
-		$this->userfunctions = new zgUserfunctions();
 
 		$this->database = new zgDatabase();
 		$this->database->connect();
@@ -268,7 +266,7 @@ class lrUserfunctions
 	}
 
 
-	
+
 	/**
 	 * inserts a transaction for the player
 	 * transactions are permanent records of player actions
@@ -297,29 +295,42 @@ class lrUserfunctions
 		return true;		
 	}
 	
-	
+
 	/**
-	 * creates a new demo user
+	 * checks if the current user is a demo user
+	 *
+	 * @param integer $userid id of the user
 	 *
 	 * @return boolean
 	 */
-	public function createDemoUser()
+	public function isDemouser()
 	{
 		$this->debug->guard();
 
-		$demoUserId = 'T_'.uniqid();
+		$ret = $this->session->getSessionVariable('user_demouser');
 
-		$this->session->setSessionVariable('user_id', $demoUserId);
-		$this->session->setSessionVariable('user_key', '');
-		$this->session->setSessionVariable('user_username', 'Temp User');
-		$this->user->setLoginStatus(true);
+		$this->debug->unguard($ret);
+		return $ret;		
+	}
 
-		$sql = "INSERT INTO userroles_to_users(userroleuser_userrole, userroleuser_user) VALUES('1', '" . $demoUserId . "')";
+
+	/**
+	 * sets a user to demo status
+	 *
+	 * @param integer $userid id of the user
+	 *
+	 * @return boolean
+	 */
+	public function setDemouserStatus($userid)
+	{
+		$this->debug->guard();
+
+		$sql = "UPDATE users SET user_demouser='1' WHERE user_id='" . $userid . "'";
 		$res = $this->database->query($sql);
 		if(!$res)
 		{
-			$this->debug->write('Could not create demo user: could not set userrole', 'warning');
-			$this->messages->setMessage('Could not create demo user: could not set userrole', 'warning');
+			$this->debug->write('Could not set demouser status: could not change state in database', 'warning');
+			$this->messages->setMessage('Could not set demouser status: could not change state in database', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -327,7 +338,64 @@ class lrUserfunctions
 		$this->debug->unguard(true);
 		return true;		
 	}
+
+
+	/**
+	 * creates a new demo user
+	 *
+	 * @return boolean
+	 */
+	public function createDemouser()
+	{
+		$this->debug->guard();
+
+		$userfunctions = new zgUserfunctions();
+
+		$demoUserName = 'DEMOUSER_'.uniqid();
+		
+		$demoUserId = $userfunctions->createUser($demoUserName, $demoUserName);
+		$userfunctions->activateUser($demoUserId);
+		$this->setDemouserStatus($demoUserId);
+		$this->user->login($demoUserName, $demoUserName);
+		$this->user->grantUserrole('demoplayer');
+		$this->session->setSessionVariable('user_demouser', 1);
+
+		$this->debug->unguard(true);
+		return true;
+	}
 	
 
+	/**
+	 * delete the current demo user
+	 *
+	 * @return boolean
+	 */
+	public function deleteDemouser()
+	{
+		$this->debug->guard();
+		
+		if(!$this->isDemouser())
+		{
+			$this->debug->write('Could not delete demouser: user is no demouser', 'warning');
+			$this->messages->setMessage('Could not delete demouser: user is no demouser', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}		
+
+		$userfunctions = new zgUserfunctions();
+
+		$demoUserName = 'DEMOUSER_'.uniqid();
+		
+		$demoUserId = $userfunctions->createUser($demoUserName, $demoUserName);
+		$userfunctions->activateUser($demoUserId);
+		$this->setDemouserStatus($demoUserId);
+		$this->user->login($demoUserName, $demoUserName);
+		$this->user->grantUserrole('demoplayer');
+		$this->session->setSessionVariable('user_demouser', 1);
+
+		$this->debug->unguard(true);
+		return true;
+	}
+	
 }
 ?>
