@@ -71,12 +71,10 @@ class zgUserrights
 				}
 			}
 
-			if (count($ret) < 1)
+			if (count($ret) == 0)
 			{
 				$this->debug->write('Possible problem getting userrights for a user: the user seems to have no assigned rights', 'warning');
 				$this->messages->setMessage('Possible problem getting userrights for a user: the user seems to have no assigned rights', 'warning');
-				$this->debug->unguard(false);
-				return false;
 			}
 
 			$this->debug->unguard($ret);
