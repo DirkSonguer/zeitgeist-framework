@@ -65,8 +65,6 @@ class zgUserroles
 			{
 				$this->debug->write('Possible problem getting the roles of a user: there seems to be no roles assigned to the user', 'warning');
 				$this->messages->setMessage('Possible problem getting the roles of a user: there seems to be no roles assigned to the user', 'warning');
-				$this->debug->unguard(false);
-				return false;
 			}
 
 			$this->debug->unguard($ret);

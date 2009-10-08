@@ -644,10 +644,10 @@ class zgUserhandler
 		$userroles = new zgUserroles();
 		$this->userroles = $userroles->loadUserroles($this->getUserID());
 		
-		if ( (!is_array($this->userroles)) || (count($this->userroles) < 1) )
+		if (!is_array($this->userroles))
 		{
-			$this->debug->write('Problem getting userroles for a user: could not find any userroles', 'warning');
-			$this->messages->setMessage('Problem getting userroles for a user: could not find any userroles', 'warning');
+			$this->debug->write('Problem getting userroles for a user: could not load userroles', 'warning');
+			$this->messages->setMessage('Problem getting userroles for a user: could not load userroles', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -741,11 +741,11 @@ class zgUserhandler
 
 		if (!$this->userrolesLoaded)
 		{
-			$this->_loadUserrights();
+			$this->_loadUserroles();
 		}
 
 		$userroles = new zgUserroles();
-		$roleid  =$userroles->identifyRole($rolename);
+		$roleid  = $userroles->identifyRole($rolename);
 
 		$this->userroles[$roleid] = $rolename;
 		if ($saveuserroles) $this->_saveUserroles();

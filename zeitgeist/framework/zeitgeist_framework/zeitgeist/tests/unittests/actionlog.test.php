@@ -49,12 +49,12 @@ class testActionlog extends UnitTestCase
 		$this->assertEqual($ret, 2);
 
 		$ret = $this->database->fetchArray($res);
-		$this->assertEqual($ret['actionparameters_key'], 'test1');
-		$this->assertEqual($ret['actionparameters_value'], 'test'.$param1);
+		$this->assertEqual($ret['actionparameter_key'], 'test1');
+		$this->assertEqual($ret['actionparameter_value'], 'test'.$param1);
 
 		$ret = $this->database->fetchArray($res);
-		$this->assertEqual($ret['actionparameters_key'], 'test2');
-		$this->assertEqual($ret['actionparameters_value'], 'test'.$param2);
+		$this->assertEqual($ret['actionparameter_key'], 'test2');
+		$this->assertEqual($ret['actionparameter_value'], 'test'.$param2);
 
 		unset($actionlog);
 	}
