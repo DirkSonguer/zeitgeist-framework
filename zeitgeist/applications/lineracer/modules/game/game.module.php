@@ -260,7 +260,23 @@ class game
 		$this->debug->unguard(true);
 		return true;
 	}
-		
+
+
+
+	public function enddemo($parameters=array())
+	{
+		$this->debug->guard();
+
+		$gamefunctions = new lrGamefunctions();
+		$gamefunctions->endDemo();
+
+		$tpl = new lrTemplate();
+		$tpl->redirect($tpl->createLink('main', 'index'));
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
 
 	public function reset($parameters=array())
 	{

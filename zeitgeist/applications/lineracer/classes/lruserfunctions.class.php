@@ -380,18 +380,13 @@ class lrUserfunctions
 			$this->messages->setMessage('Could not delete demouser: user is no demouser', 'warning');
 			$this->debug->unguard(false);
 			return false;
-		}		
+		}
+		
+		$demoUserId = $this->user->getUserID();
+		$this->user->logout();
 
 		$userfunctions = new zgUserfunctions();
-
-		$demoUserName = 'DEMOUSER_'.uniqid();
-		
-		$demoUserId = $userfunctions->createUser($demoUserName, $demoUserName);
-		$userfunctions->activateUser($demoUserId);
-		$this->setDemouserStatus($demoUserId);
-		$this->user->login($demoUserName, $demoUserName);
-		$this->user->grantUserrole('demoplayer');
-		$this->session->setSessionVariable('user_demouser', 1);
+		$userfunctions->deleteUser($demoUserId);
 
 		$this->debug->unguard(true);
 		return true;

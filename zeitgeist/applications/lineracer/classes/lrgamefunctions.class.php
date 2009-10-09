@@ -631,5 +631,17 @@ class lrGamefunctions
 		return true;
 	}
 
+
+	public function endDemo()
+	{
+		$this->debug->guard();
+		
+		$this->forfeit();
+		$this->lruser->deleteDemouser();
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
 }
 ?>
