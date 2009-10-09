@@ -68,11 +68,15 @@ class lrTemplate extends zgTemplate
 
 		parent::insertUsermessages();
 
-		if (($this->user->isLoggedIn()) && (!$this->lruser->isDemouser()) )
+		if ( ($this->user->isLoggedIn()) && (!$this->lruser->isDemouser()) )
 		{
 			$playername = $this->user->getUsername();
 			parent::assign('playername', $playername);
 			parent::insertBlock('logoutbox');
+		}
+		elseif ($this->lruser->isDemouser())
+		{
+			parent::insertBlock('demoplayerbox');
 		}
 		else
 		{
