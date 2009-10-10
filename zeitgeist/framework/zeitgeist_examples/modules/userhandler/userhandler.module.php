@@ -40,26 +40,26 @@ class userhandler
 			// First we have to create a user to use one. To do this we'll use the
 			// generic user methods.
 			$userfunctions = new zgUserfunctions();
-			
+
 			// As there are no users in the database, let's create one with
 			// name "test" and password "test".
 			$userid = $userfunctions->createUser('test', 'test');
 			echo "User created with id: ".$userid."<br />";
-	
+
 			// If double opt in is activated, the user has to be activated
 			// before he can log in.
 			if ($userfunctions->activateUser($userid))
 			{
 				echo "User with id ".$userid." has been activated<br />";
 			}
-	
+
 			// As we have a user now, we can log in. We'll do this with the
 			// object of the current user
 			if ($user->login('test', 'test'))
 			{
 				echo "User with id ".$userid." is logged in<br />";
 			}
-	
+
 			// Verify that the user is logged in
 			if ($user->isLoggedIn())
 			{
@@ -70,7 +70,7 @@ class userhandler
 		{
 			// User is in
 			echo "User is logged in<br />";
-			
+
 			// Get the user id
 			$userid = $user->getUserID();
 			echo "User has the id ".$userid."<br />";
@@ -80,7 +80,7 @@ class userhandler
 			{
 				echo "User with id ".$userid." is logged out<br />";
 			}
-			
+
 			// clean up afterwards		
 			$database = new zgDatabase();
 			$database->connect();

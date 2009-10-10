@@ -25,11 +25,11 @@ class configuration
 		$this->debug->guard();
 
 		// Load the example configuration
-		// The configuration system uses standard ini files
+		// The configuration system uses pretty standard ini files but with some neat twists
 		// Take a look at the file to see the content
 		$this->configuration->loadConfiguration('config_example', './_additional_files/example_configuration.ini');
 
-		// Gets a dedicated configuration variable mby addressing it
+		// Gets a dedicated configuration variable by addressing it
 		// Parameters are: CONFIGURATIONHANDLE, BLOCK, VARIABLE
 		$var1 = $this->configuration->getConfiguration('config_example', 'block', 'var1');
 		$var2 = $this->configuration->getConfiguration('config_example', 'block', 'var2');
