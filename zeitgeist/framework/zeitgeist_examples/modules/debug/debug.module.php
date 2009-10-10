@@ -67,8 +67,16 @@ class debug
 
 		// Errors will be highlighted
 		$database->query("'Hello Database Error'");
+		
+		// At the start and end of the exaple functions ou see the guarding calls.
+		// Function Guarding acts as tracing through the entire application as long
+		// as you use the calls.
+		// "$this->debug->guard();" automatically pulls out all relevant information:
+		// class, method, parameters and so on.
+		// "$this->debug->unguard(true);" should be called with the return value and
+		// marks the end of a method call.
 
-		$this->debug->unguard(true);		
+		$this->debug->unguard(true);
 		return true;
 	}
 

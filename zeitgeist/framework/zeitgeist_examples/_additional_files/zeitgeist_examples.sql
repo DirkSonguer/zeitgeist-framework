@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 06. Oktober 2009 um 21:10
+-- Erstellungszeit: 08. Oktober 2009 um 19:37
 -- Server Version: 5.0.51
 -- PHP-Version: 5.2.6
 
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `actionlog_parameters` (
 
 CREATE TABLE IF NOT EXISTS `actions` (
   `action_id` int(12) NOT NULL auto_increment,
-  `action_module` int(12) NOT NULL default '0',
+  `action_module` int(12) NOT NULL,
   `action_name` varchar(30) NOT NULL default '',
   `action_description` text NOT NULL,
   `action_requiresuserright` tinyint(1) NOT NULL default '0',
@@ -182,7 +182,7 @@ CREATE TABLE IF NOT EXISTS `userconfirmation` (
 
 CREATE TABLE IF NOT EXISTS `userdata` (
   `userdata_id` int(12) NOT NULL auto_increment,
-  `userdata_user` int(12) NOT NULL default '0',
+  `userdata_user` int(12) NOT NULL,
   `userdata_username` varchar(100) default NULL,
   `userdata_url` varchar(255) default NULL,
   `userdata_timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
@@ -202,13 +202,10 @@ CREATE TABLE IF NOT EXISTS `userdata` (
 --
 
 CREATE TABLE IF NOT EXISTS `userrights` (
-  `userright_id` int(12) NOT NULL auto_increment,
   `userright_action` int(12) NOT NULL default '0',
   `userright_user` int(12) NOT NULL default '0',
-  PRIMARY KEY  (`userright_id`),
-  KEY `userright_action` (`userright_action`),
-  KEY `userright_user` (`userright_user`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  PRIMARY KEY  (`userright_action`,`userright_user`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `userrights`
@@ -280,7 +277,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `user_username` varchar(255) NOT NULL,
   `user_password` varchar(255) NOT NULL default '',
   `user_key` varchar(64) default NULL,
-  `user_active` tinyint(1) NOT NULL,
+  `user_active` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 

@@ -30,6 +30,7 @@ class messages
 		// Enter something into the message system		
 		// notice that "my_type" as type
 		$this->messages->setMessage('Hello Messages', 'my_type');
+		$this->messages->setMessage('How are you today?', 'my_type');
 
 		// Get it back again
 		// We only ask for messages with type "my_type"
@@ -71,6 +72,10 @@ class messages
 		// Remember that as the message class is a singleton,
 		// the application and framework share the same pool
 		// of messages, so they send them to each other
+		
+		// The message system should only be used to send strings.
+		// If you need to share objects between classes, use the
+		// object system
 		
 		$this->debug->unguard(true);		
 		return true;

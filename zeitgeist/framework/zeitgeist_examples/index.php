@@ -40,13 +40,13 @@
 	$debug = zgDebug::init();					// use debugging
 	$message = zgMessages::init();				// use the message system
 	$configuration = zgConfiguration::init();	// use configuration
-	$error = zgErrorhandler::init();					// activate & use error handling
+	$error = zgErrorhandler::init();			// activate & use error handling
 	$user = zgUserhandler::init();				// use user handling
 	$controller = new zgController();			// use the event handler
 
 	// Set standard module if none is defined
-	// Bascially modules are collections of actions. Each module is represented by
-	// a class in the folder /modules/MODULENAME/
+	// Bascially modules are collections of actions.
+	// Each module is represented by a class in the folder /modules/MODULENAME/
 	if (isset($_GET['module']))
 	{
 		$module = $_GET['module'];
@@ -81,11 +81,12 @@
 	// parameters are used	
 
 ///*
-	$debug->loadStylesheet('debug.css');
-	$debug->showInnerLoops = true;
-	$debug->showMiscInformation();
-	$debug->showDebugMessages();
-	$debug->showQueryMessages();
-	$debug->showGuardMessages();
+	// This prints out a lot of debug information
+	$debug->loadStylesheet('debug.css');	// Loads a style sheet for debug output
+	$debug->showInnerLoops = true;			// If true, output also includes inner loops (verbose)
+	$debug->showMiscInformation();			// Shows raw REQUEST & SESSION information 
+	$debug->showDebugMessages();			// Shows user debug information
+	$debug->showQueryMessages();			// Shows SQL query log
+	$debug->showGuardMessages();			// Shows tracing (function guarding) log
 //*/
 ?>
