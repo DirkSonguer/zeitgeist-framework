@@ -35,8 +35,6 @@
 	require_once('classes/lrmovementfunctions.class.php');
 	require_once('classes/lrgamefunctions.class.php');
 
-	require_once('prototype/classes/prototyperenderer.class.php');
-
 	include('configuration/lineracer.config.php');
 	
 	spl_autoload_register ('__autoload');
@@ -101,10 +99,11 @@
 	$debug->saveToFile('./_additional_material/debug.html', 'debug.css');
 
 /*	
+	$debug->loadStylesheet('debug.css');
+	$debug->showInnerLoops = true;
 	$debug->showMiscInformation();
 	$debug->showDebugMessages();
-	$debug->showQueryMessages();
 	$debug->showGuardMessages();
-*/
+//*/
 
 ?>
