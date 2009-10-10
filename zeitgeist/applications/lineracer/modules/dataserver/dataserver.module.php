@@ -3,8 +3,6 @@
 
 defined('LINERACER_ACTIVE') or die();
 
-include_once('includes/open-flash-chart/open-flash-chart.php');
-
 class dataserver
 {
 	protected $debug;

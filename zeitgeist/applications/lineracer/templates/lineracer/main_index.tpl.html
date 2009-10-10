@@ -24,15 +24,6 @@ function login()
 
 <!-- InstanceBeginEditable name="head" -->
 
-<script type="text/javascript">
-
-function createGame()
-{
-  document.creategameroom.submit();
-}
-
-</script>
-
 <!-- InstanceEndEditable -->
 </head>
 <body>
@@ -109,7 +100,7 @@ function createGame()
     <div id="content">
       
     <div class="flasharea-default"> <!-- InstanceBeginEditable name="Flashbanner" -->
-		<a href="@@{[lobby.playdemogame]}@@"><img src="@@{templatepath}@@/images/noflash-banner.gif" alt="LineRacer News" /></a>
+		<a href="@@{[lobby.playdemogame]}@@"><img src="@@{templatepath}@@/images/noflash-banner.gif" alt="LineRacer News" border="0" /></a>
       <!-- InstanceEndEditable --> </div>
     <script type="text/javascript">
 	$(function() {
@@ -182,23 +173,36 @@ function createGame()
             <div class="tabcontent" id="vtabs-4">
 				<!-- InstanceBeginEditable name="Content-Neuanmelden" -->
            	  <h1>Neu anmelden</h1>
-                <p>&nbsp;
-           	  </p><form action="#" id="registerform">
-                    	<label>Username</label><input type="text" id="username" class="txtbig" />
-                        <label>Passwort</label><input type="text" class="txtbig" />
-                        <label>Passwort bestätigen</label><input type="text" class="txtbig" />
-                        <label>E-Mail Adresse</label><input type="text" class="txtbig" />
-                        <label>Geburtsdatum</label><input type="text" class="txtsmall" /><input type="text" class="txtsmall" /><input type="text" class="txtnormal" />
-                        <label>Land</label>
-                        <select class="txtbig">
-                        	<option>Deutschland</option>
-                            <option>Österreich</option>
-                            <option>Schweiz</option>
-                            <option>Sonstiges</option>
-                        </select>
-                        <a href="#" class="btn01 right"><span>Registrieren</span></a>
+                <form method="POST" action="@@{[main.register]}@@" name="register" enctype="multipart/form-data; charset=utf-8">
+                
+                    <label>Username</label><input type="text" name="register[username]" class="txtbig" value="@@{username:value}@@" />
+                    <!-- TemplateBeginBlock name="username:errormsg" -->
+                        <br /><span class="formerrormsg">@@{username:errormsg}@@</span>
+                    <!-- TemplateEndBlock -->              
+
+                    <label>Passwort</label><input type="text" name="register[password]" class="txtbig" />
+                    <!-- TemplateBeginBlock name="password:errormsg" -->
+                        <br /><span class="formerrormsg">@@{password:errormsg}@@</span>
+                    <!-- TemplateEndBlock -->              
+
+                    <label>Passwort bestätigen</label><input type="text" name="register[confirmpassword]" class="txtbig" />
+                    <!-- TemplateBeginBlock name="confirmpassword:errormsg" -->
+                        <br /><span class="formerrormsg">@@{confirmpassword:errormsg}@@</span>
+                    <!-- TemplateEndBlock -->              
+                    
+                    <label>E-Mail Adresse</label><input type="text" name="register[email]" class="txtbig" value="@@{email:value}@@" />
+                    <!-- TemplateBeginBlock name="email:errormsg" -->
+                        <br /><span class="formerrormsg">@@{email:errormsg}@@</span>
+                    <!-- TemplateEndBlock -->              
+                    
+                    <label>Geburtsdatum</label><input type="text" name="register[birthday]" class="txtsmall" value="@@{birthday:value}@@" /><input type="text" name="register[birthmonth]" class="txtsmall" value="@@{birthmonth:value}@@" /><input type="text" name="register[birthyear]" class="txtnormal" value="@@{birthyear:value}@@" />
+                    <!-- TemplateBeginBlock name="email:errormsg" -->
+                        <br /><span class="formerrormsg">@@{birthday:errormsg}@@</span>
+                    <!-- TemplateEndBlock -->              
+
+                    <input type="submit" name="submit" value="Registrieren" />
+                    <a href="javascript:registerNewPlayer();" class="btn01 right"><span>Registrieren</span></a>
               </form>
-                </p>
                 <!-- InstanceEndEditable -->
             </div>  
         </div>

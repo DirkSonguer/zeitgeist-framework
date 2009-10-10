@@ -294,7 +294,27 @@ class lrUserfunctions
 		$this->debug->unguard(true);
 		return true;		
 	}
-	
+
+
+	/**
+	 * creates a new user
+	 *
+	 * @return boolean
+	 */
+	public function createUser($name, $password)
+	{
+		$this->debug->guard();
+
+		$userfunctions = new zgUserfunctions();
+		
+		$userId = $userfunctions->createUser($name, $password);
+		$userfunctions->activateUser($userId);
+		$this->user->grantUserrole('player');
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
 
 	/**
 	 * checks if the current user is a demo user

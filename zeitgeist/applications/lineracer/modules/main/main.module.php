@@ -98,6 +98,22 @@ class main
 		$this->debug->unguard(true);
 		return true;
 	}
+	
+	
+	// TODO: New form class
+	public function register($parameters=array())
+	{
+		$this->debug->guard();
+
+		$tpl = new lrTemplate();
+		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_register'));
+
+		
+		$tpl->show();
+		
+		$this->debug->unguard(true);
+		return true;
+	}
 
 }
 ?>
