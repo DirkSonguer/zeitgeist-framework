@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title> Form example </title>
+	</head>
+
+	<body>
+
+        <form method="POST" action="@@{[forms.index]}@@" name="exampleform" enctype="multipart/form-data; charset=utf-8">
+        
+            <label>String Example</label>
+			<input type="text" name="exampleform[stringexample]" value="@@{stringexample:value}@@" />
+            <!-- TemplateBeginBlock name="stringexample:errorblock" -->
+                <br /><span class="formerrormsg">@@{stringexample:errormessage}@@</span>
+            <!-- TemplateEndBlock -->
+			<br /><br />
+
+            <label>Number Example</label>
+			<input type="text" name="exampleform[numberexample]" value="@@{numberexample:value}@@" />
+            <!-- TemplateBeginBlock name="numberexample:errorblock" -->
+                <br /><span class="formerrormsg">@@{numberexample:errormessage}@@</span>
+            <!-- TemplateEndBlock -->
+			<br /><br />
+            
+            <label>E-Mail Example</label>
+			<input type="text" name="exampleform[emailexample]" value="@@{emailexample:value}@@" />
+            <!-- TemplateBeginBlock name="emailexample:errorblock" -->
+                <br /><span class="formerrormsg">@@{emailexample:errormessage}@@</span>
+            <!-- TemplateEndBlock -->              
+			<br /><br />
+
+            <label>Textarea Example</label>
+			<textarea name="exampleform[textareaexample]" cols="15" rows="10">@@{textareaexample:value}@@</textarea>
+            <!-- TemplateBeginBlock name="textareaexample:errorblock" -->
+                <br /><span class="formerrormsg">@@{textareaexample:errormessage}@@</span>
+            <!-- TemplateEndBlock -->              
+			<br /><br />
+
+            <input type="submit" name="submit" value="Submit Exampleform" />
+
+      </form>
+
+	</body>
+</html>
