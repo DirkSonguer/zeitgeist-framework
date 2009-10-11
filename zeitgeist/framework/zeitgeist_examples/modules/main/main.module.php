@@ -56,6 +56,7 @@ class main
 		echo '<li><a href="./index.php?module=dataserver">Dataserver examples</a></li>';
 		echo '<li><a href="./index.php?module=parameters">Parameter examples</a></li>';
 		echo '<li><a href="./index.php?module=userhandler">Userhandler examples</a></li>';
+		echo '<li><a href="./index.php?module=forms">Form examples</a></li>';
 		echo '</ul>';
 	
 		return true;
