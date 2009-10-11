@@ -86,7 +86,7 @@ class zgParameters
 
 		$moduleConfiguration = $this->configuration->getConfiguration($module);
 
-		if (!empty($moduleConfiguration[$action]['hasExternalParameters']))
+		if ( (!empty($moduleConfiguration[$action]['hasExternalParameters'])) && ($moduleConfiguration[$action]['hasExternalParameters'] == 'true') )
 		{
 			foreach ($moduleConfiguration[$action] as $parametername => $parametervalue)
 			{
@@ -115,7 +115,7 @@ class zgParameters
 	{
 		$this->debug->guard(true);
 
-		if ( (!isset($parameterdefinition['source'])) || (!isset($parameterdefinition['type'])) )
+		if ( (!isset($parameterdefinition['source'])) || (!isset($parameterdefinition['expected'])) )
 		{
 			$this->debug->unguard('Problem checking parameter: could not get parameter definition for ' . $parametername);
 			return false;
@@ -123,7 +123,7 @@ class zgParameters
 
 		if (isset($this->rawParameters[$parameterdefinition['source']][$parametername]))
 		{
-			if ($parameterdefinition['type'] == 'CONSTANT')
+			if ($parameterdefinition['expected'] == 'CONSTANT')
 			{
 				if ( (!empty($parameterdefinition['value'])) && ($parameterdefinition['value'] == $this->rawParameters[$parameterdefinition['source']][$parametername]) )
 				{
@@ -131,7 +131,7 @@ class zgParameters
 					return true;
 				}
 			}
-			elseif ($parameterdefinition['type'] == 'ARRAY')
+			elseif ($parameterdefinition['expected'] == 'ARRAY')
 			{
 				if (is_array($this->rawParameters[$parameterdefinition['source']][$parametername]))
 				{
@@ -141,11 +141,11 @@ class zgParameters
 			}
 			else
 			{
-				$ret = preg_match($parameterdefinition['type'], $this->rawParameters[$parameterdefinition['source']][$parametername]);
+				$ret = preg_match($parameterdefinition['expected'], $this->rawParameters[$parameterdefinition['source']][$parametername]);
 
 				if ($ret === false)
 				{
-					$this->debug->unguard('Parameter could not be tested. There may be an error in the regexp definition: ' . $parameterdefinition['type']);
+					$this->debug->unguard('Parameter could not be tested. There may be an error in the regexp definition: ' . $parameterdefinition['expected']);
 					return false;
 				}
 
@@ -156,8 +156,7 @@ class zgParameters
 				}
 			}
 
-			//			$this->debug->unguard('squirrelz!');
-			$this->debug->unguard('Parameter not safe: ' . $parametername.' (value: ' . $this->rawParameters[$parameterdefinition['source']][$parametername].' tested against: ' . $parameterdefinition['type'].')');
+			$this->debug->unguard('Parameter not safe: ' . $parametername.' (value: ' . $this->rawParameters[$parameterdefinition['source']][$parametername].' tested against: ' . $parameterdefinition['expected'].')');
 			return false;
 		}
 		else
