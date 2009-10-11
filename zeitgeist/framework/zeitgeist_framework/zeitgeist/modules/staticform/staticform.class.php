@@ -37,6 +37,8 @@ class zgStaticform
 
 		$this->database = new zgDatabase();
 		$this->database->connect();
+		
+		$this->debug->write('The staticform module is deprecated. Use the new form module', 'warning');
 
 		$this->formid = 'form_' . uniqid(rand(), true);
 		$this->initial = false;
