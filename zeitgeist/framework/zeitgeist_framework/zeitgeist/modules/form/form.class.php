@@ -180,7 +180,7 @@ class zgForm
 				if (!empty($elementdata['value'])) $this->formelements[$elementname]->value = $elementdata['value'];
 				if (!empty($elementdata['required'])) $this->formelements[$elementname]->required = $elementdata['required'];
 				if (!empty($elementdata['expected'])) $this->formelements[$elementname]->expected = $elementdata['expected'];
-				if (!empty($elementdata['escape'])) $this->formelements[$elementname]->escape = $elementdata['escape'];
+				if ( (!empty($elementdata['escape'])) && ($elementdata['escape'] == 'true') ) $this->formelements[$elementname]->escape = true;
 				if (!empty($elementdata['errormsg'])) $this->formelements[$elementname]->errormsg = $elementdata['errormsg'];
 			}
 			else
@@ -257,10 +257,10 @@ class zgFormelement
 	{
 		$this->value = '';
 		$this->required = 0;
-		$this->escape = 0;
 		$this->expected = '';
 		$this->errormsg = '';
 
+		$this->escape = false;
 		$this->valid = false;
 	}
 
