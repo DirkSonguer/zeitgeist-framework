@@ -108,6 +108,16 @@ class main
 		$tpl = new lrTemplate();
 		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_register'));
 
+		$exampleform = new zgForm();
+		$exampleform->load('forms/register.form.ini');
+
+		if (!empty($parameters['submit']))
+		{
+			$valid = $exampleform->validate($parameters);
+			if ($valid) echo '<p><b>All form fields are valid</b></p>';
+		}
+
+		$exampleform->insert($tpl);
 		
 		$tpl->show();
 		

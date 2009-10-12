@@ -172,35 +172,53 @@ function login()
             </div>
             <div class="tabcontent" id="vtabs-4">
 				<!-- InstanceBeginEditable name="Content-Neuanmelden" -->
-           	  <h1>Neu anmelden</h1>
+         	  <h1>Neu anmelden</h1>
                 <form method="POST" action="@@{[main.register]}@@" name="register" enctype="multipart/form-data; charset=utf-8">
-                
-                    <label>Username</label><input type="text" name="register[username]" class="txtbig" value="@@{username:value}@@" />
-                    <!-- TemplateBeginBlock name="username:errormsg" -->
-                        <br /><span class="formerrormsg">@@{username:errormsg}@@</span>
-                    <!-- TemplateEndBlock -->              
 
-                    <label>Passwort</label><input type="text" name="register[password]" class="txtbig" />
-                    <!-- TemplateBeginBlock name="password:errormsg" -->
-                        <br /><span class="formerrormsg">@@{password:errormsg}@@</span>
-                    <!-- TemplateEndBlock -->              
+                    <p>
+                    <label>Username</label>
+                    <input type="text" name="register[username]" class="txtbig" value="@@{username:value}@@" />
+                    <!-- TemplateBeginBlock name="username:errorblock" -->
+                        <br /><span class="formerrormsg">@@{username:errormessage}@@</span>
+                    <!-- TemplateEndBlock -->
+                    </p>
 
-                    <label>Passwort bestätigen</label><input type="text" name="register[confirmpassword]" class="txtbig" />
-                    <!-- TemplateBeginBlock name="confirmpassword:errormsg" -->
-                        <br /><span class="formerrormsg">@@{confirmpassword:errormsg}@@</span>
-                    <!-- TemplateEndBlock -->              
-                    
-                    <label>E-Mail Adresse</label><input type="text" name="register[email]" class="txtbig" value="@@{email:value}@@" />
-                    <!-- TemplateBeginBlock name="email:errormsg" -->
-                        <br /><span class="formerrormsg">@@{email:errormsg}@@</span>
-                    <!-- TemplateEndBlock -->              
-                    
-                    <label>Geburtsdatum</label><input type="text" name="register[birthday]" class="txtsmall" value="@@{birthday:value}@@" /><input type="text" name="register[birthmonth]" class="txtsmall" value="@@{birthmonth:value}@@" /><input type="text" name="register[birthyear]" class="txtnormal" value="@@{birthyear:value}@@" />
-                    <!-- TemplateBeginBlock name="email:errormsg" -->
-                        <br /><span class="formerrormsg">@@{birthday:errormsg}@@</span>
-                    <!-- TemplateEndBlock -->              
+                    <p>
+                    <label>Passwort</label>
+                    <input type="text" name="register[password]" class="txtbig" value="@@{password:value}@@" />
+                    <!-- TemplateBeginBlock name="password:errorblock" -->
+                        <br /><span class="formerrormsg">@@{password:errormessage}@@</span>
+                    <!-- TemplateEndBlock -->
+                    </p>
 
-                    <input type="submit" name="submit" value="Registrieren" />
+                    <p>
+                    <label>Passwort bestätigen</label>
+                    <input type="text" name="register[confirmpassword]" class="txtbig" value="@@{confirmpassword:value}@@" />
+                    <!-- TemplateBeginBlock name="confirmpassword:errorblock" -->
+                        <br /><span class="formerrormsg">@@{confirmpassword:errormessage}@@</span>
+                    <!-- TemplateEndBlock -->
+                    </p>
+
+                    <p>
+                    <label>E-Mail Adresse</label>
+                    <input type="text" name="register[email]" class="txtbig" value="@@{email:value}@@" />
+                    <!-- TemplateBeginBlock name="email:errorblock" -->
+                        <br /><span class="formerrormsg">@@{email:errormessage}@@</span>
+                    <!-- TemplateEndBlock -->
+                    </p>
+
+                    <p>
+                    <label>Geburtsdatum</label>
+                    <input type="text" name="register[birthday]" class="txtsmall" value="@@{birthday:value}@@" />
+                    <input type="text" name="register[birthmonth]" class="txtsmall" value="@@{birthmonth:value}@@" />
+                    <input type="text" name="register[birthyear]" class="txtnormal" value="@@{birthyear:value}@@" />
+                    <!-- TemplateBeginBlock name="birthday:errorblock" -->
+                        <br /><span class="formerrormsg">@@{birthday:errormessage}@@</span>
+                    <!-- TemplateEndBlock -->
+                    </p>
+
+					<p><input type="submit" name="submit" value="Registrieren" /></p>
+
                     <a href="javascript:registerNewPlayer();" class="btn01 right"><span>Registrieren</span></a>
               </form>
                 <!-- InstanceEndEditable -->
