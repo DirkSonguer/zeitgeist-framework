@@ -100,7 +100,6 @@ class main
 	}
 	
 	
-	// TODO: New form class
 	public function register($parameters=array())
 	{
 		$this->debug->guard();
@@ -108,16 +107,40 @@ class main
 		$tpl = new lrTemplate();
 		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_register'));
 
-		$exampleform = new zgForm();
-		$exampleform->load('forms/register.form.ini');
+		$registrationform = new zgForm();
+		$registrationform->load('forms/register.form.ini');
 
 		if (!empty($parameters['submit']))
 		{
-			$valid = $exampleform->validate($parameters);
-			if ($valid) echo '<p><b>All form fields are valid</b></p>';
+			$valid = $registrationform->validate($parameters);
+			
+			if ($valid)
+			{
+				$registrationvalid = true;
+				if ($parameters['register']['password'] != $parameters['register']['confirmpassword'])
+				{
+					$registrationform->validateElement('confirmpassword', false);
+					$registrationvalid = false;
+				}
+
+				if ($registrationvalid)
+				{
+					$lruser = new lrUserfunctions();
+					$birthday = $parameters['register']['birthday'].'.'.$parameters['register']['birthmonth'].'.'.$parameters['register']['birthyear'];
+					$userCreated = $lruser->createUser($parameters['register']['username'], $parameters['register']['password'], $parameters['register']['email'], $birthday);
+				}
+				
+				if ($userCreated)
+				{
+					$this->messages->setMessage('Dein Benutzer wurde erfolgreich angelegt.', 'usermessage');
+					$tpl = new lrTemplate();
+					$tpl->redirect($tpl->createLink('main', 'index'));
+				}
+				
+			}
 		}
 
-		$exampleform->insert($tpl);
+		$registrationform->insert($tpl);
 		
 		$tpl->show();
 		

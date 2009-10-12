@@ -301,15 +301,18 @@ class lrUserfunctions
 	 *
 	 * @return boolean
 	 */
-	public function createUser($name, $password)
+	public function createUser($username, $password, $email, $birthday)
 	{
 		$this->debug->guard();
 
 		$userfunctions = new zgUserfunctions();
 		
-		$userId = $userfunctions->createUser($name, $password);
+		$userId = $userfunctions->createUser($username, $password);
 		$userfunctions->activateUser($userId);
+		$this->user->login($username, $password);
 		$this->user->grantUserrole('player');
+		$this->user->setUserdata('userdata_email', $email, false);
+		$this->user->setUserdata('userdata_birthday', $birthday, true);
 
 		$this->debug->unguard(true);
 		return true;
