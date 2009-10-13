@@ -14,6 +14,13 @@
                 <br /><span class="formerrormsg">@@{stringexample:errormessage}@@</span>
             <!-- TemplateEndBlock -->
 			<br /><br />
+        
+            <label>Escaped String Example</label>
+			<input type="text" name="exampleform[escapestringexample]" value="@@{escapestringexample:value}@@" />
+            <!-- TemplateBeginBlock name="escapestringexample:errorblock" -->
+                <br /><span class="formerrormsg">@@{escapestringexample:errormessage}@@</span>
+            <!-- TemplateEndBlock -->
+			<br /><br />
 
             <label>Number Example</label>
 			<input type="text" name="exampleform[numberexample]" value="@@{numberexample:value}@@" />
