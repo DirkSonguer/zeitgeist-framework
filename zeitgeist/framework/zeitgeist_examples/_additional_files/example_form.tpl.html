@@ -15,10 +15,17 @@
             <!-- TemplateEndBlock -->
 			<br /><br />
         
+            <label>String with Stripslashes Example</label>
+			<input type="text" name="exampleform[stripslashesexample]" value="@@{stripslashesexample:value}@@" />
+            <!-- TemplateBeginBlock name="stripslashesexample:errorblock" -->
+                <br /><span class="formerrormsg">@@{stripslashesexample:errormessage}@@</span>
+            <!-- TemplateEndBlock -->
+			<br /><br />
+        
             <label>Escaped String Example</label>
-			<input type="text" name="exampleform[escapestringexample]" value="@@{escapestringexample:value}@@" />
-            <!-- TemplateBeginBlock name="escapestringexample:errorblock" -->
-                <br /><span class="formerrormsg">@@{escapestringexample:errormessage}@@</span>
+			<input type="text" name="exampleform[escapeexample]" value="@@{escapeexample:value}@@" />
+            <!-- TemplateBeginBlock name="escapeexample:errorblock" -->
+                <br /><span class="formerrormsg">@@{escapeexample:errormessage}@@</span>
             <!-- TemplateEndBlock -->
 			<br /><br />
 

@@ -24,14 +24,14 @@ class parameters
 		
 		// You can define the allowed input for each action in the according
 		// .ini file of the module. If you open the parameters.ini
-		// file you'll notice that this action has 3 allowed input variables:
-		// teststring, testnumber and testescape.
+		// file you'll notice that this action has 4 allowed input variables:
+		// teststring, testnumber, testescape and teststripslashes.
 		// Each input has a pattern that defines its possible content.
-		
-		
+
+
 		// The first parameter is defined as GET parameter and the definition
 		// the input data has to follow is defined as "/^.{4,5}$/".
-		// Notice that you can use any regexp to define the incomming data.
+		// Notice that you can use any regexp to define the incoming data.
 		echo '<a href="./index.php?module=parameters&teststring=abc">Test first parameter with 3 chars (fail)</a><br />';
 		echo '<a href="./index.php?module=parameters&teststring=abcde">Test first parameter with 5 chars (success)</a><br /><br />';
 
@@ -45,14 +45,15 @@ class parameters
 		echo '<a href="./index.php?module=parameters&testnumber=123">Test second parameter with number (success)</a><br /><br />';
 
 
-		// The third parameter is defixned as pretty open string (/^.{1,50}$/). Notice that escape=true
+		// The third parameter is defined as pretty open string (/^.{1,50}$/). Notice that escape=true
 		// for this input. This means it will be routed through a mysql_real_escape.
-		echo '<a href="./index.php?module=parameters&testescape=abc">Test third parameter with normal string (normal)</a><br />';
-		echo '<a href="./index.php?module=parameters&testescape=escap\'d">Test second parameter with special chars (escaped)</a><br /><br />';
+		echo '<a href="./index.php?module=parameters&testescape=escap\'d">Test third parameter with special chars (escaped)</a><br /><br />';
 
 
-		// show output
-		
+		// The fourth parameter is defined as pretty open string as well (/^.{1,50}$/). Notice that stripslashes=true
+		// for this input. This means it will be routed through the php stripslashes() function to clean up html form escapes
+		echo '<a href="./index.php?module=parameters&teststripslashes=Strip\'/"">Test fourth parameter with special chars (stripped)</a><br /><br />';
+
 		// Teststring content
 		if (!empty($parameters['teststring']))
 		{
@@ -81,6 +82,16 @@ class parameters
 		else
 		{
 			echo '<span style="background:#ff8888;">testescape is empty</span><br />';
+		}
+
+		// Teststripslashes content
+		if (!empty($parameters['teststripslashes']))
+		{
+			echo '<span style="background:#33cc33;">teststripslashes: '.$parameters['teststripslashes'].'</span><br />';
+		}
+		else
+		{
+			echo '<span style="background:#ff8888;">teststripslashes is empty</span><br />';
 		}
 
 		$this->debug->unguard(true);		

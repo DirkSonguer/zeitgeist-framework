@@ -42,6 +42,10 @@ class forms
 		// This inserts the validated fields and enters the error messages
 		// in the template fields
 		$exampleform->insert($tpl);
+		
+		// You can validate form elements manually as well:
+		// To validate the element: $exampleform->validateElement('stringexample', true);
+		// To invalidate the element: $exampleform->validateElement('stringexample', false);
 
 		$tpl->show();
 
