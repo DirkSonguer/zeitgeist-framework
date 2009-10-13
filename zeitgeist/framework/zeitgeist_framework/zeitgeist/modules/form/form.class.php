@@ -104,7 +104,17 @@ class zgForm
 			if ($elementdata->valid)
 			{
 				if (empty($formdata[$elementname])) $formdata[$elementname] = '';
-				if ($elementdata->escape == 'true') $formdata[$elementname] = mysql_real_escape_string($formdata[$elementname]);
+
+				if ($elementdata->stripslashes == 'true')
+				{
+					$formdata[$elementname] = stripslashes($formdata[$elementname]);
+				}
+
+				if ($elementdata->escape == 'true')
+				{
+					$formdata[$elementname] = mysql_real_escape_string($formdata[$elementname]);
+				}
+
 				$elementdata->value = $formdata[$elementname];
 			}
 			else
@@ -181,6 +191,7 @@ class zgForm
 				if (!empty($elementdata['required'])) $this->formelements[$elementname]->required = $elementdata['required'];
 				if (!empty($elementdata['expected'])) $this->formelements[$elementname]->expected = $elementdata['expected'];
 				if ( (!empty($elementdata['escape'])) && ($elementdata['escape'] == 'true') ) $this->formelements[$elementname]->escape = true;
+				if ( (!empty($elementdata['stripslashes'])) && ($elementdata['stripslashes'] == 'true') ) $this->formelements[$elementname]->stripslashes = true;
 				if (!empty($elementdata['errormsg'])) $this->formelements[$elementname]->errormsg = $elementdata['errormsg'];
 			}
 			else
@@ -249,6 +260,7 @@ class zgFormelement
 	public $required;
 	public $expected;
 	public $escape;
+	public $stripslashes;
 	public $errormsg;
 
 	public $valid;
@@ -261,6 +273,7 @@ class zgFormelement
 		$this->errormsg = '';
 
 		$this->escape = false;
+		$this->stripslashes = false;
 		$this->valid = false;
 	}
 
