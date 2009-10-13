@@ -196,6 +196,23 @@ class zgParameters
 			{
 				$safeParameters[$parametername] = $this->rawParameters[$parameterdefinition['source']][$parametername];
 
+				// strip slashes
+				if ( (!empty($parameterdefinition['stripslashes'])) && ($parameterdefinition['stripslashes'] == 'true') )
+				{
+					if (is_array($safeParameters[$parametername]))
+					{
+						foreach ($safeParameters[$parametername] as $key => $value)
+						{
+							$safeParameters[$parametername][$key] = stripslashes($value);
+						}
+					}
+					else
+					{
+						$safeParameters[$parametername] = stripslashes($safeParameters[$parametername]);
+					}
+				}
+
+				// escape parameter
 				if ( (!empty($parameterdefinition['escape'])) && ($parameterdefinition['escape'] == 'true') )
 				{
 					if (is_array($safeParameters[$parametername]))
