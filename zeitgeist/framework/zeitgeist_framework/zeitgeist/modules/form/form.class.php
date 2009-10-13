@@ -129,6 +129,34 @@ class zgForm
 	}
 	
 
+	/**
+	 * Validate a given element
+	 *
+	 * @param string $elementname name of the element to validate
+	 * @param boolean $validation state of validation
+	 *
+	 * @return boolean
+	 */
+	public function validateElement($elementname, $validation=true)
+	{
+		$this->debug->guard();
+
+		if (!empty($this->formelements[$elementname]))
+		{
+			$this->formelements[$elementname]->valid = $validation;
+		}
+		else
+		{
+			$this->debug->write('Problem setting the status of the element: element not found in form configuration', 'warning');
+			$this->messages->setMessage('Problem setting the status of the element: element not found in form configuration', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
 
 	/**
 	 * Inserts status and values of the form into a template
