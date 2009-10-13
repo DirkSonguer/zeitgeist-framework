@@ -141,9 +141,9 @@ class main
 		}
 
 		$registrationform->insert($tpl);
-		
+
 		$tpl->show();
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
