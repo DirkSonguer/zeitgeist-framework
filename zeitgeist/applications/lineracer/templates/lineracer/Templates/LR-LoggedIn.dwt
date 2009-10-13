@@ -62,7 +62,7 @@ function login()
         </div>
         
         <div class="options">
-        	<a href="@@{[main.profile]}@@" class="btn01 right"><span>Mein Profil</span></a>
+        	<a href="@@{[profile.index]}@@" class="btn01 right"><span>Dein Profil</span></a>
             <a href="@@{[main.logout]}@@" class="btn01 right"><span>Abmelden</span></a>
         </div>
 		<!-- TemplateEndBlock -->
@@ -96,7 +96,7 @@ function login()
 	<!-- TemplateEndBlock -->
 	</div>
 
-      <a href="#"><img src="@@{templatepath}@@/images/logo-lineracer.png" alt="LineRacer - Das Strategierennen" id="logo" /></a>
+      <a href="@@{basepath}@@"><img src="@@{templatepath}@@/images/logo-lineracer.png" alt="LineRacer - Das Strategierennen" id="logo" /></a>
       
       <ul class="maintabnav">
         <li><a href="@@{[main.index]}@@" class="@@@(TabBoxengasse)@@@"><b></b><em>Boxengasse</em></a></li>
