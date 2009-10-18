@@ -54,8 +54,7 @@ class zgUserdata
 			$ret = array();
 			if ($this->database->numRows($res) > 0)
 			{
-				$row = $this->database->fetchArray($res);
-				$ret = $row;
+				$ret = $this->database->fetchArray($res);
 			}
 			else
 			{
