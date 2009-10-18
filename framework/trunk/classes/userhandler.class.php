@@ -461,7 +461,7 @@ class zgUserhandler
 			$this->_loadUserdata();
 		}
 
-		if (isset($this->userdata[$userdata]))
+		if (array_key_exists($userdata, $this->userdata))
 		{
 			$this->userdata[$userdata] = $value;
 			if ($saveuserdata) $this->_saveUserdata();
