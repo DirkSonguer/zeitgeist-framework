@@ -40,7 +40,7 @@ class zgActionlog
 
 	/**
 	 * Function that logs the given action information
-	 *
+	 * 
 	 * @param int $module id of the module
 	 * @param int $action id of the action
 	 * @param array $parameters array with parameters of the call

@@ -21,6 +21,7 @@ class zgshopCartfunctions
 	protected $objects;
 	protected $configuration;
 	protected $database;
+	protected $session;
 	protected $user;
 
 	public function __construct()
@@ -29,6 +30,7 @@ class zgshopCartfunctions
 		$this->messages = zgMessages::init();
 		$this->objects = zgObjects::init();
 		$this->configuration = zgConfiguration::init();
+		$this->session = zgSession::init();
 		$this->user = zgUserhandler::init();
 
 		$this->database = new zgDatabase();
@@ -68,7 +70,7 @@ class zgshopCartfunctions
 			return false;
 		}
 
-		$sql = "INSERT INTO shop_cart(cart_user, cart_product, cart_qty) VALUES('" . $this->user->getUserID() . "', '" . $productid . "', '" . $quantity . "')";
+		$sql = "INSERT INTO shop_cart(cart_session, cart_product, cart_qty) VALUES('" . $this->session->getSessionId() . "', '" . $productid . "', '" . $quantity . "')";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -107,7 +109,7 @@ class zgshopCartfunctions
 	{
 		$this->debug->guard(true);
 
-		$sql = "SELECT cart_qty FROM shop_cart WHERE cart_user = '" . $this->user->getUserID() . "' AND cart_product = '" . $productid . "'";
+		$sql = "SELECT cart_qty FROM shop_cart WHERE cart_session = '" . $this->session->getSessionId() . "' AND cart_product = '" . $productid . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -128,7 +130,7 @@ class zgshopCartfunctions
 		
 		if ( ($quantity == 0) || ($row['cart_qty'] < $quantity) )
 		{
-			$sql = "DELETE FROM shop_cart WHERE cart_user = '" . $this->user->getUserID() . "' AND cart_product = '" . $productid . "'";
+			$sql = "DELETE FROM shop_cart WHERE cart_session = '" . $this->session->getSessionId() . "' AND cart_product = '" . $productid . "'";
 			$res = $this->database->query($sql);
 			if (!$res)
 			{
@@ -140,7 +142,7 @@ class zgshopCartfunctions
 		}
 		else
 		{
-			$sql = "UPDATE shop_cart SET cart_qty = cart_qty - " . $quantity . " WHERE cart_user = '" . $this->user->getUserID() . "' AND cart_product = '" . $productid . "'";
+			$sql = "UPDATE shop_cart SET cart_qty = cart_qty - " . $quantity . " WHERE cart_session = '" . $this->session->getSessionId() . "' AND cart_product = '" . $productid . "'";
 			$res = $this->database->query($sql);
 			if (!$res)
 			{
@@ -165,7 +167,7 @@ class zgshopCartfunctions
 	{
 		$this->debug->guard(true);
 
-		$sql = "DELETE FROM shop_cart WHERE cart_user = '" . $this->user->getUserID() . "'";
+		$sql = "DELETE FROM shop_cart WHERE cart_session = '" . $this->session->getSessionId() . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -189,7 +191,7 @@ class zgshopCartfunctions
 	{
 		$this->debug->guard(true);
 
-		$sql = "SELECT * FROM shop_cart WHERE cart_user = '" . $this->user->getUserID() . "'";
+		$sql = "SELECT * FROM shop_cart WHERE cart_session = '" . $this->session->getSessionId() . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -257,7 +259,7 @@ class zgshopCartfunctions
 			}
 		}
 
-		$sql = "DELETE FROM shop_cart WHERE cart_user = '" . $this->user->getUserID() . "'";
+		$sql = "DELETE FROM shop_cart WHERE cart_session = '" . $this->session->getSessionId() . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{

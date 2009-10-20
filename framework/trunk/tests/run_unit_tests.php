@@ -28,7 +28,6 @@
 	
 	require_once('./unittests/messages.test.php');
 	require_once('./unittests/objects.test.php');
-	require_once('./unittests/database.test.php');
 	require_once('./unittests/configuration.test.php');
 	require_once('./unittests/files.test.php');
 	require_once('./unittests/actionlog.test.php');
@@ -45,7 +44,6 @@
     $test = &new TestSuite('Zeitgeist Unit Tests');
 	$test->addTestCase(new testMessages());
 	$test->addTestCase(new testObjects());
-//	$test->addTestCase(new testDatabase());
 	$test->addTestCase(new testConfiguration());
 	$test->addTestCase(new testFiles());
 	$test->addTestCase(new testactionlog());
