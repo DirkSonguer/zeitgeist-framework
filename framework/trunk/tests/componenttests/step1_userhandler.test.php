@@ -1,6 +1,6 @@
 <?php
 
-class testUserhandler_s3 extends UnitTestCase
+class testUserhandler extends UnitTestCase
 {
 	public $database;
 	
@@ -14,6 +14,24 @@ class testUserhandler_s3 extends UnitTestCase
 		unset($userhandler);
     }
 
+	function test_login()
+	{
+		$userhandler = zgUserhandler::init();
+		$userfunctions = new zgUserfunctions();
+		$this->database->query('TRUNCATE TABLE users');
+
+		$testid = $userfunctions->createUser('test', 'test');
+		$ret = $userfunctions->activateUser($testid);
+
+		$ret = $userhandler->login('test', 'test');
+		$this->assertTrue($ret);
+		
+		$userid = $userhandler->getUserId();
+		$this->assertEqual($userid, $testid);
+
+		unset($userhandler);
+	}
+
 	function test_isLoggedIn_true()
 	{
 		$userhandler = zgUserhandler::init();
@@ -22,30 +40,7 @@ class testUserhandler_s3 extends UnitTestCase
 		$this->assertTrue($ret);
 
 		unset($userhandler);
-	}	
-
-	function test_logout()
-	{
-		$userhandler = zgUserhandler::init();
-
-		$ret = $userhandler->logout();
-		$this->assertTrue($ret);
-
-		$ret = $userhandler->logout();
-		$this->assertFalse($ret);
-
-		unset($userhandler);
-	}	
-
-	function test_isLoggedIn_false()
-	{
-		$userhandler = zgUserhandler::init();
-
-		$ret = $userhandler->isLoggedIn();
-		$this->assertFalse($ret);
-
-		unset($userhandler);
-	}	
+	}
 
 }
 

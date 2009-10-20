@@ -1,10 +1,8 @@
 <?php
 
-	define('MULTITEST', true);
-
-	if (!defined('SIMPLE_TEST'))
+	if (! defined('SIMPLE_TEST'))
 	{
-	    define('SIMPLE_TEST', './simpletest/');
+	    define('SIMPLE_TEST', 'simpletest/');
 	}
 	require_once(SIMPLE_TEST . 'autorun.php');
 				
@@ -25,22 +23,33 @@
 	$error = zgErrorhandler::init();
 	$user = zgUserhandler::init();
 	$controller = new zgController();
-	
-	require_once('./component_tests/userhandler.test.php');
+
+	if ( (!empty($_GET['step'])) && ($_GET['step'] == 2))
+	{
+		require_once('./componenttests/step2_messages.test.php');
+		require_once('./componenttests/step2_userhandler.test.php');
+		echo "<h2><a href='run_component_tests.php?step=1'>Step 1</a></h2>";
+	}
+	else
+	{
+		require_once('./componenttests/step1_messages.test.php');
+		require_once('./componenttests/step1_userhandler.test.php');
+		echo "<h2><a href='run_component_tests.php?step=2'>Step 2</a></h2>";
+	}
 
 	$debug = zgDebug::init();
 
-    $test = &new TestSuite('Zeitgeist Component Tests');
-	$test->addTestCase(new testUserhandler());
-	
-	$test->run(new HtmlReporter());
+    $test = &new TestSuite('Zeitgeist Unit Tests');
+    $test->addTestCase(new testMessages());
+    $test->addTestCase(new testUserhandler());
+    $test->run(new HtmlReporter());
 
 	$debug->loadStylesheet('debug.css');
-	$debug->showInnerLoops = true;
-	$debug->showMiscInformation();
+//	$debug->showInnerLoops = true;
+//	$debug->showMiscInformation();
 	$debug->showDebugMessages();
 	$debug->showQueryMessages();
-	$debug->showGuardMessages();
+//	$debug->showGuardMessages();
 	
 ?>
 

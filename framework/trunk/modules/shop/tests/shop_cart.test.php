@@ -1,5 +1,7 @@
 <?php
 
+if (!defined('MULTITEST')) include(dirname(__FILE__).'/../../../tests/test_configuration.php');
+
 class testShopCart extends UnitTestCase
 {
 	public $database;

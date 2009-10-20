@@ -1,6 +1,6 @@
 <?php
 
-class testUserhandler_s2 extends UnitTestCase
+class testUserhandler extends UnitTestCase
 {
 	public $database;
 	
@@ -44,28 +44,28 @@ class testUserhandler_s2 extends UnitTestCase
 		unset($userhandler);
 	}	
 
-	function test_getUserdata()
+	function test_logout()
 	{
 		$userhandler = zgUserhandler::init();
 
-		$ret = $userhandler->getUserdata();
-		$this->assertEqual(count($ret), 12);
-		$this->assertEqual($ret['userdata_firstname'], 'Mr');
-		$this->assertEqual($ret['userdata_lastname'], 'Test');
-
-		unset($userhandler);		
-	}
-	
-	function test_getUserKey()
-	{
-		$userhandler = zgUserhandler::init();
-
-		$ret = $userhandler->getUserKey();
+		$ret = $userhandler->logout();
 		$this->assertTrue($ret);
+
+		$ret = $userhandler->logout();
+		$this->assertFalse($ret);
 
 		unset($userhandler);
 	}	
 
+	function test_isLoggedIn_false()
+	{
+		$userhandler = zgUserhandler::init();
+
+		$ret = $userhandler->isLoggedIn();
+		$this->assertFalse($ret);
+
+		unset($userhandler);
+	}	
 }
 
 ?>
