@@ -21,21 +21,43 @@ class testUserdata extends UnitTestCase
 	function test_saveUserdata_nodata()
 	{
 		$userdata = new zgUserdata();
-		$res = $this->database->query("TRUNCATE TABLE userdata");
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('userdata');
 		
 		$ret = $userdata->saveUserdata('', '');
 		$this->assertFalse($ret);
 
+		$testfunctions->dropZeitgeistTable('userdata');
 		unset($ret);
 		unset($userdata);
     }
-	
-	
+
+
 	// Try to save userdata without valid data
 	function test_saveUserdata_withoutdata()
 	{
 		$userdata = new zgUserdata();
-		$res = $this->database->query("TRUNCATE TABLE userdata");
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('userdata');
+		
+		$testuser = rand(100,200);
+		$testdata = array();
+		
+		$ret = $userdata->saveUserdata($testuser, $testdata);
+		$this->assertFalse($ret);
+
+		$testfunctions->dropZeitgeistTable('userdata');
+		unset($ret);
+		unset($userdata);
+    }
+
+
+	// Try to save userdata without a database
+	function test_saveUserdata_withoutdatabase()
+	{
+		$userdata = new zgUserdata();
 		
 		$testuser = rand(100,200);
 		$testdata = array();
@@ -52,7 +74,9 @@ class testUserdata extends UnitTestCase
 	function test_saveUserdata_success()
 	{
 		$userdata = new zgUserdata();
-		$res = $this->database->query("TRUNCATE TABLE userdata");
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('userdata');
 		
 		$testuser = rand(100,200);
 		$testdata = array();
@@ -68,6 +92,7 @@ class testUserdata extends UnitTestCase
 		$ret = $this->database->fetchArray($res);
 		$this->assertEqual($ret['userdata_username'], $testdata['userdata_username']);
 
+		$testfunctions->dropZeitgeistTable('userdata');
 		unset($ret);
 		unset($userdata);
     }	
@@ -77,12 +102,15 @@ class testUserdata extends UnitTestCase
 	function test_loadUserdata_emptyuser()
 	{
 		$userdata = new zgUserdata();
-		$res = $this->database->query("TRUNCATE TABLE userdata");
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('userdata');
 
 		$ret = $userdata->loadUserdata('');
 		$this->assertTrue($ret);
 		$this->assertEqual(count($ret), 5);
 
+		$testfunctions->dropZeitgeistTable('userdata');
 		unset($ret);
 		unset($userdata);
     }	
@@ -92,11 +120,27 @@ class testUserdata extends UnitTestCase
 	function test_loadUserdata_nonexistantuser()
 	{
 		$userdata = new zgUserdata();
-		$res = $this->database->query("TRUNCATE TABLE userdata");
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('userdata');
 
 		$ret = $userdata->loadUserdata(1);
 		$this->assertTrue($ret);
 		$this->assertEqual(count($ret), 5);
+
+		$testfunctions->dropZeitgeistTable('userdata');
+		unset($ret);
+		unset($userdata);
+    }	
+
+
+	// Try to load userdata without a database
+	function test_loadUserdata_without_database()
+	{
+		$userdata = new zgUserdata();
+
+		$ret = $userdata->loadUserdata(1);
+		$this->assertFalse($ret);
 
 		unset($ret);
 		unset($userdata);
@@ -107,7 +151,9 @@ class testUserdata extends UnitTestCase
 	function test_loadUserdata()
 	{
 		$userdata = new zgUserdata();
-		$res = $this->database->query("TRUNCATE TABLE userdata");
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('userdata');
 
 		$testuser = rand(100,200);
 		$testdata = uniqid();
@@ -118,6 +164,7 @@ class testUserdata extends UnitTestCase
 		$this->assertEqual(count($ret), 5);
 		$this->assertEqual($ret['userdata_username'], $testdata);
 
+		$testfunctions->dropZeitgeistTable('userdata');
 		unset($ret);
 		unset($userdata);
     }

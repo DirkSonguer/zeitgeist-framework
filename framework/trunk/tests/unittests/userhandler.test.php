@@ -33,7 +33,9 @@ class testUserhandler extends UnitTestCase
 	{
 		$userhandler = zgUserhandler::init();
 		$userfunctions = new zgUserfunctions();
-		$this->database->query('TRUNCATE TABLE users');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('users');
 
 		$username = uniqid();
 		$password = uniqid();
@@ -43,6 +45,7 @@ class testUserhandler extends UnitTestCase
 		$ret = $userhandler->login($username, 'false');
 		$this->assertFalse($ret);
 
+		$testfunctions->dropZeitgeistTable('users');
 		unset($ret);
 		unset($userhandler);
 	}
@@ -53,7 +56,9 @@ class testUserhandler extends UnitTestCase
 	{
 		$userhandler = zgUserhandler::init();
 		$userfunctions = new zgUserfunctions();
-		$this->database->query('TRUNCATE TABLE users');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('users');
 
 		$username = uniqid();
 		$password = uniqid();
@@ -63,6 +68,7 @@ class testUserhandler extends UnitTestCase
 		$ret = $userhandler->login('false', $password);
 		$this->assertFalse($ret);
 
+		$testfunctions->dropZeitgeistTable('users');
 		unset($ret);
 		unset($userhandler);
 	}
@@ -73,7 +79,9 @@ class testUserhandler extends UnitTestCase
 	{
 		$userhandler = zgUserhandler::init();
 		$userfunctions = new zgUserfunctions();
-		$this->database->query('TRUNCATE TABLE users');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('users');
 
 		$username = uniqid();
 		$password = uniqid();
@@ -83,6 +91,7 @@ class testUserhandler extends UnitTestCase
 		$ret = $userhandler->login($username, $password);
 		$this->assertTrue($ret);
 
+		$testfunctions->dropZeitgeistTable('users');
 		unset($ret);
 		unset($userhandler);
 	}
@@ -132,7 +141,9 @@ class testUserhandler extends UnitTestCase
 	{
 		$userhandler = zgUserhandler::init();
 		$userfunctions = new zgUserfunctions();
-		$this->database->query('TRUNCATE TABLE users');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('users');
 
 		$username = uniqid();
 		$password = uniqid();
@@ -144,6 +155,7 @@ class testUserhandler extends UnitTestCase
 		$ret = $userhandler->getUserID();
 		$this->assertEqual($userid, $ret);
 
+		$testfunctions->dropZeitgeistTable('users');
 		unset($ret);
 		unset($userhandler);
 	}
@@ -168,7 +180,9 @@ class testUserhandler extends UnitTestCase
 	{
 		$userhandler = zgUserhandler::init();
 		$userfunctions = new zgUserfunctions();
-		$this->database->query('TRUNCATE TABLE users');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('users');
 
 		$username = uniqid();
 		$password = uniqid();
@@ -180,6 +194,7 @@ class testUserhandler extends UnitTestCase
 		$ret = $userhandler->isLoggedIn();
 		$this->assertTrue($ret);
 
+		$testfunctions->dropZeitgeistTable('users');
 		unset($ret);
 		unset($userhandler);
 	}

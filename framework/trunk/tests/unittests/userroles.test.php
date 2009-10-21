@@ -21,11 +21,14 @@ class testUserroles extends UnitTestCase
 	function test_saveUserroles_nodata()
 	{
 		$userroles = new zgUserroles();
-		$res = $this->database->query("TRUNCATE TABLE userroles_to_users");
-		
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('userroles_to_users');
+
 		$ret = $userroles->saveUserroles('', '');
 		$this->assertFalse($ret);
-		
+
+		$testfunctions->dropZeitgeistTable('userroles_to_users');
 		unset($ret);
 		unset($userroles);
     }
@@ -35,7 +38,9 @@ class testUserroles extends UnitTestCase
 	function test_saveUserroles_emptydata()
 	{
 		$userroles = new zgUserroles();
-		$res = $this->database->query("TRUNCATE TABLE userroles_to_users");
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('userroles_to_users');
 
 		$testuser = rand(1,100);
 		$testroles = array();
@@ -43,6 +48,7 @@ class testUserroles extends UnitTestCase
 		$ret = $userroles->saveUserroles($testuser, $testroles);
 		$this->assertFalse($ret);
 		
+		$testfunctions->dropZeitgeistTable('userroles_to_users');
 		unset($ret);
 		unset($userroles);
     }
@@ -51,7 +57,9 @@ class testUserroles extends UnitTestCase
 	function test_saveUserroles_success()
 	{
 		$userroles = new zgUserroles();
-		$res = $this->database->query("TRUNCATE TABLE userroles_to_users");
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('userroles_to_users');
 
 		$testuser = rand(1,100);
 		
@@ -71,6 +79,7 @@ class testUserroles extends UnitTestCase
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 2);
 
+		$testfunctions->dropZeitgeistTable('userroles_to_users');
 		unset($ret);
 		unset($userroles);
     }
@@ -80,11 +89,14 @@ class testUserroles extends UnitTestCase
 	function test_loadUserroles_nouser()
 	{
 		$userroles = new zgUserroles();
-		$res = $this->database->query("TRUNCATE TABLE userroles_to_users");
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('userroles_to_users');
 
 		$ret = $userroles->loadUserroles('');
 		$this->assertFalse($ret);
 		
+		$testfunctions->dropZeitgeistTable('userroles_to_users');
 		unset($ret);
 		unset($userroles);
     }
@@ -94,11 +106,14 @@ class testUserroles extends UnitTestCase
 	function test_loadUserroles_nonexistantuser()
 	{
 		$userroles = new zgUserroles();
-		$res = $this->database->query("TRUNCATE TABLE userroles_to_users");
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('userroles_to_users');
 
 		$ret = $userroles->loadUserroles(1);
 		$this->assertFalse($ret);
 		
+		$testfunctions->dropZeitgeistTable('userroles_to_users');
 		unset($ret);
 		unset($userroles);
     }
@@ -108,8 +123,10 @@ class testUserroles extends UnitTestCase
 	function test_loadUserroles_success()
 	{
 		$userroles = new zgUserroles();
-		$res = $this->database->query("TRUNCATE TABLE userroles_to_users");
-		$res = $this->database->query("TRUNCATE TABLE userroles");
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('userroles_to_users');
+		$testfunctions->createZeitgeistTable('userroles');
 
 		$testuser = rand(1,100);
 		$testrole1_id = rand(1, 50);
@@ -133,6 +150,8 @@ class testUserroles extends UnitTestCase
 		$this->assertEqual($ret[$testrole1_id], $testrole1_name);
 		$this->assertEqual($ret[$testrole2_id], $testrole2_name);
 
+		$testfunctions->dropZeitgeistTable('userroles_to_users');
+		$testfunctions->dropZeitgeistTable('userroles');
 		unset($ret);
 		unset($userroles);
     }
@@ -142,11 +161,14 @@ class testUserroles extends UnitTestCase
 	function test_identifyRole_nodata()
 	{
 		$userroles = new zgUserroles();
-		$res = $this->database->query("TRUNCATE TABLE userroles");
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('userroles');
 
 		$ret = $userroles->identifyRole('');
 		$this->assertFalse($ret);
 
+		$testfunctions->dropZeitgeistTable('userroles');
 		unset($ret);
 		unset($userroles);
     }
@@ -156,11 +178,14 @@ class testUserroles extends UnitTestCase
 	function test_identifyRole_invaidrole()
 	{
 		$userroles = new zgUserroles();
-		$res = $this->database->query("TRUNCATE TABLE userroles");
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('userroles');
 
 		$ret = $userroles->identifyRole('false');
 		$this->assertFalse($ret);
 
+		$testfunctions->dropZeitgeistTable('userroles');
 		unset($ret);
 		unset($userroles);
     }
@@ -170,7 +195,9 @@ class testUserroles extends UnitTestCase
 	function test_identifyRole_success()
 	{
 		$userroles = new zgUserroles();
-		$res = $this->database->query("TRUNCATE TABLE userroles");
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('userroles');
 
 		$testuser = rand(1,100);
 		$testrole1_id = rand(1, 50);
@@ -183,6 +210,7 @@ class testUserroles extends UnitTestCase
 		$this->assertTrue($ret);
 		$this->assertEqual($ret, $testrole1_id);
 
+		$testfunctions->dropZeitgeistTable('userroles');
 		unset($ret);
 		unset($userroles);
     }
