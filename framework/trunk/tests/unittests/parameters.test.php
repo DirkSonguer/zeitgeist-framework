@@ -1,6 +1,6 @@
 <?php
 
-if (!defined('MULTITEST')) include(dirname(__FILE__).'/../test_configuration.php');
+if (!defined('MULTITEST')) include(dirname(__FILE__).'/../_configuration.php');
 
 class testParameters extends UnitTestCase
 {
