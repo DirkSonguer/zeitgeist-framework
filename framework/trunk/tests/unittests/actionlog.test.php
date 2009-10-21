@@ -1,6 +1,6 @@
 <?php
 
-if (!defined('MULTITEST')) include(dirname(__FILE__).'/../test_configuration.php');
+if (!defined('MULTITEST')) include(dirname(__FILE__).'/../_configuration.php');
 
 class testActionlog extends UnitTestCase
 {
@@ -16,13 +16,57 @@ class testActionlog extends UnitTestCase
 		unset($actionlog);		
     }
 	
-	
+
+	// Test logging a pageview without a table for logging actions
+	function test_logAction_noActiontable()
+	{
+		$actionlog = new zgActionlog();
+		
+		$param1 = rand(100, 5000);
+		$param2 = rand(100, 5000);
+		$param3 = rand(100, 5000);
+		
+		$parameters = array();
+		$parameters['test1'] = 'test'.$param1;
+		$parameters['test2'] = 'test'.$param2;
+		$ret = $actionlog->logAction($param1, $param2, $parameters);
+		$this->assertFalse($ret);
+
+		unset($actionlog);
+	}
+
+
+	// Test logging a pageview without a table for logging parameters
+	function test_logAction_noParametertable()
+	{
+		$actionlog = new zgActionlog();
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('actionlog');
+		
+		$param1 = rand(100, 5000);
+		$param2 = rand(100, 5000);
+		$param3 = rand(100, 5000);
+		
+		$parameters = array();
+		$parameters['test1'] = 'test'.$param1;
+		$parameters['test2'] = 'test'.$param2;
+		$ret = $actionlog->logAction($param1, $param2, $parameters);
+		$this->assertFalse($ret);
+
+		$testfunctions->dropZeitgeistTable('actionlog');
+		unset($actionlog);
+	}
+
+
 	// Test logging a pageview
 	function test_logAction_success()
 	{
 		$actionlog = new zgActionlog();
-		$this->database->query('TRUNCATE TABLE actionlog');
-		$this->database->query('TRUNCATE TABLE actionlog_parameters');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('actionlog');
+		$testfunctions->createZeitgeistTable('actionlog_parameters');
 		
 		$param1 = rand(100, 5000);
 		$param2 = rand(100, 5000);
@@ -56,6 +100,8 @@ class testActionlog extends UnitTestCase
 		$this->assertEqual($ret['actionparameter_key'], 'test2');
 		$this->assertEqual($ret['actionparameter_value'], 'test'.$param2);
 
+		$testfunctions->dropZeitgeistTable('actionlog');
+		$testfunctions->dropZeitgeistTable('actionlog_parameters');
 		unset($actionlog);
 	}
 	

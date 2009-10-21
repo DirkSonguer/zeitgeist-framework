@@ -1,6 +1,6 @@
 <?php
 
-if (!defined('MULTITEST')) include(dirname(__FILE__).'/../../../tests/test_configuration.php');
+if (!defined('MULTITEST')) include(dirname(__FILE__).'/../../../tests/_configuration.php');
 
 class testShopCart extends UnitTestCase
 {
