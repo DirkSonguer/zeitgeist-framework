@@ -21,7 +21,9 @@ class testUserfunctions extends UnitTestCase
 	function test_createUser_without_data()
 	{
 		$user = new zgUserfunctions();
-		$this->database->query('TRUNCATE TABLE users');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('users');
 
 		$newuserid = $user->createUser('', '');
 		$this->assertFalse($newuserid);
@@ -30,7 +32,23 @@ class testUserfunctions extends UnitTestCase
 		$res = $this->database->query("SELECT * FROM users WHERE user_id='" . $newuserid . "'");
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 0);
-		
+
+		$testfunctions->dropZeitgeistTable('users');
+		unset($ret);
+		unset($user);
+	}
+
+
+	// Try creating a user without database
+	function test_createUser_without_database()
+	{
+		$user = new zgUserfunctions();
+
+		$username = uniqid();
+		$password = uniqid();
+		$newuserid = $user->createUser($username, $password);
+		$this->assertFalse($newuserid);
+
 		unset($ret);
 		unset($user);
 	}
@@ -40,7 +58,9 @@ class testUserfunctions extends UnitTestCase
 	function test_createUser_success()
 	{
 		$user = new zgUserfunctions();
-		$this->database->query('TRUNCATE TABLE users');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('users');
 
 		$username = uniqid();
 		$password = uniqid();
@@ -52,6 +72,7 @@ class testUserfunctions extends UnitTestCase
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 1);
 
+		$testfunctions->dropZeitgeistTable('users');
 		unset($ret);
 		unset($user);
 	}
@@ -61,7 +82,9 @@ class testUserfunctions extends UnitTestCase
 	function test_createUser_twice()
 	{
 		$user = new zgUserfunctions();
-		$this->database->query('TRUNCATE TABLE users');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('users');
 
 		$username = uniqid();
 		$password = uniqid();
@@ -76,6 +99,7 @@ class testUserfunctions extends UnitTestCase
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 1);
 
+		$testfunctions->dropZeitgeistTable('users');
 		unset($ret);
 		unset($user);
 	}
@@ -85,21 +109,39 @@ class testUserfunctions extends UnitTestCase
 	function test_login_nodata()
 	{
 		$user = new zgUserfunctions();
-		$this->database->query('TRUNCATE TABLE users');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('users');
 		
 		$ret = $user->login('', '');
+		$this->assertFalse($ret);
+
+		$testfunctions->dropZeitgeistTable('users');
+		unset($ret);
+		unset($user);
+	}
+
+
+	// Try to log in without a database
+	function test_login_without_database()
+	{
+		$user = new zgUserfunctions();
+		
+		$ret = $user->login('test', 'test');
 		$this->assertFalse($ret);
 
 		unset($ret);
 		unset($user);
 	}
-	
-	
+
+
 	// Try login with existing user and wrong password
 	function test_login_wrongpassword()
 	{
 		$user = new zgUserfunctions();
-		$this->database->query('TRUNCATE TABLE users');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('users');
 
 		$username = uniqid();
 		$password = uniqid();
@@ -109,6 +151,7 @@ class testUserfunctions extends UnitTestCase
 		$ret = $user->login($username, $password.'1');
 		$this->assertFalse($ret);
 
+		$testfunctions->dropZeitgeistTable('users');
 		unset($ret);
 		unset($user);
 	}
@@ -118,7 +161,9 @@ class testUserfunctions extends UnitTestCase
 	function test_login_success()
 	{
 		$user = new zgUserfunctions();
-		$this->database->query('TRUNCATE TABLE users');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('users');
 
 		$username = uniqid();
 		$password = uniqid();
@@ -129,6 +174,7 @@ class testUserfunctions extends UnitTestCase
 		$this->assertTrue($ret);
 		$this->assertEqual($ret['user_id'], $newuserid);
 
+		$testfunctions->dropZeitgeistTable('users');
 		unset($ret);
 		unset($user);
 	}
@@ -138,7 +184,9 @@ class testUserfunctions extends UnitTestCase
 	function test_deleteUser_nodata()
 	{
 		$user = new zgUserfunctions();
-		$this->database->query('TRUNCATE TABLE users');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('users');
 
 		$username = uniqid();
 		$password = uniqid();
@@ -152,6 +200,19 @@ class testUserfunctions extends UnitTestCase
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 1);
 
+		$testfunctions->dropZeitgeistTable('users');
+		unset($ret);
+		unset($user);
+	}
+
+
+	// Try deleting an existing user without database
+	function test_deleteUser_without_database()
+	{
+		$user = new zgUserfunctions();
+
+		$ret = $user->deleteUser($newuserid);
+
 		unset($ret);
 		unset($user);
 	}
@@ -161,7 +222,9 @@ class testUserfunctions extends UnitTestCase
 	function test_deleteUser_success()
 	{
 		$user = new zgUserfunctions();
-		$this->database->query('TRUNCATE TABLE users');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('users');
 
 		$username = uniqid();
 		$password = uniqid();
@@ -172,6 +235,7 @@ class testUserfunctions extends UnitTestCase
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 0);
 
+		$testfunctions->dropZeitgeistTable('users');
 		unset($ret);
 		unset($user);
 	}
@@ -181,7 +245,9 @@ class testUserfunctions extends UnitTestCase
 	function test_changePassword_nodata()
 	{
 		$user = new zgUserfunctions();
-		$this->database->query('TRUNCATE TABLE users');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('users');
 
 		$username = uniqid();
 		$password = uniqid();
@@ -193,6 +259,20 @@ class testUserfunctions extends UnitTestCase
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 1);
 
+		$testfunctions->dropZeitgeistTable('users');
+		unset($ret);
+		unset($user);
+	}
+
+
+	// Try changing the password of a user without the database
+	function test_changePassword_without_database()
+	{
+		$user = new zgUserfunctions();
+
+		$ret = $user->changePassword($newuserid, $password.'1');
+		$this->assertFalse($ret);
+
 		unset($ret);
 		unset($user);
 	}
@@ -202,7 +282,9 @@ class testUserfunctions extends UnitTestCase
 	function test_changePassword_success()
 	{
 		$user = new zgUserfunctions();
-		$this->database->query('TRUNCATE TABLE users');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('users');
 
 		$username = uniqid();
 		$password = uniqid();
@@ -214,6 +296,7 @@ class testUserfunctions extends UnitTestCase
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 1);
 
+		$testfunctions->dropZeitgeistTable('users');
 		unset($ret);
 		unset($user);
 	}
@@ -223,7 +306,9 @@ class testUserfunctions extends UnitTestCase
 	function test_changeUsername_nodata()
 	{
 		$user = new zgUserfunctions();
-		$this->database->query('TRUNCATE TABLE users');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('users');
 
 		$username = uniqid();
 		$password = uniqid();
@@ -235,6 +320,7 @@ class testUserfunctions extends UnitTestCase
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 1);
 
+		$testfunctions->dropZeitgeistTable('users');
 		unset($ret);
 		unset($user);
 	}
@@ -244,7 +330,9 @@ class testUserfunctions extends UnitTestCase
 	function test_changeUsername_existingusername()
 	{
 		$user = new zgUserfunctions();
-		$this->database->query('TRUNCATE TABLE users');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('users');
 
 		$username = uniqid();
 		$password = uniqid();
@@ -261,6 +349,19 @@ class testUserfunctions extends UnitTestCase
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 1);
 
+		$testfunctions->dropZeitgeistTable('users');
+		unset($ret);
+		unset($user);
+	}
+
+
+	// Try changing username without database
+	function test_changeUsername_without_database()
+	{
+		$user = new zgUserfunctions();
+
+		$ret = $user->changeUsername($newuserid, $username.'1');
+
 		unset($ret);
 		unset($user);
 	}
@@ -270,7 +371,9 @@ class testUserfunctions extends UnitTestCase
 	function test_changeUsername_success()
 	{
 		$user = new zgUserfunctions();
-		$this->database->query('TRUNCATE TABLE users');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('users');
 
 		$username = uniqid();
 		$password = uniqid();
@@ -282,6 +385,7 @@ class testUserfunctions extends UnitTestCase
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 1);
 
+		$testfunctions->dropZeitgeistTable('users');
 		unset($ret);
 		unset($user);
 	}
@@ -291,23 +395,42 @@ class testUserfunctions extends UnitTestCase
 	function test_getConfirmationKey_invaliduser()
 	{
 		$user = new zgUserfunctions();
-		$this->database->query('TRUNCATE TABLE users');
-		$this->database->query('TRUNCATE TABLE userconfirmation');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('users');
+		$testfunctions->createZeitgeistTable('userconfirmation');
 
 		$ret = $user->getConfirmationKey(1);
 		$this->assertFalse($ret);
 
+		$testfunctions->dropZeitgeistTable('users');
+		$testfunctions->dropZeitgeistTable('userconfirmation');
 		unset($ret);
 		unset($user);
 	}
-	
+
+
+	// Try to get confirmation key without a database
+	function test_getConfirmationKey_without_database()
+	{
+		$user = new zgUserfunctions();
+
+		$confirmationkey = $user->getConfirmationKey($newuserid);
+		$this->assertFalse($confirmationkey);
+
+		unset($ret);
+		unset($user);
+	}
+
 
 	// Get confirmation key
 	function test_getConfirmationKey_success()
 	{
 		$user = new zgUserfunctions();
-		$this->database->query('TRUNCATE TABLE users');
-		$this->database->query('TRUNCATE TABLE userconfirmation');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('users');
+		$testfunctions->createZeitgeistTable('userconfirmation');
 
 		$username = uniqid();
 		$password = uniqid();
@@ -319,6 +442,8 @@ class testUserfunctions extends UnitTestCase
 		$ret = $this->database->fetchArray($res);
 		$this->assertEqual($ret['userconfirmation_key'], $confirmationkey);
 
+		$testfunctions->dropZeitgeistTable('users');
+		$testfunctions->dropZeitgeistTable('userconfirmation');
 		unset($ret);
 		unset($user);
 	}
@@ -328,8 +453,10 @@ class testUserfunctions extends UnitTestCase
 	function test_checkConfirmation_invalidkey()
 	{
 		$user = new zgUserfunctions();
-		$this->database->query('TRUNCATE TABLE users');
-		$this->database->query('TRUNCATE TABLE userconfirmation');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('users');
+		$testfunctions->createZeitgeistTable('userconfirmation');
 
 		$username = uniqid();
 		$password = uniqid();
@@ -338,6 +465,21 @@ class testUserfunctions extends UnitTestCase
 		
 		$ret = $user->checkConfirmation($confirmationkey.'1');
 		$this->assertFalse($ret);
+
+		$testfunctions->dropZeitgeistTable('users');
+		$testfunctions->dropZeitgeistTable('userconfirmation');
+		unset($ret);
+		unset($user);
+	}
+
+
+	// Try to check confirmation key without the database
+	function test_checkConfirmation_without_database()
+	{
+		$user = new zgUserfunctions();
+
+		$ret = $user->checkConfirmation('test');
+		$this->assertFalse($ret, $newuserid);
 
 		unset($ret);
 		unset($user);
@@ -348,8 +490,10 @@ class testUserfunctions extends UnitTestCase
 	function test_checkConfirmation_success()
 	{
 		$user = new zgUserfunctions();
-		$this->database->query('TRUNCATE TABLE users');
-		$this->database->query('TRUNCATE TABLE userconfirmation');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('users');
+		$testfunctions->createZeitgeistTable('userconfirmation');
 
 		$username = uniqid();
 		$password = uniqid();
@@ -359,6 +503,8 @@ class testUserfunctions extends UnitTestCase
 		$ret = $user->checkConfirmation($confirmationkey);
 		$this->assertEqual($ret, $newuserid);
 
+		$testfunctions->dropZeitgeistTable('users');
+		$testfunctions->dropZeitgeistTable('userconfirmation');
 		unset($ret);
 		unset($user);
 	}
@@ -368,22 +514,40 @@ class testUserfunctions extends UnitTestCase
 	function test_activateUser_invaliduser()
 	{
 		$user = new zgUserfunctions();
-		$this->database->query('TRUNCATE TABLE users');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('users');
 
 		$ret = $user->activateUser(1);
-		$this->assertTrue($ret);
+		$this->assertFalse($ret);
+
+		$testfunctions->dropZeitgeistTable('users');
+		unset($ret);
+		unset($userhandler);
+	}
+
+
+	// try activating user without database
+	function test_activateUser_without_database()
+	{
+		$user = new zgUserfunctions();
+
+		$ret = $user->activateUser(1);
+		$this->assertFalse($ret);
 
 		unset($ret);
 		unset($userhandler);
 	}
-	
-	
+
+
 	// Activate user
 	function test_activateUser_success()
 	{
 		$user = new zgUserfunctions();
-		$this->database->query('TRUNCATE TABLE users');
-		$this->database->query('TRUNCATE TABLE userconfirmation');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('users');
+		$testfunctions->createZeitgeistTable('userconfirmation');
 
 		$username = uniqid();
 		$password = uniqid();
@@ -400,31 +564,51 @@ class testUserfunctions extends UnitTestCase
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 0);
 
+		$testfunctions->dropZeitgeistTable('users');
+		$testfunctions->dropZeitgeistTable('userconfirmation');
 		unset($ret);
 		unset($userhandler);
 	}
-	
+
 
 	// try deactivating nonexistant user
 	function test_deactivateUser_invaliduser()
 	{
 		$user = new zgUserfunctions();
-		$this->database->query('TRUNCATE TABLE users');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('users');
 
 		$ret = $user->deactivateUser(1);
-		$this->assertTrue($ret);
+		$this->assertFalse($ret);
 
+		$testfunctions->dropZeitgeistTable('users');
 		unset($ret);
 		unset($userhandler);
 	}
 	
-	
+
+	// try deactivating user without database
+	function test_deactivateUser_without_database()
+	{
+		$user = new zgUserfunctions();
+
+		$ret = $user->deactivateUser(1);
+		$this->assertFalse($ret);
+
+		unset($ret);
+		unset($userhandler);
+	}
+
+
 	// Deactivate user
 	function test_deactivateUser_success()
 	{
 		$user = new zgUserfunctions();
-		$this->database->query('TRUNCATE TABLE users');
-		$this->database->query('TRUNCATE TABLE userconfirmation');
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('users');
+		$testfunctions->createZeitgeistTable('userconfirmation');
 
 		$username = uniqid();
 		$password = uniqid();
@@ -442,6 +626,8 @@ class testUserfunctions extends UnitTestCase
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 1);
 
+		$testfunctions->dropZeitgeistTable('users');
+		$testfunctions->dropZeitgeistTable('userconfirmation');
 		unset($ret);
 		unset($userhandler);
 	}
