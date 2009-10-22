@@ -44,18 +44,18 @@
 	$debug = zgDebug::init();
 
     $test = &new TestSuite('Zeitgeist Unit Tests');
-	$test->addTestCase(new testMessages());
-	$test->addTestCase(new testObjects());
+//	$test->addTestCase(new testMessages());
+//	$test->addTestCase(new testObjects());
 	$test->addTestCase(new testConfiguration());
-	$test->addTestCase(new testFiles());
-	$test->addTestCase(new testactionlog());
-	$test->addTestCase(new testParameters());
-	$test->addTestCase(new testUserfunctions());
-	$test->addTestCase(new testUserdata());
-	$test->addTestCase(new testUserroles());
-	$test->addTestCase(new testUserrights());
-	$test->addTestCase(new testUserhandler());
-	$test->addTestCase(new testLocalisation());
+//	$test->addTestCase(new testFiles());
+//	$test->addTestCase(new testactionlog());
+//	$test->addTestCase(new testParameters());
+//	$test->addTestCase(new testUserfunctions());
+//	$test->addTestCase(new testUserdata());
+//	$test->addTestCase(new testUserroles());
+//	$test->addTestCase(new testUserrights());
+//	$test->addTestCase(new testUserhandler());
+//	$test->addTestCase(new testLocalisation());
 	
 	$test->run(new HtmlReporter());
 

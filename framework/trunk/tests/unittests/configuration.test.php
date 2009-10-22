@@ -17,18 +17,22 @@ class testConfiguration extends UnitTestCase
 	function test_loadConfiguration_wrongfilename()
 	{
 		$configuration = zgConfiguration::init();
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('configurationcache');
 		$randomid = uniqid();
 
 		$ret = $configuration->loadConfiguration($randomid, 'false');
 		$this->assertFalse($ret);
 
+		$testfunctions->dropZeitgeistTable('configurationcache');
 		unset($ret);
 		unset($configuration);
 	}
 
 
-	// Load a configuration from an existing and valid file
-	function test_loadConfiguration_success()
+	// Load a configuration without database
+	function test_loadConfiguration_without_database()
 	{
 		$configuration = zgConfiguration::init();
 		$randomid = uniqid();
@@ -41,16 +45,39 @@ class testConfiguration extends UnitTestCase
 	}
 
 
+
+	// Load a configuration from an existing and valid file
+	function test_loadConfiguration_success()
+	{
+		$configuration = zgConfiguration::init();
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('configurationcache');
+		$randomid = uniqid();
+		
+		$ret = $configuration->loadConfiguration($randomid, ZEITGEIST_ROOTDIRECTORY.'tests/testdata/testconfiguration.ini');
+		$this->assertTrue($ret);
+
+		$testfunctions->dropZeitgeistTable('configurationcache');
+		unset($ret);
+		unset($configuration);
+	}
+
+
 	// Load a configuration from an existing file but into an already defined ID
 	function test_loadConfiguration_namecollision()
 	{
 		$configuration = zgConfiguration::init();
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('configurationcache');
 		$randomid = uniqid();
 
 		$configuration->loadConfiguration($randomid, ZEITGEIST_ROOTDIRECTORY.'tests/testdata/testconfiguration.ini');
 		$ret = $configuration->loadConfiguration($randomid, ZEITGEIST_ROOTDIRECTORY.'tests/testdata/testconfiguration.ini');
 		$this->assertFalse($ret);
 
+		$testfunctions->dropZeitgeistTable('configurationcache');
 		unset($ret);
 		unset($configuration);
 	}
@@ -60,12 +87,16 @@ class testConfiguration extends UnitTestCase
 	function test_loadConfiguration_forceoverwrite()
 	{
 		$configuration = zgConfiguration::init();
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('configurationcache');
 		$randomid = uniqid();
 
 		$configuration->loadConfiguration($randomid, ZEITGEIST_ROOTDIRECTORY.'tests/testdata/testconfiguration.ini');
 		$ret = $configuration->loadConfiguration($randomid, ZEITGEIST_ROOTDIRECTORY.'tests/testdata/testconfiguration.ini', true);
 		$this->assertTrue($ret);
 
+		$testfunctions->dropZeitgeistTable('configurationcache');
 		unset($ret);
 		unset($configuration);
 	}
@@ -75,6 +106,9 @@ class testConfiguration extends UnitTestCase
 	function test_getConfiguration_correctitems()
 	{
 		$configuration = zgConfiguration::init();
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('configurationcache');
 		$randomid = uniqid();
 
 		$ret = $configuration->loadConfiguration($randomid, ZEITGEIST_ROOTDIRECTORY.'tests/testdata/testconfiguration.ini');
@@ -87,6 +121,7 @@ class testConfiguration extends UnitTestCase
 		$ret = $configuration->getConfiguration($randomid);
 		$this->assertEqual($ret, $testconfiguration);
 		
+		$testfunctions->dropZeitgeistTable('configurationcache');
 		unset($ret);
 		unset($configuration);
 	}
