@@ -100,10 +100,10 @@ class testConfiguration extends UnitTestCase
 		unset($ret);
 		unset($configuration);
 	}
-	
-	
-	// Check if the contents of the test configuration are ok
-	function test_getConfiguration_correctitems()
+
+
+	// Get the contents of the configuration
+	function test_getConfiguration_getcompleteconfiguration()
 	{
 		$configuration = zgConfiguration::init();
 		$testfunctions = new testFunctions();
@@ -114,12 +114,73 @@ class testConfiguration extends UnitTestCase
 		$ret = $configuration->loadConfiguration($randomid, ZEITGEIST_ROOTDIRECTORY.'tests/testdata/testconfiguration.ini');
 
 		$testblock1 = array('testvar1' => 'true', 'testvar2' => '1', 'testvar3' => 'test3');
-		$testblock2 = array('testvar4' => 'false', 'testvar5' => '2', 'testvar6' => 'test4');
+		$testblock2 = array('testvar4' => 'false', 'testvar5' => '2', 'testvar6' => '1');
 		$testconfiguration['testblock1'] = $testblock1;
 		$testconfiguration['testblock2'] = $testblock2;
 
 		$ret = $configuration->getConfiguration($randomid);
 		$this->assertEqual($ret, $testconfiguration);
+		
+		$testfunctions->dropZeitgeistTable('configurationcache');
+		unset($ret);
+		unset($configuration);
+	}
+
+
+	// Get the contents of the configuration blocks
+	function test_getConfiguration_getblock()
+	{
+		$configuration = zgConfiguration::init();
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('configurationcache');
+		$randomid = uniqid();
+
+		$ret = $configuration->loadConfiguration($randomid, ZEITGEIST_ROOTDIRECTORY.'tests/testdata/testconfiguration.ini');
+		$testblock1 = array('testvar1' => 'true', 'testvar2' => '1', 'testvar3' => 'test3');
+
+		$ret = $configuration->getConfiguration($randomid, 'testblock1');
+		$this->assertEqual($ret, $testblock1);
+		
+		$testfunctions->dropZeitgeistTable('configurationcache');
+		unset($ret);
+		unset($configuration);
+	}
+	
+
+	// Get the contents of a configuration variable
+	function test_getConfiguration_getvariable()
+	{
+		$configuration = zgConfiguration::init();
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('configurationcache');
+		$randomid = uniqid();
+
+		$ret = $configuration->loadConfiguration($randomid, ZEITGEIST_ROOTDIRECTORY.'tests/testdata/testconfiguration.ini');
+
+		$ret = $configuration->getConfiguration($randomid, 'testblock1', 'testvar2');
+		$this->assertEqual($ret, '1');
+		
+		$testfunctions->dropZeitgeistTable('configurationcache');
+		unset($ret);
+		unset($configuration);
+	}
+	
+
+	// Get the contents of a referenced configuration variable
+	function test_getConfiguration_getreferencedvariable()
+	{
+		$configuration = zgConfiguration::init();
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('configurationcache');
+		$randomid = uniqid();
+
+		$ret = $configuration->loadConfiguration('testconfiguration', ZEITGEIST_ROOTDIRECTORY.'tests/testdata/testconfiguration.ini');
+
+		$ret = $configuration->getConfiguration('testconfiguration', 'testblock2', 'testvar6');
+		$this->assertEqual($ret, '1');
 		
 		$testfunctions->dropZeitgeistTable('configurationcache');
 		unset($ret);
