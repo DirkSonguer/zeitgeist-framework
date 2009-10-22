@@ -15,7 +15,7 @@ class testActionlog extends UnitTestCase
 		$this->assertNotNull($actionlog);
 		unset($actionlog);		
     }
-	
+
 
 	// Test logging a pageview without a table for logging actions
 	function test_logAction_noActiontable()
