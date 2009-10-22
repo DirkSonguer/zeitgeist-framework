@@ -64,6 +64,48 @@ class testFiles extends UnitTestCase
 		unset($filehandler);
     }
 
+
+	// Try to store nonexistant uploaded file
+	function test_storeUploadedFile_nouploadfile()
+	{
+		$filehandler = new zgFiles();
+		
+		$ret = $filehandler->storeUploadedFile('./tests/testdata/');
+		$this->assertFalse($ret);
+		unset($ret);
+
+		unset($filehandler);
+    }
+
+
+	// Try to store uploaded file with errors
+	function test_storeUploadedFile_fileerror()
+	{
+		$filehandler = new zgFiles();
+
+		$_FILES["file"]["error"] = 1;
+		$ret = $filehandler->storeUploadedFile('./tests/testdata/');
+		$this->assertFalse($ret);
+		unset($ret);
+
+		unset($filehandler);
+    }
+
+
+	// Try to store uploaded file over existing file
+	function test_storeUploadedFile_existingfile()
+	{
+		$filehandler = new zgFiles();
+
+		$_FILES["file"]["error"] = 0;
+		$_FILES["file"]["name"] = 'testfile.txt';
+		$ret = $filehandler->storeUploadedFile('./tests/testdata/');
+		$this->assertFalse($ret);
+		unset($ret);
+
+		unset($filehandler);
+    }
+
 }
 
 ?>
