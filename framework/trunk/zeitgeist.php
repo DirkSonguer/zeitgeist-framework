@@ -54,11 +54,7 @@ require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/dataserver.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/files.class.php');
 
 // include modules
-require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/staticform/staticform.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/form/form.class.php');
-require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/facebook/facebook.class.php');
-require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/facebook/facebookuserhandler.class.php');
-require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/shop/shop.class.php');
 
 // include misc functions
 require_once (ZEITGEIST_ROOTDIRECTORY . 'includes/autoloader.include.php');
