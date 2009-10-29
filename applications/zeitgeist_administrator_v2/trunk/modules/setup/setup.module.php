@@ -135,8 +135,8 @@ class setup
 				return true;
 			}
 
-			$active = $createmoduleForm->getValue('module_active');
-			if ($active) $createmoduleForm->setValue('module_active', 'checked="checked"');
+			$active = $createmoduleForm->getElementValue('module_active');
+			if ($active) $createmoduleForm->setElementValue('module_active', 'checked="checked"');
 
 			$formcreated = $createmoduleForm->insert($tpl);
 		}
@@ -193,8 +193,8 @@ class setup
 			$formvalid = $editmoduleForm->validate($processData);
 		}
 
-		$active = $editmoduleForm->getValue('module_active');
-		if ($active) $editmoduleForm->setValue('module_active', 'checked="checked"');
+		$active = $editmoduleForm->getElementValue('module_active');
+		if ($active) $editmoduleForm->setElementValue('module_active', 'checked="checked"');
 
 		$formcreated = $editmoduleForm->insert($tpl);
 
@@ -305,12 +305,12 @@ class setup
 		$tpl = new zgaTemplate();
 		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_createaction'));
 
-		$createactionForm = new zgStaticform();
+		$createactionForm = new zgForm();
 		$createactionForm->load('forms/createaction.form.ini');
 
 		if (!empty($parameters['submit']))
 		{
-			$formvalid = $createactionForm->process($parameters);
+			$formvalid = $createactionForm->validate($parameters);
 
 			if ($formvalid)
 			{
@@ -329,7 +329,10 @@ class setup
 				return true;
 			}
 
-			$formcreated = $createactionForm->create($tpl);
+			$active = $createactionForm->getElementValue('action_requiresuserright');
+			if ($active) $createactionForm->setElementValue('action_requiresuserright', 'checked="checked"');
+
+			$formcreated = $createactionForm->insert($tpl);
 		}
 
 		$modules = $this->setupfunctions->getAllModules();
@@ -402,10 +405,14 @@ class setup
 
 			$processData = array();
 			$processData['editaction'] = $actiondata;
-			$formvalid = $editactionForm->insert($processData);
+			$formvalid = $editactionForm->validate($processData);
 		}
 
-		$formcreated = $editactionForm->create($tpl);
+
+		$active = $editactionForm->getElementValue('action_requiresuserright');
+		if ($active) $editactionForm->setElementValue('action_requiresuserright', 'checked="checked"');
+
+		$formcreated = $editactionForm->insert($tpl);
 
 		$modules = $this->setupfunctions->getAllModules();
 		foreach ($modules as $module)
@@ -496,12 +503,12 @@ class setup
 		$tpl = new zgaTemplate();
 		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_createuserrole'));
 
-		$edituserroleForm = new zgStaticform();
+		$edituserroleForm = new zgForm();
 		$edituserroleForm->load('forms/createuserrole.form.ini');
 
 		if (!empty($parameters['submit']))
 		{
-			$formvalid = $edituserroleForm->process($parameters);
+			$formvalid = $edituserroleForm->validate($parameters);
 
 			if ($formvalid)
 			{
@@ -543,7 +550,7 @@ class setup
 				}
 			}
 
-			$formcreated = $edituserroleForm->create($tpl);
+			$formcreated = $edituserroleForm->insert($tpl);
 		}
 		else
 		{
@@ -576,13 +583,13 @@ class setup
 		$tpl = new zgaTemplate();
 		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_edituserrole'));
 
-		$edituserroleForm = new zgStaticform();
+		$edituserroleForm = new zgForm();
 		$edituserroleForm->load('forms/edituserrole.form.ini');
 
 		if (!empty($parameters['submit']))
 		{
 
-			$formvalid = $edituserroleForm->process($parameters);
+			$formvalid = $edituserroleForm->validate($parameters);
 
 			if ($formvalid)
 			{
@@ -623,7 +630,6 @@ class setup
 					$tpl->insertBlock('userrole_action');
 				}
 			}
-				
 		}
 		else
 		{
@@ -631,7 +637,7 @@ class setup
 
 			$processData = array();
 			$processData['edituserrole'] = $userroledata;
-			$formvalid = $edituserroleForm->process($processData);
+			$formvalid = $edituserroleForm->validate($processData);
 
 			$actions = $this->setupfunctions->getAllActions();
 			$userroleactions = $this->setupfunctions->getUserroleActions($currentId);
@@ -655,7 +661,7 @@ class setup
 			}
 		}
 
-		$formcreated = $edituserroleForm->create($tpl);
+		$formcreated = $edituserroleForm->insert($tpl);
 		$tpl->assign('userrole_id:value', $currentId);
 		$tpl->show();
 		

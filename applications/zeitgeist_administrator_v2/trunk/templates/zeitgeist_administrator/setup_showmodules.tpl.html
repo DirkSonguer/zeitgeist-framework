@@ -158,14 +158,16 @@ $(document).ready(function()
 				<td id="listtable"><p>@@{module_description}@@</a></p></td>
 				<td id="listtable" align="center">
 					<!-- TemplateBeginBlock name="moduleactive" -->
-					<p><a href="@@{[setup.deactivatemodule]}@@&id=@@{module_id}@@" alt="Module is active. Click to deactivate.">
+					<p><nobr>
+                    <a href="@@{[setup.deactivatemodule]}@@&id=@@{module_id}@@" alt="Module is active. Click to deactivate.">
 					<img src="@@{templatepath}@@/images/icons/ledgreen_22.png" alt="Module is active. Click to deactivate." title="Module is active. Click to deactivate." border="0" />
 					</a></p>
 					<!-- TemplateEndBlock -->				
 					<!-- TemplateBeginBlock name="moduleinactive" -->
 					<p><a href="@@{[setup.activatemodule]}@@&id=@@{module_id}@@" alt="Module is inactive. Click to activate.">
 					<img src="@@{templatepath}@@/images/icons/ledred_22.png" alt="Module is inactive. Click to activate." title="Module is inactive. Click to activate." border="0" />
-					</a></p>
+					</a>
+                    </nobr></p>
 					<!-- TemplateEndBlock -->
 				</td>
 				<td id="listtable" align="center"><p>

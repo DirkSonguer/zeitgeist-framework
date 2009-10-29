@@ -109,7 +109,7 @@
 				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Module name*</p></td>
 				<td valign="middle" @@{module_name:formerror}@@>
 				<!-- TemplateBeginBlock name="module_name:errorblock" -->
-					<br /><span class="formerrormsg">@@{module_name:errormessage}@@</span>
+					<br /><span class="formerrormsg">@@{module_name:errormessage}@@</span><br />
 				<!-- TemplateEndBlock -->
 				<input type="text" maxlength="60" name="editmodule[module_name]" value="@@{module_name:value}@@" class="formtext" />
 				</td>
@@ -118,7 +118,7 @@
 				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Description*</p></td>
 				<td align="left" valign="middle" @@{module_description:formerror}@@>
 					<!-- TemplateBeginBlock name="module_description:errorblock" -->
-						<br /><span class="formerrormsg">@@{module_description:errormessage}@@</span>
+						<br /><span class="formerrormsg">@@{module_description:errormessage}@@</span><br />
 					<!-- TemplateEndBlock -->				
 					<textarea rows="5" name="editmodule[module_description]" class="formtext">@@{module_description:value}@@</textarea>
 				</td>
@@ -127,7 +127,7 @@
 				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Module active</p></td>
 				<td align="left" valign="middle" @@{module_active:formerror}@@>
 					<!-- TemplateBeginBlock name="module_active:errorblock" -->
-						<br /><span class="formerrormsg">@@{module_active:errormessage}@@</span>
+						<br /><span class="formerrormsg">@@{module_active:errormessage}@@</span><br />
 					<!-- TemplateEndBlock -->				
 					<input type="checkbox" name="editmodule[module_active]" @@{module_active:value}@@ />
 				</td>

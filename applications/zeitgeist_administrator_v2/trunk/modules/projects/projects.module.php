@@ -129,12 +129,12 @@ class projects
 		$tpl = new zgaTemplate();
 		$tpl->load($this->configuration->getConfiguration('projects', 'templates', 'projects_createproject'));
 
-		$createprojectForm = new zgStaticform();
+		$createprojectForm = new zgForm();
 		$createprojectForm->load('forms/createproject.form.ini');
 
 		if (!empty($parameters['submit']))
 		{
-			$formvalid = $createprojectForm->process($parameters);
+			$formvalid = $createprojectForm->validate($parameters);
 
 			if ($formvalid)
 			{
@@ -179,7 +179,7 @@ class projects
 				}
 			}
 			
-			$formcreated = $createprojectForm->create($tpl);
+			$formcreated = $createprojectForm->validate($tpl);
 		}
 
 		$tpl->show();
@@ -200,12 +200,12 @@ class projects
 		$tpl = new zgaTemplate();
 		$tpl->load($this->configuration->getConfiguration('projects', 'templates', 'projects_editproject'));
 
-		$editprojectForm = new zgStaticform();
+		$editprojectForm = new zgForm();
 		$editprojectForm->load('forms/editproject.form.ini');
 
 		if (!empty($parameters['submit']))
 		{
-			$formvalid = $editprojectForm->process($parameters);
+			$formvalid = $editprojectForm->validate($parameters);
 
 			if ($formvalid)
 			{
@@ -256,10 +256,10 @@ class projects
 
 			$processData = array();
 			$processData['editproject'] = $projectdata;
-			$formvalid = $editprojectForm->process($processData);
+			$formvalid = $editprojectForm->validate($processData);
 		}
 
-		$formcreated = $editprojectForm->create($tpl);
+		$formcreated = $editprojectForm->insert($tpl);
 
 		$tpl->assign('project_id:value', $currentId);
 		$tpl->show();
