@@ -108,8 +108,8 @@
 			<tr>
 				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Action name*</p></td>
 				<td valign="middle" @@{action_name:formerror}@@><input type="text" maxlength="60" name="editaction[action_name]" value="@@{action_name:value}@@" class="formtext" />
-				<!-- TemplateBeginBlock name="action_name:errormsg" -->
-					<br /><span class="formerrormsg">@@{action_name:errormsg}@@</span>
+				<!-- TemplateBeginBlock name="action_name:errorblock" -->
+					<br /><span class="formerrormsg">@@{action_name:errormessage}@@</span>
 				<!-- TemplateEndBlock -->
 				</td>
 			</tr>
@@ -117,8 +117,8 @@
 				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Description*</p></td>
 				<td align="left" valign="middle" @@{action_description:formerror}@@>
 					<textarea rows="5" name="editaction[action_description]" class="formtext">@@{action_description:value}@@</textarea>
-					<!-- TemplateBeginBlock name="action_description:errormsg" -->
-						<br /><span class="formerrormsg">@@{action_description:errormsg}@@</span>
+					<!-- TemplateBeginBlock name="action_description:errorblock" -->
+						<br /><span class="formerrormsg">@@{action_description:errormessage}@@</span>
 					<!-- TemplateEndBlock -->				
 				</td>
 			</tr>
@@ -131,8 +131,8 @@
 						<option value="@@{module_id}@@" @@{module_isactive}@@>@@{module_name}@@</option>
 					<!-- TemplateEndBlock -->
 				</select>
-				<!-- TemplateBeginBlock name="action_module:errormsg" -->
-					<br /><span class="formerrormsg">@@{action_module:errormsg}@@</span>
+				<!-- TemplateBeginBlock name="action_module:errorblock" -->
+					<br /><span class="formerrormsg">@@{action_module:errormessage}@@</span>
 				<!-- TemplateEndBlock -->
 				</td>
 			</tr>
@@ -142,8 +142,8 @@
 				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Requires userrights</p></td>
 				<td align="left" valign="middle" @@{action_requiresuserright:formerror}@@>
 					<input type="checkbox" name="editaction[action_requiresuserright]" @@{action_requiresuserright:value}@@ />
-					<!-- TemplateBeginBlock name="action_requiresuserright:errormsg" -->
-						<br /><span class="formerrormsg">@@{action_requiresuserright:errormsg}@@</span>
+					<!-- TemplateBeginBlock name="action_requiresuserright:errorblock" -->
+						<br /><span class="formerrormsg">@@{action_requiresuserright:errormessage}@@</span>
 					<!-- TemplateEndBlock -->				
 				</td>
 			</tr>
