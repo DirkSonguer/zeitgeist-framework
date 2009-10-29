@@ -282,6 +282,12 @@ input.button {
 	top: 95px; left: 25px;
 }
 
+#breadcrumb
+{
+	margin-top:-38px;
+	margin-bottom:0px;
+}
+
 #projectlink
 {
 	color: #99CC33;	

@@ -111,12 +111,12 @@ class setup
 		$tpl = new zgaTemplate();
 		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_createmodule'));
 
-		$createmoduleForm = new zgStaticform();
+		$createmoduleForm = new zgForm();
 		$createmoduleForm->load('forms/createmodule.form.ini');
 
 		if (!empty($parameters['submit']))
 		{
-			$formvalid = $createmoduleForm->process($parameters);
+			$formvalid = $createmoduleForm->validate($parameters);
 
 			if ($formvalid)
 			{
@@ -135,7 +135,10 @@ class setup
 				return true;
 			}
 
-			$formcreated = $createmoduleForm->create($tpl);
+			$active = $createmoduleForm->getValue('module_active');
+			if ($active) $createmoduleForm->setValue('module_active', 'checked="checked"');
+
+			$formcreated = $createmoduleForm->insert($tpl);
 		}
 
 		$tpl->show();
@@ -157,12 +160,12 @@ class setup
 		$tpl = new zgaTemplate();
 		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_editmodule'));
 
-		$editmoduleForm = new zgStaticform();
+		$editmoduleForm = new zgForm();
 		$editmoduleForm->load('forms/editmodule.form.ini');
 
 		if (!empty($parameters['submit']))
 		{
-			$formvalid = $editmoduleForm->process($parameters);
+			$formvalid = $editmoduleForm->validate($parameters);
 
 			if ($formvalid)
 			{
@@ -187,10 +190,13 @@ class setup
 
 			$processData = array();
 			$processData['editmodule'] = $moduledata;
-			$formvalid = $editmoduleForm->process($processData);
+			$formvalid = $editmoduleForm->validate($processData);
 		}
 
-		$formcreated = $editmoduleForm->create($tpl);
+		$active = $editmoduleForm->getValue('module_active');
+		if ($active) $editmoduleForm->setValue('module_active', 'checked="checked"');
+
+		$formcreated = $editmoduleForm->insert($tpl);
 
 		$tpl->assign('module_id:value', $currentId);
 		$tpl->show();
@@ -364,12 +370,12 @@ class setup
 		$tpl = new zgaTemplate();
 		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_editaction'));
 
-		$editactionForm = new zgStaticform();
+		$editactionForm = new zgForm();
 		$editactionForm->load('forms/editaction.form.ini');
 
 		if (!empty($parameters['submit']))
 		{
-			$formvalid = $editactionForm->process($parameters);
+			$formvalid = $editactionForm->validate($parameters);
 			$currentModuleId = $parameters['editaction']['action_module'];
 
 			if ($formvalid)
@@ -396,7 +402,7 @@ class setup
 
 			$processData = array();
 			$processData['editaction'] = $actiondata;
-			$formvalid = $editactionForm->process($processData);
+			$formvalid = $editactionForm->insert($processData);
 		}
 
 		$formcreated = $editactionForm->create($tpl);

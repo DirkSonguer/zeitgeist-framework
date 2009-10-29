@@ -123,8 +123,8 @@
 			<tr>
 				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Username*</p></td>
 				<td valign="middle" @@{user_name:formerror}@@><input type="text" maxlength="60" name="edituser[user_name]" value="@@{user_name:value}@@" class="formtext" />
-				<!-- TemplateBeginBlock name="user_name:errormsg" -->
-					<br /><span class="formerrormsg">@@{user_name:errormsg}@@</span>
+				<!-- TemplateBeginBlock name="user_name:errorblock" -->
+					<br /><span class="formerrormsg">@@{user_name:errormessage}@@</span>
 				<!-- TemplateEndBlock -->
 				</td>
 			</tr>
@@ -132,8 +132,8 @@
 				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">User key*</p></td>
 				<td align="left" valign="middle" @@{user_key:formerror}@@>
 					<input type="text" maxlength="60" name="edituser[user_key]" value="@@{user_key:value}@@" class="formtext" />
-					<!-- TemplateBeginBlock name="user_key:errormsg" -->
-						<br /><span class="formerrormsg">@@{user_key:errormsg}@@</span>
+					<!-- TemplateBeginBlock name="user_key:errorblock" -->
+						<br /><span class="formerrormsg">@@{user_key:errormessage}@@</span>
 					<!-- TemplateEndBlock -->				
 				</td>
 			</tr>
@@ -144,8 +144,8 @@
 			<tr>
 				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Password</p></td>
 				<td valign="middle" @@{user_password:formerror}@@><input type="text" maxlength="60" name="edituser[user_password]" value="@@{user_password:value}@@" class="formtext" />
-				<!-- TemplateBeginBlock name="user_password:errormsg" -->
-					<br /><span class="formerrormsg">@@{user_password:errormsg}@@</span>
+				<!-- TemplateBeginBlock name="user_password:errorblock" -->
+					<br /><span class="formerrormsg">@@{user_password:errormessage}@@</span>
 				<!-- TemplateEndBlock -->
 				</td>
 			</tr>
@@ -153,8 +153,8 @@
 				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Confirmation</p></td>
 				<td align="left" valign="middle" @@{user_pwconfirmation:formerror}@@>
 					<input type="text" maxlength="60" name="edituser[user_pwconfirmation]" value="@@{user_pwconfirmation:value}@@" class="formtext" />
-					<!-- TemplateBeginBlock name="user_pwconfirmation:errormsg" -->
-						<br /><span class="formerrormsg">@@{user_pwconfirmation:errormsg}@@</span>
+					<!-- TemplateBeginBlock name="user_pwconfirmation:errorblock" -->
+						<br /><span class="formerrormsg">@@{user_pwconfirmation:errormessage}@@</span>
 					<!-- TemplateEndBlock -->				
 				</td>
 			</tr>

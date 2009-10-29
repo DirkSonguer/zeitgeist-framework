@@ -80,13 +80,17 @@
 	// hand over to applicaton pipeline
 	$ret = $controller->callEvent($module, $action);
 
+	// save all debug information to file
+	$debug->saveToFile('./_additional_material/debug.html', 'debug.css');
+
+/*	
 	// output all debug information
 	$debug->loadStylesheet('debug.css');
 	$debug->showInnerLoops = true;
 	$debug->showMiscInformation();
 	$debug->showDebugMessages();
-	$debug->showQueryMessages();
 	$debug->showGuardMessages();
+//*/
 
 ?>
 
