@@ -159,6 +159,61 @@ class zgForm
 
 
 	/**
+	 * Gets the value of a given element
+	 *
+	 * @param string $elementname name of the element
+	 *
+	 * @return boolean
+	 */
+	public function getValue($elementname)
+	{
+		$this->debug->guard();
+
+		if (empty($this->formelements[$elementname]))
+		{
+			$this->debug->write('Problem getting the value of the element: element not found in form configuration', 'warning');
+			$this->messages->setMessage('Problem getting the value of the element: element not found in form configuration', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$ret = $this->formelements[$elementname]->value;
+
+		$this->debug->unguard($ret);
+		return $ret;
+	}
+
+
+	/**
+	 * Sets the value of a given element
+	 *
+	 * @param string $elementname name of the element
+	 * @param string $value value to insert
+	 *
+	 * @return boolean
+	 */
+	public function setValue($elementname, $value)
+	{
+		$this->debug->guard();
+
+		if (!empty($this->formelements[$elementname]))
+		{
+			$this->formelements[$elementname]->value = $value;
+		}
+		else
+		{
+			$this->debug->write('Problem setting the value of the element: element not found in form configuration', 'warning');
+			$this->messages->setMessage('Problem setting the value of the element: element not found in form configuration', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	/**
 	 * Inserts status and values of the form into a template
 	 *
 	 * @return boolean
@@ -251,7 +306,6 @@ class zgForm
 		
 		if (!empty($formdata[$elementname]))
 		{
-
 			$ret = preg_match($elementdata->expected, $formdata[$elementname]);
 
 			if ($ret === false)
