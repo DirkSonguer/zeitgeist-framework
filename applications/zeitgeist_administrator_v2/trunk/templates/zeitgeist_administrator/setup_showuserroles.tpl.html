@@ -155,14 +155,14 @@ $(document).ready(function()
                 <tr>
 				<td id="listtable"><p>@@{userrole_name}@@</a></p></td>
 				<td id="listtable"><p>@@{userrole_description}@@</a></p></td>
-				<td id="listtable" align="center"><p>
+				<td id="listtable" align="center"><p><nobr>
 					<a href="@@{[setup.edituserrole]}@@&id=@@{userrole_id}@@" alt="Edit userrole">
 						<img src="@@{templatepath}@@/images/icons/edit_22.png" alt="Edit userrole" title="Edit userrole '@@{userrole_name}@@'" border="0" />
 					</a> &nbsp; 
 					<a href="javascript:deleteUserrole(@@{userrole_id}@@, '@@{userrole_name}@@')" alt="Delete userrole">
 						<img src="@@{templatepath}@@/images/icons/delete_22.png" alt="Delete userrole" title="Delete userrole '@@{userrole_name}@@'" border="0" />
 					</a>
-				</p></td>
+				</nobr></p></td>
                 </tr>
             <!-- TemplateEndBlock -->
             </tbody>

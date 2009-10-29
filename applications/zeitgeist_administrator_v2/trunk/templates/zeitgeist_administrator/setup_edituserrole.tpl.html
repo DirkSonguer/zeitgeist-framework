@@ -119,19 +119,20 @@
 			<table border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Userrole name*</p></td>
-				<td valign="middle" @@{userrole_name:formerror}@@><input type="text" maxlength="60" name="edituserrole[userrole_name]" value="@@{userrole_name:value}@@" class="formtext" />
+				<td valign="middle" @@{userrole_name:formerror}@@>
 				<!-- TemplateBeginBlock name="userrole_name:errorblock" -->
-					<br /><span class="formerrormsg">@@{userrole_name:errormessage}@@</span>
+					<br /><span class="formerrormsg">@@{userrole_name:errormessage}@@</span><br />
 				<!-- TemplateEndBlock -->
+                <input type="text" maxlength="60" name="edituserrole[userrole_name]" value="@@{userrole_name:value}@@" class="formtext" />
 				</td>
 			</tr>
 			<tr>
 				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Description*</p></td>
 				<td align="left" valign="middle" @@{userrole_description:formerror}@@>
-					<textarea rows="5" name="edituserrole[userrole_description]" class="formtext">@@{userrole_description:value}@@</textarea>
 					<!-- TemplateBeginBlock name="userrole_description:errorblock" -->
-						<br /><span class="formerrormsg">@@{userrole_description:errormessage}@@</span>
-					<!-- TemplateEndBlock -->				
+						<br /><span class="formerrormsg">@@{userrole_description:errormessage}@@</span><br />
+					<!-- TemplateEndBlock -->
+					<textarea rows="5" name="edituserrole[userrole_description]" class="formtext">@@{userrole_description:value}@@</textarea>
 				</td>
 			</tr>
 			</table>

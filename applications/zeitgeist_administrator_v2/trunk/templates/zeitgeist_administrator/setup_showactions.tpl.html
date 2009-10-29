@@ -157,14 +157,14 @@ $(document).ready(function()
 				<td id="listtable"><p>@@{action_name}@@</a></p></td>
 				<td id="listtable"><p>@@{action_description}@@</a></p></td>
 				<td id="listtable"><p>@@{module_name}@@</a></p></td>
-				<td id="listtable" align="center"><p>
+				<td id="listtable" align="center"><p><nobr>
 					<a href="@@{[setup.editaction]}@@&id=@@{action_id}@@" alt="Edit action">
 						<img src="@@{templatepath}@@/images/icons/edit_22.png" alt="Edit action" title="Edit action '@@{action_name}@@'" border="0" />
 					</a> &nbsp; 
 					<a href="javascript:deleteModule(@@{action_id}@@, '@@{action_name}@@')" alt="Delete action">
 						<img src="@@{templatepath}@@/images/icons/delete_22.png" alt="Delete action" title="Delete action '@@{action_name}@@'" border="0" />
-					</a>
-				</p></td>
+                    </a>
+				</nobr></p></td>
                 </tr>
             <!-- TemplateEndBlock -->
             </tbody>
