@@ -699,7 +699,33 @@ class setup
 		$this->debug->unguard(true);
 		return true;
 	}
-	
-	
+
+
+	public function showuserdata($parameters=array())
+	{
+		$this->debug->guard();
+		
+		$tpl = new zgaTemplate();
+		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_showuserdata'));
+
+		$userfunctions = new zgaUserfunctions();
+		$userdata = $userfunctions->getUserdataDefinition();
+		
+		foreach ($userdata as $field)
+		{
+//			if ( ($field['Field'] == 'userdata_id') || ($field['Field'] == 'userdata_user') ) continue;
+			$tpl->assign('userdata_field', $field['Field']);
+			$type = split('\(',$field['Type']);
+			$tpl->assign('userdata_type', $type[0]);
+			if (!empty($type[1])) $tpl->assign('userdata_length', substr($type[1], 0, -1));
+				else $tpl->assign('userdata_length', '');
+			$tpl->insertBlock('userdata');
+		}
+
+		$tpl->show();
+
+		$this->debug->unguard(true);
+		return true;
+	}	
 }
 ?>

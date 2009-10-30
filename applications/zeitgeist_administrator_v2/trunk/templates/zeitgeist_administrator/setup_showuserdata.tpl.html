@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Zeitgeist Administrator - Create project action</title>
+<title>Zeitgeist Administrator - Manage userdata fields</title>
 <!-- InstanceEndEditable -->
 
 <link rel="stylesheet" href="@@{templatepath}@@/css/main.css" type="text/css" />
@@ -31,11 +31,33 @@
 
 <script language="JavaScript" type="text/javascript">
 
-	function showOverview()
+$(document).ready(function() 
+    { 
+
+		$("#userdatatable")
+		.tablesorter({widthFixed: true, widgets: ['zebra']}) 
+		.tablesorterPager({container: $("#pager"), positionFixed: false})
+		.tablesorterFilter({filterContainer: "#filter-box",
+                            filterClearContainer: "#filter-clear-button",
+                            filterColumns: [0, 1]});
+
+		; 
+    } 
+); 
+
+	function deleteField(id, name)
 	{
-		window.location.href = "@@{[setup.showactions]}@@";
-	}
-	
+		var answer = window.confirm("Do you really want to delete the module '" + name + "'?\n\nIMPORTANT: All actions for the module are deleted as well.\n\nNote that only the reference to the module and actions in the database will be deleted, not the physical module files.");
+
+		/* Question icon, Yes/No button. */
+		/* 0 = error, 1 = OK, 2 = Cancel, 3 = No, 4 = Yes */
+
+		if (answer == true)
+		{
+		   window.location.href = "@@{[setup.deletemodule]}@@"+"&id="+id;
+		}
+	}	
+
 </script>
 
 <!-- InstanceEndEditable -->
@@ -89,77 +111,85 @@
 		<div id="sidebar" >	
         <!-- InstanceBeginEditable name="sidebar" -->
 
-			<h3>Editing actions</h3>
-			<p>The name of the action acts as the identifier for the controller. It tries to call a method with the same name as the action inside the module class. You should not choose weird action names - remember you have to name your methods accordingly.</p>
-			<p>The description of a action just acts as a reminder for yourself and is not used by the framework.</p>
-			<p>Inactive actions are ignored by the controller. If a user tries to use an inactive action, an error is thrown.</p>
-
+			<h3>Managing userdata</h3>			
+			<p>The userdata fields are bascially additional data fields that can be associated with users. So if you want to store the email address or phone number for each user, you could add a field for it to the user data and access it directly from your application (via the userdata class or the userhandler abstraction).</p>
+            
 		<!-- InstanceEndEditable -->
 		</div>	
 	
 		<div id="main">		
         <!-- InstanceBeginEditable name="main" -->
 
-			<h2>Create project action</h2>
-			
-			<form method="post" action="@@{[setup.createaction]}@@" name="createaction" enctype="multipart/form-data; charset=utf-8">
-			<input type="hidden" value="@@{action_id:value}@@" name="createaction[action_id]" />
+			<h2>Manage userdata fields</h2>
 
-			<table border="0" cellpadding="0" cellspacing="0">
+			<table id="controltable" border="0" cellpadding="0" cellspacing="5" width="100%">
 			<tr>
-				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Action name*</p></td>
-				<td valign="middle" @@{action_name:formerror}@@>
-				<!-- TemplateBeginBlock name="action_name:errorblock" -->
-					<br /><span class="formerrormsg">@@{action_name:errormessage}@@</span><br />
-				<!-- TemplateEndBlock -->
-                <input type="text" maxlength="60" name="createaction[action_name]" value="@@{action_name:value}@@" class="formtext" />
+				<td>
+				<p>
+					<a href="@@{[setup.createuserdata]}@@" alt="Create a new userdata field"><img src="@@{templatepath}@@/images/icons/new_22.png" alt="Create a new userdata field" title="Create a new userdata field" border="0" align="absmiddle" /></a>
+					<a href="@@{[setup.createuserdata]}@@" alt="Create a new userdata field">Create a new userdata field</a>
+				</p>
 				</td>
-			</tr>
-			<tr>
-				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Description*</p></td>
-				<td align="left" valign="middle" @@{action_description:formerror}@@>
-					<!-- TemplateBeginBlock name="action_description:errorblock" -->
-						<br /><span class="formerrormsg">@@{action_description:errormessage}@@</span><br />
-					<!-- TemplateEndBlock -->
-					<textarea rows="5" name="createaction[action_description]" class="formtext">@@{action_description:value}@@</textarea>
-				</td>
-			</tr>
-
-			<tr>
-				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Module*</p></td>
-				<td valign="middle" @@{action_module:formerror}@@>
-				<!-- TemplateBeginBlock name="action_module:errorblock" -->
-					<br /><span class="formerrormsg">@@{action_module:errormessage}@@</span><br />
-				<!-- TemplateEndBlock -->
-				<select name="createaction[action_module]" class="formtext">
-					<!-- TemplateBeginBlock name="module_loop" -->
-						<option value="@@{module_id}@@" @@{module_isactive}@@>@@{module_name}@@</option>
-					<!-- TemplateEndBlock -->
-				</select>
-				</td>
-			</tr>
-
-
-			<tr>
-				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Requires userrights</p></td>
-				<td align="left" valign="middle" @@{action_requiresuserright:formerror}@@>
-					<!-- TemplateBeginBlock name="action_requiresuserright:errorblock" -->
-						<br /><span class="formerrormsg">@@{action_requiresuserright:errormessage}@@</span><br />
-					<!-- TemplateEndBlock -->
-					<input type="checkbox" name="createaction[action_requiresuserright]" @@{action_requiresuserright:value}@@ />
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-				   <p style="text-align:center;">
-				   <input name="back" value="Back to overview" class="formbutton" type="button" onclick="javascript:showOverview();" />
-				   <input name="submit" value="Submit data" class="formbutton" type="submit" />
-				   </p>
+				<td class="filter">
+				<p style="text-align:right;">
+					Search: 
+					<input name="filter" id="filter-box" value="" maxlength="50" size="30" type="text">
+					<input id="filter-clear-button" type="submit" value="Clear"/>
+				</p>
 				</td>
 			</tr>
 			</table>
 
-			</form>
+            <table id="userdatatable" border="0" cellpadding="0" cellspacing="5" width="100%">
+	       	<thead>
+	        <tr>
+				<th><p>Field name</p></th>
+				<th><p>Type</p></th>
+				<th><p>Length</p></th>
+				<th><p style="text-align:center;">Actions</p></th>
+	        </tr>
+            </thead>
+            <tbody>
+            <!-- TemplateBeginBlock name="userdata" -->
+                <tr>
+				<td id="listtable"><p>@@{userdata_field}@@</a></p></td>
+				<td id="listtable"><p>@@{userdata_type}@@</a></p></td>
+				<td id="listtable"><p>@@{userdata_length}@@</a></p></td>
+				<td id="listtable" align="center">
+					<a href="@@{[setup.editmodule]}@@&id=@@{module_id}@@" alt="Edit module">
+						<img src="@@{templatepath}@@/images/icons/edit_22.png" alt="Edit module" title="Edit module '@@{module_name}@@'" border="0" />
+					</a> &nbsp; 
+					<a href="javascript:deleteModule(@@{module_id}@@, '@@{module_name}@@')" alt="Delete module">
+						<img src="@@{templatepath}@@/images/icons/delete_22.png" alt="Delete module" title="Delete module '@@{module_name}@@'" border="0" />
+					</a>
+				</nobr></p></td>
+                </tr>
+            <!-- TemplateEndBlock -->
+            </tbody>
+            </table>
+
+            <div id="pager" class="pager">
+				<form class="noborder">
+	            <table id="pagertable" border="0" cellpadding="0" cellspacing="5" width="100%">
+                <tr><td>
+					<img src="@@{templatepath}@@/images/icons/2leftarrow_22.png" class="first"/>&nbsp;
+					<img src="@@{templatepath}@@/images/icons/1leftarrow_22.png" class="prev"/>
+				</td><td align="right">
+					<input type="text" class="pagedisplay" style="text-align:center;"/>
+				</td><td>
+					<select class="pagesize">
+						<option selected="selected"  value="10">&nbsp;10&nbsp;</option>
+						<option value="20">&nbsp;20&nbsp;</option>
+						<option value="30">&nbsp;30&nbsp;</option>
+						<option  value="40">&nbsp;40&nbsp;</option>
+					</select>
+				</td><td align="right">
+					<img src="@@{templatepath}@@/images/icons/1rightarrow_22.png" class="next"/>&nbsp;
+					<img src="@@{templatepath}@@/images/icons/2rightarrow_22.png" class="last"/>
+				</td></tr>
+				</table>
+				</form>
+            </div>
 
 		<!-- InstanceEndEditable -->
 		</div>					
