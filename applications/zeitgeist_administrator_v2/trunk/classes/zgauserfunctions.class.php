@@ -65,6 +65,32 @@ class zgaUserfunctions
 		$this->debug->unguard($userdata);
 		return $userdata;
 	}
+	
+	function getUserdataDefinition()
+	{
+		$this->debug->guard();
+		
+		$sql = "EXPLAIN userdata";
+	
+		$res = $this->projectDatabase->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not get userdata definitio from project database: could not connect to database', 'warning');
+			$this->messages->setMessage('Could not get userdata definitio from project database: could not connect to database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$userdata = array();
+		while ($row = $this->projectDatabase->fetchArray($res))
+		{
+			$userdata[] = $row;
+		}		
+
+		$this->debug->unguard($userdata);
+		return $userdata;
+	}
+		
 
 }
 ?>

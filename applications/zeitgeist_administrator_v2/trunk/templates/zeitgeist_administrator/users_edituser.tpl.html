@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="@@{templatepath}@@/css/main.css" type="text/css" />
 
 <script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery-1.3.2.min.js"></script>
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery-ui-1.7.2.custom.min.js"></script>
 <script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery.tooltip.min.js"></script>
 <script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery.tablesorter.js"></script>
 <script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery.tablesorter.filter.js"></script>
@@ -51,9 +52,11 @@
 								filterColumns: [0, 1]});
 	
 			; 
+
+			$("#useraccordion").accordion({ autoHeight: false, clearStyle: true});
 		} 
 	); 
-	
+
 </script>
 
 <!-- InstanceEndEditable -->
@@ -108,7 +111,11 @@
         <!-- InstanceBeginEditable name="sidebar" -->
 
 			<h3>Quickhelp</h3>
-			
+			<p>Here you can edit the userdata for a existing user or reset his password.</p>
+            <p>Click on the headlines to open the respective user information.</p>
+			<p>A <span id="projectlink">userrole</span> consists of a number of actions. A user with the role will autmatically have all userrights associated with the role.</p>
+            <p>Apart from roles you can set the <span id="projectlink">userrights</span> for actions manually. They will be available additionally to the roles a user has.</p>
+
 		<!-- InstanceEndEditable -->
 		</div>	
 	
@@ -118,23 +125,26 @@
 			<form method="post" action="@@{[users.edituser]}@@" name="editaction" enctype="multipart/form-data; charset=utf-8">
 			<input type="hidden" value="@@{user_id}@@" name="user_id" />
 
-			<h2>Edit user</h2>
+			<div id="useraccordion">
+			<h2><a href="#">Edit user</a></h2>
+            <div>
 			<table border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Username*</p></td>
-				<td valign="middle" @@{user_name:formerror}@@><input type="text" maxlength="60" name="edituser[user_name]" value="@@{user_name:value}@@" class="formtext" />
+				<td valign="middle" @@{user_name:formerror}@@>
 				<!-- TemplateBeginBlock name="user_name:errorblock" -->
-					<br /><span class="formerrormsg">@@{user_name:errormessage}@@</span>
+					<br /><span class="formerrormsg">@@{user_name:errormessage}@@</span><br />
 				<!-- TemplateEndBlock -->
+                <input type="text" maxlength="60" name="edituser[user_name]" value="@@{user_name:value}@@" class="formtext" />
 				</td>
 			</tr>
 			<tr>
 				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">User key*</p></td>
 				<td align="left" valign="middle" @@{user_key:formerror}@@>
-					<input type="text" maxlength="60" name="edituser[user_key]" value="@@{user_key:value}@@" class="formtext" />
 					<!-- TemplateBeginBlock name="user_key:errorblock" -->
-						<br /><span class="formerrormsg">@@{user_key:errormessage}@@</span>
+						<br /><span class="formerrormsg">@@{user_key:errormessage}@@</span><br />
 					<!-- TemplateEndBlock -->				
+					<input type="text" maxlength="60" name="edituser[user_key]" value="@@{user_key:value}@@" class="formtext" />
 				</td>
 			</tr>
 			</table>
@@ -143,26 +153,31 @@
 			<table border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Password</p></td>
-				<td valign="middle" @@{user_password:formerror}@@><input type="text" maxlength="60" name="edituser[user_password]" value="@@{user_password:value}@@" class="formtext" />
+				<td valign="middle" @@{user_password:formerror}@@>
 				<!-- TemplateBeginBlock name="user_password:errorblock" -->
-					<br /><span class="formerrormsg">@@{user_password:errormessage}@@</span>
+					<br /><span class="formerrormsg">@@{user_password:errormessage}@@</span><br />
 				<!-- TemplateEndBlock -->
+                <input type="text" maxlength="60" name="edituser[user_password]" value="@@{user_password:value}@@" class="formtext" />
 				</td>
 			</tr>
 			<tr>
 				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Confirmation</p></td>
 				<td align="left" valign="middle" @@{user_pwconfirmation:formerror}@@>
-					<input type="text" maxlength="60" name="edituser[user_pwconfirmation]" value="@@{user_pwconfirmation:value}@@" class="formtext" />
 					<!-- TemplateBeginBlock name="user_pwconfirmation:errorblock" -->
-						<br /><span class="formerrormsg">@@{user_pwconfirmation:errormessage}@@</span>
+						<br /><span class="formerrormsg">@@{user_pwconfirmation:errormessage}@@</span><br />
 					<!-- TemplateEndBlock -->				
+					<input type="text" maxlength="60" name="edituser[user_pwconfirmation]" value="@@{user_pwconfirmation:value}@@" class="formtext" />
 				</td>
 			</tr>
 			</table>
+            </div>
 
-			<h2>Userdata</h2>
+			<h2><a href="#">Userdata</a></h2>
+            <div>
+            </div>
 
-			<h2>Userroles</h2>
+			<h2><a href="#">Userroles</a></h2>
+            <div>
             <table id="userrolestable" border="0" cellpadding="0" cellspacing="5" width="100%">
 	       	<thead>
 	        <tr>
@@ -180,8 +195,10 @@
 			<!-- TemplateEndBlock -->				
 			</tr>
 			</table>
+            </div>
 
-			<h2>Userrights</h2>
+			<h2><a href="#">Userrights</a></h2>
+            <div>
             <table id="userrightstable" border="0" cellpadding="0" cellspacing="5" width="100%">
 	       	<thead>
 	        <tr>
@@ -199,9 +216,12 @@
 			<!-- TemplateEndBlock -->				
 			</tr>
 			</table>
+            </p>
+            </div>
+
+            </div>
 
 			<table border="0" cellpadding="0" cellspacing="0">
-			<tr>
 			<tr>
 				<td colspan="2">
 				   <p style="text-align:center;">
