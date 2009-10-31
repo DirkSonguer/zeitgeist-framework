@@ -130,7 +130,7 @@ class projects
 		$tpl->load($this->configuration->getConfiguration('projects', 'templates', 'projects_createproject'));
 
 		$createprojectForm = new zgForm();
-		$createprojectForm->load('forms/createproject.form.ini');
+		$createprojectForm->load('forms/projectdata.form.ini');
 
 		if (!empty($parameters['submit']))
 		{
@@ -201,7 +201,7 @@ class projects
 		$tpl->load($this->configuration->getConfiguration('projects', 'templates', 'projects_editproject'));
 
 		$editprojectForm = new zgForm();
-		$editprojectForm->load('forms/editproject.form.ini');
+		$editprojectForm->load('forms/projectdata.form.ini');
 
 		if (!empty($parameters['submit']))
 		{
