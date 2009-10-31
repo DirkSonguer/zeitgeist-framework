@@ -102,8 +102,8 @@
 
 			<h2>Edit project module</h2>
 			
-			<form method="post" action="@@{[setup.editmodule]}@@" name="editmodule" enctype="multipart/form-data; charset=utf-8">
-			<input type="hidden" value="@@{module_id:value}@@" name="editmodule[module_id]" />
+			<form method="post" action="@@{[setup.editmodule]}@@" name="moduleform" enctype="multipart/form-data; charset=utf-8">
+			<input type="hidden" value="@@{module_id:value}@@" name="moduledata[module_id]" />
 
 			<table border="0" cellpadding="0" cellspacing="0">
 			<tr>
@@ -112,7 +112,7 @@
 				<!-- TemplateBeginBlock name="module_name:errorblock" -->
 					<br /><span class="formerrormsg">@@{module_name:errormessage}@@</span><br />
 				<!-- TemplateEndBlock -->
-				<input type="text" maxlength="60" name="editmodule[module_name]" value="@@{module_name:value}@@" class="formtext" />
+				<input type="text" maxlength="60" name="moduledata[module_name]" value="@@{module_name:value}@@" class="formtext" />
 				</td>
 			</tr>
 			<tr>
@@ -121,7 +121,7 @@
 					<!-- TemplateBeginBlock name="module_description:errorblock" -->
 						<br /><span class="formerrormsg">@@{module_description:errormessage}@@</span><br />
 					<!-- TemplateEndBlock -->				
-					<textarea rows="5" name="editmodule[module_description]" class="formtext">@@{module_description:value}@@</textarea>
+					<textarea rows="5" name="moduledata[module_description]" class="formtext">@@{module_description:value}@@</textarea>
 				</td>
 			</tr>
 			<tr>
@@ -130,7 +130,7 @@
 					<!-- TemplateBeginBlock name="module_active:errorblock" -->
 						<br /><span class="formerrormsg">@@{module_active:errormessage}@@</span><br />
 					<!-- TemplateEndBlock -->				
-					<input type="checkbox" name="editmodule[module_active]" @@{module_active:value}@@ />
+					<input type="checkbox" name="moduledata[module_active]" @@{module_active:value}@@ />
 				</td>
 			</tr>
 			<tr>

@@ -113,7 +113,7 @@
 
 			<h2>Create a new userrole</h2>
 			
-			<form method="post" userrole="@@{[setup.createuserrole]}@@" name="createuserrole" enctype="multipart/form-data; charset=utf-8">
+			<form method="post" userrole="@@{[setup.createuserrole]}@@" name="userroleform" enctype="multipart/form-data; charset=utf-8">
 
 			<table border="0" cellpadding="0" cellspacing="0">
 			<tr>
@@ -122,7 +122,7 @@
 				<!-- TemplateBeginBlock name="userrole_name:errorblock" -->
 					<br /><span class="formerrormsg">@@{userrole_name:errormessage}@@</span><br />
 				<!-- TemplateEndBlock -->
-                <input type="text" maxlength="60" name="createuserrole[userrole_name]" value="@@{userrole_name:value}@@" class="formtext" />
+                <input type="text" maxlength="60" name="userroledata[userrole_name]" value="@@{userrole_name:value}@@" class="formtext" />
 				</td>
 			</tr>
 			<tr>
@@ -131,7 +131,7 @@
 					<!-- TemplateBeginBlock name="userrole_description:errorblock" -->
 						<br /><span class="formerrormsg">@@{userrole_description:errormessage}@@</span><br />
 					<!-- TemplateEndBlock -->				
-					<textarea rows="5" name="createuserrole[userrole_description]" class="formtext">@@{userrole_description:value}@@</textarea>
+					<textarea rows="5" name="userroledata[userrole_description]" class="formtext">@@{userrole_description:value}@@</textarea>
 				</td>
 			</tr>
 			</table>

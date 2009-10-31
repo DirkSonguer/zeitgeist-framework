@@ -103,7 +103,7 @@
 			<h2>Create project action</h2>
 			
 			<form method="post" action="@@{[setup.createaction]}@@" name="actionform" enctype="multipart/form-data; charset=utf-8">
-			<input type="hidden" value="@@{action_id:value}@@" name="createaction[action_id]" />
+			<input type="hidden" value="@@{action_id:value}@@" name="actiondata[action_id]" />
 
 			<table border="0" cellpadding="0" cellspacing="0">
 			<tr>
@@ -112,7 +112,7 @@
 				<!-- TemplateBeginBlock name="action_name:errorblock" -->
 					<br /><span class="formerrormsg">@@{action_name:errormessage}@@</span><br />
 				<!-- TemplateEndBlock -->
-                <input type="text" maxlength="60" name="createaction[action_name]" value="@@{action_name:value}@@" class="formtext" />
+                <input type="text" maxlength="60" name="actiondata[action_name]" value="@@{action_name:value}@@" class="formtext" />
 				</td>
 			</tr>
 			<tr>
@@ -121,7 +121,7 @@
 					<!-- TemplateBeginBlock name="action_description:errorblock" -->
 						<br /><span class="formerrormsg">@@{action_description:errormessage}@@</span><br />
 					<!-- TemplateEndBlock -->
-					<textarea rows="5" name="createaction[action_description]" class="formtext">@@{action_description:value}@@</textarea>
+					<textarea rows="5" name="actiondata[action_description]" class="formtext">@@{action_description:value}@@</textarea>
 				</td>
 			</tr>
 
@@ -131,7 +131,7 @@
 				<!-- TemplateBeginBlock name="action_module:errorblock" -->
 					<br /><span class="formerrormsg">@@{action_module:errormessage}@@</span><br />
 				<!-- TemplateEndBlock -->
-				<select name="createaction[action_module]" class="formtext">
+				<select name="actiondata[action_module]" class="formtext">
 					<!-- TemplateBeginBlock name="module_loop" -->
 						<option value="@@{module_id}@@" @@{module_isactive}@@>@@{module_name}@@</option>
 					<!-- TemplateEndBlock -->
@@ -146,7 +146,7 @@
 					<!-- TemplateBeginBlock name="action_requiresuserright:errorblock" -->
 						<br /><span class="formerrormsg">@@{action_requiresuserright:errormessage}@@</span><br />
 					<!-- TemplateEndBlock -->
-					<input type="checkbox" name="createaction[action_requiresuserright]" @@{action_requiresuserright:value}@@ />
+					<input type="checkbox" name="actiondata[action_requiresuserright]" @@{action_requiresuserright:value}@@ />
 				</td>
 			</tr>
 			<tr>
