@@ -106,21 +106,21 @@ class setup
 	{
 		$this->debug->guard();
 
-		if (!empty($parameters['createmodule']['module_active'])) $parameters['createmodule']['module_active'] = 1;
+		if (!empty($parameters['moduledata']['module_active'])) $parameters['moduledata']['module_active'] = 1;
 
 		$tpl = new zgaTemplate();
 		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_createmodule'));
 
-		$createmoduleForm = new zgForm();
-		$createmoduleForm->load('forms/moduledata.form.ini');
+		$moduleForm = new zgForm();
+		$moduleForm->load('forms/moduledata.form.ini');
 
 		if (!empty($parameters['submit']))
 		{
-			$formvalid = $createmoduleForm->validate($parameters);
+			$formvalid = $moduleForm->validate($parameters);
 
 			if ($formvalid)
 			{
-				$ret = $this->setupfunctions->saveModule($parameters['createmodule']);
+				$ret = $this->setupfunctions->saveModule($parameters['moduledata']);
 				if (!$ret)
 				{
 					$this->messages->setMessage('Could not save module data to database', 'userwarning');
@@ -135,10 +135,10 @@ class setup
 				return true;
 			}
 
-			$active = $createmoduleForm->getElementValue('module_active');
-			if ($active) $createmoduleForm->setElementValue('module_active', 'checked="checked"');
+			$active = $moduleForm->getElementValue('module_active');
+			if ($active) $moduleForm->setElementValue('module_active', 'checked="checked"');
 
-			$formcreated = $createmoduleForm->insert($tpl);
+			$formcreated = $moduleForm->insert($tpl);
 		}
 
 		$tpl->show();
@@ -154,22 +154,22 @@ class setup
 
 		$currentId = 1;
 		if (!empty($parameters['id'])) $currentId = $parameters['id'];
-		if (!empty($parameters['editmodule']['module_id'])) $currentId = $parameters['editmodule']['module_id'];
-		if (!empty($parameters['editmodule']['module_active'])) $parameters['editmodule']['module_active'] = 1;
+		if (!empty($parameters['moduledata']['module_id'])) $currentId = $parameters['moduledata']['module_id'];
+		if (!empty($parameters['moduledata']['module_active'])) $parameters['moduledata']['module_active'] = 1;
 
 		$tpl = new zgaTemplate();
 		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_editmodule'));
 
-		$editmoduleForm = new zgForm();
-		$editmoduleForm->load('forms/moduledata.form.ini');
+		$moduleForm = new zgForm();
+		$moduleForm->load('forms/moduledata.form.ini');
 
 		if (!empty($parameters['submit']))
 		{
-			$formvalid = $editmoduleForm->validate($parameters);
+			$formvalid = $moduleForm->validate($parameters);
 
 			if ($formvalid)
 			{
-				$ret = $this->setupfunctions->saveModule($parameters['editmodule']);
+				$ret = $this->setupfunctions->saveModule($parameters['moduledata']);
 				if (!$ret)
 				{
 					$this->messages->setMessage('Could not save module data to database', 'userwarning');
@@ -189,14 +189,14 @@ class setup
 			$moduledata = $this->setupfunctions->getModule($currentId);
 
 			$processData = array();
-			$processData['editmodule'] = $moduledata;
-			$formvalid = $editmoduleForm->validate($processData);
+			$processData['moduledata'] = $moduledata;
+			$formvalid = $moduleForm->validate($processData);
 		}
 
-		$active = $editmoduleForm->getElementValue('module_active');
-		if ($active) $editmoduleForm->setElementValue('module_active', 'checked="checked"');
+		$active = $moduleForm->getElementValue('module_active');
+		if ($active) $moduleForm->setElementValue('module_active', 'checked="checked"');
 
-		$formcreated = $editmoduleForm->insert($tpl);
+		$formcreated = $moduleForm->insert($tpl);
 
 		$tpl->assign('module_id:value', $currentId);
 		$tpl->show();
@@ -292,10 +292,10 @@ class setup
 	{
 		$this->debug->guard();
 
-		if (!empty($parameters['createaction']['action_requiresuserright'])) $parameters['createaction']['action_requiresuserright'] = 1;
-		if (!empty($parameters['createaction']['action_module']))
+		if (!empty($parameters['actiondata']['action_requiresuserright'])) $parameters['actiondata']['action_requiresuserright'] = 1;
+		if (!empty($parameters['actiondata']['action_module']))
 		{
-			$currentModuleId = $parameters['createaction']['action_module'];
+			$currentModuleId = $parameters['actiondata']['action_module'];
 		}
 		else
 		{
@@ -305,16 +305,16 @@ class setup
 		$tpl = new zgaTemplate();
 		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_createaction'));
 
-		$createactionForm = new zgForm();
-		$createactionForm->load('forms/actiondata.form.ini');
+		$actionForm = new zgForm();
+		$actionForm->load('forms/actiondata.form.ini');
 
 		if (!empty($parameters['submit']))
 		{
-			$formvalid = $createactionForm->validate($parameters);
+			$formvalid = $actionForm->validate($parameters);
 
 			if ($formvalid)
 			{
-				$ret = $this->setupfunctions->saveAction($parameters['createaction']);
+				$ret = $this->setupfunctions->saveAction($parameters['actiondata']);
 				if (!$ret)
 				{
 					$this->messages->setMessage('Could not save action data to database', 'userwarning');
@@ -329,10 +329,10 @@ class setup
 				return true;
 			}
 
-			$active = $createactionForm->getElementValue('action_requiresuserright');
-			if ($active) $createactionForm->setElementValue('action_requiresuserright', 'checked="checked"');
+			$active = $actionForm->getElementValue('action_requiresuserright');
+			if ($active) $actionForm->setElementValue('action_requiresuserright', 'checked="checked"');
 
-			$formcreated = $createactionForm->insert($tpl);
+			$formcreated = $actionForm->insert($tpl);
 		}
 
 		$modules = $this->setupfunctions->getAllModules();
@@ -367,8 +367,8 @@ class setup
 
 		$currentId = 1;
 		if (!empty($parameters['id'])) $currentId = $parameters['id'];
-		if (!empty($parameters['actionform']['action_id'])) $currentId = $parameters['actionform']['action_id'];
-		if (!empty($parameters['actionform']['action_requiresuserright'])) $parameters['actionform']['action_requiresuserright'] = 1;
+		if (!empty($parameters['actiondata']['action_id'])) $currentId = $parameters['actiondata']['action_id'];
+		if (!empty($parameters['actiondata']['action_requiresuserright'])) $parameters['actiondata']['action_requiresuserright'] = 1;
 
 		$tpl = new zgaTemplate();
 		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_editaction'));
@@ -379,11 +379,11 @@ class setup
 		if (!empty($parameters['submit']))
 		{
 			$formvalid = $actionForm->validate($parameters);
-			$currentModuleId = $parameters['actionform']['action_module'];
+			$currentModuleId = $parameters['actiondata']['action_module'];
 
 			if ($formvalid)
 			{
-				$ret = $this->setupfunctions->saveAction($parameters['actionform']);
+				$ret = $this->setupfunctions->saveAction($parameters['actiondata']);
 				if (!$ret)
 				{
 					$this->messages->setMessage('Could not save action data to database', 'userwarning');
@@ -404,7 +404,7 @@ class setup
 			$currentModuleId = $actiondata['action_module'];
 
 			$processData = array();
-			$processData['actionform'] = $actiondata;
+			$processData['actiondata'] = $actiondata;
 			$formvalid = $actionForm->validate($processData);
 		}
 
@@ -502,16 +502,17 @@ class setup
 		$tpl = new zgaTemplate();
 		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_createuserrole'));
 
-		$edituserroleForm = new zgForm();
-		$edituserroleForm->load('forms/userroledata.form.ini');
+		$userroleForm = new zgForm();
+		$userroleForm->load('forms/userroledata.form.ini');
 
 		if (!empty($parameters['submit']))
 		{
-			$formvalid = $edituserroleForm->validate($parameters);
+			$formvalid = $userroleForm->validate($parameters);
+			if (empty($parameters['userroleactions'])) $parameters['userroleactions'] = array();
 
 			if ($formvalid)
 			{
-				$ret = $this->setupfunctions->saveuserrole($parameters['createuserrole'], $parameters['userroleactions']);
+				$ret = $this->setupfunctions->saveuserrole($parameters['userroledata'], $parameters['userroleactions']);
 				if (!$ret)
 				{
 					$this->messages->setMessage('Could not save userrole to database', 'userwarning');
@@ -549,7 +550,7 @@ class setup
 				}
 			}
 
-			$formcreated = $edituserroleForm->insert($tpl);
+			$formcreated = $userroleForm->insert($tpl);
 		}
 		else
 		{
@@ -577,22 +578,23 @@ class setup
 
 		$currentId = 1;
 		if (!empty($parameters['id'])) $currentId = $parameters['id'];
-		if (!empty($parameters['edituserrole']['userrole_id'])) $currentId = $parameters['edituserrole']['userrole_id'];
+		if (!empty($parameters['userroledata']['userrole_id'])) $currentId = $parameters['userroledata']['userrole_id'];
 
 		$tpl = new zgaTemplate();
 		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_edituserrole'));
 
-		$edituserroleForm = new zgForm();
-		$edituserroleForm->load('forms/userroledata.form.ini');
+		$userroleForm = new zgForm();
+		$userroleForm->load('forms/userroledata.form.ini');
 
 		if (!empty($parameters['submit']))
 		{
 
-			$formvalid = $edituserroleForm->validate($parameters);
+			$formvalid = $userroleForm->validate($parameters);
+			if (empty($parameters['userroleactions'])) $parameters['userroleactions'] = array();
 
 			if ($formvalid)
 			{
-				$ret = $this->setupfunctions->saveuserrole($parameters['edituserrole'], $parameters['userroleactions']);
+				$ret = $this->setupfunctions->saveuserrole($parameters['userroledata'], $parameters['userroleactions']);
 				if (!$ret)
 				{
 					$this->messages->setMessage('Could not save userrole to database', 'userwarning');
@@ -635,8 +637,8 @@ class setup
 			$userroledata = $this->setupfunctions->getuserrole($currentId);
 
 			$processData = array();
-			$processData['edituserrole'] = $userroledata;
-			$formvalid = $edituserroleForm->validate($processData);
+			$processData['userroledata'] = $userroledata;
+			$formvalid = $userroleForm->validate($processData);
 
 			$actions = $this->setupfunctions->getAllActions();
 			$userroleactions = $this->setupfunctions->getUserroleActions($currentId);
@@ -660,7 +662,7 @@ class setup
 			}
 		}
 
-		$formcreated = $edituserroleForm->insert($tpl);
+		$formcreated = $userroleForm->insert($tpl);
 		$tpl->assign('userrole_id:value', $currentId);
 		$tpl->show();
 		
