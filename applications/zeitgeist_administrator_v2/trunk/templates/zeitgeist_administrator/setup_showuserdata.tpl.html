@@ -47,14 +47,14 @@ $(document).ready(function()
 
 	function deleteField(id, name)
 	{
-		var answer = window.confirm("Do you really want to delete the module '" + name + "'?\n\nIMPORTANT: All actions for the module are deleted as well.\n\nNote that only the reference to the module and actions in the database will be deleted, not the physical module files.");
+		var answer = window.confirm("Do you really want to delete the userdata field '" + name + "'?\n\nIMPORTANT: The changes are automatically applied for all users. The user information will be LOST!\n\nIMPORTANT: IF your application depends on this userdata field, it may break!\n\n");
 
 		/* Question icon, Yes/No button. */
 		/* 0 = error, 1 = OK, 2 = Cancel, 3 = No, 4 = Yes */
 
 		if (answer == true)
 		{
-		   window.location.href = "@@{[setup.deletemodule]}@@"+"&id="+id;
+		   window.location.href = "@@{[setup.deleteuserdata]}@@"+"&id="+id;
 		}
 	}	
 
@@ -111,8 +111,12 @@ $(document).ready(function()
 		<div id="sidebar" >	
         <!-- InstanceBeginEditable name="sidebar" -->
 
-			<h3>Managing userdata</h3>			
-			<p>The userdata fields are bascially additional data fields that can be associated with users. So if you want to store the email address or phone number for each user, you could add a field for it to the user data and access it directly from your application (via the userdata class or the userhandler abstraction).</p>
+			<h3>Managing userdata</h3>
+			<p>The userdata fields are additional data fields that can be associated with users (e.g. email address or phone number).</p>
+            <p>The data fields are available for all users abd are accessible directly from the application (via the userdata class or the userhandler abstraction).</p>
+			<h3>Important</h3>
+			<p>All changes are automatically applied for all users. Be careful not to delete or edit any fields your application is already using and depending on.</p>
+            
             
 		<!-- InstanceEndEditable -->
 		</div>	
@@ -155,12 +159,12 @@ $(document).ready(function()
 				<td id="listtable"><p>@@{userdata_field}@@</a></p></td>
 				<td id="listtable"><p>@@{userdata_type}@@</a></p></td>
 				<td id="listtable"><p>@@{userdata_length}@@</a></p></td>
-				<td id="listtable" align="center">
-					<a href="@@{[setup.editmodule]}@@&id=@@{module_id}@@" alt="Edit module">
-						<img src="@@{templatepath}@@/images/icons/edit_22.png" alt="Edit module" title="Edit module '@@{module_name}@@'" border="0" />
+				<td id="listtable" align="center"><p><nobr>
+					<a href="@@{[setup.edituserdata]}@@&id=@@{userdata_field}@@" alt="Edit userdata field">
+						<img src="@@{templatepath}@@/images/icons/edit_22.png" alt="Edit module" title="Edit userdata field '@@{userdata_field}@@'" border="0" />
 					</a> &nbsp; 
-					<a href="javascript:deleteModule(@@{module_id}@@, '@@{module_name}@@')" alt="Delete module">
-						<img src="@@{templatepath}@@/images/icons/delete_22.png" alt="Delete module" title="Delete module '@@{module_name}@@'" border="0" />
+					<a href="javascript:deleteField('@@{userdata_field}@@', '@@{userdata_field}@@')" alt="Delete userdata field">
+						<img src="@@{templatepath}@@/images/icons/delete_22.png" alt="Delete userdata field" title="Delete userdata field '@@{userdata_field}@@'" border="0" />
 					</a>
 				</nobr></p></td>
                 </tr>

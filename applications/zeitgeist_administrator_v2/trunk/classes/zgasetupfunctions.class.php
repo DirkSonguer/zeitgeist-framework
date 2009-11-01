@@ -531,5 +531,89 @@ class zgaSetupfunctions
 	}
 	
 
+	public function saveUserdata($userdata)
+	{
+		$this->debug->guard();
+
+		if ( (empty($userdata['field_name'])) || (empty($userdata['field_type'])) )
+		{
+			$this->debug->write('Could not add userdata field: missing field information', 'warning');
+			$this->messages->setMessage('Could not add userdata field: missing field information', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$allowedtypes = array('text', 'varchar', 'int', 'tinyint', 'timestamp');
+		if (!in_array($userdata['field_type'], $allowedtypes))
+		{
+			$this->debug->write('Could not add userdata field: type is not allowed', 'warning');
+			$this->messages->setMessage('Could not add userdata field: type is not allowed', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		if (empty($userdata['field_oldname']))
+		{
+			$sql = "ALTER TABLE `userdata` ADD `userdata_" . $userdata['field_name'] . "` " . $userdata['field_type'] . " ";
+			if (!empty($userdata['field_length'])) $sql .= "( " . $userdata['field_length'] . " ) ";
+			$sql .= "NULL;";
+		}
+		else
+		{
+			$sql = "ALTER TABLE `userdata` CHANGE `" . $userdata['field_oldname'] . "` `userdata_" . $userdata['field_name'] . "` " . $userdata['field_type'] . " ";
+			if (!empty($userdata['field_length'])) $sql .= "( " . $userdata['field_length'] . " ) ";
+			$sql .= "NULL;";
+		}
+
+		$res = $this->projectDatabase->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not add userdata field: could not save userdata to database', 'warning');
+			$this->messages->setMessage('Could not add userdata field: could not save userdata to database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function deleteUserdata($userdatafield)
+	{
+		$this->debug->guard();
+
+
+		$userfunctions = new zgaUserfunctions();
+		$userdata = $userfunctions->getUserdataDefinition();
+
+		$found = false;
+		foreach ($userdata as $field)
+		{
+			if ($field['Field'] == $userdatafield) $found = true;
+		}
+
+		if (!$found)
+		{
+			$this->debug->write('Could not delete userdata field from project database: could not find field', 'warning');
+			$this->messages->setMessage('Could not delete userdata field from project database: could not find field', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$sql = " ALTER TABLE `userdata` DROP `" . $userdatafield . "`";
+		$res = $this->projectDatabase->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not delete userdata field from project database: could not connect to database', 'warning');
+			$this->messages->setMessage('Could not delete userdata field from project database: could not connect to database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
 }
 ?>

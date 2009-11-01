@@ -111,8 +111,8 @@
         <!-- InstanceBeginEditable name="sidebar" -->
 
 			<h3>Quickhelp</h3>
-			<p>Here you can edit the userdata for a existing user or reset his password.</p>
-            <p>Click on the headlines to open the respective user information.</p>
+			<p>Here you can edit the userdata for a existing user or reset his password. Click on the headlines to open the respective user information.</p>
+            <p>The <span id="projectlink">username</span> and <span id="projectlink">user key</span> should only be changed if necessary. There are NO checks if the username or key are unique, so handle with care.</p>
 			<p>A <span id="projectlink">userrole</span> consists of a number of actions. A user with the role will autmatically have all userrights associated with the role.</p>
             <p>Apart from roles you can set the <span id="projectlink">userrights</span> for actions manually. They will be available additionally to the roles a user has.</p>
 
@@ -131,16 +131,16 @@
 			<table border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Username*</p></td>
-				<td valign="middle" @@{user_name:formerror}@@>
-				<!-- TemplateBeginBlock name="user_name:errorblock" -->
-					<br /><span class="formerrormsg">@@{user_name:errormessage}@@</span><br />
+				<td valign="middle">
+				<!-- TemplateBeginBlock name="user_username:errorblock" -->
+					<br /><span class="formerrormsg">@@{user_username:errormessage}@@</span><br />
 				<!-- TemplateEndBlock -->
-                <input type="text" maxlength="60" name="edituser[user_name]" value="@@{user_name:value}@@" class="formtext" />
+                <input type="text" maxlength="60" name="edituser[user_username]" value="@@{user_username:value}@@" class="formtext" />
 				</td>
 			</tr>
 			<tr>
 				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">User key*</p></td>
-				<td align="left" valign="middle" @@{user_key:formerror}@@>
+				<td align="left" valign="middle">
 					<!-- TemplateBeginBlock name="user_key:errorblock" -->
 						<br /><span class="formerrormsg">@@{user_key:errormessage}@@</span><br />
 					<!-- TemplateEndBlock -->				
@@ -150,10 +150,11 @@
 			</table>
 
 			<h3>Change Password</h3>
+            <p>Enter a new passwort to change to current one.</p>
 			<table border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Password</p></td>
-				<td valign="middle" @@{user_password:formerror}@@>
+				<td valign="middle">
 				<!-- TemplateBeginBlock name="user_password:errorblock" -->
 					<br /><span class="formerrormsg">@@{user_password:errormessage}@@</span><br />
 				<!-- TemplateEndBlock -->
@@ -162,7 +163,7 @@
 			</tr>
 			<tr>
 				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Confirmation</p></td>
-				<td align="left" valign="middle" @@{user_pwconfirmation:formerror}@@>
+				<td align="left" valign="middle">
 					<!-- TemplateBeginBlock name="user_pwconfirmation:errorblock" -->
 						<br /><span class="formerrormsg">@@{user_pwconfirmation:errormessage}@@</span><br />
 					<!-- TemplateEndBlock -->				
@@ -174,6 +175,21 @@
 
 			<h2><a href="#">Userdata</a></h2>
             <div>
+            <table id="userdatatable" border="0" cellpadding="0" cellspacing="5" width="100%">
+	       	<thead>
+	        <tr>
+				<th><p>Key</p></th>
+				<th><p>Value</p></th>
+	        </tr>
+            </thead>
+            <tbody>
+			<!-- TemplateBeginBlock name="userdatafield" -->
+                <tr>
+                    <td id="listtable"><p>@@{userdatafield_key}@@</a></p></td>
+                    <td id="listtable"><p>@@{userdatafield_value}@@</a></p></td>
+                </tr>
+			<!-- TemplateEndBlock -->
+			</table>
             </div>
 
 			<h2><a href="#">Userroles</a></h2>
