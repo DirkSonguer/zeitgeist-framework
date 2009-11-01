@@ -75,8 +75,8 @@ class zgaUserfunctions
 		$res = $this->projectDatabase->query($sql);
 		if (!$res)
 		{
-			$this->debug->write('Could not get userdata definitio from project database: could not connect to database', 'warning');
-			$this->messages->setMessage('Could not get userdata definitio from project database: could not connect to database', 'warning');
+			$this->debug->write('Could not get userdata definition from project database: could not connect to database', 'warning');
+			$this->messages->setMessage('Could not get userdata definition from project database: could not connect to database', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -90,7 +90,77 @@ class zgaUserfunctions
 		$this->debug->unguard($userdata);
 		return $userdata;
 	}
+
 		
+	public function getInformation($userid)
+	{
+		$this->debug->guard();
+
+		$sql = "SELECT * FROM users WHERE user_id = '" . $userid . "'";
+		if ($res = $this->projectDatabase->query($sql))
+		{
+			if ($this->projectDatabase->numRows($res))
+			{
+				$ret = array();
+				$row = $this->projectDatabase->fetchArray($res);
+				$ret = $row;
+
+				$this->debug->unguard($ret);
+				return $ret;
+			}
+			else
+			{
+				$this->debug->write('Problem getting user information: id not found for given user', 'warning');
+				$this->messages->setMessage('Problem getting user information: id not found for given user', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
+		}
+		else
+		{
+			$this->debug->write('Error searching a user: could not read the user table', 'error');
+			$this->messages->setMessage('Error searching a user: could not read the user table', 'error');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(false);
+		return false;
+	}
+
+
+	public function changeUserinformation($userid, $userinformation)
+	{
+		$this->debug->guard();
+
+		if (count($userinformation) < 1)
+		{
+			$this->debug->write('Problem changing the information of a user: no new userdata was given for the user', 'warning');
+			$this->messages->setMessage('Problem changing the information of a user: no new userdata was given for the user', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$sql = 'UPDATE users SET ';
+		foreach ($userinformation as $fieldkey => $fieldvalue)
+		{
+			$sql .= $fieldkey."='".$fieldvalue."',";
+		}
+		$sql = substr($sql, 0, -1);
+		$sql .= " WHERE user_id='" . $userid . "'";
+
+		$res = $this->projectDatabase->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not update user information: could not connect to database', 'warning');
+			$this->messages->setMessage('Could not update user information: could not connect to database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
 
 }
 ?>

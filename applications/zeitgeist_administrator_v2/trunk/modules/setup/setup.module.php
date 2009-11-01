@@ -705,16 +705,15 @@ class setup
 	public function showuserdata($parameters=array())
 	{
 		$this->debug->guard();
-		
+
 		$tpl = new zgaTemplate();
 		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_showuserdata'));
 
 		$userfunctions = new zgaUserfunctions();
 		$userdata = $userfunctions->getUserdataDefinition();
-		
 		foreach ($userdata as $field)
 		{
-//			if ( ($field['Field'] == 'userdata_id') || ($field['Field'] == 'userdata_user') ) continue;
+			if ( ($field['Field'] == 'userdata_id') || ($field['Field'] == 'userdata_user') ) continue;
 			$tpl->assign('userdata_field', $field['Field']);
 			$type = split('\(',$field['Type']);
 			$tpl->assign('userdata_type', $type[0]);
@@ -728,5 +727,165 @@ class setup
 		$this->debug->unguard(true);
 		return true;
 	}	
+
+
+	public function createuserdata($parameters=array())
+	{
+		$this->debug->guard();
+
+		$tpl = new zgaTemplate();
+		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_createuserdata'));
+
+		$userdataForm = new zgForm();
+		$userdataForm->load('forms/userdata.form.ini');
+
+		if (!empty($parameters['submit']))
+		{
+			$formvalid = $userdataForm->validate($parameters);
+
+			if ($formvalid)
+			{
+				$ret = $this->setupfunctions->saveUserdata($parameters['userdata']);
+				if (!$ret)
+				{
+					$this->messages->setMessage('Could not save userddata field to database', 'userwarning');
+				}
+				else
+				{
+					$this->messages->setMessage('Userdata field was created', 'usermessage');
+				}
+
+				$tpl->redirect($tpl->createLink('setup', 'showuserdata'));
+				$this->debug->unguard(true);
+				return true;
+			}
+
+			$formcreated = $userdataForm->insert($tpl);
+		}
+
+		$types = array('text', 'varchar', 'int', 'tinyint', 'timestamp');
+		foreach ($types as $type)
+		{
+			$tpl->assign('type_name', $type);
+			$tpl->insertBlock('types_loop');
+		}
+
+		$tpl->show();
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function edituserdata($parameters=array())
+	{
+		$this->debug->guard();
+
+		$currentField = '';
+		if (!empty($parameters['id'])) $currentField = $parameters['id'];
+		if (!empty($parameters['userdata']['field_oldname'])) $currentField = $parameters['userdata']['userfield_oldnamerole_id'];
+
+		$tpl = new zgaTemplate();
+		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_edituserdata'));
+
+		$userdataForm = new zgForm();
+		$userdataForm->load('forms/userdata.form.ini');
+
+		if (!empty($parameters['submit']))
+		{
+			$formvalid = $userdataForm->validate($parameters);
+
+			if ($formvalid)
+			{
+				$ret = $this->setupfunctions->saveUserdata($parameters['userdata']);
+				if (!$ret)
+				{
+					$this->messages->setMessage('Could not save userddata field to database', 'userwarning');
+				}
+				else
+				{
+					$this->messages->setMessage('Userdata field was created', 'usermessage');
+				}
+
+				$tpl->redirect($tpl->createLink('setup', 'showuserdata'));
+				$this->debug->unguard(true);
+				return true;
+			}
+		}
+		else
+		{
+			$userfunctions = new zgaUserfunctions();
+			$userdata = $userfunctions->getUserdataDefinition();
+			$fieldinfo = array();
+			foreach ($userdata as $field)
+			{
+				if ($field['Field'] != $currentField) continue;
+				$fieldinfo['field_name'] = substr($field['Field'], 9);
+				$type = split('\(',$field['Type']);
+				$fieldinfo['field_type'] = $type[0];
+				if (!empty($type[1])) $fieldinfo['field_length'] = substr($type[1], 0, -1);
+					else $fieldinfo['field_length'] = '';
+			}
+
+			$parameters['userdata'] = $fieldinfo;
+			$formvalid = $userdataForm->validate($parameters);
+		}
+
+		$formcreated = $userdataForm->insert($tpl);
+
+		$tpl->assign('field_oldname', $currentField);
+
+		$types = array('text', 'varchar', 'int', 'tinyint', 'timestamp');
+		foreach ($types as $type)
+		{
+			$tpl->assign('type_name', $type);
+			if ($parameters['userdata']['field_type'] == $type)
+			{
+				$tpl->assign('type_isactive', 'selected="selected"');
+			}
+			else
+			{
+				$tpl->assign('type_isactive', '');
+			}
+			$tpl->insertBlock('types_loop');
+		}
+
+		$tpl->show();
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function deleteuserdata($parameters=array())
+	{
+		$this->debug->guard();
+		
+		$tpl = new zgaTemplate();
+
+		if (empty($parameters['id']))
+		{
+			$tpl->redirect($tpl->createLink('setup', 'showuserdata'));
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$ret = $this->setupfunctions->deleteUserdata($parameters['id']);
+
+		if (!$ret)
+		{
+			$this->messages->setMessage('Could not delete userdata field, it\'s is still available', 'userwarning');
+		}
+		else
+		{
+			$this->messages->setMessage('Userdata field deleted', 'usermessage');
+		}
+		
+		$tpl->redirect($tpl->createLink('setup', 'showuserdata'));
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+
 }
 ?>
