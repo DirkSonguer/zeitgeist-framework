@@ -16,7 +16,7 @@ class templates
 	public function index($parameters=array())
 	{
 		$this->debug->guard();
-		
+
 		// Create a new object of type template
 		$tpl = new zgTemplate();
 		
@@ -51,7 +51,7 @@ class templates
 
 		// Sends the contents of the template buffer to the output
 		$tpl->show();
-		
+
 		$this->debug->unguard(true);		
 		return true;
 	}
