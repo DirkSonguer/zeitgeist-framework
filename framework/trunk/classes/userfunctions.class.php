@@ -160,9 +160,8 @@ class zgUserfunctions
 		{
 			if ($this->database->numRows($res))
 			{
-				$ret = array();
 				$row = $this->database->fetchArray($res);
-				$ret = $row;
+				$ret = $row['user_id'];
 
 				$this->debug->unguard($ret);
 				return $ret;
@@ -270,10 +269,55 @@ class zgUserfunctions
 
 
 	/**
+	 * Gets user information for a given user
+	 * Returns the contents of the usertable if the user is found or false
+	 *
+	 * @param integer $userid id of the user to get information for
+	 *
+	 * @return integer
+	 */
+	public function getInformation($userid)
+	{
+		$this->debug->guard();
+
+		$sql = "SELECT * FROM " . $this->configuration->getConfiguration('zeitgeist','tables','table_users') . " WHERE user_id = '" . $userid . "'";
+		if ($res = $this->database->query($sql))
+		{
+			if ($this->database->numRows($res))
+			{
+				$ret = array();
+				$row = $this->database->fetchArray($res);
+				$ret = $row;
+
+				$this->debug->unguard($ret);
+				return $ret;
+			}
+			else
+			{
+				$this->debug->write('Problem getting user information: id not found for given user', 'warning');
+				$this->messages->setMessage('Problem getting user information: id not found for given user', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
+		}
+		else
+		{
+			$this->debug->write('Error searching a user: could not read the user table', 'error');
+			$this->messages->setMessage('Error searching a user: could not read the user table', 'error');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(false);
+		return false;
+	}
+
+
+	/**
 	 * Gets the confirmation key for a given user
 	 * Returns the confirmation key if the user is found or false
 	 *
-	 * @param integer $userid id of the user to chek the confirmation key for
+	 * @param integer $userid id of the user to check the confirmation key for
 	 *
 	 * @return integer
 	 */

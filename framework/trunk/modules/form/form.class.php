@@ -165,7 +165,7 @@ class zgForm
 	 *
 	 * @return boolean
 	 */
-	public function getValue($elementname)
+	public function getElementValue($elementname)
 	{
 		$this->debug->guard();
 
@@ -192,7 +192,7 @@ class zgForm
 	 *
 	 * @return boolean
 	 */
-	public function setValue($elementname, $value)
+	public function setElementValue($elementname, $value)
 	{
 		$this->debug->guard();
 
