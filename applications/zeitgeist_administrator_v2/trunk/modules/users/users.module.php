@@ -76,6 +76,7 @@ class users
 				
 				$update = true;
 
+				// User name
 				if ($username != $parameters['edituser']['user_username'])
 				{
 					$usernamearray = array('user_username' => $parameters['edituser']['user_username']);
@@ -91,6 +92,8 @@ class users
 					}
 				}
 
+
+				// User key
 				if ($userkey != $parameters['edituser']['user_key'])
 				{
 					$userkeyarray = array('user_key' => $parameters['edituser']['user_key']);
@@ -106,6 +109,8 @@ class users
 					}
 				}
 
+
+				// Password check
 				if ( (!empty($parameters['edituser']['user_password'])) && (!empty($parameters['edituser']['user_pwconfirmation'])) )
 				{
 					if ($parameters['edituser']['user_password'] == $parameters['edituser']['user_pwconfirmation'])
@@ -129,6 +134,29 @@ class users
 					}
 				}
 
+
+				// Userdata changes
+				$userdata = $userfunctions->loadUserdata($currentId);
+				$userdataChanges = false;
+				
+				foreach ($parameters['userdata'] as $key => $value)
+				{
+					if ( (!empty($userdata[$key])) && ($userdata[$key] != $value) )
+					{
+						$userdata[$key] = $value;
+						$userdataChanges = true;
+					}
+				}
+
+				$ret = $userfunctions->saveUserdata($currentId, $userdata);
+				if (!$ret)
+				{
+					$this->messages->setMessage('The userdata could not be saved', 'userwarning');
+					$update = false;
+				}
+				
+
+				// Check if everything went fine
 				if ($update)
 				{
 					$tpl->redirect($tpl->createLink('users', 'index'));
@@ -146,17 +174,6 @@ class users
 			$userinformation = $userfunctions->getInformation($currentId);
 			$userprofile['user_username'] = $userinformation['user_username'];
 			$userprofile['user_key'] = $userinformation['user_key'];
-
-			// list userdata for user
-			$userdatafunctions = new zgUserdata();
-			$userdata = $userdatafunctions->loadUserdata($currentId);
-	
-			foreach ($userdata as $key => $value)
-			{
-				$tpl->assign('userdatafield_key', $key);
-				$tpl->assign('userdatafield_value', $value);
-				$tpl->insertBlock('userdatafield');
-			}
 
 /*	
 			// list userroles for user
@@ -208,6 +225,20 @@ class users
 			$parameters['edituser'] = $userprofile;
 			$userForm->validate($parameters);
 		}
+
+
+		// list userdata for user
+		$userdata = $userfunctions->loadUserdata($currentId);
+
+		foreach ($userdata as $key => $value)
+		{
+			if ( ($key != 'userdata_id') && ($key != 'userdata_user') )
+			{
+				$tpl->assign('userdatafield_key', $key);
+				$tpl->assign('userdatafield_value', $value);
+				$tpl->insertBlock('userdatafield');
+			}
+		}
 		
 		$userForm->insert($tpl);
 		$tpl->assign('user_id', $currentId);
@@ -217,6 +248,38 @@ class users
 		$this->debug->unguard(true);
 		return true;
 	}
+
+
+	public function deleteuser($parameters=array())
+	{
+		$this->debug->guard();
+		
+		$tpl = new zgaTemplate();
+
+		if (empty($parameters['id']))
+		{
+			$tpl->redirect($tpl->createLink('users', 'index'));
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$ret = $this->userfunctions->deleteUser($parameters['id']);
+
+		if (!$ret)
+		{
+			$this->messages->setMessage('Could not delete the user, it\'s is still available', 'userwarning');
+		}
+		else
+		{
+			$this->messages->setMessage('User deleted', 'usermessage');
+		}
+		
+		$tpl->redirect($tpl->createLink('users', 'index'));
+		
+		$this->debug->unguard(true);
+		return true;
+	}
+
 
 }
 ?>
