@@ -186,7 +186,9 @@
 			<!-- TemplateBeginBlock name="userdatafield" -->
                 <tr>
                     <td id="listtable"><p>@@{userdatafield_key}@@</a></p></td>
-                    <td id="listtable"><p>@@{userdatafield_value}@@</a></p></td>
+                    <td id="listtable"><p>
+                    <input type="text" maxlength="255" name="userdata[@@{userdatafield_key}@@]" value="@@{userdatafield_value}@@" class="formtext" />
+                    </p></td>
                 </tr>
 			<!-- TemplateEndBlock -->
 			</table>
