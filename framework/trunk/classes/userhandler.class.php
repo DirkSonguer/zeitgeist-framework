@@ -143,8 +143,9 @@ class zgUserhandler
 		if (!$this->loggedIn)
 		{
 			$userfunctions = new zgUserfunctions();
-			if ($userinformation = $userfunctions->login($username, $password))
+			if ($userid = $userfunctions->login($username, $password))
 			{
+				$userinformation = $userfunctions->getInformation($userid);
 				$this->session->setSessionVariable('user_id', $userinformation['user_id']);
 				$this->session->setSessionVariable('user_key', $userinformation['user_key']);
 				$this->session->setSessionVariable('user_username', $userinformation['user_username']);
