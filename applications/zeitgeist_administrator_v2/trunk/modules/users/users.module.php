@@ -158,6 +158,15 @@ class users
 					$this->messages->setMessage('The userdata could not be saved', 'userwarning');
 					$update = false;
 				}
+
+
+				// Saving Userroles
+				$ret = $this->userroles->saveUserroles($currentId, $parameters['userroles']);
+				if (!$ret)
+				{
+					$this->messages->setMessage('The userroles could not be saved', 'userwarning');
+					$update = false;
+				}
 				
 
 				// Check if everything went fine
