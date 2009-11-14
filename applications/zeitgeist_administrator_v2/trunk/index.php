@@ -33,6 +33,8 @@
 	require_once('classes/zgatemplate.class.php');
 	require_once('classes/zgasetupfunctions.class.php');
 	require_once('classes/zgauserfunctions.class.php');
+	require_once('classes/zgauserdata.class.php');
+	require_once('classes/zgauserroles.class.php');
 	require_once('classes/zgaprojectfunctions.class.php');
 	
 	// define some general classes
