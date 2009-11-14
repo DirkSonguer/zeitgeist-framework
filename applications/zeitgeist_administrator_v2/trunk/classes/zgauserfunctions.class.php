@@ -45,7 +45,6 @@ class zgaUserfunctions
 		$sql = "SELECT * FROM users u ";
 		$sql .= "LEFT JOIN userroles_to_users r2u ON u.user_id = r2u.userroleuser_user ";
 		$sql .= "GROUP BY u.user_id";
-//		$sql .= "LEFT JOIN userroles r ON r2u.user_id = r2u.userroleuser_user ";
 	
 		$res = $this->projectDatabase->query($sql);
 		if (!$res)
