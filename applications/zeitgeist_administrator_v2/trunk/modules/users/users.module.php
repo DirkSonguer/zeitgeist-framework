@@ -10,6 +10,8 @@ class users
 	protected $configuration;
 	protected $user;
 	protected $userfunctions;
+	protected $userdata;
+	protected $userroles;
 	protected $setupfunctions;
 
 	public function __construct()
@@ -20,6 +22,8 @@ class users
 		$this->user = zgUserhandler::init();
 		
 		$this->userfunctions = new zgaUserfunctions();
+		$this->userdata = new zgaUserdata();
+		$this->userroles = new zgaUserroles();
 		$this->setupfunctions = new zgaSetupfunctions();
 
 		$this->database = new zgDatabase();
@@ -34,9 +38,9 @@ class users
 		$tpl = new zgaTemplate();
 		$tpl->load($this->configuration->getConfiguration('users', 'templates', 'users_index'));
 		
-		$userdata = $this->userfunctions->getAllUsers();
+		$userlist = $this->userfunctions->getAllUsers();
 		
-		foreach ($userdata as $user)
+		foreach ($userlist as $user)
 		{
 			$tpl->assignDataset($user);
 			$tpl->insertBlock('applicationuser');
@@ -136,7 +140,7 @@ class users
 
 
 				// Userdata changes
-				$userdata = $userfunctions->loadUserdata($currentId);
+				$userdata = $this->userdata->loadUserdata($currentId);
 				$userdataChanges = false;
 				
 				foreach ($parameters['userdata'] as $key => $value)
@@ -148,7 +152,7 @@ class users
 					}
 				}
 
-				$ret = $userfunctions->saveUserdata($currentId, $userdata);
+				$ret = $this->userdata->saveUserdata($currentId, $userdata);
 				if (!$ret)
 				{
 					$this->messages->setMessage('The userdata could not be saved', 'userwarning');
@@ -170,8 +174,7 @@ class users
 		{
 			$userprofile = array();
 			
-			$userfunctions = new zgaUserfunctions();
-			$userinformation = $userfunctions->getInformation($currentId);
+			$userinformation = $this->userfunctions->getInformation($currentId);
 			$userprofile['user_username'] = $userinformation['user_username'];
 			$userprofile['user_key'] = $userinformation['user_key'];
 
@@ -228,8 +231,7 @@ class users
 
 
 		// list userdata for user
-		$userdata = $userfunctions->loadUserdata($currentId);
-
+		$userdata = $this->userdata->loadUserdata($currentId);
 		foreach ($userdata as $key => $value)
 		{
 			if ( ($key != 'userdata_id') && ($key != 'userdata_user') )
@@ -238,6 +240,28 @@ class users
 				$tpl->assign('userdatafield_value', $value);
 				$tpl->insertBlock('userdatafield');
 			}
+		}
+
+
+		// list userroles for user
+		$userroles = $this->setupfunctions->getAllUserroles();
+		$userrolesForUser = $this->userroles->loadUserroles($currentId);
+		foreach ($userroles as $userrole)
+		{
+			$tpl->assign('userrole_id', $userrole['userrole_id']);
+			$tpl->assign('userrole_name', $userrole['userrole_name']);
+			$tpl->assign('userrole_description', $userrole['userrole_description']);
+
+			if (array_key_exists($userrole['userrole_id'], $userrolesForUser))
+			{
+				$tpl->assign('userrole_active', 'checked="checked"');
+			}
+			else
+			{
+				$tpl->assign('userrole_active', '');
+			}
+
+			$tpl->insertBlock('userroles');
 		}
 		
 		$userForm->insert($tpl);

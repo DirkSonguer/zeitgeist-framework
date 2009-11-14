@@ -18,7 +18,6 @@ class zgaUserfunctions
 {
 	protected $debug;
 	protected $messages;
-	protected $projectfunctions;
 	protected $projectDatabase;
 	protected $configuration;
 
@@ -31,8 +30,8 @@ class zgaUserfunctions
 		$this->messages = zgMessages::init();
 		$this->configuration = zgConfiguration::init();
 
-		$this->projectfunctions = new zgaProjectfunctions();
-		$activeproject = $this->projectfunctions->getActiveProject();
+		$projectfunctions = new zgaProjectfunctions();
+		$activeproject = $projectfunctions->getActiveProject();
 
 		$this->projectDatabase = new zgDatabase();
 		$this->projectDatabase->connect($activeproject['project_dbserver'], $activeproject['project_dbuser'], $activeproject['project_dbpassword'], $activeproject['project_dbdatabase'], false, true);
@@ -186,101 +185,6 @@ class zgaUserfunctions
 		// userconfirmation
 		$sql = "DELETE FROM userconfirmation WHERE userconfirmation_user='" . $userid . "'";
 		$res = $this->projectDatabase->query($sql);
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-
-	public function loadUserdata($userid)
-	{
-		$this->debug->guard();
-
-		$userdataTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userdata');
-		$sql = "SELECT * FROM " . $userdataTablename . " WHERE userdata_user = '" . $userid . "'";
-
-		if ($res = $this->projectDatabase->query($sql))
-		{
-			$ret = array();
-			if ($this->projectDatabase->numRows($res) > 0)
-			{
-				$ret = $this->projectDatabase->fetchArray($res);
-			}
-			else
-			{
-				$sql = "EXPLAIN " . $userdataTablename;
-				$res = $this->projectDatabase->query($sql);
-				
-				while($row = $this->projectDatabase->fetchArray($res))
-				{
-					$ret[$row['Field']] = '';
-				}
-				
-				$this->debug->write('The user seems to habe no assigned data. Userdata returned empty.', 'message');
-				$this->messages->setMessage('The user seems to habe no assigned data. Userdata returned empty.', 'message');
-			}
-
-			$this->debug->unguard($ret);
-			return $ret;
-		}
-		else
-		{
-			$this->debug->write('Error getting userdata for a user: could not find the userdata', 'error');
-			$this->messages->setMessage('Error getting userdata for a user: could not find the userdata', 'error');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$this->debug->unguard(false);
-		return false;
-	}
-
-
-	public function saveUserdata($userid, $userdata)
-	{
-		$this->debug->guard();
-
-		if ((!is_array($userdata)) || (count($userdata) < 1))
-		{
-			$this->debug->write('Problem setting the user data: array not valid', 'warning');
-			$this->messages->setMessage('Problem setting the user data: array not valid', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$userdataTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_userdata');
-		$sql = 'DELETE FROM ' . $userdataTablename . " WHERE userdata_user='" . $userid . "'";
-		$res = $this->projectDatabase->query($sql);
-		if (!$res)
-		{
-			$this->debug->write('Problem setting the user data: could not clean up the data table', 'warning');
-			$this->messages->setMessage('Problem setting the user data: could not clean up the data table', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$sqlkeys = '';
-		$sqlvalues = '';
-		foreach ($userdata as $key => $value)
-		{
-			if (($key != 'userdata_timestamp') && ($key != 'userdata_user'))
-			{
-				if ($sqlkeys != '') $sqlkeys .= ', ';
-				$sqlkeys .= $key;
-				if ($sqlvalues != '') $sqlvalues .= ', ';
-				$sqlvalues .= "'" . $value . "'";
-			}
-		}
-
-		$sql = "INSERT INTO " . $userdataTablename . "(userdata_user, " . $sqlkeys . ") VALUES('" . $userid . "'," . $sqlvalues . ")";
-		$res = $this->projectDatabase->query($sql);
-		if (!$res)
-		{
-			$this->debug->write('Problem setting the user data: could not write the data', 'warning');
-			$this->messages->setMessage('Problem setting the user data: could not write the data', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
 
 		$this->debug->unguard(true);
 		return true;
