@@ -12,6 +12,7 @@ class users
 	protected $userfunctions;
 	protected $userdata;
 	protected $userroles;
+	protected $userrights;
 	protected $setupfunctions;
 
 	public function __construct()
@@ -24,6 +25,7 @@ class users
 		$this->userfunctions = new zgaUserfunctions();
 		$this->userdata = new zgaUserdata();
 		$this->userroles = new zgaUserroles();
+		$this->userrights = new zgaUserrights();
 		$this->setupfunctions = new zgaSetupfunctions();
 
 		$this->database = new zgDatabase();
@@ -169,6 +171,15 @@ class users
 				}
 				
 
+				// Saving Userrights
+				$ret = $this->userrights->saveUserrights($currentId, $parameters['userrights']);
+				if (!$ret)
+				{
+					$this->messages->setMessage('The userroles could not be saved', 'userwarning');
+					$update = false;
+				}
+				
+
 				// Check if everything went fine
 				if ($update)
 				{
@@ -177,7 +188,6 @@ class users
 					return true;
 				}
 			}
-			
 		}
 		else
 		{
@@ -186,53 +196,6 @@ class users
 			$userinformation = $this->userfunctions->getInformation($currentId);
 			$userprofile['user_username'] = $userinformation['user_username'];
 			$userprofile['user_key'] = $userinformation['user_key'];
-
-/*	
-			// list userroles for user
-			$userroles = $this->setupfunctions->getAllUserroles();
-			foreach ($userroles as $userrole)
-			{
-				$tpl->assign('userrole_id', $userrole['userrole_id']);
-				$tpl->assign('userrole_name', $userrole['userrole_name']);
-				$tpl->assign('userrole_description', $userrole['userrole_description']);
-				$tpl->assign('userrole_active', '');
-	
-		
-				if (array_key_exists($action['action_id'], $userroleactions))
-				{
-					$tpl->assign('action_active', 'checked="checked"');
-				}
-				else
-				{
-					$tpl->assign('action_active', '');
-				}
-	
-				$tpl->insertBlock('userroles');
-			}
-	
-			// list userrights for user
-			$actions = $this->setupfunctions->getAllActions();
-	//		$userroleactions = $parameters['userroleactions'];
-	
-			foreach ($actions as $action)
-			{
-				$tpl->assign('action_id', $action['action_id']);
-				$tpl->assign('action_name', $action['action_name']);
-				$tpl->assign('module_name', $action['module_name']);
-				$tpl->assign('action_active', '');
-	
-				if (array_key_exists($action['action_id'], $userroleactions))
-				{
-					$tpl->assign('action_active', 'checked="checked"');
-				}
-				else
-				{
-					$tpl->assign('action_active', '');
-				}
-	
-				$tpl->insertBlock('userrights');
-			}
-*/
 
 			$parameters['edituser'] = $userprofile;
 			$userForm->validate($parameters);
@@ -272,7 +235,31 @@ class users
 
 			$tpl->insertBlock('userroles');
 		}
-		
+
+
+		// list userrights for user
+		$actions = $this->setupfunctions->getAllActions();
+		$userrightsForUser = $this->userrights->loadUserrights($currentId);
+		foreach ($actions as $action)
+		{
+			$tpl->assign('action_id', $action['action_id']);
+			$tpl->assign('action_name', $action['action_name']);
+			$tpl->assign('module_name', $action['module_name']);
+			$tpl->assign('action_active', '');
+
+			if (array_key_exists($action['action_id'], $userrightsForUser))
+			{
+				$tpl->assign('action_active', 'checked="checked"');
+			}
+			else
+			{
+				$tpl->assign('action_active', '');
+			}
+
+			$tpl->insertBlock('userrights');
+		}
+
+
 		$userForm->insert($tpl);
 		$tpl->assign('user_id', $currentId);
 
