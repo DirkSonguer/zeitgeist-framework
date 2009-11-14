@@ -86,5 +86,19 @@ class main
 		return true;
 	}
 
+
+	public function info($parameters=array())
+	{
+		$this->debug->guard();
+		
+		$tpl = new zgaTemplate();
+		$tpl->load($this->configuration->getConfiguration('main', 'templates', 'main_info'));
+
+		$tpl->show();
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
 }
 ?>
