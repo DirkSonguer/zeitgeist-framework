@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/zeitgeist_administrator.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>Zeitgeist Administrator - Manage application users</title>
+<!-- InstanceEndEditable -->
+
+<link rel="stylesheet" href="@@{templatepath}@@/css/main.css" type="text/css" />
+
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery-1.3.2.min.js"></script>
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery-ui-1.7.2.custom.min.js"></script>
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery.tooltip.min.js"></script>
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery.tablesorter.js"></script>
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery.tablesorter.filter.js"></script>
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery.tablesorter.pager.js"></script>
+
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/chili-1.7.pack.js"></script>
+
+<script language="JavaScript" type="text/javascript">
+
+	$(function() {
+		$('#set1 *').tooltip();
+
+		$("#block").click($.tooltip.block);
+	});
+	
+</script>
+
+<!-- InstanceBeginEditable name="head" -->
+
+<script language="JavaScript" type="text/javascript">
+
+$(document).ready(function() 
+    { 
+
+		$("#usertable")
+		.tablesorter({widthFixed: true, widgets: ['zebra']}) 
+		.tablesorterPager({container: $("#pager"), positionFixed: false})
+		.tablesorterFilter({filterContainer: "#filter-box",
+                            filterClearContainer: "#filter-clear-button",
+                            filterColumns: [0, 1]});
+
+		; 
+    } 
+); 
+
+	function deleteUser(id, name)
+	{
+		var answer = window.confirm("Do you really want to delete the user '" + name + "'?");
+
+		/* Question icon, Yes/No button. */
+		/* 0 = error, 1 = OK, 2 = Cancel, 3 = No, 4 = Yes */
+
+		if (answer == true)
+		{
+		   window.location.href = "@@{[users.deleteuser]}@@"+"&id="+id;
+		}
+	}	
+
+</script>
+
+<!-- InstanceEndEditable -->
+</head>
+
+<body>
+
+	<!-- navigation starts here -->
+	<div id="nav">
+		
+		<h3>Zeitgeist Administrator v2 - <a href="@@{[projects.index]}@@" id="projectlink">@@{activeproject}@@</a></h3>
+	
+	</div>
+
+	<!-- header starts here -->
+	<!-- TemplateBeginBlock name="mainmenu" -->
+	<div id="header">	
+	
+        	<div id="topnavleft">
+                <a href="@@{[main.index]}@@"><img src="@@{templatepath}@@/images/icons/home_128.png" id="naviconleft" alt="Home" title="Home" border="0"/></a>
+                <a href="@@{[setup.index]}@@"><img src="@@{templatepath}@@/images/icons/setup_128.png" id="naviconleft" alt="Setup application" title="Setup application" border="0" /></a>
+                <a href="@@{[users.index]}@@"><img src="@@{templatepath}@@/images/icons/user_128.png" id="naviconleft" alt="Manage users" title="Manage users" border="0" /></a>
+                <a href="@@{[projects.index]}@@"><img src="@@{templatepath}@@/images/icons/projects_128.png" id="naviconleft" alt="Manage Zeitgeist Administrator projects" title="Manage Zeitgeist projects" border="0" /></a>
+            </div>
+
+        	<div id="topnavright">
+                <a href="@@{[main.info]}@@"><img src="@@{templatepath}@@/images/icons/info_128.png" id="naviconright" alt="Info" border="0" /></a>
+                <a href="@@{[main.logout]}@@"><img src="@@{templatepath}@@/images/icons/exit_128.png" id="naviconright" alt="Logout" title="Logout" border="0" /></a>
+			</div>
+            <div style="clear:both;"></div>
+
+	</div>	
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="usermessages" -->
+		<h3 class="usermessage"><img src="@@{templatepath}@@/images/icons/ok_32.png" alt="" align="left" style="margin-right:5px;" /> @@{usermessage}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="userwarnings" -->
+		<h3 class="userwarning"><img src="@@{templatepath}@@/images/icons/warning_32.png" alt="" align="left" style="margin-right:5px;" /> @@{userwarning}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="usererrors" -->
+		<h3 class="usererror"><img src="@@{templatepath}@@/images/icons/error_32.png" alt="" align="left" style="margin-right:5px;" /> @@{usererror}@@</h3>
+	<!-- TemplateEndBlock -->	
+				
+	<!-- content-wrap starts here -->
+	<div id="content-wrap">
+    <div id="content">	 
+
+		<div id="sidebar" >	
+        <!-- InstanceBeginEditable name="sidebar" -->
+
+			<h3>Quickhelp</h3>			
+			<p>Here you can see all the users of your application.</p>
+            <p>By default the list is sorted by ID, which should in most cases also represent the order of creation in descending order. Use the row titles to sort the list to your liking.</p>
+            <p>Use the icons to the right to either edit a user or delete it. Notice that you can't restore deleted users with this tool.<p>
+            <p>The search will filter by ID as well as the username as you type. Note that it's case insensitive. Use the "Clear" button to reset the filter and show all users.</p>
+            
+		<!-- InstanceEndEditable -->
+		</div>	
+	
+		<div id="main">		
+        <!-- InstanceBeginEditable name="main" -->
+
+			<h2>Manage application users</h2>
+
+			<table id="controltable" border="0" cellpadding="0" cellspacing="5" width="100%">
+			<tr>
+				<td>
+				<p>
+					<a href="@@{[users.createuser]}@@" alt="Create new user"><img src="@@{templatepath}@@/images/icons/new_22.png" alt="Create new user" title="Create new user" border="0" align="absmiddle" /></a>
+					<a href="@@{[users.createuser]}@@" alt="Create new user">Create new user</a>
+				</p>
+				</td>
+				<td class="filter">
+				<p style="text-align:right;">
+					Search: 
+					<input name="filter" id="filter-box" value="" maxlength="50" size="30" type="text">
+					<input id="filter-clear-button" type="submit" value="Clear"/>
+				</p>
+				</td>
+			</tr>
+			</table>
+      
+            <table id="usertable" border="0" cellpadding="0" cellspacing="5" width="100%">
+	       	<thead>
+	        <tr>
+				<th><p>ID</p></th>
+				<th><p>Username</p></th>
+				<th><p style="text-align:center;">Active</p></th>
+				<th><p style="text-align:center;">Actions</p></th>
+	        </tr>
+            </thead>
+            <tbody>
+            <!-- TemplateBeginBlock name="applicationuser" -->            
+                <tr>
+				<td id="listtable"><p>@@{user_id}@@</a></p></td>
+				<td id="listtable"><p>@@{user_username}@@</a></p></td>
+				<td id="listtable" align="center"><p>@@{user_active}@@</a></p></td>
+				<td id="listtable" align="center"><p>
+					<a href="@@{[users.edituser]}@@&id=@@{user_id}@@" alt="edit user">
+						<img src="@@{templatepath}@@/images/icons/edit_22.png" alt="Edit user" title="Edit user '@@{user_username}@@'" border="0" />
+					</a> &nbsp; 
+					<a href="javascript:deleteUser(@@{user_id}@@, '@@{user_username}@@')">
+						<img src="@@{templatepath}@@/images/icons/delete_22.png" alt="Delete user" title="Delete user '@@{user_username}@@'" border="0" />
+					</a>
+				</p></td>
+                </tr>
+            <!-- TemplateEndBlock -->
+            </tbody>
+            </table>
+
+            <div id="pager" class="pager">
+				<form class="noborder">
+	            <table id="pagertable" border="0" cellpadding="0" cellspacing="5" width="100%">
+                <tr><td>
+					<img src="@@{templatepath}@@/images/icons/2leftarrow_22.png" class="first"/>&nbsp;
+					<img src="@@{templatepath}@@/images/icons/1leftarrow_22.png" class="prev"/>
+				</td><td align="right">
+					<input type="text" class="pagedisplay" style="text-align:center;"/>
+				</td><td>
+					<select class="pagesize">
+						<option selected="selected"  value="10">&nbsp;10&nbsp;</option>
+						<option value="20">&nbsp;20&nbsp;</option>
+						<option value="30">&nbsp;30&nbsp;</option>
+						<option  value="40">&nbsp;40&nbsp;</option>
+					</select>
+				</td><td align="right">
+					<img src="@@{templatepath}@@/images/icons/1rightarrow_22.png" class="next"/>&nbsp;
+					<img src="@@{templatepath}@@/images/icons/2rightarrow_22.png" class="last"/>
+				</td></tr>
+				</table>
+				</form>
+            </div>
+
+		<!-- InstanceEndEditable -->
+		</div>					
+		
+	<!-- content-wrap ends here -->		
+	</div>
+    </div>
+
+	<!-- footer starts here-->	
+	<div id="footer-wrap">
+		
+		<div id="footer-bottom">		
+			<p>
+			&copy; 2009 <strong><a href="http://www.menschenwerk.net">Menschenwerk.net</a></strong> | 
+			Original template design: <a href="http://www.styleshout.com/">styleshout</a> | 
+            Icons by: <a href="http://www.icon-king.com/projects/nuvola/">David Vignoni</a>
+			</p>		
+		</div>	
+	
+	<!-- footer ends-->		
+	</div>
+
+</body>
+<!-- InstanceEnd --></html>

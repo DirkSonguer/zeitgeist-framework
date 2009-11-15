@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/zeitgeist_administrator.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>Zeitgeist Administrator - Edit userrole</title>
+<!-- InstanceEndEditable -->
+
+<link rel="stylesheet" href="@@{templatepath}@@/css/main.css" type="text/css" />
+
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery-1.3.2.min.js"></script>
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery-ui-1.7.2.custom.min.js"></script>
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery.tooltip.min.js"></script>
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery.tablesorter.js"></script>
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery.tablesorter.filter.js"></script>
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery.tablesorter.pager.js"></script>
+
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/chili-1.7.pack.js"></script>
+
+<script language="JavaScript" type="text/javascript">
+
+	$(function() {
+		$('#set1 *').tooltip();
+
+		$("#block").click($.tooltip.block);
+	});
+	
+</script>
+
+<!-- InstanceBeginEditable name="head" -->
+
+<script language="JavaScript" type="text/javascript">
+
+	function showOverview()
+	{
+		window.location.href = "@@{[setup.showuserroles]}@@";
+	}
+
+	$(document).ready(function() 
+		{ 
+	
+			$("#userrolestable")
+			.tablesorter({widthFixed: true, widgets: ['zebra']}) 
+			.tablesorterFilter({filterContainer: "#filter-box",
+								filterClearContainer: "#filter-clear-button",
+								filterColumns: [0, 1]});
+	
+			; 
+		} 
+	); 
+	
+</script>
+
+<!-- InstanceEndEditable -->
+</head>
+
+<body>
+
+	<!-- navigation starts here -->
+	<div id="nav">
+		
+		<h3>Zeitgeist Administrator v2 - <a href="@@{[projects.index]}@@" id="projectlink">@@{activeproject}@@</a></h3>
+	
+	</div>
+
+	<!-- header starts here -->
+	<!-- TemplateBeginBlock name="mainmenu" -->
+	<div id="header">	
+	
+        	<div id="topnavleft">
+                <a href="@@{[main.index]}@@"><img src="@@{templatepath}@@/images/icons/home_128.png" id="naviconleft" alt="Home" title="Home" border="0"/></a>
+                <a href="@@{[setup.index]}@@"><img src="@@{templatepath}@@/images/icons/setup_128.png" id="naviconleft" alt="Setup application" title="Setup application" border="0" /></a>
+                <a href="@@{[users.index]}@@"><img src="@@{templatepath}@@/images/icons/user_128.png" id="naviconleft" alt="Manage users" title="Manage users" border="0" /></a>
+                <a href="@@{[projects.index]}@@"><img src="@@{templatepath}@@/images/icons/projects_128.png" id="naviconleft" alt="Manage Zeitgeist Administrator projects" title="Manage Zeitgeist projects" border="0" /></a>
+            </div>
+
+        	<div id="topnavright">
+                <a href="@@{[main.info]}@@"><img src="@@{templatepath}@@/images/icons/info_128.png" id="naviconright" alt="Info" border="0" /></a>
+                <a href="@@{[main.logout]}@@"><img src="@@{templatepath}@@/images/icons/exit_128.png" id="naviconright" alt="Logout" title="Logout" border="0" /></a>
+			</div>
+            <div style="clear:both;"></div>
+
+	</div>	
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="usermessages" -->
+		<h3 class="usermessage"><img src="@@{templatepath}@@/images/icons/ok_32.png" alt="" align="left" style="margin-right:5px;" /> @@{usermessage}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="userwarnings" -->
+		<h3 class="userwarning"><img src="@@{templatepath}@@/images/icons/warning_32.png" alt="" align="left" style="margin-right:5px;" /> @@{userwarning}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="usererrors" -->
+		<h3 class="usererror"><img src="@@{templatepath}@@/images/icons/error_32.png" alt="" align="left" style="margin-right:5px;" /> @@{usererror}@@</h3>
+	<!-- TemplateEndBlock -->	
+				
+	<!-- content-wrap starts here -->
+	<div id="content-wrap">
+    <div id="content">	 
+
+		<div id="sidebar" >	
+        <!-- InstanceBeginEditable name="sidebar" -->
+
+			<h3>Editing userroles</h3>
+			<p>Userroles are identified by name. It is advised to enter a description as well to know the purpose of the role.</p>
+			<p>A role consists of a number of actions. A user with the active role will have all userrights to the marked actions</p>
+
+		<!-- InstanceEndEditable -->
+		</div>	
+	
+		<div id="main">		
+        <!-- InstanceBeginEditable name="main" -->
+
+			<h2>Edit userrole</h2>
+			
+			<form method="post" userrole="@@{[setup.edituserrole]}@@" name="userroleform" enctype="multipart/form-data; charset=utf-8">
+			<input type="hidden" value="@@{userrole_id:value}@@" name="userroledata[userrole_id]" />
+
+			<table border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Userrole name*</p></td>
+				<td valign="middle">
+				<!-- TemplateBeginBlock name="userrole_name:errorblock" -->
+					<br /><span class="formerrormsg">@@{userrole_name:errormessage}@@</span><br />
+				<!-- TemplateEndBlock -->
+                <input type="text" maxlength="60" name="userroledata[userrole_name]" value="@@{userrole_name:value}@@" class="formtext" />
+				</td>
+			</tr>
+			<tr>
+				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Description*</p></td>
+				<td align="left" valign="middle">
+					<!-- TemplateBeginBlock name="userrole_description:errorblock" -->
+						<br /><span class="formerrormsg">@@{userrole_description:errormessage}@@</span><br />
+					<!-- TemplateEndBlock -->
+					<textarea rows="5" name="userroledata[userrole_description]" class="formtext">@@{userrole_description:value}@@</textarea>
+				</td>
+			</tr>
+			</table>
+			
+			<h2>Actions for Userrole</h2>
+			
+            <table id="userrolestable" border="0" cellpadding="0" cellspacing="5" width="100%">
+	       	<thead>
+	        <tr>
+				<th><p>Module</p></th>
+				<th><p>Action Name</p></th>
+				<th><p>Has Userright</p></th>
+	        </tr>
+            </thead>
+            <tbody>
+			<!-- TemplateBeginBlock name="userrole_action" -->
+                <tr>
+				<td id="listtable"><p>@@{module_name}@@</a></p></td>
+				<td id="listtable"><p>@@{action_name}@@</a></p></td>
+				<td id="listtable"><p><input type="checkbox" name="userroleactions[@@{action_id}@@]" @@{action_active}@@ /></p></td>
+			<!-- TemplateEndBlock -->				
+			</tr>
+			</table>
+
+			<table border="0" cellpadding="0" cellspacing="0">
+			<tr>
+			<tr>
+				<td colspan="2">
+				   <p style="text-align:center;">
+				   <input name="back" value="Back to overview" class="formbutton" type="button" onclick="javascript:showOverview();" />
+				   <input name="submit" value="Submit data" class="formbutton" type="submit" />
+				   </p>
+				</td>
+			</tr>
+			</table>
+
+			</form>
+
+		<!-- InstanceEndEditable -->
+		</div>					
+		
+	<!-- content-wrap ends here -->		
+	</div>
+    </div>
+
+	<!-- footer starts here-->	
+	<div id="footer-wrap">
+		
+		<div id="footer-bottom">		
+			<p>
+			&copy; 2009 <strong><a href="http://www.menschenwerk.net">Menschenwerk.net</a></strong> | 
+			Original template design: <a href="http://www.styleshout.com/">styleshout</a> | 
+            Icons by: <a href="http://www.icon-king.com/projects/nuvola/">David Vignoni</a>
+			</p>		
+		</div>	
+	
+	<!-- footer ends-->		
+	</div>
+
+</body>
+<!-- InstanceEnd --></html>
