@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/zeitgeist_administrator.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>Zeitgeist Administrator - Setup application</title>
+<!-- InstanceEndEditable -->
+
+<link rel="stylesheet" href="@@{templatepath}@@/css/main.css" type="text/css" />
+
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery-1.3.2.min.js"></script>
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery-ui-1.7.2.custom.min.js"></script>
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery.tooltip.min.js"></script>
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery.tablesorter.js"></script>
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery.tablesorter.filter.js"></script>
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery.tablesorter.pager.js"></script>
+
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/chili-1.7.pack.js"></script>
+
+<script language="JavaScript" type="text/javascript">
+
+	$(function() {
+		$('#set1 *').tooltip();
+
+		$("#block").click($.tooltip.block);
+	});
+	
+</script>
+
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
+</head>
+
+<body>
+
+	<!-- navigation starts here -->
+	<div id="nav">
+		
+		<h3>Zeitgeist Administrator v2 - <a href="@@{[projects.index]}@@" id="projectlink">@@{activeproject}@@</a></h3>
+	
+	</div>
+
+	<!-- header starts here -->
+	<!-- TemplateBeginBlock name="mainmenu" -->
+	<div id="header">	
+	
+        	<div id="topnavleft">
+                <a href="@@{[main.index]}@@"><img src="@@{templatepath}@@/images/icons/home_128.png" id="naviconleft" alt="Home" title="Home" border="0"/></a>
+                <a href="@@{[setup.index]}@@"><img src="@@{templatepath}@@/images/icons/setup_128.png" id="naviconleft" alt="Setup application" title="Setup application" border="0" /></a>
+                <a href="@@{[users.index]}@@"><img src="@@{templatepath}@@/images/icons/user_128.png" id="naviconleft" alt="Manage users" title="Manage users" border="0" /></a>
+                <a href="@@{[projects.index]}@@"><img src="@@{templatepath}@@/images/icons/projects_128.png" id="naviconleft" alt="Manage Zeitgeist Administrator projects" title="Manage Zeitgeist projects" border="0" /></a>
+            </div>
+
+        	<div id="topnavright">
+                <a href="@@{[main.info]}@@"><img src="@@{templatepath}@@/images/icons/info_128.png" id="naviconright" alt="Info" border="0" /></a>
+                <a href="@@{[main.logout]}@@"><img src="@@{templatepath}@@/images/icons/exit_128.png" id="naviconright" alt="Logout" title="Logout" border="0" /></a>
+			</div>
+            <div style="clear:both;"></div>
+
+	</div>	
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="usermessages" -->
+		<h3 class="usermessage"><img src="@@{templatepath}@@/images/icons/ok_32.png" alt="" align="left" style="margin-right:5px;" /> @@{usermessage}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="userwarnings" -->
+		<h3 class="userwarning"><img src="@@{templatepath}@@/images/icons/warning_32.png" alt="" align="left" style="margin-right:5px;" /> @@{userwarning}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="usererrors" -->
+		<h3 class="usererror"><img src="@@{templatepath}@@/images/icons/error_32.png" alt="" align="left" style="margin-right:5px;" /> @@{usererror}@@</h3>
+	<!-- TemplateEndBlock -->	
+				
+	<!-- content-wrap starts here -->
+	<div id="content-wrap">
+    <div id="content">	 
+
+		<div id="sidebar" >	
+        <!-- InstanceBeginEditable name="sidebar" -->
+
+			<h3>Setup application</h3>			
+			<p>Here you can set up and configure your Zeitgeist project.</p>
+			<p>You will see the currently active project in the headline. You can configure and set the currently active project in the <a href="@@{[projects.index]}@@" id="projectlink">ZGA configuration</a>.</p>
+			<p>On this global scale you can define what kind of userdata and what userroles are available to your application. This should be designed during development as your application has to interface the userdata or check for userroles in order to work. Refactoring the data structures on a live set of users and their data might have unforseen consequences in your application.</p>
+</p>
+            <p>
+            
+		<!-- InstanceEndEditable -->
+		</div>	
+	
+		<div id="main">		
+        <!-- InstanceBeginEditable name="main" -->
+
+			<h2>Setup application '@@{activeproject}@@'</h2>
+            
+            <table border="0" cellpadding="0" cellspacing="5">
+                <tr>
+                    <td width="90">
+                        <p><a href="@@{[setup.showmodules]}@@" alt="Manage modules">
+							<img src="@@{templatepath}@@/images/icons/setup_modules_64.png" alt="Manage modules" border="0" />
+						</a></p>
+                    </td>
+                    <td>
+                        <h3><a href="@@{[setup.showmodules]}@@" alt="Manage modules">Manage modules</a></h3>
+                        <p>Manage the modules that are available for your application.</p>
+                    </td>
+                </tr>
+            </table>
+            
+            <table border="0" cellpadding="0" cellspacing="5">
+                <tr>
+                    <td width="90">
+                        <p><a href="@@{[setup.showactions]}@@" alt="Manage actions">
+							<img src="@@{templatepath}@@/images/icons/setup_actions_64.png" alt="Manage actions" border="0" />
+						</a></p>
+                    </td>
+                    <td>
+                        <h3><a href="@@{[setup.showactions]}@@" alt="Manage actions">Manage actions</a></h3>
+                        <p>Manage the actions within the modules that are available for your application.</p>
+                    </td>
+                </tr>
+            </table>
+            
+            <table border="0" cellpadding="0" cellspacing="5">
+                <tr>
+                    <td width="90">
+                        <p><a href="@@{[setup.showuserroles]}@@" alt="Manage userroles">
+							<img src="@@{templatepath}@@/images/icons/setup_userroles_64.png" alt="Manage userroles" border="0" />
+						</a></p>
+                    </td>
+                    <td>
+                        <h3><a href="@@{[setup.showuserroles]}@@" alt="Manage userroles">Manage userroles</a></h3>
+                        <p>Manage the userroles that should be available for your application.</p>
+                    </td>
+                </tr>
+            </table>
+            
+            <table border="0" cellpadding="0" cellspacing="5">
+                <tr>
+                    <td width="90">
+                        <p><a href="@@{[setup.showusedata]}@@" alt="Manage userdata">
+							<img src="@@{templatepath}@@/images/icons/setup_userdata_64.png" alt="Manage userdata" border="0" />
+						</a></p>
+                    </td>
+                    <td>
+                        <h3><a href="@@{[setup.showuserdata]}@@" alt="Manage userdata">Manage userdata</a></h3>
+                        <p>Manage what userdata should be used in your application.</p>
+                    </td>
+                </tr>
+            </table>
+
+		<!-- InstanceEndEditable -->
+		</div>					
+		
+	<!-- content-wrap ends here -->		
+	</div>
+    </div>
+
+	<!-- footer starts here-->	
+	<div id="footer-wrap">
+		
+		<div id="footer-bottom">		
+			<p>
+			&copy; 2009 <strong><a href="http://www.menschenwerk.net">Menschenwerk.net</a></strong> | 
+			Original template design: <a href="http://www.styleshout.com/">styleshout</a> | 
+            Icons by: <a href="http://www.icon-king.com/projects/nuvola/">David Vignoni</a>
+			</p>		
+		</div>	
+	
+	<!-- footer ends-->		
+	</div>
+
+</body>
+<!-- InstanceEnd --></html>

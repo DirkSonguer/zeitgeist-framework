@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/zeitgeist_administrator.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>Zeitgeist Administrator - Edit project module</title>
+<!-- InstanceEndEditable -->
+
+<link rel="stylesheet" href="@@{templatepath}@@/css/main.css" type="text/css" />
+
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery-1.3.2.min.js"></script>
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery-ui-1.7.2.custom.min.js"></script>
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery.tooltip.min.js"></script>
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery.tablesorter.js"></script>
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery.tablesorter.filter.js"></script>
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/jquery.tablesorter.pager.js"></script>
+
+<script language="JavaScript" type="text/javascript" src="@@{templatepath}@@/js/chili-1.7.pack.js"></script>
+
+<script language="JavaScript" type="text/javascript">
+
+	$(function() {
+		$('#set1 *').tooltip();
+
+		$("#block").click($.tooltip.block);
+	});
+	
+</script>
+
+<!-- InstanceBeginEditable name="head" -->
+
+<script language="JavaScript" type="text/javascript">
+
+	function showOverview()
+	{
+		window.location.href = "@@{[setup.showmodules]}@@";
+	}
+	
+</script>
+
+<!-- InstanceEndEditable -->
+</head>
+
+<body>
+
+	<!-- navigation starts here -->
+	<div id="nav">
+		
+		<h3>Zeitgeist Administrator v2 - <a href="@@{[projects.index]}@@" id="projectlink">@@{activeproject}@@</a></h3>
+	
+	</div>
+
+	<!-- header starts here -->
+	<!-- TemplateBeginBlock name="mainmenu" -->
+	<div id="header">	
+	
+        	<div id="topnavleft">
+                <a href="@@{[main.index]}@@"><img src="@@{templatepath}@@/images/icons/home_128.png" id="naviconleft" alt="Home" title="Home" border="0"/></a>
+                <a href="@@{[setup.index]}@@"><img src="@@{templatepath}@@/images/icons/setup_128.png" id="naviconleft" alt="Setup application" title="Setup application" border="0" /></a>
+                <a href="@@{[users.index]}@@"><img src="@@{templatepath}@@/images/icons/user_128.png" id="naviconleft" alt="Manage users" title="Manage users" border="0" /></a>
+                <a href="@@{[projects.index]}@@"><img src="@@{templatepath}@@/images/icons/projects_128.png" id="naviconleft" alt="Manage Zeitgeist Administrator projects" title="Manage Zeitgeist projects" border="0" /></a>
+            </div>
+
+        	<div id="topnavright">
+                <a href="@@{[main.info]}@@"><img src="@@{templatepath}@@/images/icons/info_128.png" id="naviconright" alt="Info" border="0" /></a>
+                <a href="@@{[main.logout]}@@"><img src="@@{templatepath}@@/images/icons/exit_128.png" id="naviconright" alt="Logout" title="Logout" border="0" /></a>
+			</div>
+            <div style="clear:both;"></div>
+
+	</div>	
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="usermessages" -->
+		<h3 class="usermessage"><img src="@@{templatepath}@@/images/icons/ok_32.png" alt="" align="left" style="margin-right:5px;" /> @@{usermessage}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="userwarnings" -->
+		<h3 class="userwarning"><img src="@@{templatepath}@@/images/icons/warning_32.png" alt="" align="left" style="margin-right:5px;" /> @@{userwarning}@@</h3>
+	<!-- TemplateEndBlock -->
+
+	<!-- TemplateBeginBlock name="usererrors" -->
+		<h3 class="usererror"><img src="@@{templatepath}@@/images/icons/error_32.png" alt="" align="left" style="margin-right:5px;" /> @@{usererror}@@</h3>
+	<!-- TemplateEndBlock -->	
+				
+	<!-- content-wrap starts here -->
+	<div id="content-wrap">
+    <div id="content">	 
+
+		<div id="sidebar" >	
+        <!-- InstanceBeginEditable name="sidebar" -->
+
+			<h3>Editing modules</h3>			
+			<p>The name of the module acts as the identifier for the controller. It tries to call a class with the same name as the module. Therefor you should not choose weird module names - remember you have to name your classes accordingly.</p>
+			<p>The description of a module just acts as a reminder for yourself and is not used by the framework.</p>
+			<p>Inactive modules are ignored by the controller. If a user tries to use an inactive module, an error is thrown.</p>
+
+		<!-- InstanceEndEditable -->
+		</div>	
+	
+		<div id="main">		
+        <!-- InstanceBeginEditable name="main" -->
+
+			<h2>Edit project module</h2>
+			
+			<form method="post" action="@@{[setup.editmodule]}@@" name="moduleform" enctype="multipart/form-data; charset=utf-8">
+			<input type="hidden" value="@@{module_id:value}@@" name="moduledata[module_id]" />
+
+			<table border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Module name*</p></td>
+				<td valign="middle">
+				<!-- TemplateBeginBlock name="module_name:errorblock" -->
+					<br /><span class="formerrormsg">@@{module_name:errormessage}@@</span><br />
+				<!-- TemplateEndBlock -->
+				<input type="text" maxlength="60" name="moduledata[module_name]" value="@@{module_name:value}@@" class="formtext" />
+				</td>
+			</tr>
+			<tr>
+				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Description*</p></td>
+				<td align="left" valign="middle">
+					<!-- TemplateBeginBlock name="module_description:errorblock" -->
+						<br /><span class="formerrormsg">@@{module_description:errormessage}@@</span><br />
+					<!-- TemplateEndBlock -->				
+					<textarea rows="5" name="moduledata[module_description]" class="formtext">@@{module_description:value}@@</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Module active</p></td>
+				<td align="left" valign="middle">
+					<!-- TemplateBeginBlock name="module_active:errorblock" -->
+						<br /><span class="formerrormsg">@@{module_active:errormessage}@@</span><br />
+					<!-- TemplateEndBlock -->				
+					<input type="checkbox" name="moduledata[module_active]" @@{module_active:value}@@ />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+				   <p style="text-align:center;">
+				   <input name="back" value="Back to overview" class="formbutton" type="button" onclick="javascript:showOverview();" />
+				   <input name="submit" value="Submit data" class="formbutton" type="submit" />
+				   </p>
+				</td>
+			</tr>
+			</table>
+
+			</form>
+
+		<!-- InstanceEndEditable -->
+		</div>					
+		
+	<!-- content-wrap ends here -->		
+	</div>
+    </div>
+
+	<!-- footer starts here-->	
+	<div id="footer-wrap">
+		
+		<div id="footer-bottom">		
+			<p>
+			&copy; 2009 <strong><a href="http://www.menschenwerk.net">Menschenwerk.net</a></strong> | 
+			Original template design: <a href="http://www.styleshout.com/">styleshout</a> | 
+            Icons by: <a href="http://www.icon-king.com/projects/nuvola/">David Vignoni</a>
+			</p>		
+		</div>	
+	
+	<!-- footer ends-->		
+	</div>
+
+</body>
+<!-- InstanceEnd --></html>
