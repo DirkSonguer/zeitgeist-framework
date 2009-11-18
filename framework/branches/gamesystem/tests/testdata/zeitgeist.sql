@@ -273,9 +273,46 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 CREATE TABLE IF NOT EXISTS `game_entities` (
   `entity_id` int(12) NOT NULL auto_increment,
+  `entity_name` varchar(255),
   PRIMARY KEY  (`entity_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Daten für Tabelle `game_entities`
+--
+
+-- --------------------------------------------------------
+
+
+--
+-- Tabellenstruktur für Tabelle `game_components`
+--
+
+CREATE TABLE IF NOT EXISTS `game_components` (
+  `component_id` int(12) NOT NULL auto_increment,
+  `component_name` varchar(32) NOT NULL,
+  `component_description` text,
+  PRIMARY KEY  (`component_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 ;
+
+--
+-- Daten für Tabelle `game_components`
+--
+
+-- --------------------------------------------------------
+
+
+--
+-- Tabellenstruktur für Tabelle `game_components_to_entities`
+--
+
+CREATE TABLE IF NOT EXISTS `game_entity_components` (
+  `entitycomponent_entity` int(11) NOT NULL,
+  `entitycomponent_component` int(11) NOT NULL,
+  `entitycomponent_componentdata` int(11) NOT NULL,
+  PRIMARY KEY  (`component_name`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 ;
+
+--
+-- Daten für Tabelle `game_components`
 --
