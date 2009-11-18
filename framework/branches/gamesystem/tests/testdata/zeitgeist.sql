@@ -263,3 +263,19 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Daten für Tabelle `users`
 --
 
+
+-- --------------------------------------------------------
+
+
+--
+-- Tabellenstruktur für Tabelle `game_entities`
+--
+
+CREATE TABLE IF NOT EXISTS `game_entities` (
+  `entity_id` int(12) NOT NULL auto_increment,
+  PRIMARY KEY  (`entity_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Daten für Tabelle `game_entities`
+--
