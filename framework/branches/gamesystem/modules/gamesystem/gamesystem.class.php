@@ -111,9 +111,38 @@ class zgGamesystem
 	{
 		$this->debug->guard();
 
+		$sql = "INSERT INTO game_component_" . $component_id . "() VALUES()";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem adding a new component to an entity: could not insert component data into database', 'warning');
+			$this->messages->setMessage('Problem adding a new component to an entity: could not insert component data into database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
 
-		$this->debug->unguard(true);
-		return true;
+		$ret = $this->database->insertId();
+		if (!$ret)
+		{
+			$this->debug->write('Problem adding a new component to an entity: could not get the component data id', 'warning');
+			$this->messages->setMessage('Problem adding a new component to an entity: could not get the component data id', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$sql = "INSERT INTO game_entity_components(entitycomponent_entity, entitycomponent_component, entitycomponent_componentdata) ";
+		$sql .= "VALUES('" . $entity_id . "', '" . $component_id . "', '" . $ret . "')";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem adding a new component to an entity: could not insert component data into database', 'warning');
+			$this->messages->setMessage('Problem adding a new component to an entity: could not insert component data into database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard($ret);
+		return $ret;
 	}
 
 
@@ -129,9 +158,98 @@ class zgGamesystem
 	{
 		$this->debug->guard();
 
-
+		$sql = "DELETE FROM game_component_" . $component_id . " WHERE id=(";
+		$sql .= "SELECT entitycomponent_componentdata FROM game_entity_components ";
+		$sql .= "WHERE entitycomponent_entity='" . $entity_id . "' AND entitycomponent_component='" . $component_id . "')";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem removing a component from an entity: could not delete component data', 'warning');
+			$this->messages->setMessage('Problem removing a component from an entity: could not delete component data', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		$sql = "DELETE FROM game_entity_components ";
+		$sql .= "WHERE entitycomponent_entity='" . $entity_id . "' AND entitycomponent_component='" . $component_id . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem removing a component from an entity: could not delete component to entity mapping', 'warning');
+			$this->messages->setMessage('Problem removing a component from an entity: could not delete component to entity mapping', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}		
+		
 		$this->debug->unguard(true);
 		return true;
+	}
+
+
+	/**
+	 * Gets the data from a component of a specific entity
+	 *
+	 * @param int $component_id id of the component to get the data from
+	 * @param int $entity_id id of the entity the component is bound to
+	 *
+	 * @return array
+	 */
+	public function getComponentDataForEntity($component_id, $entity_id)
+	{
+		$this->debug->guard();
+
+		$sql = "SELECT * FROM game_component_" . $component_id . " WHERE id=(";
+		$sql .= "SELECT entitycomponent_componentdata FROM game_entity_components ";
+		$sql .= "WHERE entitycomponent_entity='" . $entity_id . "' AND entitycomponent_component='" . $component_id . "')";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem getting data for the component of an entity: could not get component data', 'warning');
+			$this->messages->setMessage('Problem getting data for the component of an entity: could not get component data', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$ret = $this->database->fetchArray($res);
+
+		$this->debug->unguard($ret);
+		return $ret;
+	}
+
+
+	/**
+	 * Sets the data from a component of a specific entity
+	 *
+	 * @param int $component_id id of the component to set the data to
+	 * @param int $entity_id id of the entity the component is bound to
+	 *
+	 * @return array
+	 */
+	public function setComponentDataForEntity($componentId, $entityId, $componentData)
+	{
+		$this->debug->guard();
+		
+		$sqlData = '';
+		foreach($componentData as $componentKey => $componentValue)
+		{
+			$sqlData .= $componentKey . "='" . $componentValue . "',";
+		}
+		$sqlData = substr($sqlData, 0, -1);
+
+		$sql = "UPDATE game_component_" . $componentId . " SET ".$sqlData;
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem setting data for the component of an entity: could not write component data', 'warning');
+			$this->messages->setMessage('Problem setting data for the component of an entity: could not write component data', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$ret = $this->database->fetchArray($res);
+
+		$this->debug->unguard($ret);
+		return $ret;
 	}
 
 
@@ -168,7 +286,7 @@ class zgGamesystem
 			return false;
 		}
 
-		$sql = "CREATE TABLE game_component_". $name ." ";
+		$sql = "CREATE TABLE game_component_". $ret ." ";
 		$sql .= "(`id` INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY) ENGINE = MYISAM";
 		$res = $this->database->query($sql);
 		if (!$res)
@@ -196,7 +314,7 @@ class zgGamesystem
 		$this->debug->guard();
 
 
-		$sql = "DELETE FROM game_components WHERE component_name='" . $id . "'";
+		$sql = "DELETE FROM game_components WHERE component_id='" . $id . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{

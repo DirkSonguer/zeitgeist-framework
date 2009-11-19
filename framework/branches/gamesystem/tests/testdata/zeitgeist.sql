@@ -299,20 +299,22 @@ CREATE TABLE IF NOT EXISTS `game_components` (
 -- Daten für Tabelle `game_components`
 --
 
+
 -- --------------------------------------------------------
 
 
 --
--- Tabellenstruktur für Tabelle `game_components_to_entities`
+-- Tabellenstruktur für Tabelle `game_entity_components`
 --
 
 CREATE TABLE IF NOT EXISTS `game_entity_components` (
   `entitycomponent_entity` int(11) NOT NULL,
   `entitycomponent_component` int(11) NOT NULL,
   `entitycomponent_componentdata` int(11) NOT NULL,
-  PRIMARY KEY  (`component_name`)
+  PRIMARY KEY  (`entitycomponent_entity` , `entitycomponent_component`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 ;
 
 --
--- Daten für Tabelle `game_components`
+-- Daten für Tabelle `game_entity_components`
 --
+
