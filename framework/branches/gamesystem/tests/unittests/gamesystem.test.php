@@ -121,17 +121,18 @@ class testGamesystem extends UnitTestCase
 		$this->assertEqual($ret['component_id'], $componentid);
 		$this->assertEqual($ret['component_name'], $componentname);
 		$this->assertEqual($ret['component_description'], $componentdescription);
-		$this->assertEqual($ret['component_table'], 'game_component_'.$componentname);
 
 		// check database
-		$res = $this->database->query("SELECT * FROM game_component_".$componentname);
+		$res = $this->database->query("SELECT * FROM game_component_".$componentid);
 		$this->assertTrue($res);
 
+		$testfunctions->dropZeitgeistTable('game_component_'.$componentid);
 		$testfunctions->dropZeitgeistTable('game_components');
 
 		unset($ret);
 		unset($gamesystem);
     }
+
 
 	// Try to delete component
 	function test_deleteComponent()
@@ -153,11 +154,90 @@ class testGamesystem extends UnitTestCase
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 0);
 
-		// check database
-		$res = $this->database->query("SELECT * FROM game_component_".$componentname);
+		$res = $this->database->query("SELECT * FROM game_component_".$componentid);
 		$this->assertFalse($res);
 
 		$testfunctions->dropZeitgeistTable('game_components');
+
+		unset($ret);
+		unset($gamesystem);
+    }
+
+
+	// Try to create a new component to an existing entity
+	function test_addComponentToEntity()
+	{
+		$gamesystem = new zgGamesystem();
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('game_components');
+		$testfunctions->createZeitgeistTable('game_entities');
+		$testfunctions->createZeitgeistTable('game_entity_components');
+
+		$entityname = uniqid();
+		$entityid = $gamesystem->createEntity($entityname);
+
+		$componentname = uniqid();
+		$componentdescription = uniqid();
+		$componentid = $gamesystem->createComponent($componentname, $componentdescription);
+		
+		$ret = $gamesystem->addComponentToEntity($componentid, $entityid);
+		$this->assertTrue($ret);
+
+		// check database
+		$res = $this->database->query("SELECT * FROM game_entity_components");
+		$ret = $this->database->numRows($res);
+		$this->assertEqual($ret, 1);
+
+		$res = $this->database->query("SELECT * FROM game_component_".$componentid);
+		$ret = $this->database->numRows($res);
+		$this->assertEqual($ret, 1);
+
+		$testfunctions->dropZeitgeistTable('game_component_'.$componentid);
+		$testfunctions->dropZeitgeistTable('game_components');
+		$testfunctions->dropZeitgeistTable('game_entities');
+		$testfunctions->dropZeitgeistTable('game_entity_components');
+
+		unset($ret);
+		unset($gamesystem);
+    }
+
+
+	// Try to remove a component from an existing entity
+	function test_removeComponentFromEntity()
+	{
+		$gamesystem = new zgGamesystem();
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('game_components');
+		$testfunctions->createZeitgeistTable('game_entities');
+		$testfunctions->createZeitgeistTable('game_entity_components');
+
+		$entityname = uniqid();
+		$entityid = $gamesystem->createEntity($entityname);
+
+		$componentname = uniqid();
+		$componentdescription = uniqid();
+		$componentid = $gamesystem->createComponent($componentname, $componentdescription);
+		
+		$ret = $gamesystem->addComponentToEntity($componentid, $entityid);
+
+		$ret = $gamesystem->removeComponentFromEntity($componentid, $entityid);
+		$this->assertTrue($ret);
+
+		// check database
+		$res = $this->database->query("SELECT * FROM game_entity_components");
+		$ret = $this->database->numRows($res);
+		$this->assertEqual($ret, 0);
+
+		$res = $this->database->query("SELECT * FROM game_component_".$componentid);
+		$ret = $this->database->numRows($res);
+		$this->assertEqual($ret, 0);
+
+		$testfunctions->dropZeitgeistTable('game_component_'.$componentid);
+		$testfunctions->dropZeitgeistTable('game_components');
+		$testfunctions->dropZeitgeistTable('game_entities');
+		$testfunctions->dropZeitgeistTable('game_entity_components');
 
 		unset($ret);
 		unset($gamesystem);
