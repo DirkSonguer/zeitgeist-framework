@@ -10,6 +10,8 @@
 				
 	define('DEBUGMODE', true);
 	if (!defined('ZEITGEIST_ROOTDIRECTORY')) define('ZEITGEIST_ROOTDIRECTORY', '../');
+	if (!defined('GAMESYSTEM_ACTIONDIRECTORY')) define('GAMESYSTEM_ACTIONDIRECTORY', ZEITGEIST_ROOTDIRECTORY . 'tests/testdata/');
+
 
 	// This should be an empty database without any tables
 	// The test cases will create the tables themselves as needed

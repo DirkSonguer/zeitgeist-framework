@@ -320,20 +320,21 @@ CREATE TABLE IF NOT EXISTS `game_entity_components` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `game_actionlog`
+-- Tabellenstruktur für Tabelle `game_eventlog`
 --
 
-CREATE TABLE IF NOT EXISTS `game_actionlog` (
-  `actionlog_id` int(11) NOT NULL,
-  `actionlog_action` int(11) NOT NULL,
-  `actionlog_parameter` varchar(32) NOT NULL,
-  `actionlog_player` int(11) NOT NULL,
-  `actionlog_timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  PRIMARY KEY  (`actionlog_id`)
+CREATE TABLE IF NOT EXISTS `game_eventlog` (
+  `eventlog_id` int(11) NOT NULL auto_increment,
+  `eventlog_action` int(11) NOT NULL,
+  `eventlog_parameter` varchar(32) NOT NULL,
+  `eventlog_player` int(11) NOT NULL,
+  `eventlog_time` int(11) NOT NULL,
+  `eventlog_timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`eventlog_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 ;
 
 --
--- Daten für Tabelle `game_actionlog`
+-- Daten für Tabelle `game_eventlog`
 --
 
 
@@ -345,7 +346,7 @@ CREATE TABLE IF NOT EXISTS `game_actionlog` (
 --
 
 CREATE TABLE IF NOT EXISTS `game_actions` (
-  `action_id` int(11) NOT NULL,
+  `action_id` int(11) NOT NULL auto_increment,
   `action_name` varchar(255) NOT NULL,
   `action_class` varchar(32) NOT NULL,
   PRIMARY KEY  (`action_id`)
@@ -363,7 +364,7 @@ CREATE TABLE IF NOT EXISTS `game_actions` (
 --
 
 CREATE TABLE IF NOT EXISTS `game_events` (
-  `event_id` int(11) NOT NULL,
+  `event_id` int(11) NOT NULL auto_increment,
   `event_action` int(11) NOT NULL,
   `event_parameter` varchar(32) NOT NULL,
   `event_player` int(11) NOT NULL,
