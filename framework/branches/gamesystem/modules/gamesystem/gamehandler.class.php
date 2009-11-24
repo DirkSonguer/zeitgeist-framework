@@ -48,18 +48,18 @@ class zgGamehandler
 	 *
 	 * @return boolean
 	 */
-	public function saveGameaction($action, $parameter, $player)
+	public function logGameaction($action, $parameter, $player)
 	{
 		$this->debug->guard();
 
-		$sql = "INSERT INTO game_actions(action_id, action_parameter, action_player) ";
+		$sql = "INSERT INTO game_actionlog(actionlog_action, actionlog_parameter, actionlog_player) ";
 		$sql .= "VALUES('" . $action . "', '" . $parameter . "', '" . $player . "')";
 
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
-			$this->debug->write('Could save game action: could not insert action into database', 'warning');
-			$this->messages->setMessage('Could game race action: could not insert action into database', 'warning');
+			$this->debug->write('Could save game action to log: could not insert action data into database', 'warning');
+			$this->messages->setMessage('Could game game action to log: could not insert action data into database', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
@@ -82,7 +82,7 @@ class zgGamehandler
 	 *
 	 * @return boolean
 	 */
-	public function saveRaceevent($action, $parameter, $player, $time=0)
+	public function saveGameevent($action, $parameter, $player, $time=0)
 	{
 		$this->debug->guard();
 
@@ -103,6 +103,32 @@ class zgGamehandler
 
 
 	/**
+	 * Removes a given race event from the event log
+	 *
+	 * @param integer $event id of the event to remove
+	 *
+	 * @return boolean
+	 */
+	public function removeGameevent($event)
+	{
+		$this->debug->guard();
+
+		$sql  = "DELETE FROM game_events WHERE event_id='" . $event . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could remove game event: could not remove data from database', 'warning');
+			$this->messages->setMessage('Could remove game event: could not remove data from database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	/**
 	 * Handles all race events
 	 * The time define the upper limit for the events to be executed
 	 * If a player id is given, only the events for the respective player
@@ -113,17 +139,19 @@ class zgGamehandler
 	 * 
 	 * @return boolean
 	 */
-	public function handleRaceeevents($time, $player=0)
+	public function handleGameevents($time, $player=0)
 	{
 		$this->debug->guard();
 		
 		// get all events for the active player and the current round
-		$sql = "SELECT event_action, event_parameter FROM game_events WHERE event_time<='" . $time . "'";
+		$sql = "SELECT ge.event_id, ga.action_class, ge.event_parameter FROM game_events ge ";
+		$sql .= "LEFT JOIN game_actions ga ON ge.event_action = ga.action_id ";
+		$sql .= "WHERE ge.event_time <= '" . $time . "'";
 		if ($player > 0)
 		{
-			$sql .= " AND event_player='" . $player . "'";
+			$sql .= " AND ge.event_player='" . $player . "'";
 		}
-		$sql .= " ORDER BY event_time ASC";
+		$sql .= " ORDER BY ge.event_time ASC";
 
 		$res = $this->database->query($sql);
 		if (!$res)
@@ -134,32 +162,22 @@ class zgGamehandler
 			return false;
 		}
 		
-		// extract event data
-		$activeevents = array();
-		while ($row = $this->database->fetchArray($res))
-		{
-			$event = array();
-			$event['action'] = $row['event_action'];
-			$event['parameter'] = $row['event_action'];
-			$event['time'] = $row['event_action'];
-			$activeevents[] = $event;
-		}
-
-		foreach ($activeevents as $event)
+		// execute event data
+		while ($event = $this->database->fetchArray($res))
 		{
 			//check if the event exists and what function to call				
-			$gamecardClassname = $event['even_action'];
-			if (!class_exists($gamecardClassname, true))
+			if ( (empty($event['action_class'])) || (!class_exists($event['action_class'], true)) )
 			{
-				$this->debug->write('Could not handle race events: gamecard class was not found: '.$gamecardClassname, 'warning');
-				$this->messages->setMessage('Could not handle race events: gamecard class was not found: '.$gamecardClassname, 'warning');
+				$this->debug->write('Could not handle game event: event class was not found: '.$event['action_class'], 'warning');
+				$this->messages->setMessage('Could not handle game event: event class was not found: '.$event['action_class'], 'warning');
 				$this->debug->unguard(false);
 				return false;
 			}
 
 			// load the module class through the autoloader
-			$gamecardClass = new $gamecardClassname;
-			$ret = call_user_func(array(&$gamecardClass, 'execute'));
+			$eventClass = new $event['action_class'];
+			call_user_func(array(&$eventClass, 'execute'), $event['event_parameter']);
+			$this->removeRaceevent($event['event_id']);
 		}
 
 		$this->debug->unguard(true);

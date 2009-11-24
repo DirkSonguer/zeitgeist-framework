@@ -266,7 +266,6 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 -- --------------------------------------------------------
 
-
 --
 -- Tabellenstruktur für Tabelle `game_entities`
 --
@@ -281,8 +280,8 @@ CREATE TABLE IF NOT EXISTS `game_entities` (
 -- Daten für Tabelle `game_entities`
 --
 
--- --------------------------------------------------------
 
+-- --------------------------------------------------------
 
 --
 -- Tabellenstruktur für Tabelle `game_components`
@@ -302,7 +301,6 @@ CREATE TABLE IF NOT EXISTS `game_components` (
 
 -- --------------------------------------------------------
 
-
 --
 -- Tabellenstruktur für Tabelle `game_entity_components`
 --
@@ -318,3 +316,62 @@ CREATE TABLE IF NOT EXISTS `game_entity_components` (
 -- Daten für Tabelle `game_entity_components`
 --
 
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `game_actionlog`
+--
+
+CREATE TABLE IF NOT EXISTS `game_actionlog` (
+  `actionlog_id` int(11) NOT NULL,
+  `actionlog_action` int(11) NOT NULL,
+  `actionlog_parameter` varchar(32) NOT NULL,
+  `actionlog_player` int(11) NOT NULL,
+  `actionlog_timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`actionlog_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 ;
+
+--
+-- Daten für Tabelle `game_actionlog`
+--
+
+
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `game_actions`
+--
+
+CREATE TABLE IF NOT EXISTS `game_actions` (
+  `action_id` int(11) NOT NULL,
+  `action_name` varchar(255) NOT NULL,
+  `action_class` varchar(32) NOT NULL,
+  PRIMARY KEY  (`action_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 ;
+
+--
+-- Daten für Tabelle `game_actions`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `game_events`
+--
+
+CREATE TABLE IF NOT EXISTS `game_events` (
+  `event_id` int(11) NOT NULL,
+  `event_action` int(11) NOT NULL,
+  `event_parameter` varchar(32) NOT NULL,
+  `event_player` int(11) NOT NULL,
+  `event_time` int(11) NOT NULL,
+  `event_timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`event_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 ;
+
+--
+-- Daten für Tabelle `game_events`
+--

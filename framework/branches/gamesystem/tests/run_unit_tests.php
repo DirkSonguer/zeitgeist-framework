@@ -43,6 +43,7 @@
 	require_once('./unittests/userhandler.test.php');
 	require_once('./unittests/localisation.test.php');
 	require_once('./unittests/gamedata.test.php');
+	require_once('./unittests/gamehandler.test.php');
 	
 	$debug = zgDebug::init();
 
@@ -62,6 +63,7 @@
 	$test->addTestCase(new testLocalisation());
 */
 	$test->addTestCase(new testGamedata());
+	$test->addTestCase(new testGamehandler());
 	
 	$test->run(new HtmlReporter());
 
