@@ -12,6 +12,8 @@
  * @subpackage ZEITGEIST GAMESYSTEM
  */
 
+if (!defined('GAMESYSTEM_ACTIONDIRECTORY')) define('GAMESYSTEM_ACTIONDIRECTORY', 'actions/');
+
 // include the gamesystem classes
 require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/gamesystem/gameaction.interface.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/gamesystem/gamedata.class.php');
