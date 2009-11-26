@@ -16,6 +16,7 @@ if (!defined('GAMESYSTEM_ACTIONDIRECTORY')) define('GAMESYSTEM_ACTIONDIRECTORY',
 
 // include the gamesystem classes
 require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/gamesystem/gameaction.interface.php');
+require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/gamesystem/gamesetup.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/gamesystem/gamedata.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/gamesystem/gamehandler.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/gamesystem/gameautoloader.include.php');

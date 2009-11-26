@@ -45,7 +45,7 @@ class zgGamedata
 	 *
 	 * @return int|boolean
 	 */
-	public function createEntity($entityname='')
+	public function createEntity($name='', $template=false)
 	{
 		$this->debug->guard();
 
@@ -59,7 +59,7 @@ class zgGamedata
 			return false;
 		}
 		
-		$ret = $this->database->insertId();
+		$entitiy = $this->database->insertId();
 		if (!$ret)
 		{
 			$this->debug->write('Problem creating new entity: could not get entity id', 'warning');
@@ -67,9 +67,14 @@ class zgGamedata
 			$this->debug->unguard(false);
 			return false;
 		}
+		
+		if ($template)
+		{
+			$this->addTemplateComponentsToEntity($template, $entitiy);
+		}
 
-		$this->debug->unguard($ret);
-		return $ret;
+		$this->debug->unguard($entitiy);
+		return $entitiy;
 	}
 
 
@@ -194,7 +199,7 @@ class zgGamedata
 	 *
 	 * @return array
 	 */
-	public function getComponentDataForEntity($componentId, $entityId)
+	public function getComponentData($componentId, $entityId)
 	{
 		$this->debug->guard();
 
@@ -225,7 +230,7 @@ class zgGamedata
 	 *
 	 * @return array
 	 */
-	public function setComponentDataForEntity($componentId, $entityId, $componentData)
+	public function setComponentData($componentId, $entityId, $componentData)
 	{
 		$this->debug->guard();
 		
@@ -286,93 +291,6 @@ class zgGamedata
 		$this->debug->unguard($componentList);
 		return $componentList;
 	}
-
-
-	/**
-	 * Creates a new component
-	 * The name of the new component has to be unique as it's the table key
-	 *
-	 * @param string $name name of the new component
-	 * @param string $description description of the new component
-	 *
-	 * @return int|boolean
-	 */
-	public function createComponent($name, $description='')
-	{
-		$this->debug->guard();
-
-		$sql = "INSERT INTO game_components(component_name, component_description) ";
-		$sql .= "VALUES('" . $name . "', '" . $description . "')";
-		$res = $this->database->query($sql);
-		if (!$res)
-		{
-			$this->debug->write('Problem creating new component: could not insert component into database', 'warning');
-			$this->messages->setMessage('Problem creating new component: could not insert component into database', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$ret = $this->database->insertId();
-		if (!$ret)
-		{
-			$this->debug->write('Problem creating new entity: could not get entity id', 'warning');
-			$this->messages->setMessage('Problem creating new entity: could not get entity id', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$sql = "CREATE TABLE game_component_". $ret ." ";
-		$sql .= "(`id` INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY) ENGINE = MYISAM";
-		$res = $this->database->query($sql);
-		if (!$res)
-		{
-			$this->debug->write('Problem creating new component: could not create component table', 'warning');
-			$this->messages->setMessage('Problem creating new component: could not create component table', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$this->debug->unguard($ret);
-		return $ret;
-	}
-
-
-	/**
-	 * Delete a given component
-	 *
-	 * @param string $component_id id of the component to delete
-	 *
-	 * @return boolean
-	 */
-	public function deleteComponent($id)
-	{
-		$this->debug->guard();
-
-
-		$sql = "DELETE FROM game_components WHERE component_id='" . $id . "'";
-		$res = $this->database->query($sql);
-		if (!$res)
-		{
-			$this->debug->write('Problem deleting component: could not delete component from database', 'warning');
-			$this->messages->setMessage('Problem deleting component: could not delete component from database', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$sql = "DROP TABLE game_component_". $id ." ";
-		$res = $this->database->query($sql);
-		if (!$res)
-		{
-			$this->debug->write('Problem deleting component: could not delete component table', 'warning');
-			$this->messages->setMessage('Problem deleting component: could not delete component table', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
 }
 
 ?>
