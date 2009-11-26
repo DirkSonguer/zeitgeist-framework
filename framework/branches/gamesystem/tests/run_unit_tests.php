@@ -7,8 +7,8 @@
 	    define('SIMPLE_TEST', './simpletest/');
 	}
 	require_once(SIMPLE_TEST . 'autorun.php');
-				
-	define('DEBUGMODE', true);
+
+//	define('DEBUGMODE', true);
 	if (!defined('ZEITGEIST_ROOTDIRECTORY')) define('ZEITGEIST_ROOTDIRECTORY', '../');
 	if (!defined('GAMESYSTEM_ACTIONDIRECTORY')) define('GAMESYSTEM_ACTIONDIRECTORY', ZEITGEIST_ROOTDIRECTORY . 'tests/testdata/');
 
@@ -45,12 +45,13 @@
 	require_once('./unittests/userhandler.test.php');
 	require_once('./unittests/localisation.test.php');
 	require_once('./unittests/gamedata.test.php');
+	require_once('./unittests/gamesetup.test.php');
 	require_once('./unittests/gamehandler.test.php');
 	
 	$debug = zgDebug::init();
 
     $test = &new TestSuite('Zeitgeist Unit Tests');
-/*
+
 	$test->addTestCase(new testMessages());
 	$test->addTestCase(new testObjects());
 	$test->addTestCase(new testConfiguration());
@@ -63,7 +64,7 @@
 	$test->addTestCase(new testUserrights());
 	$test->addTestCase(new testUserhandler());
 	$test->addTestCase(new testLocalisation());
-*/
+	$test->addTestCase(new testGamesetup());
 	$test->addTestCase(new testGamedata());
 	$test->addTestCase(new testGamehandler());
 	
@@ -74,7 +75,7 @@
 	$debug->showMiscInformation();
 	$debug->showDebugMessages();
 	$debug->showQueryMessages();
-	$debug->showGuardMessages();
+//	$debug->showGuardMessages();
 	
 ?>
 
