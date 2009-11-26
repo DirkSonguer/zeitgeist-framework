@@ -33,6 +33,8 @@
 	require_once('./_testfunctions.php');
 	
 	require_once('./unittests/messages.test.php');
+	require_once('./unittests/entitysetup.test.php');
+	require_once('./unittests/entitysystem.test.php');
 	require_once('./unittests/objects.test.php');
 	require_once('./unittests/configuration.test.php');
 	require_once('./unittests/files.test.php');
@@ -53,6 +55,8 @@
     $test = &new TestSuite('Zeitgeist Unit Tests');
 
 	$test->addTestCase(new testMessages());
+	$test->addTestCase(new testEntitysystem());
+	$test->addTestCase(new testEntitysetup());
 	$test->addTestCase(new testObjects());
 	$test->addTestCase(new testConfiguration());
 	$test->addTestCase(new testFiles());
@@ -64,9 +68,9 @@
 	$test->addTestCase(new testUserrights());
 	$test->addTestCase(new testUserhandler());
 	$test->addTestCase(new testLocalisation());
-	$test->addTestCase(new testGamesetup());
-	$test->addTestCase(new testGamedata());
-	$test->addTestCase(new testGamehandler());
+//	$test->addTestCase(new testGamesetup());
+//	$test->addTestCase(new testGamedata());
+//	$test->addTestCase(new testGamehandler());
 	
 	$test->run(new HtmlReporter());
 
