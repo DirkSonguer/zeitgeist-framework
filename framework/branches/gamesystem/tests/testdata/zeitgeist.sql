@@ -267,27 +267,27 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `game_entities`
+-- Tabellenstruktur für Tabelle `entities`
 --
 
-CREATE TABLE IF NOT EXISTS `game_entities` (
+CREATE TABLE IF NOT EXISTS `entities` (
   `entity_id` int(11) NOT NULL auto_increment,
   `entity_name` varchar(255),
   PRIMARY KEY  (`entity_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
--- Daten für Tabelle `game_entities`
+-- Daten für Tabelle `entities`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `game_components`
+-- Tabellenstruktur für Tabelle `components`
 --
 
-CREATE TABLE IF NOT EXISTS `game_components` (
+CREATE TABLE IF NOT EXISTS `components` (
   `component_id` int(11) NOT NULL auto_increment,
   `component_name` varchar(32) NOT NULL,
   `component_description` text,
@@ -295,17 +295,17 @@ CREATE TABLE IF NOT EXISTS `game_components` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
 
 --
--- Daten für Tabelle `game_components`
+-- Daten für Tabelle `components`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `game_entity_components`
+-- Tabellenstruktur für Tabelle `entity_components`
 --
 
-CREATE TABLE IF NOT EXISTS `game_entity_components` (
+CREATE TABLE IF NOT EXISTS `entity_components` (
   `entitycomponent_entity` int(11) NOT NULL,
   `entitycomponent_component` int(11) NOT NULL,
   `entitycomponent_componentdata` int(11) NOT NULL,
@@ -313,17 +313,17 @@ CREATE TABLE IF NOT EXISTS `game_entity_components` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
 
 --
--- Daten für Tabelle `game_entity_components`
+-- Daten für Tabelle `entity_components`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `game_eventlog`
+-- Tabellenstruktur für Tabelle `eventlog`
 --
 
-CREATE TABLE IF NOT EXISTS `game_eventlog` (
+CREATE TABLE IF NOT EXISTS `eventlog` (
   `eventlog_id` int(11) NOT NULL auto_increment,
   `eventlog_action` int(11) NOT NULL,
   `eventlog_parameter` varchar(32) NOT NULL,
@@ -334,17 +334,17 @@ CREATE TABLE IF NOT EXISTS `game_eventlog` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
 
 --
--- Daten für Tabelle `game_eventlog`
+-- Daten für Tabelle `eventlog`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `game_actions`
+-- Tabellenstruktur für Tabelle `actions`
 --
 
-CREATE TABLE IF NOT EXISTS `game_actions` (
+CREATE TABLE IF NOT EXISTS `actions` (
   `action_id` int(11) NOT NULL auto_increment,
   `action_name` varchar(255) NOT NULL,
   `action_class` varchar(32) NOT NULL,
@@ -352,17 +352,17 @@ CREATE TABLE IF NOT EXISTS `game_actions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
 
 --
--- Daten für Tabelle `game_actions`
+-- Daten für Tabelle `actions`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `game_events`
+-- Tabellenstruktur für Tabelle `events`
 --
 
-CREATE TABLE IF NOT EXISTS `game_events` (
+CREATE TABLE IF NOT EXISTS `events` (
   `event_id` int(11) NOT NULL auto_increment,
   `event_action` int(11) NOT NULL,
   `event_parameter` varchar(32) NOT NULL,
@@ -373,34 +373,34 @@ CREATE TABLE IF NOT EXISTS `game_events` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
 
 --
--- Daten für Tabelle `game_events`
+-- Daten für Tabelle `events`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `game_entitytemplate`
+-- Tabellenstruktur für Tabelle `entitytemplate`
 --
 
-CREATE TABLE IF NOT EXISTS `game_entitytemplate` (
+CREATE TABLE IF NOT EXISTS `entitytemplate` (
   `template_id` int(11) NOT NULL auto_increment,
   `template_id` varchar(32) NOT NULL,
   PRIMARY KEY  (`template_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
 
 --
--- Daten für Tabelle `game_entitytemplate`
+-- Daten für Tabelle `entitytemplate`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `game_templates_to_components`
+-- Tabellenstruktur für Tabelle `templates_to_components`
 --
 
-CREATE TABLE IF NOT EXISTS `game_templates_to_components` (
+CREATE TABLE IF NOT EXISTS `templates_to_components` (
   `templatecomponent_template` int(11) NOT NULL,
   `templatecomponent_component` int(11) NOT NULL,
   KEY `templatecomponent_template` (`templatecomponent_template`),
@@ -408,5 +408,5 @@ CREATE TABLE IF NOT EXISTS `game_templates_to_components` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
 
 --
--- Daten für Tabelle `game_templates_to_components`
+-- Daten für Tabelle `templates_to_components`
 --
