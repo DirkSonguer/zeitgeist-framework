@@ -47,7 +47,7 @@ class zgEntitysetup
 	{
 		$this->debug->guard();
 
-		$sql = "INSERT INTO game_components(component_name, component_description) ";
+		$sql = "INSERT INTO components(component_name, component_description) ";
 		$sql .= "VALUES('" . $name . "', '" . $description . "')";
 		$res = $this->database->query($sql);
 		if (!$res)
@@ -67,7 +67,7 @@ class zgEntitysetup
 			return false;
 		}
 
-		$sql = "CREATE TABLE game_component_". $ret ." ";
+		$sql = "CREATE TABLE component_". $ret ." ";
 		$sql .= "(`id` INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY) ENGINE = MYISAM";
 		$res = $this->database->query($sql);
 		if (!$res)
@@ -95,7 +95,7 @@ class zgEntitysetup
 		$this->debug->guard();
 
 
-		$sql = "DELETE FROM game_components WHERE component_id='" . $component . "'";
+		$sql = "DELETE FROM components WHERE component_id='" . $component . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -105,7 +105,7 @@ class zgEntitysetup
 			return false;
 		}
 
-		$sql = "DROP TABLE game_component_". $component ." ";
+		$sql = "DROP TABLE component_". $component ." ";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{

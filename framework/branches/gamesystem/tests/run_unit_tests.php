@@ -8,7 +8,7 @@
 	}
 	require_once(SIMPLE_TEST . 'autorun.php');
 
-//	define('DEBUGMODE', true);
+	define('DEBUGMODE', true);
 	if (!defined('ZEITGEIST_ROOTDIRECTORY')) define('ZEITGEIST_ROOTDIRECTORY', '../');
 	if (!defined('GAMESYSTEM_ACTIONDIRECTORY')) define('GAMESYSTEM_ACTIONDIRECTORY', ZEITGEIST_ROOTDIRECTORY . 'tests/testdata/');
 
@@ -57,6 +57,7 @@
 	$test->addTestCase(new testMessages());
 	$test->addTestCase(new testEntitysystem());
 	$test->addTestCase(new testEntitysetup());
+/*	
 	$test->addTestCase(new testObjects());
 	$test->addTestCase(new testConfiguration());
 	$test->addTestCase(new testFiles());
@@ -71,7 +72,7 @@
 //	$test->addTestCase(new testGamesetup());
 //	$test->addTestCase(new testGamedata());
 //	$test->addTestCase(new testGamehandler());
-	
+*/
 	$test->run(new HtmlReporter());
 
 	$debug->loadStylesheet('debug.css');

@@ -39,15 +39,16 @@ class zgEntitysystem
 	 * The new entity will be empty in the sense that no components will be added at this stage
 	 * Returns the id of the new entity if successful or false if not
 	 *
-	 * @param string $entity_name name of the entity
+	 * @param string $name name of the entity
+	 * @param int $assemblage assemblage used to add initial components to the entity
 	 *
 	 * @return int|boolean
 	 */
-	public function createEntity($name='', $template=false)
+	public function createEntity($name='', $assemblage=false)
 	{
 		$this->debug->guard();
 
-		$sql = "INSERT INTO entities(entity_name) VALUES('" . $entityname . "')";
+		$sql = "INSERT INTO entities(entity_name) VALUES('" . $name . "')";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -57,22 +58,22 @@ class zgEntitysystem
 			return false;
 		}
 		
-		$entitiy = $this->database->insertId();
-		if (!$ret)
+		$entity = $this->database->insertId();
+		if (!$entity)
 		{
 			$this->debug->write('Problem creating new entity: could not get entity id', 'warning');
 			$this->messages->setMessage('Problem creating new entity: could not get entity id', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
-		
-		if ($template)
+
+		if ($assemblage)
 		{
-			$this->addTemplateComponentsToEntity($template, $entitiy);
+			$this->addAssemblageToEntity($assemblage, $entity);
 		}
 
-		$this->debug->unguard($entitiy);
-		return $entitiy;
+		$this->debug->unguard($entity);
+		return $entity;
 	}
 
 
@@ -124,7 +125,7 @@ class zgEntitysystem
 			return false;
 		}
 
-		$componentDataId = $this->database->insert();
+		$componentDataId = $this->database->insertId();
 		if (!$componentDataId)
 		{
 			$this->debug->write('Problem adding a new component to an entity: could not get the component data id', 'warning');
@@ -184,6 +185,44 @@ class zgEntitysystem
 			return false;
 		}		
 		
+		$this->debug->unguard(true);
+		return true;
+	}
+	
+
+	/**
+	 * Adds aassemblage components to a given entity
+	 *
+	 * @param int $assemblage id of the assemblage that should be applied to the entity
+	 * @param int $entity id of the entity to add the assemblage components to
+	 *
+	 * @return boolean
+	 */
+	public function addAssemblageToEntity($assemblage, $entity)
+	{
+		$this->debug->guard();
+
+		$sql = "SELECT assemblagecomponent_component FROM assemblage_components WHERE assemblagecomponent_assemblage = '" . $assemblage . "'";
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Problem adding assemblage components to entity: could not get assemblage data from database', 'warning');
+			$this->messages->setMessage('Problem adding assemblage components to entity: could not get assemblage data from database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		while ($component = $this->database->fetchArray($res))
+		{
+			if (!$this->addComponentToEntity($row['assemblagecomponent_component'], $entity))
+			{
+				$this->debug->write('Problem adding assemblage components to entity: could not add the component to the entity', 'warning');
+				$this->messages->setMessage('Problem adding assemblage components to entity: could not add the component to the entity', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
+		}
+
 		$this->debug->unguard(true);
 		return true;
 	}
