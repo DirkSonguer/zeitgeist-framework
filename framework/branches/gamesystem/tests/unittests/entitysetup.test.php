@@ -120,27 +120,33 @@ class testEntitysetup extends UnitTestCase
 		$entitysetup = new zgEntitysetup();
 		$testfunctions = new testFunctions();
 
+		$testfunctions->createZeitgeistTable('assemblages');
+		$testfunctions->createZeitgeistTable('components');
 		$testfunctions->createZeitgeistTable('assemblage_components');
 
-		$entityname = uniqid();
-		$entityid = $entitysystem->createEntity($entityname);
+		$assemblagename = uniqid();
+		$assemblagedescription = uniqid();
+		$assemblageid = $entitysetup->createAssemblage($assemblagename, $assemblagedescription);
 
 		$componentname = uniqid();
 		$componentdescription = uniqid();
 		$componentid = $entitysetup->createComponent($componentname, $componentdescription);
 		
-		$ret = $entitysystem->addComponentToEntity($componentid, $entityid);
+		$ret = $entitysetup->addComponentToAssemblage($componentid, $assemblageid);
 		$this->assertTrue($ret);
 
 		// check database
-		$res = $this->database->query("SELECT * FROM entity_components");
+		$res = $this->database->query("SELECT * FROM assemblage_components");
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 1);
 
-		$res = $this->database->query("SELECT * FROM component_".$componentid);
-		$ret = $this->database->numRows($res);
-		$this->assertEqual($ret, 1);
+		$ret = $this->database->fetchArray($res);
+		$this->assertEqual($ret['assemblagecomponent_assemblage'], $assemblageid);
+		$this->assertEqual($ret['assemblagecomponent_component'], $componentid);
 
+		$testfunctions->dropZeitgeistTable('component_'.$componentid);
+		$testfunctions->dropZeitgeistTable('components');
+		$testfunctions->dropZeitgeistTable('assemblages');
 		$testfunctions->dropZeitgeistTable('assemblage_components');
 
 		unset($ret);
