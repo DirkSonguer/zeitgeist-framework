@@ -71,7 +71,7 @@ class testEntitysystem extends UnitTestCase
 		unset($entitysystem);
     }
 
-
+/*
 	// Try to create a new entity with a template
 	function test_createEntity_with_assemblage()
 	{
@@ -126,7 +126,7 @@ class testEntitysystem extends UnitTestCase
 		unset($ret);
 		unset($entitysystem);
     }
-
+*/
 
 	// Try to delete an existing entity
 	function test_deleteEntity()
