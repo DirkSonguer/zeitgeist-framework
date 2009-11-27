@@ -380,33 +380,33 @@ CREATE TABLE IF NOT EXISTS `events` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `entitytemplate`
+-- Tabellenstruktur für Tabelle `assemblages`
 --
 
-CREATE TABLE IF NOT EXISTS `entitytemplate` (
-  `template_id` int(11) NOT NULL auto_increment,
-  `template_id` varchar(32) NOT NULL,
-  PRIMARY KEY  (`template_id`)
+CREATE TABLE IF NOT EXISTS `assemblages` (
+  `assemblage_id` int(11) NOT NULL auto_increment,
+  `assemblage_name` varchar(32) NOT NULL,
+  PRIMARY KEY  (`assemblage_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
 
 --
--- Daten für Tabelle `entitytemplate`
+-- Daten für Tabelle `assemblages`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `templates_to_components`
+-- Tabellenstruktur für Tabelle `assemblage_components`
 --
 
-CREATE TABLE IF NOT EXISTS `templates_to_components` (
-  `templatecomponent_template` int(11) NOT NULL,
-  `templatecomponent_component` int(11) NOT NULL,
-  KEY `templatecomponent_template` (`templatecomponent_template`),
-  KEY `templatecomponent_component` (`templatecomponent_component`)
+CREATE TABLE IF NOT EXISTS `assemblage_components` (
+  `assemblagecomponent_assemblage` int(11) NOT NULL,
+  `assemblagecomponent_component` int(11) NOT NULL,
+  KEY `assemblagecomponent_assemblage` (`assemblagecomponent_assemblage`),
+  KEY `assemblagecomponent_component` (`assemblagecomponent_component`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
 
 --
--- Daten für Tabelle `templates_to_components`
+-- Daten für Tabelle `assemblage_components`
 --

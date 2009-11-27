@@ -72,6 +72,62 @@ class testEntitysystem extends UnitTestCase
     }
 
 
+	// Try to create a new entity with a template
+	function test_createEntity_with_assemblage()
+	{
+		$entitysystem = new zgEntitysystem();
+		$entitysetup = new zgEntitysetup();
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('entities');
+		$testfunctions->createZeitgeistTable('assemblage_components');
+		$testfunctions->createZeitgeistTable('assemblages');
+		$testfunctions->createZeitgeistTable('components');
+		$testfunctions->createZeitgeistTable('entity_components');
+
+		$templatename = uniqid();
+		$res = $this->database->query("INSERT INTO assemblages(assemblage_name) VALUES('" . $templatename . "')");
+		$templateid = $this->database->insertId();
+
+		$componentname = uniqid();
+		$componentdescription = uniqid();
+		$componentid = $entitysetup->createComponent($componentname, $componentdescription);
+		$res = $this->database->query("INSERT INTO assemblage_components(assemblagecomponent_assemblage, assemblagecomponent_component) VALUES('" . $templateid . "', '" . $componentid . "')");
+
+		$entityname = uniqid();
+
+		$entityid = $entitysystem->createEntity($entityname, $templateid);
+		$this->assertTrue($entityid);
+
+		// check database
+		$res = $this->database->query("SELECT * FROM entities");
+		$ret = $this->database->numRows($res);
+		$this->assertEqual($ret, 1);
+
+		$ret = $this->database->fetchArray($res);
+		$this->assertEqual($ret['entity_id'], $entityid);
+		$this->assertEqual($ret['entity_name'], $entityname);
+
+		$res = $this->database->query("SELECT * FROM entity_components");
+		$ret = $this->database->numRows($res);
+		$this->assertEqual($ret, 1);
+
+		$ret = $this->database->fetchArray($res);
+		$this->assertEqual($ret['entitycomponent_entity'], $entityid);
+		$this->assertEqual($ret['entitycomponent_component'], $componentid);
+
+		$testfunctions->dropZeitgeistTable('component_'.$componentid);
+		$testfunctions->dropZeitgeistTable('entities');
+		$testfunctions->dropZeitgeistTable('assemblage_components');
+		$testfunctions->dropZeitgeistTable('assemblages');
+		$testfunctions->dropZeitgeistTable('components');
+		$testfunctions->dropZeitgeistTable('entity_components');
+
+		unset($ret);
+		unset($entitysystem);
+    }
+
+
 	// Try to delete an existing entity
 	function test_deleteEntity()
 	{
