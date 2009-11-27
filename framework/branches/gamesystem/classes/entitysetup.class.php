@@ -173,7 +173,7 @@ class zgEntitysetup
 		$this->debug->guard();
 
 		$sql = "INSERT INTO assemblage_components(assemblagecomponent_component, assemblagecomponent_assemblage) ";
-		$sql .= "VALUES('" . $component . "', '" . $assemblage . "'')";
+		$sql .= "VALUES('" . $component . "', '" . $assemblage . "')";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
