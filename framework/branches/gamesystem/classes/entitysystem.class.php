@@ -78,7 +78,7 @@ class zgEntitysystem
 
 
 	/**
-	 * Deletes a given entity.
+	 * Deletes a given entity
 	 *
 	 * @param int $entity the id of the entity to delete
 	 *
@@ -104,7 +104,7 @@ class zgEntitysystem
 
 
 	/**
-	 * Adds a new component to an entity.
+	 * Adds a new component to an entity
 	 *
 	 * @param int $component id of the component that should be added to the entity
 	 * @param int $entity id of the entity to add the component to

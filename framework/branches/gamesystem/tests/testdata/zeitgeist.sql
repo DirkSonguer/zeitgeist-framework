@@ -386,6 +386,7 @@ CREATE TABLE IF NOT EXISTS `events` (
 CREATE TABLE IF NOT EXISTS `assemblages` (
   `assemblage_id` int(11) NOT NULL auto_increment,
   `assemblage_name` varchar(32) NOT NULL,
+  `assemblage_description` text,
   PRIMARY KEY  (`assemblage_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
 

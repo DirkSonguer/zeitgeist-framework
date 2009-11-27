@@ -82,6 +82,71 @@ class testEntitysetup extends UnitTestCase
 		unset($entitysetup);
     }
 
+
+	// Try to create a new assemblage
+	function test_createAssemblage()
+	{
+		$entitysetup = new zgEntitysetup();
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('assemblages');
+
+		$assemblagename = uniqid();
+		$assemblagedescription = uniqid();
+
+		$assemblageid = $entitysetup->createAssemblage($assemblagename, $assemblagedescription);
+		$this->assertTrue($assemblageid);
+
+		// check database
+		$res = $this->database->query("SELECT * FROM assemblages");
+		$ret = $this->database->numRows($res);
+		$this->assertEqual($ret, 1);
+
+		$ret = $this->database->fetchArray($res);
+		$this->assertEqual($ret['assemblage_id'], $assemblageid);
+		$this->assertEqual($ret['assemblage_name'], $assemblagename);
+		$this->assertEqual($ret['assemblage_description'], $assemblagedescription);
+
+		$testfunctions->dropZeitgeistTable('assemblages');
+
+		unset($ret);
+		unset($entitysetup);
+    }
+
+
+	// Try to add a new component to an existing assemblage
+	function test_addComponentToAssemblage()
+	{
+		$entitysetup = new zgEntitysetup();
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('assemblage_components');
+
+		$entityname = uniqid();
+		$entityid = $entitysystem->createEntity($entityname);
+
+		$componentname = uniqid();
+		$componentdescription = uniqid();
+		$componentid = $entitysetup->createComponent($componentname, $componentdescription);
+		
+		$ret = $entitysystem->addComponentToEntity($componentid, $entityid);
+		$this->assertTrue($ret);
+
+		// check database
+		$res = $this->database->query("SELECT * FROM entity_components");
+		$ret = $this->database->numRows($res);
+		$this->assertEqual($ret, 1);
+
+		$res = $this->database->query("SELECT * FROM component_".$componentid);
+		$ret = $this->database->numRows($res);
+		$this->assertEqual($ret, 1);
+
+		$testfunctions->dropZeitgeistTable('assemblage_components');
+
+		unset($ret);
+		unset($entitysystem);
+    }
+
 }
 
 ?>
