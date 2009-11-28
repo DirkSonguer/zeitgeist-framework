@@ -155,7 +155,7 @@ class testEntitysetup extends UnitTestCase
 
 
 	// Try to remove a component from an existing assemblage
-	function test_removeComponentToAssemblage()
+	function test_removeComponentFromAssemblage()
 	{
 		$entitysetup = new zgEntitysetup();
 		$testfunctions = new testFunctions();
