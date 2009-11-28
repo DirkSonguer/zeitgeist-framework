@@ -214,7 +214,7 @@ class zgEntitysystem
 		
 		while ($component = $this->database->fetchArray($res))
 		{
-			if (!$this->addComponentToEntity($row['assemblagecomponent_component'], $entity))
+			if (!$this->addComponentToEntity($component['assemblagecomponent_component'], $entity))
 			{
 				$this->debug->write('Problem adding assemblage components to entity: could not add the component to the entity', 'warning');
 				$this->messages->setMessage('Problem adding assemblage components to entity: could not add the component to the entity', 'warning');

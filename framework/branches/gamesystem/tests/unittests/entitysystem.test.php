@@ -71,7 +71,7 @@ class testEntitysystem extends UnitTestCase
 		unset($entitysystem);
     }
 
-/*
+
 	// Try to create a new entity with a template
 	function test_createEntity_with_assemblage()
 	{
@@ -85,18 +85,18 @@ class testEntitysystem extends UnitTestCase
 		$testfunctions->createZeitgeistTable('components');
 		$testfunctions->createZeitgeistTable('entity_components');
 
-		$templatename = uniqid();
-		$res = $this->database->query("INSERT INTO assemblages(assemblage_name) VALUES('" . $templatename . "')");
-		$templateid = $this->database->insertId();
+		$assemblagename = uniqid();
+		$assemblagedescription = uniqid();
+		$assemblageid = $entitysetup->createAssemblage($assemblagename, $assemblagedescription);
 
 		$componentname = uniqid();
 		$componentdescription = uniqid();
 		$componentid = $entitysetup->createComponent($componentname, $componentdescription);
-		$res = $this->database->query("INSERT INTO assemblage_components(assemblagecomponent_assemblage, assemblagecomponent_component) VALUES('" . $templateid . "', '" . $componentid . "')");
+
+		$ret = $entitysetup->addComponentToAssemblage($componentid, $assemblageid);
 
 		$entityname = uniqid();
-
-		$entityid = $entitysystem->createEntity($entityname, $templateid);
+		$entityid = $entitysystem->createEntity($entityname, $assemblageid);
 		$this->assertTrue($entityid);
 
 		// check database
@@ -126,7 +126,7 @@ class testEntitysystem extends UnitTestCase
 		unset($ret);
 		unset($entitysystem);
     }
-*/
+
 
 	// Try to delete an existing entity
 	function test_deleteEntity()
