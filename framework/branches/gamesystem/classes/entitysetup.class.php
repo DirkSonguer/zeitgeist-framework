@@ -196,13 +196,13 @@ class zgEntitysetup
 	 *
 	 * @return boolean
 	 */
-	public function removeComponentFromEntity($component, $assemblage)
+	public function removeComponentFromAssemblage($component, $assemblage)
 	{
 		$this->debug->guard();
 
 		$sql = "DELETE FROM assemblage_components WHERE ";
 		$sql .= "assemblagecomponent_component='" . $component . "' AND ";
-		$sql .= "assemblagecomponent_assemblage='" . $assemblage . "'')";
+		$sql .= "assemblagecomponent_assemblage='" . $assemblage . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{

@@ -153,6 +153,44 @@ class testEntitysetup extends UnitTestCase
 		unset($entitysystem);
     }
 
+
+	// Try to remove a component from an existing assemblage
+	function test_removeComponentToAssemblage()
+	{
+		$entitysetup = new zgEntitysetup();
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('assemblages');
+		$testfunctions->createZeitgeistTable('components');
+		$testfunctions->createZeitgeistTable('assemblage_components');
+
+		$assemblagename = uniqid();
+		$assemblagedescription = uniqid();
+		$assemblageid = $entitysetup->createAssemblage($assemblagename, $assemblagedescription);
+
+		$componentname = uniqid();
+		$componentdescription = uniqid();
+		$componentid = $entitysetup->createComponent($componentname, $componentdescription);
+		
+		$ret = $entitysetup->addComponentToAssemblage($componentid, $assemblageid);
+
+		$ret = $entitysetup->removeComponentFromAssemblage($componentid, $assemblageid);
+		$this->assertTrue($ret);
+
+		// check database
+		$res = $this->database->query("SELECT * FROM assemblage_components");
+		$ret = $this->database->numRows($res);
+		$this->assertEqual($ret, 0);
+
+		$testfunctions->dropZeitgeistTable('component_'.$componentid);
+		$testfunctions->dropZeitgeistTable('components');
+		$testfunctions->dropZeitgeistTable('assemblages');
+		$testfunctions->dropZeitgeistTable('assemblage_components');
+
+		unset($ret);
+		unset($entitysystem);
+    }
+
 }
 
 ?>
