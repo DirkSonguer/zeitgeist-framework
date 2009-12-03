@@ -180,7 +180,7 @@ class testGamedata extends UnitTestCase
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 1);
 
-		$res = $this->database->query("SELECT * FROM component_".$componentid);
+		$res = $this->database->query("SELECT * FROM game_component_".$componentid);
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 1);
 
@@ -269,7 +269,7 @@ class testGamedata extends UnitTestCase
 		$ret = $gamedata->setComponentData($componentid, $entityid, $testdata);
 		$this->assertTrue($res);
 
-		$res = $this->database->query("SELECT * FROM component_".$componentid);
+		$res = $this->database->query("SELECT * FROM game_component_".$componentid);
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 1);
 

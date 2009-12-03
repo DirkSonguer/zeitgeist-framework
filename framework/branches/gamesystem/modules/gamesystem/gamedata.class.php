@@ -202,7 +202,7 @@ class zgGamedata
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT game_assemblagecomponent_component FROM assemblage_components WHERE assemblagecomponent_assemblage = '" . $assemblage . "'";
+		$sql = "SELECT assemblagecomponent_component FROM game_assemblage_components WHERE assemblagecomponent_assemblage = '" . $assemblage . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -359,7 +359,7 @@ class zgGamedata
 	{
 		$this->debug->guard();
 
-		$sql .= "SELECT game_entitycomponent_component, entitycomponent_componentdata FROM entity_components ";
+		$sql .= "SELECT entitycomponent_component, entitycomponent_componentdata FROM game_entity_components ";
 		$sql .= "WHERE entitycomponent_entity='" . $entity . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
@@ -393,7 +393,7 @@ class zgGamedata
 	{
 		$this->debug->guard();
 
-		$sql .= "SELECT game_entitycomponent_entity FROM entity_components ";
+		$sql .= "SELECT entitycomponent_entity FROM game_entity_components ";
 		$sql .= "WHERE entitycomponent_component='" . $component . "' AND entitycomponent_componentdata='" . $componentdata . "')";
 		$res = $this->database->query($sql);
 		if (!$res)
