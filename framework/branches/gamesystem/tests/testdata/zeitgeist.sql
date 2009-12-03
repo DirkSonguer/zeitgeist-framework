@@ -320,6 +320,42 @@ CREATE TABLE IF NOT EXISTS `game_entity_components` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `game_assemblages`
+--
+
+CREATE TABLE IF NOT EXISTS `game_assemblages` (
+  `assemblage_id` int(11) NOT NULL auto_increment,
+  `assemblage_name` varchar(32) NOT NULL,
+  `assemblage_description` text,
+  PRIMARY KEY  (`assemblage_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
+
+--
+-- Daten für Tabelle `game_assemblages`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `game_assemblage_components`
+--
+
+CREATE TABLE IF NOT EXISTS `game_assemblage_components` (
+  `assemblagecomponent_assemblage` int(11) NOT NULL,
+  `assemblagecomponent_component` int(11) NOT NULL,
+  KEY `assemblagecomponent_assemblage` (`assemblagecomponent_assemblage`),
+  KEY `assemblagecomponent_component` (`assemblagecomponent_component`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
+
+--
+-- Daten für Tabelle `game_assemblage_components`
+--
+
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `game_eventlog`
 --
 
@@ -374,40 +410,4 @@ CREATE TABLE IF NOT EXISTS `game_events` (
 
 --
 -- Daten für Tabelle `game_events`
---
-
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `game_assemblages`
---
-
-CREATE TABLE IF NOT EXISTS `game_assemblages` (
-  `assemblage_id` int(11) NOT NULL auto_increment,
-  `assemblage_name` varchar(32) NOT NULL,
-  `assemblage_description` text,
-  PRIMARY KEY  (`assemblage_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
-
---
--- Daten für Tabelle `game_assemblages`
---
-
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `game_assemblage_components`
---
-
-CREATE TABLE IF NOT EXISTS `game_assemblage_components` (
-  `assemblagecomponent_assemblage` int(11) NOT NULL,
-  `assemblagecomponent_component` int(11) NOT NULL,
-  KEY `assemblagecomponent_assemblage` (`assemblagecomponent_assemblage`),
-  KEY `assemblagecomponent_component` (`assemblagecomponent_component`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
-
---
--- Daten für Tabelle `game_assemblage_components`
 --
