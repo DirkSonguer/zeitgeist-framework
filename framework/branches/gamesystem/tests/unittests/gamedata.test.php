@@ -72,6 +72,62 @@ class testGamedata extends UnitTestCase
     }
 
 
+	// Try to create a new entity with a template
+	function test_createEntity_with_assemblage()
+	{
+		$gamedata = new zgGamedata();
+		$gamesetup = new zgGamesetup();
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('game_entities');
+		$testfunctions->createZeitgeistTable('game_assemblage_components');
+		$testfunctions->createZeitgeistTable('game_assemblages');
+		$testfunctions->createZeitgeistTable('game_components');
+		$testfunctions->createZeitgeistTable('game_entity_components');
+
+		$assemblagename = uniqid();
+		$assemblagedescription = uniqid();
+		$assemblageid = $gamesetup->createAssemblage($assemblagename, $assemblagedescription);
+
+		$componentname = uniqid();
+		$componentdescription = uniqid();
+		$componentid = $gamesetup->createComponent($componentname, $componentdescription);
+
+		$ret = $gamesetup->addComponentToAssemblage($componentid, $assemblageid);
+
+		$entityname = uniqid();
+		$entityid = $gamedata->createEntity($entityname, $assemblageid);
+		$this->assertTrue($entityid);
+
+		// check database
+		$res = $this->database->query("SELECT * FROM game_entities");
+		$ret = $this->database->numRows($res);
+		$this->assertEqual($ret, 1);
+
+		$ret = $this->database->fetchArray($res);
+		$this->assertEqual($ret['entity_id'], $entityid);
+		$this->assertEqual($ret['entity_name'], $entityname);
+
+		$res = $this->database->query("SELECT * FROM game_entity_components");
+		$ret = $this->database->numRows($res);
+		$this->assertEqual($ret, 1);
+
+		$ret = $this->database->fetchArray($res);
+		$this->assertEqual($ret['entitycomponent_entity'], $entityid);
+		$this->assertEqual($ret['entitycomponent_component'], $componentid);
+
+		$testfunctions->dropZeitgeistTable('game_component_'.$componentid);
+		$testfunctions->dropZeitgeistTable('game_entities');
+		$testfunctions->dropZeitgeistTable('game_assemblage_components');
+		$testfunctions->dropZeitgeistTable('game_assemblages');
+		$testfunctions->dropZeitgeistTable('game_components');
+		$testfunctions->dropZeitgeistTable('game_entity_components');
+
+		unset($ret);
+		unset($gamedata);
+    }
+
+
 	// Try to delete an existing entity
 	function test_deleteEntity()
 	{
@@ -114,7 +170,7 @@ class testGamedata extends UnitTestCase
 
 		$componentname = uniqid();
 		$componentdescription = uniqid();
-		$componentid = $gamedata->createComponent($componentname, $componentdescription);
+		$componentid = $gamesetup->createComponent($componentname, $componentdescription);
 		
 		$ret = $gamedata->addComponentToEntity($componentid, $entityid);
 		$this->assertTrue($ret);
@@ -124,7 +180,7 @@ class testGamedata extends UnitTestCase
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 1);
 
-		$res = $this->database->query("SELECT * FROM game_component_".$componentid);
+		$res = $this->database->query("SELECT * FROM component_".$componentid);
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 1);
 
@@ -154,7 +210,7 @@ class testGamedata extends UnitTestCase
 
 		$componentname = uniqid();
 		$componentdescription = uniqid();
-		$componentid = $gamedata->createComponent($componentname, $componentdescription);
+		$componentid = $gamesetup->createComponent($componentname, $componentdescription);
 		
 		$ret = $gamedata->addComponentToEntity($componentid, $entityid);
 
@@ -185,6 +241,7 @@ class testGamedata extends UnitTestCase
 	{
 		$gamedata = new zgGamedata();
 		$gamesetup = new zgGamesetup();
+		$gamesetup = new zgGamesetup();
 		$testfunctions = new testFunctions();
 
 		$testfunctions->createZeitgeistTable('game_components');
@@ -196,7 +253,7 @@ class testGamedata extends UnitTestCase
 
 		$componentname = uniqid();
 		$componentdescription = uniqid();
-		$componentid = $gamedata->createComponent($componentname, $componentdescription);
+		$componentid = $gamesetup->createComponent($componentname, $componentdescription);
 		
 		$componentdataid = $gamedata->addComponentToEntity($componentid, $entityid);
 		$res = $this->database->query("ALTER TABLE `game_component_".$componentid."` ADD `testdata1` VARCHAR( 16 ) NOT NULL ");
@@ -212,7 +269,7 @@ class testGamedata extends UnitTestCase
 		$ret = $gamedata->setComponentData($componentid, $entityid, $testdata);
 		$this->assertTrue($res);
 
-		$res = $this->database->query("SELECT * FROM game_component_".$componentid);
+		$res = $this->database->query("SELECT * FROM component_".$componentid);
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 1);
 
@@ -231,10 +288,86 @@ class testGamedata extends UnitTestCase
     }
 
 
-	// Try getting data from a component
-	function test_getComponentData()
+	// Try getting data for a component without a filter
+	function test_getComponentData_nofilter()
 	{
 		$gamedata = new zgGamedata();
+		$gamesetup = new zgGamesetup();
+
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('game_components');
+		$testfunctions->createZeitgeistTable('game_entities');
+		$testfunctions->createZeitgeistTable('game_entity_components');
+
+		$componentname = uniqid();
+		$componentdescription = uniqid();
+		$componentid = $gamesetup->createComponent($componentname, $componentdescription);
+
+		for ($i=0;$i<5;$i++)
+		{
+			$entityname = uniqid();
+			$entityid[$i] = $gamedata->createEntity($entityname);
+			$componentdataid[$i] = $gamedata->addComponentToEntity($componentid, $entityid[$i]);
+		}
+
+		$componentlist = $gamedata->getComponentData($componentid);
+		$this->assertTrue($componentlist);
+		$this->assertEqual(count($componentlist), 5);
+
+		$testfunctions->dropZeitgeistTable('game_component_'.$componentid);
+		$testfunctions->dropZeitgeistTable('game_components');
+		$testfunctions->dropZeitgeistTable('game_entities');
+		$testfunctions->dropZeitgeistTable('game_entity_components');
+
+		unset($ret);
+		unset($gamedata);
+    }
+
+
+	// Try getting data for a component using a filter
+	function test_getComponentData_filtered()
+	{
+		$gamedata = new zgGamedata();
+		$gamesetup = new zgGamesetup();
+
+		$testfunctions = new testFunctions();
+
+		$testfunctions->createZeitgeistTable('game_components');
+		$testfunctions->createZeitgeistTable('game_entities');
+		$testfunctions->createZeitgeistTable('game_entity_components');
+
+		$componentname = uniqid();
+		$componentdescription = uniqid();
+		$componentid = $gamesetup->createComponent($componentname, $componentdescription);
+
+		for ($i=0;$i<5;$i++)
+		{
+			$entityname = uniqid();
+			$entityid[$i] = $gamedata->createEntity($entityname);
+			$componentdataid[$i] = $gamedata->addComponentToEntity($componentid, $entityid[$i]);
+		}
+
+		$filter = array('id' => $componentdataid[1]);
+		$componentlist = $gamedata->getComponentData($componentid, $filter);
+		$this->assertTrue($componentlist);
+		$this->assertEqual(count($componentlist), 1);
+
+		$testfunctions->dropZeitgeistTable('game_component_'.$componentid);
+		$testfunctions->dropZeitgeistTable('game_components');
+		$testfunctions->dropZeitgeistTable('game_entities');
+		$testfunctions->dropZeitgeistTable('game_entity_components');
+
+		unset($ret);
+		unset($gamedata);
+    }
+
+
+	// Try getting data from a component for a specific entity
+	function test_getComponentDataForEntity()
+	{
+		$gamedata = new zgGamedata();
+		$gamesetup = new zgGamesetup();
 		$gamesetup = new zgGamesetup();
 		$testfunctions = new testFunctions();
 
@@ -247,7 +380,7 @@ class testGamedata extends UnitTestCase
 
 		$componentname = uniqid();
 		$componentdescription = uniqid();
-		$componentid = $gamedata->createComponent($componentname, $componentdescription);
+		$componentid = $gamesetup->createComponent($componentname, $componentdescription);
 		
 		$componentdataid = $gamedata->addComponentToEntity($componentid, $entityid);
 		$res = $this->database->query("ALTER TABLE `game_component_".$componentid."` ADD `testdata1` VARCHAR( 16 ) NOT NULL ");
@@ -262,7 +395,7 @@ class testGamedata extends UnitTestCase
 
 		$ret = $gamedata->setComponentData($componentid, $entityid, $testdata);
 
-		$ret = $gamedata->getComponentData($componentid, $entityid);
+		$ret = $gamedata->getComponentDataForEntity($componentid, $entityid);
 		$this->assertEqual($ret['id'], $componentdataid);
 		$this->assertEqual($ret['testdata1'], $testdata1);
 		$this->assertEqual($ret['testdata2'], $testdata2);
@@ -293,12 +426,12 @@ class testGamedata extends UnitTestCase
 
 		$componentname1 = uniqid();
 		$componentdescription1 = uniqid();
-		$componentid1 = $gamedata->createComponent($componentname1, $componentdescription1);
+		$componentid1 = $gamesetup->createComponent($componentname1, $componentdescription1);
 		$componentdataid1 = $gamedata->addComponentToEntity($componentid1, $entityid);
 
 		$componentname2 = uniqid();
 		$componentdescription2 = uniqid();
-		$componentid2 = $gamedata->createComponent($componentname2, $componentdescription2);
+		$componentid2 = $gamesetup->createComponent($componentname2, $componentdescription2);
 		$componentdataid2 = $gamedata->addComponentToEntity($componentid2, $entityid);
 
 		$componentlist = $gamedata->getComponentListForEntity($entityid);

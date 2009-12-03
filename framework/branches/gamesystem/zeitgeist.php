@@ -36,8 +36,6 @@ else
 // include core classes
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/messages.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/database.class.php');
-require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/entitysetup.class.php');
-require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/entitysystem.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/configuration.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/localisation.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/objects.class.php');

@@ -3,22 +3,23 @@
  * Zeitgeist Application Framework
  * http://www.zeitgeist-framework.com
  *
- * Entitysystem class
+ * Gamedata class
  *
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
  *
  * @package ZEITGEIST
- * @subpackage ZEITGEIST ENTITYSYSTEM
+ * @subpackage ZEITGEIST GAMESYSTEM
  */
 
 defined('ZEITGEIST_ACTIVE') or die();
 
-class zgEntitysystem
+class zgGamedata
 {
 	protected $debug;
 	protected $messages;
 	protected $database;
+	protected $configuration;
 
 
 	/**
@@ -28,6 +29,7 @@ class zgEntitysystem
 	{
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
+		$this->configuration = zgConfiguration::init();
 
 		$this->database = new zgDatabase();
 		$this->database->connect();
@@ -39,16 +41,15 @@ class zgEntitysystem
 	 * The new entity will be empty in the sense that no components will be added at this stage
 	 * Returns the id of the new entity if successful or false if not
 	 *
-	 * @param string $name name of the entity
-	 * @param int $assemblage assemblage used to add initial components to the entity
+	 * @param string $entity_name name of the entity (only used for debugging)
 	 *
 	 * @return int|boolean
 	 */
-	public function createEntity($name='', $assemblage=false)
+	public function createEntity($name='', $template=false)
 	{
 		$this->debug->guard();
 
-		$sql = "INSERT INTO entities(entity_name) VALUES('" . $name . "')";
+		$sql = "INSERT INTO game_entities(entity_name) VALUES('" . $entityname . "')";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -58,37 +59,37 @@ class zgEntitysystem
 			return false;
 		}
 		
-		$entity = $this->database->insertId();
-		if (!$entity)
+		$entitiy = $this->database->insertId();
+		if (!$ret)
 		{
 			$this->debug->write('Problem creating new entity: could not get entity id', 'warning');
 			$this->messages->setMessage('Problem creating new entity: could not get entity id', 'warning');
 			$this->debug->unguard(false);
 			return false;
 		}
-
-		if ($assemblage)
+		
+		if ($template)
 		{
-			$this->addAssemblageToEntity($assemblage, $entity);
+			$this->addTemplateComponentsToEntity($template, $entitiy);
 		}
 
-		$this->debug->unguard($entity);
-		return $entity;
+		$this->debug->unguard($entitiy);
+		return $entitiy;
 	}
 
 
 	/**
-	 * Deletes a given entity
+	 * Deletes a given entity.
 	 *
-	 * @param int $entity the id of the entity to delete
+	 * @param string $configfile filename of the configuratio with the form definition
 	 *
 	 * @return boolean
 	 */
-	public function deleteEntity($entity)
+	public function deleteEntity($entityid)
 	{
 		$this->debug->guard();
 
-		$sql = "DELETE FROM entities WHERE entity_id='" . $entity . "'";
+		$sql = "DELETE FROM game_entities WHERE entity_id='" . $entityid . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -104,18 +105,18 @@ class zgEntitysystem
 
 
 	/**
-	 * Adds a new component to an entity
+	 * Adds a new component to an entity.
 	 *
-	 * @param int $component id of the component that should be added to the entity
-	 * @param int $entity id of the entity to add the component to
+	 * @param int $component_id id of the component that should be added to the entity
+	 * @param int $entity_id id of the entity to add the component to
 	 *
 	 * @return boolean
 	 */
-	public function addComponentToEntity($component, $entity)
+	public function addComponentToEntity($componentId, $entityId)
 	{
 		$this->debug->guard();
 
-		$sql = "INSERT INTO component_" . $component . "() VALUES()";
+		$sql = "INSERT INTO game_component_" . $componentId . "() VALUES()";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -134,8 +135,8 @@ class zgEntitysystem
 			return false;
 		}
 
-		$sql = "INSERT INTO entity_components(entitycomponent_entity, entitycomponent_component, entitycomponent_componentdata) ";
-		$sql .= "VALUES('" . $entity . "', '" . $component . "', '" . $componentDataId . "')";
+		$sql = "INSERT INTO game_entity_components(entitycomponent_entity, entitycomponent_component, entitycomponent_componentdata) ";
+		$sql .= "VALUES('" . $entityId . "', '" . $componentId . "', '" . $componentDataId . "')";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -153,18 +154,18 @@ class zgEntitysystem
 	/**
 	 * Removes a component from an existing entity
 	 *
-	 * @param int $component id of the component that should be removed from the entity
-	 * @param int $entity id of the entity to delete the component from
+	 * @param int $componentId id of the component that should be removed from the entity
+	 * @param int $entityId id of the entity to delete the component from
 	 *
 	 * @return boolean
 	 */
-	public function removeComponentFromEntity($component, $entity)
+	public function removeComponentFromEntity($componentId, $entityId)
 	{
 		$this->debug->guard();
 
-		$sql = "DELETE FROM component_" . $component . " WHERE id=(";
-		$sql .= "SELECT entitycomponent_componentdata FROM entity_components ";
-		$sql .= "WHERE entitycomponent_entity='" . $entity . "' AND entitycomponent_component='" . $component . "')";
+		$sql = "DELETE FROM game_component_" . $componentId . " WHERE id=(";
+		$sql .= "SELECT entitycomponent_componentdata FROM game_entity_components ";
+		$sql .= "WHERE entitycomponent_entity='" . $entityId . "' AND entitycomponent_component='" . $componentId . "')";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -174,8 +175,8 @@ class zgEntitysystem
 			return false;
 		}
 		
-		$sql = "DELETE FROM entity_components ";
-		$sql .= "WHERE entitycomponent_entity='" . $entity . "' AND entitycomponent_component='" . $component . "'";
+		$sql = "DELETE FROM game_entity_components ";
+		$sql .= "WHERE entitycomponent_entity='" . $entityId . "' AND entitycomponent_component='" . $componentId . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -188,61 +189,23 @@ class zgEntitysystem
 		$this->debug->unguard(true);
 		return true;
 	}
-	
-
-	/**
-	 * Adds aassemblage components to a given entity
-	 *
-	 * @param int $assemblage id of the assemblage that should be applied to the entity
-	 * @param int $entity id of the entity to add the assemblage components to
-	 *
-	 * @return boolean
-	 */
-	public function addAssemblageToEntity($assemblage, $entity)
-	{
-		$this->debug->guard();
-
-		$sql = "SELECT assemblagecomponent_component FROM assemblage_components WHERE assemblagecomponent_assemblage = '" . $assemblage . "'";
-		$res = $this->database->query($sql);
-		if (!$res)
-		{
-			$this->debug->write('Problem adding assemblage components to entity: could not get assemblage data from database', 'warning');
-			$this->messages->setMessage('Problem adding assemblage components to entity: could not get assemblage data from database', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-		
-		while ($component = $this->database->fetchArray($res))
-		{
-			if (!$this->addComponentToEntity($component['assemblagecomponent_component'], $entity))
-			{
-				$this->debug->write('Problem adding assemblage components to entity: could not add the component to the entity', 'warning');
-				$this->messages->setMessage('Problem adding assemblage components to entity: could not add the component to the entity', 'warning');
-				$this->debug->unguard(false);
-				return false;
-			}
-		}
-
-		$this->debug->unguard(true);
-		return true;
-	}
 
 
 	/**
 	 * Gets the data from a component of a specific entity
 	 *
-	 * @param int $component id of the component to get the data from
-	 * @param int $entity id of the entity the component is bound to
+	 * @param int $componentId id of the component to get the data from
+	 * @param int $entityId id of the entity the component is bound to
 	 *
 	 * @return array
 	 */
-	public function getComponentData($component, $entity)
+	public function getComponentData($componentId, $entityId)
 	{
 		$this->debug->guard();
 
-		$sql = "SELECT * FROM component_" . $component . " WHERE id=(";
-		$sql .= "SELECT entitycomponent_componentdata FROM entity_components ";
-		$sql .= "WHERE entitycomponent_entity='" . $entity . "' AND entitycomponent_component='" . $component . "')";
+		$sql = "SELECT * FROM game_component_" . $componentId . " WHERE id=(";
+		$sql .= "SELECT entitycomponent_componentdata FROM game_entity_components ";
+		$sql .= "WHERE entitycomponent_entity='" . $entityId . "' AND entitycomponent_component='" . $componentId . "')";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -262,12 +225,12 @@ class zgEntitysystem
 	/**
 	 * Sets the data from a component of a specific entity
 	 *
-	 * @param int $component id of the component to set the data to
-	 * @param int $entity id of the entity the component is bound to
+	 * @param int $componentId id of the component to set the data to
+	 * @param int $entityId id of the entity the component is bound to
 	 *
 	 * @return array
 	 */
-	public function setComponentData($component, $entity, $componentData)
+	public function setComponentData($componentId, $entityId, $componentData)
 	{
 		$this->debug->guard();
 		
@@ -278,7 +241,7 @@ class zgEntitysystem
 		}
 		$sqlData = substr($sqlData, 0, -1);
 
-		$sql = "UPDATE component_" . $component . " SET ".$sqlData;
+		$sql = "UPDATE game_component_" . $componentId . " SET ".$sqlData;
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -296,20 +259,20 @@ class zgEntitysystem
 
 
 	/**
-	 * Gets the list of components for a specific entity
+	 * Gets the list of component for a specific entity
 	 * Returns an array with the component id as key and the component
 	 * data id as value
 	 *
-	 * @param int $entity id of the entity
+	 * @param int $entityId id of the entity
 	 *
 	 * @return array
 	 */
-	public function getComponentListForEntity($entity)
+	public function getComponentListForEntity($entityId)
 	{
 		$this->debug->guard();
 
-		$sql .= "SELECT entitycomponent_component, entitycomponent_componentdata FROM entity_components ";
-		$sql .= "WHERE entitycomponent_entity='" . $entity . "'";
+		$sql .= "SELECT entitycomponent_component, entitycomponent_componentdata FROM game_entity_components ";
+		$sql .= "WHERE entitycomponent_entity='" . $entityId . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
