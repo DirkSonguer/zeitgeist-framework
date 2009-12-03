@@ -55,6 +55,7 @@ require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/files.class.php');
 
 // include modules
 require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/form/form.class.php');
+require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/gamesystem/gamesystem.class.php');
 
 // include misc functions
 require_once (ZEITGEIST_ROOTDIRECTORY . 'includes/autoloader.include.php');

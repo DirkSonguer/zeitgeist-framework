@@ -28,7 +28,7 @@ class testUserfunctions extends UnitTestCase
 		$newuserid = $user->createUser('', '');
 		$this->assertFalse($newuserid);
 		
-		// check database		
+		// check database
 		$res = $this->database->query("SELECT * FROM users WHERE user_id='" . $newuserid . "'");
 		$ret = $this->database->numRows($res);
 		$this->assertEqual($ret, 0);
