@@ -49,12 +49,12 @@ class zgGamehandler
 	 *
 	 * @return boolean
 	 */
-	public function saveGameevent($action, $parameter, $player, $time=0)
+	public function saveGameevent($game=0, $action, $parameter, $player, $time=0)
 	{
 		$this->debug->guard();
 
-		$sql  = "INSERT INTO game_events(event_action, event_parameter, event_player, event_time) ";
-		$sql .= "VALUES('" . $action . "', '" . $parameter . "', '" . $player . "', '" . $time . "')";
+		$sql  = "INSERT INTO game_events(event_game, event_action, event_parameter, event_player, event_time) ";
+		$sql .= "VALUES('" . $game . "', '" . $action . "', '" . $parameter . "', '" . $player . "', '" . $time . "')";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -107,8 +107,8 @@ class zgGamehandler
 	{
 		$this->debug->guard();
 
-		$sql = "INSERT INTO game_eventlog(eventlog_action, eventlog_parameter, eventlog_player, eventlog_time) ";
-		$sql .= "SELECT event_action, event_parameter, event_player, event_time FROM game_events WHERE event_id='" . $event . "'";
+		$sql = "INSERT INTO game_eventlog(eventlog_game, eventlog_action, eventlog_parameter, eventlog_player, eventlog_time) ";
+		$sql .= "SELECT event_game, event_action, event_parameter, event_player, event_time FROM game_events WHERE event_id='" . $event . "'";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -146,14 +146,14 @@ class zgGamehandler
 	 * 
 	 * @return boolean
 	 */
-	public function handleGameevents($time, $player=0)
+	public function handleGameevents($game, $time, $player=0)
 	{
 		$this->debug->guard();
 
 		// get all events for the active player and the current round
 		$sql = "SELECT ge.event_id, ga.action_class, ge.event_parameter FROM game_events ge ";
 		$sql .= "LEFT JOIN game_actions ga ON ge.event_action = ga.action_id ";
-		$sql .= "WHERE ge.event_time <= '" . $time . "'";
+		$sql .= "WHERE ge.event_game = '" . $game . "' AND ge.event_time <= '" . $time . "'";
 		if ($player > 0)
 		{
 			$sql .= " AND ge.event_player='" . $player . "'";

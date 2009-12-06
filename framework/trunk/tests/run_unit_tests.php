@@ -51,10 +51,7 @@
 	$debug = zgDebug::init();
 
     $test = &new TestSuite('Zeitgeist Unit Tests');
-/*
 	$test->addTestCase(new testMessages());
-	$test->addTestCase(new testEntitysystem());
-	$test->addTestCase(new testEntitysetup());
 	$test->addTestCase(new testObjects());
 	$test->addTestCase(new testConfiguration());
 	$test->addTestCase(new testFiles());
@@ -66,7 +63,6 @@
 	$test->addTestCase(new testUserrights());
 	$test->addTestCase(new testUserhandler());
 	$test->addTestCase(new testLocalisation());
-*/
 	$test->addTestCase(new testGamesetup());
 	$test->addTestCase(new testGamedata());
 	$test->addTestCase(new testGamehandler());
