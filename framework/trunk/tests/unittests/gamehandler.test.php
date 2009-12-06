@@ -25,11 +25,12 @@ class testGamehandler extends UnitTestCase
 
 		$testfunctions->createZeitgeistTable('game_events');
 
+		$game = rand(0,1000);
 		$action = rand(0,1000);
 		$parameter = uniqid();
 		$player = rand(1,1000);
 		$time = rand(1,1000);
-		$ret = $gamehandler->saveGameevent($action, $parameter, $player, $time);
+		$ret = $gamehandler->saveGameevent($game, $action, $parameter, $player, $time);
 		$this->assertTrue($ret);
 
 		// check database
@@ -58,11 +59,12 @@ class testGamehandler extends UnitTestCase
 
 		$testfunctions->createZeitgeistTable('game_events');
 
+		$game = rand(0,1000);
 		$action = rand(0,1000);
 		$parameter = uniqid();
 		$player = rand(1,1000);
 		$time = rand(1,1000);
-		$ret = $gamehandler->saveGameevent($action, $parameter, $player, $time);
+		$ret = $gamehandler->saveGameevent($game, $action, $parameter, $player, $time);
 
 		$res = $this->database->query("SELECT * FROM game_events");
 		$ret = $this->database->fetchArray($res);
@@ -86,11 +88,12 @@ class testGamehandler extends UnitTestCase
 		$testfunctions->createZeitgeistTable('game_events');
 		$testfunctions->createZeitgeistTable('game_eventlog');
 
+		$game = rand(0,1000);
 		$action = rand(0,1000);
 		$parameter = uniqid();
 		$player = rand(1,1000);
 		$time = rand(1,1000);
-		$ret = $gamehandler->saveGameevent($action, $parameter, $player, $time);
+		$ret = $gamehandler->saveGameevent($game, $action, $parameter, $player, $time);
 
 		$res = $this->database->query("SELECT * FROM game_events");
 		$ret = $this->database->fetchArray($res);
@@ -130,15 +133,16 @@ class testGamehandler extends UnitTestCase
 		$testfunctions->createZeitgeistTable('game_eventlog');
 		$testfunctions->createZeitgeistTable('game_events');
 
+		$game = rand(0,1000);
 		$action = rand(0,1000);
 		$parameter = uniqid();
 		$player = rand(1,1000);
 		$time = rand(1,1000);
 		$res = $this->database->query("INSERT INTO game_actions(action_id, action_name, action_class) VALUES('".$action."', 'test', 'testaction')");
 
-		$ret = $gamehandler->saveGameevent($action, $parameter, $player, $time);
+		$ret = $gamehandler->saveGameevent($game, $action, $parameter, $player, $time);
 		
-		$ret = $gamehandler->handleGameevents(($time+1));
+		$ret = $gamehandler->handleGameevents($game, ($time+1));
 		$this->assertTrue($ret);
 
 		// check database
