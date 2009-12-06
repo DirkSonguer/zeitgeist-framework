@@ -361,6 +361,7 @@ CREATE TABLE IF NOT EXISTS `game_assemblage_components` (
 
 CREATE TABLE IF NOT EXISTS `game_eventlog` (
   `eventlog_id` int(11) NOT NULL auto_increment,
+  `eventlog_game` int(11) NOT NULL DEFAULT '0',
   `eventlog_action` int(11) NOT NULL,
   `eventlog_parameter` varchar(32) NOT NULL,
   `eventlog_player` int(11) NOT NULL,
@@ -400,6 +401,7 @@ CREATE TABLE IF NOT EXISTS `game_actions` (
 
 CREATE TABLE IF NOT EXISTS `game_events` (
   `event_id` int(11) NOT NULL auto_increment,
+  `event_game` int(11) NOT NULL DEFAULT '0',
   `event_action` int(11) NOT NULL,
   `event_parameter` varchar(32) NOT NULL,
   `event_player` int(11) NOT NULL,
