@@ -105,13 +105,15 @@ class zgGamedata
 
 	/**
 	 * Adds a new component to an entity
+	 * Optionally the initial data of the component can be given as third parameter
 	 *
 	 * @param int $component id of the component that should be added to the entity
 	 * @param int $entity id of the entity to add the component to
+	 * @param array $componentdata the initial data for the new component as key / value pairs
 	 *
 	 * @return boolean
 	 */
-	public function addComponentToEntity($component, $entity)
+	public function addComponentToEntity($component, $entity, $componentdata=false)
 	{
 		$this->debug->guard();
 
@@ -143,6 +145,17 @@ class zgGamedata
 			$this->messages->setMessage('Problem adding a new component to an entity: could not insert component data into database', 'warning');
 			$this->debug->unguard(false);
 			return false;
+		}
+		
+		if (is_array($componentdata))
+		{
+			if ($this->setComponentData($component, $entity, $componentdata))
+			{
+				$this->debug->write('Problem adding a new component to an entity: could not insert initial component data', 'warning');
+				$this->messages->setMessage('Problem adding a new component to an entity: could not insert initial component data', 'warning');
+				$this->debug->unguard(false);
+				return false;
+			}
 		}
 
 		$this->debug->unguard($componentDataId);
@@ -315,29 +328,29 @@ class zgGamedata
 	}
 
 
-
-// TODO: AAAAARGH!!!!!!
-
 	/**
 	 * Sets the data from a component of a specific component data entry
 	 *
 	 * @param int $component id of the component to set the data to
-	 * @param array $componentData data
+	 * @param int $entity id of the entity the component is bound to
+	 * @param array $componentdata new component data as key / value pairs
 	 *
 	 * @return array
 	 */
-	public function setComponentData($component, $componentData)
+	public function setComponentData($component, $entity, $componentdata)
 	{
 		$this->debug->guard();
 		
 		$sqlData = '';
-		foreach($componentData as $componentKey => $componentValue)
+		foreach($componentdata as $componentKey => $componentValue)
 		{
 			$sqlData .= $componentKey . "='" . $componentValue . "',";
 		}
 		$sqlData = substr($sqlData, 0, -1);
 
-		$sql = "UPDATE game_component_" . $component . " SET ".$sqlData;
+		$sql = "UPDATE game_component_" . $component . " gi SET ".$sqlData." WHERE gi.id=(";
+		$sql .= "SELECT entitycomponent_componentdata FROM game_entity_components ";
+		$sql .= "WHERE entitycomponent_entity='" . $entity . "' AND entitycomponent_component='" . $component . "')";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
