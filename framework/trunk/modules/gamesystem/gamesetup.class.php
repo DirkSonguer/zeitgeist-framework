@@ -69,7 +69,7 @@ class zgGamesetup
 		}
 
 		$sql = "CREATE TABLE game_component_". $componentid ." ";
-		$sql .= "(`id` INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY) ENGINE = MYISAM";
+		$sql .= "(`id` INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY) ENGINE = InnoDB";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
