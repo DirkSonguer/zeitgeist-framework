@@ -46,15 +46,16 @@ class zgGamehandler
 	 * @param integer $parameter the parameter/s of the action
 	 * @param integer $player id of the player that the event concerns
 	 * @param integer $time this is the time when the event should be handled
+	 * @param integer $game the id of the game or shard the action resides in
 	 *
 	 * @return boolean
 	 */
-	public function saveGameevent($game=0, $action, $parameter, $player, $time=0)
+	public function saveGameevent($action, $parameter, $player, $time=0, $game=0)
 	{
 		$this->debug->guard();
 
-		$sql  = "INSERT INTO game_events(event_game, event_action, event_parameter, event_player, event_time) ";
-		$sql .= "VALUES('" . $game . "', '" . $action . "', '" . $parameter . "', '" . $player . "', '" . $time . "')";
+		$sql  = "INSERT INTO game_events(event_action, event_parameter, event_player, event_time, event_game) ";
+		$sql .= "VALUES('" . $action . "', '" . $parameter . "', '" . $player . "', '" . $time . "', '" . $game . "')";
 		$res = $this->database->query($sql);
 		if (!$res)
 		{
@@ -184,8 +185,7 @@ class zgGamehandler
 			// load the module class through the autoloader
 			$eventClass = new $event['action_class'];
 
-			call_user_func(array(&$eventClass, 'execute'), $event['event_parameter'], $time);
-			$this->logGameevent($event['event_id']);
+			call_user_func(array(&$eventClass, 'execute'), $event, $time);
 		}
 
 		$this->debug->unguard(true);
