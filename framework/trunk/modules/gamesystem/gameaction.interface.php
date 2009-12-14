@@ -17,7 +17,7 @@ defined('ZEITGEIST_ACTIVE') or die();
 interface zgGameaction
 {
 
-	public function execute($parameter, $time);
+	public function execute($eventdata, $time);
 
 }
 
