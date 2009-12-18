@@ -308,7 +308,7 @@ class zgGamedata
 		$sql .= "SELECT entitycomponent_componentdata FROM game_entity_components ";
 		$sql .= "WHERE entitycomponent_entity='" . $entity . "' AND entitycomponent_component='" . $component . "')";
 */
-		$sql = "SELECT * FROM game_component_" . $component . " gc ";
+		$sql = "SELECT gc.* FROM game_component_" . $component . " gc ";
 		$sql .= "JOIN game_entity_components gec ON gc.id = gec.entitycomponent_componentdata ";
 		$sql .= "WHERE gec.entitycomponent_entity='" . $entity . "' AND gec.entitycomponent_component='" . $component . "'";
 
