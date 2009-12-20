@@ -1,4 +1,7 @@
 
+v0.1, 04.11.2009, based on rev. 580
+
+
 Welcome to the Zeitgeist Framework examples.
 
 If you have questions about the examples or the source feel free to ignore this email and figure it out yourself: dirk@songuer.de
