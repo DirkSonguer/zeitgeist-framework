@@ -38,19 +38,19 @@ class zgGamehandler
 
 	/**
 	 * Saves a game event to the event handler
-	 * The time offset defines the time when the event will be triggered
+	 * The time defines when the event will be triggered
 	 * Note that the timescale has to be defined by the game applicationm
 	 * This can be seconds, ticks, rounds, depending on your game
 	 *
 	 * @param integer $action id of the action that should be executed
 	 * @param integer $parameter the parameter/s of the action
-	 * @param integer $player id of the player that the event concerns
 	 * @param integer $time this is the time when the event should be handled
+	 * @param integer $player id of the player that executed the event
 	 * @param integer $game the id of the game or shard the action resides in
 	 *
 	 * @return boolean
 	 */
-	public function saveGameevent($action, $parameter, $player, $time=0, $game=0)
+	public function saveGameevent($action, $parameter, $time, $player=0, $game=0)
 	{
 		$this->debug->guard();
 
@@ -71,94 +71,38 @@ class zgGamehandler
 
 
 	/**
-	 * Removes a given race event from the event log
-	 *
-	 * @param integer $event id of the event to remove
-	 *
-	 * @return boolean
-	 */
-	public function removeGameevent($event)
-	{
-		$this->debug->guard();
-
-		$sql  = "DELETE FROM game_events WHERE event_id='" . $event . "'";
-		$res = $this->database->query($sql);
-		if (!$res)
-		{
-			$this->debug->write('Could remove game event: could not remove data from database', 'warning');
-			$this->messages->setMessage('Could remove game event: could not remove data from database', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-
-	/**
-	 * This stores a given game event to the eventlog.
-	 * The event will be taken from the event table (and deleted there).
-	 *
-	 * @param integer $event id of the event in the event table
-	 *
-	 * @return boolean
-	 */
-	public function logGameevent($event)
-	{
-		$this->debug->guard();
-
-		$sql = "INSERT INTO game_eventlog(eventlog_game, eventlog_action, eventlog_parameter, eventlog_player, eventlog_time) ";
-		$sql .= "SELECT event_game, event_action, event_parameter, event_player, event_time FROM game_events WHERE event_id='" . $event . "'";
-		$res = $this->database->query($sql);
-		if (!$res)
-		{
-			$this->debug->write('Could not store game event to log: could not insert event data into database', 'warning');
-			$this->messages->setMessage('Could not store game event to log: could not insert event data into database', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$sql = "DELETE FROM game_events WHERE event_id='" . $event . "'";
-		$res = $this->database->query($sql);
-		if (!$res)
-		{
-			$this->debug->write('Could not store game event to log: could not delete event data from event table', 'warning');
-			$this->messages->setMessage('Could not store game event to log: could not delete event data from event table', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
-
-		$this->removeGameevent($event);
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-
-	/**
 	 * Handles all race events
 	 * The time define the upper limit for the events to be executed
 	 * If a player id is given, only the events for the respective player
 	 * will be executed
+	 * If a game is given, only the event of the respective game / shard
+	 * will be executed
 	 *
 	 * @param integer $time the current time
 	 * @param integer $player id of the player to execute events for
+	 * @param integer $game id of the game / shard
 	 * 
 	 * @return boolean
 	 */
-	public function handleGameevents($game, $time, $player=0)
+	public function handleGameevents($time, $player=0, $game=0)
 	{
 		$this->debug->guard();
 
 		// get all events for the active player and the current round
 		$sql = "SELECT ge.event_id, ga.action_class, ge.event_parameter FROM game_events ge ";
 		$sql .= "LEFT JOIN game_actions ga ON ge.event_action = ga.action_id ";
-		$sql .= "WHERE ge.event_game = '" . $game . "' AND ge.event_time <= '" . $time . "'";
+		$sql .= "WHERE ge.event_time <= '" . $time . "'";
+
+		if ($game > 0)
+		{
+			$sql .= " AND ge.event_game='" . $game . "'";
+		}
+
 		if ($player > 0)
 		{
 			$sql .= " AND ge.event_player='" . $player . "'";
 		}
+
 		$sql .= " ORDER BY ge.event_time ASC";
 
 		$res = $this->database->query($sql);
@@ -191,6 +135,108 @@ class zgGamehandler
 		$this->debug->unguard(true);
 		return true;		
 	}
+
+
+	/**
+	 * This stores a given game event to the eventlog.
+	 * The event will be taken from the event table (and deleted there).
+	 * The time define the upper limit for the events to be executed
+	 * If a player id is given, only the events for the respective player
+	 * will be executed
+	 * If a game is given, only the event of the respective game / shard
+	 * will be executed
+	 *
+	 * @param integer $time the current time
+	 * @param integer $player id of the player to execute events for
+	 * @param integer $game id of the game / shard
+	 * 
+	 * @return boolean
+	 */
+	public function logGameevents($time, $player=0, $game=0)
+	{
+		$this->debug->guard();
+
+		$sql = "INSERT INTO game_eventlog(eventlog_game, eventlog_action, eventlog_parameter, eventlog_player, eventlog_time) ";
+		$sql .= "SELECT event_game, event_action, event_parameter, event_player, event_time FROM game_events ";
+		$sql .= "WHERE event_time <= '" . $time . "'";
+
+		if ($game > 0)
+		{
+			$sql .= " AND event_game='" . $game . "'";
+		}
+
+		if ($player > 0)
+		{
+			$sql .= " AND event_player='" . $player . "'";
+		}
+
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not store game event to log: could not insert event data into database', 'warning');
+			$this->messages->setMessage('Could not store game event to log: could not insert event data into database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		if (!$this->removeGameevents($time, $player, $game))
+		{
+			$this->debug->write('Could not store game event to log: could not delete event data from event table', 'warning');
+			$this->messages->setMessage('Could not store game event to log: could not delete event data from event table', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	/**
+	 * Removes race events from the event log
+	 * The time define the upper limit for the events to be executed
+	 * If a player id is given, only the events for the respective player
+	 * will be executed
+	 * If a game is given, only the event of the respective game / shard
+	 * will be executed
+	 *
+	 * @param integer $time the current time
+	 * @param integer $player id of the player to execute events for
+	 * @param integer $game id of the game / shard
+	 * 
+	 * @return boolean
+	 */
+	public function removeGameevents($time, $player=0, $game=0)
+	{
+		$this->debug->guard();
+
+		$sql  = "DELETE FROM game_events ";
+		$sql .= "WHERE event_time <= '" . $time . "'";
+
+		if ($game > 0)
+		{
+			$sql .= " AND event_game='" . $game . "'";
+		}
+
+		if ($player > 0)
+		{
+			$sql .= " AND event_player='" . $player . "'";
+		}
+		
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could remove game event: could not remove data from database', 'warning');
+			$this->messages->setMessage('Could remove game event: could not remove data from database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
 
 }
 
