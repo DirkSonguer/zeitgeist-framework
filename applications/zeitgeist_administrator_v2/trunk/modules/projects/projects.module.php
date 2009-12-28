@@ -142,7 +142,7 @@ class projects
 				
 				// check database connection
 				$projectdatabase = new zgDatabase();
-				$ret = $projectdatabase->connect($parameters['createproject']['project_dbserver'], $parameters['createproject']['project_dbuser'], $parameters['createproject']['project_dbpassword'], $parameters['createproject']['project_dbdatabase'], false, true);
+				$ret = $projectdatabase->connect($parameters['projectdata']['project_dbserver'], $parameters['projectdata']['project_dbuser'], $parameters['projectdata']['project_dbpassword'], $parameters['projectdata']['project_dbdatabase'], false, true);
 				if (!$ret)
 				{
 					$creationProblems = true;
@@ -163,7 +163,7 @@ class projects
 
 				if (!$creationProblems)
 				{
-					$ret = $this->projectfunctions->saveProject($parameters['createproject']);
+					$ret = $this->projectfunctions->saveProject($parameters['projectdata']);
 					if (!$ret)
 					{
 						$this->messages->setMessage('Could not save project data to database', 'userwarning');
@@ -179,7 +179,7 @@ class projects
 				}
 			}
 			
-			$formcreated = $createprojectForm->validate($tpl);
+			$formcreated = $createprojectForm->insert($tpl);
 		}
 
 		$tpl->show();
@@ -195,7 +195,7 @@ class projects
 
 		$currentId = 1;
 		if (!empty($parameters['id'])) $currentId = $parameters['id'];
-		if (!empty($parameters['editproject']['project_id'])) $currentId = $parameters['editproject']['project_id'];
+		if (!empty($parameters['projectdata']['project_id'])) $currentId = $parameters['projectdata']['project_id'];
 
 		$tpl = new zgaTemplate();
 		$tpl->load($this->configuration->getConfiguration('projects', 'templates', 'projects_editproject'));
@@ -213,7 +213,7 @@ class projects
 				
 				// check database connection
 				$projectdatabase = new zgDatabase();
-				$ret = $projectdatabase->connect($parameters['editproject']['project_dbserver'], $parameters['editproject']['project_dbuser'], $parameters['editproject']['project_dbpassword'], $parameters['editproject']['project_dbdatabase']);
+				$ret = $projectdatabase->connect($parameters['projectdata']['project_dbserver'], $parameters['projectdata']['project_dbuser'], $parameters['projectdata']['project_dbpassword'], $parameters['projectdata']['project_dbdatabase']);
 				if (!$ret)
 				{
 					$updateProblems = true;
@@ -234,7 +234,7 @@ class projects
 
 				if (!$updateProblems)
 				{
-					$ret = $this->projectfunctions->saveProject($parameters['editproject']);
+					$ret = $this->projectfunctions->saveProject($parameters['projectdata']);
 					if (!$ret)
 					{
 						$this->messages->setMessage('Could not save project data to database', 'userwarning');
@@ -255,7 +255,7 @@ class projects
 			$projectdata = $this->projectfunctions->getProject($currentId);
 
 			$processData = array();
-			$processData['editproject'] = $projectdata;
+			$processData['projectdata'] = $projectdata;
 			$formvalid = $editprojectForm->validate($processData);
 		}
 
