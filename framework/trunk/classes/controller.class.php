@@ -58,7 +58,7 @@ class zgController
 		$this->debug->guard();
 
 		$modulesTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_modules');
-		$sql = "SELECT * FROM " . $modulesTablename . " WHERE module_name = '" . $module . "'";
+		$sql = "SELECT * FROM " . $modulesTablename . " WHERE module_name = '" . mysql_real_escape_string($module) . "'";
 
 		if ($res = $this->database->query($sql))
 		{
@@ -91,7 +91,7 @@ class zgController
 		$this->debug->guard();
 
 		$actionsTablename = $this->configuration->getConfiguration('zeitgeist','tables','table_actions');
-		$sql = "SELECT * FROM " . $actionsTablename . " WHERE action_module = '" . $module['module_id'] . "' AND action_name = '" . $action . "'";
+		$sql = "SELECT * FROM " . $actionsTablename . " WHERE action_module = '" . $module['module_id'] . "' AND action_name = '" . mysql_real_escape_string($action) . "'";
 
 		if ($res = $this->database->query($sql))
 		{

@@ -25,7 +25,7 @@ defined('ZEITGEIST_ACTIVE') or die();
 	 *
 	 * @return NULL
 	 */
-	function __autoload($class)
+	function zgAutoload($class)
 	{
 		$debug = zgDebug::init();
 		$message = zgMessages::init();
@@ -39,8 +39,8 @@ defined('ZEITGEIST_ACTIVE') or die();
 			return;
 		}
 
-		$debug->write('Error autoloading class: Class ' . $class . ' not found', 'error');
-		$message->setMessage('Error autoloading class: Class ' . $class . ' not found', 'error');
+		$debug->write('Error autoloading class: Class ' . $class . ' not found', 'warning');
+		$message->setMessage('Error autoloading class: Class ' . $class . ' not found', 'warning');
 
 		$debug->unguard(false);
 	}
