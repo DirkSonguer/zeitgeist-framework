@@ -138,16 +138,16 @@ class zgGamehandler
 
 
 	/**
-	 * This stores a given game event to the eventlog.
-	 * The event will be taken from the event table (and deleted there).
-	 * The time define the upper limit for the events to be executed
+	 * Logs events and stores them to the eventlog.
+	 * The events will be taken from the event table (and deleted there).
+	 * The time defines the upper limit for the events to be stored
 	 * If a player id is given, only the events for the respective player
-	 * will be executed
+	 * will be stored
 	 * If a game is given, only the event of the respective game / shard
-	 * will be executed
+	 * will be stored
 	 *
 	 * @param integer $time the current time
-	 * @param integer $player id of the player to execute events for
+	 * @param integer $player id of the player to store events for
 	 * @param integer $game id of the game / shard
 	 * 
 	 * @return boolean
