@@ -1,0 +1,105 @@
+#summary A Quickstart to get you up and running with Zeitgeist.
+
+= Getting Started with Zeitgeist =
+
+This page acts as a quick guide to get you started.
+
+== Obtaining Zeitgeist ==
+
+If you have access to the SVN, there is an "empty" Zeitgeist project available in the repository: source:/examples/zeitgeist_example-project/. It contains the basic structure of a Zeitgeist project, an index.php file, database, configuration files and so on.
+
+If you do not have direct access to the repository, just [ZeitgeistDownloadOverview download a specific version], they are just zipped archives of the individual tags and contain the same as above.
+
+If you have never worked with Zeitgeist before I would suggest that you download an "Example Zeitgeist Project". It contains the Zeitgeist framework in the respective version as well as a skeleton for an application all ready to set up.
+
+== Installing Zeitgeist ==
+
+Take the files you have downloaded and put them into a directory accessible by your web server (htdocs/zeitgeist/ or something). Import the /_additional_files/*.sql files into your database and configure the application in the /configuration/* files.
+
+Most of the projects have a readme in the root directory describing this in a bit more detail.
+
+== Framework and Application Structure ==
+
+If you downloaded the example project as recommended, you will see the following directory structure:
+
+ * '''_additional_material''': contains additional files not directly needed for the application, e.g. an sql dump etc.
+ * '''classes''': contains the classes for the application
+ * '''configuration''': contains the configuration for the application
+ * '''modules''': contains the modules of the application
+ * '''templates''': contains templates / the presentation layers
+ * '''zeitgeist''': contains the Zeitgeist framework files
+
+The framework itself (inside the /zeitgeist folder) looks like this:
+
+ * '''_additional_material''': contains additional files not directly needed for the framework, e.g. an sql dump etc.
+ * '''classes''': contains the classes of the framework
+ * '''configuration''': contains the configuration for the framework as well as the global constants
+ * '''includes''': contains additional includes for the framework (methods)
+ * '''modules''': contains additional modules for the framework (classes)
+ * '''tests''': contains the unit tests for the Zeitgeist framework
+
+== How Does an Application Work? ==
+
+A typical call to a Zeitgeist application looks like this:
+
+[[Image(wiki:ZeitgeistGettingStarted:zeitgeist_calls.png)]]
+
+All calls go through the '''index.php'''. It is called with a module and action. Example: http://www.zeitgeistapplication.com/index.php?module=main&action=index
+
+From there the '''[ClassController controller]''' / eventhandler of Zeitgeist will route the call accordingly.
+
+The '''[ZeitgeistModules module]''' is the name of the class. In our example this would be "class main" in "/modules/main/main.php". It also loads the accordig configuration for the module.
+
+The '''[ZeitgeistActions action]''' is the name of the method inside the module class. In our example this would be "function index" in "/modules/main/main.php". It does all the magic
+
+== A Hello World Application ==
+
+ * Copy the contents of the "Example Zeitgeist Project" to a folder accessible by your web server (htdocs/zeitgeist/ or something)
+ * Dump ./_additional_files/zeitgeist_examples.sql in a new table with the same name on your webserver
+ * Configure the database access in ./configuration/application.configuration.php
+ * Start your browser and call the index.php. This should be something like this: http://127.0.0.1/zeitgeist_examples/index.php
+ * The first call should actually display nothing
+ * Open /modules/main/main.php in an editor
+ * Locate the index-method (''public function index($parameters=array())'')
+ * Enter an echo with some text (''echo "Hello World!";'')
+ * Reload the page and you should see your new content
+
+== Adding more actions ==
+
+An action is represented by a method inside the module class. However just adding a method and calling it by it's name as action parameter does not work. The reason is that all actions need to be registered in the application database. For more details about this, read the [ClassController controller documentation].
+
+Step by step:
+
+ * Add the method to the module class (for example "''public function test()''")
+ * Add some content to it (''echo "test"; // or something'')
+ * Add the method to the application database (''INSERT INTO actions(action_module, action_name, action_description, action_requiresuserright) VALUES('1', 'test', 'Some Test', '0');'')
+ * Please note that the first parameter of the query is the id of the module the action belongs to. The modules and their respective ids are located in the modules table (''SELECT * FROM modules'')
+ * Now call the index.php with the new action parameter (''http://127.0.0.1/zeitgeist_app/index.php?module=main&action=test'')
+
+== Adding more modules ==
+
+A module is a class, located in a folder in /modules/. The folder, file and class have to have the name of the module. The class need not extend any other class. However you need to register the module in the database, much like an action. For more details about this, read the [ClassController controller documentation].
+
+Step by step:
+
+ * Create a new folder (for example ''/modules/test/'')
+ * Create a new file in the folder with the same name (''/modules/test/test.php'')
+ * Add module to the application database (''INSERT INTO modules(module_name, module_description, module_active) VALUES('test', 'Some Test', '1');'')
+ * Start adding actions to the new module
+
+== Architectural Layout ==
+
+Zeitgeist does not dictate any architectural pattern besides the module / action layout. This gives you the freedom to utilize the framework in a way that fits your style and solves the application in an efficient way.
+
+Here are some examples:
+
+ * Use [http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller MVC] by using actions as controllers, application classes as models and templates as views.
+ * Use the [ClassController Controller] as an eventhandler for an [http://en.wikipedia.org/wiki/Event_driven Event Driven] approach (use the [ClassMessages message class] as internal control path).
+ * Put everything in the actions and be done with it.
+
+Of course you can do pretty much anything and even mix up the different approaches to suit your needs. For more on this see [ZeitgeistApplicationArchitecture Application Architecture].
+
+== A Starting Point ==
+
+Another good starting point is the example project, containing examples for most of the classes of Zeitgeist: source:/examples/zeitgeist_example/
+  * Automatic links to other wiki pages
