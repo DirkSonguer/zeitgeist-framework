@@ -88,6 +88,8 @@ Step by step:
 
 Both actions and modules can be created and configured with the [http://code.google.com/p/zeitgeist-framework/source/browse/#svn/applications/zeitgeist_administrator_v2 Zeitgeist Administrator]. It saves you time as it creates the database entries and so on and basically does most of the steps automatically.
 
+See [ZeitgeistAdministrator] for more details.
+
 == Architectural Layout ==
 
 Zeitgeist does not dictate any architectural pattern besides the module / action layout. This gives you the freedom to utilize the framework in a way that fits your style and solves the application in an efficient way.
