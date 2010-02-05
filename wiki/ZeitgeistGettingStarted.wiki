@@ -15,7 +15,7 @@ If you have never worked with Zeitgeist before I would suggest that you download
 
 == Installing Zeitgeist ==
 
-Take the files you have downloaded and put them into a directory accessible by your web server (htdocs/zeitgeist/ or something). Import the /_additional_files/*.sql files into your database and configure the application in the /configuration/* files.
+Take the files you have downloaded and put them into a directory accessible by your web server (htdocs/zeitgeist/ or something). Import the /_additional_files/.sql files into your database and configure the application in the /configuration/ files.
 
 Most of the projects have a readme in the root directory describing this in a bit more detail.
 
@@ -70,7 +70,7 @@ Step by step:
  * Add the method to the module class (for example "''public function test()''")
  * Add some content to it (''echo "test"; // or something'')
  * Add the method to the application database (''INSERT INTO actions(action_module, action_name, action_description, action_requiresuserright) VALUES('1', 'test', 'Some Test', '0');'')
- * Please note that the first parameter of the query is the id of the module the action belongs to. The modules and their respective ids are located in the modules table (''SELECT * FROM modules'')
+ * Please note that the first parameter of the query is the id of the module the action belongs to. The modules and their respective ids are located in the modules table (''SELECT FROM modules'')
  * Now call the index.php with the new action parameter (''http://127.0.0.1/zeitgeist_app/index.php?module=main&action=test'')
 
 == Adding more modules ==
