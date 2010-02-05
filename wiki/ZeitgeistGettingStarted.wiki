@@ -52,7 +52,7 @@ The '''[ZeitgeistActions action]''' is the name of the method inside the module 
 == A Hello World Application ==
 
  * Copy the contents of the "Example Zeitgeist Project" to a folder accessible by your web server (htdocs/zeitgeist/ or something)
- * Dump ./_additional_files/zeitgeist_examples.sql in a new table with the same name on your webserver
+ * Dump _additional_files/zeitgeist_examples.sql in a new table with the same name on your webserver
  * Configure the database access in ./configuration/application.configuration.php
  * Start your browser and call the index.php. This should be something like this: http://127.0.0.1/zeitgeist_examples/index.php
  * The first call should actually display nothing
