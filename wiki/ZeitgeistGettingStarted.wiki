@@ -6,7 +6,7 @@ This page acts as a quick guide to get you started.
 
 == Obtaining Zeitgeist ==
 
-If you have access to the SVN, there is an "empty" Zeitgeist project available in the repository: source:/examples/zeitgeist_example-project/. It contains the basic structure of a Zeitgeist project, an index.php file, database, configuration files and so on.
+Inside the [http://code.google.com/p/zeitgeist-framework/source/browse/ Zeitgeist Repository], there is an [http://code.google.com/p/zeitgeist-framework/source/browse/#svn/examples/zeitgeist_example-project empty Zeitgeist project] available in the repository. It contains the basic structure of a Zeitgeist project, an index.php file, database, configuration files and so on.
 
 If you do not have direct access to the repository, just [ZeitgeistDownloadOverview download a specific version], they are just zipped archives of the individual tags and contain the same as above.
 
