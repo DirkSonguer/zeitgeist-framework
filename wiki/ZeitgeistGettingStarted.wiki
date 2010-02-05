@@ -1,4 +1,5 @@
 #summary A Quickstart to get you up and running with Zeitgeist.
+#labels HowTo
 
 = Getting Started with Zeitgeist =
 
@@ -39,10 +40,6 @@ The framework itself (inside the /zeitgeist folder) looks like this:
  * '''tests''': contains the unit tests for the Zeitgeist framework
 
 == How Does an Application Work? ==
-
-A typical call to a Zeitgeist application looks like this:
-
-[[Image(wiki:ZeitgeistGettingStarted:zeitgeist_calls.png)]]
 
 All calls go through the '''index.php'''. It is called with a module and action. Example: http://www.zeitgeistapplication.com/index.php?module=main&action=index
 
@@ -86,6 +83,10 @@ Step by step:
  * Create a new file in the folder with the same name (''/modules/test/test.php'')
  * Add module to the application database (''INSERT INTO modules(module_name, module_description, module_active) VALUES('test', 'Some Test', '1');'')
  * Start adding actions to the new module
+
+== Convinience ==
+
+Both actions and modules can be created and configured with the [http://code.google.com/p/zeitgeist-framework/source/browse/#svn/applications/zeitgeist_administrator_v2 Zeitgeist Administrator]. It saves you time as it creates the database entries and so on and basically does most of the steps automatically.
 
 == Architectural Layout ==
 
