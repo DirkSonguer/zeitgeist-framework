@@ -1,4 +1,5 @@
 #summary Explains the role of Zeitgeist Modules.
+#labels Basics
 
 = Zeitgeist Modules =
 
