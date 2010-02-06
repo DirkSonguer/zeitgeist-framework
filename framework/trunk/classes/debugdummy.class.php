@@ -4,9 +4,12 @@
  * http://www.zeitgeist-framework.com
  *
  * Debug class
+ * 
+ * If debugging is deactivated, this dummy is used instead of the real
+ * class to save ressources
  *
- * @copyright http://www.zeitgeist-framework.com
- * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
+ * @author Dirk Songür <dirk@zeitalter3.de>
+ * @license MIT License <http://creativecommons.org/licenses/MIT/>
  *
  * @package ZEITGEIST
  * @subpackage ZEITGEIST DEBUG

@@ -4,9 +4,13 @@
  * http://www.zeitgeist-framework.com
  *
  * User class
+ * 
+ * Provides general user handling functionalities like ctreating and
+ * editing users, opt-is as well as validating a login
+ * However it does manage a specific user session (see userhandler.class.php)
  *
- * @copyright http://www.zeitgeist-framework.com
- * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
+ * @author Dirk Songür <dirk@zeitalter3.de>
+ * @license MIT License <http://creativecommons.org/licenses/MIT/>
  *
  * @package ZEITGEIST
  * @subpackage ZEITGEIST USERHANDLER

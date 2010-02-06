@@ -4,9 +4,11 @@
  * http://www.zeitgeist-framework.com
  *
  * Userdata class
+ * 
+ * Manages the additional userdata associated with a user
  *
- * @copyright http://www.zeitgeist-framework.com
- * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
+ * @author Dirk Songür <dirk@zeitalter3.de>
+ * @license MIT License <http://creativecommons.org/licenses/MIT/>
  *
  * @package ZEITGEIST
  * @subpackage ZEITGEIST USERHANDLER

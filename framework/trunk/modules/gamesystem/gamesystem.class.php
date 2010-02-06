@@ -3,10 +3,14 @@
  * Zeitgeist Application Framework
  * http://www.zeitgeist-framework.com
  *
- * Main Zeitgeist file
+ * Game System
+ * 
+ * The main entry point for the game system
+ * The game system provides an eventhandler as well as data
+ * management for a game project
  *
- * @copyright http://www.zeitgeist-framework.com
- * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
+ * @author Dirk Songür <dirk@zeitalter3.de>
+ * @license MIT License <http://creativecommons.org/licenses/MIT/>
  *
  * @package ZEITGEIST
  * @subpackage ZEITGEIST GAMESYSTEM

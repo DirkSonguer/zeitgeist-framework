@@ -4,9 +4,15 @@
  * http://www.zeitgeist-framework.com
  *
  * Messaging class
+ * 
+ * The message class is used as a message stack for the entire
+ * applications. Messages are aggregated and can be accessed globally.
+ * Warnings and errors by the framework will end up in the message stack
+ * as well
+ * Messages may be saved transparently in the user session
  *
- * @copyright http://www.zeitgeist-framework.com
- * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
+ * @author Dirk Songür <dirk@zeitalter3.de>
+ * @license MIT License <http://creativecommons.org/licenses/MIT/>
  *
  * @package ZEITGEIST
  * @subpackage ZEITGEIST MESSAGES

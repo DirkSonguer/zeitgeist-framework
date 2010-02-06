@@ -4,9 +4,12 @@
  * http://www.zeitgeist-framework.com
  *
  * Autoloader
+ * 
+ * The autoloader is needed to route the incoming requests to the
+ * according modules and actions
  *
- * @copyright http://www.zeitgeist-framework.com
- * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
+ * @author Dirk Songür <dirk@zeitalter3.de>
+ * @license MIT License <http://creativecommons.org/licenses/MIT/>
  *
  * @package ZEITGEIST
  * @subpackage ZEITGEIST AUTOLOADER

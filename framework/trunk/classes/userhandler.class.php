@@ -4,9 +4,12 @@
  * http://www.zeitgeist-framework.com
  *
  * Userhandler class
+ * 
+ * Manages a specific user session
+ * Based on the userfunctions.class.php
  *
- * @copyright http://www.zeitgeist-framework.com
- * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
+ * @author Dirk Songür <dirk@zeitalter3.de>
+ * @license MIT License <http://creativecommons.org/licenses/MIT/>
  *
  * @package ZEITGEIST
  * @subpackage ZEITGEIST USERHANDLER
