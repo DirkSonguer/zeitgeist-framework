@@ -10,8 +10,8 @@
  * It also handles the usual tasks like checking user and security related
  * issues
  *
- * @copyright http://www.zeitgeist-framework.com
- * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
+ * @author Dirk Songür <dirk@zeitalter3.de>
+ * @license MIT License <http://creativecommons.org/licenses/MIT/>
  *
  * @package ZEITGEIST
  * @subpackage ZEITGEIST CONTROLLER

@@ -4,12 +4,14 @@
  * http://www.zeitgeist-framework.com
  *
  * Gameaction interface
+ * 
+ * A simple interface for a given game action
  *
- * @copyright http://www.zeitgeist-framework.com
- * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
+ * @author Dirk Songür <dirk@zeitalter3.de>
+ * @license MIT License <http://creativecommons.org/licenses/MIT/>
  *
  * @package ZEITGEIST
- * @subpackage ZEITGEIST GAMEACTION
+ * @subpackage ZEITGEIST GAMESYSTEM
  */
 
 defined('ZEITGEIST_ACTIVE') or die();

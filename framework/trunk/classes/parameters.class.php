@@ -4,9 +4,13 @@
  * http://www.zeitgeist-framework.com
  *
  * Parameter class
+ * 
+ * The parameter class handles all incoming parameters from the client
+ * (GET, POST, COOKIE) and validates them against given definitions
+ * Acts as a security layer between your application and the client input
  *
- * @copyright http://www.zeitgeist-framework.com
- * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
+ * @author Dirk Songür <dirk@zeitalter3.de>
+ * @license MIT License <http://creativecommons.org/licenses/MIT/>
  *
  * @package ZEITGEIST
  * @subpackage ZEITGEIST PARAMETERS

@@ -4,9 +4,12 @@
  * http://www.zeitgeist-framework.com
  *
  * Objecthandler class
+ * 
+ * The object class is comparable to the message class but instead of
+ * managing messages, it manages application objects
  *
- * @copyright http://www.zeitgeist-framework.com
- * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
+ * @author Dirk Songür <dirk@zeitalter3.de>
+ * @license MIT License <http://creativecommons.org/licenses/MIT/>
  *
  * @package ZEITGEIST
  * @subpackage ZEITGEIST OBJECTS

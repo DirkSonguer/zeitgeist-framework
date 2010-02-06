@@ -7,9 +7,10 @@
  * 
  * This class handles multiple language variants of system messages
  * and is able to convert one variant into another
+ * Uses the configuration system to load the language assets
  *
- * @copyright http://www.zeitgeist-framework.com
- * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
+ * @author Dirk Songür <dirk@zeitalter3.de>
+ * @license MIT License <http://creativecommons.org/licenses/MIT/>
  *
  * @package ZEITGEIST
  * @subpackage ZEITGEIST LOCALISATION

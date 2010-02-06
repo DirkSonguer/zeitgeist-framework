@@ -5,11 +5,12 @@
  *
  * Main Zeitgeist file
  *
- * @copyright http://www.zeitgeist-framework.com
- * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
- *
+ * @author Dirk Songür <dirk@zeitalter3.de>
+ * @license MIT License <http://creativecommons.org/licenses/MIT/>
+ * 
  * @package ZEITGEIST
  * @subpackage ZEITGEIST CORE
+ * 
  */
 
 // Define a constant to indicate that Zeitgeist is active

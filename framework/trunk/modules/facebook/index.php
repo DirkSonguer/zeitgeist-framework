@@ -1,5 +1,8 @@
 <?php
 
+// A SIMPLE TEST PAGE
+// WORK IN PROGRESS!
+
 // the facebook client library
 include_once 'facebook_api/facebook.php';
 

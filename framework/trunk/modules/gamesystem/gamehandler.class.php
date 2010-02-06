@@ -4,12 +4,15 @@
  * http://www.zeitgeist-framework.com
  *
  * Gamehandler class
+ * 
+ * An event handler for games that manages incoming events and executes
+ * associated game actions
  *
- * @copyright http://www.zeitgeist-framework.com
- * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
+ * @author Dirk Songür <dirk@zeitalter3.de>
+ * @license MIT License <http://creativecommons.org/licenses/MIT/>
  *
  * @package ZEITGEIST
- * @subpackage ZEITGEIST GAMEHANDLER
+ * @subpackage ZEITGEIST GAMESYSTEM
  */
 
 defined('ZEITGEIST_ACTIVE') or die();

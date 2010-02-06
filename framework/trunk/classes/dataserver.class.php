@@ -4,9 +4,13 @@
  * http://www.zeitgeist-framework.com
  *
  * Dataserver class
+ * 
+ * Just a simple class that takes arrays as input and sends them
+ * to the client as XML.
+ * More or less deprecated with the XML capabilities of PHP5
  *
- * @copyright http://www.zeitgeist-framework.com
- * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
+ * @author Dirk Songür <dirk@zeitalter3.de>
+ * @license MIT License <http://creativecommons.org/licenses/MIT/>
  *
  * @package ZEITGEIST
  * @subpackage ZEITGEIST DATASERVER

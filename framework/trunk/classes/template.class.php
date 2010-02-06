@@ -4,9 +4,13 @@
  * http://www.zeitgeist-framework.com
  *
  * Template class
+ * 
+ * A simple template class based on Dreamweaver templates
+ * The idea is to let the designer work in Dreamweaver and define
+ * the dynamic parts as DW template markup supported by the IDE
  *
- * @copyright http://www.zeitgeist-framework.com
- * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
+ * @author Dirk Songür <dirk@zeitalter3.de>
+ * @license MIT License <http://creativecommons.org/licenses/MIT/>
  *
  * @package ZEITGEIST
  * @subpackage ZEITGEIST TEMPLATE

@@ -4,9 +4,13 @@
  * http://www.zeitgeist-framework.com
  *
  * Forms class
+ * 
+ * A simple abstraction layer for form handling
+ * It does not create forms from definitions but instead it uses
+ * the definitions to verify input and act accordingly
  *
- * @copyright http://www.zeitgeist-framework.com
- * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
+ * @author Dirk Songür <dirk@zeitalter3.de>
+ * @license MIT License <http://creativecommons.org/licenses/MIT/>
  *
  * @package ZEITGEIST
  * @subpackage ZEITGEIST FORMS
