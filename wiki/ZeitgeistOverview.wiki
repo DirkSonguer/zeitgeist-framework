@@ -6,20 +6,20 @@ This page acts as a "Home" to point to the individual sections and contents of t
 
 == Starting with Zeitgeist ==
 
- * [ZeitgeistGettingStarted Getting started with Zeitgeist]: A quickstart tutorial that explains some basics and gets you started.
- * [ZeitgeistExamples Zeitgeist Examples]: An overview of the the basic features of Zeitgeist
+ * [ZeitgeistGettingStarted Getting started with Zeitgeist]: A quickstart tutorial that explains some basics and gets you started
+ * [ZeitgeistExamples Zeitgeist Examples]: There are several examples for the basic functionalities and classes of Zeitgeist
 
 
 == Zeitgeist Basics ==
 
- * [ZeitgeistModules Zeitgeist Modules]
- * [ZeitgeistActions Zeitgeist Actions]
- * [ZeitgeistApplicationArchitecture Application Architecture]
+ * [ZeitgeistApplicationArchitecture Application Architecture]: Gives an overview of the architecture of the Zeitgeist framework and applications
+ * [ZeitgeistModules Zeitgeist Modules]: Explains what Zeitgeist modules are and how they work
+ * [ZeitgeistActions Zeitgeist Actions]: Explains what Zeitgeist actions are and how they work
 
 
 == Zeitgeist Core Classes ==
 
-Overview of Zeitgeist Classes
+Overview of the core classes with examples on how to use them.
 
  * [ClassActionlog actionlog]: tracking of requests
  * [ClassConfiguration configuration]: handles loading & using configuration files
@@ -45,4 +45,4 @@ Overview of Zeitgeist Classes
 
 Tools to help developing for and with Zeitgeist.
 
- * [ZeitgeistAdministrator Zeitgeist Administrator]: a tool that supports you while developing and maintaining Zeitgeist applications
+ * [ZeitgeistAdministrator Zeitgeist Administrator]: A tool that supports you while developing and maintaining Zeitgeist applications
