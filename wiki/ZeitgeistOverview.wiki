@@ -1,0 +1,48 @@
+#summary Overview of the Zeitgeist Framework, the features and how to get started
+
+= Overview =
+
+This page acts as a "Home" to point to the individual sections and contents of the documentation.
+
+== Starting with Zeitgeist ==
+
+ * [ZeitgeistGettingStarted Getting started with Zeitgeist]: A quickstart tutorial that explains some basics and gets you started.
+ * [ZeitgeistExamples Zeitgeist Examples]: An overview of the the basic features of Zeitgeist
+
+
+== Zeitgeist Basics ==
+
+ * [ZeitgeistModules Zeitgeist Modules]
+ * [ZeitgeistActions Zeitgeist Actions]
+ * [ZeitgeistApplicationArchitecture Application Architecture]
+
+
+== Zeitgeist Core Classes ==
+
+Overview of Zeitgeist Classes
+
+ * [ClassActionlog actionlog]: tracking of requests
+ * [ClassConfiguration configuration]: handles loading & using configuration files
+ * [ClassController controller]: front controller
+ * [ClassDatabase database]: simple database abstraction(MySQL)
+ * [ClassDebug debug]: debug & tracing functionality
+ * [ClassDebug debugdummy]: empty class as substitute for the real debug class
+ * [ClassErrorhandler errorhandler]: handles PHP errors, warning etc.
+ * [ClassFiles files]: simple file handling abstraction
+ * [ClassLocalisation localisation]: localisation functionalities
+ * [ClassMessages messages]: message system
+ * [ClassObjects objects]: object system
+ * [ClassParameters parameters]: input filter
+ * [ClassSession session]: session handling
+ * [ClassTemplate template]: template system
+ * [ClassUserdata userdata]: handles project specific data
+ * [ClassUserfunctions userfunctions]: general user functionalities
+ * [ClassUserhandler userhandler]: currently active user
+ * [ClassUserrights userrights]: handling user rights
+ * [ClassUserroles userroles]: handling user roles
+
+== Tools ==
+
+Tools to help developing for and with Zeitgeist.
+
+ * [ZeitgeistAdministrator Zeitgeist Administrator]: a tool that supports you while developing and maintaining Zeitgeist applications
