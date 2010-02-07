@@ -1,29 +1,43 @@
 #summary A Quickstart to get you up and running with Zeitgeist.
-#labels HowTo
+#labels Basics
 
 = Getting Started with Zeitgeist =
 
-This page acts as a quick guide to get you started.
+This page acts as a quick guide to get you started. There are links to more in depth information on the [ZeitgeistOverview overview page].
 
 == Obtaining Zeitgeist ==
 
-Inside the [http://code.google.com/p/zeitgeist-framework/source/browse/ Zeitgeist Repository], there is an [http://code.google.com/p/zeitgeist-framework/source/browse/#svn/examples/zeitgeist_example-project empty Zeitgeist project] available in the repository. It contains the basic structure of a Zeitgeist project, an index.php file, database, configuration files and so on.
+If you are new to the Zeitgeist Framework you should first [http://code.google.com/p/zeitgeist-framework/source/browse/ take a look] at the repository. As you can see it contains 4 sections:
 
-If you do not have direct access to the repository, just [ZeitgeistDownloadOverview download a specific version], they are just zipped archives of the individual tags and contain the same as above.
+ * *applications*: tools that help you develop with Zeitgeist
+ * *examples*: examples of the ZG classes as well as an empty ZG project template
+ * *framework*: the framework itself
+ * *wiki*: copy of the documentation (in Wiki format)
 
-If you have never worked with Zeitgeist before I would suggest that you download an "Example Zeitgeist Project". It contains the Zeitgeist framework in the respective version as well as a skeleton for an application all ready to set up.
+Just check out the entire repository - it should be around 60 MB or something:
 
-== Installing Zeitgeist ==
+{{{svn checkout http://zeitgeist-framework.googlecode.com/svn/ zeitgeist-framework-read-only}}}
 
-Take the files you have downloaded and put them into a directory accessible by your web server (htdocs/zeitgeist/ or something). Import the /_additional_files/.sql files into your database and configure the application in the /configuration/ files.
+Note that the framework and tools have their own branching and tagging directories, so might get some unstable work-in-prograss stuff as well. For now, just ignore them and concentrate on the trunk-directories.
 
-Most of the projects have a readme in the root directory describing this in a bit more detail.
+== Installing the Zeitgeist examples ==
+
+Follow these steps to get the ZG examples up and running. You will need some kind of webserver and a MySQL database.
+
+ * Create a new folder on you webserver, for example "_yourwebroot/zgexamples_".
+ * Copy the contents of "_zeitgeist-repository/examples/zeitgeist`_`examples/_" into the new  folder
+ * Copy "_zeitgeist-repository/framework/trunk_" (the ZG framework itself) into the new folder
+ * Import the SQL file for the examples ("_/`_`additional_material/zeitgeist_examples.sql_") into a MySQL database
+ * Edit the config file ("_/configuration/application.configuration.php_") and enter your database credentials
+ * Now try calling the examples in your webserver, for example http:://localhost/zgexamples
+
+Most of the projects have a [http://code.google.com/p/zeitgeist-framework/source/browse/examples/zeitgeist_examples/readme.txt readme] in the root directory describing this in a bit more detail.
 
 == Framework and Application Structure ==
 
 If you downloaded the example project as recommended, you will see the following directory structure:
 
- * '''_additional_material''': contains additional files not directly needed for the application, e.g. an sql dump etc.
+ * '''`_`additional_material''': contains additional files not directly needed for the application, e.g. an sql dump etc.
  * '''classes''': contains the classes for the application
  * '''configuration''': contains the configuration for the application
  * '''modules''': contains the modules of the application
@@ -32,7 +46,7 @@ If you downloaded the example project as recommended, you will see the following
 
 The framework itself (inside the /zeitgeist folder) looks like this:
 
- * '''_additional_material''': contains additional files not directly needed for the framework, e.g. an sql dump etc.
+ * '''`_`additional_material''': contains additional files not directly needed for the framework, e.g. an sql dump etc.
  * '''classes''': contains the classes of the framework
  * '''configuration''': contains the configuration for the framework as well as the global constants
  * '''includes''': contains additional includes for the framework (methods)
@@ -43,20 +57,22 @@ The framework itself (inside the /zeitgeist folder) looks like this:
 
 All calls go through the '''index.php'''. It is called with a module and action. Example: http://www.zeitgeistapplication.com/index.php?module=main&action=index
 
-From there the '''[ClassController controller]''' / eventhandler of Zeitgeist will route the call accordingly.
+From there the '''[ClassController controller]''' of Zeitgeist will route the call accordingly:
 
-The '''[ZeitgeistModules module]''' is the name of the class. In our example this would be "class main" in "/modules/main/main.php". It also loads the accordig configuration for the module.
+ * The '''[ZeitgeistModules module]''' is the name of the class. In our example this would be "class main" in "/modules/main/main.php". It also loads the accordig configuration for the module.
 
-The '''[ZeitgeistActions action]''' is the name of the method inside the module class. In our example this would be "function index" in "/modules/main/main.php". It does all the magic
+ * The '''[ZeitgeistActions action]''' is the name of the method inside the module class. In our example it would be "function index" in "/modules/main/main.php" that does all the magic
 
 == A Hello World Application ==
 
- * Copy the contents of the "Example Zeitgeist Project" to a folder accessible by your web server (htdocs/zeitgeist/ or something)
- * Dump _additional_files/zeitgeist_examples.sql in a new table with the same name on your webserver
- * Configure the database access in configuration/application.configuration.php
- * Start your browser and call the index.php. This should be something like this: http://127.0.0.1/zeitgeist_examples/index.php
+ * Create a new folder on you webserver, for example "_yourwebroot/zghelloworld_".
+ * Copy the contents of "_zeitgeist-repository/examples/zeitgeist`_`example-project/_" into the new  folder
+ * Copy "_zeitgeist-repository/framework/trunk_" (the ZG framework itself) into the new folder
+ * Import the SQL file for the examples ("_/`_`additional_material/zeitgeist_project.sql_") into a MySQL database
+ * Edit the config file ("_/configuration/application.configuration.php_") and enter your database credentials
+ * Now try calling the examples in your webserver, for example http:://localhost/zghelloworld
  * The first call should actually display nothing
- * Open /modules/main/main.php in an editor
+ * Open "_/modules/main/main.php_" in an editor
  * Locate the index-method (''public function index($parameters=array())'')
  * Enter an echo with some text (''echo "Hello World!";'')
  * Reload the page and you should see your new content
@@ -70,7 +86,7 @@ Step by step:
  * Add the method to the module class (for example "''public function test()''")
  * Add some content to it (''echo "test"; // or something'')
  * Add the method to the application database (''INSERT INTO actions(action_module, action_name, action_description, action_requiresuserright) VALUES('1', 'test', 'Some Test', '0');'')
- * Please note that the first parameter of the query is the id of the module the action belongs to. The modules and their respective ids are located in the modules table (''SELECT FROM modules'')
+ * Please note that the first parameter of the query is the id of the module the action belongs to. The modules and their respective ids are located in the modules table (''SELECT `*` FROM modules'')
  * Now call the index.php with the new action parameter (''http://127.0.0.1/zeitgeist_app/index.php?module=main&action=test'')
 
 == Adding more modules ==
@@ -96,13 +112,8 @@ Zeitgeist does not dictate any architectural pattern besides the module / action
 
 Here are some examples:
 
- * Use [http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller MVC] by using actions as controllers, application classes as models and templates as views.
+ * Use [http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller MVC] by using actions as controllers, special application classes as models and templates as views.
  * Use the [ClassController Controller] as an eventhandler for an [http://en.wikipedia.org/wiki/Event_driven Event Driven] approach (use the [ClassMessages message class] as internal control path).
- * Put everything in the actions and be done with it.
+ * Put everything in the actions and be done with it (linear approach).
 
 Of course you can do pretty much anything and even mix up the different approaches to suit your needs. For more on this see [ZeitgeistApplicationArchitecture Application Architecture].
-
-== A Starting Point ==
-
-Another good starting point is the example project, containing examples for most of the classes of Zeitgeist: source:/examples/zeitgeist_example/
-  * Automatic links to other wiki pages
