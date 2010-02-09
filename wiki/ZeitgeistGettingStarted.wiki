@@ -14,13 +14,21 @@ If you are new to the Zeitgeist Framework you should first [http://code.google.c
  * *framework*: the framework itself
  * *wiki*: copy of the documentation (in Wiki format)
 
-Just check out the entire repository - it should be around 60 MB or something:
+Just check out the entire repository to get the newest version of everything or use the [http://code.google.com/p/zeitgeist-framework/downloads/list downloads] to download specific versions:
 
 {{{svn checkout http://zeitgeist-framework.googlecode.com/svn/ zeitgeist-framework-read-only}}}
 
-Note that the framework and tools have their own branching and tagging directories, so might get some unstable work-in-prograss stuff as well. For now, just ignore them and concentrate on the trunk-directories.
+Note that the framework and tools have their own branching and tagging directories, so you might get some unstable work-in-prograss stuff as well. For now, just ignore them and concentrate on the trunk-directories.
 
 == Installing the Zeitgeist examples ==
+
+=== Use the download ===
+
+It is advised that you use the [http://code.google.com/p/zeitgeist-framework/downloads/list download version]. It contains everything you need and is easier than copying some files manually.
+
+Just download a version of the ZG Examples and follow the directions inside the readme.
+
+=== Do it manually ===
 
 Follow these steps to get the ZG examples up and running. You will need some kind of webserver and a MySQL database.
 
@@ -65,9 +73,13 @@ From there the '''[ClassController controller]''' of Zeitgeist will route the ca
 
 == A Hello World Application ==
 
+It is advised that you use the [http://code.google.com/p/zeitgeist-framework/downloads/list download version]. It contains everything you need and is easier than copying some files manually.
+
+Just download a version of the ZG Example Project and follow the directions inside the readme.
+
  * Create a new folder on you webserver, for example "_yourwebroot/zghelloworld_".
- * Copy the contents of "_zeitgeist-repository/examples/zeitgeist`_`example-project/_" into the new  folder
- * Copy "_zeitgeist-repository/framework/trunk_" (the ZG framework itself) into the new folder
+ * Copy the contents of "_zeitgeist-repository/examples/zeitgeist`_`example-project/_" OR the download contents (see above) into the new  folder
+ * Copy "_zeitgeist-repository/framework/trunk_" (the ZG framework itself) into the new folder (NOTE: this step is only necessary if you did not use the downloaded version and are using the repository directly)
  * Import the SQL file for the examples ("_/`_`additional_material/zeitgeist_project.sql_") into a MySQL database
  * Edit the config file ("_/configuration/application.configuration.php_") and enter your database credentials
  * Now try calling the examples in your webserver, for example http:://localhost/zghelloworld
