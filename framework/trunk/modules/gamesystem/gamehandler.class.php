@@ -91,34 +91,11 @@ class zgGamehandler
 	{
 		$this->debug->guard();
 
-		// get all events for the active player and the current round
-		$sql = "SELECT ge.event_id, ga.action_class, ge.event_parameter FROM game_events ge ";
-		$sql .= "LEFT JOIN game_actions ga ON ge.event_action = ga.action_id ";
-		$sql .= "WHERE ge.event_time <= '" . $time . "'";
-
-		if ($game > 0)
-		{
-			$sql .= " AND ge.event_game='" . $game . "'";
-		}
-
-		if ($player > 0)
-		{
-			$sql .= " AND ge.event_player='" . $player . "'";
-		}
-
-		$sql .= " ORDER BY ge.event_time ASC";
-
-		$res = $this->database->query($sql);
-		if (!$res)
-		{
-			$this->debug->write('Could not handle game events: could not load events from the database', 'warning');
-			$this->messages->setMessage('Could not handle game events: could not load events from the database', 'warning');
-			$this->debug->unguard(false);
-			return false;
-		}
+		// get the events for the given timeframe
+		$gameevents = $this->getGameevents($time, $player, $game);
 		
 		// execute event data
-		while ($event = $this->database->fetchArray($res))
+		foreach($gameevents as $event)
 		{
 			//check if the event exists and what function to call				
 			if ( (empty($event['action_class'])) || (!class_exists($event['action_class'], true)) )
@@ -137,6 +114,62 @@ class zgGamehandler
 
 		$this->debug->unguard(true);
 		return true;		
+	}
+
+
+	/**
+	 * Gets the current game events stored in the database for the given timeframe
+	 * The time define the upper limit for the events to be executed
+	 * If a player id is given, only the events for the respective player
+	 * will be executed
+	 * If a game is given, only the event of the respective game / shard
+	 * will be executed
+	 *
+	 * @param integer $time the current time
+	 * @param integer $player id of the player to execute events for
+	 * @param integer $game id of the game / shard
+	 * 
+	 * @return array
+	 */
+	public function getGameevents($time, $player=0, $game=0)
+	{
+		$this->debug->guard();
+
+		// get all events for the active player and the current round
+		$sql = "SELECT ge.event_id, ge.event_action, ga.action_class, ge.event_parameter FROM game_events ge ";
+		$sql .= "LEFT JOIN game_actions ga ON ge.event_action = ga.action_id ";
+		$sql .= "WHERE ge.event_time <= '" . $time . "'";
+
+		if ($game > 0)
+		{
+			$sql .= " AND ge.event_game='" . $game . "'";
+		}
+
+		if ($player > 0)
+		{
+			$sql .= " AND ge.event_player='" . $player . "'";
+		}
+
+		$sql .= " ORDER BY ge.event_time ASC";
+
+		$res = $this->database->query($sql);
+		if (!$res)
+		{
+			$this->debug->write('Could not get game events: could not load events from the database', 'warning');
+			$this->messages->setMessage('Could not get game events: could not load events from the database', 'warning');
+			$this->debug->unguard(false);
+			return false;
+		}
+		
+		// collect events
+		$gameevents = array();
+		while ($event = $this->database->fetchArray($res))
+		{
+			$gameevents[] = $event;
+		}
+
+		$this->debug->unguard($gameevents);
+		return $gameevents;		
 	}
 
 
