@@ -5,7 +5,7 @@
  *
  * Zeitgeist Examples
  * 
- * @author Dirk Songür <dirk.songuer@zeitgeist-framework.com>
+ * @author Dirk Songür <dirk@zeitalter3.de>
  * 
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt

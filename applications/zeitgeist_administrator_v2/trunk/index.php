@@ -1,10 +1,10 @@
 <?php
 /**
- * Zeitgeist
+ * Zeitgeist Administrator v2
  * A PHP based multipurpose framework for web applications
  * http://www.zeitgeist-framework.com
  *
- * @author Dirk Songür <songuer@zeitgeist-framework.com>
+ * @author Dirk Songür <dirk@zeitalter3.de>
  * 
  * @copyright http://www.zeitgeist-framework.com
  * @license http://www.zeitgeist-framework.com/zeitgeist/license.txt
