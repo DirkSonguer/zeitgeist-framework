@@ -1,7 +1,12 @@
 <?php
 /**
  * Zeitgeist Administrator v2
- * A PHP based multipurpose framework for web applications
+ * 
+ * The Zeitgeist Administrator v2 will help you create and manage
+ * projects based on the Zeitgeist framework.
+ * It is meant as a tool to help you develop applications with Zeitgeist
+ * as well as manage your running applications.
+ * 
  * http://www.zeitgeist-framework.com
  *
  * @author Dirk Songür <dirk@zeitalter3.de>
@@ -16,8 +21,8 @@
 	// set define for application
 	define('ZGADMIN_ACTIVE', true);
 	
-	// activate debugging
-	define('DEBUGMODE', true);
+	// activate debugging by uncommenting the line below
+	// define('DEBUGMODE', true);
 
 	// require basic configuration
 	require_once('configuration/application.configuration.php');	
