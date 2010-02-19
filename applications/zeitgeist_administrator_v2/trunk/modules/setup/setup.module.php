@@ -572,6 +572,7 @@ class setup
 		return true;
 	}
 
+
 	public function edituserrole($parameters=array())
 	{
 		$this->debug->guard();

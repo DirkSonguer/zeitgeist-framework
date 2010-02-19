@@ -98,7 +98,6 @@ class users
 					}
 				}
 
-
 				// User key
 				if ($userkey != $parameters['edituser']['user_key'])
 				{
@@ -114,7 +113,6 @@ class users
 						$this->messages->setMessage('User key data was changed', 'usermessage');
 					}
 				}
-
 
 				// Password check
 				if ( (!empty($parameters['edituser']['user_password'])) && (!empty($parameters['edituser']['user_pwconfirmation'])) )
@@ -161,7 +159,6 @@ class users
 					$update = false;
 				}
 
-
 				// Saving Userroles
 				$ret = $this->userroles->saveUserroles($currentId, $parameters['userroles']);
 				if (!$ret)
@@ -170,7 +167,6 @@ class users
 					$update = false;
 				}
 				
-
 				// Saving Userrights
 				$ret = $this->userrights->saveUserrights($currentId, $parameters['userrights']);
 				if (!$ret)
@@ -179,7 +175,6 @@ class users
 					$update = false;
 				}
 				
-
 				// Check if everything went fine
 				if ($update)
 				{
@@ -201,7 +196,6 @@ class users
 			$userForm->validate($parameters);
 		}
 
-
 		// list userdata for user
 		$userdata = $this->userdata->loadUserdata($currentId);
 		foreach ($userdata as $key => $value)
@@ -213,7 +207,6 @@ class users
 				$tpl->insertBlock('userdatafield');
 			}
 		}
-
 
 		// list userroles for user
 		$userroles = $this->setupfunctions->getAllUserroles();
@@ -236,7 +229,6 @@ class users
 			$tpl->insertBlock('userroles');
 		}
 
-
 		// list userrights for user
 		$actions = $this->setupfunctions->getAllActions();
 		$userrightsForUser = $this->userrights->loadUserrights($currentId);
@@ -258,7 +250,6 @@ class users
 
 			$tpl->insertBlock('userrights');
 		}
-
 
 		$userForm->insert($tpl);
 		$tpl->assign('user_id', $currentId);

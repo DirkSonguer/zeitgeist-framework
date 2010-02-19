@@ -73,6 +73,7 @@ class main
 		return true;
 	}
 
+
 	public function logout($parameters=array())
 	{
 		$this->debug->guard();
