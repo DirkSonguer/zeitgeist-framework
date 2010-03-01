@@ -1,5 +1,5 @@
 #summary Overview of the Zeitgeist Framework, the features and how to get started
-#labels Basics
+#labels Basics,Featured
 
 = Overview =
 
