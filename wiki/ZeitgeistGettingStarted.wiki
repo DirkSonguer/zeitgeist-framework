@@ -1,5 +1,5 @@
 #summary A Quickstart to get you up and running with Zeitgeist.
-#labels Basics
+#labels Basics,Featured
 
 = Getting Started with Zeitgeist =
 
