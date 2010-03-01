@@ -2,6 +2,7 @@
 
 define('ZEITGEIST_SOURCE_LINK', 'http://zeitgeist-framework.googlecode.com/files/zeitgeist-framework_20100213_1_0_1.zip');
 define('ZEITGEIST_SQLIMPORT_FILE', './../_additional_material/zeitgeist_administrator.sql');
+define('ZEITGEIST_APPCONFIG_FILE', './../configuration/application.configuration.php');
 
 function createMessage($message, $messagetype)
 {
@@ -70,8 +71,11 @@ function database_connection()
 	$database_userpassword = $_POST['database_userpassword'];
 	$database_database = $_POST['database_database'];
 	$database_createdatabase = $_POST['database_createdatabase'];
+	$database_resetdatabase = $_POST['database_resetdatabase'];
 
-	$message = 'Trying to connect to the MySQL server..<br />';
+	$message = 'Setting up the database connection<br /><br />';
+
+	$message .= 'Trying to connect to the MySQL server..<br />';
 	if (!$dblink = @mysql_connect($database_server, $database_user, $database_userpassword))
 	{
 		$message .= 'Could not connect to the database server<br /><br />';
@@ -82,6 +86,14 @@ function database_connection()
 
 	if ($database_createdatabase == 'true')
 	{
+		$message .= 'Checking if the database already exists..<br />';
+		if (mysql_select_db($database_database, $dblink))
+		{
+			$message .= 'The database already exists, there is no need to create it first.<br /><br />';
+			$message .= 'If you use this database (by unchecking the box) it\'s contents will be deleted automatically.<br />';
+			return createMessage($message, 'warning');
+		}
+
 		$message .= 'Trying to create the database..<br />';
 		if (!mysql_query('CREATE DATABASE '.$database_database, $dblink))
 		{
@@ -89,7 +101,46 @@ function database_connection()
 			$message .= 'MySQL message was: '.mysql_error().'<br />';
 			return createMessage($message, 'warning');
 		}
-	} else {
+
+		$message .= 'Trying to connect to the database..<br />';
+		if (!mysql_select_db($database_database, $dblink))
+		{
+			$message .= 'Could not connect to the database<br /><br />';
+			$message .= 'MySQL message was: '.mysql_error().'<br /><br />';
+			$message .= 'Make sure you entered the right database name.';
+			return createMessage($message, 'warning');
+		}
+	}
+	else
+	{
+		if ($database_resetdatabase == 'true')
+		{
+			$message .= 'Trying to reset the database..<br />';
+			if (!mysql_query('DROP DATABASE '.$database_database, $dblink))
+			{
+				$message .= 'Could not drop the database<br /><br />';
+				$message .= 'MySQL message was: '.mysql_error().'<br />';
+				return createMessage($message, 'warning');
+			}
+
+			if (!mysql_query('CREATE DATABASE '.$database_database, $dblink))
+			{
+				$message .= 'Could not create the database<br /><br />';
+				$message .= 'MySQL message was: '.mysql_error().'<br />';
+				return createMessage($message, 'warning');
+			}
+		}
+		else
+		{
+			$message .= 'Checking if the database already exists..<br />';
+			if (mysql_select_db($database_database, $dblink))
+			{
+				$message .= 'The database already exists.<br /><br />';
+				$message .= 'If you want to reset an existing database, please choose the "Reset Database" option. Please note that all previous data will be lost.';
+				return createMessage($message, 'warning');
+			}
+		}
+
 		$message .= 'Trying to connect to the database..<br />';
 		if (!mysql_select_db($database_database, $dblink))
 		{
@@ -104,22 +155,53 @@ function database_connection()
 	if (!$importHandle = fopen(ZEITGEIST_SQLIMPORT_FILE, 'r'))
 	{
 		$message .= 'Could not open SQL initialization file<br /><br />';
-		$message .= 'Please make sure that the file _additional_material/zeitgeist_administrator.sql exisis.';
+		$message .= 'Please make sure that the file '.ZEITGEIST_SQLIMPORT_FILE.' exisis.';
 		return createMessage($message, 'warning');
 	}
-	$importData = fread($importHandle, filesize(ZEITGEIST_SQLIMPORT_FILE));
-	fclose($importHandle);
 
-	$message .= 'Importing initial SQL data to database..<br />';
-	if (!mysql_query($importData, $dblink))
+	$tempDataString = '';
+	while ($sqlImportLine = fgets($importHandle))
 	{
-		$message .= 'Could not import the initial data to the database<br /><br />';
-		$message .= 'MySQL message was: '.mysql_error().'<br />';
-		return createMessage($message, 'warning');
+		if ( (substr($sqlImportLine, 0, 2) != '--') && (substr($sqlImportLine, 0, 2) != '/*') && (strlen($sqlImportLine) > 1) )
+		{
+			$endDataString = trim(substr($sqlImportLine, -2, 1));
+			$tempDataString .= trim(substr($sqlImportLine, 0, -1));
+			if ($endDataString == ';')
+			{
+				if (!mysql_query($tempDataString, $dblink))
+				{
+					$message .= 'Could not import the initial data to the database<br /><br />';
+					$message .= 'MySQL message was: '.mysql_error().'<br />';
+					return createMessage($message, 'warning');
+				}
+				
+				$tempDataString = '';
+			}
+		}
 	}
 
-	$message .= 'Database connection is available<br /><br />';
-	$message .= 'The connection details have ben saved to ./configuration/application.configuration.php and will be used from now on.<br />';
+	fclose($importHandle);
+	$message .= 'Database connection is ok and data has been imported<br />';
+
+	$message .= 'Writing database details to configuration file..<br />';
+	if (!$configurationHandle = fopen(ZEITGEIST_APPCONFIG_FILE, 'w'))
+	{
+		$message .= 'Could not open application configuration file<br /><br />';
+		$message .= 'Please make sure that the file '.ZEITGEIST_APPCONFIG_FILE.' exisis.';
+		return createMessage($message, 'warning');
+	}
+	
+	fwrite($configurationHandle, "<?php\n\n");
+	fwrite($configurationHandle, "\tdefine(ZG_DB_DBSERVER, '".$database_server."');\n");
+	fwrite($configurationHandle, "\tdefine(ZG_DB_USERNAME, '".$database_user."');\n");
+	fwrite($configurationHandle, "\tdefine(ZG_DB_USERPASS, '".$database_userpassword."');\n");
+	fwrite($configurationHandle, "\tdefine(ZG_DB_DATABASE, '".$database_database."');\n");
+	fwrite($configurationHandle, "\tdefine(ZG_DB_CONFIGURATIONCACHE, 'configurationcache');\n");
+	fwrite($configurationHandle, "\n?>");
+	fclose($configurationHandle);
+	$message .= 'Done writing configuration<br /><br />';
+
+	$message .= 'The database is all set up. The connection details have been saved to <br />./configuration/application.configuration.php and will be used from now on.<br />';
 
 	$message = createMessage($message, 'message');
 	return $message;
