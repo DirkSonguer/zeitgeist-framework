@@ -1,6 +1,6 @@
 <?php
 
-define('ZEITGEIST_SOURCE_LINK', 'http://zeitgeist-framework.googlecode.com/files/zeitgeist-framework_20100213_1_0_1.zip');
+define('ZEITGEIST_SOURCE_LINK', 'http://zeitgeist-framework.googlecode.com/files/zeitgeist-framework_20100304_1_0_2.zip');
 define('ZEITGEIST_SQLIMPORT_FILE', './../_additional_material/zeitgeist_administrator.sql');
 define('ZEITGEIST_APPCONFIG_FILE', './../configuration/application.configuration.php');
 
@@ -49,7 +49,7 @@ function download_zeitgeist()
 		return createMessage($message, 'warning');
 	}
 
-	if ($zip->extractTo('./../zeitgeist/') !== TRUE)
+	if ($zip->extractTo('./../') !== TRUE)
 	{
 		$message .= 'Could not unzip the framework. The ZIP file may be corrupt.<br />';
 		$message .= 'Please try to manually unzip the archive "zeitgeist.zip" in the root directory of the Zeitgeist Administrator.';
@@ -57,6 +57,7 @@ function download_zeitgeist()
 	}
 
 	$zip->close();
+	unlink('./../zeitgeist.zip');
 
 	$message .= '<br />Done. The Zeitgeist Framework is not installed in the root directory of the Zeitgeist Administrator.';
 	$message = createMessage($message, 'message');
