@@ -31,7 +31,7 @@ function check_zeitgeist()
 
 function download_zeitgeist()
 {
-	$message = 'Downloading a matching version of the Zeitgeist Framework..<br />';
+	$message = 'Downloading a matching version of the Zeitgeist Framework<br /><br />';
 	if (!copy(ZEITGEIST_SOURCE_LINK, './../zeitgeist.zip'))
 	{
 		$message .= 'Could not download the framework.<br />';
@@ -40,6 +40,7 @@ function download_zeitgeist()
 		return createMessage($message, 'warning');
 	}
 
+	$message .= 'Download ok..<br />';
 	$message .= 'Unpacking the framework..<br />';
 	$zip = new ZipArchive;
 	if ($zip->open('./../zeitgeist.zip') !== TRUE)
@@ -57,9 +58,12 @@ function download_zeitgeist()
 	}
 
 	$zip->close();
+	$message .= 'Framework files are available..<br />';
+
+	$message .= 'Deleting temp download file..<br />';
 	unlink('./../zeitgeist.zip');
 
-	$message .= '<br />Done. The Zeitgeist Framework is not installed in the root directory of the Zeitgeist Administrator.';
+	$message .= 'Done.<br /><br >The Zeitgeist Framework is not installed in the root directory of the Zeitgeist Administrator.';
 	$message = createMessage($message, 'message');
 	return $message;
 }
