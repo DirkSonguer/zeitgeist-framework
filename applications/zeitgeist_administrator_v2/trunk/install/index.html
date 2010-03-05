@@ -17,6 +17,7 @@
 
 	function contentloader(targetid, contentid)
 	{
+		jQuery("#"+targetid).html('<h3 class="usermessage" style="text-align:center;"><img src="./images/loading.gif" alt="Loading, please wait" /></h3>');
 		$("#"+targetid).load("installer.php?contentid="+contentid);
 	}
 
@@ -27,6 +28,7 @@
 
 	function checkDatabaseCredentials()
 	{
+		jQuery("#message_database").html('<h3 class="usermessage" style="text-align:center;"><img src="./images/loading.gif" alt="Loading, please wait" /></h3>');
 		var database_server = jQuery("#database_server").attr("value");
 		var database_user = jQuery("#database_user").attr("value");
 		var database_password = jQuery("#database_password").attr("value");
