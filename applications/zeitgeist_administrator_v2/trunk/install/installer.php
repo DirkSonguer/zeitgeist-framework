@@ -3,6 +3,7 @@
 define('ZEITGEIST_SOURCE_LINK', 'http://zeitgeist-framework.googlecode.com/files/zeitgeist-framework_20100304_1_0_2.zip');
 define('ZEITGEIST_SQLIMPORT_FILE', './../_additional_material/zeitgeist_administrator.sql');
 define('ZEITGEIST_APPCONFIG_FILE', './../configuration/application.configuration.php');
+define('ZEITGEIST_APPINI_FILE', './../configuration/application.ini');
 
 function createMessage($message, $messagetype)
 {
@@ -29,9 +30,64 @@ function check_zeitgeist()
 }
 
 
+function check_basepath()
+{
+	$message = '<b>Checking application basepath.</b><br /><br />';
+	$basepath_URL = $_POST['basepath_URL'];
+
+	if (empty($basepath_URL))
+	{
+		if ( ($_SERVER["REQUEST_URI"] != '/zeitgeist_administrator_v2/install/installer.php?contentid=check_basepath') || ($_SERVER['SERVER_NAME'] != '127.0.0.1') )
+		{
+			$message .= 'The current application path seems to differ from the default installation path (http://127.0.0.1/zeitgeist_administrator_v2). You need to set your application path manually in the textbox above.<br /><br />';
+			$message .= 'Most likely your application path is:<br />http://'.$_SERVER['SERVER_NAME'].substr($_SERVER["REQUEST_URI"], 0, -47).'<br />';
+			return createMessage($message, 'warning');
+		}
+
+		$message .= 'The current application path seems to be the default installation path (http://127.0.0.1/zeitgeist_administrator_v2) so everything should be fine<br /><br />';
+		$message .= 'If you encounter problems (like broken links, templates or images) try checking the basepath again in /configuration/application.ini';
+		return createMessage($message, 'message');
+	}
+	else
+	{
+		$message .= 'Checking current configuration<br />';
+		if (!$configuration = file_get_contents(ZEITGEIST_APPINI_FILE))
+		{
+			$message .= 'Could not open application.ini configuration file<br /><br />';
+			$message .= 'Please make sure that the file '.ZEITGEIST_APPINI_FILE.' exisis.';
+			return createMessage($message, 'warning');
+		}
+		$configuration = str_replace('http://127.0.0.1/zeitgeist_administrator_v2', $basepath_URL, $configuration);
+
+		$message .= 'Writing new basepath to configuration<br />';
+		if (!$configurationHandle = fopen(ZEITGEIST_APPINI_FILE, 'w'))
+		{
+			$message .= 'Could not open application.ini configuration file<br /><br />';
+			$message .= 'Please make sure that the file '.ZEITGEIST_APPINI_FILE.' exisis.';
+			return createMessage($message, 'warning');
+		}		
+		fwrite($configurationHandle, $configuration);
+		fclose($configurationHandle);
+		$message .= 'Done writing configuration<br /><br />';
+
+		if ( ('http://'.$_SERVER['SERVER_NAME'].substr($_SERVER["REQUEST_URI"], 0, -47)) != $basepath_URL )
+		{
+			$message .= 'The basepath is set to the URL you specified. However it does not match the URL that the installer is called from, so you may encounter problems.<br /><br />';
+			$message .= '<b>If you do encounter problems (like broken links, templates or images) try checking the basepath again in /configuration/application.ini</b>';
+		}
+
+		$message .= '<br />Basepath set successfully.<br />';
+		$message .= 'If you do encounter problems (like broken links, templates or images) try checking the basepath again in /configuration/application.ini';
+	}
+
+	$message = createMessage($message, 'message');
+	return $message;
+}
+
+
 function download_zeitgeist()
 {
-	$message = 'Downloading a matching version of the Zeitgeist Framework<br /><br />';
+	$message = '<b>Downloading a matching version of the Zeitgeist Framework</b><br /><br />';
 	if (!copy(ZEITGEIST_SOURCE_LINK, './../zeitgeist.zip'))
 	{
 		$message .= 'Could not download the framework.<br />';
@@ -78,7 +134,7 @@ function database_connection()
 	$database_createdatabase = $_POST['database_createdatabase'];
 	$database_resetdatabase = $_POST['database_resetdatabase'];
 
-	$message = 'Setting up the database connection<br /><br />';
+	$message = '<b>Setting up the database connection</b><br /><br />';
 
 	$message .= 'Trying to connect to the MySQL server..<br />';
 	if (!$dblink = @mysql_connect($database_server, $database_user, $database_userpassword))
