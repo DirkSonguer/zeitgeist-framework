@@ -24,6 +24,25 @@
 	function check_all()
 	{
 		contentloader('message_zeitgeist', 'check_zeitgeist');
+		contentloader('message_basepath', 'check_basepath');
+	}
+
+	function checkBasepath()
+	{
+		var basepath_URL = jQuery("#basepath_URL").attr("value");
+		jQuery.ajax({
+ 			type: "POST",
+ 			url: "installer.php?contentid=check_basepath",
+			dataType: "html",
+			data: "basepath_URL=" + basepath_URL,
+			success: function(response)
+			{
+				// if sucessful; response will contain some stuff echo-ed from .php
+				// quick tect: alert("Here is your response: " + response);
+				// Append this response to some <div> => let's append it to div with id "serverMsg"
+				jQuery("#message_basepath").html(response);
+			}
+		});
 	}
 
 	function checkDatabaseCredentials()
@@ -95,10 +114,28 @@
             <p>This tool is based on the <a href="http://www.zeitgeist-framework.com">Zeitgeist Framework</a> and requires that the framework is available on the server as well. Depending on how you obtained the Zeitgeist Administrator the framework itself may not have been part of the package.</p>
 			<div id="message_zeitgeist"></div>
 
+            <h3 id="projectlink">Application Basepath</h3>
+            <p>You need to specify the basepath of the application on your server. This is basically the root URL where the application is located:</p>
+			<form method="post" action="" name="application_basepath" enctype="multipart/form-data; charset=utf-8">
+			<table border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td valign="top" nowrap="nowrap"><p class="formlabel">Basepath</p></td>
+				<td valign="middle">
+				<input type="text" maxlength="140" id="basepath_URL" value="http://127.0.0.1/zeitgeist_administrator_v2" class="formtext" style="width:565px;" />
+				</td>
+			</tr>
+			<tr>
+				<td valign="top" nowrap="nowrap" colspan="2">
+				<p style="margin-top:15px; margin-left:0px;"><button id="basepath_submit" type="button" class="formlabel" onclick="javascript:checkBasepath();">Set basepath to given location</button></p>
+				</td>
+			</tr>
+			</table>
+			</form>
+			<div id="message_basepath"></div>
+
             <h3 id="projectlink">Database</h3>
             <p>The Zeitgeist Administrator requires a MySQL database to work. Please enter the connection details to the database you want to use.</p>
             <p>New databases can only be created if no database with the same name exists already. If you want to reset an already existing database, choose "Reset Database".</p>
-
 			<form method="post" action="" name="database_connection" enctype="multipart/form-data; charset=utf-8">
 			<table border="0" cellpadding="0" cellspacing="0">
 			<tr>
@@ -144,10 +181,7 @@
 			</tr>
             </table>
             </form/
-
-
 			<div id="message_database"></div>
-
 
 	<script type="text/javascript">
 		check_all();
