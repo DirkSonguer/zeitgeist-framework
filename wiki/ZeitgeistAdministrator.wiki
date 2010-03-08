@@ -1,4 +1,5 @@
 #summary Basics about the Zeitgeist Administrator Tool.
+#labels ZGA
 
 = Zeitgeist Administrator v2 =
 
@@ -8,4 +9,4 @@ Note that it's a pretty simple tool with very little failsafes. So be careful wh
 
 == Installing the ZGAv2 ==
 
-Download a release version from [ZeitgeistDownloadOverview the download page] or export it from the [source:applications/zeitgeist_administrator_v2/ SVN]. Afterwards follow the [source:applications/zeitgeist_administrator_v2/trunk/readme.txt installation instructions].
+Download a release version from [ZeitgeistDownloadOverview the download page] or export it from the [http://code.google.com/p/zeitgeist-framework/source/browse/applications/zeitgeist_administrator_v2/#zeitgeist_administrator_v2/trunk SVN]. Afterwards follow the [http://code.google.com/p/zeitgeist-framework/source/browse/applications/zeitgeist_administrator_v2/trunk/readme.txt installation instructions].
