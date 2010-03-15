@@ -360,7 +360,7 @@ CREATE TABLE users (
 -- Daten für Tabelle 'users'
 --
 
-INSERT INTO users (user_id, user_username, user_password, user_key, user_active) VALUES(1, 'dirk', '098f6bcd4621d373cade4e832627b4f6', '098f6bcd4621d373cade4e832627b4f6', 1);
+INSERT INTO users (user_id, user_username, user_password, user_key, user_active) VALUES(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', '098f6bcd4621d373cade4e832627b4f6', 1);
 
 -- --------------------------------------------------------
 
@@ -382,6 +382,3 @@ CREATE TABLE zga_projects (
 -- Daten für Tabelle 'zga_projects'
 --
 
-INSERT INTO zga_projects (project_id, project_name, project_dbserver, project_dbuser, project_dbpassword, project_dbdatabase) VALUES(1, 'Pokendesign', '127.0.0.1', 'root', '', 'pokendesign');
-INSERT INTO zga_projects (project_id, project_name, project_dbserver, project_dbuser, project_dbpassword, project_dbdatabase) VALUES(2, 'Zeitgeist Administrator', '127.0.0.1', 'root', '', 'zeitgeist_administrator');
-INSERT INTO zga_projects (project_id, project_name, project_dbserver, project_dbuser, project_dbpassword, project_dbdatabase) VALUES(9, 'lineracer', '127.0.0.1', 'root', '', 'lineracer');
