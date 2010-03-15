@@ -21,5 +21,6 @@ _Setup_
 
 * Copy this directory to your htdocs directory or in some folder there (for example http://127.0.0.1/zeitgeist-administrator)
 * Start /install/ and follow the instructions (http://127.0.0.1/zeitgeist-administrator/install)
+* Log in with admin / admin
 * Click around
 * Read the help areas
