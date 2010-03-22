@@ -1,5 +1,5 @@
 #summary This page contains news regarding the framework
-#labels Phase-Support,Basics
+#labels Featured,Basics
 
 = 22.03.2010 =
 
