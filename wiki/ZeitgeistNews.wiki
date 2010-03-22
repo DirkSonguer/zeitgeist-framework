@@ -1,0 +1,6 @@
+#summary This page contains news regarding the framework
+#labels Phase-Support,Basics
+
+= 22.03.2010 =
+
+ * Added new version of Zeitgeist Administrator v2. Now contains working installer for easy setup.
