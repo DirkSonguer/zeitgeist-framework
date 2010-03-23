@@ -1,6 +1,11 @@
 #summary This page contains news regarding the framework
 #labels Featured,Basics
 
+= 23.03.2010 =
+
+ * Zeitgeist Examples: Now contains working installer for easy setup.
+ * Zeitgeist Examples: New download version.
+
 = 22.03.2010 =
 
- * Added new version of Zeitgeist Administrator v2. Now contains working installer for easy setup.
+ * Zeitgeist Administrator v2: Added new download version. Now contains working installer for easy setup.
