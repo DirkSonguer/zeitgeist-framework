@@ -20,9 +20,7 @@ _Setup_
 
 * Create a new folder on you webserver, for example "yourwebroot/zeitgeist_examples".
 * Copy the contents of this directory into the new folder
-* Copy the Zeitgeist Framework also into the new folder
-* Dump ./_additional_files/zeitgeist_examples.sql in a new database
-* Configure the database access in /configuration/application.configuration.php
-* Start your browser and call the index.php. Should be something like this: http://127.0.0.1/zeitgeist_examples/index.php
+* Start your browser, call the /install/ subdirectory and follow the instructions (http://127.0.0.1/zeitgeist_examples/install/)
+* Call the index.php in the root directory. Should be something like this: http://127.0.0.1/zeitgeist_examples/index.php
 * Click around
 * Read the source
