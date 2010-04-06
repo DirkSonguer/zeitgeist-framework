@@ -15,7 +15,7 @@
  * @subpackage ZEITGEIST OBJECTS
  */
 
-defined('ZEITGEIST_ACTIVE') or die();
+defined( 'ZEITGEIST_ACTIVE' ) or die();
 
 /**
  * NOTE: This class is a singleton.
@@ -24,11 +24,12 @@ defined('ZEITGEIST_ACTIVE') or die();
 class zgObjects
 {
 	private static $instance = false;
-
+	
 	protected $debug;
 	protected $messages;
-
+	
 	protected $objects;
+
 
 	/**
 	 * Class constructor
@@ -39,23 +40,23 @@ class zgObjects
 	{
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
-
-		$this->objects = array();
+		
+		$this->objects = array ();
 	}
 
 
 	/**
 	 * Initialize the singleton
 	 *
-	 * @return object
+	 * @return zgObjects
 	 */
 	public static function init()
 	{
-		if (self::$instance === false)
+		if( self::$instance === false )
 		{
 			self::$instance = new zgObjects();
 		}
-
+		
 		return self::$instance;
 	}
 
@@ -69,21 +70,21 @@ class zgObjects
 	 *
 	 * @return boolean
 	 */
-	public function storeObject($name, $object, $overwrite=false)
+	public function storeObject($name, $object, $overwrite = false)
 	{
 		$this->debug->guard();
-
-		if ( (!empty($this->objects[$name])) && (!$overwrite) )
+		
+		if( (! empty( $this->objects [$name] )) && (! $overwrite) )
 		{
-			$this->debug->write('An object of this name ("' . $name . '") already exists', 'error');
-			$this->messages->setMessage('An object of this name ("' . $name . '") already exists', 'error');
-			$this->debug->unguard(false);
+			$this->debug->write( 'An object of this name ("' . $name . '") already exists', 'error' );
+			$this->messages->setMessage( 'An object of this name ("' . $name . '") already exists', 'error' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
-		$this->objects[$name] = $object;
-
-		$this->debug->unguard(true);
+		
+		$this->objects [$name] = $object;
+		
+		$this->debug->unguard( true );
 		return true;
 	}
 
@@ -98,18 +99,18 @@ class zgObjects
 	public function getObject($objectname)
 	{
 		$this->debug->guard();
-
-		if (empty($this->objects[$objectname]))
+		
+		if( empty( $this->objects [$objectname] ) )
 		{
-			$this->debug->write('Object with name ' . $objectname . ' not found', 'error');
-			$this->messages->setMessage('Object with name ' . $objectname . ' not found', 'error');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Object with name ' . $objectname . ' not found', 'error' );
+			$this->messages->setMessage( 'Object with name ' . $objectname . ' not found', 'error' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
-		$ret = $this->objects[$objectname];
-
-		$this->debug->unguard($ret);
+		
+		$ret = $this->objects [$objectname];
+		
+		$this->debug->unguard( $ret );
 		return $ret;
 	}
 
@@ -124,18 +125,18 @@ class zgObjects
 	public function deleteObject($objectname)
 	{
 		$this->debug->guard();
-
-		if (empty($this->objects[$objectname]))
+		
+		if( empty( $this->objects [$objectname] ) )
 		{
-			$this->debug->write('Object with name ' . $objectname . ' not found', 'error');
-			$this->messages->setMessage('Object with name ' . $objectname . ' not found', 'error');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Object with name ' . $objectname . ' not found', 'error' );
+			$this->messages->setMessage( 'Object with name ' . $objectname . ' not found', 'error' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
-		unset($this->objects[$objectname]);
-
-		$this->debug->unguard(true);
+		
+		unset( $this->objects [$objectname] );
+		
+		$this->debug->unguard( true );
 		return true;
 	}
 
@@ -149,10 +150,10 @@ class zgObjects
 	public function deleteAllObjects()
 	{
 		$this->debug->guard();
-
-		$this->objects = array();
-
-		$this->debug->unguard(true);
+		
+		$this->objects = array ();
+		
+		$this->debug->unguard( true );
 		return true;
 	}
 

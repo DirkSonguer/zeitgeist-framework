@@ -15,17 +15,17 @@
 
 // Define a constant to indicate that Zeitgeist is active
 // Every file in this package should test for this constant to verify that it is called from the framework
-define('ZEITGEIST_ACTIVE', true);
+define( 'ZEITGEIST_ACTIVE', true );
 
 // definitions
-if (!defined('ZEITGEIST_ROOTDIRECTORY')) define('ZEITGEIST_ROOTDIRECTORY', './zeitgeist/');
-if (!defined('APPLICATION_ROOTDIRECTORY')) define('APPLICATION_ROOTDIRECTORY', './');
+if( ! defined( 'ZEITGEIST_ROOTDIRECTORY' ) ) define( 'ZEITGEIST_ROOTDIRECTORY', './zeitgeist/' );
+if( ! defined( 'APPLICATION_ROOTDIRECTORY' ) ) define( 'APPLICATION_ROOTDIRECTORY', './' );
 
 // configuration
 require_once (ZEITGEIST_ROOTDIRECTORY . 'configuration/zeitgeist.config.php');
 
 // check for debug mode
-if (!defined('DEBUGMODE'))
+if( ! defined( 'DEBUGMODE' ) )
 {
 	require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/debugdummy.class.php');
 }
@@ -56,7 +56,7 @@ require_once (ZEITGEIST_ROOTDIRECTORY . 'classes/files.class.php');
 
 // include misc functions
 require_once (ZEITGEIST_ROOTDIRECTORY . 'includes/autoloader.include.php');
-spl_autoload_register ('zgAutoload');
+spl_autoload_register( 'zgAutoload' );
 
 // include modules
 require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/form/form.class.php');

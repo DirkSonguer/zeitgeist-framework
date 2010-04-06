@@ -15,7 +15,7 @@
  * @subpackage ZEITGEIST USERHANDLER
  */
 
-defined('ZEITGEIST_ACTIVE') or die();
+defined( 'ZEITGEIST_ACTIVE' ) or die();
 
 /**
  * NOTE: This class is a singleton.
@@ -24,24 +24,25 @@ defined('ZEITGEIST_ACTIVE') or die();
 class zgUserhandler
 {
 	private static $instance = false;
-
+	
 	protected $debug;
 	protected $messages;
 	protected $session;
 	protected $database;
 	protected $configuration;
-
+	
 	protected $userroles;
 	protected $userrolesLoaded;
-
+	
 	protected $userrights;
 	protected $userrightsLoaded;
-
+	
 	protected $userdata;
 	protected $userdataLoaded;
-
+	
 	protected $loggedIn;
 	protected $userid;
+
 
 	/**
 	 * Class constructor
@@ -53,22 +54,22 @@ class zgUserhandler
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
 		$this->configuration = zgConfiguration::init();
-
+		
 		$this->database = new zgDatabase();
 		$this->database->connect();
-
+		
 		$this->session = zgSession::init();
 		$this->session->startSession();
-
-		$this->userroles = array();
+		
+		$this->userroles = array ();
 		$this->userrolesLoaded = false;
-
-		$this->userrights = array();
+		
+		$this->userrights = array ();
 		$this->userrightsLoaded = false;
-
-		$this->userdata = array();
+		
+		$this->userdata = array ();
 		$this->userdataLoaded = false;
-
+		
 		$this->loggedIn = false;
 	}
 
@@ -76,15 +77,15 @@ class zgUserhandler
 	/**
 	 * Initialize the singleton
 	 *
-	 * @return object
+	 * @return zgUserhandler
 	 */
 	public static function init()
 	{
-		if (self::$instance === false)
+		if( self::$instance === false )
 		{
 			self::$instance = new zgUserhandler();
 		}
-
+		
 		return self::$instance;
 	}
 
@@ -98,34 +99,34 @@ class zgUserhandler
 	public function establishUserSession()
 	{
 		$this->debug->guard();
-
-		if (!$this->session->getSessionId())
+		
+		if( ! $this->session->getSessionId() )
 		{
-			$this->debug->write('Problem establishing user session: could not find a session id', 'warning');
-			$this->messages->setMessage('Problem establishing user session: could not find a session id', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Problem establishing user session: could not find a session id', 'warning' );
+			$this->messages->setMessage( 'Problem establishing user session: could not find a session id', 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
-		if (!$this->session->getSessionVariable('user_id'))
+		
+		if( ! $this->session->getSessionVariable( 'user_id' ) )
 		{
-			$this->debug->write('Could not establish user session: user id not found in session', 'warning');
-			$this->messages->setMessage('Could not establish user session: user id not found in session', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Could not establish user session: user id not found in session', 'warning' );
+			$this->messages->setMessage( 'Could not establish user session: user id not found in session', 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
-		if (!$this->_validateUserSession())
+		
+		if( ! $this->_validateUserSession() )
 		{
-			$this->debug->write('Could not validate the user session: session is not safe!', 'warning');
-			$this->messages->setMessage('Could not validate the user session: session is not safe!', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Could not validate the user session: session is not safe!', 'warning' );
+			$this->messages->setMessage( 'Could not validate the user session: session is not safe!', 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
+		
 		$this->loggedIn = true;
-
-		$this->debug->unguard(true);
+		
+		$this->debug->unguard( true );
 		return true;
 	}
 
@@ -142,39 +143,39 @@ class zgUserhandler
 	public function login($username, $password)
 	{
 		$this->debug->guard();
-
-		if (!$this->loggedIn)
+		
+		if( ! $this->loggedIn )
 		{
 			$userfunctions = new zgUserfunctions();
-			if ($userid = $userfunctions->login($username, $password))
+			if( $userid = $userfunctions->login( $username, $password ) )
 			{
-				$userinformation = $userfunctions->getInformation($userid);
-				$this->session->setSessionVariable('user_id', $userinformation['user_id']);
-				$this->session->setSessionVariable('user_key', $userinformation['user_key']);
-				$this->session->setSessionVariable('user_username', $userinformation['user_username']);
-
+				$userinformation = $userfunctions->getInformation( $userid );
+				$this->session->setSessionVariable( 'user_id', $userinformation ['user_id'] );
+				$this->session->setSessionVariable( 'user_key', $userinformation ['user_key'] );
+				$this->session->setSessionVariable( 'user_username', $userinformation ['user_username'] );
+				
 				$this->loggedIn = true;
-
-				$this->debug->unguard(true);
+				
+				$this->debug->unguard( true );
 				return true;
 			}
 			else
 			{
-				$this->debug->write('Problem validating a user: user not found/is inactive or password is wrong', 'warning');
-				$this->messages->setMessage('Problem validating a user: user not found/is inactive or password is wrong', 'warning');
-				$this->debug->unguard(false);
+				$this->debug->write( 'Problem validating a user: user not found/is inactive or password is wrong', 'warning' );
+				$this->messages->setMessage( 'Problem validating a user: user not found/is inactive or password is wrong', 'warning' );
+				$this->debug->unguard( false );
 				return false;
 			}
 		}
 		else
 		{
-			$this->debug->write('Error logging in a user: user is already logged in. Cannot login user twice', 'error');
-			$this->messages->setMessage('Error logging in a user: user is already logged in. Cannot login user twice', 'error');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Error logging in a user: user is already logged in. Cannot login user twice', 'error' );
+			$this->messages->setMessage( 'Error logging in a user: user is already logged in. Cannot login user twice', 'error' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
-		$this->debug->unguard(false);
+		
+		$this->debug->unguard( false );
 		return false;
 	}
 
@@ -187,27 +188,27 @@ class zgUserhandler
 	public function logout()
 	{
 		$this->debug->guard();
-
-		if ($this->loggedIn)
+		
+		if( $this->loggedIn )
 		{
 			$this->session->unsetAllSessionVariables();
 		}
 		else
 		{
-			$this->debug->write('Problem logging out user: user is not logged in', 'warning');
-			$this->messages->setMessage('Problem logging out user: user is not logged in', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Problem logging out user: user is not logged in', 'warning' );
+			$this->messages->setMessage( 'Problem logging out user: user is not logged in', 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
+		
 		$this->session->stopSession();
 		$this->loggedIn = false;
-
-		$this->debug->unguard(true);
+		
+		$this->debug->unguard( true );
 		return true;
 	}
-	
-	
+
+
 	/**
 	 * Sets the login status of a user
 	 * This is public as the unit tests use it as well
@@ -216,13 +217,13 @@ class zgUserhandler
 	 *
 	 * @return boolean
 	 */
-	public function setLoginStatus($status=false)
+	public function setLoginStatus($status = false)
 	{
 		$this->debug->guard();
 		
 		$this->loggedIn = $status;
 		
-		$this->debug->unguard(true);
+		$this->debug->unguard( true );
 		return true;
 	}
 
@@ -235,12 +236,12 @@ class zgUserhandler
 	public function saveUserstates()
 	{
 		$this->debug->guard();
-
+		
 		$this->_saveUserrights();
 		$this->_saveUserroles();
 		$this->_saveUserdata();
-
-		$this->debug->unguard(true);
+		
+		$this->debug->unguard( true );
 		return true;
 	}
 
@@ -253,14 +254,14 @@ class zgUserhandler
 	public function isLoggedIn()
 	{
 		$this->debug->guard();
-
-		if ($this->loggedIn)
+		
+		if( $this->loggedIn )
 		{
-			$this->debug->unguard(true);
+			$this->debug->unguard( true );
 			return true;
 		}
-
-		$this->debug->unguard(false);
+		
+		$this->debug->unguard( false );
 		return false;
 	}
 
@@ -273,19 +274,19 @@ class zgUserhandler
 	public function getUserID()
 	{
 		$this->debug->guard();
-
-		if ($this->loggedIn)
+		
+		if( $this->loggedIn )
 		{
-			$userid = $this->session->getSessionVariable('user_id');
-
-			if ($userid)
+			$userid = $this->session->getSessionVariable( 'user_id' );
+			
+			if( $userid )
 			{
-				$this->debug->unguard($userid);
+				$this->debug->unguard( $userid );
 				return $userid;
 			}
 		}
-
-		$this->debug->unguard(false);
+		
+		$this->debug->unguard( false );
 		return false;
 	}
 
@@ -298,19 +299,19 @@ class zgUserhandler
 	public function getUsername()
 	{
 		$this->debug->guard();
-
-		if ($this->loggedIn)
+		
+		if( $this->loggedIn )
 		{
-			$username = $this->session->getSessionVariable('user_username');
-
-			if ($username)
+			$username = $this->session->getSessionVariable( 'user_username' );
+			
+			if( $username )
 			{
-				$this->debug->unguard($username);
+				$this->debug->unguard( $username );
 				return $username;
 			}
 		}
-
-		$this->debug->unguard(false);
+		
+		$this->debug->unguard( false );
 		return false;
 	}
 
@@ -323,19 +324,19 @@ class zgUserhandler
 	public function getUserKey()
 	{
 		$this->debug->guard();
-
-		if ($this->loggedIn)
+		
+		if( $this->loggedIn )
 		{
-			$userkey = $this->session->getSessionVariable('user_key');
-
-			if ($userkey)
+			$userkey = $this->session->getSessionVariable( 'user_key' );
+			
+			if( $userkey )
 			{
-				$this->debug->unguard($userkey);
+				$this->debug->unguard( $userkey );
 				return $userkey;
 			}
 		}
-
-		$this->debug->unguard(false);
+		
+		$this->debug->unguard( false );
 		return false;
 	}
 
@@ -350,20 +351,20 @@ class zgUserhandler
 	protected function _loadUserdata()
 	{
 		$this->debug->guard();
-
+		
 		$userdata = new zgUserdata();
-		$this->userdata = $userdata->loadUserdata($this->getUserID());
-
-		if ( (!is_array($this->userdata)) || (count($this->userdata) < 1) )
+		$this->userdata = $userdata->loadUserdata( $this->getUserID() );
+		
+		if( (! is_array( $this->userdata )) || (count( $this->userdata ) < 1) )
 		{
-			$this->debug->write('Error getting userdata for a user: could not find the userdata', 'error');
-			$this->messages->setMessage('Error getting userdata for a user: could not find the userdata', 'error');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Error getting userdata for a user: could not find the userdata', 'error' );
+			$this->messages->setMessage( 'Error getting userdata for a user: could not find the userdata', 'error' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
+		
 		$this->userdataLoaded = true;
-		$this->debug->unguard(true);
+		$this->debug->unguard( true );
 		return true;
 	}
 
@@ -378,26 +379,26 @@ class zgUserhandler
 	protected function _saveUserdata()
 	{
 		$this->debug->guard();
-
-		if (!$this->userdataLoaded)
+		
+		if( ! $this->userdataLoaded )
 		{
-			$this->debug->write('Userdata is not loaded for user: no update needed.', 'message');
-			$this->messages->setMessage('Userdata is not loaded for user: no update needed.', 'message');
-			$this->debug->unguard(true);
+			$this->debug->write( 'Userdata is not loaded for user: no update needed.', 'message' );
+			$this->messages->setMessage( 'Userdata is not loaded for user: no update needed.', 'message' );
+			$this->debug->unguard( true );
 			return true;
 		}
-
+		
 		$userdata = new zgUserdata();
-		$ret = $userdata->saveUserdata($this->getUserID(), $this->userdata);
-		if (!$ret)
+		$ret = $userdata->saveUserdata( $this->getUserID(), $this->userdata );
+		if( ! $ret )
 		{
-			$this->debug->write('Problem saving the user data: could not save userdata for user', 'warning');
-			$this->messages->setMessage('Problem saving the user data: could not save userdata for user', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Problem saving the user data: could not save userdata for user', 'warning' );
+			$this->messages->setMessage( 'Problem saving the user data: could not save userdata for user', 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
-		$this->debug->unguard(true);
+		
+		$this->debug->unguard( true );
 		return true;
 	}
 
@@ -410,38 +411,38 @@ class zgUserhandler
 	 *
 	 * @return boolean
 	 */
-	public function getUserdata($datakey='')
+	public function getUserdata($datakey = '')
 	{
 		$this->debug->guard();
-
-		if (!$this->userdataLoaded)
+		
+		if( ! $this->userdataLoaded )
 		{
 			$this->_loadUserdata();
 		}
-
-		if ($datakey != '')
+		
+		if( $datakey != '' )
 		{
-			if (!empty($this->userdata[$datakey]))
+			if( ! empty( $this->userdata [$datakey] ) )
 			{
-				$this->debug->unguard($this->userdata[$datakey]);
-				return $this->userdata[$datakey];
+				$this->debug->unguard( $this->userdata [$datakey] );
+				return $this->userdata [$datakey];
 			}
 			else
 			{
-				$this->debug->write('Problem getting selected userdata: userdata with given key (' . $datakey . ') not found', 'warning');
-				$this->messages->setMessage('Problem getting selected userdata: userdata with given key (' . $datakey . ') not found', 'warning');
-
-				$this->debug->unguard(false);
+				$this->debug->write( 'Problem getting selected userdata: userdata with given key (' . $datakey . ') not found', 'warning' );
+				$this->messages->setMessage( 'Problem getting selected userdata: userdata with given key (' . $datakey . ') not found', 'warning' );
+				
+				$this->debug->unguard( false );
 				return false;
 			}
 		}
 		else
 		{
-			$this->debug->unguard('No key given, returning all userdata');
+			$this->debug->unguard( 'No key given, returning all userdata' );
 			return $this->userdata;
 		}
-
-		$this->debug->unguard(false);
+		
+		$this->debug->unguard( false );
 		return false;
 	}
 
@@ -456,37 +457,37 @@ class zgUserhandler
 	 *
 	 * @return boolean
 	 */
-	public function setUserdata($userdata, $value, $saveuserdata=true, $forceupdate=false)
+	public function setUserdata($userdata, $value, $saveuserdata = true, $forceupdate = false)
 	{
 		$this->debug->guard();
-
-		if (!$this->userdataLoaded)
+		
+		if( ! $this->userdataLoaded )
 		{
 			$this->_loadUserdata();
 		}
-
-		if (array_key_exists($userdata, $this->userdata))
+		
+		if( array_key_exists( $userdata, $this->userdata ) )
 		{
-			$this->userdata[$userdata] = $value;
-			if ($saveuserdata) $this->_saveUserdata();
-
-			$this->debug->unguard(true);
+			$this->userdata [$userdata] = $value;
+			if( $saveuserdata ) $this->_saveUserdata();
+			
+			$this->debug->unguard( true );
 			return true;
 		}
-
-		if ($forceupdate)
+		
+		if( $forceupdate )
 		{
-			$this->userdata[$userdata] = $value;
-			if ($saveuserdata) $this->_saveUserdata();
-
-			$this->debug->unguard(true);
+			$this->userdata [$userdata] = $value;
+			if( $saveuserdata ) $this->_saveUserdata();
+			
+			$this->debug->unguard( true );
 			return true;
 		}
-
-		$this->debug->write('Problem setting userdata: Userdata (' . $userdata . ') does not exist and could not be set.', 'warning');
-		$this->messages->setMessage('Problem setting userdata: Userdata (' . $userdata . ') does not exist and could not be set.', 'warning');
-
-		$this->debug->unguard(false);
+		
+		$this->debug->write( 'Problem setting userdata: Userdata (' . $userdata . ') does not exist and could not be set.', 'warning' );
+		$this->messages->setMessage( 'Problem setting userdata: Userdata (' . $userdata . ') does not exist and could not be set.', 'warning' );
+		
+		$this->debug->unguard( false );
 		return false;
 	}
 
@@ -501,20 +502,20 @@ class zgUserhandler
 	protected function _loadUserrights()
 	{
 		$this->debug->guard();
-
-		$userrights = new zgUserrights();		
-		$this->userrights = $userrights->loadUserrights($this->getUserID());
-
-		if ( (!is_array($this->userrights)) || (count($this->userrights) < 1) )
+		
+		$userrights = new zgUserrights();
+		$this->userrights = $userrights->loadUserrights( $this->getUserID() );
+		
+		if( (! is_array( $this->userrights )) || (count( $this->userrights ) < 1) )
 		{
-			$this->debug->write('Problem getting userrights for a user: could not find the userrights', 'warning');
-			$this->messages->setMessage('Problem getting userrights for a user: could not find the userrights', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Problem getting userrights for a user: could not find the userrights', 'warning' );
+			$this->messages->setMessage( 'Problem getting userrights for a user: could not find the userrights', 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
+		
 		$this->userrightsLoaded = true;
-		$this->debug->unguard(true);
+		$this->debug->unguard( true );
 		return true;
 	}
 
@@ -527,26 +528,26 @@ class zgUserhandler
 	protected function _saveUserrights()
 	{
 		$this->debug->guard();
-
-		if (!$this->userrightsLoaded)
+		
+		if( ! $this->userrightsLoaded )
 		{
-			$this->debug->write('User rights are not loaded for user: no update needed.', 'message');
-			$this->messages->setMessage('User rights are not loaded for user: no update needed.', 'message');
-			$this->debug->unguard(true);
+			$this->debug->write( 'User rights are not loaded for user: no update needed.', 'message' );
+			$this->messages->setMessage( 'User rights are not loaded for user: no update needed.', 'message' );
+			$this->debug->unguard( true );
 			return true;
 		}
-
+		
 		$userrights = new zgUserrights();
-		$ret = $userrights->saveUserrights($this->getUserID(), $this->userrights);
-		if (!$ret)
+		$ret = $userrights->saveUserrights( $this->getUserID(), $this->userrights );
+		if( ! $ret )
 		{
-			$this->debug->write('Problem saving the user rights: could not save userrights for user', 'warning');
-			$this->messages->setMessage('Problem saving the user rights: could not save userrights for user', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Problem saving the user rights: could not save userrights for user', 'warning' );
+			$this->messages->setMessage( 'Problem saving the user rights: could not save userrights for user', 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
-		$this->debug->unguard(true);
+		
+		$this->debug->unguard( true );
 		return true;
 	}
 
@@ -561,22 +562,22 @@ class zgUserhandler
 	public function hasUserright($actionid)
 	{
 		$this->debug->guard();
-
-		if (!$this->userrightsLoaded)
+		
+		if( ! $this->userrightsLoaded )
 		{
 			$this->_loadUserrights();
 		}
 		
-		if (!empty($this->userrights[$actionid]))
+		if( ! empty( $this->userrights [$actionid] ) )
 		{
-			$this->debug->unguard(true);
+			$this->debug->unguard( true );
 			return true;
 		}
-
-		$this->debug->write('User does not have the requested right for action (' . $actionid . ')', 'message');
-		$this->messages->setMessage('User does not have the requested right for action (' . $actionid . ')', 'message');
-
-		$this->debug->unguard(false);
+		
+		$this->debug->write( 'User does not have the requested right for action (' . $actionid . ')', 'message' );
+		$this->messages->setMessage( 'User does not have the requested right for action (' . $actionid . ')', 'message' );
+		
+		$this->debug->unguard( false );
 		return false;
 	}
 
@@ -589,19 +590,19 @@ class zgUserhandler
 	 *
 	 * @return boolean
 	 */
-	public function grantUserright($actionid, $saveuserrights=true)
+	public function grantUserright($actionid, $saveuserrights = true)
 	{
 		$this->debug->guard();
-
-		if (!$this->userrightsLoaded)
+		
+		if( ! $this->userrightsLoaded )
 		{
 			$this->_loadUserrights();
 		}
-
-		$this->userrights[$actionid] = true;
-		if ($saveuserrights) $this->_saveUserrights();
-
-		$this->debug->unguard(true);
+		
+		$this->userrights [$actionid] = true;
+		if( $saveuserrights ) $this->_saveUserrights();
+		
+		$this->debug->unguard( true );
 		return true;
 	}
 
@@ -614,22 +615,22 @@ class zgUserhandler
 	 *
 	 * @return boolean
 	 */
-	public function revokeUserright($actionid, $saveuserrights=true)
+	public function revokeUserright($actionid, $saveuserrights = true)
 	{
 		$this->debug->guard();
-
-		if (!$this->userrightsLoaded)
+		
+		if( ! $this->userrightsLoaded )
 		{
 			$this->_loadUserrights();
 		}
-
-		if (isset($this->userrights[$actionid]))
+		
+		if( isset( $this->userrights [$actionid] ) )
 		{
-			unset($this->userrights[$actionid]);
-			if ($saveuserrights) $this->_saveUserrights();
+			unset( $this->userrights [$actionid] );
+			if( $saveuserrights ) $this->_saveUserrights();
 		}
-
-		$this->debug->unguard(true);
+		
+		$this->debug->unguard( true );
 		return true;
 	}
 
@@ -644,20 +645,20 @@ class zgUserhandler
 	protected function _loadUserroles()
 	{
 		$this->debug->guard();
-
-		$userroles = new zgUserroles();
-		$this->userroles = $userroles->loadUserroles($this->getUserID());
 		
-		if (!is_array($this->userroles))
+		$userroles = new zgUserroles();
+		$this->userroles = $userroles->loadUserroles( $this->getUserID() );
+		
+		if( ! is_array( $this->userroles ) )
 		{
-			$this->debug->write('Problem getting userroles for a user: could not load userroles', 'warning');
-			$this->messages->setMessage('Problem getting userroles for a user: could not load userroles', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Problem getting userroles for a user: could not load userroles', 'warning' );
+			$this->messages->setMessage( 'Problem getting userroles for a user: could not load userroles', 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
+		
 		$this->userrolesLoaded = true;
-		$this->debug->unguard(true);
+		$this->debug->unguard( true );
 		return true;
 	}
 
@@ -670,26 +671,26 @@ class zgUserhandler
 	protected function _saveUserroles()
 	{
 		$this->debug->guard();
-
-		if (!$this->userrolesLoaded)
+		
+		if( ! $this->userrolesLoaded )
 		{
-			$this->debug->write('User roles are not loaded for user: no update needed.', 'message');
-			$this->messages->setMessage('User roles are not loaded for user: no update needed.', 'message');
-			$this->debug->unguard(true);
+			$this->debug->write( 'User roles are not loaded for user: no update needed.', 'message' );
+			$this->messages->setMessage( 'User roles are not loaded for user: no update needed.', 'message' );
+			$this->debug->unguard( true );
 			return true;
 		}
-
+		
 		$userroles = new zgUserroles();
-		$ret = $userroles->saveUserroles($this->getUserID(), $this->userroles);
-		if (!$ret)
+		$ret = $userroles->saveUserroles( $this->getUserID(), $this->userroles );
+		if( ! $ret )
 		{
-			$this->debug->write('Problem saving the user roles: could not save userroles for user', 'warning');
-			$this->messages->setMessage('Problem saving the user roles: could not save userroles for user', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Problem saving the user roles: could not save userroles for user', 'warning' );
+			$this->messages->setMessage( 'Problem saving the user roles: could not save userroles for user', 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
-		$this->debug->unguard(true);
+		
+		$this->debug->unguard( true );
 		return true;
 	}
 
@@ -704,29 +705,29 @@ class zgUserhandler
 	public function hasUserrole($rolename)
 	{
 		$this->debug->guard();
-
-		if (!$this->userrolesLoaded)
+		
+		if( ! $this->userrolesLoaded )
 		{
 			$this->_loadUserroles();
 		}
-
-		if ($rolename === true)
+		
+		if( $rolename === true )
 		{
-			$this->debug->write('Problem checking userroles: you should not ask for generic roles', 'warning');
-			$this->messages->setMessage('Problem checking userroles: you should not ask for generic roles', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Problem checking userroles: you should not ask for generic roles', 'warning' );
+			$this->messages->setMessage( 'Problem checking userroles: you should not ask for generic roles', 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
-		if (in_array($rolename, $this->userroles))
+		
+		if( in_array( $rolename, $this->userroles ) )
 		{
-			$this->debug->unguard(true);
+			$this->debug->unguard( true );
 			return true;
 		}
-
-		$this->debug->write('User does not have the requested role assigned (' . $rolename . ')', 'warning');
-		$this->messages->setMessage('User does not have the requested role assigned (' . $rolename . ')', 'warning');
-		$this->debug->unguard(false);
+		
+		$this->debug->write( 'User does not have the requested role assigned (' . $rolename . ')', 'warning' );
+		$this->messages->setMessage( 'User does not have the requested role assigned (' . $rolename . ')', 'warning' );
+		$this->debug->unguard( false );
 		return false;
 	}
 
@@ -739,22 +740,22 @@ class zgUserhandler
 	 *
 	 * @return boolean
 	 */
-	public function grantUserrole($rolename, $saveuserroles=true)
+	public function grantUserrole($rolename, $saveuserroles = true)
 	{
 		$this->debug->guard();
-
-		if (!$this->userrolesLoaded)
+		
+		if( ! $this->userrolesLoaded )
 		{
 			$this->_loadUserroles();
 		}
-
+		
 		$userroles = new zgUserroles();
-		$roleid  = $userroles->identifyRole($rolename);
-
-		$this->userroles[$roleid] = $rolename;
-		if ($saveuserroles) $this->_saveUserroles();
-
-		$this->debug->unguard(true);
+		$roleid = $userroles->identifyRole( $rolename );
+		
+		$this->userroles [$roleid] = $rolename;
+		if( $saveuserroles ) $this->_saveUserroles();
+		
+		$this->debug->unguard( true );
 		return true;
 	}
 
@@ -767,22 +768,22 @@ class zgUserhandler
 	 *
 	 * @return boolean
 	 */
-	public function revokeUserrole($rolename, $saveuserroles=true)
+	public function revokeUserrole($rolename, $saveuserroles = true)
 	{
 		$this->debug->guard();
-
-		if (!$this->userrolesLoaded)
+		
+		if( ! $this->userrolesLoaded )
 		{
 			$this->_loadUserroles();
 		}
-
-		if ($roleid = array_search($rolename, $this->userroles))
+		
+		if( $roleid = array_search( $rolename, $this->userroles ) )
 		{
-			unset($this->userroles[$roleid]);
-			if ($saveuserroles) $this->_saveUserroles();
+			unset( $this->userroles [$roleid] );
+			if( $saveuserroles ) $this->_saveUserroles();
 		}
-
-		$this->debug->unguard(true);
+		
+		$this->debug->unguard( true );
 		return true;
 	}
 
@@ -795,20 +796,20 @@ class zgUserhandler
 	protected function _validateUserSession()
 	{
 		$this->debug->guard();
-
-		if ($this->session->getBoundIP() != getenv('REMOTE_ADDR'))
+		
+		if( $this->session->getBoundIP() != getenv( 'REMOTE_ADDR' ) )
 		{
-			$this->session->unsetSessionVariable('user_id');
-			$this->session->unsetSessionVariable('user_key');
+			$this->session->unsetSessionVariable( 'user_id' );
+			$this->session->unsetSessionVariable( 'user_key' );
 			$this->session->stopSession();
-
-			$this->debug->write('Problem validating the user session: IP does not match the session', 'warning');
-			$this->messages->setMessage('Problem validating the user session: IP does not match the session', 'warning');
-			$this->debug->unguard(false);
+			
+			$this->debug->write( 'Problem validating the user session: IP does not match the session', 'warning' );
+			$this->messages->setMessage( 'Problem validating the user session: IP does not match the session', 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
-		$this->debug->unguard(true);
+		
+		$this->debug->unguard( true );
 		return true;
 	}
 
