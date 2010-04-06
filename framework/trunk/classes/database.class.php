@@ -17,15 +17,16 @@
  * @subpackage ZEITGEIST DATABASE
  */
 
-defined('ZEITGEIST_ACTIVE') or die();
+defined( 'ZEITGEIST_ACTIVE' ) or die();
 
 class zgDatabase
 {
 	protected $debug;
 	protected $messages;
-
+	
 	protected $dblink;
 	protected $persistent;
+
 
 	/**
 	 * Class constructor
@@ -34,17 +35,18 @@ class zgDatabase
 	{
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
-
+		
 		$this->persistent = false;
 		$this->dblink = false;
 	}
+
 
 	/**
 	 * Class destructor
 	 */
 	public function __destruct()
 	{
-		if (($this->dblink) && ($this->persistent))
+		if( ($this->dblink) && ($this->persistent) )
 		{
 			$this->close();
 		}
@@ -64,39 +66,39 @@ class zgDatabase
 	 *
 	 * @return boolean
 	 */
-	public function connect($servername=ZG_DB_DBSERVER, $username=ZG_DB_USERNAME, $userpass=ZG_DB_USERPASS, $database=ZG_DB_DATABASE, $persistent=false, $newconnection=false)
+	public function connect($servername = ZG_DB_DBSERVER, $username = ZG_DB_USERNAME, $userpass = ZG_DB_USERPASS, $database = ZG_DB_DATABASE, $persistent = false, $newconnection = false)
 	{
 		$this->debug->guard();
-
-		if ($persistent)
+		
+		if( $persistent )
 		{
 			$this->persistent = true;
-			$this->dblink = @mysql_pconnect($servername, $username, $userpass);
+			$this->dblink = @mysql_pconnect( $servername, $username, $userpass );
 		}
 		else
 		{
-			$this->dblink = @mysql_connect($servername, $username, $userpass, $newconnection);
+			$this->dblink = @mysql_connect( $servername, $username, $userpass, $newconnection );
 		}
-
-		if (!$this->dblink)
+		
+		if( ! $this->dblink )
 		{
-			$this->debug->write('Error connecting to database server: '.mysql_error(), 'error');
-			$this->messages->setMessage('Error connecting to database server: '.mysql_error(), 'error');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Error connecting to database server: ' . mysql_error(), 'error' );
+			$this->messages->setMessage( 'Error connecting to database server: ' . mysql_error(), 'error' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
-		if (!mysql_select_db($database, $this->dblink))
+		
+		if( ! mysql_select_db( $database, $this->dblink ) )
 		{
-			$this->debug->write('Error connecting to database: '.mysql_error(), 'error');
-			$this->messages->setMessage('Error connecting to database: '.mysql_error(), 'error');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Error connecting to database: ' . mysql_error(), 'error' );
+			$this->messages->setMessage( 'Error connecting to database: ' . mysql_error(), 'error' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
-		$this->setDBCharset('utf8');
-
-		$this->debug->unguard(true);
+		
+		$this->setDBCharset( 'utf8' );
+		
+		$this->debug->unguard( true );
 		return true;
 	}
 
@@ -115,15 +117,15 @@ class zgDatabase
 	public function close()
 	{
 		$this->debug->guard();
-
+		
 		$ret = false;
 		
-		if (($this->dblink) && (!$this->persistent))
+		if( ($this->dblink) && (! $this->persistent) )
 		{
-			$ret = mysql_close($this->dblink);
+			$ret = mysql_close( $this->dblink );
 		}
-
-		$this->debug->unguard($ret);
+		
+		$this->debug->unguard( $ret );
 		return $ret;
 	}
 
@@ -139,35 +141,35 @@ class zgDatabase
 	public function setDBCharset($charset)
 	{
 		$this->debug->guard();
-
-		$res = mysql_query("SET character_set_connection = ".$charset, $this->dblink);
-		if (!$res)
+		
+		$res = mysql_query( "SET character_set_connection = " . $charset, $this->dblink );
+		if( ! $res )
 		{
-			$this->debug->write('Problem setting charset for connection: '.mysql_error().' Query was: "' . $query . '"', 'warning');
-			$this->messages->setMessage('Problem setting charset for connection: '.mysql_error().' Query was: "' . $query . '"', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Problem setting charset for connection: ' . mysql_error(), 'warning' );
+			$this->messages->setMessage( 'Problem setting charset for connection: ' . mysql_error(), 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
-		$res = mysql_query("SET character_set_results = ".$charset, $this->dblink);
-		if (!$res)
+		
+		$res = mysql_query( "SET character_set_results = " . $charset, $this->dblink );
+		if( ! $res )
 		{
-			$this->debug->write('Problem setting charset for results: '.mysql_error().' Query was: "' . $query . '"', 'warning');
-			$this->messages->setMessage('Problem setting charset for results: '.mysql_error().' Query was: "' . $query . '"', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Problem setting charset for results: ' . mysql_error(), 'warning' );
+			$this->messages->setMessage( 'Problem setting charset for results: ' . mysql_error(), 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
-		$res = mysql_query("SET character_set_client = ".$charset, $this->dblink);
-		if (!$res)
+		
+		$res = mysql_query( "SET character_set_client = " . $charset, $this->dblink );
+		if( ! $res )
 		{
-			$this->debug->write('Problem setting charset for client: '.mysql_error().' Query was: "' . $query . '"', 'warning');
-			$this->messages->setMessage('Problem setting charset for client: '.mysql_error().' Query was: "' . $query . '"', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Problem setting charset for client: ' . mysql_error(), 'warning' );
+			$this->messages->setMessage( 'Problem setting charset for client: ' . mysql_error(), 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
-		$this->debug->unguard(true);
+		
+		$this->debug->unguard( true );
 		return true;
 	}
 
@@ -182,20 +184,20 @@ class zgDatabase
 	public function query($query)
 	{
 		$this->debug->guard();
-
+		
 		$this->debug->beginSQLStatement();
-		$result = mysql_query($query, $this->dblink);
-		$this->debug->storeSQLStatement($query, $result);
-
-		if (!$result)
+		$result = mysql_query( $query, $this->dblink );
+		$this->debug->storeSQLStatement( $query, $result );
+		
+		if( ! $result )
 		{
-			$this->debug->write('Problem executing query: '.mysql_error().' Query was: "' . $query . '"', 'warning');
-			$this->messages->setMessage('Problem executing query: '.mysql_error().' Query was: "' . $query . '"', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Problem executing query: ' . mysql_error() . ' Query was: "' . $query . '"', 'warning' );
+			$this->messages->setMessage( 'Problem executing query: ' . mysql_error() . ' Query was: "' . $query . '"', 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
-		$this->debug->unguard($result);
+		
+		$this->debug->unguard( $result );
 		return $result;
 	}
 
@@ -209,22 +211,22 @@ class zgDatabase
 	 *
 	 * @return array
 	 */
-	public function fetchArray($result, $type=MYSQL_ASSOC)
+	public function fetchArray($result, $type = MYSQL_ASSOC)
 	{
-		$this->debug->guard(true);
-
-		$resulttype = gettype($result);
-		if ($resulttype != 'resource')
+		$this->debug->guard( true );
+		
+		$resulttype = gettype( $result );
+		if( $resulttype != 'resource' )
 		{
-			$this->debug->write('Problem fetching result: The given result was not a resource: "' . $result . '"', 'warning');
-			$this->messages->setMessage('Problem fetching result: The given result was not a resource: "' . $result . '"', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Problem fetching result: The given result was not a resource: "' . $result . '"', 'warning' );
+			$this->messages->setMessage( 'Problem fetching result: The given result was not a resource: "' . $result . '"', 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
-		$ret = mysql_fetch_array($result, $type);
-
-		$this->debug->unguard($ret);
+		
+		$ret = mysql_fetch_array( $result, $type );
+		
+		$this->debug->unguard( $ret );
 		return $ret;
 	}
 
@@ -239,19 +241,19 @@ class zgDatabase
 	public function numRows($result)
 	{
 		$this->debug->guard();
-
-		$resulttype = gettype($result);
-		if ($resulttype != 'resource')
+		
+		$resulttype = gettype( $result );
+		if( $resulttype != 'resource' )
 		{
-			$this->debug->write('Problem counting rows: The given result was not a resource: "' . $result . '"', 'warning');
-			$this->messages->setMessage('Problem counting rows: The given result was not a resource: "' . $result . '"', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Problem counting rows: The given result was not a resource: "' . $result . '"', 'warning' );
+			$this->messages->setMessage( 'Problem counting rows: The given result was not a resource: "' . $result . '"', 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
-		$ret = mysql_num_rows($result);
-
-		$this->debug->unguard($ret);
+		
+		$ret = mysql_num_rows( $result );
+		
+		$this->debug->unguard( $ret );
 		return $ret;
 	}
 
@@ -264,10 +266,10 @@ class zgDatabase
 	public function affectedRows()
 	{
 		$this->debug->guard();
-
-		$ret = mysql_affected_rows($this->dblink);
-
-		$this->debug->unguard($ret);
+		
+		$ret = mysql_affected_rows( $this->dblink );
+		
+		$this->debug->unguard( $ret );
 		return $ret;
 	}
 
@@ -280,16 +282,16 @@ class zgDatabase
 	public function insertId()
 	{
 		$this->debug->guard();
-
-		$ret = mysql_insert_id($this->dblink);
-
-		if (!$ret)
+		
+		$ret = mysql_insert_id( $this->dblink );
+		
+		if( ! $ret )
 		{
-			$this->debug->write('Problem geting the last insert id: '.mysql_error(), 'warning');
-			$this->messages->setMessage('Problem geting the last insert id: '.mysql_error(), 'warning');
+			$this->debug->write( 'Problem geting the last insert id: ' . mysql_error(), 'warning' );
+			$this->messages->setMessage( 'Problem geting the last insert id: ' . mysql_error(), 'warning' );
 		}
-
-		$this->debug->unguard($ret);
+		
+		$this->debug->unguard( $ret );
 		return $ret;
 	}
 

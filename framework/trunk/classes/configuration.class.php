@@ -15,7 +15,7 @@
  * @subpackage ZEITGEIST CONFIGURATION
  */
 
-defined('ZEITGEIST_ACTIVE') or die();
+defined( 'ZEITGEIST_ACTIVE' ) or die();
 
 /**
  * NOTE: This class is a singleton.
@@ -24,12 +24,13 @@ defined('ZEITGEIST_ACTIVE') or die();
 class zgConfiguration
 {
 	private static $instance = false;
-
+	
 	protected $configuration;
-
+	
 	protected $debug;
 	protected $messages;
 	protected $database;
+
 
 	/**
 	 * Class constructor
@@ -40,36 +41,36 @@ class zgConfiguration
 	{
 		$this->debug = zgDebug::init();
 		$this->messages = zgMessages::init();
-
+		
 		$this->database = new zgDatabase();
 		$this->database->connect();
-
-		$this->configuration = array();
+		
+		$this->configuration = array ();
 	}
 
 
 	/**
 	 * Initialize the singleton
 	 *
-	 * @return object
+	 * @return zgConfiguration
 	 */
 	public static function init()
 	{
-		if (self::$instance === false)
+		if( self::$instance === false )
 		{
 			self::$instance = new zgConfiguration();
-
+			
 			// try to load zeitgeist default configuration as this contains several global configuration data
-			self::$instance->loadConfiguration('zeitgeist', ZEITGEIST_ROOTDIRECTORY . 'configuration/zeitgeist.ini');
-
+			self::$instance->loadConfiguration( 'zeitgeist', ZEITGEIST_ROOTDIRECTORY . 'configuration/zeitgeist.ini' );
+			
 			// try to load zeitgeist configuration in the application configuration directory
 			// the application configuration will overwrite the default values and act as a project configuration file
-			if (file_exists(APPLICATION_ROOTDIRECTORY . 'configuration/zeitgeist.ini'))
+			if( file_exists( APPLICATION_ROOTDIRECTORY . 'configuration/zeitgeist.ini' ) )
 			{
-				self::$instance->loadConfiguration('zeitgeist', APPLICATION_ROOTDIRECTORY . 'configuration/zeitgeist.ini', true);
+				self::$instance->loadConfiguration( 'zeitgeist', APPLICATION_ROOTDIRECTORY . 'configuration/zeitgeist.ini', true );
 			}
 		}
-
+		
 		return self::$instance;
 	}
 
@@ -85,61 +86,61 @@ class zgConfiguration
 	 *
 	 * @return string|array
 	 */
-	public function getConfiguration($module, $section='', $configuration='')
+	public function getConfiguration($module, $section = '', $configuration = '')
 	{
-		$this->debug->guard(true);
-
-		if ($section == '')
+		$this->debug->guard( true );
+		
+		if( $section == '' )
 		{
 			// try to return the complete configuration if not empty
-			if (empty($this->configuration[$module]))
+			if( empty( $this->configuration [$module] ) )
 			{
-				$this->debug->write('Problem reading the configuration: module not found', 'warning');
-				$this->messages->setMessage('Problem reading the configuration: module not found', 'warning');
-				$this->debug->unguard(false);
+				$this->debug->write( 'Problem reading the configuration: module not found', 'warning' );
+				$this->messages->setMessage( 'Problem reading the configuration: module not found', 'warning' );
+				$this->debug->unguard( false );
 				return false;
 			}
-
-			$ret = $this->configuration[$module];
-			array_walk_recursive($ret, array($this, '_replaceReferences'));
+			
+			$ret = $this->configuration [$module];
+			array_walk_recursive( $ret, array ($this, '_replaceReferences' ) );
 		}
-		elseif ($configuration == '')
+		elseif( $configuration == '' )
 		{
 			// try to return the section configuration if not empty
-			if (empty($this->configuration[$module][$section]))
+			if( empty( $this->configuration [$module] [$section] ) )
 			{
-				$this->debug->write('Problem reading the configuration: section not found', 'warning');
-				$this->messages->setMessage('Problem reading the configuration: section not found', 'warning');
-				$this->debug->unguard(false);
+				$this->debug->write( 'Problem reading the configuration: section not found', 'warning' );
+				$this->messages->setMessage( 'Problem reading the configuration: section not found', 'warning' );
+				$this->debug->unguard( false );
 				return false;
 			}
-
-			$ret = $this->configuration[$module][$section];
-			array_walk_recursive($ret, array($this, '_replaceReferences'));
+			
+			$ret = $this->configuration [$module] [$section];
+			array_walk_recursive( $ret, array ($this, '_replaceReferences' ) );
 		}
 		else
 		{
 			// try to return the configuration value if it's not empty
-			if (!isset($this->configuration[$module][$section][$configuration]))
+			if( ! isset( $this->configuration [$module] [$section] [$configuration] ) )
 			{
-				$this->debug->write('Problem reading the configuration: configuration not found ('.$module.' - '.$section.' - '.$configuration.')', 'warning');
-				$this->messages->setMessage('Problem reading the configuration: configuration not found ('.$module.' - '.$section.' - '.$configuration.')', 'warning');
-				$this->debug->unguard(false);
+				$this->debug->write( 'Problem reading the configuration: configuration not found (' . $module . ' - ' . $section . ' - ' . $configuration . ')', 'warning' );
+				$this->messages->setMessage( 'Problem reading the configuration: configuration not found (' . $module . ' - ' . $section . ' - ' . $configuration . ')', 'warning' );
+				$this->debug->unguard( false );
 				return false;
 			}
-
-			$ret = $this->configuration[$module][$section][$configuration];
-			if (!is_array($ret))
+			
+			$ret = $this->configuration [$module] [$section] [$configuration];
+			if( ! is_array( $ret ) )
 			{
-				$this->_replaceReferences($ret, '');
+				$this->_replaceReferences( $ret, '' );
 			}
 			else
 			{
-				array_walk_recursive($ret, array($this, '_replaceReferences'));
+				array_walk_recursive( $ret, array ($this, '_replaceReferences' ) );
 			}
 		}
-
-		$this->debug->unguard($ret);
+		
+		$this->debug->unguard( $ret );
 		return $ret;
 	}
 
@@ -153,66 +154,66 @@ class zgConfiguration
 	 *
 	 * @return boolean
 	 */
-	public function loadConfiguration($modulename, $filename, $overwrite=false)
+	public function loadConfiguration($modulename, $filename, $overwrite = false)
 	{
 		$this->debug->guard();
-
+		
 		// check if module with this name is already loaded
-		if ( (!empty($this->configuration[$modulename])) && ($overwrite == false) )
+		if( (! empty( $this->configuration [$modulename] )) && ($overwrite == false) )
 		{
-			$this->debug->write('Problem loading the configuration: module already loaded', 'warning');
-			$this->messages->setMessage('Problem loading the configuration: module already loaded', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Problem loading the configuration: module already loaded', 'warning' );
+			$this->messages->setMessage( 'Problem loading the configuration: module already loaded', 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
+		
 		// try to load the configuration
-		$configuration = $this->_loadConfigurationFromDatabase($filename);
-
-		if ($configuration !== false)
+		$configuration = $this->_loadConfigurationFromDatabase( $filename );
+		
+		if( $configuration !== false )
 		{
-			$this->debug->write('Configuration found and successfully loaded: ' . $filename);
-			if (!$overwrite)
+			$this->debug->write( 'Configuration found and successfully loaded: ' . $filename );
+			if( ! $overwrite )
 			{
-				$this->configuration[$modulename] = $configuration;
+				$this->configuration [$modulename] = $configuration;
 			}
 			else
 			{
-				if (is_array($this->configuration[$modulename]))
+				if( is_array( $this->configuration [$modulename] ) )
 				{
-					$this->configuration[$modulename] = array_merge($this->configuration[$modulename], $configuration);
+					$this->configuration [$modulename] = array_merge( $this->configuration [$modulename], $configuration );
 				}
 				else
 				{
-					$this->configuration[$modulename] = $configuration;
+					$this->configuration [$modulename] = $configuration;
 				}
 			}
 		}
 		else
 		{
-			$configurationArray = $this->_readINIfile($filename);
-
-			if (!is_array($configurationArray))
+			$configurationArray = $this->_readINIfile( $filename );
+			
+			if( ! is_array( $configurationArray ) )
 			{
-				$this->debug->write('Problem loading the configuration: no contents could be extracted', 'warning');
-				$this->messages->setMessage('Problem loading the configuration: no contents could be extracted', 'warning');
-				$this->debug->unguard(false);
+				$this->debug->write( 'Problem loading the configuration: no contents could be extracted', 'warning' );
+				$this->messages->setMessage( 'Problem loading the configuration: no contents could be extracted', 'warning' );
+				$this->debug->unguard( false );
 				return false;
 			}
-
-			$ret = $this->_saveConfigurationToDatabase($filename, $configurationArray);
-
-			if ($overwrite == false)
+			
+			$ret = $this->_saveConfigurationToDatabase( $filename, $configurationArray );
+			
+			if( $overwrite == false )
 			{
-				$this->configuration[$modulename] = $configurationArray;
+				$this->configuration [$modulename] = $configurationArray;
 			}
 			else
 			{
-				$this->configuration[$modulename] = array_merge($this->configuration[$modulename], $configurationArray);
+				$this->configuration [$modulename] = array_merge( $this->configuration [$modulename], $configurationArray );
 			}
 		}
-
-		$this->debug->unguard(true);
+		
+		$this->debug->unguard( true );
 		return true;
 	}
 
@@ -229,45 +230,45 @@ class zgConfiguration
 	protected function _loadConfigurationFromDatabase($filename)
 	{
 		$this->debug->guard();
-
-		$res = $this->database->query("SELECT configurationcache_content, configurationcache_timestamp FROM " . ZG_DB_CONFIGURATIONCACHE . " WHERE configurationcache_name = '".$filename."'");
-
-		if ($this->database->numRows($res) == 1)
+		
+		$res = $this->database->query( "SELECT configurationcache_content, configurationcache_timestamp FROM " . ZG_DB_CONFIGURATIONCACHE . " WHERE configurationcache_name = '" . $filename . "'" );
+		
+		if( $this->database->numRows( $res ) == 1 )
 		{
-			$row = $this->database->fetchArray($res);
-
-			if ($row['configurationcache_timestamp'] == filemtime($filename))
+			$row = $this->database->fetchArray( $res );
+			
+			if( $row ['configurationcache_timestamp'] == filemtime( $filename ) )
 			{
-				$serializedConfiguration = $row['configurationcache_content'];
-				$serializedConfiguration = base64_decode($serializedConfiguration);
-				$configuration = unserialize($serializedConfiguration);
-
-				if ($configuration === false)
+				$serializedConfiguration = $row ['configurationcache_content'];
+				$serializedConfiguration = base64_decode( $serializedConfiguration );
+				$configuration = unserialize( $serializedConfiguration );
+				
+				if( $configuration === false )
 				{
-					$this->debug->write('Error unserializing configuration content from the database', 'error');
-					$this->messages->setMessage('Error unserializing configuration content from the database', 'error');
-					$this->debug->unguard(false);
+					$this->debug->write( 'Error unserializing configuration content from the database', 'error' );
+					$this->messages->setMessage( 'Error unserializing configuration content from the database', 'error' );
+					$this->debug->unguard( false );
 					return false;
 				}
 			}
 			else
 			{
-				$res = $this->database->query("DELETE FROM " . ZG_DB_CONFIGURATIONCACHE . " WHERE configurationcache_name = '" . $filename."'");
-				$this->debug->write('Configuration data in the database is outdated', 'warning');
-				$this->messages->setMessage('Configuration data in the database is outdated', 'warning');
-				$this->debug->unguard(false);
+				$res = $this->database->query( "DELETE FROM " . ZG_DB_CONFIGURATIONCACHE . " WHERE configurationcache_name = '" . $filename . "'" );
+				$this->debug->write( 'Configuration data in the database is outdated', 'warning' );
+				$this->messages->setMessage( 'Configuration data in the database is outdated', 'warning' );
+				$this->debug->unguard( false );
 				return false;
 			}
 		}
 		else
 		{
-			$this->debug->write('No configuration is stored in database for this module', 'warning');
-			$this->messages->setMessage('No configuration is stored in database for this module', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'No configuration is stored in database for this module', 'warning' );
+			$this->messages->setMessage( 'No configuration is stored in database for this module', 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
-		$this->debug->unguard($configuration);
+		
+		$this->debug->unguard( $configuration );
 		return $configuration;
 	}
 
@@ -285,26 +286,24 @@ class zgConfiguration
 	protected function _saveConfigurationToDatabase($filename, $configuration)
 	{
 		$this->debug->guard();
-
-		$serializedConfiguration = serialize($configuration);
-		if ($serializedConfiguration == '')
+		
+		$serializedConfiguration = serialize( $configuration );
+		if( $serializedConfiguration == '' )
 		{
-			$this->debug->unguard(false);
+			$this->debug->unguard( false );
 			return false;
 		}
-
-		$serializedConfiguration = base64_encode($serializedConfiguration);
-		if ($serializedConfiguration === false)
+		
+		$serializedConfiguration = base64_encode( $serializedConfiguration );
+		if( $serializedConfiguration === false )
 		{
-			$this->debug->unguard(false);
+			$this->debug->unguard( false );
 			return false;
 		}
-
-		$res = $this->database->query("INSERT INTO " . ZG_DB_CONFIGURATIONCACHE .
-		"(configurationcache_name, configurationcache_content, configurationcache_timestamp) " .
-		"VALUES('" . $filename . "', '" . $serializedConfiguration . "', '" . filemtime($filename) . "')");
-
-		$this->debug->unguard(true);
+		
+		$res = $this->database->query( "INSERT INTO " . ZG_DB_CONFIGURATIONCACHE . "(configurationcache_name, configurationcache_content, configurationcache_timestamp) " . "VALUES('" . $filename . "', '" . $serializedConfiguration . "', '" . filemtime( $filename ) . "')" );
+		
+		$this->debug->unguard( true );
 		return true;
 	}
 
@@ -321,32 +320,32 @@ class zgConfiguration
 	protected function _replaceReferences(&$configurationValue, $configurationKey)
 	{
 		// check for references
-		if ( (strpos($configurationValue, '[[') !== false) && (strpos($configurationValue, ']]') !== false) )
+		if( (strpos( $configurationValue, '[[' ) !== false) && (strpos( $configurationValue, ']]' ) !== false) )
 		{
-			$referenceStart = strpos($configurationValue, '[[');
-			$referenceEnd = strpos($configurationValue, ']]');
-
-			$referenceString = substr($configurationValue, $referenceStart, $referenceEnd-$referenceStart+2);
-			$reference = substr($referenceString,2,-2);
-
-			$referenceArray = explode('.', $reference);
-			if (count($referenceArray) == 3)
+			$referenceStart = strpos( $configurationValue, '[[' );
+			$referenceEnd = strpos( $configurationValue, ']]' );
+			
+			$referenceString = substr( $configurationValue, $referenceStart, $referenceEnd - $referenceStart + 2 );
+			$reference = substr( $referenceString, 2, - 2 );
+			
+			$referenceArray = explode( '.', $reference );
+			if( count( $referenceArray ) == 3 )
 			{
-				if ($this->getConfiguration($referenceArray[0], $referenceArray[1], $referenceArray[2]))
+				if( $this->getConfiguration( $referenceArray [0], $referenceArray [1], $referenceArray [2] ) )
 				{
-					$referenceValue = $this->getConfiguration($referenceArray[0], $referenceArray[1], $referenceArray[2]);
-					$configurationValue = str_replace($referenceString, $referenceValue, $configurationValue);
+					$referenceValue = $this->getConfiguration( $referenceArray [0], $referenceArray [1], $referenceArray [2] );
+					$configurationValue = str_replace( $referenceString, $referenceValue, $configurationValue );
 				}
 				else
 				{
-					$this->debug->write('A reference (' . $reference . ') could not be resolved', 'warning');
-					$this->messages->setMessage('A reference (' . $reference . ') could not be resolved', 'warning');
+					$this->debug->write( 'A reference (' . $reference . ') could not be resolved', 'warning' );
+					$this->messages->setMessage( 'A reference (' . $reference . ') could not be resolved', 'warning' );
 				}
 			}
 			else
 			{
-				$this->debug->write('A reference (' . $reference . ') is not stated correctly', 'warning');
-				$this->messages->setMessage('A reference (' . $reference . ') is not stated correctly', 'warning');
+				$this->debug->write( 'A reference (' . $reference . ') is not stated correctly', 'warning' );
+				$this->messages->setMessage( 'A reference (' . $reference . ') is not stated correctly', 'warning' );
 			}
 		}
 	}
@@ -365,90 +364,90 @@ class zgConfiguration
 	protected function _readINIfile($filename)
 	{
 		$this->debug->guard();
-
-		if (!file_exists($filename))
+		
+		if( ! file_exists( $filename ) )
 		{
-			$this->debug->write('Error loading the configuration file ' . $filename . ': file not found', 'error');
-			$this->messages->setMessage('Error loading the configuration file ' . $filename . ': file not found', 'error');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Error loading the configuration file ' . $filename . ': file not found', 'error' );
+			$this->messages->setMessage( 'Error loading the configuration file ' . $filename . ': file not found', 'error' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
-		$retArray = array();
-
-		$fileArray = array();
-		$fileArray = file($filename);
-
-		if (!$fileArray)
+		
+		$retArray = array ();
+		
+		$fileArray = array ();
+		$fileArray = file( $filename );
+		
+		if( ! $fileArray )
 		{
-			$this->debug->write('Error loading the configuration file ' . $filename . ': file not a valid ini file', 'error');
-			$this->messages->setMessage('Error loading the configuration file ' . $filename . ': file not a valid ini file', 'error');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Error loading the configuration file ' . $filename . ': file not a valid ini file', 'error' );
+			$this->messages->setMessage( 'Error loading the configuration file ' . $filename . ': file not a valid ini file', 'error' );
+			$this->debug->unguard( false );
 			return false;
 		}
-
+		
 		$currentSection = '';
-
-		foreach ($fileArray as $fileData)
+		
+		foreach( $fileArray as $fileData )
 		{
-			$fileData = trim($fileData);
-
+			$fileData = trim( $fileData );
+			
 			// check for comments
-			if ( (substr($fileData, 0, 1) == ';') && ($fileData == '') ) continue;
-
-			if ( (substr($fileData, 0, 1) == '[') && (substr($fileData, -1, 1) == ']') )
+			if( (substr( $fileData, 0, 1 ) == ';') && ($fileData == '') ) continue;
+			
+			if( (substr( $fileData, 0, 1 ) == '[') && (substr( $fileData, - 1, 1 ) == ']') )
 			{
 				// parsing section
-				$currentSection = substr($fileData, 1, -1);
+				$currentSection = substr( $fileData, 1, - 1 );
 			}
 			else
 			{
 				// parsing key/value
-				$delimiter = strpos($fileData, '=');
+				$delimiter = strpos( $fileData, '=' );
 				$configurationKey = '';
 				$configurationValue = '';
-
-				if ($delimiter > 0)
+				
+				if( $delimiter > 0 )
 				{
-					$configurationKey = trim(substr($fileData, 0, $delimiter));
-					$configurationValue = trim(substr($fileData, $delimiter + 1));
-
+					$configurationKey = trim( substr( $fileData, 0, $delimiter ) );
+					$configurationValue = trim( substr( $fileData, $delimiter + 1 ) );
+					
 					// check if value is escaped. if so, cut the escape chars
-					if ( (substr($configurationValue, 1, 1) == '"') && (substr($configurationValue, -1, 1) == '"') )
+					if( (substr( $configurationValue, 1, 1 ) == '"') && (substr( $configurationValue, - 1, 1 ) == '"') )
 					{
-						$configurationValue = substr($value, 1, -1);
+						$configurationValue = substr( $value, 1, - 1 );
 					}
-
+					
 					$arrayvalue = false;
-					if ( (strpos($configurationKey, '[') !== false) && (strpos($configurationKey, ']') !== false) )
+					if( (strpos( $configurationKey, '[' ) !== false) && (strpos( $configurationKey, ']' ) !== false) )
 					{
-						$keystart = strpos($configurationKey, '[');
+						$keystart = strpos( $configurationKey, '[' );
 						$arrayvalue = true;
-						$arrayKey = substr($configurationKey, $keystart+1, -1);
-						$configurationKey = substr($configurationKey, 0, $keystart);
+						$arrayKey = substr( $configurationKey, $keystart + 1, - 1 );
+						$configurationKey = substr( $configurationKey, 0, $keystart );
 					}
-
-					if (!$arrayvalue)
+					
+					if( ! $arrayvalue )
 					{
-						$retArray[$currentSection][$configurationKey] = $configurationValue;
+						$retArray [$currentSection] [$configurationKey] = $configurationValue;
 						$arrayKey = false;
 					}
 					else
 					{
-						if (!$arrayKey)
+						if( ! $arrayKey )
 						{
-							$retArray[$currentSection][$configurationKey][] = $configurationValue;
+							$retArray [$currentSection] [$configurationKey] [] = $configurationValue;
 						}
 						else
 						{
-							$retArray[$currentSection][$configurationKey][$arrayKey] = $configurationValue;
+							$retArray [$currentSection] [$configurationKey] [$arrayKey] = $configurationValue;
 						}
 					}
 				}
 			}
 		}
-
-		$this->debug->unguard($retArray);
+		
+		$this->debug->unguard( $retArray );
 		return $retArray;
 	}
 

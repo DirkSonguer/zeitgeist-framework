@@ -15,7 +15,7 @@
  * @subpackage ZEITGEIST DEBUG
  */
 
-defined('ZEITGEIST_ACTIVE') or die();
+defined( 'ZEITGEIST_ACTIVE' ) or die();
 
 /**
  * NOTE: This class is a singleton.
@@ -24,8 +24,9 @@ defined('ZEITGEIST_ACTIVE') or die();
 class zgDebug
 {
 	private static $instance = false;
+	
+	public $showInnerLoops; // Set this to true to show inner loops in the guard-output
 
-	public $showInnerLoops;	// Set this to true to show inner loops in the guard-output
 
 	/**
 	 * Class constructor
@@ -40,15 +41,15 @@ class zgDebug
 	/**
 	 * Initialize the singleton
 	 *
-	 * @return object
+	 * @return zgDebug
 	 */
 	public static function init()
 	{
-		if (self::$instance === false)
+		if( self::$instance === false )
 		{
 			self::$instance = new zgDebug();
 		}
-
+		
 		return self::$instance;
 	}
 
@@ -59,7 +60,7 @@ class zgDebug
 	 * @param string $message debug message to print
 	 * @param integer $level level of the message. 0 = important,.. , 3 = unimportant
 	 */
-	public function write($message, $type='message')
+	public function write($message, $type = 'message')
 	{
 	}
 
