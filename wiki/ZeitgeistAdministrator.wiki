@@ -1,5 +1,5 @@
 #summary Basics about the Zeitgeist Administrator Tool.
-#labels ZGA
+#labels Basics
 
 = Zeitgeist Administrator v2 =
 
