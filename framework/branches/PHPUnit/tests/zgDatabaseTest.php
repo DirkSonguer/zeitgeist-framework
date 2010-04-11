@@ -1,7 +1,7 @@
 <?php
 
-require_once 'tests\_configuration.php';
-require_once 'PHPUnit\Framework\TestCase.php';
+require_once 'tests/_configuration.php';
+require_once 'PHPUnit/Framework/TestCase.php';
 
 /**
  * zgDatabase test case.
@@ -52,7 +52,7 @@ class zgDatabaseTest extends PHPUnit_Framework_TestCase
 		// TODO Auto-generated zgDatabaseTest->test__construct()
 		$this->markTestIncomplete( "__construct test not implemented" );
 		
-		$this->zgDatabase->__construct(/* parameters */);	
+		$this->zgDatabase->__construct(/* parameters */);
 	}
 
 
@@ -71,7 +71,35 @@ class zgDatabaseTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests zgDatabase->connect()
 	 */
-	public function testConnect()
+	public function testConnect_WrongServer()
+	{
+		$this->setUp();
+		
+		$ret = $this->zgDatabase->connect( 'false' );
+		$this->assertFalse( $ret );
+		
+		$this->tearDown();
+	}
+
+
+	/**
+	 * Tests zgDatabase->connect()
+	 */
+	public function testConnect_WrongDatabase()
+	{
+		$this->setUp();
+		
+		$ret = $this->zgDatabase->connect( ZG_DB_DBSERVER, ZG_DB_USERNAME, ZG_DB_USERPASS, 'false' );
+		$this->assertFalse( $ret );
+		
+		$this->tearDown();
+	}
+
+
+	/**
+	 * Tests zgDatabase->connect()
+	 */
+	public function testConnect_Success()
 	{
 		$this->setUp();
 		
@@ -253,7 +281,7 @@ class zgDatabaseTest extends PHPUnit_Framework_TestCase
 		$this->tearDown();
 	}
 
-	
+
 	/**
 	 * Tests zgDatabase->affectedRows()
 	 */
@@ -262,22 +290,38 @@ class zgDatabaseTest extends PHPUnit_Framework_TestCase
 		$this->setUp();
 		$this->zgDatabase->connect();
 		
-		$this->zgDatabase->query("CREATE TABLE test(id INT, test VARCHAR(30))");
-		$this->zgDatabase->query("INSERT INTO test(id, test) VALUES('1', 'test1')");
-		$this->zgDatabase->query("INSERT INTO test(id, test) VALUES('2', 'test2')");
-
-		$this->zgDatabase->query("DELETE FROM test");
+		$this->zgDatabase->query( "CREATE TABLE test(id INT, test VARCHAR(30))" );
+		$this->zgDatabase->query( "INSERT INTO test(id, test) VALUES('1', 'test1')" );
+		$this->zgDatabase->query( "INSERT INTO test(id, test) VALUES('2', 'test2')" );
+		
+		$this->zgDatabase->query( "DELETE FROM test" );
 		$ret = $this->zgDatabase->affectedRows();
-		$this->assertEquals($ret, 2);
-		unset($ret);
-
-		$this->zgDatabase->query("DROP TABLE test");
-				
+		$this->assertEquals( $ret, 2 );
+		unset( $ret );
+		
+		$this->zgDatabase->query( "DROP TABLE test" );
+		
 		$this->zgDatabase->close();
 		$this->tearDown();
 	}
 
-	
+
+	/**
+	 * Tests zgDatabase->insertId()
+	 */
+	public function testInsertId_EmptyID()
+	{
+		$this->setUp();
+		$this->zgDatabase->connect();
+		
+		$ret = $this->zgDatabase->insertId();
+		$this->assertFalse( $ret );
+		
+		$this->zgDatabase->close();
+		$this->tearDown();
+	}
+
+
 	/**
 	 * Tests zgDatabase->insertId()
 	 */
@@ -286,16 +330,16 @@ class zgDatabaseTest extends PHPUnit_Framework_TestCase
 		$this->setUp();
 		$this->zgDatabase->connect();
 		
-		$this->zgDatabase->query("CREATE TABLE test(id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(id), test VARCHAR(30))");
-		$this->zgDatabase->query("INSERT INTO test(test) VALUES('test1')");
-		$this->zgDatabase->query("INSERT INTO test(test) VALUES('test2')");
-
+		$this->zgDatabase->query( "CREATE TABLE test(id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(id), test VARCHAR(30))" );
+		$this->zgDatabase->query( "INSERT INTO test(test) VALUES('test1')" );
+		$this->zgDatabase->query( "INSERT INTO test(test) VALUES('test2')" );
+		
 		$ret = $this->zgDatabase->insertId();
-		$this->assertEquals($ret, 2);
-		unset($ret);
-
-		$this->zgDatabase->query("DROP TABLE test");
-				
+		$this->assertEquals( $ret, 2 );
+		unset( $ret );
+		
+		$this->zgDatabase->query( "DROP TABLE test" );
+		
 		$this->zgDatabase->close();
 		$this->tearDown();
 	}

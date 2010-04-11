@@ -1,6 +1,6 @@
 <?php
 
-define('ZEITGEIST_ROOTDIRECTORY', '');
+define('ZEITGEIST_ROOTDIRECTORY', dirname(__FILE__).'/../');
 
 // This should be an empty database without any tables
 // The test cases will create the tables themselves as needed
@@ -10,7 +10,10 @@ define('ZG_DB_USERPASS', '');
 define('ZG_DB_DATABASE', 'zg_test');
 define('ZG_DB_CONFIGURATIONCACHE', 'configurationcache');
 
+define('ZG_TESTDATA_DIR', dirname(__FILE__).'/testdata/');
+
 require_once('zeitgeist.php');
-	
+require_once 'tests/_testfunctions.php';
+
 ?>
 
