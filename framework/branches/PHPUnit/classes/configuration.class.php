@@ -61,7 +61,10 @@ class zgConfiguration
 			self::$instance = new zgConfiguration();
 			
 			// try to load zeitgeist default configuration as this contains several global configuration data
-			self::$instance->loadConfiguration( 'zeitgeist', ZEITGEIST_ROOTDIRECTORY . 'configuration/zeitgeist.ini' );
+			if( file_exists( ZEITGEIST_ROOTDIRECTORY . 'configuration/zeitgeist.ini' ) )
+			{
+				self::$instance->loadConfiguration( 'zeitgeist', ZEITGEIST_ROOTDIRECTORY . 'configuration/zeitgeist.ini' );
+			}
 			
 			// try to load zeitgeist configuration in the application configuration directory
 			// the application configuration will overwrite the default values and act as a project configuration file
