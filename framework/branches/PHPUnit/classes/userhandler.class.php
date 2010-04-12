@@ -147,7 +147,8 @@ class zgUserhandler
 		if( ! $this->loggedIn )
 		{
 			$userfunctions = new zgUserfunctions();
-			if( $userid = $userfunctions->login( $username, $password ) )
+			$userid = $userfunctions->login( $username, $password );
+			if( $userid )
 			{
 				$userinformation = $userfunctions->getInformation( $userid );
 				$this->session->setSessionVariable( 'user_id', $userinformation ['user_id'] );
@@ -777,7 +778,8 @@ class zgUserhandler
 			$this->_loadUserroles();
 		}
 		
-		if( $roleid = array_search( $rolename, $this->userroles ) )
+		$roleid = array_search( $rolename, $this->userroles );
+		if( $roleid )
 		{
 			unset( $this->userroles [$roleid] );
 			if( $saveuserroles ) $this->_saveUserroles();

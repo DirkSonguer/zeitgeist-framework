@@ -52,7 +52,8 @@ class zgUserdata
 		$userdataTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userdata' );
 		$sql = "SELECT * FROM " . $userdataTablename . " WHERE userdata_user = '" . $userid . "'";
 		
-		if( $res = $this->database->query( $sql ) )
+		$res = $this->database->query( $sql );
+		if( $res )
 		{
 			$ret = array ();
 			if( $this->database->numRows( $res ) > 0 )
@@ -64,7 +65,7 @@ class zgUserdata
 				$sql = "EXPLAIN " . $userdataTablename;
 				$res = $this->database->query( $sql );
 				
-				while( $row = $this->database->fetchArray( $res ) )
+				while( ($row = $this->database->fetchArray( $res )) !== false )
 				{
 					$ret [$row ['Field']] = '';
 				}
