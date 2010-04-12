@@ -103,7 +103,7 @@ class zgFiles
 			return false;
 		}
 		
-		while( $dirEntry = readdir( $directoryhandle ) )
+		while( ($dirEntry = readdir( $directoryhandle )) !== false )
 		{
 			$dirContents [] = $dirEntry;
 		}

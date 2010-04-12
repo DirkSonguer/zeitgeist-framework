@@ -301,7 +301,8 @@ class zgSession
 		$sessionTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_sessiondata' );
 		$sql = "SELECT sessiondata_content, sessiondata_ip FROM " . $sessionTablename . " WHERE sessiondata_id = '" . $id . "'";
 		
-		if( $res = $this->database->query( $sql ) )
+		$res = $this->database->query( $sql );
+		if( $res )
 		{
 			if( $this->database->numRows( $res ) )
 			{

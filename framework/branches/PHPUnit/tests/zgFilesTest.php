@@ -106,9 +106,9 @@ class zgFilesTest extends PHPUnit_Framework_TestCase
 	{
 		$this->setUp();
 		
-		$ret = $this->zgFiles->getFileContent( 'tests/testdata/' );
-		$this->assertTrue( array_search( 'testfile.txt', $ret ) );
-		//array_search('testfile.txt', $ret)
+		$ret = $this->zgFiles->getDirectoryListing( ZG_TESTDATA_DIR );
+		$this->assertContains( 'testfile.txt', $ret );
+
 		$this->tearDown();
 	}
 

@@ -52,10 +52,11 @@ class zgUserrights
 		$userrightsTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userrights' );
 		$sql = "SELECT * FROM " . $userrightsTablename . " WHERE userright_user = '" . $userid . "'";
 		
-		if( $res = $this->database->query( $sql ) )
+		$res = $this->database->query( $sql );
+		if( $res )
 		{
 			$ret = array ();
-			while( $row = $this->database->fetchArray( $res ) )
+			while( ($row = $this->database->fetchArray( $res )) !== false )
 			{
 				$ret [$row ['userright_action']] = true;
 			}
@@ -159,10 +160,11 @@ class zgUserrights
 		$rolestoactionsTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userroles_to_actions' );
 		$sql = "SELECT * FROM " . $rolestoactionsTablename . " WHERE userroleaction_userrole = '" . $roleid . "'";
 		
-		if( $res = $this->database->query( $sql ) )
+		$res = $this->database->query( $sql );
+		if( $res )
 		{
 			$ret = array ();
-			while( $row = $this->database->fetchArray( $res ) )
+			while( ($row = $this->database->fetchArray( $res )) !== false )
 			{
 				$ret [$row ['userroleaction_action']] = true;
 			}
