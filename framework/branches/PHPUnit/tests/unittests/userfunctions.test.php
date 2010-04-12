@@ -597,7 +597,7 @@ class testUserfunctions extends UnitTestCase
 		$this->assertFalse($ret);
 
 		unset($ret);
-		unset($userhandler);
+		
 	}
 
 
@@ -629,7 +629,7 @@ class testUserfunctions extends UnitTestCase
 		$testfunctions->dropZeitgeistTable('users');
 		$testfunctions->dropZeitgeistTable('userconfirmation');
 		unset($ret);
-		unset($userhandler);
+		
 	}
 
 }
