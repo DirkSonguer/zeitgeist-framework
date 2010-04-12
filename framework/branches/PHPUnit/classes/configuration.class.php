@@ -418,7 +418,7 @@ class zgConfiguration
 					// check if value is escaped. if so, cut the escape chars
 					if( (substr( $configurationValue, 1, 1 ) == '"') && (substr( $configurationValue, - 1, 1 ) == '"') )
 					{
-						$configurationValue = substr( $value, 1, - 1 );
+						$configurationValue = substr( $configurationValue, 1, - 1 );
 					}
 					
 					$arrayvalue = false;
