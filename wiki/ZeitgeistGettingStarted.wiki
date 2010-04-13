@@ -34,7 +34,7 @@ Follow these steps to get the ZG examples up and running. You will need some kin
 
  * Create a new folder on you webserver, for example "_yourwebroot/zgexamples_".
  * Copy the contents of "_zeitgeist-repository/examples/zeitgeist`_`examples/_" into the new  folder
- * Copy "_zeitgeist-repository/framework/trunk_" (the ZG framework itself) into the new folder
+ * Create a new subfolder called "zeitgeist" and copy the framework itself there ("_zeitgeist-repository/framework/trunk_")
  * Import the SQL file for the examples ("_/`_`additional_material/zeitgeist_examples.sql_") into a MySQL database
  * Edit the config file ("_/configuration/application.configuration.php_") and enter your database credentials
  * Now try calling the examples in your webserver, for example http:://localhost/zgexamples
