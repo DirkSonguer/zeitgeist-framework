@@ -132,13 +132,100 @@ class zgGamehandlerTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests zgGamehandler->getGameevents()
 	 */
-	public function testGetGameevents()
+	public function testGetGameevents_NoEvents()
 	{
-		// TODO Auto-generated zgGamehandlerTest->testGetGameevents()
-		$this->markTestIncomplete( "getGameevents test not implemented" );
+		$this->setUp();
+		$testfunctions = new testFunctions();
 		
-		$this->zgGamehandler->getGameevents(/* parameters */);
-	
+		$testfunctions->createZeitgeistTable( 'game_events' );
+		
+		$ret = $this->zgGamehandler->getGameevents( 1 );
+		$this->assertFalse( $ret );
+		
+		$testfunctions->dropZeitgeistTable( 'game_events' );
+		$this->tearDown();
+	}
+
+
+	/**
+	 * Tests zgGamehandler->getGameevents()
+	 */
+	public function testGetGameevents_WrongTimePlayerAndGame()
+	{
+		$this->setUp();
+		$testfunctions = new testFunctions();
+		
+		$testfunctions->createZeitgeistTable( 'game_actions' );
+		$testfunctions->createZeitgeistTable( 'game_events' );
+		
+		$game = rand( 0, 1000 );
+		$action = rand( 0, 1000 );
+		$parameter = uniqid();
+		$player = rand( 1, 1000 );
+		$time = rand( 1, 1000 );
+		
+		// insert an action and save an event for it
+		$res = $this->database->query( "INSERT INTO game_actions(action_id, action_name, action_class) VALUES('" . $action . "', 'test', 'testaction')" );
+		$res = $this->database->query( "INSERT INTO game_actions(action_id, action_name, action_class) VALUES('" . ($action + 1) . "', 'test', 'testaction')" );
+		$this->zgGamehandler->saveGameevent( $action, $parameter, $time, $player, $game );
+		$this->zgGamehandler->saveGameevent( ($action + 1), $parameter, $time, $player, $game );
+		
+		// wrong time
+		$ret = $this->zgGamehandler->getGameevents( ($time - 1) );
+		$this->assertTrue( (count( $ret ) == 0) );
+		
+		// wrong player
+		$ret = $this->zgGamehandler->getGameevents( $time, ($player + 1) );
+		$this->assertTrue( (count( $ret ) == 0) );
+		
+		// wrong game
+		$ret = $this->zgGamehandler->getGameevents( $time, $player, ($game + 1) );
+		$this->assertTrue( (count( $ret ) == 0) );
+		
+		$testfunctions->dropZeitgeistTable( 'game_events' );
+		$testfunctions->dropZeitgeistTable( 'game_actions' );
+		$this->tearDown();
+	}
+
+
+	/**
+	 * Tests zgGamehandler->getGameevents()
+	 */
+	public function testGetGameevents_WithTimePlayerAndGame()
+	{
+		$this->setUp();
+		$testfunctions = new testFunctions();
+		
+		$testfunctions->createZeitgeistTable( 'game_actions' );
+		$testfunctions->createZeitgeistTable( 'game_events' );
+		
+		$game = rand( 0, 1000 );
+		$action = rand( 0, 1000 );
+		$parameter = uniqid();
+		$player = rand( 1, 1000 );
+		$time = rand( 1, 1000 );
+		
+		// insert an action and save an event for it
+		$res = $this->database->query( "INSERT INTO game_actions(action_id, action_name, action_class) VALUES('" . $action . "', 'test', 'testaction')" );
+		$res = $this->database->query( "INSERT INTO game_actions(action_id, action_name, action_class) VALUES('" . ($action + 1) . "', 'test', 'testaction')" );
+		$this->zgGamehandler->saveGameevent( $action, $parameter, $time, $player, $game );
+		$this->zgGamehandler->saveGameevent( ($action + 1), $parameter, $time, $player, $game );
+		
+		// wrong time
+		$ret = $this->zgGamehandler->getGameevents( $time );
+		$this->assertTrue( (count( $ret ) == 2) );
+		
+		// wrong player
+		$ret = $this->zgGamehandler->getGameevents( $time, $player );
+		$this->assertTrue( (count( $ret ) == 2) );
+		
+		// wrong game
+		$ret = $this->zgGamehandler->getGameevents( $time, $player, $game );
+		$this->assertTrue( (count( $ret ) == 2) );
+		
+		$testfunctions->dropZeitgeistTable( 'game_events' );
+		$testfunctions->dropZeitgeistTable( 'game_actions' );
+		$this->tearDown();
 	}
 
 
