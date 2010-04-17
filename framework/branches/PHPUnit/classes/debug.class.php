@@ -129,7 +129,8 @@ class zgDebug
 		if( ! $result )
 		{
 			$newQueryMessage ['success'] = false;
-		} else
+		}
+		else
 		{
 			$newQueryMessage ['success'] = true;
 		}
@@ -154,7 +155,8 @@ class zgDebug
 		if( function_exists( 'memory_get_usage' ) )
 		{
 			$newGuardMessage ['currentMemoryUsage'] = memory_get_usage() / 1024;
-		} else
+		}
+		else
 		{
 			$newGuardMessage ['currentMemoryUsage'] = '-';
 		}
@@ -173,7 +175,8 @@ class zgDebug
 		if( ! empty( $backtrace ['class'] ) )
 		{
 			$newGuardMessage ['class'] = $backtrace ['class'];
-		} else
+		}
+		else
 		{
 			$newGuardMessage ['class'] = '';
 		}
@@ -224,7 +227,8 @@ class zgDebug
 		if( ! empty( $backtrace ['class'] ) )
 		{
 			$newGuardMessage ['class'] = $backtrace ['class'];
-		} else
+		}
+		else
 		{
 			$newGuardMessage ['class'] = '';
 		}
@@ -246,7 +250,7 @@ class zgDebug
 
 
 	/**
-	 * Shows some misc information
+	 * Shows somemisc information
 	 */
 	public function showMiscInformation()
 	{
@@ -280,10 +284,11 @@ class zgDebug
 			echo '<p>' . $key . ' : ' . $value;
 		}
 		
-		if( ! empty( session_id() ) )
+		$session = session_id();
+		if( ! empty( $session ) )
 		{
 			echo '<h2>SESSION:</h2>';
-			echo '<p>' . session_id() . '</p>';
+			echo '<p>' . $session . '</p>';
 		}
 		
 		echo '</div>';
@@ -338,11 +343,13 @@ class zgDebug
 				if( $queryMessage ['executionTime'] < 0.01 )
 				{
 					echo '<tr class="sqlmessage">';
-				} else
+				}
+				else
 				{
 					echo '<tr class="sqlwarning">';
 				}
-			} else
+			}
+			else
 			{
 				echo '<tr class="sqlerror">';
 			}
@@ -367,7 +374,8 @@ class zgDebug
 		if( $totalExecutionTime < 0.1 )
 		{
 			$currentQueryLine .= $totalExecutionTime;
-		} else
+		}
+		else
 		{
 			$currentQueryLine .= '<span class="sqlproblem">' . $totalExecutionTime . '</span>';
 		}
@@ -398,7 +406,8 @@ class zgDebug
 				if( $guardMessage ['type'] == 'GUARD' )
 				{
 					echo '<tr class="guardLine">';
-				} else
+				}
+				else
 				{
 					echo '<tr class="unguardLine">';
 				}
@@ -412,23 +421,19 @@ class zgDebug
 				
 				$currentGuardLine .= '<td class="guardMessageLine">';
 				
-				if( ! empty( $guardMessage ['filename'] ) )
-					$currentGuardLine .= '[<span class="guardFile">' . $guardMessage ['filename'] . '</span> ';
+				if( ! empty( $guardMessage ['filename'] ) ) $currentGuardLine .= '[<span class="guardFile">' . $guardMessage ['filename'] . '</span> ';
 				else
 					$currentGuardLine .= '[ ';
 				
-				if( ! empty( $guardMessage ['line'] ) )
-					$currentGuardLine .= '(<span class="guardLine">' . $guardMessage ['line'] . '</span>)] ';
+				if( ! empty( $guardMessage ['line'] ) ) $currentGuardLine .= '(<span class="guardLine">' . $guardMessage ['line'] . '</span>)] ';
 				else
 					$currentGuardLine .= ' ]';
 				
-				if( ! empty( $guardMessage ['filename'] ) )
-					$currentGuardLine .= '<span class="guardClass">' . $guardMessage ['class'] . '-&gt;</span>';
+				if( ! empty( $guardMessage ['filename'] ) ) $currentGuardLine .= '<span class="guardClass">' . $guardMessage ['class'] . '-&gt;</span>';
 				else
 					$currentGuardLine .= ' ';
 				
-				if( ! empty( $guardMessage ['function'] ) )
-					$currentGuardLine .= '<span class="guardFunction">' . $guardMessage ['function'] . '</span>';
+				if( ! empty( $guardMessage ['function'] ) ) $currentGuardLine .= '<span class="guardFunction">' . $guardMessage ['function'] . '</span>';
 				else
 					$currentGuardLine .= ' ';
 				
@@ -446,7 +451,8 @@ class zgDebug
 					}
 					
 					$currentGuardLine .= '(' . $argstring . ')';
-				} else
+				}
+				else
 				{
 					$currentGuardLine .= "() returned with: <span class=\"guardArgument\">'" . $guardMessage ['returnValue'] . "'</span>";
 				}

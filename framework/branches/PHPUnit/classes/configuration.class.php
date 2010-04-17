@@ -212,7 +212,14 @@ class zgConfiguration
 			}
 			else
 			{
-				$this->configuration [$modulename] = array_merge( $this->configuration [$modulename], $configurationArray );
+				if( is_array( $this->configuration [$modulename] ) )
+				{
+					$this->configuration [$modulename] = array_merge( $this->configuration [$modulename], $configurationArray );
+				}
+				else
+				{
+					$this->configuration [$modulename] = $configurationArray;
+				}
 			}
 		}
 		
