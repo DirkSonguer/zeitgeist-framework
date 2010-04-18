@@ -212,6 +212,12 @@ class zgSession
 	{
 		$this->debug->guard();
 		
+		if( empty( $_SESSION ) )
+		{
+			$this->debug->unguard( true );
+			return true;
+		}
+		
 		foreach( $_SESSION as $key => $value )
 		{
 			if( isset( $_SESSION [$key] ) )
