@@ -216,7 +216,8 @@ class zgMessages
 		$this->debug->guard();
 		
 		$session = zgSession::init();
-		if( $messagecache = $session->getSessionVariable( 'messagecache_session' ) )
+		$messagecache = $session->getSessionVariable( 'messagecache_session' );
+		if( ! empty( $messagecache ) )
 		{
 			$serializedMessages = $messagecache;
 			$messages = unserialize( $serializedMessages );
@@ -230,8 +231,7 @@ class zgMessages
 			}
 			
 			$this->importMessages( $messages );
-		}
-		else
+		} else
 		{
 			$this->debug->write( 'No messagedata is stored in database for this user', 'warning' );
 			$this->setMessage( 'No messagedata is stored in database for this user', 'warning' );

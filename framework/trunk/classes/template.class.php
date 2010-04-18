@@ -769,8 +769,8 @@ class zgTemplate
 			{
 				if( empty( $this->variables [$variableName] ) )
 				{
-					$this->debug->write( 'Error inserting the variable ' . $variableName . ' into block ' . $blockname, 'error' );
-					$this->messages->setMessage( 'Error inserting the variable ' . $variableName . ' into block ' . $blockname, 'error' );
+					$this->debug->write( 'Error inserting the variable ' . $variableName . ' into the outer template node', 'error' );
+					$this->messages->setMessage( 'Error inserting the variable ' . $variableName . ' into outer template node', 'error' );
 					$this->debug->unguard( false );
 					return false;
 				}

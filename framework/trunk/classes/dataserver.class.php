@@ -64,7 +64,7 @@ class zgDataserver
 		$res = $database->query( $sql );
 		
 		$i = 1;
-		while( $row = $database->fetchArray( $res ) )
+		while( ($row = $database->fetchArray( $res )) !== false )
 		{
 			$xmlDataset .= "\t<element id=\"" . $i . "\">\n";
 			

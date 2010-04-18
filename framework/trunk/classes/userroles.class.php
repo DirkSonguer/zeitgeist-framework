@@ -55,10 +55,11 @@ class zgUserroles
 		$sql .= "LEFT JOIN " . $userrolesTablename . " r ON u2r.userroleuser_userrole = r.userrole_id ";
 		$sql .= "WHERE u2r.userroleuser_user = '" . $userid . "'";
 		
-		if( $res = $this->database->query( $sql ) )
+		$res = $this->database->query( $sql );
+		if( $res )
 		{
 			$ret = array ();
-			while( $row = $this->database->fetchArray( $res ) )
+			while( ($row = $this->database->fetchArray( $res )) !== false )
 			{
 				if( $row ['userrole_name'] == NULL ) $row ['userrole_name'] = true;
 				$ret [$row ['userroleuser_userrole']] = $row ['userrole_name'];
@@ -149,7 +150,8 @@ class zgUserroles
 		$userrolesTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userroles' );
 		$sql = "SELECT userrole_id FROM " . $userrolesTablename . " WHERE userrole_name = '" . $rolename . "'";
 		
-		if( $res = $this->database->query( $sql ) )
+		$res = $this->database->query( $sql );
+		if( $res )
 		{
 			if( $this->database->numRows( $res ) )
 			{

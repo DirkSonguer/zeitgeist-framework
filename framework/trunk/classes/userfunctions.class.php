@@ -161,7 +161,8 @@ class zgUserfunctions
 		
 		$sql = "SELECT user_id, user_key, user_username FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " WHERE user_username = '" . $username . "' AND user_password = '" . md5( $password ) . "' AND user_active='1'";
 		
-		if( $res = $this->database->query( $sql ) )
+		$res = $this->database->query( $sql );
+		if( $res )
 		{
 			if( $this->database->numRows( $res ) )
 			{
@@ -286,7 +287,8 @@ class zgUserfunctions
 		$this->debug->guard();
 		
 		$sql = "SELECT * FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " WHERE user_id = '" . $userid . "'";
-		if( $res = $this->database->query( $sql ) )
+		$res = $this->database->query( $sql );
+		if( $res )
 		{
 			if( $this->database->numRows( $res ) )
 			{
@@ -331,7 +333,8 @@ class zgUserfunctions
 		$this->debug->guard();
 		
 		$sql = "SELECT * FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userconfirmation' ) . " WHERE userconfirmation_user = '" . $userid . "'";
-		if( $res = $this->database->query( $sql ) )
+		$res = $this->database->query( $sql );
+		if( $res )
 		{
 			if( $this->database->numRows( $res ) )
 			{
@@ -373,7 +376,8 @@ class zgUserfunctions
 		$this->debug->guard();
 		
 		$sql = "SELECT * FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userconfirmation' ) . " WHERE userconfirmation_key = '" . $confirmationkey . "'";
-		if( $res = $this->database->query( $sql ) )
+		$res = $this->database->query( $sql );
+		if( $res )
 		{
 			if( $this->database->numRows( $res ) )
 			{
