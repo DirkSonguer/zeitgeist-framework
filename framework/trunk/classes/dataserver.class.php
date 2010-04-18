@@ -193,10 +193,6 @@ class zgDataserver
 					$attribute = ' id="' . $key . '"';
 					$key = 'element';
 				}
-				else
-				{
-					$key = $key;
-				}
 				
 				$xmlData .= $tabs . '<' . $key . $attribute . ">\n";
 				$this->_transformArrayRecursive( $value, true );
