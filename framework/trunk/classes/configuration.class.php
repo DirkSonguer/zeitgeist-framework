@@ -61,7 +61,10 @@ class zgConfiguration
 			self::$instance = new zgConfiguration();
 			
 			// try to load zeitgeist default configuration as this contains several global configuration data
-			self::$instance->loadConfiguration( 'zeitgeist', ZEITGEIST_ROOTDIRECTORY . 'configuration/zeitgeist.ini' );
+			if( file_exists( ZEITGEIST_ROOTDIRECTORY . 'configuration/zeitgeist.ini' ) )
+			{
+				self::$instance->loadConfiguration( 'zeitgeist', ZEITGEIST_ROOTDIRECTORY . 'configuration/zeitgeist.ini' );
+			}
 			
 			// try to load zeitgeist configuration in the application configuration directory
 			// the application configuration will overwrite the default values and act as a project configuration file
@@ -209,7 +212,14 @@ class zgConfiguration
 			}
 			else
 			{
-				$this->configuration [$modulename] = array_merge( $this->configuration [$modulename], $configurationArray );
+				if( is_array( $this->configuration [$modulename] ) )
+				{
+					$this->configuration [$modulename] = array_merge( $this->configuration [$modulename], $configurationArray );
+				}
+				else
+				{
+					$this->configuration [$modulename] = $configurationArray;
+				}
 			}
 		}
 		
@@ -415,7 +425,7 @@ class zgConfiguration
 					// check if value is escaped. if so, cut the escape chars
 					if( (substr( $configurationValue, 1, 1 ) == '"') && (substr( $configurationValue, - 1, 1 ) == '"') )
 					{
-						$configurationValue = substr( $value, 1, - 1 );
+						$configurationValue = substr( $configurationValue, 1, - 1 );
 					}
 					
 					$arrayvalue = false;

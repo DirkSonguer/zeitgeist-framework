@@ -289,6 +289,8 @@ class zgDatabase
 		{
 			$this->debug->write( 'Problem geting the last insert id: ' . mysql_error(), 'warning' );
 			$this->messages->setMessage( 'Problem geting the last insert id: ' . mysql_error(), 'warning' );
+			$this->debug->unguard( false );
+			return false;
 		}
 		
 		$this->debug->unguard( $ret );
