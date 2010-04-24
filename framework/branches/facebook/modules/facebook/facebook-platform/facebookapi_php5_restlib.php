@@ -1,5 +1,5 @@
 <?php
-// Copyright 2004-2009 Facebook. All Rights Reserved.
+// Copyright 2004-present Facebook. All Rights Reserved.
 //
 // +---------------------------------------------------------------------------+
 // | Facebook Platform PHP5 client                                             |
@@ -53,6 +53,7 @@ class FacebookRestClient {
   public $batch_mode;
   private $batch_queue;
   private $pending_batch;
+  private $pending_batch_is_read_only;
   private $call_as_apikey;
   private $use_curl_if_available;
   private $format = null;
@@ -82,6 +83,8 @@ class FacebookRestClient {
       Facebook::get_facebook_url('api') . '/restserver.php';
     $this->photo_server_addr =
       Facebook::get_facebook_url('api-photo') . '/restserver.php';
+    $this->read_server_addr =
+      Facebook::get_facebook_url('api-read') . '/restserver.php';
 
     if (!empty($GLOBALS['facebook_config']['debug'])) {
       $this->cur_id = 0;
@@ -166,6 +169,7 @@ function toggleDisplay(id, type) {
 
     $this->batch_queue = array();
     $this->pending_batch = true;
+    $this->pending_batch_is_read_only = true;
   }
 
   /*
@@ -178,9 +182,11 @@ function toggleDisplay(id, type) {
       throw new FacebookRestClientException($description, $code);
     }
 
+    $read_only = $this->pending_batch_is_read_only;
     $this->pending_batch = false;
+    $this->pending_batch_is_read_only = false;
 
-    $this->execute_server_side_batch();
+    $this->execute_server_side_batch($read_only);
     $this->batch_queue = null;
   }
 
@@ -191,7 +197,7 @@ function toggleDisplay(id, type) {
     return $this->pending_batch;
   }
 
-  private function execute_server_side_batch() {
+  private function execute_server_side_batch($read_only) {
     $item_count = count($this->batch_queue);
     $method_feed = array();
     foreach ($this->batch_queue as $batch_item) {
@@ -207,7 +213,7 @@ function toggleDisplay(id, type) {
     $params = array('method_feed' => json_encode($method_feed),
                     'serial_only' => $serial_only,
                     'format' => $this->format);
-    $result = $this->call_method('facebook.batch.run', $params);
+    $result = $this->call_method('facebook.batch.run', $params, $read_only);
 
     if (is_array($result) && isset($result['error_code'])) {
       throw new FacebookRestClientException($result['error_msg'],
@@ -569,7 +575,7 @@ function toggleDisplay(id, type) {
     return $this->call_method('facebook.events.invite',
                               array('eid' => $eid,
                                     'uids' => $uids,
-                                    'personal_message', $personal_message));
+                                    'personal_message' => $personal_message));
   }
 
   /**
@@ -1200,7 +1206,7 @@ function toggleDisplay(id, type) {
    * @return array  An array of links.
    */
   public function &links_get($uid, $limit, $link_ids = null) {
-    return $this->call_method('links.get',
+    return $this->call_method('facebook.links.get',
         array('uid' => $uid,
               'limit' => $limit,
               'link_ids' => $link_ids));
@@ -1217,7 +1223,7 @@ function toggleDisplay(id, type) {
    * @return bool
    */
   public function &links_post($url, $comment='', $uid = null) {
-    return $this->call_method('links.post',
+    return $this->call_method('facebook.links.post',
         array('uid' => $uid,
               'url' => $url,
               'comment' => $comment));
@@ -1317,6 +1323,13 @@ function toggleDisplay(id, type) {
               'test_mode' => $test_mode)), true);
   }
 
+  public function payments_transfer($from_id, $to_id, $params) {
+    return $this->call_method('facebook.payments.transfer',
+        array('from_id' => $from_id,
+              'to_id' => $to_id,
+              'params' => json_encode($params)));
+  }
+
   /**
    * Gifts API
    */
@@ -1350,53 +1363,6 @@ function toggleDisplay(id, type) {
     );
   }
 
-  /**
-   * Dashboard API
-   */
-
-  /**
-   * Set the news for the specified user.
-   *
-   * @param int    $uid     The user for whom you are setting news for
-   * @param string $news    Text of news to display
-   *
-   * @return bool   Success
-   */
-  public function dashboard_setNews($uid, $news) {
-    return $this->call_method('facebook.dashboard.setNews',
-                              array('uid'  => $uid,
-                                    'news' => $news)
-                             );
-  }
-
-  /**
-   * Get the current news of the specified user.
-   *
-   * @param int    $uid     The user to get the news of
-   *
-   * @return string   The text of the current news for the user
-   */
-  public function dashboard_getNews($uid) {
-    return json_decode(
-      $this->call_method('facebook.dashboard.getNews',
-                         array('uid' => $uid)
-                        ), true);
-  }
-
-  /**
-   * Set the news for the specified user.
-   *
-   * @param int    $uid     The user you are clearing the news of
-   *
-   * @return bool   Success
-   */
-  public function dashboard_clearNews($uid) {
-    return $this->call_method('facebook.dashboard.clearNews',
-                              array('uid' => $uid)
-                             );
-  }
-
-
 
   /**
    * Creates a note with the specified title and content.
@@ -1409,7 +1375,7 @@ function toggleDisplay(id, type) {
    * @return int   The ID of the note that was just created.
    */
   public function &notes_create($title, $content, $uid = null) {
-    return $this->call_method('notes.create',
+    return $this->call_method('facebook.notes.create',
         array('uid' => $uid,
               'title' => $title,
               'content' => $content));
@@ -1425,7 +1391,7 @@ function toggleDisplay(id, type) {
    * @return bool
    */
   public function &notes_delete($note_id, $uid = null) {
-    return $this->call_method('notes.delete',
+    return $this->call_method('facebook.notes.delete',
         array('uid' => $uid,
               'note_id' => $note_id));
   }
@@ -1443,7 +1409,7 @@ function toggleDisplay(id, type) {
    * @return bool
    */
   public function &notes_edit($note_id, $title, $content, $uid = null) {
-    return $this->call_method('notes.edit',
+    return $this->call_method('facebook.notes.edit',
         array('uid' => $uid,
               'note_id' => $note_id,
               'title' => $title,
@@ -1463,7 +1429,7 @@ function toggleDisplay(id, type) {
    *               notes.
    */
   public function &notes_get($uid, $note_ids = null) {
-    return $this->call_method('notes.get',
+    return $this->call_method('facebook.notes.get',
         array('uid' => $uid,
               'note_ids' => $note_ids));
   }
@@ -1948,7 +1914,9 @@ function toggleDisplay(id, type) {
                               $filter_key = '',
                               $exportable_only = false,
                               $metadata = null,
-                              $post_ids = null) {
+                              $post_ids = null,
+                              $query = null,
+                              $everyone_stream = false) {
     $args = array(
       'viewer_id'  => $viewer_id,
       'source_ids' => $source_ids,
@@ -1958,7 +1926,9 @@ function toggleDisplay(id, type) {
       'filter_key' => $filter_key,
       'exportable_only' => $exportable_only,
       'metadata' => $metadata,
-      'post_ids' => $post_ids);
+      'post_ids' => $post_ids,
+      'query' => $query,
+      'everyone_stream' => $everyone_stream);
     return $this->call_method('facebook.stream.get', $args);
   }
 
@@ -2005,7 +1975,7 @@ function toggleDisplay(id, type) {
    * @return  array  A list of strings describing any compile errors for the
    *                 submitted FBML
    */
-  function profile_setFBML($markup,
+  public function profile_setFBML($markup,
                            $uid=null,
                            $profile='',
                            $profile_action='',
@@ -2999,7 +2969,7 @@ function toggleDisplay(id, type) {
    * @return array  A map of the names and values for those metrics
    */
   public function &admin_getMetrics($start_time, $end_time, $period, $metrics) {
-    return $this->call_method('admin.getMetrics',
+    return $this->call_method('facebook.admin.getMetrics',
         array('start_time' => $start_time,
               'end_time' => $end_time,
               'period' => $period,
@@ -3023,7 +2993,7 @@ function toggleDisplay(id, type) {
     if (!empty($restriction_info)) {
       $restriction_str = json_encode($restriction_info);
     }
-    return $this->call_method('admin.setRestrictionInfo',
+    return $this->call_method('facebook.admin.setRestrictionInfo',
         array('restriction_str' => $restriction_str));
   }
 
@@ -3039,7 +3009,7 @@ function toggleDisplay(id, type) {
    */
   public function admin_getRestrictionInfo() {
     return json_decode(
-        $this->call_method('admin.getRestrictionInfo'),
+        $this->call_method('facebook.admin.getRestrictionInfo'),
         true);
   }
 
@@ -3053,7 +3023,7 @@ function toggleDisplay(id, type) {
    */
   public function admin_banUsers($uids) {
     return $this->call_method(
-      'admin.banUsers', array('uids' => json_encode($uids)));
+      'facebook.admin.banUsers', array('uids' => json_encode($uids)));
   }
 
   /**
@@ -3065,7 +3035,7 @@ function toggleDisplay(id, type) {
    */
   public function admin_unbanUsers($uids) {
     return $this->call_method(
-      'admin.unbanUsers', array('uids' => json_encode($uids)));
+      'facebook.admin.unbanUsers', array('uids' => json_encode($uids)));
   }
 
   /**
@@ -3077,13 +3047,306 @@ function toggleDisplay(id, type) {
    * @param array $uids an array of user ids to filter by
    * @return bool true on success
    */
-
   public function admin_getBannedUsers($uids = null) {
     return $this->call_method(
-      'admin.getBannedUsers',
+      'facebook.admin.getBannedUsers',
       array('uids' => $uids ? json_encode($uids) : null));
   }
 
+  /**
+   * Add global news for an app.
+   * App Secret only.
+   *
+   * @param  news   Array of news items [{message, action_link => {href, text}}]
+   * @param  image  Valid image url // Optional
+   *
+   * @return fbid   ID of newly created news bundle
+   */
+  public function dashboard_addGlobalNews($news, $image = null) {
+    return $this->call_method('facebook.dashboard.addGlobalNews',
+      array('news'  => $news,
+            'image' => $image));
+  }
+
+  /**
+   * Add news for a specific user.
+   *
+   * @param  news   Array of news items [{message, action_link => {href, text}}]
+   * @param  image  Valid image url // Optional
+   * @param  uid    The user ID of the user // Optional if session provided
+   *
+   * @return fbid   ID of newly created news bundle
+   */
+  public function dashboard_addNews($news, $image = null, $uid = null) {
+    return $this->call_method('facebook.dashboard.addNews',
+      array('uid'   => $uid,
+            'news'  => $news,
+            'image' => $image));
+  }
+
+  /**
+   * Remove global news for an app.
+   * App Secret only.
+   *
+   * @param  news_ids  Array of fbids of news bundles // All if empty
+   *
+   * @return results   Array where key => news_id
+   *                             value => successfully cleared
+   */
+  public function dashboard_clearGlobalNews($news_ids = null) {
+    return $this->call_method('facebook.dashboard.clearGlobalNews',
+      array('news_ids' => $news_ids));
+  }
+
+  /**
+   * Clear the news for a specific user.
+   *
+   * @param  news_ids  Array of fbids of news bundles // All if empty
+   * @param  uid       The user ID of the user // Optional if session provided
+   *
+   * @return results   Array where key => news_id
+   *                             value => successfully cleared
+   */
+  public function dashboard_clearNews($news_ids, $uid = null) {
+    return $this->call_method('facebook.dashboard.clearNews',
+      array('uid'      => $uid,
+            'news_ids' => $news_ids));
+  }
+
+  /**
+   * Decrement the count for a specific user.
+   *
+   * @param  uid   The user ID of the user // Optional if session provided
+   *
+   * @return bool  Success // If the count is already 0, decrementing fails.
+   */
+  public function dashboard_decrementCount($uid = null) {
+    return $this->call_method('facebook.dashboard.decrementCount',
+      array('uid' => $uid));
+  }
+
+  /**
+   * Get a user's activity.
+   *
+   * @param  activity_ids    Array of fbids of activity bundles // All if empty
+   * @param  uid             The user ID of the user // Optional if session key
+   *
+   * @return activities      Array of activities, including 'time' and 'fbid'
+   *                         [{message, time, fbid,
+   *                           action_link => {text, href}}]
+   */
+  public function dashboard_getActivity($activity_ids, $uid = null) {
+    return $this->call_method('facebook.dashboard.getActivity',
+      array('uid' => $uid,
+            'activity_ids' => $activity_ids));
+  }
+
+  /**
+   * Get the count for a specific user.
+   *
+   * @param  uid    The user ID of the user // Optional if session provided
+   *
+   * @return count  The user's count
+   */
+  public function dashboard_getCount($uid = null) {
+    return $this->call_method('facebook.dashboard.getCount',
+      array('uid' => $uid));
+  }
+
+  /**
+   * Get the global news for an app.
+   * App Secret only.
+   *
+   * @param  news_ids  Array of fbids of news bundles // All if empty
+   *
+   * @return news      Array of news [{image,
+   *                                   news => [{message,
+   *                                             action_link => {text, href}}]}]
+   */
+  public function dashboard_getGlobalNews($news_ids = null) {
+    return $this->call_method('facebook.dashboard.getGlobalNews',
+      array('news_ids' => $news_ids));
+  }
+
+  /**
+   * Get the news for a specific user.
+   *
+   * @param  news_ids  Array of fbids of news bundles // All if empty
+   * @param  uid       The user ID of the user // Optional if session provided
+   *
+   * @return news      Array of news [{image,
+   *                                   news => [{message,
+   *                                             action_link => {text, href}}]}]
+   */
+  public function dashboard_getNews($news_ids = null, $uid = null) {
+    return $this->call_method('facebook.dashboard.getNews',
+      array('uid'      => $uid,
+            'news_ids' => $news_ids));
+  }
+
+  /**
+   * Increment the count for a specific user.
+   *
+   * @param  uid   The user ID of the user // Optional if session provided
+   *
+   * @return bool  Success
+   */
+  public function dashboard_incrementCount($uid = null) {
+    return $this->call_method('facebook.dashboard.incrementCount',
+      array('uid' => $uid));
+  }
+
+  /**
+   * Add news for a series of users
+   * App Secret only.
+   *
+   * @param  uids   User ids
+   * @param  news   Array of news items [{message, action_link => {href, text}}]
+   * @param  image  Valid image url
+   *
+   * @return ids    Associative array.  key => uid, value => fbid or false
+   */
+  public function dashboard_multiAddNews($uids, $news, $image = null) {
+    return $this->call_method('facebook.dashboard.multiAddNews',
+      array('uids'  => $uids,
+            'news'  => $news,
+            'image' => $image));
+  }
+
+  /**
+   * Clear the news for a series of users
+   * App Secret only.
+   *
+   * @param  ids   Associative array.
+   *                 Key   => uid,
+   *                 Value => array(news_ids) // All if empty
+   *
+   * @return ids   Associative array.  key => uid, value => true or false
+   */
+  public function dashboard_multiClearNews($ids) {
+    return $this->call_method('facebook.dashboard.multiClearNews',
+      array('ids' => $ids));
+  }
+
+  /**
+   * Decrement the count for a series of users
+   * App Secret only.
+   *
+   * @param  uids  Array of uids
+   *
+   * @return array  Key => uid
+   *                Value => count for uid was decremented successfully.
+   *                // If a count was already at 0, then decrementing fails.
+   */
+  public function dashboard_multiDecrementCount($uids) {
+    return $this->call_method('facebook.dashboard.multiDecrementCount',
+      array('uids' => $uids));
+  }
+
+  /**
+   * Get the count for a series of users.
+   * App Secret only.
+   *
+   * @param  uids    Array of uids
+   *
+   * @return counts  Associative array.
+   *                   Key => uid,
+   *                   Value => count
+   */
+  public function dashboard_multiGetCount($uids) {
+    return $this->call_method('facebook.dashboard.multiGetCount',
+      array('uids' => $uids));
+  }
+
+  /**
+   * Get the news for a series of users.
+   * App Secret only.
+   *
+   * @param  ids   Associative array.
+   *                 Key   => uid,
+   *                 Value => array(news_ids) // All if empty
+   *
+   * @return news  Associative array.
+   *                 Key   => uid,
+   *                 Value => [{image, news => [{message,
+   *                                            action_link => {text,
+   *                                                            href}}]}]
+   */
+  public function dashboard_multiGetNews($ids) {
+    return $this->call_method('facebook.dashboard.multiGetNews',
+      array('ids' => $ids));
+  }
+
+  /**
+   * Increment the count for a series of users
+   * App Secret only.
+   *
+   * @param  uids  Array of uids
+   *
+   * @return array  Key => uid
+   *                Value => count for uid was incremented successfully.
+   */
+  public function dashboard_multiIncrementCount($uids) {
+    return $this->call_method('facebook.dashboard.multiIncrementCount',
+      array('uids' => $uids));
+  }
+
+  /**
+   * Set the count for a series of users.
+   * App Secret only.
+   *
+   * @param  ids   Associative array.
+   *                 Key   => uid,
+   *                 Value => count
+   *
+   * @return array  Key => uid
+   *                Value => count for uid was set successfully.
+   */
+  public function dashboard_multiSetCount($ids) {
+    return $this->call_method('facebook.dashboard.multiSetCount',
+      array('ids' => $ids));
+  }
+
+  /**
+   * Publish activity for a user.
+   * Session Key only.
+   *
+   * @param  activity   one activity {message, action_link => {href, text}}
+   *
+   * @return fbid       ID of newly created activity
+   */
+  public function dashboard_publishActivity($activity) {
+    return $this->call_method('facebook.dashboard.publishActivity',
+      array('activity' => $activity));
+  }
+
+  /**
+   * Remove the activity for a specific user.
+   * @param  activity_ids  Array of fbids of bundles // Cannot be empty
+   * @param  uid           The user ID of the user // Optional w/ session
+   *
+   * @return results   Array where key => news_id
+   *                             value => successfully cleared
+   */
+  public function dashboard_removeActivity($activity_ids, $uid = null) {
+    return $this->call_method('facebook.dashboard.removeActivity',
+      array('uid' => $uid,
+            'activity_ids' => $activity_ids));
+  }
+
+  /**
+   * Set the count for a specific user.
+   *
+   * @param  count  The new count
+    * @param  uid    The user ID of the user // Optional if session provided
+   *
+   * @return bool   Count was set successfly.
+   */
+  public function dashboard_setCount($count, $uid = null) {
+    return $this->call_method('facebook.dashboard.setCount',
+      array('uid' => $uid,
+            'count' => $count));
+  }
 
   /* UTILITY FUNCTIONS */
 
@@ -3092,12 +3355,15 @@ function toggleDisplay(id, type) {
    *
    * @param string $method  Name of the Facebook method to invoke
    * @param array $params   A map of param names => param values
+   * @param bool $force_read_only force the read-only endpoint
    *
    * @return mixed  Result of method call; this returns a reference to support
    *                'delayed returns' when in a batch context.
    *     See: http://wiki.developers.facebook.com/index.php/Using_batching_API
    */
-  public function &call_method($method, $params = array()) {
+  public function &call_method($method,
+                               $params = array(),
+                               $force_read_only = false) {
     if ($this->format) {
       $params['format'] = $this->format;
     }
@@ -3105,18 +3371,23 @@ function toggleDisplay(id, type) {
       if ($this->call_as_apikey) {
         $params['call_as_apikey'] = $this->call_as_apikey;
       }
-      $data = $this->post_request($method, $params);
+      $read_only = $force_read_only || $this->methodIsReadOnly($method);
+      $server_addr = ($read_only) ? $this->read_server_addr
+                                  : $this->server_addr;
+      $data = $this->post_request($method, $params, $server_addr);
       $this->rawData = $data;
       $result = $this->convert_result($data, $method, $params);
       if (is_array($result) && isset($result['error_code'])) {
         throw new FacebookRestClientException($result['error_msg'],
                                               $result['error_code']);
       }
-    }
-    else {
+    } else {
       $result = null;
       $batch_item = array('m' => $method, 'p' => $params, 'r' => & $result);
       $this->batch_queue[] = $batch_item;
+      if (!$this->methodIsReadOnly($method)) {
+        $this->pending_batch_is_read_only = false;
+      }
     }
 
     return $result;
@@ -3156,6 +3427,15 @@ function toggleDisplay(id, type) {
    */
    public function getRawData() {
      return $this->rawData;
+   }
+
+   /**
+    * Change the server address
+    *
+    * @param string $server_addr New server address
+    */
+   public function setServerAddress($server_addr) {
+      $this->server_addr = $this->photo_server_addr = $server_addr;
    }
 
   /**
@@ -3226,8 +3506,12 @@ function toggleDisplay(id, type) {
     list($get, $post) = $this->add_standard_params($method, $params);
     // we need to do this before signing the params
     $this->convert_array_values_to_json($post);
-    $post['sig'] = Facebook::generate_sig(array_merge($get, $post),
-                                          $this->secret);
+
+    // no point in signing if we don't have a secret
+    if ($this->secret) {
+      $post['sig'] = Facebook::generate_sig(array_merge($get, $post),
+                                            $this->secret);
+    }
     return array($get, $post);
   }
 
@@ -3267,9 +3551,8 @@ function toggleDisplay(id, type) {
     } else {
       $get['v'] = '1.0';
     }
-    if (isset($this->use_ssl_resources) &&
-        $this->use_ssl_resources) {
-      $post['return_ssl_resources'] = true;
+    if (isset($this->use_ssl_resources)) {
+      $post['return_ssl_resources'] = (bool) $this->use_ssl_resources;
     }
     return array($get, $post);
   }
@@ -3313,11 +3596,11 @@ function toggleDisplay(id, type) {
     return $this->run_http_post_transaction($content_type, $content, $server_addr);
   }
 
-  public function post_request($method, $params) {
+  public function post_request($method, $params, $server_addr) {
     list($get, $post) = $this->finalize_params($method, $params);
     $post_string = $this->create_url_string($post);
     $get_string = $this->create_url_string($get);
-    $url_with_get = $this->server_addr . '?' . $get_string;
+    $url_with_get = $server_addr . '?' . $get_string;
     if ($this->use_curl_if_available && function_exists('curl_init')) {
       $useragent = 'Facebook API PHP5 Client 1.1 (curl) ' . phpversion();
       $ch = curl_init();
@@ -3405,7 +3688,11 @@ function toggleDisplay(id, type) {
     if ($sxml) {
       foreach ($sxml as $k => $v) {
         if ($sxml['list']) {
-          $arr[] = self::convert_simplexml_to_array($v);
+          if (isset($v['key'])) {
+            $arr[(string)$v['key']] = self::convert_simplexml_to_array($v);
+          } else {
+            $arr[] = self::convert_simplexml_to_array($v);
+          }
         } else {
           $arr[$k] = self::convert_simplexml_to_array($v);
         }
@@ -3420,6 +3707,75 @@ function toggleDisplay(id, type) {
 
   protected function get_uid($uid) {
     return $uid ? $uid : $this->user;
+  }
+
+  static public function methodIsReadOnly($method) {
+    static $READ_ONLY_CALLS =
+      array('admin_getallocation' => 1,
+            'admin_getappproperties' => 1,
+            'admin_getbannedusers' => 1,
+            'admin_getlivestreamvialink' => 1,
+            'admin_getmetrics' => 1,
+            'admin_getrestrictioninfo' => 1,
+            'application_getpublicinfo' => 1,
+            'auth_getapppublickey' => 1,
+            'auth_getsession' => 1,
+            'auth_getsignedpublicsessiondata' => 1,
+            'comments_get' => 1,
+            'connect_getunconnectedfriendscount' => 1,
+            'dashboard_getactivity' => 1,
+            'dashboard_getcount' => 1,
+            'dashboard_getglobalnews' => 1,
+            'dashboard_getnews' => 1,
+            'dashboard_multigetcount' => 1,
+            'dashboard_multigetnews' => 1,
+            'data_getcookies' => 1,
+            'events_get' => 1,
+            'events_getmembers' => 1,
+            'fbml_getcustomtags' => 1,
+            'feed_getappfriendstories' => 1,
+            'feed_getregisteredtemplatebundlebyid' => 1,
+            'feed_getregisteredtemplatebundles' => 1,
+            'fql_multiquery' => 1,
+            'fql_query' => 1,
+            'friends_arefriends' => 1,
+            'friends_get' => 1,
+            'friends_getappusers' => 1,
+            'friends_getlists' => 1,
+            'friends_getmutualfriends' => 1,
+            'gifts_get' => 1,
+            'groups_get' => 1,
+            'groups_getmembers' => 1,
+            'intl_gettranslations' => 1,
+            'links_get' => 1,
+            'notes_get' => 1,
+            'notifications_get' => 1,
+            'pages_getinfo' => 1,
+            'pages_isadmin' => 1,
+            'pages_isappadded' => 1,
+            'pages_isfan' => 1,
+            'permissions_checkavailableapiaccess' => 1,
+            'permissions_checkgrantedapiaccess' => 1,
+            'photos_get' => 1,
+            'photos_getalbums' => 1,
+            'photos_gettags' => 1,
+            'profile_getinfo' => 1,
+            'profile_getinfooptions' => 1,
+            'stream_getcomments' => 1,
+            'stream_getfilters' => 1,
+            'users_getinfo' => 1,
+            'users_getloggedinuser' => 1,
+            'users_getstandardinfo' => 1,
+            'users_hasapppermission' => 1,
+            'users_isappuser' => 1,
+            'users_isverified' => 1,
+            'video_getuploadlimits' => 1);
+
+    if (substr($method, 0, 9) == 'facebook.') {
+      $method = substr($method, 9);
+    }
+    $method = strtolower(str_replace('.', '_', $method));
+    return isset($READ_ONLY_CALLS[$method]);
   }
 }
 
@@ -3456,6 +3812,8 @@ class FacebookAPIErrorCodes {
   const API_EC_HOST_PUP = 14;
   const API_EC_SESSION_SECRET_NOT_ALLOWED = 15;
   const API_EC_HOST_READONLY = 16;
+  const API_EC_USER_TOO_MANY_CALLS = 17;
+  const API_EC_REQUEST_RESOURCES_EXCEEDED = 18;
 
   /*
    * PARAMETER ERRORS
@@ -3485,6 +3843,7 @@ class FacebookAPIErrorCodes {
   const API_EC_PARAM_BAD_PAGE_TYPE = 152;
   const API_EC_PARAM_BAD_LOCALE = 170;
   const API_EC_PARAM_BLOCKED_NOTIFICATION = 180;
+  const API_EC_PARAM_ACCESS_TOKEN = 190;
 
   /*
    * USER PERMISSIONS ERRORS
@@ -3542,6 +3901,9 @@ class FacebookAPIErrorCodes {
   const API_EC_EDIT_VIDEO_INVALID_FILE = 351;
   const API_EC_EDIT_VIDEO_INVALID_TYPE = 352;
   const API_EC_EDIT_VIDEO_FILE = 353;
+  const API_EC_VIDEO_NOT_TAGGED = 354;
+  const API_EC_VIDEO_ALREADY_TAGGED = 355;
+
 
   const API_EC_EDIT_FEED_TITLE_ARRAY = 360;
   const API_EC_EDIT_FEED_TITLE_PARAMS = 361;
@@ -3651,6 +4013,7 @@ class FacebookAPIErrorCodes {
   const API_EC_PAYMENTS_INVALID_OPERATION = 1158;
   const API_EC_PAYMENTS_PAYMENT_FAILED = 1159;
   const API_EC_PAYMENTS_DISABLED = 1160;
+  const API_EC_PAYMENTS_INSUFFICIENT_BALANCE = 1161;
 
   /*
    * CONNECT SESSION ERRORS
