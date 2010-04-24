@@ -59,6 +59,7 @@ require_once (ZEITGEIST_ROOTDIRECTORY . 'includes/autoloader.include.php');
 spl_autoload_register( 'zgAutoload' );
 
 // include modules
+require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/facebook/facebookuserhandler.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/form/form.class.php');
 require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/gamesystem/gamesystem.class.php');
 
