@@ -136,6 +136,36 @@ class zgController
 		return false;
 	}
 
+	
+
+	/**
+	 * Checks if the given action requires special user rights
+	 *
+	 * @param string $module name of the module
+	 * @param string $action name of the action
+	 *
+	 * @return boolean
+	 */
+	public function requiresUserRights($module, $action)
+	{
+		$this->debug->guard();
+		
+		$actionsTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_actions' );
+		$sql = "SELECT action_requiresuserright FROM " . $actionsTablename . " WHERE action_module = '" . mysql_real_escape_string( $module ) . "' AND action_name = '" . mysql_real_escape_string( $action ) . "'";
+		
+		$res = $this->database->query( $sql );
+		if( ! empty( $res ) )
+		{
+			$row = $this->database->fetchArray( $res );
+			
+			$this->debug->unguard( $row['action_requiresuserright'] );
+			return $row['action_requiresuserright'];
+		}
+		
+		$this->debug->unguard( false );
+		return false;
+	}
+	
 
 	/**
 	 * Executes an action inside a module

@@ -20,7 +20,8 @@ require_once (ZEITGEIST_ROOTDIRECTORY . 'modules/facebook/facebook-platform/face
 
 /**
  * NOTE: This class is a singleton.
- * Other classes or files may initialize it with zgObjects::init();
+ * Other classes or files may initialize it with zgFacebookUserhandler::init();
+ * Extends the core zgUserhandler
  */
 class zgFacebookUserhandler extends zgUserhandler
 {
@@ -49,11 +50,15 @@ class zgFacebookUserhandler extends zgUserhandler
 		$this->facebookId = NULL;
 		
 		parent::__construct();
-
-		$this->configuration->loadConfiguration('facebook', ZEITGEIST_ROOTDIRECTORY.'configuration/zgfacebook.ini');
-		if (file_exists(APPLICATION_ROOTDIRECTORY . 'configuration/zgfacebook.ini'))
+		
+		if( file_exists( ZEITGEIST_ROOTDIRECTORY . 'configuration/zgfacebook.ini' ) )
 		{
-			$this->configuration->loadConfiguration('facebook', APPLICATION_ROOTDIRECTORY.'configuration/zgfacebook.ini', true);
+			$this->configuration->loadConfiguration( 'facebook', ZEITGEIST_ROOTDIRECTORY . 'configuration/zgfacebook.ini' );
+		}
+		
+		if( file_exists( APPLICATION_ROOTDIRECTORY . 'configuration/zgfacebook.ini' ) )
+		{
+			$this->configuration->loadConfiguration( 'facebook', APPLICATION_ROOTDIRECTORY . 'configuration/zgfacebook.ini', true );
 		}
 		
 		$this->facebook = new Facebook( $this->configuration->getConfiguration( 'facebook', 'api', 'api_key' ), $this->configuration->getConfiguration( 'facebook', 'api', 'secret_key' ) );
@@ -73,26 +78,6 @@ class zgFacebookUserhandler extends zgUserhandler
 		}
 		
 		return self::$instance;
-	}
-
-
-	/**
-	 * connects to Facebook
-	 *
-	 * @param string $api_key public key for your application
-	 * @param string $secret_key secret key for your application
-	 * 
-	 * @return boolean
-	 */
-	public function connectToFacebook($api_key, $secret_key)
-	{
-		$this->debug->guard();
-		
-		// connect to facebook API
-		$this->facebook = new Facebook( $api_key, $secret_key );
-		
-		$this->debug->unguard( is_object( $this->facebook ) );
-		return is_object( $this->facebook );
 	}
 
 
@@ -157,7 +142,7 @@ class zgFacebookUserhandler extends zgUserhandler
 	public function login()
 	{
 		$this->debug->guard();
-
+		
 		if( $this->loggedIn )
 		{
 			$this->debug->write( 'Error logging in a user: user is already logged in. Cannot login user twice', 'error' );
@@ -166,7 +151,7 @@ class zgFacebookUserhandler extends zgUserhandler
 			return false;
 		}
 		
-		$this->facebookId = $this->facebook->require_login();	
+		$this->facebookId = $this->facebook->require_login();
 		if( empty( $this->facebookId ) )
 		{
 			$this->debug->write( 'Error logging in a user: facebook session not initialized', 'warning' );

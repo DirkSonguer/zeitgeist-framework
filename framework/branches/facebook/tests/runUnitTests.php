@@ -51,7 +51,7 @@ class runUnitTests extends PHPUnit_Framework_TestSuite
 		$this->addTestSuite( 'zgActionlogTest' );
 		
 		$this->addTestSuite( 'zgConfigurationTest' );
-		
+
 		$this->addTestSuite( 'zgDatabaseTest' );
 		
 		$this->addTestSuite( 'zgFilesTest' );
@@ -79,7 +79,7 @@ class runUnitTests extends PHPUnit_Framework_TestSuite
 		$this->addTestSuite( 'zgUserrightsTest' );
 		
 		$this->addTestSuite( 'zgUserrolesTest' );
-	
+
 	}
 
 
