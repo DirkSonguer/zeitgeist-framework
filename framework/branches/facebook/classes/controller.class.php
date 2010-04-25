@@ -151,7 +151,10 @@ class zgController
 		$this->debug->guard();
 		
 		$actionsTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_actions' );
-		$sql = "SELECT action_requiresuserright FROM " . $actionsTablename . " WHERE action_module = '" . mysql_real_escape_string( $module ) . "' AND action_name = '" . mysql_real_escape_string( $action ) . "'";
+		$modulesTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_modules' );
+		$sql = "SELECT a.action_requiresuserright FROM " . $actionsTablename . " a ";
+		$sql .= "LEFT JOIN " . $modulesTablename ." m ON a.action_module = m.module_id ";
+		$sql .= "WHERE m.module_name = '" . mysql_real_escape_string( $module ) . "' AND a.action_name = '" . mysql_real_escape_string( $action ) . "'";
 		
 		$res = $this->database->query( $sql );
 		if( ! empty( $res ) )
