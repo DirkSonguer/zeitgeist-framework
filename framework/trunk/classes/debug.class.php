@@ -93,10 +93,20 @@ class zgDebug
 		$newDebugMessage ['message'] = $message;
 		$newDebugMessage ['type'] = $type;
 		
-		$backtrace = array_shift( debug_backtrace() );
-		$newDebugMessage ['filename'] = array_pop( explode( '\\', $backtrace ['file'] ) );
-		$newDebugMessage ['function'] = $backtrace ['function'];
-		$newDebugMessage ['line'] = $backtrace ['line'];
+		$backtrace = debug_backtrace();
+		
+		$i = 0;
+		foreach( $backtrace as $trace )
+		{
+			if( ! empty( $trace ['file'] ) )
+			{
+				$newDebugMessage ['filename'] [] = array_pop( explode( '\\', $trace ['file'] ) );
+				$newDebugMessage ['function'] [] = $trace ['function'];
+				$newDebugMessage ['line'] [] = $trace ['line'];
+				$i ++;
+			}
+		}
+		$newDebugMessage ['traces'] = $i;
 		
 		$this->debugMessages [] = $newDebugMessage;
 	}
@@ -313,7 +323,14 @@ class zgDebug
 			$currentDebugLine .= '<td class="debugMessageLine">' . $debugID . '</td>';
 			$currentDebugLine .= '<td class="debugMessageLine">' . $debugMessage ['executionTime'] . '</td>';
 			$currentDebugLine .= '<td class="debugMessageLine">' . strtoupper( $debugMessage ['type'] ) . '</td>';
-			$currentDebugLine .= '<td class="debugMessageLine">[' . $debugMessage ['line'] . '] <strong>' . $debugMessage ['filename'] . '</strong></td>';
+			$currentDebugLine .= '<td class="debugMessageLine">';
+			
+			for( $i = ($debugMessage ['traces'] - 1); $i >= 0; $i -- )
+			{
+				$currentDebugLine .= '[' . $debugMessage ['line'] [$i] . '] <strong>' . $debugMessage ['filename'] [$i] . '</strong><br />';
+			}
+			
+			$currentDebugLine .= '</td>';
 			$currentDebugLine .= '<td class="debugMessageLine">' . $debugMessage ['message'] . '</td>';
 			
 			echo ($currentDebugLine);

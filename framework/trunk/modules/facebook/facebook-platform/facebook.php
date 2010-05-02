@@ -1,5 +1,5 @@
 <?php
-// Copyright 2004-2009 Facebook. All Rights Reserved.
+// Copyright 2004-present Facebook. All Rights Reserved.
 //
 // +---------------------------------------------------------------------------+
 // | Facebook Platform PHP5 client                                             |
@@ -45,7 +45,9 @@ class Facebook {
   public $user;
   public $profile_user;
   public $canvas_user;
+  public $ext_perms = array();
   protected $base_domain;
+
   /*
    * Create a Facebook client like this:
    *
@@ -128,6 +130,9 @@ class Facebook {
                             $this->fb_params['canvas_user'] : null;
       $this->base_domain  = isset($this->fb_params['base_domain']) ?
                             $this->fb_params['base_domain'] : null;
+      $this->ext_perms    = isset($this->fb_params['ext_perms']) ?
+                            explode(',', $this->fb_params['ext_perms'])
+                            : array();
 
       if (isset($this->fb_params['session_key'])) {
         $session_key =  $this->fb_params['session_key'];
@@ -309,11 +314,28 @@ class Facebook {
 
   // require_add and require_install have been removed.
   // see http://developer.facebook.com/news.php?blog=1&story=116 for more details
-  public function require_login() {
-    if ($user = $this->get_loggedin_user()) {
+  public function require_login($required_permissions = '') {
+    $user = $this->get_loggedin_user();
+    $has_permissions = true;
+
+    if ($required_permissions) {
+      $this->require_frame();
+      $permissions = array_map('trim', explode(',', $required_permissions));
+      foreach ($permissions as $permission) {
+        if (!in_array($permission, $this->ext_perms)) {
+          $has_permissions = false;
+          break;
+        }
+      }
+    }
+
+    if ($user && $has_permissions) {
       return $user;
     }
-    $this->redirect($this->get_login_url(self::current_url(), $this->in_frame()));
+
+    $this->redirect(
+      $this->get_login_url(self::current_url(), $this->in_frame(),
+                           $required_permissions));
   }
 
   public function require_frame() {
@@ -342,10 +364,11 @@ class Facebook {
     return $page . '?' . http_build_query($params);
   }
 
-  public function get_login_url($next, $canvas) {
+  public function get_login_url($next, $canvas, $req_perms = '') {
     $page = self::get_facebook_url().'/login.php';
-    $params = array('api_key' => $this->api_key,
-                    'v'       => '1.0');
+    $params = array('api_key'   => $this->api_key,
+                    'v'         => '1.0',
+                    'req_perms' => $req_perms);
 
     if ($next) {
       $params['next'] = $next;
