@@ -171,24 +171,24 @@ class zgConfiguration
 		}
 		
 		// try to load the configuration
-		$configuration = $this->_loadConfigurationFromDatabase( $filename );
+		$configurationArray = $this->_loadConfigurationFromDatabase( $filename );
 		
-		if( $configuration !== false )
+		if( is_array( $configurationArray ) )
 		{
 			$this->debug->write( 'Configuration found and successfully loaded: ' . $filename );
 			if( ! $overwrite )
 			{
-				$this->configuration [$modulename] = $configuration;
+				$this->configuration [$modulename] = $configurationArray;
 			}
 			else
 			{
 				if( is_array( $this->configuration [$modulename] ) )
 				{
-					$this->configuration [$modulename] = array_merge( $this->configuration [$modulename], $configuration );
+					$this->configuration [$modulename] = array_merge( $this->configuration [$modulename], $configurationArray );
 				}
 				else
 				{
-					$this->configuration [$modulename] = $configuration;
+					$this->configuration [$modulename] = $configurationArray;
 				}
 			}
 		}
@@ -206,7 +206,7 @@ class zgConfiguration
 			
 			$ret = $this->_saveConfigurationToDatabase( $filename, $configurationArray );
 			
-			if( $overwrite == false )
+			if( ! $overwrite )
 			{
 				$this->configuration [$modulename] = $configurationArray;
 			}

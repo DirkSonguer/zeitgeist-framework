@@ -138,6 +138,62 @@ class zgController
 
 
 	/**
+	 * Checks if the given action requires special user rights
+	 *
+	 * @param string $module name of the module
+	 * @param string $action name of the action
+	 *
+	 * @return boolean
+	 */
+	public function requiresUserRights($module, $action)
+	{
+		$this->debug->guard();
+		
+		$actionsTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_actions' );
+		$modulesTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_modules' );
+		$sql = "SELECT a.action_requiresuserright FROM " . $actionsTablename . " a ";
+		$sql .= "LEFT JOIN " . $modulesTablename . " m ON a.action_module = m.module_id ";
+		$sql .= "WHERE m.module_name = '" . mysql_real_escape_string( $module ) . "' AND a.action_name = '" . mysql_real_escape_string( $action ) . "'";
+		
+		$res = $this->database->query( $sql );
+		if( ! empty( $res ) )
+		{
+			$row = $this->database->fetchArray( $res );
+			
+			$this->debug->unguard( $row ['action_requiresuserright'] );
+			return $row ['action_requiresuserright'];
+		}
+		
+		$this->debug->unguard( false );
+		return false;
+	}
+
+
+	/**
+	 * Sets a custom userhandler
+	 * The userhandler class will be used to check rights and roles of a user
+	 *
+	 * @param zgUserhandler $userhandler userhandler class
+	 *
+	 * @return boolean
+	 */
+	public function setEventhandler($userhandler)
+	{
+		$this->debug->guard();
+		
+		if( $userhandler instanceof zgUserhandler )
+		{
+			$this->user = $userhandler;
+			$this->debug->unguard( true );
+			return true;
+		}
+		
+		$this->debug->unguard( false );
+		return false;
+	}
+
+
+	/**
 	 * Executes an action inside a module
 	 * Also handles all security related aspects
 	 *

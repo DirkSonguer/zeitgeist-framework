@@ -115,6 +115,52 @@ class zgConfigurationTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests zgConfiguration->loadConfiguration()
 	 */
+	public function testLoadConfiguration_ConfigurationAlreadyExists()
+	{
+		$this->setUp();
+		
+		$testfunctions = new testFunctions();
+		$testfunctions->createZeitgeistTable( 'configurationcache' );
+		$randomid = uniqid();
+		
+		$ret = $this->zgConfiguration->loadConfiguration( $randomid, ZG_TESTDATA_DIR . 'testconfiguration.ini' );
+		$ret = $this->zgConfiguration->loadConfiguration( $randomid, ZG_TESTDATA_DIR . 'testconfiguration_include.ini' );
+		$this->assertFalse( $ret );
+		
+		$ret = $this->zgConfiguration->getConfiguration( $randomid );
+		$this->assertEquals( count( $ret ), 2 );
+		
+		$testfunctions->dropZeitgeistTable( 'configurationcache' );
+		$this->tearDown();
+	}
+
+
+	/**
+	 * Tests zgConfiguration->loadConfiguration()
+	 */
+	public function testLoadConfiguration_Include()
+	{
+		$this->setUp();
+		
+		$testfunctions = new testFunctions();
+		$testfunctions->createZeitgeistTable( 'configurationcache' );
+		$randomid = uniqid();
+		
+		$ret = $this->zgConfiguration->loadConfiguration( $randomid, ZG_TESTDATA_DIR . 'testconfiguration.ini' );
+		$ret = $this->zgConfiguration->loadConfiguration( $randomid, ZG_TESTDATA_DIR . 'testconfiguration_include.ini', true );
+		$this->assertTrue( $ret );
+		
+		$ret = $this->zgConfiguration->getConfiguration( $randomid );
+		$this->assertEquals( count( $ret ), 3 );
+		
+		$testfunctions->dropZeitgeistTable( 'configurationcache' );
+		$this->tearDown();
+	}
+
+
+	/**
+	 * Tests zgConfiguration->loadConfiguration()
+	 */
 	public function testLoadConfiguration_NameCollision()
 	{
 		$this->setUp();
