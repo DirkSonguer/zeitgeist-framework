@@ -74,7 +74,7 @@ function database_connection()
 {
 	$database_server = $_POST['database_server'];
 	$database_user = $_POST['database_user'];
-	$database_userpassword = $_POST['database_userpassword'];
+	$database_password = $_POST['database_password'];
 	$database_database = $_POST['database_database'];
 	$database_createdatabase = $_POST['database_createdatabase'];
 	$database_resetdatabase = $_POST['database_resetdatabase'];
@@ -82,7 +82,7 @@ function database_connection()
 	$message = '<b>Setting up the database connection</b><br /><br />';
 
 	$message .= 'Trying to connect to the MySQL server..<br />';
-	if (!$dblink = @mysql_connect($database_server, $database_user, $database_userpassword))
+	if (!$dblink = @mysql_connect($database_server, $database_user, $database_password))
 	{
 		$message .= 'Could not connect to the database server<br /><br />';
 		$message .= 'MySQL message was: '.mysql_error().'<br /><br />';
@@ -200,7 +200,7 @@ function database_connection()
 	fwrite($configurationHandle, "<?php\n\n");
 	fwrite($configurationHandle, "\tdefine(ZG_DB_DBSERVER, '".$database_server."');\n");
 	fwrite($configurationHandle, "\tdefine(ZG_DB_USERNAME, '".$database_user."');\n");
-	fwrite($configurationHandle, "\tdefine(ZG_DB_USERPASS, '".$database_userpassword."');\n");
+	fwrite($configurationHandle, "\tdefine(ZG_DB_USERPASS, '".$database_password."');\n");
 	fwrite($configurationHandle, "\tdefine(ZG_DB_DATABASE, '".$database_database."');\n");
 	fwrite($configurationHandle, "\tdefine(ZG_DB_CONFIGURATIONCACHE, 'configurationcache');\n");
 	fwrite($configurationHandle, "\n?>");
