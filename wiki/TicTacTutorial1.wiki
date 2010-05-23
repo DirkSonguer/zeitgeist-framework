@@ -3,7 +3,7 @@
 
 = Part 1 - Introduction =
 
-This tutorial is about creating a working persistent browserbased game with the Zeitgeist Framework. To keep it simple, we're just doing a simple Tic Tac Toe game. However we will use a much Zeitgeist specific functionalities as possible to show how they work.
+This tutorial is about creating a working persistent browser based game with the Zeitgeist Framework. To keep it simple, we're just doing a simple Tic Tac Toe game. However we will use a much Zeitgeist specific functionalities as possible to show how they work.
 
 If you have specific questions about the tutorial, please mail us or open an [http://code.google.com/p/zeitgeist-framework/issues/list issue].
 
@@ -17,3 +17,22 @@ The game will be a working implementation of [http://en.wikipedia.org/wiki/Tic-t
  * Each win earns the player points
  * The player clicks "play". This will either open a new game or match him to a already open game.
  * A player can only play one game at a time
+ * A game ends if a player wins, the game is tied or one player forfeits
+
+== Setup ==
+
+=== Basics ===
+
+To develop something like a PBBG, it's always a good idea to have a local development environment. For a Zeitgeist based game, this would include a webserver, PHP5 and MySQL5. 
+
+If you don't have this already running on your machine, [http://www.apachefriends.org/en/xampp.html XAMPP] will help you set all this up on your Windows / Mac / Linux machine.
+
+
+
+ * Some *SVN client* to get the current versions of the framework and example project
+
+[http://tortoisesvn.tigris.org/ Tortoise SVN] for example is a simple SVN client for Windows. The versions in the [http://code.google.com/p/zeitgeist-framework/downloads/list Download section] will work as well, but SVN checkouts are preferred.
+
+== Setup ==
+
+
