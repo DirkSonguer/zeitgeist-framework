@@ -4,7 +4,7 @@
  * http://www.zeitgeist-framework.com
  *
  * Session class
- * 
+ *
  * Simple session handling class
  * The sessioninformation will be handled in the database instead
  * of files
@@ -16,7 +16,7 @@
  * @subpackage ZEITGEIST SESSION
  */
 
-defined( 'ZEITGEIST_ACTIVE' ) or die();
+defined( 'ZEITGEIST_ACTIVE' ) or die( );
 
 /**
  * NOTE: This class is a singleton.
@@ -25,12 +25,10 @@ defined( 'ZEITGEIST_ACTIVE' ) or die();
 class zgSession
 {
 	private static $instance = false;
-	
 	protected $debug;
 	protected $messages;
 	protected $database;
 	protected $configuration;
-	
 	protected $storageMode;
 	protected $newSession;
 	protected $boundIP;
@@ -44,21 +42,21 @@ class zgSession
 	 *
 	 * The constructor is set to private to prevent files from calling the class as a class instead of a singleton.
 	 */
-	protected function __construct()
+	protected function __construct( )
 	{
-		$this->debug = zgDebug::init();
-		$this->messages = zgMessages::init();
-		$this->configuration = zgConfiguration::init();
-		
-		$this->database = new zgDatabase();
-		$this->database->connect();
-		
+		$this->debug = zgDebug::init( );
+		$this->messages = zgMessages::init( );
+		$this->configuration = zgConfiguration::init( );
+
+		$this->database = new zgDatabase( );
+		$this->database->connect( );
+
 		$this->boundIP = '';
 		$this->newSession = true;
 		$this->storageMode = $this->configuration->getConfiguration( 'zeitgeist', 'session', 'session_storage' );
 		$this->lifetime = $this->configuration->getConfiguration( 'zeitgeist', 'session', 'session_lifetime' );
 		$this->sessionName = $this->configuration->getConfiguration( 'zeitgeist', 'session', 'session_name' );
-		
+
 		$this->sessionStarted = false;
 	}
 
@@ -68,13 +66,13 @@ class zgSession
 	 *
 	 * @return object
 	 */
-	public static function init()
+	public static function init( )
 	{
-		if( self::$instance === false )
+		if ( self::$instance === false )
 		{
-			self::$instance = new zgSession();
+			self::$instance = new zgSession( );
 		}
-		
+
 		return self::$instance;
 	}
 
@@ -84,38 +82,38 @@ class zgSession
 	 *
 	 * @return boolean
 	 */
-	public function startSession()
+	public function startSession( )
 	{
-		$this->debug->guard();
-		
-		if( ! $this->sessionStarted )
+		$this->debug->guard( );
+
+		if ( !$this->sessionStarted )
 		{
-			if( $this->storageMode == 'database' )
+			if ( $this->storageMode == 'database' )
 			{
-				$ret = session_set_save_handler( array (&$this, '_openSession' ), array (&$this, '_closeSession' ), array (&$this, '_readSession' ), array (&$this, '_writeSession' ), array (&$this, '_destroySession' ), array (&$this, '_cleanSession' ) );
-				if( ! $ret )
+				$ret = session_set_save_handler( array(&$this, '_openSession'), array(&$this, '_closeSession'), array(&$this, '_readSession'), array(&$this, '_writeSession'), array(&$this, '_destroySession'), array(&$this, '_cleanSession') );
+				if ( !$ret )
 				{
 					$this->debug->write( 'Could not register session save handlers!', 'error' );
 					$this->messages->setMessage( 'Could not register session save handlers!', 'error' );
 				}
 			}
-			
+
 			ini_set( 'session.use_cookies', 1 );
 			ini_set( 'session.use_only_cookies', 1 );
 			ini_set( 'session.use_trans_sid', 0 );
 			ini_set( 'session.cookie_lifetime', $this->lifetime );
 			ini_set( 'session.name', $this->sessionName );
-			
-			$ret = session_start();
-			if( ! $ret )
+
+			$ret = session_start( );
+			if ( !$ret )
 			{
 				$this->debug->write( 'Could not start session', 'error' );
 				$this->messages->setMessage( 'Could not start session', 'error' );
 			}
-			
+
 			$this->sessionStarted = true;
 		}
-		
+
 		$this->debug->unguard( true );
 		return true;
 	}
@@ -127,15 +125,15 @@ class zgSession
 	 *
 	 * @return boolean
 	 */
-	public function stopSession()
+	public function stopSession( )
 	{
-		$this->debug->guard();
-		
-		if( $this->getSessionId() != false )
+		$this->debug->guard( );
+
+		if ( $this->getSessionId( ) != false )
 		{
-			$ret = session_destroy();
+			$ret = session_destroy( );
 		}
-		
+
 		$this->debug->unguard( $ret );
 		return $ret;
 	}
@@ -149,12 +147,12 @@ class zgSession
 	 *
 	 * @return boolean
 	 */
-	public function setSessionVariable($key, $value)
+	public function setSessionVariable( $key, $value )
 	{
-		$this->debug->guard();
-		
+		$this->debug->guard( );
+
 		$_SESSION [$key] = $value;
-		
+
 		$this->debug->unguard( true );
 		return true;
 	}
@@ -167,16 +165,16 @@ class zgSession
 	 *
 	 * @return object
 	 */
-	public function getSessionVariable($key)
+	public function getSessionVariable( $key )
 	{
-		$this->debug->guard();
-		
-		if( isset( $_SESSION [$key] ) )
+		$this->debug->guard( );
+
+		if ( isset( $_SESSION [$key] ) )
 		{
 			$this->debug->unguard( $_SESSION [$key] );
 			return $_SESSION [$key];
 		}
-		
+
 		$this->debug->unguard( false );
 		return false;
 	}
@@ -189,15 +187,15 @@ class zgSession
 	 * *
 	 * @return boolean
 	 */
-	public function unsetSessionVariable($key)
+	public function unsetSessionVariable( $key )
 	{
-		$this->debug->guard();
-		
-		if( isset( $_SESSION [$key] ) )
+		$this->debug->guard( );
+
+		if ( isset( $_SESSION [$key] ) )
 		{
 			unset( $_SESSION [$key] );
 		}
-		
+
 		$this->debug->unguard( true );
 		return true;
 	}
@@ -208,24 +206,24 @@ class zgSession
 	 *
 	 * @return boolean
 	 */
-	public function unsetAllSessionVariables()
+	public function unsetAllSessionVariables( )
 	{
-		$this->debug->guard();
-		
-		if( empty( $_SESSION ) )
+		$this->debug->guard( );
+
+		if ( empty( $_SESSION ) )
 		{
 			$this->debug->unguard( true );
 			return true;
 		}
-		
-		foreach( $_SESSION as $key => $value )
+
+		foreach ( $_SESSION as $key => $value )
 		{
-			if( isset( $_SESSION [$key] ) )
+			if ( isset( $_SESSION [$key] ) )
 			{
 				unset( $_SESSION [$key] );
 			}
 		}
-		
+
 		$this->debug->unguard( true );
 		return true;
 	}
@@ -236,12 +234,12 @@ class zgSession
 	 *
 	 * @return integer
 	 */
-	public function getSessionId()
+	public function getSessionId( )
 	{
-		$this->debug->guard();
-		
-		$ret = session_id();
-		
+		$this->debug->guard( );
+
+		$ret = session_id( );
+
 		$this->debug->unguard( $ret );
 		return $ret;
 	}
@@ -252,12 +250,12 @@ class zgSession
 	 *
 	 * @return string
 	 */
-	public function getBoundIP()
+	public function getBoundIP( )
 	{
-		$this->debug->guard();
-		
+		$this->debug->guard( );
+
 		$ret = $this->boundIP;
-		
+
 		$this->debug->unguard( $ret );
 		return $ret;
 	}
@@ -267,12 +265,12 @@ class zgSession
 	 * Function is called if a session is started
 	 * No work is needed as everything is initialized in the constructor
 	 */
-	public function _openSession()
+	public function _openSession( )
 	{
-		$this->debug->guard();
-		
+		$this->debug->guard( );
+
 		$this->debug->write( 'Starting Session through hook' );
-		
+
 		$this->debug->unguard( true );
 	}
 
@@ -281,12 +279,12 @@ class zgSession
 	 * Function is called if a session is destroyed
 	 * No work is needed as everything is destroyed in the destructor
 	 */
-	public function _closeSession()
+	public function _closeSession( )
 	{
-		$this->debug->guard();
-		
+		$this->debug->guard( );
+
 		$this->debug->write( 'Stopping Session through hook' );
-		
+
 		$this->debug->unguard( true );
 	}
 
@@ -298,26 +296,26 @@ class zgSession
 	 *
 	 * @return array
 	 */
-	public function _readSession($id)
+	public function _readSession( $id )
 	{
-		$this->debug->guard();
-		
+		$this->debug->guard( );
+
 		$id = mysql_real_escape_string( $id );
-		
+
 		$sessionTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_sessiondata' );
 		$sql = "SELECT sessiondata_content, sessiondata_ip FROM " . $sessionTablename . " WHERE sessiondata_id = '" . $id . "'";
-		
+
 		$res = $this->database->query( $sql );
-		if( $res )
+		if ( $res )
 		{
-			if( $this->database->numRows( $res ) )
+			if ( $this->database->numRows( $res ) )
 			{
 				$row = $this->database->fetchArray( $res );
 				$sessiondata = $row ['sessiondata_content'];
 				$this->boundIP = long2ip( $row ['sessiondata_ip'] );
-				
+
 				$this->newSession = false;
-				
+
 				$this->debug->guard( $sessiondata );
 				return $sessiondata;
 			}
@@ -330,7 +328,7 @@ class zgSession
 		{
 			$this->debug->write( 'Stopping Session through hook' );
 		}
-		
+
 		$this->debug->guard( '' );
 		return '';
 	}
@@ -344,27 +342,27 @@ class zgSession
 	 *
 	 * @return resource
 	 */
-	public function _writeSession($id, $data)
+	public function _writeSession( $id, $data )
 	{
-		$this->debug->guard();
-		
-		$currentTime = time();
-		
+		$this->debug->guard( );
+
+		$currentTime = time( );
+
 		$id = mysql_escape_string( $id );
 		$data = mysql_escape_string( $data );
-		
+
 		$sessionTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_sessiondata' );
-		
-		if( $this->newSession )
+
+		if ( $this->newSession )
 		{
-			$startTime = time();
+			$startTime = time( );
 			$sql = "INSERT INTO " . $sessionTablename . " VALUES  ('" . $id . "', '" . $startTime . "', '" . $currentTime . "', '" . $data . "', INET_ATON('" . getenv( 'REMOTE_ADDR' ) . "'))";
 		}
 		else
 		{
 			$sql = "UPDATE " . $sessionTablename . " SET " . $sessionTablename . "_lastupdate = '" . $currentTime . "', " . $sessionTablename . "_content = '" . $data . "'" . " WHERE " . $sessionTablename . "_id = '" . $id . "'";
 		}
-		
+
 		$ret = $this->database->query( $sql );
 		$this->debug->unguard( $ret );
 		return $ret;
@@ -379,15 +377,15 @@ class zgSession
 	 *
 	 * @return resource
 	 */
-	public function _destroySession($id)
+	public function _destroySession( $id )
 	{
-		$this->debug->guard();
-		
+		$this->debug->guard( );
+
 		$id = mysql_escape_string( $id );
-		
+
 		$sessionTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_sessiondata' );
 		$sql = "DELETE FROM " . $sessionTablename . " WHERE sessiondata_id = '" . $id . "'";
-		
+
 		$ret = $this->database->query( $sql );
 		$this->debug->guard( $ret );
 		return $ret;
@@ -402,20 +400,20 @@ class zgSession
 	 *
 	 * @return resource
 	 */
-	public function _cleanSession($max)
+	public function _cleanSession( $max )
 	{
-		$this->debug->guard();
-		
-		$old = time() - $max;
+		$this->debug->guard( );
+
+		$old = time( ) - $max;
 		$old = mysql_escape_string( $old );
-		
+
 		$sessionTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_sessiondata' );
 		$sql = "DELETE FROM " . $sessionTablename . " WHERE sessiondata_lastupdate < '" . $old . "'";
-		
+
 		$ret = $this->database->query( $sql );
 		$this->debug->guard( $ret );
 		return $ret;
 	}
-
 }
+
 ?>

@@ -4,7 +4,7 @@
  * http://www.zeitgeist-framework.com
  *
  * Parameter class
- * 
+ *
  * The parameter class handles all incoming parameters from the client
  * (GET, POST, COOKIE) and validates them against given definitions
  * Acts as a security layer between your application and the client input
@@ -16,7 +16,7 @@
  * @subpackage ZEITGEIST PARAMETERS
  */
 
-defined( 'ZEITGEIST_ACTIVE' ) or die();
+defined( 'ZEITGEIST_ACTIVE' ) or die( );
 
 class zgParameters
 {
@@ -24,21 +24,20 @@ class zgParameters
 	protected $messages;
 	protected $objects;
 	protected $configuration;
-	
 	protected $rawParameters;
 
 
 	/**
 	 * Class constructor
 	 */
-	public function __construct()
+	public function __construct( )
 	{
-		$this->debug = zgDebug::init();
-		$this->messages = zgMessages::init();
-		$this->objects = zgObjects::init();
-		$this->configuration = zgConfiguration::init();
-		
-		$this->rawParameters = array ();
+		$this->debug = zgDebug::init( );
+		$this->messages = zgMessages::init( );
+		$this->objects = zgObjects::init( );
+		$this->configuration = zgConfiguration::init( );
+
+		$this->rawParameters = array();
 		$this->rawParameters ['GET'] = $_GET;
 		$this->rawParameters ['POST'] = $_POST;
 		$this->rawParameters ['COOKIE'] = $_COOKIE;
@@ -55,19 +54,19 @@ class zgParameters
 	 *
 	 * @return array
 	 */
-	public function getSafeParameters($module, $action)
+	public function getSafeParameters( $module, $action )
 	{
-		$this->debug->guard();
-		
-		$allowedParameters = array ();
+		$this->debug->guard( );
+
+		$allowedParameters = array();
 		$allowedParameters = $this->_getAllowedParameters( $module, $action );
-		
-		$safeParameters = array ();
-		if( count( $allowedParameters ) > 0 )
+
+		$safeParameters = array();
+		if ( count( $allowedParameters ) > 0 )
 		{
 			$safeParameters = $this->_filterParameters( $allowedParameters );
 		}
-		
+
 		$this->debug->unguard( $safeParameters );
 		return $safeParameters;
 	}
@@ -83,24 +82,24 @@ class zgParameters
 	 *
 	 * @return array
 	 */
-	protected function _getAllowedParameters($module, $action)
+	protected function _getAllowedParameters( $module, $action )
 	{
-		$this->debug->guard();
-		
-		$allowedParameters = array ();
-		
+		$this->debug->guard( );
+
+		$allowedParameters = array();
+
 		$moduleConfiguration = $this->configuration->getConfiguration( $module );
-		
-		if( (! empty( $moduleConfiguration [$action] ['hasExternalParameters'] )) && ($moduleConfiguration [$action] ['hasExternalParameters'] == 'true') )
+
+		if ( ( !empty( $moduleConfiguration [$action] ['hasExternalParameters'] ) ) && ( $moduleConfiguration [$action] ['hasExternalParameters'] == 'true' ) )
 		{
-			foreach( $moduleConfiguration [$action] as $parametername => $parametervalue )
+			foreach ( $moduleConfiguration [$action] as $parametername => $parametervalue )
 			{
-				if( (! is_array( $parametervalue )) || (! array_key_exists( 'parameter', $parametervalue )) ) continue;
-				
+				if ( ( !is_array( $parametervalue ) ) || ( !array_key_exists( 'parameter', $parametervalue ) ) ) continue;
+
 				$allowedParameters [$parametername] = $parametervalue;
 			}
 		}
-		
+
 		$this->debug->unguard( $allowedParameters );
 		return $allowedParameters;
 	}
@@ -116,29 +115,29 @@ class zgParameters
 	 *
 	 * @return array
 	 */
-	protected function _checkParameter($parametername, $parameterdefinition)
+	protected function _checkParameter( $parametername, $parameterdefinition )
 	{
 		$this->debug->guard( true );
-		
-		if( (! isset( $parameterdefinition ['source'] )) || (! isset( $parameterdefinition ['expected'] )) )
+
+		if ( ( !isset( $parameterdefinition ['source'] ) ) || ( !isset( $parameterdefinition ['expected'] ) ) )
 		{
 			$this->debug->unguard( 'Problem checking parameter: could not get parameter definition for ' . $parametername );
 			return false;
 		}
-		
-		if( isset( $this->rawParameters [$parameterdefinition ['source']] [$parametername] ) )
+
+		if ( isset( $this->rawParameters [$parameterdefinition ['source']] [$parametername] ) )
 		{
-			if( $parameterdefinition ['expected'] == 'CONSTANT' )
+			if ( $parameterdefinition ['expected'] == 'CONSTANT' )
 			{
-				if( (! empty( $parameterdefinition ['value'] )) && ($parameterdefinition ['value'] == $this->rawParameters [$parameterdefinition ['source']] [$parametername]) )
+				if ( ( !empty( $parameterdefinition ['value'] ) ) && ( $parameterdefinition ['value'] == $this->rawParameters [$parameterdefinition ['source']] [$parametername] ) )
 				{
 					$this->debug->unguard( 'Parameter appears to be safe: ' . $parametername );
 					return true;
 				}
 			}
-			elseif( $parameterdefinition ['expected'] == 'ARRAY' )
+			elseif ( $parameterdefinition ['expected'] == 'ARRAY' )
 			{
-				if( is_array( $this->rawParameters [$parameterdefinition ['source']] [$parametername] ) )
+				if ( is_array( $this->rawParameters [$parameterdefinition ['source']] [$parametername] ) )
 				{
 					$this->debug->unguard( 'Parameter appears to be safe: ' . $parametername );
 					return true;
@@ -147,20 +146,20 @@ class zgParameters
 			else
 			{
 				$ret = preg_match( $parameterdefinition ['expected'], $this->rawParameters [$parameterdefinition ['source']] [$parametername] );
-				
-				if( $ret === false )
+
+				if ( $ret === false )
 				{
 					$this->debug->unguard( 'Parameter could not be tested. There may be an error in the regexp definition: ' . $parameterdefinition ['expected'] );
 					return false;
 				}
-				
-				if( $ret !== 0 )
+
+				if ( $ret !== 0 )
 				{
 					$this->debug->unguard( 'Parameter appears to be safe: ' . $parametername );
 					return true;
 				}
 			}
-			
+
 			$this->debug->unguard( 'Parameter not safe: ' . $parametername . ' (value: ' . $this->rawParameters [$parameterdefinition ['source']] [$parametername] . ' tested against: ' . $parameterdefinition ['expected'] . ')' );
 			return false;
 		}
@@ -169,7 +168,7 @@ class zgParameters
 			$this->debug->unguard( 'Parameter not set: ' . $parametername );
 			return false;
 		}
-		
+
 		$this->debug->unguard( false );
 		return false;
 	}
@@ -184,29 +183,29 @@ class zgParameters
 	 *
 	 * @return array
 	 */
-	protected function _filterParameters($allowedParameters)
+	protected function _filterParameters( $allowedParameters )
 	{
-		$this->debug->guard();
-		
-		$safeParameters = array ();
-		
-		$unsafeParameters = array ();
+		$this->debug->guard( );
+
+		$safeParameters = array();
+
+		$unsafeParameters = array();
 		$unsafeParameters += $this->rawParameters ['GET'];
 		$unsafeParameters += $this->rawParameters ['POST'];
 		$unsafeParameters += $this->rawParameters ['COOKIE'];
-		
-		foreach( $allowedParameters as $parametername => $parameterdefinition )
+
+		foreach ( $allowedParameters as $parametername => $parameterdefinition )
 		{
-			if( $this->_checkParameter( $parametername, $parameterdefinition ) )
+			if ( $this->_checkParameter( $parametername, $parameterdefinition ) )
 			{
 				$safeParameters [$parametername] = $this->rawParameters [$parameterdefinition ['source']] [$parametername];
-				
+
 				// strip slashes
-				if( (! empty( $parameterdefinition ['stripslashes'] )) && ($parameterdefinition ['stripslashes'] == 'true') )
+				if ( ( !empty( $parameterdefinition ['stripslashes'] ) ) && ( $parameterdefinition ['stripslashes'] == 'true' ) )
 				{
-					if( is_array( $safeParameters [$parametername] ) )
+					if ( is_array( $safeParameters [$parametername] ) )
 					{
-						foreach( $safeParameters [$parametername] as $key => $value )
+						foreach ( $safeParameters [$parametername] as $key => $value )
 						{
 							$safeParameters [$parametername] [$key] = stripslashes( $value );
 						}
@@ -216,13 +215,13 @@ class zgParameters
 						$safeParameters [$parametername] = stripslashes( $safeParameters [$parametername] );
 					}
 				}
-				
+
 				// escape parameter
-				if( (! empty( $parameterdefinition ['escape'] )) && ($parameterdefinition ['escape'] == 'true') )
+				if ( ( !empty( $parameterdefinition ['escape'] ) ) && ( $parameterdefinition ['escape'] == 'true' ) )
 				{
-					if( is_array( $safeParameters [$parametername] ) )
+					if ( is_array( $safeParameters [$parametername] ) )
 					{
-						foreach( $safeParameters [$parametername] as $key => $value )
+						foreach ( $safeParameters [$parametername] as $key => $value )
 						{
 							$safeParameters [$parametername] [$key] = mysql_escape_string( $value );
 						}
@@ -232,16 +231,16 @@ class zgParameters
 						$safeParameters [$parametername] = mysql_escape_string( $safeParameters [$parametername] );
 					}
 				}
-				
+
 				unset( $unsafeParameters [$parametername] );
 			}
 		}
-		
+
 		$this->objects->storeObject( 'unsafeParameters', $unsafeParameters );
-		
+
 		$this->debug->unguard( $safeParameters );
 		return $safeParameters;
 	}
-
 }
+
 ?>

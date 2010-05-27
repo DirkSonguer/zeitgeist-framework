@@ -8,7 +8,6 @@ require_once 'PHPUnit/Framework/TestCase.php';
  */
 class zgUserhandlerTest extends PHPUnit_Framework_TestCase
 {
-	
 	/**
 	 * @var zgUserhandler
 	 */
@@ -19,439 +18,425 @@ class zgUserhandlerTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Prepares the environment before running a test.
 	 */
-	protected function setUp()
+	protected function setUp( )
 	{
-		parent::setUp();
-		$this->zgUserhandler = zgUserhandler::init();
+		parent::setUp( );
+		$this->zgUserhandler = zgUserhandler::init( );
 	}
 
 
 	/**
 	 * Cleans up the environment after running a test.
 	 */
-	protected function tearDown()
+	protected function tearDown( )
 	{
 		$this->zgUserhandler = null;
-		parent::tearDown();
+		parent::tearDown( );
 	}
 
 
 	/**
 	 * Constructs the test case.
 	 */
-	public function __construct()
+	public function __construct( )
 	{
-		$this->database = new zgDatabase();
-		$ret = $this->database->connect();
+		$this->database = new zgDatabase( );
+		$ret = $this->database->connect( );
 	}
 
 
 	/**
 	 * Tests zgUserhandler::init()
 	 */
-	public function testInit()
+	public function testInit( )
 	{
 		// TODO Auto-generated zgUserhandlerTest::testInit()
 		$this->markTestIncomplete( "init test not implemented" );
-		
-		zgUserhandler::init(/* parameters */);
-	
+
+		zgUserhandler::init( /* parameters */ );
 	}
 
 
 	/**
 	 * Tests zgUserhandler->establishUserSession()
 	 */
-	public function testEstablishUserSession()
+	public function testEstablishUserSession( )
 	{
 		// TODO Auto-generated zgUserhandlerTest->testEstablishUserSession()
 		$this->markTestIncomplete( "establishUserSession test not implemented" );
-		
-		$this->zgUserhandler->establishUserSession(/* parameters */);
-	
+
+		$this->zgUserhandler->establishUserSession( /* parameters */ );
 	}
 
 
 	/**
 	 * Tests zgUserhandler->login()
 	 */
-	public function testLogin_NoData()
+	public function testLogin_NoData( )
 	{
-		$this->setUp();
-		
+		$this->setUp( );
+
 		$ret = $this->zgUserhandler->login( '', '' );
 		$this->assertFalse( $ret );
-		
-		$this->tearDown();
+
+		$this->tearDown( );
 	}
 
 
 	/**
 	 * Tests zgUserhandler->login()
 	 */
-	public function testLogin_WrongPassword()
+	public function testLogin_WrongPassword( )
 	{
-		$this->setUp();
-		$userfunctions = new zgUserfunctions();
-		$testfunctions = new testFunctions();
-		
+		$this->setUp( );
+		$userfunctions = new zgUserfunctions( );
+		$testfunctions = new testFunctions( );
+
 		$testfunctions->createZeitgeistTable( 'users' );
-		
-		$username = uniqid();
-		$password = uniqid();
+
+		$username = uniqid( );
+		$password = uniqid( );
 		$userid = $userfunctions->createUser( $username, $password );
 		$userfunctions->activateUser( $userid );
-		
+
 		$ret = $this->zgUserhandler->login( $username, 'false' );
 		$this->assertFalse( $ret );
-		
+
 		$testfunctions->dropZeitgeistTable( 'users' );
-		
-		$this->tearDown();
+
+		$this->tearDown( );
 	}
 
 
 	/**
 	 * Tests zgUserhandler->login()
 	 */
-	public function testLogin_WrongUser()
+	public function testLogin_WrongUser( )
 	{
-		$this->setUp();
-		$userfunctions = new zgUserfunctions();
-		$testfunctions = new testFunctions();
-		
+		$this->setUp( );
+		$userfunctions = new zgUserfunctions( );
+		$testfunctions = new testFunctions( );
+
 		$testfunctions->createZeitgeistTable( 'users' );
-		
-		$username = uniqid();
-		$password = uniqid();
+
+		$username = uniqid( );
+		$password = uniqid( );
 		$userid = $userfunctions->createUser( $username, $password );
 		$userfunctions->activateUser( $userid );
-		
+
 		$ret = $this->zgUserhandler->login( 'false', $password );
 		$this->assertFalse( $ret );
-		
+
 		$testfunctions->dropZeitgeistTable( 'users' );
-		
-		$this->tearDown();
+
+		$this->tearDown( );
 	}
 
 
 	/**
 	 * Tests zgUserhandler->login()
 	 */
-	public function testLogin_Success()
+	public function testLogin_Success( )
 	{
-		$this->setUp();
-		$userfunctions = new zgUserfunctions();
-		$testfunctions = new testFunctions();
-		
+		$this->setUp( );
+		$userfunctions = new zgUserfunctions( );
+		$testfunctions = new testFunctions( );
+
 		$testfunctions->createZeitgeistTable( 'users' );
-		
-		$username = uniqid();
-		$password = uniqid();
+
+		$username = uniqid( );
+		$password = uniqid( );
 		$userid = $userfunctions->createUser( $username, $password );
 		$userfunctions->activateUser( $userid );
-		
+
 		$ret = $this->zgUserhandler->login( $username, $password );
 		$this->assertTrue( $ret );
-		
+
 		$testfunctions->dropZeitgeistTable( 'users' );
-		
-		$this->tearDown();
+
+		$this->tearDown( );
 	}
 
 
 	/**
 	 * Tests zgUserhandler->logout()
 	 */
-	public function testLogout_Success()
+	public function testLogout_Success( )
 	{
-		$this->setUp();
-		
-		$ret = $this->zgUserhandler->logout();
+		$this->setUp( );
+
+		$ret = $this->zgUserhandler->logout( );
 		$this->assertTrue( $ret );
-		
-		$this->tearDown();
+
+		$this->tearDown( );
 	}
 
 
 	/**
 	 * Tests zgUserhandler->logout()
 	 */
-	public function testLogout_NotLoggedIn()
+	public function testLogout_NotLoggedIn( )
 	{
-		$this->setUp();
-		
-		$ret = $this->zgUserhandler->logout();
+		$this->setUp( );
+
+		$ret = $this->zgUserhandler->logout( );
 		$this->assertFalse( $ret );
-		
-		$this->tearDown();
+
+		$this->tearDown( );
 	}
 
 
 	/**
 	 * Tests zgUserhandler->setLoginStatus()
 	 */
-	public function testSetLoginStatus()
+	public function testSetLoginStatus( )
 	{
 		// TODO Auto-generated zgUserhandlerTest->testSetLoginStatus()
 		$this->markTestIncomplete( "setLoginStatus test not implemented" );
-		
-		$this->zgUserhandler->setLoginStatus(/* parameters */);
-	
+
+		$this->zgUserhandler->setLoginStatus( /* parameters */ );
 	}
 
 
 	/**
 	 * Tests zgUserhandler->saveUserstates()
 	 */
-	public function testSaveUserstates()
+	public function testSaveUserstates( )
 	{
 		// TODO Auto-generated zgUserhandlerTest->testSaveUserstates()
 		$this->markTestIncomplete( "saveUserstates test not implemented" );
-		
-		$this->zgUserhandler->saveUserstates(/* parameters */);
-	
+
+		$this->zgUserhandler->saveUserstates( /* parameters */ );
 	}
 
 
 	/**
 	 * Tests zgUserhandler->isLoggedIn()
 	 */
-	public function testIsLoggedIn_NotLoggedIn()
+	public function testIsLoggedIn_NotLoggedIn( )
 	{
-		$this->setUp();
-		
-		$ret = $this->zgUserhandler->isLoggedIn();
+		$this->setUp( );
+
+		$ret = $this->zgUserhandler->isLoggedIn( );
 		$this->assertFalse( $ret );
-		
-		$this->tearDown();
+
+		$this->tearDown( );
 	}
 
 
 	/**
 	 * Tests zgUserhandler->isLoggedIn()
 	 */
-	public function testIsLoggedIn_LoggedIn()
+	public function testIsLoggedIn_LoggedIn( )
 	{
-		$this->setUp();
-		$userfunctions = new zgUserfunctions();
-		$testfunctions = new testFunctions();
-		
+		$this->setUp( );
+		$userfunctions = new zgUserfunctions( );
+		$testfunctions = new testFunctions( );
+
 		$testfunctions->createZeitgeistTable( 'users' );
-		
-		$username = uniqid();
-		$password = uniqid();
+
+		$username = uniqid( );
+		$password = uniqid( );
 		$userid = $userfunctions->createUser( $username, $password );
 		$userfunctions->activateUser( $userid );
-		
+
 		$this->zgUserhandler->login( $username, $password );
-		
-		$ret = $this->zgUserhandler->isLoggedIn();
+
+		$ret = $this->zgUserhandler->isLoggedIn( );
 		$this->assertTrue( $ret );
-		
+
 		$testfunctions->dropZeitgeistTable( 'users' );
-		$this->tearDown();
+		$this->tearDown( );
 	}
 
 
 	/**
 	 * Tests zgUserhandler->getUserID()
 	 */
-	public function testGetUserID_NoUser()
+	public function testGetUserID_NoUser( )
 	{
-		$this->setUp();
-		
-		$this->zgUserhandler->logout();
-		$ret = $this->zgUserhandler->getUserID();
+		$this->setUp( );
+
+		$this->zgUserhandler->logout( );
+		$ret = $this->zgUserhandler->getUserID( );
 		$this->assertFalse( $ret );
-		
-		$this->tearDown();
+
+		$this->tearDown( );
 	}
 
 
 	/**
 	 * Tests zgUserhandler->getUserID()
 	 */
-	public function testGetUserID_Success()
+	public function testGetUserID_Success( )
 	{
-		$this->setUp();
-		$userfunctions = new zgUserfunctions();
-		$testfunctions = new testFunctions();
-		
+		$this->setUp( );
+		$userfunctions = new zgUserfunctions( );
+		$testfunctions = new testFunctions( );
+
 		$testfunctions->createZeitgeistTable( 'users' );
-		
-		$username = uniqid();
-		$password = uniqid();
+
+		$username = uniqid( );
+		$password = uniqid( );
 		$userid = $userfunctions->createUser( $username, $password );
 		$userfunctions->activateUser( $userid );
-		
+
 		$this->zgUserhandler->login( $username, $password );
-		
-		$ret = $this->zgUserhandler->getUserID();
+
+		$ret = $this->zgUserhandler->getUserID( );
 		$this->assertEquals( $userid, $ret );
-		
+
 		$testfunctions->dropZeitgeistTable( 'users' );
-		$this->tearDown();
+		$this->tearDown( );
 	}
 
 
 	/**
 	 * Tests zgUserhandler->getUsername()
 	 */
-	public function testGetUsername_NoUser()
+	public function testGetUsername_NoUser( )
 	{
-		$this->setUp();
-		
-		$this->zgUserhandler->logout();
-		$ret = $this->zgUserhandler->getUsername();
+		$this->setUp( );
+
+		$this->zgUserhandler->logout( );
+		$ret = $this->zgUserhandler->getUsername( );
 		$this->assertFalse( $ret );
-		
-		$this->tearDown();
+
+		$this->tearDown( );
 	}
 
 
 	/**
 	 * Tests zgUserhandler->getUsername()
 	 */
-	public function testGetUsername_Success()
+	public function testGetUsername_Success( )
 	{
-		$this->setUp();
-		$userfunctions = new zgUserfunctions();
-		$testfunctions = new testFunctions();
-		
+		$this->setUp( );
+		$userfunctions = new zgUserfunctions( );
+		$testfunctions = new testFunctions( );
+
 		$testfunctions->createZeitgeistTable( 'users' );
-		
-		$username = uniqid();
-		$password = uniqid();
+
+		$username = uniqid( );
+		$password = uniqid( );
 		$userid = $userfunctions->createUser( $username, $password );
 		$userfunctions->activateUser( $userid );
-		
+
 		$this->zgUserhandler->login( $username, $password );
-		
-		$ret = $this->zgUserhandler->getUsername();
+
+		$ret = $this->zgUserhandler->getUsername( );
 		$this->assertEquals( $username, $ret );
-		
+
 		$testfunctions->dropZeitgeistTable( 'users' );
-		$this->tearDown();
+		$this->tearDown( );
 	}
 
 
 	/**
 	 * Tests zgUserhandler->getUserKey()
 	 */
-	public function testGetUserKey()
+	public function testGetUserKey( )
 	{
 		// TODO Auto-generated zgUserhandlerTest->testGetUserKey()
 		$this->markTestIncomplete( "getUserKey test not implemented" );
-		
-		$this->zgUserhandler->getUserKey(/* parameters */);
-	
+
+		$this->zgUserhandler->getUserKey( /* parameters */ );
 	}
 
 
 	/**
 	 * Tests zgUserhandler->getUserdata()
 	 */
-	public function testGetUserdata()
+	public function testGetUserdata( )
 	{
 		// TODO Auto-generated zgUserhandlerTest->testGetUserdata()
 		$this->markTestIncomplete( "getUserdata test not implemented" );
-		
-		$this->zgUserhandler->getUserdata(/* parameters */);
-	
+
+		$this->zgUserhandler->getUserdata( /* parameters */ );
 	}
 
 
 	/**
 	 * Tests zgUserhandler->setUserdata()
 	 */
-	public function testSetUserdata()
+	public function testSetUserdata( )
 	{
 		// TODO Auto-generated zgUserhandlerTest->testSetUserdata()
 		$this->markTestIncomplete( "setUserdata test not implemented" );
-		
-		$this->zgUserhandler->setUserdata(/* parameters */);
-	
+
+		$this->zgUserhandler->setUserdata( /* parameters */ );
 	}
 
 
 	/**
 	 * Tests zgUserhandler->hasUserright()
 	 */
-	public function testHasUserright()
+	public function testHasUserright( )
 	{
 		// TODO Auto-generated zgUserhandlerTest->testHasUserright()
 		$this->markTestIncomplete( "hasUserright test not implemented" );
-		
-		$this->zgUserhandler->hasUserright(/* parameters */);
-	
+
+		$this->zgUserhandler->hasUserright( /* parameters */ );
 	}
 
 
 	/**
 	 * Tests zgUserhandler->grantUserright()
 	 */
-	public function testGrantUserright()
+	public function testGrantUserright( )
 	{
 		// TODO Auto-generated zgUserhandlerTest->testGrantUserright()
 		$this->markTestIncomplete( "grantUserright test not implemented" );
-		
-		$this->zgUserhandler->grantUserright(/* parameters */);
-	
+
+		$this->zgUserhandler->grantUserright( /* parameters */ );
 	}
 
 
 	/**
 	 * Tests zgUserhandler->revokeUserright()
 	 */
-	public function testRevokeUserright()
+	public function testRevokeUserright( )
 	{
 		// TODO Auto-generated zgUserhandlerTest->testRevokeUserright()
 		$this->markTestIncomplete( "revokeUserright test not implemented" );
-		
-		$this->zgUserhandler->revokeUserright(/* parameters */);
-	
+
+		$this->zgUserhandler->revokeUserright( /* parameters */ );
 	}
 
 
 	/**
 	 * Tests zgUserhandler->hasUserrole()
 	 */
-	public function testHasUserrole()
+	public function testHasUserrole( )
 	{
 		// TODO Auto-generated zgUserhandlerTest->testHasUserrole()
 		$this->markTestIncomplete( "hasUserrole test not implemented" );
-		
-		$this->zgUserhandler->hasUserrole(/* parameters */);
-	
+
+		$this->zgUserhandler->hasUserrole( /* parameters */ );
 	}
 
 
 	/**
 	 * Tests zgUserhandler->grantUserrole()
 	 */
-	public function testGrantUserrole()
+	public function testGrantUserrole( )
 	{
 		// TODO Auto-generated zgUserhandlerTest->testGrantUserrole()
 		$this->markTestIncomplete( "grantUserrole test not implemented" );
-		
-		$this->zgUserhandler->grantUserrole(/* parameters */);
-	
+
+		$this->zgUserhandler->grantUserrole( /* parameters */ );
 	}
 
 
 	/**
 	 * Tests zgUserhandler->revokeUserrole()
 	 */
-	public function testRevokeUserrole()
+	public function testRevokeUserrole( )
 	{
 		// TODO Auto-generated zgUserhandlerTest->testRevokeUserrole()
 		$this->markTestIncomplete( "revokeUserrole test not implemented" );
-		
-		$this->zgUserhandler->revokeUserrole(/* parameters */);
-	
-	}
 
+		$this->zgUserhandler->revokeUserrole( /* parameters */ );
+	}
 }
 

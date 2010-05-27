@@ -4,7 +4,7 @@
  * http://www.zeitgeist-framework.com
  *
  * Filehandler class
- * 
+ *
  * A simple file handling class that wraps the most common functionalities
  * with function guarding
  *
@@ -15,7 +15,7 @@
  * @subpackage ZEITGEIST FILEHANDLER
  */
 
-defined( 'ZEITGEIST_ACTIVE' ) or die();
+defined( 'ZEITGEIST_ACTIVE' ) or die( );
 
 class zgFiles
 {
@@ -27,11 +27,11 @@ class zgFiles
 	/**
 	 * Class constructor
 	 */
-	public function __construct()
+	public function __construct( )
 	{
-		$this->debug = zgDebug::init();
-		$this->messages = zgMessages::init();
-		$this->configuration = zgConfiguration::init();
+		$this->debug = zgDebug::init( );
+		$this->messages = zgMessages::init( );
+		$this->configuration = zgConfiguration::init( );
 	}
 
 
@@ -42,12 +42,12 @@ class zgFiles
 	 *
 	 * @return boolean
 	 */
-	protected function _fileAvailable($filename)
+	protected function _fileAvailable( $filename )
 	{
 		$this->debug->guard( true );
-		
+
 		$ret = file_exists( $filename );
-		
+
 		$this->debug->unguard( $ret );
 		return $ret;
 	}
@@ -60,22 +60,22 @@ class zgFiles
 	 *
 	 * @return binary
 	 */
-	public function getFileContent($filename)
+	public function getFileContent( $filename )
 	{
 		$this->debug->guard( true );
-		
-		if( ! $this->_fileAvailable( $filename ) )
+
+		if ( !$this->_fileAvailable( $filename ) )
 		{
 			$this->debug->write( 'Could not open file: "' . $filename . '"', 'warning' );
 			$this->messages->setMessage( 'Could not open file: "' . $filename . '"', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
-		
+
 		$filehandle = fopen( $filename, "r" );
 		$content = @fread( $filehandle, filesize( $filename ) );
 		fclose( $filehandle );
-		
+
 		$this->debug->unguard( $content );
 		return $content;
 	}
@@ -88,28 +88,28 @@ class zgFiles
 	 *
 	 * @return array
 	 */
-	public function getDirectoryListing($path)
+	public function getDirectoryListing( $path )
 	{
 		$this->debug->guard( true );
-		
-		$dirContents = array ();
+
+		$dirContents = array();
 		$directoryhandle = @opendir( $path );
-		
-		if( ! $directoryhandle )
+
+		if ( !$directoryhandle )
 		{
 			$this->debug->write( 'Could not open directory: "' . $path . '"', 'warning' );
 			$this->messages->setMessage( 'Could not open directory: "' . $path . '"', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
-		
-		while( ($dirEntry = readdir( $directoryhandle )) !== false )
+
+		while ( ( $dirEntry = readdir( $directoryhandle ) ) !== false )
 		{
 			$dirContents [] = $dirEntry;
 		}
-		
+
 		closedir( $directoryhandle );
-		
+
 		$this->debug->unguard( $dirContents );
 		return $dirContents;
 	}
@@ -123,39 +123,39 @@ class zgFiles
 	 *
 	 * @return boolean
 	 */
-	public function storeUploadedFile($path, $overwrite = false)
+	public function storeUploadedFile( $path, $overwrite = false )
 	{
 		$this->debug->guard( true );
-		
-		if( count( $_FILES ) == 0 )
+
+		if ( count( $_FILES ) == 0 )
 		{
 			$this->debug->write( 'Could not find uploaded file', 'warning' );
 			$this->messages->setMessage( 'Could not find uploaded file', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
-		
-		if( $_FILES ["file"] ["error"] > 0 )
+
+		if ( $_FILES ["file"] ["error"] > 0 )
 		{
 			$this->debug->write( 'File was uploaded with errors', 'warning' );
 			$this->messages->setMessage( 'File was uploaded with errors', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
-		
-		if( (file_exists( $path . $_FILES ["file"] ["name"] )) && ($overwrite == false) )
+
+		if ( ( file_exists( $path . $_FILES ["file"] ["name"] ) ) && ( $overwrite == false ) )
 		{
 			$this->debug->write( 'File ' . $_FILES ["file"] ["name"] . ' already exists at ' . $path, 'warning' );
 			$this->messages->setMessage( 'File ' . $_FILES ["file"] ["name"] . ' already exists at ' . $path, 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
-		
+
 		$ret = move_uploaded_file( $_FILES ["file"] ["tmp_name"], $path . $_FILES ["file"] ["name"] );
-		
+
 		$this->debug->unguard( $ret );
 		return $ret;
 	}
-
 }
+
 ?>
