@@ -4,7 +4,7 @@
  * http://www.zeitgeist-framework.com
  *
  * Messaging class
- * 
+ *
  * The message class is used as a message stack for the entire
  * applications. Messages are aggregated and can be accessed globally.
  * Warnings and errors by the framework will end up in the message stack
@@ -18,7 +18,7 @@
  * @subpackage ZEITGEIST MESSAGES
  */
 
-defined( 'ZEITGEIST_ACTIVE' ) or die();
+defined( 'ZEITGEIST_ACTIVE' ) or die( );
 
 /**
  * NOTE: This class is a singleton.
@@ -27,7 +27,6 @@ defined( 'ZEITGEIST_ACTIVE' ) or die();
 class zgMessages
 {
 	private static $instance = false;
-	
 	protected $debug;
 	protected $messages;
 
@@ -37,10 +36,10 @@ class zgMessages
 	 *
 	 * The constructor is set to private to prevent files from calling the class as a class instead of a singleton.
 	 */
-	protected function __construct()
+	protected function __construct( )
 	{
-		$this->debug = zgDebug::init();
-		$this->messages = array ();
+		$this->debug = zgDebug::init( );
+		$this->messages = array();
 	}
 
 
@@ -49,13 +48,13 @@ class zgMessages
 	 *
 	 * @return zgMessages
 	 */
-	public static function init()
+	public static function init( )
 	{
-		if( self::$instance === false )
+		if ( self::$instance === false )
 		{
-			self::$instance = new zgMessages();
+			self::$instance = new zgMessages( );
 		}
-		
+
 		return self::$instance;
 	}
 
@@ -68,21 +67,21 @@ class zgMessages
 	 *
 	 * @return boolean
 	 */
-	public function setMessage($message, $type = 'message')
+	public function setMessage( $message, $type = 'message' )
 	{
 		$this->debug->guard( true );
-		
-		$newMessage = new zgMessage();
-		
+
+		$newMessage = new zgMessage( );
+
 		$newMessage->message = $message;
 		$newMessage->type = $type;
-		
-		$backtrace = debug_backtrace();
+
+		$backtrace = debug_backtrace( );
 		$backtraceSender = $backtrace [0];
 		$newMessage->from = array_pop( explode( '\\', $backtraceSender ['file'] ) );
-		
+
 		$this->messages [] = $newMessage;
-		
+
 		$this->debug->unguard( true );
 		return true;
 	}
@@ -95,20 +94,20 @@ class zgMessages
 	 *
 	 * @return array
 	 */
-	public function getMessagesByType($type = '')
+	public function getMessagesByType( $type = '' )
 	{
-		$this->debug->guard();
-		
-		$retArray = array ();
-		
-		foreach( $this->messages as $message )
+		$this->debug->guard( );
+
+		$retArray = array();
+
+		foreach ( $this->messages as $message )
 		{
-			if( $message->type == $type )
+			if ( $message->type == $type )
 			{
 				$retArray [] = $message;
 			}
 		}
-		
+
 		$this->debug->unguard( $retArray );
 		return $retArray;
 	}
@@ -121,20 +120,20 @@ class zgMessages
 	 *
 	 * @return array
 	 */
-	public function getAllMessages($from = '')
+	public function getAllMessages( $from = '' )
 	{
-		$this->debug->guard();
-		
-		$retArray = array ();
-		
-		foreach( $this->messages as $message )
+		$this->debug->guard( );
+
+		$retArray = array();
+
+		foreach ( $this->messages as $message )
 		{
-			if( ($from == '') || ($message->from == $from) )
+			if ( ( $from == '' ) || ( $message->from == $from ) )
 			{
 				$retArray [] = $message;
 			}
 		}
-		
+
 		$this->debug->unguard( $retArray );
 		return $retArray;
 	}
@@ -145,12 +144,12 @@ class zgMessages
 	 *
 	 * @return boolean
 	 */
-	public function clearAllMessages()
+	public function clearAllMessages( )
 	{
-		$this->debug->guard();
-		
-		$this->messages = array ();
-		
+		$this->debug->guard( );
+
+		$this->messages = array();
+
 		$this->debug->unguard( true );
 		return true;
 	}
@@ -164,18 +163,18 @@ class zgMessages
 	 *
 	 * @return boolean
 	 */
-	public function importMessages($messagearray = array())
+	public function importMessages( $messagearray = array() )
 	{
-		$this->debug->guard();
-		
-		if( ! is_array( $messagearray ) )
+		$this->debug->guard( );
+
+		if ( !is_array( $messagearray ) )
 		{
 			$this->debug->unguard( false );
 			return false;
 		}
-		
+
 		$this->messages = array_merge( $this->messages, $messagearray );
-		
+
 		$this->debug->unguard( true );
 		return true;
 	}
@@ -186,21 +185,21 @@ class zgMessages
 	 *
 	 * @return boolean
 	 */
-	public function saveMessagesToSession()
+	public function saveMessagesToSession( )
 	{
-		$this->debug->guard();
-		
-		$messages = $this->getAllMessages();
+		$this->debug->guard( );
+
+		$messages = $this->getAllMessages( );
 		$serializedMessages = serialize( $messages );
-		if( $serializedMessages == '' )
+		if ( $serializedMessages == '' )
 		{
 			$this->debug->unguard( false );
 			return false;
 		}
-		
-		$session = zgSession::init();
+
+		$session = zgSession::init( );
 		$session->setSessionVariable( 'messagecache_session', $serializedMessages );
-		
+
 		$this->debug->unguard( true );
 		return true;
 	}
@@ -211,25 +210,25 @@ class zgMessages
 	 *
 	 * @return boolean
 	 */
-	public function loadMessagesFromSession()
+	public function loadMessagesFromSession( )
 	{
-		$this->debug->guard();
-		
-		$session = zgSession::init();
+		$this->debug->guard( );
+
+		$session = zgSession::init( );
 		$messagecache = $session->getSessionVariable( 'messagecache_session' );
-		if( ! empty( $messagecache ) )
+		if ( !empty( $messagecache ) )
 		{
 			$serializedMessages = $messagecache;
 			$messages = unserialize( $serializedMessages );
-			
-			if( ($messages === false) || (! is_array( $messages )) )
+
+			if ( ( $messages === false ) || ( !is_array( $messages ) ) )
 			{
 				$this->debug->write( 'Error unserializing message content from the database', 'error' );
 				$this->setMessage( 'Error unserializing message content from the database', 'error' );
 				$this->debug->unguard( false );
 				return false;
 			}
-			
+
 			$this->importMessages( $messages );
 		} else
 		{
@@ -238,12 +237,12 @@ class zgMessages
 			$this->debug->unguard( false );
 			return false;
 		}
-		
+
 		$this->debug->unguard( true );
 		return true;
 	}
-
 }
+
 
 class zgMessage
 {
@@ -253,13 +252,13 @@ class zgMessage
 	public $to;
 
 
-	public function __construct()
+	public function __construct( )
 	{
 		$message = '';
 		$type = '';
 		$from = '';
 		$to = '';
 	}
-
 }
+
 ?>

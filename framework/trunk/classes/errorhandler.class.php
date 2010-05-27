@@ -4,7 +4,7 @@
  * http://www.zeitgeist-framework.com
  *
  * Errorhandler class
- * 
+ *
  * A minimal error handler
  *
  * @author Dirk Songür <dirk@zeitalter3.de>
@@ -14,7 +14,7 @@
  * @subpackage ZEITGEIST ERRORHANDLER
  */
 
-defined( 'ZEITGEIST_ACTIVE' ) or die();
+defined( 'ZEITGEIST_ACTIVE' ) or die( );
 
 /**
  * NOTE: This class is a singleton.
@@ -23,11 +23,9 @@ defined( 'ZEITGEIST_ACTIVE' ) or die();
 class zgErrorhandler
 {
 	private static $instance = false;
-	
 	protected $debug;
 	protected $messages;
 	protected $configuration;
-	
 	protected $previousErrorhandler;
 	protected $outputLevel;
 
@@ -37,18 +35,18 @@ class zgErrorhandler
 	 *
 	 * The constructor is set to private to prevent files from calling the class as a class instead of a singleton.
 	 */
-	protected function __construct()
+	protected function __construct( )
 	{
-		$this->errornames = array (E_ERROR => 'E_ERROR', E_WARNING => 'E_WARNING', E_PARSE => 'E_PARSE', E_NOTICE => 'E_NOTICE', E_CORE_ERROR => 'E_CORE_ERROR', E_CORE_WARNING => 'E_CORE_WARNING', E_COMPILE_ERROR => 'E_COMPILE_ERROR', E_COMPILE_WARNING => 'E_COMPILE_WARNING', E_USER_ERROR => 'E_UNEXPECTED_FAILURE', E_USER_WARNING => 'E_USER_WARNING', E_USER_NOTICE => 'E_USER_NOTICE' );
-		
-		$this->debug = zgDebug::init();
-		$this->messages = zgMessages::init();
-		$this->configuration = zgConfiguration::init();
-		
+		$this->errornames = array(E_ERROR => 'E_ERROR', E_WARNING => 'E_WARNING', E_PARSE => 'E_PARSE', E_NOTICE => 'E_NOTICE', E_CORE_ERROR => 'E_CORE_ERROR', E_CORE_WARNING => 'E_CORE_WARNING', E_COMPILE_ERROR => 'E_COMPILE_ERROR', E_COMPILE_WARNING => 'E_COMPILE_WARNING', E_USER_ERROR => 'E_UNEXPECTED_FAILURE', E_USER_WARNING => 'E_USER_WARNING', E_USER_NOTICE => 'E_USER_NOTICE');
+
+		$this->debug = zgDebug::init( );
+		$this->messages = zgMessages::init( );
+		$this->configuration = zgConfiguration::init( );
+
 		$this->outputLevel = $this->configuration->getConfiguration( 'zeitgeist', 'errorhandler', 'error_reportlevel' );
-		
-		$this->previousErrorhandler = set_error_handler( array ($this, 'errorhandler' ) );
-		if( $this->previousErrorhandler === false )
+
+		$this->previousErrorhandler = set_error_handler( array($this, 'errorhandler') );
+		if ( $this->previousErrorhandler === false )
 		{
 			$this->debug->write( 'Could not set the new error handler', 'error' );
 		}
@@ -58,9 +56,9 @@ class zgErrorhandler
 	/**
 	 * destructor
 	 */
-	function __destruct()
+	function __destruct( )
 	{
-		restore_error_handler();
+		restore_error_handler( );
 	}
 
 
@@ -69,13 +67,13 @@ class zgErrorhandler
 	 *
 	 * @return zgErrorhandler
 	 */
-	public static function init()
+	public static function init( )
 	{
-		if( self::$instance === false )
+		if ( self::$instance === false )
 		{
-			self::$instance = new zgErrorhandler();
+			self::$instance = new zgErrorhandler( );
 		}
-		
+
 		return self::$instance;
 	}
 
@@ -89,24 +87,24 @@ class zgErrorhandler
 	 * @param string $errorLine line that threw the error
 	 * @param string $errorContext full backtrace of the current objects
 	 */
-	public function errorhandler($errorNo, $errorString, $errorFile, $errorLine, $errorContext)
+	public function errorhandler( $errorNo, $errorString, $errorFile, $errorLine, $errorContext )
 	{
-		if( ($this->outputLevel > 0) && (array_key_exists( $errorNo, $this->errornames )) )
+		if ( ( $this->outputLevel > 0 ) && ( array_key_exists( $errorNo, $this->errornames ) ) )
 		{
 			echo '<p style="background-color:#ffff00;">An error occured: ';
 			echo "(" . $this->errornames [$errorNo] . ")";
 			echo "In file " . print_r( $errorFile, true );
 			echo " (line " . print_r( $errorLine, true ) . ")\n";
 			echo "Message: " . print_r( $errorString, true ) . '</p>';
-			
+
 			echo '<p style="background-color:#ffff00;">Backtrace:<br />';
-			$trace = debug_backtrace();
-			foreach( $trace as $backtrace )
+			$trace = debug_backtrace( );
+			foreach ( $trace as $backtrace )
 			{
 				echo basename( $backtrace ['file'] );
-				if( ! empty( $backtrace ['line'] ) ) echo "[" . $backtrace ['line'] . "]";
+				if ( !empty( $backtrace ['line'] ) ) echo "[" . $backtrace ['line'] . "]";
 				echo " ::" . $backtrace ['function'];
-				if( ! empty( $backtrace ['args'] ) )
+				if ( !empty( $backtrace ['args'] ) )
 				{
 					echo "(";
 					echo implode( ' -- ', $backtrace ['args'] );
@@ -116,9 +114,12 @@ class zgErrorhandler
 			}
 			echo '</p>';
 		}
-		
-		if( $this->outputLevel == 3 ) echo "\n\nContext:\n" . print_r( $errorContext, true ) . "\n";
-	}
 
+		if ( $this->outputLevel == 3 )
+		{
+			echo "\n\nContext:\n" . print_r( $errorContext, true ) . "\n";
+		}
+	}
 }
+
 ?>

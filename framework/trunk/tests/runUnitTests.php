@@ -39,56 +39,53 @@ require_once 'tests\unittests\zgUserrolesTest.php';
  */
 class runUnitTests extends PHPUnit_Framework_TestSuite
 {
-
-
 	/**
 	 * Constructs the test suite handler.
 	 */
-	public function __construct()
+	public function __construct( )
 	{
 		$this->setName( 'runUnitTests' );
-		
+
 		$this->addTestSuite( 'zgActionlogTest' );
-		
+
 		$this->addTestSuite( 'zgConfigurationTest' );
 
 		$this->addTestSuite( 'zgDatabaseTest' );
-		
-		$this->addTestSuite( 'zgFilesTest' );
-		
-		$this->addTestSuite( 'zgGamedataTest' );
-		
-		$this->addTestSuite( 'zgGamehandlerTest' );
-		
-		$this->addTestSuite( 'zgGamesetupTest' );
-		
-		$this->addTestSuite( 'zgLocalisationTest' );
-		
-		$this->addTestSuite( 'zgMessagesTest' );
-		
-		$this->addTestSuite( 'zgObjectsTest' );
-		
-		$this->addTestSuite( 'zgParametersTest' );
-		
-		$this->addTestSuite( 'zgUserdataTest' );
-		
-		$this->addTestSuite( 'zgUserfunctionsTest' );
-		
-		$this->addTestSuite( 'zgUserhandlerTest' );
-		
-		$this->addTestSuite( 'zgUserrightsTest' );
-		
-		$this->addTestSuite( 'zgUserrolesTest' );
 
+		$this->addTestSuite( 'zgFilesTest' );
+
+		$this->addTestSuite( 'zgGamedataTest' );
+
+		$this->addTestSuite( 'zgGamehandlerTest' );
+
+		$this->addTestSuite( 'zgGamesetupTest' );
+
+		$this->addTestSuite( 'zgLocalisationTest' );
+
+		$this->addTestSuite( 'zgMessagesTest' );
+
+		$this->addTestSuite( 'zgObjectsTest' );
+
+		$this->addTestSuite( 'zgParametersTest' );
+
+		$this->addTestSuite( 'zgUserdataTest' );
+
+		$this->addTestSuite( 'zgUserfunctionsTest' );
+
+		$this->addTestSuite( 'zgUserhandlerTest' );
+
+		$this->addTestSuite( 'zgUserrightsTest' );
+
+		$this->addTestSuite( 'zgUserrolesTest' );
 	}
 
 
 	/**
 	 * Creates the suite.
 	 */
-	public static function suite()
+	public static function suite( )
 	{
-		return new self();
+		return new self( );
 	}
 }
 

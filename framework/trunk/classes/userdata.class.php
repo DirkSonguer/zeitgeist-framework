@@ -4,7 +4,7 @@
  * http://www.zeitgeist-framework.com
  *
  * Userdata class
- * 
+ *
  * Manages the additional userdata associated with a user
  *
  * @author Dirk Songür <dirk@zeitalter3.de>
@@ -14,7 +14,7 @@
  * @subpackage ZEITGEIST USERHANDLER
  */
 
-defined( 'ZEITGEIST_ACTIVE' ) or die();
+defined( 'ZEITGEIST_ACTIVE' ) or die( );
 
 class zgUserdata
 {
@@ -27,14 +27,14 @@ class zgUserdata
 	/**
 	 * Class constructor
 	 */
-	public function __construct()
+	public function __construct( )
 	{
-		$this->debug = zgDebug::init();
-		$this->messages = zgMessages::init();
-		$this->configuration = zgConfiguration::init();
-		
-		$this->database = new zgDatabase();
-		$this->database->connect();
+		$this->debug = zgDebug::init( );
+		$this->messages = zgMessages::init( );
+		$this->configuration = zgConfiguration::init( );
+
+		$this->database = new zgDatabase( );
+		$this->database->connect( );
 	}
 
 
@@ -45,18 +45,18 @@ class zgUserdata
 	 *
 	 * @return boolean
 	 */
-	public function loadUserdata($userid)
+	public function loadUserdata( $userid )
 	{
-		$this->debug->guard();
-		
+		$this->debug->guard( );
+
 		$userdataTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userdata' );
 		$sql = "SELECT * FROM " . $userdataTablename . " WHERE userdata_user = '" . $userid . "'";
-		
+
 		$res = $this->database->query( $sql );
-		if( $res )
+		if ( $res )
 		{
-			$ret = array ();
-			if( $this->database->numRows( $res ) > 0 )
+			$ret = array();
+			if ( $this->database->numRows( $res ) > 0 )
 			{
 				$ret = $this->database->fetchArray( $res );
 			}
@@ -64,16 +64,16 @@ class zgUserdata
 			{
 				$sql = "EXPLAIN " . $userdataTablename;
 				$res = $this->database->query( $sql );
-				
-				while( ($row = $this->database->fetchArray( $res )) !== false )
+
+				while ( ( $row = $this->database->fetchArray( $res ) ) !== false )
 				{
 					$ret [$row ['Field']] = '';
 				}
-				
+
 				$this->debug->write( 'The user seems to habe no assigned data. Userdata returned empty.', 'message' );
 				$this->messages->setMessage( 'The user seems to habe no assigned data. Userdata returned empty.', 'message' );
 			}
-			
+
 			$this->debug->unguard( $ret );
 			return $ret;
 		}
@@ -84,7 +84,7 @@ class zgUserdata
 			$this->debug->unguard( false );
 			return false;
 		}
-		
+
 		$this->debug->unguard( false );
 		return false;
 	}
@@ -98,55 +98,55 @@ class zgUserdata
 	 *
 	 * @return boolean
 	 */
-	public function saveUserdata($userid, $userdata)
+	public function saveUserdata( $userid, $userdata )
 	{
-		$this->debug->guard();
-		
-		if( (! is_array( $userdata )) || (count( $userdata ) < 1) )
+		$this->debug->guard( );
+
+		if ( ( !is_array( $userdata ) ) || ( count( $userdata ) < 1 ) )
 		{
 			$this->debug->write( 'Problem setting the user data: array not valid', 'warning' );
 			$this->messages->setMessage( 'Problem setting the user data: array not valid', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
-		
+
 		$userdataTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userdata' );
 		$sql = 'DELETE FROM ' . $userdataTablename . " WHERE userdata_user='" . $userid . "'";
 		$res = $this->database->query( $sql );
-		if( ! $res )
+		if ( !$res )
 		{
 			$this->debug->write( 'Problem setting the user data: could not clean up the data table', 'warning' );
 			$this->messages->setMessage( 'Problem setting the user data: could not clean up the data table', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
-		
+
 		$sqlkeys = '';
 		$sqlvalues = '';
-		foreach( $userdata as $key => $value )
+		foreach ( $userdata as $key => $value )
 		{
-			if( ($key != 'userdata_timestamp') && ($key != 'userdata_user') )
+			if ( ( $key != 'userdata_timestamp' ) && ( $key != 'userdata_user' ) )
 			{
-				if( $sqlkeys != '' ) $sqlkeys .= ', ';
+				if ( $sqlkeys != '' ) $sqlkeys .= ', ';
 				$sqlkeys .= $key;
-				if( $sqlvalues != '' ) $sqlvalues .= ', ';
+				if ( $sqlvalues != '' ) $sqlvalues .= ', ';
 				$sqlvalues .= "'" . $value . "'";
 			}
 		}
-		
+
 		$sql = "INSERT INTO " . $userdataTablename . "(userdata_user, " . $sqlkeys . ") VALUES('" . $userid . "'," . $sqlvalues . ")";
 		$res = $this->database->query( $sql );
-		if( ! $res )
+		if ( !$res )
 		{
 			$this->debug->write( 'Problem setting the user data: could not write the data', 'warning' );
 			$this->messages->setMessage( 'Problem setting the user data: could not write the data', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
-		
+
 		$this->debug->unguard( true );
 		return true;
 	}
-
 }
+
 ?>

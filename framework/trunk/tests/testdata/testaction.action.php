@@ -2,12 +2,10 @@
 
 class testaction implements zgGameaction
 {
-
-	public function execute($parameter, $time)
+	public function execute( $parameter, $time )
 	{
 		return true;
 	}
-
 }
 
 ?>

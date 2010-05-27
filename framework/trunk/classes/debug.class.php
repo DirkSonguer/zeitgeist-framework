@@ -4,7 +4,7 @@
  * http://www.zeitgeist-framework.com
  *
  * Debug class
- * 
+ *
  * This is the debug class of Zeitgeist. It provides all debugging
  * functionality like debug messages, SQL querylog and tracing
  *
@@ -15,7 +15,7 @@
  * @subpackage ZEITGEIST DEBUG
  */
 
-defined( 'ZEITGEIST_ACTIVE' ) or die();
+defined( 'ZEITGEIST_ACTIVE' ) or die( );
 
 /**
  * NOTE: This class is a singleton.
@@ -24,15 +24,12 @@ defined( 'ZEITGEIST_ACTIVE' ) or die();
 class zgDebug
 {
 	private static $instance = false;
-	
 	protected $startTime;
 	protected $queryStart;
-	
 	protected $debugMessages;
 	protected $guardMessages;
 	protected $guardStack;
 	protected $queryStack;
-	
 	public $showInnerLoops;
 
 
@@ -41,16 +38,16 @@ class zgDebug
 	 *
 	 * The constructor is set to private to prevent files from calling the class as a class instead of a singleton.
 	 */
-	protected function __construct()
+	protected function __construct( )
 	{
-		$this->debugMessages = array ();
-		$this->guardMessages = array ();
-		$this->guardStack = array ();
-		$this->queryStack = array ();
-		
+		$this->debugMessages = array();
+		$this->guardMessages = array();
+		$this->guardStack = array();
+		$this->queryStack = array();
+
 		$this->showInnerLoops = false;
-		
-		$this->startTime = microtime();
+
+		$this->startTime = microtime( );
 	}
 
 
@@ -59,13 +56,13 @@ class zgDebug
 	 *
 	 * @return zgDebug
 	 */
-	public static function init()
+	public static function init( )
 	{
-		if( self::$instance === false )
+		if ( self::$instance === false )
 		{
-			self::$instance = new zgDebug();
+			self::$instance = new zgDebug( );
 		}
-		
+
 		return self::$instance;
 	}
 
@@ -77,37 +74,37 @@ class zgDebug
 	 * @param string $message debug message to print
 	 * @param string $type type of the message.
 	 */
-	public function write($message, $type = 'message')
+	public function write( $message, $type = 'message' )
 	{
-		if( is_array( $message ) )
+		if ( is_array( $message ) )
 		{
-			ob_start();
+			ob_start( );
 			var_dump( $message );
-			$message = ob_get_contents();
-			ob_end_clean();
+			$message = ob_get_contents( );
+			ob_end_clean( );
 		}
-		
-		$newDebugMessage = array ();
-		
-		$newDebugMessage ['executionTime'] = $this->_getExecutionTime();
+
+		$newDebugMessage = array();
+
+		$newDebugMessage ['executionTime'] = $this->_getExecutionTime( );
 		$newDebugMessage ['message'] = $message;
 		$newDebugMessage ['type'] = $type;
-		
-		$backtrace = debug_backtrace();
-		
+
+		$backtrace = debug_backtrace( );
+
 		$i = 0;
-		foreach( $backtrace as $trace )
+		foreach ( $backtrace as $trace )
 		{
-			if( ! empty( $trace ['file'] ) )
+			if ( !empty( $trace ['file'] ) )
 			{
 				$newDebugMessage ['filename'] [] = array_pop( explode( '\\', $trace ['file'] ) );
 				$newDebugMessage ['function'] [] = $trace ['function'];
 				$newDebugMessage ['line'] [] = $trace ['line'];
-				$i ++;
+				$i++;
 			}
 		}
 		$newDebugMessage ['traces'] = $i;
-		
+
 		$this->debugMessages [] = $newDebugMessage;
 	}
 
@@ -115,9 +112,9 @@ class zgDebug
 	/**
 	 * Starts the timer for the sql execution timer
 	 */
-	public function beginSQLStatement()
+	public function beginSQLStatement( )
 	{
-		list ( $usec, $sec ) = explode( " ", microtime() );
+		list ( $usec, $sec ) = explode( " ", microtime( ) );
 		$this->queryStart = (float) $usec + (float) $sec;
 	}
 
@@ -128,15 +125,15 @@ class zgDebug
 	 * @param string $query original query
 	 * @param resource $result result
 	 */
-	public function storeSQLStatement($query, $result)
+	public function storeSQLStatement( $query, $result )
 	{
-		$newQueryMessage = array ();
-		
-		list ( $usec, $sec ) = explode( " ", microtime() );
-		$newQueryMessage ['executionTime'] = ((float) $usec + (float) $sec) - $this->queryStart;
+		$newQueryMessage = array();
+
+		list ( $usec, $sec ) = explode( " ", microtime( ) );
+		$newQueryMessage ['executionTime'] = ( (float) $usec + (float) $sec ) - $this->queryStart;
 		$newQueryMessage ['query'] = $query;
 		$newQueryMessage ['type'] = substr( $query, 0, strpos( $query, ' ' ) );
-		if( ! $result )
+		if ( !$result )
 		{
 			$newQueryMessage ['success'] = false;
 		}
@@ -144,7 +141,7 @@ class zgDebug
 		{
 			$newQueryMessage ['success'] = true;
 		}
-		
+
 		$this->queryStack [] = $newQueryMessage;
 	}
 
@@ -155,34 +152,34 @@ class zgDebug
 	 *
 	 * @param boolean $innerLoop set true if the calling function is an inner loop
 	 */
-	public function guard($innerLoop = false)
+	public function guard( $innerLoop = false )
 	{
-		$newGuardMessage = array ();
-		
+		$newGuardMessage = array();
+
 		$newGuardMessage ['type'] = 'GUARD';
-		$newGuardMessage ['executionTime'] = $this->_getExecutionTime();
-		
-		if( function_exists( 'memory_get_usage' ) )
+		$newGuardMessage ['executionTime'] = $this->_getExecutionTime( );
+
+		if ( function_exists( 'memory_get_usage' ) )
 		{
-			$newGuardMessage ['currentMemoryUsage'] = memory_get_usage() / 1024;
+			$newGuardMessage ['currentMemoryUsage'] = memory_get_usage( ) / 1024;
 		}
 		else
 		{
 			$newGuardMessage ['currentMemoryUsage'] = '-';
 		}
-		
+
 		$newGuardMessage ['isInnerLoop'] = $innerLoop;
 		array_push( $this->guardStack, $innerLoop );
-		
-		$backtrace = debug_backtrace();
+
+		$backtrace = debug_backtrace( );
 		$backtrace = $backtrace [1];
-		
-		if( ! empty( $backtrace ['file'] ) )
+
+		if ( !empty( $backtrace ['file'] ) )
 		{
 			$newGuardMessage ['filename'] = basename( array_pop( explode( '\\', $backtrace ['file'] ) ) );
 		}
-		
-		if( ! empty( $backtrace ['class'] ) )
+
+		if ( !empty( $backtrace ['class'] ) )
 		{
 			$newGuardMessage ['class'] = $backtrace ['class'];
 		}
@@ -190,22 +187,22 @@ class zgDebug
 		{
 			$newGuardMessage ['class'] = '';
 		}
-		
-		foreach( $backtrace ['args'] as $parameter )
+
+		foreach ( $backtrace ['args'] as $parameter )
 		{
 			$newGuardMessage ['args'] [] = $parameter;
 		}
-		
-		if( ! empty( $backtrace ['function'] ) )
+
+		if ( !empty( $backtrace ['function'] ) )
 		{
 			$newGuardMessage ['function'] = $backtrace ['function'];
 		}
-		
-		if( ! empty( $backtrace ['line'] ) )
+
+		if ( !empty( $backtrace ['line'] ) )
 		{
 			$newGuardMessage ['line'] = $backtrace ['line'];
 		}
-		
+
 		$this->guardMessages [] = $newGuardMessage;
 	}
 
@@ -216,25 +213,25 @@ class zgDebug
 	 *
 	 * @param variant $returnValue the return value of the guarded function (if it has one)
 	 */
-	public function unguard($returnValue)
+	public function unguard( $returnValue )
 	{
-		$newGuardMessage = array ();
-		
+		$newGuardMessage = array();
+
 		$newGuardMessage ['type'] = 'UNGUARD';
-		$newGuardMessage ['executionTime'] = $this->_getExecutionTime();
-		$newGuardMessage ['currentMemoryUsage'] = memory_get_usage() / 1024;
-		
+		$newGuardMessage ['executionTime'] = $this->_getExecutionTime( );
+		$newGuardMessage ['currentMemoryUsage'] = memory_get_usage( ) / 1024;
+
 		$newGuardMessage ['isInnerLoop'] = array_pop( $this->guardStack );
-		
-		$backtrace = debug_backtrace();
+
+		$backtrace = debug_backtrace( );
 		$backtrace = $backtrace [1];
-		
-		if( ! empty( $backtrace ['file'] ) )
+
+		if ( !empty( $backtrace ['file'] ) )
 		{
 			$newGuardMessage ['filename'] = basename( array_pop( explode( '\\', $backtrace ['file'] ) ) );
 		}
-		
-		if( ! empty( $backtrace ['class'] ) )
+
+		if ( !empty( $backtrace ['class'] ) )
 		{
 			$newGuardMessage ['class'] = $backtrace ['class'];
 		}
@@ -242,19 +239,19 @@ class zgDebug
 		{
 			$newGuardMessage ['class'] = '';
 		}
-		
-		if( ! empty( $backtrace ['function'] ) )
+
+		if ( !empty( $backtrace ['function'] ) )
 		{
 			$newGuardMessage ['function'] = $backtrace ['function'];
 		}
-		
-		if( ! empty( $backtrace ['line'] ) )
+
+		if ( !empty( $backtrace ['line'] ) )
 		{
 			$newGuardMessage ['line'] = $backtrace ['line'];
 		}
-		
+
 		$newGuardMessage ['returnValue'] = $returnValue;
-		
+
 		$this->guardMessages [] = $newGuardMessage;
 	}
 
@@ -262,45 +259,45 @@ class zgDebug
 	/**
 	 * Shows somemisc information
 	 */
-	public function showMiscInformation()
+	public function showMiscInformation( )
 	{
 		echo '<div class="debug">';
 		echo '<h1>Misc Infomation</h1>';
 		echo '<h2>_GET:</h2>';
-		foreach( $_GET as $key => $value )
+		foreach ( $_GET as $key => $value )
 		{
-			if( is_array( $value ) )
+			if ( is_array( $value ) )
 			{
-				ob_start();
+				ob_start( );
 				var_dump( $value );
-				$value = ob_get_contents();
-				ob_end_clean();
+				$value = ob_get_contents( );
+				ob_end_clean( );
 			}
-			
+
 			echo '<p>' . $key . ' : ' . $value;
 		}
-		
+
 		echo '<h2>_POST:</h2>';
-		foreach( $_POST as $key => $value )
+		foreach ( $_POST as $key => $value )
 		{
-			if( is_array( $value ) )
+			if ( is_array( $value ) )
 			{
-				ob_start();
+				ob_start( );
 				var_dump( $value );
-				$value = ob_get_contents();
-				ob_end_clean();
+				$value = ob_get_contents( );
+				ob_end_clean( );
 			}
-			
+
 			echo '<p>' . $key . ' : ' . $value;
 		}
-		
-		$session = session_id();
-		if( ! empty( $session ) )
+
+		$session = session_id( );
+		if ( !empty( $session ) )
 		{
 			echo '<h2>SESSION:</h2>';
 			echo '<p>' . $session . '</p>';
 		}
-		
+
 		echo '</div>';
 	}
 
@@ -308,35 +305,35 @@ class zgDebug
 	/**
 	 * Shows all the debug messages as a table
 	 */
-	public function showDebugMessages()
+	public function showDebugMessages( )
 	{
 		echo '<div class="debug">';
 		echo '<h1>DebugMessages</h1>';
 		echo '<table border="1" class="debugMessages">';
 		echo '<tr><th>ID</th><th>Time</th><th>Type</th><th>File</th><th>Message</th></tr>';
-		
-		foreach( $this->debugMessages as $debugID => $debugMessage )
+
+		foreach ( $this->debugMessages as $debugID => $debugMessage )
 		{
 			echo '<tr class="' . $debugMessage ['type'] . '">';
 			$currentDebugLine = '';
-			
+
 			$currentDebugLine .= '<td class="debugMessageLine">' . $debugID . '</td>';
 			$currentDebugLine .= '<td class="debugMessageLine">' . $debugMessage ['executionTime'] . '</td>';
 			$currentDebugLine .= '<td class="debugMessageLine">' . strtoupper( $debugMessage ['type'] ) . '</td>';
 			$currentDebugLine .= '<td class="debugMessageLine">';
-			
-			for( $i = ($debugMessage ['traces'] - 1); $i >= 0; $i -- )
+
+			for ( $i = ( $debugMessage ['traces'] - 1 ); $i >= 0; $i-- )
 			{
 				$currentDebugLine .= '[' . $debugMessage ['line'] [$i] . '] <strong>' . $debugMessage ['filename'] [$i] . '</strong><br />';
 			}
-			
+
 			$currentDebugLine .= '</td>';
 			$currentDebugLine .= '<td class="debugMessageLine">' . $debugMessage ['message'] . '</td>';
-			
-			echo ($currentDebugLine);
+
+			echo ( $currentDebugLine );
 			echo '</tr>';
 		}
-		
+
 		echo '</table></div>';
 	}
 
@@ -344,20 +341,20 @@ class zgDebug
 	/**
 	 * Shows all the query messages as a table
 	 */
-	public function showQueryMessages()
+	public function showQueryMessages( )
 	{
 		echo '<div class="debug">';
 		echo '<h1>Querylog</h1>';
 		echo '<table border="1" class="debugMessages">';
 		echo '<tr><th>ID</th><th>Execution Time</th><th>Query</th></tr>';
-		
+
 		$totalExecutionTime = 0;
 		$numberOfQueries = 0;
-		foreach( $this->queryStack as $queryID => $queryMessage )
+		foreach ( $this->queryStack as $queryID => $queryMessage )
 		{
-			if( $queryMessage ['success'] )
+			if ( $queryMessage ['success'] )
 			{
-				if( $queryMessage ['executionTime'] < 0.01 )
+				if ( $queryMessage ['executionTime'] < 0.01 )
 				{
 					echo '<tr class="sqlmessage">';
 				}
@@ -370,25 +367,25 @@ class zgDebug
 			{
 				echo '<tr class="sqlerror">';
 			}
-			
-			$numberOfQueries ++;
+
+			$numberOfQueries++;
 			$currentQueryLine = '';
-			
+
 			$currentQueryLine .= '<td class="debugMessageLine">' . $queryID . '</td>';
 			$currentQueryLine .= '<td class="debugMessageLine">' . $queryMessage ['executionTime'] . '</td>';
 			$totalExecutionTime += $queryMessage ['executionTime'];
 			$currentQueryLine .= '<td class="debugMessageLine"><strong>' . $queryMessage ['query'] . '</strong></td>';
-			
-			echo ($currentQueryLine);
+
+			echo ( $currentQueryLine );
 			echo '</tr>';
 		}
-		
+
 		$currentQueryLine = '<tr>';
-		
+
 		$currentQueryLine .= '<td class="debugMessageLine"></td>';
 		$currentQueryLine .= '<td class="debugMessageLine" colspan="2">Number of Queries: <strong>' . $numberOfQueries . '</strong><br />';
 		$currentQueryLine .= 'Total execution time: <strong>';
-		if( $totalExecutionTime < 0.1 )
+		if ( $totalExecutionTime < 0.1 )
 		{
 			$currentQueryLine .= $totalExecutionTime;
 		}
@@ -397,10 +394,10 @@ class zgDebug
 			$currentQueryLine .= '<span class="sqlproblem">' . $totalExecutionTime . '</span>';
 		}
 		$currentQueryLine .= '</strong></td>';
-		
-		echo ($currentQueryLine);
+
+		echo ( $currentQueryLine );
 		echo '</tr>';
-		
+
 		echo '</table></div>';
 	}
 
@@ -408,19 +405,19 @@ class zgDebug
 	/**
 	 * Shows all the guard messages as a table
 	 */
-	public function showGuardMessages()
+	public function showGuardMessages( )
 	{
 		echo '<div class="debug">';
 		echo '<h1>GuardMessages</h1>';
-		
+
 		echo '<table border="1" class="guardMessages">';
 		echo '<tr><th>ID</th><th>Time</th><th>Memory</th><th>Type</th><th>File</th></tr>';
-		
-		foreach( $this->guardMessages as $guardID => $guardMessage )
+
+		foreach ( $this->guardMessages as $guardID => $guardMessage )
 		{
-			if( ($this->showInnerLoops) || ($guardMessage ['isInnerLoop'] != true) )
+			if ( ( $this->showInnerLoops ) || ( $guardMessage ['isInnerLoop'] != true ) )
 			{
-				if( $guardMessage ['type'] == 'GUARD' )
+				if ( $guardMessage ['type'] == 'GUARD' )
 				{
 					echo '<tr class="guardLine">';
 				}
@@ -428,59 +425,59 @@ class zgDebug
 				{
 					echo '<tr class="unguardLine">';
 				}
-				
+
 				$currentGuardLine = '';
-				
+
 				$currentGuardLine .= '<td class="guardMessageLine">' . $guardID . '</td>';
 				$currentGuardLine .= '<td class="guardMessageLine">' . $guardMessage ['executionTime'] . '</td>';
 				$currentGuardLine .= '<td class="guardMessageLine">' . number_format( $guardMessage ['currentMemoryUsage'], 2 ) . '</td>';
 				$currentGuardLine .= '<td class="guardMessageLine">' . $guardMessage ['type'] . '</td>';
-				
+
 				$currentGuardLine .= '<td class="guardMessageLine">';
-				
-				if( ! empty( $guardMessage ['filename'] ) ) $currentGuardLine .= '[<span class="guardFile">' . $guardMessage ['filename'] . '</span> ';
+
+				if ( !empty( $guardMessage ['filename'] ) ) $currentGuardLine .= '[<span class="guardFile">' . $guardMessage ['filename'] . '</span> ';
 				else
 					$currentGuardLine .= '[ ';
-				
-				if( ! empty( $guardMessage ['line'] ) ) $currentGuardLine .= '(<span class="guardLine">' . $guardMessage ['line'] . '</span>)] ';
+
+				if ( !empty( $guardMessage ['line'] ) ) $currentGuardLine .= '(<span class="guardLine">' . $guardMessage ['line'] . '</span>)] ';
 				else
 					$currentGuardLine .= ' ]';
-				
-				if( ! empty( $guardMessage ['filename'] ) ) $currentGuardLine .= '<span class="guardClass">' . $guardMessage ['class'] . '-&gt;</span>';
+
+				if ( !empty( $guardMessage ['filename'] ) ) $currentGuardLine .= '<span class="guardClass">' . $guardMessage ['class'] . '-&gt;</span>';
 				else
 					$currentGuardLine .= ' ';
-				
-				if( ! empty( $guardMessage ['function'] ) ) $currentGuardLine .= '<span class="guardFunction">' . $guardMessage ['function'] . '</span>';
+
+				if ( !empty( $guardMessage ['function'] ) ) $currentGuardLine .= '<span class="guardFunction">' . $guardMessage ['function'] . '</span>';
 				else
 					$currentGuardLine .= ' ';
-				
-				if( $guardMessage ['type'] == 'GUARD' )
+
+				if ( $guardMessage ['type'] == 'GUARD' )
 				{
 					$argstring = '';
-					if( (! empty( $guardMessage ['args'] )) && (is_array( $guardMessage ['args'] )) )
+					if ( ( !empty( $guardMessage ['args'] ) ) && ( is_array( $guardMessage ['args'] ) ) )
 					{
-						for( $i = 0; $i < count( $guardMessage ['args'] ); $i ++ )
+						for ( $i = 0; $i < count( $guardMessage ['args'] ); $i++ )
 						{
 							$guardMessage ['args'] [$i] = "<span class=\"guardArgument\">'" . $guardMessage ['args'] [$i] . "</span>'";
 						}
-						
+
 						$argstring = implode( ',', $guardMessage ['args'] );
 					}
-					
+
 					$currentGuardLine .= '(' . $argstring . ')';
 				}
 				else
 				{
 					$currentGuardLine .= "() returned with: <span class=\"guardArgument\">'" . $guardMessage ['returnValue'] . "'</span>";
 				}
-				
+
 				$currentGuardLine .= '</td>';
-				
-				echo ($currentGuardLine);
+
+				echo ( $currentGuardLine );
 				echo '</tr>';
 			}
 		}
-		
+
 		echo '</table></div>';
 	}
 
@@ -492,20 +489,20 @@ class zgDebug
 	 *
 	 * @return boolean
 	 */
-	public function loadStylesheet($stylesheet)
+	public function loadStylesheet( $stylesheet )
 	{
 		$filename = ZEITGEIST_ROOTDIRECTORY . 'configuration/' . $stylesheet;
-		
-		if( ! file_exists( $filename ) )
+
+		if ( !file_exists( $filename ) )
 		{
 			return false;
 		}
-		
+
 		$filehandle = fopen( $filename, "r" );
 		$filecontent = fread( $filehandle, filesize( $filename ) );
 		fclose( $filehandle );
 		echo $filecontent;
-		
+
 		return true;
 	}
 
@@ -517,25 +514,25 @@ class zgDebug
 	 *
 	 * @return boolean
 	 */
-	public function saveToFile($filename, $cssfile)
+	public function saveToFile( $filename, $cssfile )
 	{
 		$filehandle = fopen( $filename, "w" );
-		ob_start();
-		
+		ob_start( );
+
 		$this->loadStylesheet( $cssfile );
 		$this->showInnerLoops = true;
-		
-		$this->showMiscInformation();
-		$this->showDebugMessages();
-		$this->showQueryMessages();
-		$this->showGuardMessages();
-		
-		$content = ob_get_contents();
+
+		$this->showMiscInformation( );
+		$this->showDebugMessages( );
+		$this->showQueryMessages( );
+		$this->showGuardMessages( );
+
+		$content = ob_get_contents( );
 		fwrite( $filehandle, $content );
-		
-		ob_end_clean();
+
+		ob_end_clean( );
 		fclose( $filehandle );
-		
+
 		return true;
 	}
 
@@ -545,11 +542,11 @@ class zgDebug
 	 *
 	 * @return integer
 	 */
-	protected function _getExecutionTime()
+	protected function _getExecutionTime( )
 	{
-		$currentTime = microtime();
+		$currentTime = microtime( );
 		return round( $currentTime - $this->startTime, 4 );
 	}
-
 }
+
 ?>

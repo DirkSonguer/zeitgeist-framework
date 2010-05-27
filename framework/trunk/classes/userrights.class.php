@@ -4,7 +4,7 @@
  * http://www.zeitgeist-framework.com
  *
  * Userrights class
- * 
+ *
  * Manages rights that can be associated with a user
  *
  * @author Dirk Songür <dirk@zeitalter3.de>
@@ -14,7 +14,7 @@
  * @subpackage ZEITGEIST USERHANDLER
  */
 
-defined( 'ZEITGEIST_ACTIVE' ) or die();
+defined( 'ZEITGEIST_ACTIVE' ) or die( );
 
 class zgUserrights
 {
@@ -27,14 +27,14 @@ class zgUserrights
 	/**
 	 * Class constructor
 	 */
-	public function __construct()
+	public function __construct( )
 	{
-		$this->debug = zgDebug::init();
-		$this->messages = zgMessages::init();
-		$this->configuration = zgConfiguration::init();
-		
-		$this->database = new zgDatabase();
-		$this->database->connect();
+		$this->debug = zgDebug::init( );
+		$this->messages = zgMessages::init( );
+		$this->configuration = zgConfiguration::init( );
+
+		$this->database = new zgDatabase( );
+		$this->database->connect( );
 	}
 
 
@@ -45,42 +45,42 @@ class zgUserrights
 	 *
 	 * @return array
 	 */
-	public function loadUserrights($userid)
+	public function loadUserrights( $userid )
 	{
-		$this->debug->guard();
-		
+		$this->debug->guard( );
+
 		$userrightsTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userrights' );
 		$sql = "SELECT * FROM " . $userrightsTablename . " WHERE userright_user = '" . $userid . "'";
-		
+
 		$res = $this->database->query( $sql );
-		if( $res )
+		if ( $res )
 		{
-			$ret = array ();
-			while( ($row = $this->database->fetchArray( $res )) !== false )
+			$ret = array();
+			while ( ( $row = $this->database->fetchArray( $res ) ) !== false )
 			{
 				$ret [$row ['userright_action']] = true;
 			}
-			
-			$rolefunctions = new zgUserroles();
+
+			$rolefunctions = new zgUserroles( );
 			$roles = $rolefunctions->loadUserroles( $userid );
-			if( (is_array( $roles )) && (count( $roles ) > 0) )
+			if ( ( is_array( $roles ) ) && ( count( $roles ) > 0 ) )
 			{
-				foreach( $roles as $roleid => $value )
+				foreach ( $roles as $roleid => $value )
 				{
 					$rights = $this->_getUserrightsForRoles( $roleid );
-					if( (is_array( $rights )) && (count( $rights ) > 0) )
+					if ( ( is_array( $rights ) ) && ( count( $rights ) > 0 ) )
 					{
 						$ret = $ret + $rights;
 					}
 				}
 			}
-			
-			if( count( $ret ) == 0 )
+
+			if ( count( $ret ) == 0 )
 			{
 				$this->debug->write( 'Possible problem getting userrights for a user: the user seems to have no assigned rights', 'warning' );
 				$this->messages->setMessage( 'Possible problem getting userrights for a user: the user seems to have no assigned rights', 'warning' );
 			}
-			
+
 			$this->debug->unguard( $ret );
 			return $ret;
 		}
@@ -91,7 +91,7 @@ class zgUserrights
 			$this->debug->unguard( false );
 			return false;
 		}
-		
+
 		$this->debug->unguard( false );
 		return false;
 	}
@@ -105,34 +105,34 @@ class zgUserrights
 	 *
 	 * @return boolean
 	 */
-	public function saveUserrights($userid, $userrights)
+	public function saveUserrights( $userid, $userrights )
 	{
-		$this->debug->guard();
-		
-		if( (! is_array( $userrights )) || (count( $userrights ) < 1) )
+		$this->debug->guard( );
+
+		if ( ( !is_array( $userrights ) ) || ( count( $userrights ) < 1 ) )
 		{
 			$this->debug->write( 'Problem setting the user rights: array not valid', 'warning' );
 			$this->messages->setMessage( 'Problem setting the user rights: array not valid', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
-		
+
 		$userrightsTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userrights' );
 		$sql = 'DELETE FROM ' . $userrightsTablename . " WHERE userright_user='" . $userid . "'";
 		$res = $this->database->query( $sql );
-		if( ! $res )
+		if ( !$res )
 		{
 			$this->debug->write( 'Problem setting the user rights: could not clean up the rights table', 'warning' );
 			$this->messages->setMessage( 'Problem setting the user rights: could not clean up the rights table', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
-		
-		foreach( $userrights as $key => $value )
+
+		foreach ( $userrights as $key => $value )
 		{
 			$sql = 'INSERT INTO ' . $userrightsTablename . "(userright_action, userright_user) VALUES('" . $key . "', '" . $userid . "')";
 			$res = $this->database->query( $sql );
-			if( ! $res )
+			if ( !$res )
 			{
 				$this->debug->write( 'Problem setting the user rights: could not insert the rights into the database', 'warning' );
 				$this->messages->setMessage( 'Problem setting the user rights: could not insert the rights into the database', 'warning' );
@@ -140,7 +140,7 @@ class zgUserrights
 				return false;
 			}
 		}
-		
+
 		$this->debug->unguard( true );
 		return true;
 	}
@@ -150,33 +150,33 @@ class zgUserrights
 	 * Loads all userrights for a given role
 	 *
 	 * @param integer $roleid id of the role
-	 * 
+	 *
 	 * @return array
 	 */
-	protected function _getUserrightsForRoles($roleid)
+	protected function _getUserrightsForRoles( $roleid )
 	{
-		$this->debug->guard();
-		
+		$this->debug->guard( );
+
 		$rolestoactionsTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userroles_to_actions' );
 		$sql = "SELECT * FROM " . $rolestoactionsTablename . " WHERE userroleaction_userrole = '" . $roleid . "'";
-		
+
 		$res = $this->database->query( $sql );
-		if( $res )
+		if ( $res )
 		{
-			$ret = array ();
-			while( ($row = $this->database->fetchArray( $res )) !== false )
+			$ret = array();
+			while ( ( $row = $this->database->fetchArray( $res ) ) !== false )
 			{
 				$ret [$row ['userroleaction_action']] = true;
 			}
-			
-			if( count( $ret ) == 0 )
+
+			if ( count( $ret ) == 0 )
 			{
 				$this->debug->write( 'Possible problem getting the rights for the roles of a user: there seems to be no rights assigned with the roles', 'warning' );
 				$this->messages->setMessage( 'Possible problem getting the rights for the roles of a user: there seems to be no rights assigned with the roles', 'warning' );
 				$this->debug->unguard( false );
 				return false;
 			}
-			
+
 			$this->debug->unguard( $ret );
 			return $ret;
 		}
@@ -187,10 +187,10 @@ class zgUserrights
 			$this->debug->unguard( false );
 			return false;
 		}
-		
+
 		$this->debug->unguard( false );
 		return false;
 	}
-
 }
+
 ?>

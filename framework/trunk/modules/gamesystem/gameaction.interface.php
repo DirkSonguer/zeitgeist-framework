@@ -4,7 +4,7 @@
  * http://www.zeitgeist-framework.com
  *
  * Gameaction interface
- * 
+ *
  * A simple interface for a given game action
  *
  * @author Dirk Songür <dirk@zeitalter3.de>
@@ -14,13 +14,11 @@
  * @subpackage ZEITGEIST GAMESYSTEM
  */
 
-defined('ZEITGEIST_ACTIVE') or die();
+defined( 'ZEITGEIST_ACTIVE' ) or die( );
 
 interface zgGameaction
 {
-
-	public function execute($eventdata, $time);
-
+	public function execute( $eventdata, $time );
 }
 
 ?>

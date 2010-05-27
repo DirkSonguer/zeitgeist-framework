@@ -4,7 +4,7 @@
  * http://www.zeitgeist-framework.com
  *
  * Gamesetup class
- * 
+ *
  * Provides setup functionalities to create the game data structure
  * needed for your game
  *
@@ -15,7 +15,7 @@
  * @subpackage ZEITGEIST GAMESYSTEM
  */
 
-defined('ZEITGEIST_ACTIVE') or die();
+defined( 'ZEITGEIST_ACTIVE' ) or die( );
 
 class zgGamesetup
 {
@@ -27,13 +27,13 @@ class zgGamesetup
 	/**
 	 * Class constructor
 	 */
-	public function __construct()
+	public function __construct( )
 	{
-		$this->debug = zgDebug::init();
-		$this->messages = zgMessages::init();
+		$this->debug = zgDebug::init( );
+		$this->messages = zgMessages::init( );
 
-		$this->database = new zgDatabase();
-		$this->database->connect();
+		$this->database = new zgDatabase( );
+		$this->database->connect( );
 	}
 
 
@@ -47,42 +47,42 @@ class zgGamesetup
 	 *
 	 * @return int|boolean
 	 */
-	public function createComponent($name, $description='')
+	public function createComponent( $name, $description = '' )
 	{
-		$this->debug->guard();
+		$this->debug->guard( );
 
 		$sql = "INSERT INTO game_components(component_name, component_description) ";
 		$sql .= "VALUES('" . $name . "', '" . $description . "')";
-		$res = $this->database->query($sql);
-		if (!$res)
+		$res = $this->database->query( $sql );
+		if ( !$res )
 		{
-			$this->debug->write('Problem creating new component: could not insert component into database', 'warning');
-			$this->messages->setMessage('Problem creating new component: could not insert component into database', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Problem creating new component: could not insert component into database', 'warning' );
+			$this->messages->setMessage( 'Problem creating new component: could not insert component into database', 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
 
-		$componentid = $this->database->insertId();
-		if (!$componentid)
+		$componentid = $this->database->insertId( );
+		if ( !$componentid )
 		{
-			$this->debug->write('Problem creating new component: could not get component id', 'warning');
-			$this->messages->setMessage('Problem creating new component: could not get component id', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Problem creating new component: could not get component id', 'warning' );
+			$this->messages->setMessage( 'Problem creating new component: could not get component id', 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
 
-		$sql = "CREATE TABLE game_component_". $componentid ." ";
+		$sql = "CREATE TABLE game_component_" . $componentid . " ";
 		$sql .= "(`id` INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY) ENGINE = InnoDB";
-		$res = $this->database->query($sql);
-		if (!$res)
+		$res = $this->database->query( $sql );
+		if ( !$res )
 		{
-			$this->debug->write('Problem creating new component: could not create component table', 'warning');
-			$this->messages->setMessage('Problem creating new component: could not create component table', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Problem creating new component: could not create component table', 'warning' );
+			$this->messages->setMessage( 'Problem creating new component: could not create component table', 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
 
-		$this->debug->unguard($componentid);
+		$this->debug->unguard( $componentid );
 		return $componentid;
 	}
 
@@ -94,32 +94,32 @@ class zgGamesetup
 	 *
 	 * @return boolean
 	 */
-	public function deleteComponent($component)
+	public function deleteComponent( $component )
 	{
-		$this->debug->guard();
+		$this->debug->guard( );
 
 
 		$sql = "DELETE FROM game_components WHERE component_id='" . $component . "'";
-		$res = $this->database->query($sql);
-		if (!$res)
+		$res = $this->database->query( $sql );
+		if ( !$res )
 		{
-			$this->debug->write('Problem deleting component: could not delete component from database', 'warning');
-			$this->messages->setMessage('Problem deleting component: could not delete component from database', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Problem deleting component: could not delete component from database', 'warning' );
+			$this->messages->setMessage( 'Problem deleting component: could not delete component from database', 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
 
-		$sql = "DROP TABLE game_component_". $component ." ";
-		$res = $this->database->query($sql);
-		if (!$res)
+		$sql = "DROP TABLE game_component_" . $component . " ";
+		$res = $this->database->query( $sql );
+		if ( !$res )
 		{
-			$this->debug->write('Problem deleting component: could not delete component table', 'warning');
-			$this->messages->setMessage('Problem deleting component: could not delete component table', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Problem deleting component: could not delete component table', 'warning' );
+			$this->messages->setMessage( 'Problem deleting component: could not delete component table', 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
 
-		$this->debug->unguard(true);
+		$this->debug->unguard( true );
 		return true;
 	}
 
@@ -134,31 +134,31 @@ class zgGamesetup
 	 *
 	 * @return int|boolean
 	 */
-	public function createAssemblage($name, $description='')
+	public function createAssemblage( $name, $description = '' )
 	{
-		$this->debug->guard();
+		$this->debug->guard( );
 
 		$sql = "INSERT INTO game_assemblages(assemblage_name, assemblage_description) ";
 		$sql .= "VALUES('" . $name . "', '" . $description . "')";
-		$res = $this->database->query($sql);
-		if (!$res)
+		$res = $this->database->query( $sql );
+		if ( !$res )
 		{
-			$this->debug->write('Problem creating new assemblage: could not insert assemblage into database', 'warning');
-			$this->messages->setMessage('Problem creating new assemblage: could not insert assemblage into database', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Problem creating new assemblage: could not insert assemblage into database', 'warning' );
+			$this->messages->setMessage( 'Problem creating new assemblage: could not insert assemblage into database', 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
 
-		$assemblageid = $this->database->insertId();
-		if (!$assemblageid)
+		$assemblageid = $this->database->insertId( );
+		if ( !$assemblageid )
 		{
-			$this->debug->write('Problem creating new assemblage: could not get assemblage id', 'warning');
-			$this->messages->setMessage('Problem creating new assemblage: could not get assemblage id', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Problem creating new assemblage: could not get assemblage id', 'warning' );
+			$this->messages->setMessage( 'Problem creating new assemblage: could not get assemblage id', 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
 
-		$this->debug->unguard($assemblageid);
+		$this->debug->unguard( $assemblageid );
 		return $assemblageid;
 	}
 
@@ -171,22 +171,22 @@ class zgGamesetup
 	 *
 	 * @return boolean
 	 */
-	public function addComponentToAssemblage($component, $assemblage)
+	public function addComponentToAssemblage( $component, $assemblage )
 	{
-		$this->debug->guard();
+		$this->debug->guard( );
 
 		$sql = "INSERT INTO game_assemblage_components(assemblagecomponent_component, assemblagecomponent_assemblage) ";
 		$sql .= "VALUES('" . $component . "', '" . $assemblage . "')";
-		$res = $this->database->query($sql);
-		if (!$res)
+		$res = $this->database->query( $sql );
+		if ( !$res )
 		{
-			$this->debug->write('Problem adding a new component to an assemblage: could not insert data into database', 'warning');
-			$this->messages->setMessage('Problem adding a new component to an assemblage: could not insert data into database', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Problem adding a new component to an assemblage: could not insert data into database', 'warning' );
+			$this->messages->setMessage( 'Problem adding a new component to an assemblage: could not insert data into database', 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
 
-		$this->debug->unguard(true);
+		$this->debug->unguard( true );
 		return true;
 	}
 
@@ -199,26 +199,25 @@ class zgGamesetup
 	 *
 	 * @return boolean
 	 */
-	public function removeComponentFromAssemblage($component, $assemblage)
+	public function removeComponentFromAssemblage( $component, $assemblage )
 	{
-		$this->debug->guard();
+		$this->debug->guard( );
 
 		$sql = "DELETE FROM game_assemblage_components WHERE ";
 		$sql .= "assemblagecomponent_component='" . $component . "' AND ";
 		$sql .= "assemblagecomponent_assemblage='" . $assemblage . "'";
-		$res = $this->database->query($sql);
-		if (!$res)
+		$res = $this->database->query( $sql );
+		if ( !$res )
 		{
-			$this->debug->write('Problem removing a component from an assemblage: could not delete component data', 'warning');
-			$this->messages->setMessage('Problem removing a component from an assemblage: could not delete component data', 'warning');
-			$this->debug->unguard(false);
+			$this->debug->write( 'Problem removing a component from an assemblage: could not delete component data', 'warning' );
+			$this->messages->setMessage( 'Problem removing a component from an assemblage: could not delete component data', 'warning' );
+			$this->debug->unguard( false );
 			return false;
 		}
-		
-		$this->debug->unguard(true);
+
+		$this->debug->unguard( true );
 		return true;
 	}
-
 }
 
 ?>

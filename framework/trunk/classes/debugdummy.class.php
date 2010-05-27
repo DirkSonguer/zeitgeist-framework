@@ -4,7 +4,7 @@
  * http://www.zeitgeist-framework.com
  *
  * Debug class
- * 
+ *
  * If debugging is deactivated, this dummy is used instead of the real
  * class to save ressources
  *
@@ -15,7 +15,7 @@
  * @subpackage ZEITGEIST DEBUG
  */
 
-defined( 'ZEITGEIST_ACTIVE' ) or die();
+defined( 'ZEITGEIST_ACTIVE' ) or die( );
 
 /**
  * NOTE: This class is a singleton.
@@ -24,7 +24,6 @@ defined( 'ZEITGEIST_ACTIVE' ) or die();
 class zgDebug
 {
 	private static $instance = false;
-	
 	public $showInnerLoops; // Set this to true to show inner loops in the guard-output
 
 
@@ -33,7 +32,7 @@ class zgDebug
 	 *
 	 * The constructor is set to private to prevent files from calling the class as a class instead of a singleton.
 	 */
-	protected function __construct()
+	protected function __construct( )
 	{
 	}
 
@@ -43,13 +42,13 @@ class zgDebug
 	 *
 	 * @return zgDebug
 	 */
-	public static function init()
+	public static function init( )
 	{
-		if( self::$instance === false )
+		if ( self::$instance === false )
 		{
-			self::$instance = new zgDebug();
+			self::$instance = new zgDebug( );
 		}
-		
+
 		return self::$instance;
 	}
 
@@ -60,7 +59,7 @@ class zgDebug
 	 * @param string $message debug message to print
 	 * @param integer $level level of the message. 0 = important,.. , 3 = unimportant
 	 */
-	public function write($message, $type = 'message')
+	public function write( $message, $type = 'message' )
 	{
 	}
 
@@ -68,7 +67,7 @@ class zgDebug
 	/**
 	 * Starts the timer for the sql execution timer
 	 */
-	public function beginSQLStatement()
+	public function beginSQLStatement( )
 	{
 	}
 
@@ -79,7 +78,7 @@ class zgDebug
 	 * @param string $query original query
 	 * @param resource $result result
 	 */
-	public function storeSQLStatement($query, $result)
+	public function storeSQLStatement( $query, $result )
 	{
 	}
 
@@ -98,7 +97,7 @@ class zgDebug
 	 *
 	 * @param boolean $innerLoop set true if the calling function is an inner loop
 	 */
-	public function guard($innerLoop = false)
+	public function guard( $innerLoop = false )
 	{
 	}
 
@@ -109,7 +108,7 @@ class zgDebug
 	 *
 	 * @param variant $returnValue the return value of the guarded function (if it has one)
 	 */
-	public function unguard($returnValue)
+	public function unguard( $returnValue )
 	{
 	}
 
@@ -117,7 +116,7 @@ class zgDebug
 	/**
 	 * Shows somemisc information
 	 */
-	public function showMiscInformation()
+	public function showMiscInformation( )
 	{
 	}
 
@@ -125,7 +124,7 @@ class zgDebug
 	/**
 	 * Shows all the debug messages as a table
 	 */
-	public function showDebugMessages()
+	public function showDebugMessages( )
 	{
 	}
 
@@ -133,7 +132,7 @@ class zgDebug
 	/**
 	 * Shows all the query messages as a table
 	 */
-	public function showQueryMessages()
+	public function showQueryMessages( )
 	{
 	}
 
@@ -141,7 +140,7 @@ class zgDebug
 	/**
 	 * Shows all the guard messages as a table
 	 */
-	public function showGuardMessages()
+	public function showGuardMessages( )
 	{
 	}
 
@@ -153,7 +152,7 @@ class zgDebug
 	 *
 	 * @return boolean
 	 */
-	public function loadStylesheet($stylesheet)
+	public function loadStylesheet( $stylesheet )
 	{
 	}
 
@@ -165,7 +164,7 @@ class zgDebug
 	 *
 	 * @return boolean
 	 */
-	public function saveToFile($filename)
+	public function saveToFile( $filename )
 	{
 	}
 
@@ -175,9 +174,9 @@ class zgDebug
 	 *
 	 * @return integer
 	 */
-	protected function _getExecutionTime()
+	protected function _getExecutionTime( )
 	{
 	}
-
 }
+
 ?>

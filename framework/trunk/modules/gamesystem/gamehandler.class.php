@@ -4,7 +4,7 @@
  * http://www.zeitgeist-framework.com
  *
  * Gamehandler class
- * 
+ *
  * An event handler for games that manages incoming events and executes
  * associated game actions
  *
@@ -15,7 +15,7 @@
  * @subpackage ZEITGEIST GAMESYSTEM
  */
 
-defined( 'ZEITGEIST_ACTIVE' ) or die();
+defined( 'ZEITGEIST_ACTIVE' ) or die( );
 
 class zgGamehandler
 {
@@ -28,14 +28,14 @@ class zgGamehandler
 	/**
 	 * Class constructor
 	 */
-	public function __construct()
+	public function __construct( )
 	{
-		$this->debug = zgDebug::init();
-		$this->messages = zgMessages::init();
-		$this->configuration = zgConfiguration::init();
-		
-		$this->database = new zgDatabase();
-		$this->database->connect();
+		$this->debug = zgDebug::init( );
+		$this->messages = zgMessages::init( );
+		$this->configuration = zgConfiguration::init( );
+
+		$this->database = new zgDatabase( );
+		$this->database->connect( );
 	}
 
 
@@ -53,21 +53,21 @@ class zgGamehandler
 	 *
 	 * @return boolean
 	 */
-	public function saveGameevent($action, $parameter, $time, $player = 0, $game = 0)
+	public function saveGameevent( $action, $parameter, $time, $player = 0, $game = 0 )
 	{
-		$this->debug->guard();
-		
+		$this->debug->guard( );
+
 		$sql = "INSERT INTO game_events(event_action, event_parameter, event_player, event_time, event_game) ";
 		$sql .= "VALUES('" . $action . "', '" . $parameter . "', '" . $player . "', '" . $time . "', '" . $game . "')";
 		$res = $this->database->query( $sql );
-		if( ! $res )
+		if ( !$res )
 		{
 			$this->debug->write( 'Could save game event: could not write data into database', 'warning' );
 			$this->messages->setMessage( 'Could save game event: could not write data into database', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
-		
+
 		$this->debug->unguard( true );
 		return true;
 	}
@@ -84,34 +84,34 @@ class zgGamehandler
 	 * @param integer $time the current time
 	 * @param integer $player id of the player to execute events for
 	 * @param integer $game id of the game / shard
-	 * 
+	 *
 	 * @return boolean
 	 */
-	public function handleGameevents($time, $player = 0, $game = 0)
+	public function handleGameevents( $time, $player = 0, $game = 0 )
 	{
-		$this->debug->guard();
-		
+		$this->debug->guard( );
+
 		// get the events for the given timeframe
 		$gameevents = $this->getGameevents( $time, $player, $game );
-		
+
 		// execute event data
-		foreach( $gameevents as $event )
+		foreach ( $gameevents as $event )
 		{
-			//check if the event exists and what function to call				
-			if( (empty( $event ['action_class'] )) || (! class_exists( $event ['action_class'], true )) )
+			//check if the event exists and what function to call
+			if ( ( empty( $event ['action_class'] ) ) || ( !class_exists( $event ['action_class'], true ) ) )
 			{
 				$this->debug->write( 'Could not handle game event: event class was not found: ' . $event ['action_class'], 'warning' );
 				$this->messages->setMessage( 'Could not handle game event: event class was not found: ' . $event ['action_class'], 'warning' );
 				$this->debug->unguard( false );
 				return false;
 			}
-			
+
 			// load the module class through the autoloader
-			$eventClass = new $event ['action_class']();
-			
-			call_user_func( array (&$eventClass, 'execute' ), $event, $time );
+			$eventClass = new $event ['action_class']( );
+
+			call_user_func( array(&$eventClass, 'execute'), $event, $time );
 		}
-		
+
 		$this->debug->unguard( true );
 		return true;
 	}
@@ -128,46 +128,46 @@ class zgGamehandler
 	 * @param integer $time the current time
 	 * @param integer $player id of the player to execute events for
 	 * @param integer $game id of the game / shard
-	 * 
+	 *
 	 * @return array
 	 */
-	public function getGameevents($time, $player = 0, $game = 0)
+	public function getGameevents( $time, $player = 0, $game = 0 )
 	{
-		$this->debug->guard();
-		
+		$this->debug->guard( );
+
 		// get all events for the active player and the current round
 		$sql = "SELECT ge.event_id, ge.event_action, ga.action_class, ge.event_parameter FROM game_events ge ";
 		$sql .= "LEFT JOIN game_actions ga ON ge.event_action = ga.action_id ";
 		$sql .= "WHERE ge.event_time <= '" . $time . "'";
-		
-		if( $game > 0 )
+
+		if ( $game > 0 )
 		{
 			$sql .= " AND ge.event_game='" . $game . "'";
 		}
-		
-		if( $player > 0 )
+
+		if ( $player > 0 )
 		{
 			$sql .= " AND ge.event_player='" . $player . "'";
 		}
-		
+
 		$sql .= " ORDER BY ge.event_time ASC";
-		
+
 		$res = $this->database->query( $sql );
-		if( ! $res )
+		if ( !$res )
 		{
 			$this->debug->write( 'Could not get game events: could not load events from the database', 'warning' );
 			$this->messages->setMessage( 'Could not get game events: could not load events from the database', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
-		
+
 		// collect events
-		$gameevents = array ();
-		while( ($event = $this->database->fetchArray( $res )) !== false )
+		$gameevents = array();
+		while ( ( $event = $this->database->fetchArray( $res ) ) !== false )
 		{
 			$gameevents [] = $event;
 		}
-		
+
 		$this->debug->unguard( $gameevents );
 		return $gameevents;
 	}
@@ -185,44 +185,44 @@ class zgGamehandler
 	 * @param integer $time the current time
 	 * @param integer $player id of the player to store events for
 	 * @param integer $game id of the game / shard
-	 * 
+	 *
 	 * @return boolean
 	 */
-	public function logGameevents($time, $player = 0, $game = 0)
+	public function logGameevents( $time, $player = 0, $game = 0 )
 	{
-		$this->debug->guard();
-		
+		$this->debug->guard( );
+
 		$sql = "INSERT INTO game_eventlog(eventlog_game, eventlog_action, eventlog_parameter, eventlog_player, eventlog_time) ";
 		$sql .= "SELECT event_game, event_action, event_parameter, event_player, event_time FROM game_events ";
 		$sql .= "WHERE event_time <= '" . $time . "'";
-		
-		if( $game > 0 )
+
+		if ( $game > 0 )
 		{
 			$sql .= " AND event_game='" . $game . "'";
 		}
-		
-		if( $player > 0 )
+
+		if ( $player > 0 )
 		{
 			$sql .= " AND event_player='" . $player . "'";
 		}
-		
+
 		$res = $this->database->query( $sql );
-		if( ! $res )
+		if ( !$res )
 		{
 			$this->debug->write( 'Could not store game event to log: could not insert event data into database', 'warning' );
 			$this->messages->setMessage( 'Could not store game event to log: could not insert event data into database', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
-		
-		if( ! $this->removeGameevents( $time, $player, $game ) )
+
+		if ( !$this->removeGameevents( $time, $player, $game ) )
 		{
 			$this->debug->write( 'Could not store game event to log: could not delete event data from event table', 'warning' );
 			$this->messages->setMessage( 'Could not store game event to log: could not delete event data from event table', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
-		
+
 		$this->debug->unguard( true );
 		return true;
 	}
@@ -239,39 +239,38 @@ class zgGamehandler
 	 * @param integer $time the current time
 	 * @param integer $player id of the player to execute events for
 	 * @param integer $game id of the game / shard
-	 * 
+	 *
 	 * @return boolean
 	 */
-	public function removeGameevents($time, $player = 0, $game = 0)
+	public function removeGameevents( $time, $player = 0, $game = 0 )
 	{
-		$this->debug->guard();
-		
+		$this->debug->guard( );
+
 		$sql = "DELETE FROM game_events ";
 		$sql .= "WHERE event_time <= '" . $time . "'";
-		
-		if( $game > 0 )
+
+		if ( $game > 0 )
 		{
 			$sql .= " AND event_game='" . $game . "'";
 		}
-		
-		if( $player > 0 )
+
+		if ( $player > 0 )
 		{
 			$sql .= " AND event_player='" . $player . "'";
 		}
-		
+
 		$res = $this->database->query( $sql );
-		if( ! $res )
+		if ( !$res )
 		{
 			$this->debug->write( 'Could remove game event: could not remove data from database', 'warning' );
 			$this->messages->setMessage( 'Could remove game event: could not remove data from database', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
-		
+
 		$this->debug->unguard( true );
 		return true;
 	}
-
 }
 
 ?>

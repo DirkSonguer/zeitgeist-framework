@@ -8,7 +8,6 @@ require_once 'PHPUnit/Framework/TestCase.php';
  */
 class zgLocalisationTest extends PHPUnit_Framework_TestCase
 {
-	
 	/**
 	 * @var zgLocalisation
 	 */
@@ -18,27 +17,27 @@ class zgLocalisationTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Prepares the environment before running a test.
 	 */
-	protected function setUp()
+	protected function setUp( )
 	{
-		parent::setUp();
-		$this->zgLocalisation = new zgLocalisation(/* parameters */);
+		parent::setUp( );
+		$this->zgLocalisation = new zgLocalisation( /* parameters */ );
 	}
 
 
 	/**
 	 * Cleans up the environment after running a test.
 	 */
-	protected function tearDown()
+	protected function tearDown( )
 	{
 		$this->zgLocalisation = null;
-		parent::tearDown();
+		parent::tearDown( );
 	}
 
 
 	/**
 	 * Constructs the test case.
 	 */
-	public function __construct()
+	public function __construct( )
 	{
 		// TODO Auto-generated constructor
 	}
@@ -47,107 +46,105 @@ class zgLocalisationTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests zgLocalisation->__construct()
 	 */
-	public function test__construct()
+	public function test__construct( )
 	{
 		// TODO Auto-generated zgLocalisationTest->test__construct()
 		$this->markTestIncomplete( "__construct test not implemented" );
-		
-		$this->zgLocalisation->__construct(/* parameters */);
-	
+
+		$this->zgLocalisation->__construct( /* parameters */ );
 	}
 
 
 	/**
 	 * Tests zgLocalisation->loadLocale()
 	 */
-	public function testLoadLocale_InvalidLocale()
+	public function testLoadLocale_InvalidLocale( )
 	{
-		$this->setUp();
-		
+		$this->setUp( );
+
 		$ret = $this->zgLocalisation->loadLocale( 'testlocale', 'false' );
 		$this->assertFalse( $ret );
-		
-		$this->tearDown();
+
+		$this->tearDown( );
 	}
 
 
 	/**
 	 * Tests zgLocalisation->loadLocale()
 	 */
-	public function testLoadLocale_Success()
+	public function testLoadLocale_Success( )
 	{
-		$this->setUp();
-		
-		$randomid = uniqid();
+		$this->setUp( );
+
+		$randomid = uniqid( );
 		$ret = $this->zgLocalisation->loadLocale( $randomid, ZG_TESTDATA_DIR . 'testlocale.ini' );
 		$this->assertTrue( $ret );
-		
-		$this->tearDown();
+
+		$this->tearDown( );
 	}
 
 
 	/**
 	 * Tests zgLocalisation->setLocale()
 	 */
-	public function testSetLocale_Invalid()
+	public function testSetLocale_Invalid( )
 	{
-		$this->setUp();
-		
-		$randomid = uniqid();
+		$this->setUp( );
+
+		$randomid = uniqid( );
 		$this->zgLocalisation->loadLocale( $randomid, ZG_TESTDATA_DIR . 'testlocale.ini' );
 		$ret = $this->zgLocalisation->setLocale( 'false' );
 		$this->assertFalse( $ret );
-		
-		$this->tearDown();
+
+		$this->tearDown( );
 	}
 
 
 	/**
 	 * Tests zgLocalisation->setLocale()
 	 */
-	public function testSetLocale_Success()
+	public function testSetLocale_Success( )
 	{
-		$this->setUp();
-		
-		$randomid = uniqid();
+		$this->setUp( );
+
+		$randomid = uniqid( );
 		$this->zgLocalisation->loadLocale( $randomid, ZG_TESTDATA_DIR . 'testlocale.ini' );
 		$ret = $this->zgLocalisation->setLocale( $randomid );
 		$this->assertTrue( $ret );
-		
-		$this->tearDown();
+
+		$this->tearDown( );
 	}
 
 
 	/**
 	 * Tests zgLocalisation->write()
 	 */
-	public function testWrite_NoLocale()
+	public function testWrite_NoLocale( )
 	{
-		$this->setUp();
-		
-		$randomid = uniqid();
+		$this->setUp( );
+
+		$randomid = uniqid( );
 		$this->zgLocalisation->loadLocale( $randomid, ZG_TESTDATA_DIR . 'testlocale.ini' );
 		$ret = $this->zgLocalisation->write( 'hello world' );
 		$this->assertEquals( $ret, 'hello world' );
-		
-		$this->tearDown();
+
+		$this->tearDown( );
 	}
 
 
 	/**
 	 * Tests zgLocalisation->write()
 	 */
-	public function testWrite_Success()
+	public function testWrite_Success( )
 	{
-		$this->setUp();
-		
+		$this->setUp( );
+
 		$this->zgLocalisation->loadLocale( 'testlocale', ZG_TESTDATA_DIR . 'testlocale.ini' );
 		$this->zgLocalisation->setLocale( 'testlocale' );
 		$ret = $this->zgLocalisation->write( 'this is a test' );
 		$this->assertEquals( $ret, 'das ist ein test' );
-		
-		$this->tearDown();
-	}
 
+		$this->tearDown( );
+	}
 }
 

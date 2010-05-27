@@ -2,26 +2,24 @@
 
 class testMessages extends UnitTestCase
 {
-
-	function test_init()
+	function test_init( )
 	{
-		$message = zgMessages::init();
-		$this->assertNotNull($message);
-		unset($message);
-    }
+		$message = zgMessages::init( );
+		$this->assertNotNull( $message );
+		unset( $message );
+	}
 
 
 	// Try saving the messages to database
-	function test_saveMessagesToSession()
+	function test_saveMessagesToSession( )
 	{
-		$messages = zgMessages::init();
-		$ret = $messages->setMessage('cache testing', 'cachetest');
-		
-		$messages->saveMessagesToSession();
+		$messages = zgMessages::init( );
+		$ret = $messages->setMessage( 'cache testing', 'cachetest' );
 
-		unset($messages);
+		$messages->saveMessagesToSession( );
+
+		unset( $messages );
 	}
-
 }
 
 ?>
