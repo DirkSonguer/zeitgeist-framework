@@ -64,7 +64,7 @@ class zgSession
 	/**
 	 * Initialize the singleton
 	 *
-	 * @return object
+	 * @return zgSession
 	 */
 	public static function init( )
 	{
