@@ -211,7 +211,7 @@ class zgDebug
 	 * Ends guarding a function
 	 * In Zeitgeist (and its applications), every function should guard/ unguard itself to get a complete image of the construction of a page.
 	 *
-	 * @param variant $returnValue the return value of the guarded function (if it has one)
+	 * @param variant|bool $returnValue the return value of the guarded function (if it has one)
 	 */
 	public function unguard( $returnValue )
 	{

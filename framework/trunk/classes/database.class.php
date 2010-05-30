@@ -205,7 +205,7 @@ class zgDatabase
 	 * Fetches a row from the sql result
 	 * Standard type is MYSQL_ASSOC, so an associative array is returned
 	 *
-	 * @param result $result resource id of the query
+	 * @param resource $result resource id of the query
 	 * @param string $type type of array to be fetched
 	 *
 	 * @return array
@@ -233,7 +233,7 @@ class zgDatabase
 	/**
 	 * Returns the number of rows for a resource
 	 *
-	 * @param result $result resource id of the query
+	 * @param resource $result resource id of the query
 	 *
 	 * @return integer
 	 */
