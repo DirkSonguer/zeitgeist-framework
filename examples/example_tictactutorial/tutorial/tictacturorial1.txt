@@ -56,15 +56,17 @@ By this point you should have the following components running on your developme
 
 After that, the first thing you'll need is the [http://code.google.com/p/zeitgeist-framework/source/browse/#svn/examples/zeitgeist_example-project Zeitgeist Example Project]. This is basically an empty project that provides the right file and directory structure for a new project as well as a default database.
 
-Use your SVN client to check out the current version: "svn checkout http://zeitgeist-framework.googlecode.com/svn/examples/zeitgeist_example-project". Put it into a directory somewhere on your webservers document root. The versions in the [http://code.google.com/p/zeitgeist-framework/downloads/list Download section] will work as well, but SVN checkouts are preferred.
+Use your SVN client to check out the current version: "svn checkout http://zeitgeist-framework.googlecode.com/svn/examples/zeitgeist_example-project". Put the files into the directory _"tictactutorial"_. However this name is just a convention for the ongoing tutorial, you may of course put the files into any directory somewhere on your webservers document root. The versions in the [http://code.google.com/p/zeitgeist-framework/downloads/list Download section] will work as well, but SVN checkouts are preferred.
 
 === Checkout Zeitgeist Framework ===
 
 While the example project contains the typical file and directory structures it does not contain the framework itself.
 
-Use your SVN client to check out the current version of the framework files: "svn checkout http://zeitgeist-framework.googlecode.com/svn/framework/trunk". Make sure you use the trink version. Put it into the same directory as the example project into a fodler named _"zeitgeist"_. The versions in the [http://code.google.com/p/zeitgeist-framework/downloads/list Download section] will work as well, but SVN checkouts are preferred.
+Use your SVN client to check out the current version of the framework files: "svn checkout http://zeitgeist-framework.googlecode.com/svn/framework/trunk". Make sure you use the trink version. Put it into the same directory as the example project into a folder named _"tictactutorial/zeitgeist"_. The versions in the [http://code.google.com/p/zeitgeist-framework/downloads/list Download section] will work as well, but SVN checkouts are preferred.
 
 === Import Project Database ===
 
-You will find the initial database import in /_additional_material/zeitgeist_project.sql. Import this into a database.
+You will find the initial database import in _"tictactutorial/_additional_material/zeitgeist_project.sql"_. Import this into a new database called _"tictactutorial"_.
+
+=== Configure your project ===
 
