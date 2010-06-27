@@ -1,38 +1,75 @@
 #summary Tutorial - How to create a simple PBBG, part 1
 #labels Phase-Implementation,Tutorial
-
 = Part 1 - Introduction =
 
 This tutorial is about creating a working persistent browser based game with the Zeitgeist Framework. To keep it simple, we're just doing a simple Tic Tac Toe game. However we will use a much Zeitgeist specific functionalities as possible to show how they work.
 
 If you have specific questions about the tutorial, please mail us or open an [http://code.google.com/p/zeitgeist-framework/issues/list issue].
 
-== The Game ==
 
-The game will be a working implementation of [http://en.wikipedia.org/wiki/Tic-tac-toe Tic Tac Toe] where two players play against each other. The game has the following properties:
+== The Goal ==
+
+In this tutorial, we want to create a game, based on the Zeitgeist Framework. The game will be a working implementation of [http://en.wikipedia.org/wiki/Tic-tac-toe Tic Tac Toe] where two players play against each other. The game should have the following properties:
 
  * The game will only feature player against player, no AI
+ * A player has to have an account to play
  * A player has to be logged in to play
- * A player has an account that counts wins, losses and ties
- * Each win earns the player points
- * The player clicks "play". This will either open a new game or match him to a already open game.
+ * Wins, losses and ties will be stored for each account
+ * Each win earns the player points, which will also be stored for each account
+ * The game will use a simple matchmaking pattern: The game will either open a new game or match a player to an already open game
  * A player can only play one game at a time
  * A game ends if a player wins, the game is tied or one player forfeits
 
-== Setup ==
-
-=== Basics ===
-
-To develop something like a PBBG, it's always a good idea to have a local development environment. For a Zeitgeist based game, this would include a webserver, PHP5 and MySQL5. 
-
-If you don't have this already running on your machine, [http://www.apachefriends.org/en/xampp.html XAMPP] will help you set all this up on your Windows / Mac / Linux machine.
+As said, the game will use the Zeitgeist Framework. The game specific implementation will use the [http://code.google.com/p/zeitgeist-framework/source/browse/#svn/framework/trunk/modules/gamesystem gamesystem module].
 
 
+== Basic Setup ==
 
- * Some *SVN client* to get the current versions of the framework and example project
+To develop something like a PBBG, it's always a good idea to have a local development environment. This will enable you to develop and test locally instead of testing on an external webserver. For a Zeitgeist based project, this would include a webserver (Apache, IIS, ..), PHP5 and MySQL5. If you don't have these already running on your machine, [http://www.apachefriends.org/en/xampp.html XAMPP] will help you set all this up on your Windows / Mac / Linux machine. For installation, please refer to the XAMPP website.
 
-[http://tortoisesvn.tigris.org/ Tortoise SVN] for example is a simple SVN client for Windows. The versions in the [http://code.google.com/p/zeitgeist-framework/downloads/list Download section] will work as well, but SVN checkouts are preferred.
+After setting up your servers, you will need some kind of client to access your database with. If you choose XAMPP you'll already have the phpMyAdmin installed and ready to use (try calling your localhost in your browser and look for it). Otherwise I'd recommend [http://www.phpmyadmin.net/home_page/index.php downloading it] or use something like the MySQL Gui Tools.
 
-== Setup ==
+You should also use some kind of versioning. It makes development a lot easier and safer and you will also be able to use the current versions of the framework and example project instead of the download versions.
+
+As versioning tool we would recommend [http://subversion.apache.org/ Apache SVN]. Also, there are tools for a lot of systems. [http://tortoisesvn.tigris.org/ Tortoise SVN] for example is a simple SVN client for Windows that provides a very simple interface and is easy to set up.
+
+Also, you need some kind of editor or IDE to write the actual code in. There are many IDE specialized on PHP development, but the choice of an IDE is a pretty subjective one. Here is a list of the better known IDEs for PHP development:
+
+ * Zend Studio
+ * Eclipse PDT
+ * Netbeans
+ * PHPStorm
+
+However you can use pretty much everything you want, even a simple notepad will do.
 
 
+== Project Setup ==
+
+By this point you should have the following components running on your development machine:
+
+ * Some webserver
+ * PHP5
+ * MySQL5
+ * Some SVN client
+ * Some kind of editor / IDE
+
+=== Checkout Example Project ===
+
+After that, the first thing you'll need is the [http://code.google.com/p/zeitgeist-framework/source/browse/#svn/examples/zeitgeist_example-project Zeitgeist Example Project]. This is basically an empty project that provides the right file and directory structure for a new project as well as a default database.
+
+Use your SVN client to check out the current version: "svn checkout http://zeitgeist-framework.googlecode.com/svn/examples/zeitgeist_example-project". Put the files into the directory _"tictactutorial"_. However this name is just a convention for the ongoing tutorial, you may of course put the files into any directory somewhere on your webservers document root. The versions in the [http://code.google.com/p/zeitgeist-framework/downloads/list Download section] will work as well, but SVN checkouts are preferred.
+
+=== Checkout Zeitgeist Framework ===
+
+While the example project contains the typical file and directory structures it does not contain the framework itself.
+
+Use your SVN client to check out the current version of the framework files: "svn checkout http://zeitgeist-framework.googlecode.com/svn/framework/trunk". Make sure you use the trink version. Put it into the same directory as the example project into a folder named _"tictactutorial/zeitgeist"_. The versions in the [http://code.google.com/p/zeitgeist-framework/downloads/list Download section] will work as well, but SVN checkouts are preferred.
+
+=== Import Project Database ===
+
+You will find the initial database import in _"tictactutorial/-additional-material/zeitgeist-project.sql"_. Import this into a new database called _"tictactutorial"_.
+
+
+== Next up: starting the development ==
+
+That's it for the setup process. Unfortunately you can't see anything at the moment as the whole project needs to be configured first. We'll cover that in the next part of the tutorial.
