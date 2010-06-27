@@ -63,7 +63,7 @@ Use your SVN client to check out the current version: "svn checkout http://zeitg
 
 While the example project contains the typical file and directory structures it does not contain the framework itself.
 
-Use your SVN client to check out the current version of the framework files: "svn checkout http://zeitgeist-framework.googlecode.com/svn/framework/trunk". Make sure you use the trink version. Put it into the same directory as the example project into a folder named _"tictactutorial/zeitgeist"_. The versions in the [http://code.google.com/p/zeitgeist-framework/downloads/list Download section] will work as well, but SVN checkouts are preferred.
+Use your SVN client to check out the current version of the framework files: "svn checkout http://zeitgeist-framework.googlecode.com/svn/framework/trunk". Make sure you use the trunk version. Put it into the same directory as the example project into a folder named _"tictactutorial/zeitgeist"_. The versions in the [http://code.google.com/p/zeitgeist-framework/downloads/list Download section] will work as well, but SVN checkouts are preferred.
 
 === Import Project Database ===
 
