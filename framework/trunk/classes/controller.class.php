@@ -217,7 +217,7 @@ class zgController
 		// check if module is installed and get module data
 		if ( !$moduleData = $this->_getModuleData( $module ) )
 		{
-			$this->debug->write( 'Error loading the module: Module is not found/ installed :' . $module, 'error' );
+			$this->debug->write( 'Error loading the module: Module is not found/ installed: ' . $module, 'error' );
 			$this->messages->setMessage( 'Error loading the module: Module is not found/ installed: ' . $module, 'error' );
 			$this->debug->unguard( false );
 			return false;
