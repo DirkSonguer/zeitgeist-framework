@@ -16,7 +16,7 @@
 	// set define for application
     // this define should be checked by every php file that
     // is executed afterwards
-	define('APPLICATION_ACTIVE', true);
+	define('TICTACTUTORIAL_ACTIVE', true);
 
 	// activate debugging with this line
     // to deactivate, simply comment it out
