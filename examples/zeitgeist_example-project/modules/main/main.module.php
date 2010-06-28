@@ -28,6 +28,8 @@ class main
 	{
 		$this->debug->guard();
 
+        echo "Hello, World!";
+
 		$this->debug->unguard(true);
 		return true;
 	}
