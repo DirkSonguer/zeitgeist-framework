@@ -1,0 +1,239 @@
+#summary Tutorial - How to create a simple PBBG, part 2
+#labels Phase-Implementation,Tutorial
+= Part 2 - Basic Setup =
+
+This tutorial is about creating a working persistent browser based game with the Zeitgeist Framework. To keep it simple, we're just doing a simple Tic Tac Toe game. However we will use a much Zeitgeist specific functionalities as possible to show how they work.
+
+If you have specific questions about the tutorial, please mail us or open an [http://code.google.com/p/zeitgeist-framework/issues/list issue].
+
+
+== The Goal ==
+
+The goal of this part is to set up and configure the project so that we have a working application pipeline (this does not mean a game pipeline, just a working project).
+
+== Setting up the Database ==
+
+You will find the initial database import in _"tictactutorial/zeitgeist/-additional-material/zeitgeist.sql"_. Import this into a new database called _"tictactutorial"_.
+
+This is a reference database that contains the tables for the framework as well as all the modules. Your database should now contain the following tables:
+
+{{{
+ * actionlog
+ * actionlog_parameters
+ * actions
+ * configurationcache
+ * game_actions
+ * game_assemblages
+ * game_assemblage_components
+ * game_components
+ * game_entities
+ * game_entity_components
+ * game_eventlog
+ * game_events
+ * modules
+ * sessiondata
+ * templatecache
+ * userconfirmation
+ * userdata
+ * userrights
+ * userroles
+ * userroles_to_actions
+ * userroles_to_users
+ * users
+}}}
+
+All tables should initially be empty. As for their purpose: we will go into each table during this tutorial, so please be patient.
+
+== Project Setup ==
+
+Open the "index.php" that should be located in your root. This is the main file that will be executed with every request a user makes. Let's take it apart from the top.
+
+At first you'll see the phpDoc description of the file, describing the project. As it is not project relevant you may keep it as it is, but it might be advisable to change this to something reasonable.
+
+Below you'll find the definition of a variable:
+
+{{{
+	// set define for application
+	// this define should be checked by every php file that
+	// is executed afterwards
+	define('APPLICATION_ACTIVE', true);
+}}}
+
+One way of securing individual PHP code fies from being called directly is [http://www.php.net/manual/de/security.php#57851 defining a project variable] at the beginning of your pipeline. Every subsequent file should check for this variable and abort if it's not found.
+
+You can either leave it or change it to something more fitting, like _"TICTACTUTORIAL_ACTIVE"_ but make sure you use it consitently with every other file you use.
+
+{{{
+	// activate debugging with this line
+	// to deactivate, simply comment it out
+	define('DEBUGMODE', true);
+}}}
+
+Below, the debug mode is defined. If DEBUGMODE is defined (the value does not matter), the debug pipeline is used. For more information see [http://code.google.com/p/zeitgeist-framework/wiki/ClassDebug ClassDebug].
+
+{{{
+	// require basic configuration
+	// this provides application specific configuration data
+	// this will not be handled by the configuration class
+	// so use this file only to define data you can't define
+	// in the application itself (e.g. database access etc.)
+	require_once('configuration/application.configuration.php');
+}}}
+
+This requires the basic project configuration file. Note that this is a PHP file, so you can place any code in there. Note that it should be only used for configuration that has to be defined before the framework loads. All other data should be handled by the framework itself through the configuration class.
+
+About the only data that need to be defined before the framework can be loaded is the database configuration. Open the configuration file (_"tictactutorial/configuration/application.configuration.php"_) and change the database credentials to match your local database installation.
+
+Next in the index.php file is the defintion of some basic Zeitgeist variables:
+
+{{{
+	// define zeitgeist specific path values
+	// if you located your zeitgeist directory somewhere else (not in the root of your
+	// application) change this directory to it's location
+	if (!defined('ZEITGEIST_ROOTDIRECTORY')) define('ZEITGEIST_ROOTDIRECTORY', './zeitgeist/');
+	if (!defined('APPLICATION_ROOTDIRECTORY')) define('APPLICATION_ROOTDIRECTORY', './');
+}}}
+
+This just defines where the framework is located relative to the index.php. You can change this to whereever you located the files.
+
+Next, we'll include the framework itself:
+
+{{{
+	// include framework
+	include(ZEITGEIST_ROOTDIRECTORY . 'zeitgeist.php');
+}}}
+
+This will load the framework with all the classes defined in the zeitgeist.php.
+
+After that some general purpose classes are defined. Note that all of them are [http://php.net/manual/en/language.oop5.patterns.php Singletons] which will be called for the first time here, hence their instance is created and their constructor is called.
+
+Next, we'll load the application configuration:
+
+{{{
+	// load application configuration
+	// this contains the application specific data and is
+	// handled by the configuration class
+	// all configuration data should be defined in there
+	$configuration->loadConfiguration('application', 'configuration/application.ini');
+}}}
+
+This uses the [http://code.google.com/p/zeitgeist-framework/wiki/ClassConfiguration configuration class] and loads the application specific data.
+
+Open the file (_"tictactutorial/configuration/application.ini"_) and take a look. The configuration class reads in standard .ini files and makes the values accessible. As for the application configuration, iz is defined in this block:
+
+{{{
+	[application]
+
+	basepath = http://127.0.0.1/zeitgeist_example-project/
+	templatepath = application_templates
+	versioninfo = Application Version
+}}}
+
+Note the basepath. As you have most likely used a different folder in your document root, change this to you configuration. Most likely it will be something like this:
+
+{{{
+	basepath = http://127.0.0.1/tictactutorial/
+}}}
+
+The templatepath points to the templates used in the /templates/ folder. We will come back to this later. For now, leave the rest of the configuration as it is.
+
+Next in the index.php is the start of the user handling:
+
+{{{
+	// pick up the session for the user
+	// this requires cookies to work
+	$user = zgUserhandler::init();
+	$user->establishUserSession();
+}}}
+
+establishUserSession will try to pick up an existing user session. For more information see [http://code.google.com/p/zeitgeist-framework/wiki/ClassUserhandler ClassUserhandler].
+
+Next, the module and action is defined from the input parameters. If none were given, the defaults are used.
+
+{{{
+	// get the module name to load
+	// the module name will be verified against existing values, so no escape needed
+	// if no module has been specified, load the main module
+	if (isset($_GET['module']))
+	{
+		$module = $_GET['module'];
+	}
+	else
+	{
+		$module = 'main';
+	}
+
+	// get the action to load
+	// the action name will be verified against existing values, so no escape needed
+	// if no action has been specified, load the index
+	if (isset($_GET['action']))
+	{
+		$action = $_GET['action'];
+	}
+	else
+	{
+		$action = 'index';
+	}
+}}}
+
+The modules and actions are used by the controller class which controls the flow of the application. It's basically a [http://en.wikipedia.org/wiki/Front_Controller_pattern front controller pattern] that acts as a central controller and routes the application to the right action (method) as well as doing all kinds of security and application related tasks in between.
+
+Next, the controller calls the given action in the given module:
+
+{{{
+	// call the controller with the defined module and action
+	// this executes the action method in the module class
+	$controller = new zgController();
+	$ret = $controller->callEvent($module, $action);
+}}}
+
+What the controller does is call a method (action) in a class (module). So if the default is used, the controller calls the method "index" in the class "main". All module classes are located in _"tictactutorial/modules"_ where each module has its own directory. The name of the directory matches the module name. For now let's check out the default module: _"tictactutorial/modules/main"_.
+
+The module directory always contains 2 files:
+
+ * The module class that contains the actual code for the module. Its name matches the module name, followed by _".module.php"_. Note that the module classes should start by checking for the application define.
+ * The module configuration that contains all the module specific configuration. Its name also matches the module name and is followed by _".ini"_. The configuration will be automatically loaded by the controller class.
+
+Looking at the main modules code (_"tictactutorial/modules/main/main.module.php"_) you'll see the default action as the only method:
+
+{{{
+	public function index($parameters=array())
+	{
+		$this->debug->guard();
+
+		echo "Hello, World!";
+
+		$this->debug->unguard(true);
+		return true;
+	}
+}}}
+
+(If you wonder about the guarding / unguarding, take a look at [http://code.google.com/p/zeitgeist-framework/wiki/ClassDebug ClassDebug].)
+
+So basically all the default action does is printing "Hello, World!". If you run the application in your browser (_"http://127.0.0.1/tictactutorial/"_) at this point however, you should only see the debug output. The last debug message (before the Querylog starts) should be *"Error loading the module: Module is not found/ installed: main"* displayed in dark red.
+
+The problem is that the controller does all kinds of security checking before it actually loads and executes the modules and actions. This is done so that only valid pieces of code can be called. (If you want to know more about the security checks, see [http://code.google.com/p/zeitgeist-framework/wiki/ClassController ClassController]. Also, I would advise you to check out the [http://code.google.com/p/zeitgeist-framework/source/browse/framework/trunk/classes/controller.class.php code].)
+
+The first thing we have to do is to register the default module. We do this by adding it to the module table in the database:
+
+{{{
+	INSERT INTO modules( module_id, module_name, module_description, module_active )
+	VALUES ( '1', 'main', 'The default module', '1' );
+}}}
+
+If you try to run your application now, you should see another error in the debug messages: *"Error loading the action (index) in module (main): Action is not installed for module"*. As you might have guessed, the actions need to be registered in the database much like the modules:
+
+{{{
+	INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright)
+	VALUES ('1', '1', 'index', 'The default action for the main module', '0');
+}}}
+
+Note that the field "action_module" has to match the ID that was assigned / given to your module you added earlier.
+
+If you run the application again you will see the output of the action: "Hello, World!".
+
+== Closing ==
+
+You should now have a running application. In the next part we will lay out our game architecture and start implementing ist.
+
+Please note that while we will continue adding modules, actions and other project related information directly into the database, there actually is a tool providing an interface for doing all this: [http://code.google.com/p/zeitgeist-framework/wiki/ZeitgeistAdministrator Zeitgeist Administrator]. Although a coder tool (thus a bit messy, unstable and undocumented), it will help you a great deal when developing Zeitgeist based applications. Take a look if you have some time.
