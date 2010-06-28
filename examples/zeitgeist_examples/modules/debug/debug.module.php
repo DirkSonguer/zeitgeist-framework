@@ -56,6 +56,11 @@ class debug
 			$debug->showQueryMessages();
 			$debug->showGuardMessages();
 		*/
+		// If you want to store the debug output to a file instead of showing
+		// it use this method:
+		/*
+			$debug->saveToFile('path_to_file/debug_file.html', 'debug.css');
+		*/
 
 		// All database calls through the db abstraction class will be logged
 		// automatically
