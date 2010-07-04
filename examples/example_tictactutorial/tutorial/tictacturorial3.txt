@@ -1,0 +1,105 @@
+#summary Tutorial - How to create a simple PBBG, part 3
+= Part 3 - Game Architecture =
+
+This tutorial is about creating a working persistent browser based game with the Zeitgeist Framework. To keep it simple, we're just doing a simple Tic Tac Toe game. However we will use a much Zeitgeist specific functionalities as possible to show how they work.
+
+If you have specific questions about the tutorial, please mail us or open an [http://code.google.com/p/zeitgeist-framework/issues/list issue].
+
+
+== The Goal ==
+
+The goal of this part is to specify how our game works from an architectural standpoint and what components and classes are needed to implement it.
+
+== Game Properties Reviewed ==
+
+In the first part we defined some properties for our game. Here they are again:
+
+ * The game will only feature player against player, no AI
+
+This means we don't have to worry about AI - it's only player interacting with the game.
+
+ * A player has to have an account to play
+ * A player has to be logged in to play
+
+The game needs some kind of user handling. A user has to be able to create an account, login, logout, edit and delete his account.
+
+ * Wins, losses and ties will be stored for each account
+ * Each win earns the player points, which will also be stored for each account
+
+The game needs some kind of mechanism to assess played games and to reward points accordingly. Also, the earned points have to be shown somewhere.
+
+ * The game will use a simple matchmaking pattern: The game will either open a new game or match a player to an already open game
+
+The game needs a simple lobby handling where a lobby is opened when a user wants to play a game but no lobby is already open. If a player wants to play and an open lobby already exists, he should join it and the game should start.
+
+ * A player can only play one game at a time
+
+This may be a simple test if the user is allowed to join a new game.
+
+ * A game ends if a player wins, the game is tied or one player forfeits
+
+The game has to test for its state while playing.
+
+== Game Components ==
+
+From these properties we can now derive the components our game needs. Before we do that, we'll take a look again at how the pipeline in a Zeitgeist project works.
+
+All calls go through the '''index.php'''. It is called with a module and action. Example: http://www.zeitgeistapplication.com/index.php?module=main&action=index
+
+From there the '''[ClassController controller]''' of Zeitgeist will route the call accordingly:
+
+ * The '''[ZeitgeistModules module]''' is the name of the class. In our example this would be "class main" in "/modules/main/main.php". It also loads the accordig configuration for the module.
+ * The '''[ZeitgeistActions action]''' is the name of the method inside the module class. In our example it would be "function index" in "/modules/main/main.php" that does all the magic
+
+So basically the modules are just containers for a number of actions. The concept behind this is that multiple actions that are locigally connected can be aggregated into one place.
+
+When we look at the properties of the game again, we'll notice that they can be grouped as follows:
+
+ * user handling
+ * lobby / matchmaking
+ * game itself
+
+Note that Zeitgeist actions only represent calls from outside of the application (from a user or an external system). So to determine the actions of a module, only actions that a user will call are relevant. All internal methods and classes should be handled as '''internal worker''' classes.
+
+So an external call goes like this:
+
+ * An action in a specific module is called
+ * The action calls methods in the worker classes to do the actual work
+
+However this is just a recommendation. Zeitgeist itself does not specify how you implement your project - you may just as well write everything directly into the actions. Then again, this would probably mean that you would repeat some logic at some point, so it pretty much depends on your own code style. For this tutorial, we'll use worker classes.
+
+Let's take a closer look at the modules:
+
+=== Module '''user''' ===
+
+The user module should take care of handling all actions related to the user and his account. As all relevant
+
+Actions of this module:
+
+ * login
+ * logout
+ * create
+ * edit
+ * delete
+
+=== Module '''lobby''' ===
+
+Actions of this module:
+
+ * startGame
+
+
+=== Module '''game''' ===
+
+Actions of this module:
+
+ * setMarker
+ * forfeit
+ * update
+
+
+== Closing ==
+
+You should now have a running application. In the next part we will lay out our game architecture and start implementing it.
+
+Please note that while we will continue adding modules, actions and other project related information directly into the database, there actually is a tool providing an interface for doing all this: [http://code.google.com/p/zeitgeist-framework/wiki/ZeitgeistAdministrator Zeitgeist Administrator]. Although a coder tool (thus a bit messy, unstable and undocumented), it will help you a great deal when developing Zeitgeist based applications. Take a look if you have some time.

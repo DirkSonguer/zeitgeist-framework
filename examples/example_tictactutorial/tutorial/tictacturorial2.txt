@@ -231,8 +231,10 @@ Note that the field "action_module" has to match the ID that was assigned / give
 
 If you run the application again you will see the output of the action: "Hello, World!".
 
+So for now, remember that the (simplyfied) pipeline is: index.php -> controller -> module -> action(). Actually it's a bit more complex than that, but we'll get there later. 
+
 == Closing ==
 
-You should now have a running application. In the next part we will lay out our game architecture and start implementing ist.
+You should now have a running application. In the next part we will lay out our game architecture and start implementing it.
 
 Please note that while we will continue adding modules, actions and other project related information directly into the database, there actually is a tool providing an interface for doing all this: [http://code.google.com/p/zeitgeist-framework/wiki/ZeitgeistAdministrator Zeitgeist Administrator]. Although a coder tool (thus a bit messy, unstable and undocumented), it will help you a great deal when developing Zeitgeist based applications. Take a look if you have some time.
