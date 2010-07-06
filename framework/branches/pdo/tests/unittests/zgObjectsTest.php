@@ -1,12 +1,14 @@
 <?php
 
-require_once 'tests/_configuration.php';
-require_once 'PHPUnit/Framework/TestCase.php';
+if ( !defined( 'MULTITEST' ) )
+{
+	include( dirname( __FILE__ ) . '/../_configuration.php' );
+}
 
 /**
  * zgObjects test case.
  */
-class zgObjectsTest extends PHPUnit_Framework_TestCase
+class zgObjectsTest extends UnitTestCase
 {
 	/**
 	 * @var zgObjects
@@ -17,7 +19,7 @@ class zgObjectsTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Prepares the environment before running a test.
 	 */
-	protected function setUp( )
+	public function setUp( )
 	{
 		parent::setUp( );
 		$this->zgObjects = zgObjects::init( );
@@ -27,7 +29,7 @@ class zgObjectsTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Cleans up the environment after running a test.
 	 */
-	protected function tearDown( )
+	public function tearDown( )
 	{
 		$this->zgObjects = null;
 		parent::tearDown( );
@@ -137,7 +139,7 @@ class zgObjectsTest extends PHPUnit_Framework_TestCase
 
 		$this->zgObjects->storeObject( $randomid, $testobj );
 		$ret = $this->zgObjects->getObject( $randomid );
-		$this->assertEquals( $ret, $testobj );
+		$this->assertEqual( $ret, $testobj );
 
 		$this->tearDown( );
 	}
@@ -177,7 +179,7 @@ class zgObjectsTest extends PHPUnit_Framework_TestCase
 		$this->assertFalse( $ret );
 
 		$ret = $this->zgObjects->getObject( ( $randomid . '1' ) );
-		$this->assertEquals( $ret, $testobj );
+		$this->assertEqual( $ret, $testobj );
 
 		$this->tearDown( );
 	}
@@ -208,3 +210,12 @@ class zgObjectsTest extends PHPUnit_Framework_TestCase
 	}
 }
 
+if ( !defined( 'MULTITEST' ) )
+{
+	$test = &new TestSuite( 'zgObjectsTest Unit Tests' );
+
+	$testfunctions = new testFunctions( );
+	$test->addTestCase( new zgObjectsTest( ) );
+
+	$test->run( new HtmlReporter( ) );
+}

@@ -1,12 +1,14 @@
 <?php
 
-require_once 'tests/_configuration.php';
-require_once 'PHPUnit/Framework/TestCase.php';
+if ( !defined( 'MULTITEST' ) )
+{
+	include( dirname( __FILE__ ) . '/../_configuration.php' );
+}
 
 /**
  * zgDatabase test case.
  */
-class zgDatabaseTest extends PHPUnit_Framework_TestCase
+class zgDatabaseTest extends UnitTestCase
 {
 	/**
 	 * @var zgDatabase
@@ -17,7 +19,7 @@ class zgDatabaseTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Prepares the environment before running a test.
 	 */
-	protected function setUp( )
+	public function setUp( )
 	{
 		parent::setUp( );
 		$this->zgDatabase = new zgDatabase( );
@@ -27,7 +29,7 @@ class zgDatabaseTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Cleans up the environment after running a test.
 	 */
-	protected function tearDown( )
+	public function tearDown( )
 	{
 		$this->zgDatabase = null;
 		parent::tearDown( );
@@ -49,8 +51,6 @@ class zgDatabaseTest extends PHPUnit_Framework_TestCase
 	public function test__construct( )
 	{
 		// TODO Auto-generated zgDatabaseTest->test__construct()
-		$this->markTestIncomplete( "__construct test not implemented" );
-
 		$this->zgDatabase->__construct( /* parameters */ );
 	}
 
@@ -61,8 +61,6 @@ class zgDatabaseTest extends PHPUnit_Framework_TestCase
 	public function test__destruct( )
 	{
 		// TODO Auto-generated zgDatabaseTest->test__destruct()
-		$this->markTestIncomplete( "__destruct test not implemented" );
-
 		$this->zgDatabase->__destruct( /* parameters */ );
 	}
 
@@ -130,9 +128,7 @@ class zgDatabaseTest extends PHPUnit_Framework_TestCase
 	public function testSetDBCharset( )
 	{
 		// TODO Auto-generated zgDatabaseTest->testSetDBCharset()
-		$this->markTestIncomplete( "setDBCharset test not implemented" );
-
-		$this->zgDatabase->setDBCharset( /* parameters */ );
+		//		$this->zgDatabase->setDBCharset( /* parameters */ );
 	}
 
 
@@ -211,12 +207,12 @@ class zgDatabaseTest extends PHPUnit_Framework_TestCase
 
 		$ret = $this->zgDatabase->fetchArray( $res );
 		$testarray = array('test' => 'test1', 'id' => '1');
-		$this->assertEquals( $ret, $testarray );
+		$this->assertEqual( $ret, $testarray );
 		unset( $ret );
 
 		$ret = $this->zgDatabase->fetchArray( $res );
 		$testarray = array('test' => 'test2', 'id' => '2');
-		$this->assertEquals( $ret, $testarray );
+		$this->assertEqual( $ret, $testarray );
 		unset( $ret );
 
 		$this->zgDatabase->query( "DROP TABLE test" );
@@ -256,7 +252,7 @@ class zgDatabaseTest extends PHPUnit_Framework_TestCase
 		$res = $this->zgDatabase->query( "SELECT * FROM test" );
 
 		$ret = $this->zgDatabase->numRows( $res );
-		$this->assertEquals( $ret, 2 );
+		$this->assertEqual( $ret, 2 );
 
 		$this->zgDatabase->query( "DROP TABLE test" );
 
@@ -274,7 +270,7 @@ class zgDatabaseTest extends PHPUnit_Framework_TestCase
 		$this->zgDatabase->connect( );
 
 		$ret = $this->zgDatabase->affectedRows( '' );
-		$this->assertEquals( $ret, 0 );
+		$this->assertEqual( $ret, 0 );
 
 		$this->zgDatabase->close( );
 		$this->tearDown( );
@@ -295,7 +291,7 @@ class zgDatabaseTest extends PHPUnit_Framework_TestCase
 
 		$this->zgDatabase->query( "DELETE FROM test" );
 		$ret = $this->zgDatabase->affectedRows( );
-		$this->assertEquals( $ret, 2 );
+		$this->assertEqual( $ret, 2 );
 		unset( $ret );
 
 		$this->zgDatabase->query( "DROP TABLE test" );
@@ -334,7 +330,7 @@ class zgDatabaseTest extends PHPUnit_Framework_TestCase
 		$this->zgDatabase->query( "INSERT INTO test(test) VALUES('test2')" );
 
 		$ret = $this->zgDatabase->insertId( );
-		$this->assertEquals( $ret, 2 );
+		$this->assertEqual( $ret, 2 );
 		unset( $ret );
 
 		$this->zgDatabase->query( "DROP TABLE test" );
@@ -344,3 +340,12 @@ class zgDatabaseTest extends PHPUnit_Framework_TestCase
 	}
 }
 
+if ( !defined( 'MULTITEST' ) )
+{
+	$test = &new TestSuite( 'zgDatabaseTest Unit Tests' );
+
+	$testfunctions = new testFunctions( );
+	$test->addTestCase( new zgDatabaseTest( ) );
+
+	$test->run( new HtmlReporter( ) );
+}

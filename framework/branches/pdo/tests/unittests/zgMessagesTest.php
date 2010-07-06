@@ -1,12 +1,14 @@
 <?php
 
-require_once 'tests/_configuration.php';
-require_once 'PHPUnit/Framework/TestCase.php';
+if ( !defined( 'MULTITEST' ) )
+{
+	include( dirname( __FILE__ ) . '/../_configuration.php' );
+}
 
 /**
  * zgMessages test case.
  */
-class zgMessagesTest extends PHPUnit_Framework_TestCase
+class zgMessagesTest extends UnitTestCase
 {
 	/**
 	 * @var zgMessages
@@ -17,7 +19,7 @@ class zgMessagesTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Prepares the environment before running a test.
 	 */
-	protected function setUp( )
+	public function setUp( )
 	{
 		parent::setUp( );
 		$this->zgMessages = zgMessages::init( );
@@ -27,7 +29,7 @@ class zgMessagesTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Cleans up the environment after running a test.
 	 */
-	protected function tearDown( )
+	public function tearDown( )
 	{
 		$this->zgMessages = null;
 		parent::tearDown( );
@@ -91,7 +93,7 @@ class zgMessagesTest extends PHPUnit_Framework_TestCase
 
 		$this->zgMessages->clearAllMessages( );
 		$ret = $this->zgMessages->getMessagesByType( );
-		$this->assertEquals( $ret, array() );
+		$this->assertEqual( $ret, array() );
 
 		$this->tearDown( );
 	}
@@ -108,7 +110,7 @@ class zgMessagesTest extends PHPUnit_Framework_TestCase
 		$this->zgMessages->setMessage( 'hello world' );
 
 		$ret = $this->zgMessages->getMessagesByType( 'test' );
-		$this->assertEquals( $ret, array() );
+		$this->assertEqual( $ret, array() );
 
 		$this->tearDown( );
 	}
@@ -125,7 +127,7 @@ class zgMessagesTest extends PHPUnit_Framework_TestCase
 		$this->zgMessages->setMessage( 'hello world' );
 
 		$ret = $this->zgMessages->getMessagesByType( 'message' );
-		$this->assertEquals( count( $ret ), 1 );
+		$this->assertEqual( count( $ret ), 1 );
 
 		$this->tearDown( );
 	}
@@ -144,7 +146,7 @@ class zgMessagesTest extends PHPUnit_Framework_TestCase
 		$this->zgMessages->setMessage( 'hello world', 'other' );
 
 		$ret = $this->zgMessages->getMessagesByType( 'test' );
-		$this->assertEquals( count( $ret ), 1 );
+		$this->assertEqual( count( $ret ), 1 );
 
 		$this->tearDown( );
 	}
@@ -163,7 +165,7 @@ class zgMessagesTest extends PHPUnit_Framework_TestCase
 		$this->zgMessages->setMessage( 'hello world', 'other' );
 
 		$ret = $this->zgMessages->getAllMessages( );
-		$this->assertEquals( count( $ret ), 3 );
+		$this->assertEqual( count( $ret ), 3 );
 
 		$this->tearDown( );
 	}
@@ -182,7 +184,7 @@ class zgMessagesTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue( $ret );
 
 		$ret = $this->zgMessages->getAllMessages( );
-		$this->assertEquals( count( $ret ), 0 );
+		$this->assertEqual( count( $ret ), 0 );
 
 		$this->tearDown( );
 	}
@@ -217,7 +219,7 @@ class zgMessagesTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue( $ret );
 
 		$ret = $this->zgMessages->getAllMessages( );
-		$this->assertEquals( count( $ret ), 0 );
+		$this->assertEqual( count( $ret ), 0 );
 
 		$this->tearDown( );
 	}
@@ -240,8 +242,8 @@ class zgMessagesTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue( $ret );
 
 		$ret = $this->zgMessages->getAllMessages( );
-		$this->assertEquals( count( $ret ), 2 );
-		$this->assertEquals( $ret, $testmessages );
+		$this->assertEqual( count( $ret ), 2 );
+		$this->assertEqual( $ret, $testmessages );
 
 		$this->tearDown( );
 	}
@@ -253,9 +255,7 @@ class zgMessagesTest extends PHPUnit_Framework_TestCase
 	public function testSaveMessagesToSession( )
 	{
 		// TODO Auto-generated zgMessagesTest->testSaveMessagesToSession()
-		$this->markTestIncomplete( "saveMessagesToSession test not implemented" );
-
-		$this->zgMessages->saveMessagesToSession( /* parameters */ );
+		//		$this->zgMessages->saveMessagesToSession( /* parameters */ );
 	}
 
 
@@ -265,9 +265,16 @@ class zgMessagesTest extends PHPUnit_Framework_TestCase
 	public function testLoadMessagesFromSession( )
 	{
 		// TODO Auto-generated zgMessagesTest->testLoadMessagesFromSession()
-		$this->markTestIncomplete( "loadMessagesFromSession test not implemented" );
-
-		$this->zgMessages->loadMessagesFromSession( /* parameters */ );
+		//		$this->zgMessages->loadMessagesFromSession( /* parameters */ );
 	}
 }
 
+if ( !defined( 'MULTITEST' ) )
+{
+	$test = &new TestSuite( 'zgMessagesTest Unit Tests' );
+
+	$testfunctions = new testFunctions( );
+	$test->addTestCase( new zgMessagesTest( ) );
+
+	$test->run( new HtmlReporter( ) );
+}

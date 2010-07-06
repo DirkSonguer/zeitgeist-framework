@@ -1,12 +1,14 @@
 <?php
 
-require_once 'tests/_configuration.php';
-require_once 'PHPUnit/Framework/TestCase.php';
+if ( !defined( 'MULTITEST' ) )
+{
+	include( dirname( __FILE__ ) . '/../_configuration.php' );
+}
 
 /**
  * zgParameters test case.
  */
-class zgParametersTest extends PHPUnit_Framework_TestCase
+class zgParametersTest extends UnitTestCase
 {
 	/**
 	 * @var zgParameters
@@ -17,7 +19,7 @@ class zgParametersTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Prepares the environment before running a test.
 	 */
-	protected function setUp( )
+	public function setUp( )
 	{
 		parent::setUp( );
 		$this->zgParameters = new zgParameters( /* parameters */ );
@@ -27,7 +29,7 @@ class zgParametersTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Cleans up the environment after running a test.
 	 */
-	protected function tearDown( )
+	public function tearDown( )
 	{
 		$this->zgParameters = null;
 		parent::tearDown( );
@@ -49,8 +51,6 @@ class zgParametersTest extends PHPUnit_Framework_TestCase
 	public function test__construct( )
 	{
 		// TODO Auto-generated zgParametersTest->test__construct()
-		$this->markTestIncomplete( "__construct test not implemented" );
-
 		$this->zgParameters->__construct( /* parameters */ );
 	}
 
@@ -69,7 +69,7 @@ class zgParametersTest extends PHPUnit_Framework_TestCase
 		$ret = $this->zgParameters->getSafeParameters( 'testparameters', 'test_parameters' );
 		$this->assertNull( $ret ['false'] );
 		$this->assertNotNull( $ret ['test_regexp'] );
-		$this->assertEquals( $ret ['test_regexp'], '1234' );
+		$this->assertEqual( $ret ['test_regexp'], '1234' );
 
 		$objects = zgObjects::init( );
 		$objects->deleteAllObjects( );
@@ -92,7 +92,7 @@ class zgParametersTest extends PHPUnit_Framework_TestCase
 		$ret = $this->zgParameters->getSafeParameters( 'testparameters', 'test_parameters' );
 		$this->assertNull( $ret ['false'] );
 		$this->assertNotNull( $ret ['test_regexp_escaped'] );
-		$this->assertEquals( $ret ['test_regexp_escaped'], "12\'34" );
+		$this->assertEqual( $ret ['test_regexp_escaped'], "12\'34" );
 
 		$objects = zgObjects::init( );
 		$objects->deleteAllObjects( );
@@ -137,7 +137,7 @@ class zgParametersTest extends PHPUnit_Framework_TestCase
 		$ret = $this->zgParameters->getSafeParameters( 'testparameters', 'test_parameters' );
 		$this->assertNull( $ret ['false'] );
 		$this->assertNotNull( $ret ['test_text'] );
-		$this->assertEquals( $ret ['test_text'], "This is a test" );
+		$this->assertEqual( $ret ['test_text'], "This is a test" );
 
 		$objects = zgObjects::init( );
 		$objects->deleteAllObjects( );
@@ -181,7 +181,7 @@ class zgParametersTest extends PHPUnit_Framework_TestCase
 
 		$ret = $this->zgParameters->getSafeParameters( 'testparameters', 'test_parameters' );
 		$this->assertNull( $ret ['false'] );
-		$this->assertEquals( $ret ['test_string'], "This is a test" );
+		$this->assertEqual( $ret ['test_string'], "This is a test" );
 
 		$objects = zgObjects::init( );
 		$objects->deleteAllObjects( );
@@ -225,7 +225,7 @@ class zgParametersTest extends PHPUnit_Framework_TestCase
 
 		$ret = $this->zgParameters->getSafeParameters( 'testparameters', 'test_parameters' );
 		$this->assertNull( $ret ['false'] );
-		$this->assertEquals( $ret ['test_date'], "01.01.1970" );
+		$this->assertEqual( $ret ['test_date'], "01.01.1970" );
 
 		$objects = zgObjects::init( );
 		$objects->deleteAllObjects( );
@@ -256,3 +256,12 @@ class zgParametersTest extends PHPUnit_Framework_TestCase
 	}
 }
 
+if ( !defined( 'MULTITEST' ) )
+{
+	$test = &new TestSuite( 'zgParametersTest Unit Tests' );
+
+	$testfunctions = new testFunctions( );
+	$test->addTestCase( new zgParametersTest( ) );
+
+	$test->run( new HtmlReporter( ) );
+}

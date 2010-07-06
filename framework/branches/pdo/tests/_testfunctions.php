@@ -21,7 +21,7 @@ class testFunctions
 		if ( empty( $this->sqldata ) )
 		{
 			$filehandler = new zgFiles( );
-			$this->sqldata = $filehandler->getFileContent( ZG_TESTDATA_DIR . 'zeitgeist.sql' );
+			$this->sqldata = $filehandler->getFileContent( ZEITGEIST_ROOTDIRECTORY . '_additional_material/zeitgeist.sql' );
 		}
 
 		$startposition = strpos( $this->sqldata, 'CREATE TABLE IF NOT EXISTS `' . $table . '`' );
@@ -44,4 +44,3 @@ class testFunctions
 }
 
 ?>
-

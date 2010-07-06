@@ -1,12 +1,14 @@
 <?php
 
-require_once 'tests/_configuration.php';
-require_once 'PHPUnit/Framework/TestCase.php';
+if ( !defined( 'MULTITEST' ) )
+{
+	include( dirname( __FILE__ ) . '/../_configuration.php' );
+}
 
 /**
  * zgConfiguration test case.
  */
-class zgConfigurationTest extends PHPUnit_Framework_TestCase
+class zgConfigurationTest extends UnitTestCase
 {
 	/**
 	 * @var zgConfiguration
@@ -17,7 +19,7 @@ class zgConfigurationTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Prepares the environment before running a test.
 	 */
-	protected function setUp( )
+	public function setUp( )
 	{
 		parent::setUp( );
 		$this->zgConfiguration = zgConfiguration::init( );
@@ -27,7 +29,7 @@ class zgConfigurationTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Cleans up the environment after running a test.
 	 */
-	protected function tearDown( )
+	public function tearDown( )
 	{
 		$this->zgConfiguration = null;
 		parent::tearDown( );
@@ -49,8 +51,6 @@ class zgConfigurationTest extends PHPUnit_Framework_TestCase
 	public function testInit( )
 	{
 		// TODO Auto-generated zgConfigurationTest::testInit()
-		$this->markTestIncomplete( "init test not implemented" );
-
 		zgConfiguration::init( /* parameters */ );
 	}
 
@@ -81,7 +81,6 @@ class zgConfigurationTest extends PHPUnit_Framework_TestCase
 	{
 		$this->setUp( );
 
-		$testfunctions = new testFunctions( );
 		$randomid = uniqid( );
 
 		$ret = $this->zgConfiguration->loadConfiguration( $randomid, ZG_TESTDATA_DIR . 'testconfiguration.ini' );
@@ -126,7 +125,7 @@ class zgConfigurationTest extends PHPUnit_Framework_TestCase
 		$this->assertFalse( $ret );
 
 		$ret = $this->zgConfiguration->getConfiguration( $randomid );
-		$this->assertEquals( count( $ret ), 2 );
+		$this->assertEqual( count( $ret ), 2 );
 
 		$testfunctions->dropZeitgeistTable( 'configurationcache' );
 		$this->tearDown( );
@@ -149,7 +148,7 @@ class zgConfigurationTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue( $ret );
 
 		$ret = $this->zgConfiguration->getConfiguration( $randomid );
-		$this->assertEquals( count( $ret ), 3 );
+		$this->assertEqual( count( $ret ), 3 );
 
 		$testfunctions->dropZeitgeistTable( 'configurationcache' );
 		$this->tearDown( );
@@ -234,7 +233,7 @@ class zgConfigurationTest extends PHPUnit_Framework_TestCase
 		$testconfiguration ['testblock2'] = $testblock2;
 
 		$ret = $this->zgConfiguration->getConfiguration( $randomid );
-		$this->assertEquals( $ret, $testconfiguration );
+		$this->assertEqual( $ret, $testconfiguration );
 
 		$testfunctions->dropZeitgeistTable( 'configurationcache' );
 		$this->tearDown( );
@@ -279,7 +278,7 @@ class zgConfigurationTest extends PHPUnit_Framework_TestCase
 		$testblock1 = array('testvar1' => 'true', 'testvar2' => '1', 'testvar3' => 'test3');
 
 		$ret = $this->zgConfiguration->getConfiguration( $randomid, 'testblock1' );
-		$this->assertEquals( $ret, $testblock1 );
+		$this->assertEqual( $ret, $testblock1 );
 
 		$testfunctions->dropZeitgeistTable( 'configurationcache' );
 		$this->tearDown( );
@@ -321,7 +320,7 @@ class zgConfigurationTest extends PHPUnit_Framework_TestCase
 		$this->zgConfiguration->loadConfiguration( $randomid, ZG_TESTDATA_DIR . 'testconfiguration.ini' );
 
 		$ret = $this->zgConfiguration->getConfiguration( $randomid, 'testblock1', 'testvar2' );
-		$this->assertEquals( $ret, '1' );
+		$this->assertEqual( $ret, '1' );
 
 		$testfunctions->dropZeitgeistTable( 'configurationcache' );
 		$this->tearDown( );
@@ -342,10 +341,19 @@ class zgConfigurationTest extends PHPUnit_Framework_TestCase
 		$this->zgConfiguration->loadConfiguration( $randomid, ZG_TESTDATA_DIR . 'testconfiguration.ini' );
 
 		$ret = $this->zgConfiguration->getConfiguration( $randomid, 'testblock2', 'testvar6' );
-		$this->assertEquals( $ret, '1' );
+		$this->assertEqual( $ret, '1' );
 
 		$testfunctions->dropZeitgeistTable( 'configurationcache' );
 		$this->tearDown( );
 	}
 }
 
+if ( !defined( 'MULTITEST' ) )
+{
+	$test = &new TestSuite( 'zgConfigurationTest Unit Tests' );
+
+	$testfunctions = new testFunctions( );
+	$test->addTestCase( new zgConfigurationTest( ) );
+
+	$test->run( new HtmlReporter( ) );
+}

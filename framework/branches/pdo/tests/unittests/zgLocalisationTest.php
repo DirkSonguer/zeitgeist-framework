@@ -1,12 +1,14 @@
 <?php
 
-require_once 'tests/_configuration.php';
-require_once 'PHPUnit/Framework/TestCase.php';
+if ( !defined( 'MULTITEST' ) )
+{
+	include( dirname( __FILE__ ) . '/../_configuration.php' );
+}
 
 /**
  * zgLocalisation test case.
  */
-class zgLocalisationTest extends PHPUnit_Framework_TestCase
+class zgLocalisationTest extends UnitTestCase
 {
 	/**
 	 * @var zgLocalisation
@@ -17,7 +19,7 @@ class zgLocalisationTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Prepares the environment before running a test.
 	 */
-	protected function setUp( )
+	public function setUp( )
 	{
 		parent::setUp( );
 		$this->zgLocalisation = new zgLocalisation( /* parameters */ );
@@ -27,7 +29,7 @@ class zgLocalisationTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Cleans up the environment after running a test.
 	 */
-	protected function tearDown( )
+	public function tearDown( )
 	{
 		$this->zgLocalisation = null;
 		parent::tearDown( );
@@ -49,8 +51,6 @@ class zgLocalisationTest extends PHPUnit_Framework_TestCase
 	public function test__construct( )
 	{
 		// TODO Auto-generated zgLocalisationTest->test__construct()
-		$this->markTestIncomplete( "__construct test not implemented" );
-
 		$this->zgLocalisation->__construct( /* parameters */ );
 	}
 
@@ -126,7 +126,7 @@ class zgLocalisationTest extends PHPUnit_Framework_TestCase
 		$randomid = uniqid( );
 		$this->zgLocalisation->loadLocale( $randomid, ZG_TESTDATA_DIR . 'testlocale.ini' );
 		$ret = $this->zgLocalisation->write( 'hello world' );
-		$this->assertEquals( $ret, 'hello world' );
+		$this->assertEqual( $ret, 'hello world' );
 
 		$this->tearDown( );
 	}
@@ -142,9 +142,18 @@ class zgLocalisationTest extends PHPUnit_Framework_TestCase
 		$this->zgLocalisation->loadLocale( 'testlocale', ZG_TESTDATA_DIR . 'testlocale.ini' );
 		$this->zgLocalisation->setLocale( 'testlocale' );
 		$ret = $this->zgLocalisation->write( 'this is a test' );
-		$this->assertEquals( $ret, 'das ist ein test' );
+		$this->assertEqual( $ret, 'das ist ein test' );
 
 		$this->tearDown( );
 	}
 }
 
+if ( !defined( 'MULTITEST' ) )
+{
+	$test = &new TestSuite( 'zgLocalisationTest Unit Tests' );
+
+	$testfunctions = new testFunctions( );
+	$test->addTestCase( new zgLocalisationTest( ) );
+
+	$test->run( new HtmlReporter( ) );
+}
