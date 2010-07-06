@@ -4,7 +4,12 @@ define( 'DEBUGMODE', true );
 define( 'MULTITEST', true );
 include( dirname( __FILE__ ) . '/_configuration.php' );
 
+// initialize debugging for the whole test session
 $debug = zgDebug::init( );
+
+// this is needed so that the session is initialized
+// before the first output by the test suite runner
+$tempUserhandler = zgUserhandler::init( );
 
 require_once 'unittests\zgActionlogTest.php';
 require_once 'unittests\zgConfigurationTest.php';
