@@ -1,12 +1,14 @@
 <?php
 
-require_once 'tests/_configuration.php';
-require_once 'PHPUnit/Framework/TestCase.php';
+if ( !defined( 'MULTITEST' ) )
+{
+	include( dirname( __FILE__ ) . '/../_configuration.php' );
+}
 
 /**
  * zgGamehandler test case.
  */
-class zgGamehandlerTest extends PHPUnit_Framework_TestCase
+class zgGamehandlerTest extends UnitTestCase
 {
 	/**
 	 * @var zgGamehandler
@@ -18,7 +20,7 @@ class zgGamehandlerTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Prepares the environment before running a test.
 	 */
-	protected function setUp( )
+	public function setUp( )
 	{
 		parent::setUp( );
 		$this->zgGamehandler = new zgGamehandler( /* parameters */ );
@@ -28,7 +30,7 @@ class zgGamehandlerTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Cleans up the environment after running a test.
 	 */
-	protected function tearDown( )
+	public function tearDown( )
 	{
 		$this->zgGamehandler = null;
 		parent::tearDown( );
@@ -41,7 +43,7 @@ class zgGamehandlerTest extends PHPUnit_Framework_TestCase
 	public function __construct( )
 	{
 		$this->database = new zgDatabase( );
-		$ret = $this->database->connect( );
+		$this->database->connect( );
 	}
 
 
@@ -51,8 +53,6 @@ class zgGamehandlerTest extends PHPUnit_Framework_TestCase
 	public function test__construct( )
 	{
 		// TODO Auto-generated zgGamehandlerTest->test__construct()
-		$this->markTestIncomplete( "__construct test not implemented" );
-
 		$this->zgGamehandler->__construct( /* parameters */ );
 	}
 
@@ -80,14 +80,14 @@ class zgGamehandlerTest extends PHPUnit_Framework_TestCase
 		// check database
 		$res = $this->database->query( "SELECT * FROM game_events" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		// check values in database
 		$ret = $this->database->fetchArray( $res );
-		$this->assertEquals( $ret ['event_action'], $action );
-		$this->assertEquals( $ret ['event_parameter'], $parameter );
-		$this->assertEquals( $ret ['event_player'], $player );
-		$this->assertEquals( $ret ['event_time'], $time );
+		$this->assertEqual( $ret ['event_action'], $action );
+		$this->assertEqual( $ret ['event_parameter'], $parameter );
+		$this->assertEqual( $ret ['event_player'], $player );
+		$this->assertEqual( $ret ['event_time'], $time );
 
 		$testfunctions->dropZeitgeistTable( 'game_events' );
 		$this->tearDown( );
@@ -113,7 +113,7 @@ class zgGamehandlerTest extends PHPUnit_Framework_TestCase
 		$time = rand( 1, 1000 );
 
 		// insert an action and save an event for it
-		$res = $this->database->query( "INSERT INTO game_actions(action_id, action_name, action_class) VALUES('" . $action . "', 'test', 'testaction')" );
+		$this->database->query( "INSERT INTO game_actions(action_id, action_name, action_class) VALUES('" . $action . "', 'test', 'testaction')" );
 		$ret = $this->zgGamehandler->saveGameevent( $action, $parameter, $time, $player, $game );
 
 		// handle the event
@@ -163,8 +163,8 @@ class zgGamehandlerTest extends PHPUnit_Framework_TestCase
 		$time = rand( 1, 1000 );
 
 		// insert an action and save an event for it
-		$res = $this->database->query( "INSERT INTO game_actions(action_id, action_name, action_class) VALUES('" . $action . "', 'test', 'testaction')" );
-		$res = $this->database->query( "INSERT INTO game_actions(action_id, action_name, action_class) VALUES('" . ( $action + 1 ) . "', 'test', 'testaction')" );
+		$this->database->query( "INSERT INTO game_actions(action_id, action_name, action_class) VALUES('" . $action . "', 'test', 'testaction')" );
+		$this->database->query( "INSERT INTO game_actions(action_id, action_name, action_class) VALUES('" . ( $action + 1 ) . "', 'test', 'testaction')" );
 		$this->zgGamehandler->saveGameevent( $action, $parameter, $time, $player, $game );
 		$this->zgGamehandler->saveGameevent( ( $action + 1 ), $parameter, $time, $player, $game );
 
@@ -204,8 +204,8 @@ class zgGamehandlerTest extends PHPUnit_Framework_TestCase
 		$time = rand( 1, 1000 );
 
 		// insert an action and save an event for it
-		$res = $this->database->query( "INSERT INTO game_actions(action_id, action_name, action_class) VALUES('" . $action . "', 'test', 'testaction')" );
-		$res = $this->database->query( "INSERT INTO game_actions(action_id, action_name, action_class) VALUES('" . ( $action + 1 ) . "', 'test', 'testaction')" );
+		$this->database->query( "INSERT INTO game_actions(action_id, action_name, action_class) VALUES('" . $action . "', 'test', 'testaction')" );
+		$this->database->query( "INSERT INTO game_actions(action_id, action_name, action_class) VALUES('" . ( $action + 1 ) . "', 'test', 'testaction')" );
 		$this->zgGamehandler->saveGameevent( $action, $parameter, $time, $player, $game );
 		$this->zgGamehandler->saveGameevent( ( $action + 1 ), $parameter, $time, $player, $game );
 
@@ -255,11 +255,11 @@ class zgGamehandlerTest extends PHPUnit_Framework_TestCase
 		// check database
 		$res = $this->database->query( "SELECT * FROM game_events" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		$res = $this->database->query( "SELECT * FROM game_eventlog" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		$testfunctions->dropZeitgeistTable( 'game_eventlog' );
 		$testfunctions->dropZeitgeistTable( 'game_events' );
@@ -295,11 +295,11 @@ class zgGamehandlerTest extends PHPUnit_Framework_TestCase
 		// check database
 		$res = $this->database->query( "SELECT * FROM game_events" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		$res = $this->database->query( "SELECT * FROM game_eventlog" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		$testfunctions->dropZeitgeistTable( 'game_eventlog' );
 		$testfunctions->dropZeitgeistTable( 'game_events' );
@@ -335,11 +335,11 @@ class zgGamehandlerTest extends PHPUnit_Framework_TestCase
 		// check database
 		$res = $this->database->query( "SELECT * FROM game_events" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 2 );
+		$this->assertEqual( $ret, 2 );
 
 		$res = $this->database->query( "SELECT * FROM game_eventlog" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 0 );
+		$this->assertEqual( $ret, 0 );
 
 		$testfunctions->dropZeitgeistTable( 'game_eventlog' );
 		$testfunctions->dropZeitgeistTable( 'game_events' );
@@ -374,7 +374,7 @@ class zgGamehandlerTest extends PHPUnit_Framework_TestCase
 		// check data in database
 		$res = $this->database->query( "SELECT * FROM game_events" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		$testfunctions->dropZeitgeistTable( 'game_events' );
 		$this->tearDown( );
@@ -408,7 +408,7 @@ class zgGamehandlerTest extends PHPUnit_Framework_TestCase
 		// check data in database
 		$res = $this->database->query( "SELECT * FROM game_events" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		$testfunctions->dropZeitgeistTable( 'game_events' );
 		$this->tearDown( );
@@ -442,7 +442,7 @@ class zgGamehandlerTest extends PHPUnit_Framework_TestCase
 		// check data in database
 		$res = $this->database->query( "SELECT * FROM game_events" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 0 );
+		$this->assertEqual( $ret, 0 );
 
 		$testfunctions->dropZeitgeistTable( 'game_events' );
 		$this->tearDown( );
@@ -476,10 +476,19 @@ class zgGamehandlerTest extends PHPUnit_Framework_TestCase
 		// check data in database
 		$res = $this->database->query( "SELECT * FROM game_events" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 2 );
+		$this->assertEqual( $ret, 2 );
 
 		$testfunctions->dropZeitgeistTable( 'game_events' );
 		$this->tearDown( );
 	}
 }
 
+if ( !defined( 'MULTITEST' ) )
+{
+	$test = &new TestSuite( 'zgGamehandlerTest Unit Tests' );
+
+	$testfunctions = new testFunctions( );
+	$test->addTestCase( new zgGamehandlerTest( ) );
+
+	$test->run( new HtmlReporter( ) );
+}
