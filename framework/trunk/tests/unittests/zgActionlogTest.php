@@ -1,12 +1,14 @@
 <?php
 
-require_once 'tests/_configuration.php';
-require_once 'PHPUnit/Framework/TestCase.php';
+if ( !defined( 'MULTITEST' ) )
+{
+	include( dirname( __FILE__ ) . '/../_configuration.php' );
+}
 
 /**
  * zgActionlog test case.
  */
-class zgActionlogTest extends PHPUnit_Framework_TestCase
+class zgActionlogTest extends UnitTestCase
 {
 	/**
 	 * @var zgActionlog
@@ -18,7 +20,7 @@ class zgActionlogTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Prepares the environment before running a test.
 	 */
-	protected function setUp( )
+	public function setUp( )
 	{
 		parent::setUp( );
 		$this->zgActionlog = new zgActionlog( /* parameters */ );
@@ -28,7 +30,7 @@ class zgActionlogTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Cleans up the environment after running a test.
 	 */
-	protected function tearDown( )
+	public function tearDown( )
 	{
 		$this->zgActionlog = null;
 		parent::tearDown( );
@@ -41,7 +43,7 @@ class zgActionlogTest extends PHPUnit_Framework_TestCase
 	public function __construct( )
 	{
 		$this->database = new zgDatabase( );
-		$ret = $this->database->connect( );
+		$this->database->connect( );
 	}
 
 
@@ -51,8 +53,6 @@ class zgActionlogTest extends PHPUnit_Framework_TestCase
 	public function test__construct( )
 	{
 		// TODO Auto-generated zgActionlogTest->test__construct()
-		$this->markTestIncomplete( "__construct test not implemented" );
-
 		$this->zgActionlog->__construct( /* parameters */ );
 	}
 
@@ -66,7 +66,6 @@ class zgActionlogTest extends PHPUnit_Framework_TestCase
 
 		$param1 = rand( 100, 5000 );
 		$param2 = rand( 100, 5000 );
-		$param3 = rand( 100, 5000 );
 
 		$parameters = array();
 		$parameters ['test1'] = 'test' . $param1;
@@ -90,7 +89,6 @@ class zgActionlogTest extends PHPUnit_Framework_TestCase
 
 		$param1 = rand( 100, 5000 );
 		$param2 = rand( 100, 5000 );
-		$param3 = rand( 100, 5000 );
 
 		$parameters = array();
 		$parameters ['test1'] = 'test' . $param1;
@@ -116,7 +114,6 @@ class zgActionlogTest extends PHPUnit_Framework_TestCase
 
 		$param1 = rand( 100, 5000 );
 		$param2 = rand( 100, 5000 );
-		$param3 = rand( 100, 5000 );
 
 		$parameters = array();
 		$parameters ['test1'] = 'test' . $param1;
@@ -128,23 +125,23 @@ class zgActionlogTest extends PHPUnit_Framework_TestCase
 
 		// should be only one entry we just entered
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		$ret = $this->database->fetchArray( $res );
-		$this->assertEquals( $ret ['actionlog_module'], $param1 );
-		$this->assertEquals( $ret ['actionlog_action'], $param2 );
+		$this->assertEqual( $ret ['actionlog_module'], $param1 );
+		$this->assertEqual( $ret ['actionlog_action'], $param2 );
 
 		$res = $this->database->query( "SELECT * FROM actionlog_parameters" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 2 );
+		$this->assertEqual( $ret, 2 );
 
 		$ret = $this->database->fetchArray( $res );
-		$this->assertEquals( $ret ['actionparameter_key'], 'test1' );
-		$this->assertEquals( $ret ['actionparameter_value'], 'test' . $param1 );
+		$this->assertEqual( $ret ['actionparameter_key'], 'test1' );
+		$this->assertEqual( $ret ['actionparameter_value'], 'test' . $param1 );
 
 		$ret = $this->database->fetchArray( $res );
-		$this->assertEquals( $ret ['actionparameter_key'], 'test2' );
-		$this->assertEquals( $ret ['actionparameter_value'], 'test' . $param2 );
+		$this->assertEqual( $ret ['actionparameter_key'], 'test2' );
+		$this->assertEqual( $ret ['actionparameter_value'], 'test' . $param2 );
 
 		$testfunctions->dropZeitgeistTable( 'actionlog' );
 		$testfunctions->dropZeitgeistTable( 'actionlog_parameters' );
@@ -152,3 +149,12 @@ class zgActionlogTest extends PHPUnit_Framework_TestCase
 	}
 }
 
+if ( !defined( 'MULTITEST' ) )
+{
+	$test = &new TestSuite( 'zgActionlogTest Unit Tests' );
+
+	$testfunctions = new testFunctions( );
+	$test->addTestCase( new zgActionlogTest( ) );
+
+	$test->run( new HtmlReporter( ) );
+}
