@@ -1,12 +1,14 @@
 <?php
 
-require_once 'tests/_configuration.php';
-require_once 'PHPUnit/Framework/TestCase.php';
+if ( !defined( 'MULTITEST' ) )
+{
+	include( dirname( __FILE__ ) . '/../_configuration.php' );
+}
 
 /**
  * zgUserrights test case.
  */
-class zgUserrightsTest extends PHPUnit_Framework_TestCase
+class zgUserrightsTest extends UnitTestCase
 {
 	/**
 	 * @var zgUserrights
@@ -18,7 +20,7 @@ class zgUserrightsTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Prepares the environment before running a test.
 	 */
-	protected function setUp( )
+	public function setUp( )
 	{
 		parent::setUp( );
 		$this->zgUserrights = new zgUserrights( /* parameters */ );
@@ -28,7 +30,7 @@ class zgUserrightsTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Cleans up the environment after running a test.
 	 */
-	protected function tearDown( )
+	public function tearDown( )
 	{
 		$this->zgUserrights = null;
 		parent::tearDown( );
@@ -41,7 +43,7 @@ class zgUserrightsTest extends PHPUnit_Framework_TestCase
 	public function __construct( )
 	{
 		$this->database = new zgDatabase( );
-		$ret = $this->database->connect( );
+		$this->database->connect( );
 	}
 
 
@@ -51,8 +53,6 @@ class zgUserrightsTest extends PHPUnit_Framework_TestCase
 	public function test__construct( )
 	{
 		// TODO Auto-generated zgUserrightsTest->test__construct()
-		$this->markTestIncomplete( "__construct test not implemented" );
-
 		$this->zgUserrights->__construct( /* parameters */ );
 	}
 
@@ -68,7 +68,7 @@ class zgUserrightsTest extends PHPUnit_Framework_TestCase
 		$testfunctions->createZeitgeistTable( 'userrights' );
 
 		$ret = $this->zgUserrights->loadUserrights( '' );
-		$this->assertEquals( count( $ret ), 0 );
+		$this->assertEqual( count( $ret ), 0 );
 
 		$testfunctions->dropZeitgeistTable( 'userrights' );
 		$this->tearDown( );
@@ -86,7 +86,7 @@ class zgUserrightsTest extends PHPUnit_Framework_TestCase
 		$testfunctions->createZeitgeistTable( 'userrights' );
 
 		$ret = $this->zgUserrights->loadUserrights( 1 );
-		$this->assertEquals( count( $ret ), 0 );
+		$this->assertEqual( count( $ret ), 0 );
 
 		$testfunctions->dropZeitgeistTable( 'userrights' );
 		$this->tearDown( );
@@ -99,7 +99,6 @@ class zgUserrightsTest extends PHPUnit_Framework_TestCase
 	public function testLoadUserrights_WithoutDatabase( )
 	{
 		$this->setUp( );
-		$testfunctions = new testFunctions( );
 
 		$ret = $this->zgUserrights->loadUserrights( 1 );
 		$this->assertFalse( $ret );
@@ -126,9 +125,9 @@ class zgUserrightsTest extends PHPUnit_Framework_TestCase
 		$this->database->query( "INSERT INTO userrights(userright_user, userright_action) VALUES('" . $testuser . "', '" . $testright2 . "')" );
 
 		$ret = $this->zgUserrights->loadUserrights( $testuser );
-		$this->assertEquals( count( $ret ), 2 );
-		$this->assertEquals( $ret [$testright1], true );
-		$this->assertEquals( $ret [$testright2], true );
+		$this->assertEqual( count( $ret ), 2 );
+		$this->assertEqual( $ret [$testright1], true );
+		$this->assertEqual( $ret [$testright2], true );
 
 		$testfunctions->dropZeitgeistTable( 'userrights' );
 		$this->tearDown( );
@@ -165,11 +164,11 @@ class zgUserrightsTest extends PHPUnit_Framework_TestCase
 		$this->database->query( "INSERT INTO userroles_to_actions(userroleaction_userrole, userroleaction_action) VALUES($testrole, $testright4)" );
 
 		$ret = $this->zgUserrights->loadUserrights( $testuser );
-		$this->assertEquals( count( $ret ), 4 );
-		$this->assertEquals( $ret [$testright1], true );
-		$this->assertEquals( $ret [$testright2], true );
-		$this->assertEquals( $ret [$testright3], true );
-		$this->assertEquals( $ret [$testright4], true );
+		$this->assertEqual( count( $ret ), 4 );
+		$this->assertEqual( $ret [$testright1], true );
+		$this->assertEqual( $ret [$testright2], true );
+		$this->assertEqual( $ret [$testright3], true );
+		$this->assertEqual( $ret [$testright4], true );
 
 		$testfunctions->dropZeitgeistTable( 'userrights' );
 		$testfunctions->dropZeitgeistTable( 'userroles_to_users' );
@@ -206,7 +205,6 @@ class zgUserrightsTest extends PHPUnit_Framework_TestCase
 	public function testSaveUserrights_WithoutDatabase( )
 	{
 		$this->setUp( );
-		$testfunctions = new testFunctions( );
 
 		$testuser = rand( 1, 100 );
 		$testrights = array();
@@ -241,10 +239,19 @@ class zgUserrightsTest extends PHPUnit_Framework_TestCase
 
 		$res = $this->database->query( "SELECT * FROM userrights" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 2 );
+		$this->assertEqual( $ret, 2 );
 
 		$testfunctions->dropZeitgeistTable( 'userrights' );
 		$this->tearDown( );
 	}
 }
 
+if ( !defined( 'MULTITEST' ) )
+{
+	$test = &new TestSuite( 'zgUserrightsTest Unit Tests' );
+
+	$testfunctions = new testFunctions( );
+	$test->addTestCase( new zgUserrightsTest( ) );
+
+	$test->run( new HtmlReporter( ) );
+}

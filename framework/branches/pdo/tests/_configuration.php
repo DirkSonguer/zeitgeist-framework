@@ -11,8 +11,13 @@ define( 'ZG_DB_USERPASS', '' );
 define( 'ZG_DB_DATABASE', 'zg_test' );
 define( 'ZG_DB_CONFIGURATIONCACHE', 'configurationcache' );
 
-require_once( 'zeitgeist.php' );
-require_once 'tests/_testfunctions.php';
+require_once( ZEITGEIST_ROOTDIRECTORY . 'zeitgeist.php' );
+require_once dirname( __FILE__ ) . '/_testfunctions.php';
+
+if ( !defined( 'SIMPLETEST_DIR' ) )
+{
+	define( 'SIMPLETEST_DIR', dirname( __FILE__ ) . '/simpletest/' );
+}
+require_once( SIMPLETEST_DIR . 'autorun.php' );
 
 ?>
-

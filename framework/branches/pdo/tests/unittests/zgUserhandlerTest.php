@@ -1,12 +1,14 @@
 <?php
 
-require_once 'tests/_configuration.php';
-require_once 'PHPUnit/Framework/TestCase.php';
+if ( !defined( 'MULTITEST' ) )
+{
+	include( dirname( __FILE__ ) . '/../_configuration.php' );
+}
 
 /**
  * zgUserhandler test case.
  */
-class zgUserhandlerTest extends PHPUnit_Framework_TestCase
+class zgUserhandlerTest extends UnitTestCase
 {
 	/**
 	 * @var zgUserhandler
@@ -18,7 +20,7 @@ class zgUserhandlerTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Prepares the environment before running a test.
 	 */
-	protected function setUp( )
+	public function setUp( )
 	{
 		parent::setUp( );
 		$this->zgUserhandler = zgUserhandler::init( );
@@ -28,7 +30,7 @@ class zgUserhandlerTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Cleans up the environment after running a test.
 	 */
-	protected function tearDown( )
+	public function tearDown( )
 	{
 		$this->zgUserhandler = null;
 		parent::tearDown( );
@@ -41,7 +43,7 @@ class zgUserhandlerTest extends PHPUnit_Framework_TestCase
 	public function __construct( )
 	{
 		$this->database = new zgDatabase( );
-		$ret = $this->database->connect( );
+		$this->database->connect( );
 	}
 
 
@@ -51,8 +53,6 @@ class zgUserhandlerTest extends PHPUnit_Framework_TestCase
 	public function testInit( )
 	{
 		// TODO Auto-generated zgUserhandlerTest::testInit()
-		$this->markTestIncomplete( "init test not implemented" );
-
 		zgUserhandler::init( /* parameters */ );
 	}
 
@@ -63,8 +63,6 @@ class zgUserhandlerTest extends PHPUnit_Framework_TestCase
 	public function testEstablishUserSession( )
 	{
 		// TODO Auto-generated zgUserhandlerTest->testEstablishUserSession()
-		$this->markTestIncomplete( "establishUserSession test not implemented" );
-
 		$this->zgUserhandler->establishUserSession( /* parameters */ );
 	}
 
@@ -192,8 +190,6 @@ class zgUserhandlerTest extends PHPUnit_Framework_TestCase
 	public function testSetLoginStatus( )
 	{
 		// TODO Auto-generated zgUserhandlerTest->testSetLoginStatus()
-		$this->markTestIncomplete( "setLoginStatus test not implemented" );
-
 		$this->zgUserhandler->setLoginStatus( /* parameters */ );
 	}
 
@@ -204,8 +200,6 @@ class zgUserhandlerTest extends PHPUnit_Framework_TestCase
 	public function testSaveUserstates( )
 	{
 		// TODO Auto-generated zgUserhandlerTest->testSaveUserstates()
-		$this->markTestIncomplete( "saveUserstates test not implemented" );
-
 		$this->zgUserhandler->saveUserstates( /* parameters */ );
 	}
 
@@ -284,7 +278,7 @@ class zgUserhandlerTest extends PHPUnit_Framework_TestCase
 		$this->zgUserhandler->login( $username, $password );
 
 		$ret = $this->zgUserhandler->getUserID( );
-		$this->assertEquals( $userid, $ret );
+		$this->assertEqual( $userid, $ret );
 
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
@@ -325,7 +319,7 @@ class zgUserhandlerTest extends PHPUnit_Framework_TestCase
 		$this->zgUserhandler->login( $username, $password );
 
 		$ret = $this->zgUserhandler->getUsername( );
-		$this->assertEquals( $username, $ret );
+		$this->assertEqual( $username, $ret );
 
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
@@ -338,9 +332,7 @@ class zgUserhandlerTest extends PHPUnit_Framework_TestCase
 	public function testGetUserKey( )
 	{
 		// TODO Auto-generated zgUserhandlerTest->testGetUserKey()
-		$this->markTestIncomplete( "getUserKey test not implemented" );
-
-		$this->zgUserhandler->getUserKey( /* parameters */ );
+		//		$this->zgUserhandler->getUserKey( /* parameters */ );
 	}
 
 
@@ -350,9 +342,7 @@ class zgUserhandlerTest extends PHPUnit_Framework_TestCase
 	public function testGetUserdata( )
 	{
 		// TODO Auto-generated zgUserhandlerTest->testGetUserdata()
-		$this->markTestIncomplete( "getUserdata test not implemented" );
-
-		$this->zgUserhandler->getUserdata( /* parameters */ );
+		//		$this->zgUserhandler->getUserdata( /* parameters */ );
 	}
 
 
@@ -362,9 +352,7 @@ class zgUserhandlerTest extends PHPUnit_Framework_TestCase
 	public function testSetUserdata( )
 	{
 		// TODO Auto-generated zgUserhandlerTest->testSetUserdata()
-		$this->markTestIncomplete( "setUserdata test not implemented" );
-
-		$this->zgUserhandler->setUserdata( /* parameters */ );
+		//		$this->zgUserhandler->setUserdata( /* parameters */ );
 	}
 
 
@@ -374,9 +362,7 @@ class zgUserhandlerTest extends PHPUnit_Framework_TestCase
 	public function testHasUserright( )
 	{
 		// TODO Auto-generated zgUserhandlerTest->testHasUserright()
-		$this->markTestIncomplete( "hasUserright test not implemented" );
-
-		$this->zgUserhandler->hasUserright( /* parameters */ );
+		//		$this->zgUserhandler->hasUserright( /* parameters */ );
 	}
 
 
@@ -386,9 +372,7 @@ class zgUserhandlerTest extends PHPUnit_Framework_TestCase
 	public function testGrantUserright( )
 	{
 		// TODO Auto-generated zgUserhandlerTest->testGrantUserright()
-		$this->markTestIncomplete( "grantUserright test not implemented" );
-
-		$this->zgUserhandler->grantUserright( /* parameters */ );
+		//		$this->zgUserhandler->grantUserright( /* parameters */ );
 	}
 
 
@@ -398,9 +382,7 @@ class zgUserhandlerTest extends PHPUnit_Framework_TestCase
 	public function testRevokeUserright( )
 	{
 		// TODO Auto-generated zgUserhandlerTest->testRevokeUserright()
-		$this->markTestIncomplete( "revokeUserright test not implemented" );
-
-		$this->zgUserhandler->revokeUserright( /* parameters */ );
+		//		$this->zgUserhandler->revokeUserright( /* parameters */ );
 	}
 
 
@@ -410,9 +392,7 @@ class zgUserhandlerTest extends PHPUnit_Framework_TestCase
 	public function testHasUserrole( )
 	{
 		// TODO Auto-generated zgUserhandlerTest->testHasUserrole()
-		$this->markTestIncomplete( "hasUserrole test not implemented" );
-
-		$this->zgUserhandler->hasUserrole( /* parameters */ );
+		//		$this->zgUserhandler->hasUserrole( /* parameters */ );
 	}
 
 
@@ -422,9 +402,7 @@ class zgUserhandlerTest extends PHPUnit_Framework_TestCase
 	public function testGrantUserrole( )
 	{
 		// TODO Auto-generated zgUserhandlerTest->testGrantUserrole()
-		$this->markTestIncomplete( "grantUserrole test not implemented" );
-
-		$this->zgUserhandler->grantUserrole( /* parameters */ );
+		//		$this->zgUserhandler->grantUserrole( /* parameters */ );
 	}
 
 
@@ -434,9 +412,16 @@ class zgUserhandlerTest extends PHPUnit_Framework_TestCase
 	public function testRevokeUserrole( )
 	{
 		// TODO Auto-generated zgUserhandlerTest->testRevokeUserrole()
-		$this->markTestIncomplete( "revokeUserrole test not implemented" );
-
-		$this->zgUserhandler->revokeUserrole( /* parameters */ );
+		//		$this->zgUserhandler->revokeUserrole( /* parameters */ );
 	}
 }
 
+if ( !defined( 'MULTITEST' ) )
+{
+	$test = &new TestSuite( 'zgUserhandlerTest Unit Tests' );
+
+	$testfunctions = new testFunctions( );
+	$test->addTestCase( new zgUserhandlerTest( ) );
+
+	$test->run( new HtmlReporter( ) );
+}

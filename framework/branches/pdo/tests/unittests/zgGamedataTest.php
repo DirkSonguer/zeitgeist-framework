@@ -1,12 +1,14 @@
 <?php
 
-require_once 'tests/_configuration.php';
-require_once 'PHPUnit/Framework/TestCase.php';
+if ( !defined( 'MULTITEST' ) )
+{
+	include( dirname( __FILE__ ) . '/../_configuration.php' );
+}
 
 /**
  * zgGamedata test case.
  */
-class zgGamedataTest extends PHPUnit_Framework_TestCase
+class zgGamedataTest extends UnitTestCase
 {
 	/**
 	 * @var zgGamedata
@@ -18,7 +20,7 @@ class zgGamedataTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Prepares the environment before running a test.
 	 */
-	protected function setUp( )
+	public function setUp( )
 	{
 		parent::setUp( );
 		$this->zgGamedata = new zgGamedata( );
@@ -28,7 +30,7 @@ class zgGamedataTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Cleans up the environment after running a test.
 	 */
-	protected function tearDown( )
+	public function tearDown( )
 	{
 		$this->zgGamedata = null;
 		parent::tearDown( );
@@ -41,7 +43,7 @@ class zgGamedataTest extends PHPUnit_Framework_TestCase
 	public function __construct( )
 	{
 		$this->database = new zgDatabase( );
-		$ret = $this->database->connect( );
+		$this->database->connect( );
 	}
 
 
@@ -51,8 +53,6 @@ class zgGamedataTest extends PHPUnit_Framework_TestCase
 	public function test__construct( )
 	{
 		// TODO Auto-generated zgGamedataTest->test__construct()
-		$this->markTestIncomplete( "__construct test not implemented" );
-
 		$this->zgGamedata->__construct( /* parameters */ );
 	}
 
@@ -74,11 +74,11 @@ class zgGamedataTest extends PHPUnit_Framework_TestCase
 		// check database
 		$res = $this->database->query( "SELECT * FROM game_entities" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		// check database content
 		$ret = $this->database->fetchArray( $res );
-		$this->assertEquals( $ret ['entity_id'], $entityid );
+		$this->assertEqual( $ret ['entity_id'], $entityid );
 
 		$testfunctions->dropZeitgeistTable( 'game_entities' );
 		$this->tearDown( );
@@ -103,12 +103,12 @@ class zgGamedataTest extends PHPUnit_Framework_TestCase
 		// check database
 		$res = $this->database->query( "SELECT * FROM game_entities" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		// check database content
 		$ret = $this->database->fetchArray( $res );
-		$this->assertEquals( $ret ['entity_id'], $entityid );
-		$this->assertEquals( $ret ['entity_name'], $entityname );
+		$this->assertEqual( $ret ['entity_id'], $entityid );
+		$this->assertEqual( $ret ['entity_name'], $entityname );
 
 		$testfunctions->dropZeitgeistTable( 'game_entities' );
 		$this->tearDown( );
@@ -151,22 +151,22 @@ class zgGamedataTest extends PHPUnit_Framework_TestCase
 		// check database
 		$res = $this->database->query( "SELECT * FROM game_entities" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		// check database content
 		$ret = $this->database->fetchArray( $res );
-		$this->assertEquals( $ret ['entity_id'], $entityid );
-		$this->assertEquals( $ret ['entity_name'], $entityname );
+		$this->assertEqual( $ret ['entity_id'], $entityid );
+		$this->assertEqual( $ret ['entity_name'], $entityname );
 
 		// check database
 		$res = $this->database->query( "SELECT * FROM game_entity_components" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		// check database content
 		$ret = $this->database->fetchArray( $res );
-		$this->assertEquals( $ret ['entitycomponent_entity'], $entityid );
-		$this->assertEquals( $ret ['entitycomponent_component'], $componentid );
+		$this->assertEqual( $ret ['entitycomponent_entity'], $entityid );
+		$this->assertEqual( $ret ['entitycomponent_component'], $componentid );
 
 		$testfunctions->dropZeitgeistTable( 'game_component_' . $componentid );
 		$testfunctions->dropZeitgeistTable( 'game_entities' );
@@ -196,7 +196,7 @@ class zgGamedataTest extends PHPUnit_Framework_TestCase
 		// check database
 		$res = $this->database->query( "SELECT * FROM game_entities" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 0 );
+		$this->assertEqual( $ret, 0 );
 
 		$testfunctions->dropZeitgeistTable( 'game_entities' );
 		$this->tearDown( );
@@ -227,17 +227,17 @@ class zgGamedataTest extends PHPUnit_Framework_TestCase
 
 		// add component to entity
 		$ret = $this->zgGamedata->addComponentToEntity( $componentid, $entityid );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		// check database
 		$res = $this->database->query( "SELECT * FROM game_entity_components" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		// check component
 		$res = $this->database->query( "SELECT * FROM game_component_" . $componentid );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		$testfunctions->dropZeitgeistTable( 'game_component_' . $componentid );
 		$testfunctions->dropZeitgeistTable( 'game_components' );
@@ -277,12 +277,12 @@ class zgGamedataTest extends PHPUnit_Framework_TestCase
 		// check database
 		$res = $this->database->query( "SELECT * FROM game_entity_components" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 0 );
+		$this->assertEqual( $ret, 0 );
 
 		// check component
 		$res = $this->database->query( "SELECT * FROM game_component_" . $componentid );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 0 );
+		$this->assertEqual( $ret, 0 );
 
 		$testfunctions->dropZeitgeistTable( 'game_component_' . $componentid );
 		$testfunctions->dropZeitgeistTable( 'game_components' );
@@ -298,9 +298,7 @@ class zgGamedataTest extends PHPUnit_Framework_TestCase
 	public function testAddAssemblageToEntity( )
 	{
 		// TODO Auto-generated zgGamedataTest->testAddAssemblageToEntity()
-		$this->markTestIncomplete( "addAssemblageToEntity test not implemented" );
-
-		$this->zgGamedata->addAssemblageToEntity( /* parameters */ );
+		//		$this->zgGamedata->addAssemblageToEntity( /* parameters */ );
 	}
 
 
@@ -333,7 +331,7 @@ class zgGamedataTest extends PHPUnit_Framework_TestCase
 		// get component data
 		$filter = array('id' => $componentdataid [1]);
 		$componentlist = $this->zgGamedata->getComponentData( $componentid, $filter );
-		$this->assertEquals( count( $componentlist ), 1 );
+		$this->assertEqual( count( $componentlist ), 1 );
 
 		$testfunctions->dropZeitgeistTable( 'game_component_' . $componentid );
 		$testfunctions->dropZeitgeistTable( 'game_components' );
@@ -380,9 +378,9 @@ class zgGamedataTest extends PHPUnit_Framework_TestCase
 		$ret = $this->zgGamedata->setComponentData( $componentid, $entityid, $testdata );
 
 		$ret = $this->zgGamedata->getComponentDataForEntity( $componentid, $entityid );
-		$this->assertEquals( $ret ['id'], $componentdataid );
-		$this->assertEquals( $ret ['testdata1'], $testdata1 );
-		$this->assertEquals( $ret ['testdata2'], $testdata2 );
+		$this->assertEqual( $ret ['id'], $componentdataid );
+		$this->assertEqual( $ret ['testdata1'], $testdata1 );
+		$this->assertEqual( $ret ['testdata2'], $testdata2 );
 
 		$testfunctions->dropZeitgeistTable( 'game_component_' . $componentid );
 		$testfunctions->dropZeitgeistTable( 'game_components' );
@@ -432,12 +430,12 @@ class zgGamedataTest extends PHPUnit_Framework_TestCase
 
 		$res = $this->database->query( "SELECT * FROM game_component_" . $componentid );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		$ret = $this->database->fetchArray( $res );
-		$this->assertEquals( $ret ['id'], $componentdataid );
-		$this->assertEquals( $ret ['testdata1'], $testdata1 );
-		$this->assertEquals( $ret ['testdata2'], $testdata2 );
+		$this->assertEqual( $ret ['id'], $componentdataid );
+		$this->assertEqual( $ret ['testdata1'], $testdata1 );
+		$this->assertEqual( $ret ['testdata2'], $testdata2 );
 
 		$testfunctions->dropZeitgeistTable( 'game_component_' . $componentid );
 		$testfunctions->dropZeitgeistTable( 'game_components' );
@@ -472,7 +470,7 @@ class zgGamedataTest extends PHPUnit_Framework_TestCase
 		}
 
 		$componentlist = $this->zgGamedata->getComponentData( $componentid );
-		$this->assertEquals( count( $componentlist ), 5 );
+		$this->assertEqual( count( $componentlist ), 5 );
 
 		$testfunctions->dropZeitgeistTable( 'game_component_' . $componentid );
 		$testfunctions->dropZeitgeistTable( 'game_components' );
@@ -504,17 +502,19 @@ class zgGamedataTest extends PHPUnit_Framework_TestCase
 		$componentdescription1 = uniqid( );
 		$componentid1 = $gamesetup->createComponent( $componentname1, $componentdescription1 );
 		$componentdataid1 = $this->zgGamedata->addComponentToEntity( $componentid1, $entityid );
+		$this->assertNotNull( $componentdataid1 );
 
 		// create and add component to entity
 		$componentname2 = uniqid( );
 		$componentdescription2 = uniqid( );
 		$componentid2 = $gamesetup->createComponent( $componentname2, $componentdescription2 );
 		$componentdataid2 = $this->zgGamedata->addComponentToEntity( $componentid2, $entityid );
+		$this->assertNotNull( $componentdataid2 );
 
 		$componentlist = $this->zgGamedata->getComponentListForEntity( $entityid );
 		$this->assertTrue( is_array( $componentlist ) );
-		$this->assertEquals( $componentlist [$componentid1], 1 );
-		$this->assertEquals( $componentlist [$componentid2], 2 );
+		$this->assertEqual( $componentlist [$componentid1], 1 );
+		$this->assertEqual( $componentlist [$componentid2], 2 );
 
 		$testfunctions->dropZeitgeistTable( 'game_component_' . $componentid1 );
 		$testfunctions->dropZeitgeistTable( 'game_component_' . $componentid2 );
@@ -531,9 +531,16 @@ class zgGamedataTest extends PHPUnit_Framework_TestCase
 	public function testGetEntityForComponent( )
 	{
 		// TODO Auto-generated zgGamedataTest->testGetEntityForComponent()
-		$this->markTestIncomplete( "getEntityForComponent test not implemented" );
-
-		$this->zgGamedata->getEntityForComponent( /* parameters */ );
+		//		$this->zgGamedata->getEntityForComponent( /* parameters */ );
 	}
 }
 
+if ( !defined( 'MULTITEST' ) )
+{
+	$test = &new TestSuite( 'zgGamedataTest Unit Tests' );
+
+	$testfunctions = new testFunctions( );
+	$test->addTestCase( new zgGamedataTest( ) );
+
+	$test->run( new HtmlReporter( ) );
+}

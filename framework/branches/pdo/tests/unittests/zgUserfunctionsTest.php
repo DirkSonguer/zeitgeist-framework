@@ -1,12 +1,14 @@
 <?php
 
-require_once 'tests/_configuration.php';
-require_once 'PHPUnit/Framework/TestCase.php';
+if ( !defined( 'MULTITEST' ) )
+{
+	include( dirname( __FILE__ ) . '/../_configuration.php' );
+}
 
 /**
  * zgUserfunctions test case.
  */
-class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
+class zgUserfunctionsTest extends UnitTestCase
 {
 	/**
 	 * @var zgUserfunctions
@@ -18,7 +20,7 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Prepares the environment before running a test.
 	 */
-	protected function setUp( )
+	public function setUp( )
 	{
 		parent::setUp( );
 		$this->zgUserfunctions = new zgUserfunctions( /* parameters */ );
@@ -28,7 +30,7 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Cleans up the environment after running a test.
 	 */
-	protected function tearDown( )
+	public function tearDown( )
 	{
 		$this->zgUserfunctions = null;
 		parent::tearDown( );
@@ -41,7 +43,7 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 	public function __construct( )
 	{
 		$this->database = new zgDatabase( );
-		$ret = $this->database->connect( );
+		$this->database->connect( );
 	}
 
 
@@ -51,8 +53,6 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 	public function test__construct( )
 	{
 		// TODO Auto-generated zgUserfunctionsTest->test__construct()
-		$this->markTestIncomplete( "__construct test not implemented" );
-
 		$this->zgUserfunctions->__construct( /* parameters */ );
 	}
 
@@ -73,7 +73,7 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 		// check database content
 		$res = $this->database->query( "SELECT * FROM users WHERE user_id='" . $newuserid . "'" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 0 );
+		$this->assertEqual( $ret, 0 );
 
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
@@ -86,7 +86,6 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 	public function testCreateUser_WithoutDatabase( )
 	{
 		$this->setUp( );
-		$testfunctions = new testFunctions( );
 
 		$username = uniqid( );
 		$password = uniqid( );
@@ -115,7 +114,7 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 		// check database content
 		$res = $this->database->query( "SELECT * FROM users WHERE user_id='" . $newuserid . "'" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
@@ -143,7 +142,7 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 		// check database content
 		$res = $this->database->query( "SELECT * FROM users WHERE user_id='" . $newuserid . "'" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
@@ -170,7 +169,7 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 		// The delete should leave the existing user alone
 		$res = $this->database->query( "SELECT * FROM users WHERE user_id='" . $newuserid . "'" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
@@ -197,7 +196,7 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 		// The delete should leave the existing user alone
 		$res = $this->database->query( "SELECT * FROM users WHERE user_id='" . $newuserid . "'" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 0 );
+		$this->assertEqual( $ret, 0 );
 
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
@@ -228,7 +227,6 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 	public function testLogin_WithoutDatabase( )
 	{
 		$this->setUp( );
-		$testfunctions = new testFunctions( );
 
 		$ret = $this->zgUserfunctions->login( '', '' );
 		$this->assertFalse( $ret );
@@ -276,7 +274,7 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 		$this->zgUserfunctions->activateUser( $newuserid );
 
 		$ret = $this->zgUserfunctions->login( $username, $password );
-		$this->assertEquals( $ret, $newuserid );
+		$this->assertEqual( $ret, $newuserid );
 
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
@@ -301,7 +299,7 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 
 		$res = $this->database->query( "SELECT * FROM users WHERE user_password='" . md5( $password ) . "'" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
@@ -314,7 +312,6 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 	public function testChangePassword_WithoutDatabase( )
 	{
 		$this->setUp( );
-		$testfunctions = new testFunctions( );
 
 		$ret = $this->zgUserfunctions->changePassword( '1', 'test' );
 		$this->assertFalse( $ret );
@@ -341,7 +338,7 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 
 		$res = $this->database->query( "SELECT * FROM users WHERE user_password='" . md5( $password . '1' ) . "'" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
@@ -366,7 +363,7 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 
 		$res = $this->database->query( "SELECT * FROM users WHERE user_username='" . $username . "'" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
@@ -396,7 +393,7 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 
 		$res = $this->database->query( "SELECT * FROM users WHERE user_username='" . $username . "'" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
@@ -409,7 +406,6 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 	public function testChangeUsername_WithoutDatabase( )
 	{
 		$this->setUp( );
-		$testfunctions = new testFunctions( );
 
 		$ret = $this->zgUserfunctions->changeUsername( '1', 'test' );
 		$this->assertFalse( $ret );
@@ -436,7 +432,7 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 
 		$res = $this->database->query( "SELECT * FROM users WHERE user_username='" . ( $username . '1' ) . "'" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
@@ -449,7 +445,6 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 	public function testGetInformation( )
 	{
 		$this->setUp( );
-		$testfunctions = new testFunctions( );
 
 		$ret = $this->zgUserfunctions->changeUsername( '1', 'test' );
 		$this->assertFalse( $ret );
@@ -484,7 +479,6 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 	public function testGetConfirmationKey_WithoutDatabase( )
 	{
 		$this->setUp( );
-		$testfunctions = new testFunctions( );
 
 		$ret = $this->zgUserfunctions->getConfirmationKey( 1 );
 		$this->assertFalse( $ret );
@@ -512,7 +506,7 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 
 		$res = $this->database->query( "SELECT * FROM userconfirmation WHERE userconfirmation_user='" . $newuserid . "'" );
 		$ret = $this->database->fetchArray( $res );
-		$this->assertEquals( $ret ['userconfirmation_key'], $confirmationkey );
+		$this->assertEqual( $ret ['userconfirmation_key'], $confirmationkey );
 
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$testfunctions->dropZeitgeistTable( 'userconfirmation' );
@@ -551,7 +545,6 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 	public function testCheckConfirmation_WithoutDatabase( )
 	{
 		$this->setUp( );
-		$testfunctions = new testFunctions( );
 
 		$ret = $this->zgUserfunctions->checkConfirmation( '1' );
 		$this->assertFalse( $ret );
@@ -577,7 +570,7 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 		$confirmationkey = $this->zgUserfunctions->getConfirmationKey( $newuserid );
 
 		$ret = $this->zgUserfunctions->checkConfirmation( $confirmationkey );
-		$this->assertEquals( $ret, $newuserid );
+		$this->assertEqual( $ret, $newuserid );
 
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$testfunctions->dropZeitgeistTable( 'userconfirmation' );
@@ -609,7 +602,6 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 	public function testActivateUser_WithoutDatabase( )
 	{
 		$this->setUp( );
-		$testfunctions = new testFunctions( );
 
 		$ret = $this->zgUserfunctions->activateUser( 1 );
 		$this->assertFalse( $ret );
@@ -638,11 +630,11 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 
 		$res = $this->database->query( "SELECT * FROM users WHERE user_username='" . $username . "' and user_active='1'" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		$res = $this->database->query( "SELECT * FROM userconfirmation" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 0 );
+		$this->assertEqual( $ret, 0 );
 
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$testfunctions->dropZeitgeistTable( 'userconfirmation' );
@@ -674,7 +666,6 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 	public function testDeactivateUser_WithoutDatabase( )
 	{
 		$this->setUp( );
-		$testfunctions = new testFunctions( );
 
 		$ret = $this->zgUserfunctions->deactivateUser( 1 );
 		$this->assertFalse( $ret );
@@ -704,11 +695,11 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 
 		$res = $this->database->query( "SELECT * FROM users WHERE user_username='" . $username . "' and user_active='0'" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		$res = $this->database->query( "SELECT * FROM userconfirmation" );
 		$ret = $this->database->numRows( $res );
-		$this->assertEquals( $ret, 1 );
+		$this->assertEqual( $ret, 1 );
 
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$testfunctions->dropZeitgeistTable( 'userconfirmation' );
@@ -716,3 +707,12 @@ class zgUserfunctionsTest extends PHPUnit_Framework_TestCase
 	}
 }
 
+if ( !defined( 'MULTITEST' ) )
+{
+	$test = &new TestSuite( 'zgUserfunctionsTest Unit Tests' );
+
+	$testfunctions = new testFunctions( );
+	$test->addTestCase( new zgUserfunctionsTest( ) );
+
+	$test->run( new HtmlReporter( ) );
+}

@@ -1,91 +1,53 @@
 <?php
 
-require_once 'PHPUnit\Framework\TestSuite.php';
+define( 'DEBUGMODE', true );
+define( 'MULTITEST', true );
+include( dirname( __FILE__ ) . '/_configuration.php' );
 
-require_once 'tests\unittests\zgActionlogTest.php';
+$debug = zgDebug::init( );
 
-require_once 'tests\unittests\zgConfigurationTest.php';
+require_once 'unittests\zgActionlogTest.php';
+require_once 'unittests\zgConfigurationTest.php';
+require_once 'unittests\zgDatabaseTest.php';
+require_once 'unittests\zgFilesTest.php';
+require_once 'unittests\zgGamedataTest.php';
+require_once 'unittests\zgGamehandlerTest.php';
+require_once 'unittests\zgGamesetupTest.php';
+require_once 'unittests\zgLocalisationTest.php';
+require_once 'unittests\zgMessagesTest.php';
+require_once 'unittests\zgObjectsTest.php';
+require_once 'unittests\zgParametersTest.php';
+require_once 'unittests\zgUserdataTest.php';
+require_once 'unittests\zgUserfunctionsTest.php';
+require_once 'unittests\zgUserhandlerTest.php';
+require_once 'unittests\zgUserrightsTest.php';
+require_once 'unittests\zgUserrolesTest.php';
 
-require_once 'tests\unittests\zgDatabaseTest.php';
+$test = &new TestSuite( 'Zeitgeist Unit Tests' );
 
-require_once 'tests\unittests\zgFilesTest.php';
+$testfunctions = new testFunctions( );
+$test->addTestCase( new zgActionlogTest( ) );
+$test->addTestCase( new zgConfigurationTest( ) );
+$test->addTestCase( new zgFilesTest( ) );
+$test->addTestCase( new zgGamedataTest( ) );
+$test->addTestCase( new zgGamehandlerTest( ) );
+$test->addTestCase( new zgGamesetupTest( ) );
+$test->addTestCase( new zgLocalisationTest( ) );
+$test->addTestCase( new zgMessagesTest( ) );
+$test->addTestCase( new zgObjectsTest( ) );
+$test->addTestCase( new zgParametersTest( ) );
+$test->addTestCase( new zgUserdataTest( ) );
+$test->addTestCase( new zgUserfunctionsTest( ) );
+$test->addTestCase( new zgUserhandlerTest( ) );
+$test->addTestCase( new zgUserrightsTest( ) );
+$test->addTestCase( new zgUserrolesTest( ) );
+$test->addTestCase( new zgDatabaseTest( ) );
 
-require_once 'tests\unittests\zgGamedataTest.php';
+$test->run( new HtmlReporter( ) );
 
-require_once 'tests\unittests\zgGamehandlerTest.php';
-
-require_once 'tests\unittests\zgGamesetupTest.php';
-
-require_once 'tests\unittests\zgLocalisationTest.php';
-
-require_once 'tests\unittests\zgMessagesTest.php';
-
-require_once 'tests\unittests\zgObjectsTest.php';
-
-require_once 'tests\unittests\zgParametersTest.php';
-
-require_once 'tests\unittests\zgUserdataTest.php';
-
-require_once 'tests\unittests\zgUserfunctionsTest.php';
-
-require_once 'tests\unittests\zgUserhandlerTest.php';
-
-require_once 'tests\unittests\zgUserrightsTest.php';
-
-require_once 'tests\unittests\zgUserrolesTest.php';
-
-/**
- * Static test suite.
- */
-class runUnitTests extends PHPUnit_Framework_TestSuite
-{
-	/**
-	 * Constructs the test suite handler.
-	 */
-	public function __construct( )
-	{
-		$this->setName( 'runUnitTests' );
-
-		$this->addTestSuite( 'zgActionlogTest' );
-
-		$this->addTestSuite( 'zgConfigurationTest' );
-
-		$this->addTestSuite( 'zgDatabaseTest' );
-
-		$this->addTestSuite( 'zgFilesTest' );
-
-		$this->addTestSuite( 'zgGamedataTest' );
-
-		$this->addTestSuite( 'zgGamehandlerTest' );
-
-		$this->addTestSuite( 'zgGamesetupTest' );
-
-		$this->addTestSuite( 'zgLocalisationTest' );
-
-		$this->addTestSuite( 'zgMessagesTest' );
-
-		$this->addTestSuite( 'zgObjectsTest' );
-
-		$this->addTestSuite( 'zgParametersTest' );
-
-		$this->addTestSuite( 'zgUserdataTest' );
-
-		$this->addTestSuite( 'zgUserfunctionsTest' );
-
-		$this->addTestSuite( 'zgUserhandlerTest' );
-
-		$this->addTestSuite( 'zgUserrightsTest' );
-
-		$this->addTestSuite( 'zgUserrolesTest' );
-	}
-
-
-	/**
-	 * Creates the suite.
-	 */
-	public static function suite( )
-	{
-		return new self( );
-	}
-}
-
+$debug->loadStylesheet( 'debug.css' );
+//	$debug->showInnerLoops = true;
+$debug->showMiscInformation();
+$debug->showDebugMessages( );
+$debug->showQueryMessages();
+$debug->showGuardMessages();
