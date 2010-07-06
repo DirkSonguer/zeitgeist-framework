@@ -418,6 +418,10 @@ class zgUserhandlerTest extends UnitTestCase
 
 if ( !defined( 'MULTITEST' ) )
 {
+    // this is needed so that the session is initialized
+    // before the first output by the test suite runner
+    $tempUserhandler = zgUserhandler::init( );
+
 	$test = &new TestSuite( 'zgUserhandlerTest Unit Tests' );
 
 	$testfunctions = new testFunctions( );
