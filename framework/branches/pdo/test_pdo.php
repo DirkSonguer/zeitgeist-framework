@@ -14,7 +14,7 @@ $debug->write("test");
 
 try
 {
-    $test = new zgDatabasePDO("mysql:host=127.0.0.1;dbname=lineracer", 'root', '');
+    $test = new zgDatabasePDO("mysql:host=127.0.0.1;dbname=lineracer_new", 'root', '');
 }
 catch ( PDOException $e )
 {
@@ -22,17 +22,18 @@ catch ( PDOException $e )
 }
 
 
-$STH = $test->prepare("SELECT * FROM actions WHERE action_id = ?");
-$STH->bindParam(1, $actionid);
+$STH = $test->prepare("sELECT * FROM actions WHERE action_id = ?");
 $actionid = "1";
+$STH->bindParam(1, $actionid);
 $STH->execute();
 
 while ( $row = $STH->fetch( ) )
 {
-    var_dump( $row );
+//    var_dump( $row );
 }
 
 $actionid = "2";
+$STH->bindParam(1, $actionid);
 $STH->execute();
 
 $STH->setFetchMode( PDO::FETCH_ASSOC );
@@ -40,7 +41,7 @@ $STH->setFetchMode( PDO::FETCH_ASSOC );
 echo "<br /><br />";
 while ( $row = $STH->fetch( ) )
 {
-    var_dump( $row );
+//    var_dump( $row );
 }
 
 $debug->loadStylesheet( 'debug.css' );
