@@ -77,7 +77,16 @@ CREATE TABLE IF NOT EXISTS `actions` (
 --
 -- Daten für Tabelle `actions`
 --
-
+INSERT INTO `actions` (`action_id`, `action_module`, `action_name`, `action_description`, `action_requiresuserright`) VALUES
+(1, 1, 'index', 'Main index action', 0),
+(2, 5, 'index', 'Index for the configuration exampels', 0),
+(4, 3, 'index', 'Overview of message examples', 0),
+(3, 2, 'index', 'Examples for the debug class', 0),
+(5, 4, 'index', 'Template Examples', 0),
+(6, 6, 'index', 'Index for dataserver examples', 0),
+(7, 7, 'index', 'Index for the parameterhandler examples', 0),
+(8, 8, 'index', 'Examples for the userhandler', 0),
+(9, 9, 'index', 'Acrion for the object handler examples', 0);
 
 -- --------------------------------------------------------
 
@@ -116,7 +125,16 @@ CREATE TABLE IF NOT EXISTS `modules` (
 --
 -- Daten für Tabelle `modules`
 --
-
+INSERT INTO `modules` (`module_id`, `module_name`, `module_description`, `module_active`) VALUES
+(1, 'main', 'Main module', 1),
+(2, 'debug', 'Examples for the debug class', 1),
+(3, 'messages', 'Examples for the message class', 1),
+(4, 'templates', 'Template Examples', 1),
+(5, 'configuration', 'Examples for configuration', 1),
+(6, 'dataserver', 'Dataserver examples', 1),
+(7, 'parameters', 'Examples for the parameterhandler', 1),
+(8, 'userhandler', 'Examples for the user handler', 1),
+(9, 'objects', 'Examples for the object handler', 1);
 
 -- --------------------------------------------------------
 

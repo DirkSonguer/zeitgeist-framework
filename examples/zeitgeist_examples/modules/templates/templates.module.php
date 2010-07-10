@@ -10,7 +10,7 @@ class templates
 	{
 		$this->debug = zgDebug::init();
 	}
-	
+
 
 	// This is the main action for this module
 	public function index($parameters=array())
@@ -19,14 +19,14 @@ class templates
 
 		// Create a new object of type template
 		$tpl = new zgTemplate();
-		
+
 		// Load the example template
 		// Open it and take a look at how it works
-		$tpl->load('_additional_files/example_template.tpl.html');
+		$tpl->load('_additional_material/example_template.tpl.html');
 
 		// Assign a value to a template var
 		$tpl->assign('examplecontent', 'Hello, Template!');
-		
+
 		// The createLink() method can be used to create a complete link
 		// All paths etc. are added automatically
 		// The parameters are createLink(MODULE, ACTION)
@@ -39,11 +39,11 @@ class templates
 		$contentarray['hello'] = 'Hello';
 		$contentarray['template'] = 'Template';
 		$tpl->assignDataset($contentarray);
-		
+
 		// Blocks do not show up by default, they have to be inserted first
 		$tpl->assign('blockcontent', 'Hello, Block 1');
 		$tpl->insertBlock('exampleblock');
-		
+
 		// However blocks can be inserted multiple times. the contents of the
 		// template vars inside the blocks are parsed when a block is inserted
 		$tpl->assign('blockcontent', 'Hello, Block 2');
@@ -52,7 +52,7 @@ class templates
 		// Sends the contents of the template buffer to the output
 		$tpl->show();
 
-		$this->debug->unguard(true);		
+		$this->debug->unguard(true);
 		return true;
 	}
 
