@@ -44,7 +44,7 @@ class zgActionlog
 	 * @param int $action id of the action
 	 * @param array $parameters array with parameters of the call
 	 */
-	public function logAction( $module, $action, $parameters = array() )
+	public function logAction( $module, $action, $parameters = array( ) )
 	{
 		$this->debug->guard( );
 
@@ -53,6 +53,7 @@ class zgActionlog
 		$sql = $this->database->prepare( "INSERT INTO actionlog(actionlog_module, actionlog_action, actionlog_ip) VALUES(?, ?, INET_ATON('" . getenv( 'REMOTE_ADDR' ) . "'))" );
 		$sql->bindParam( 1, $module );
 		$sql->bindParam( 2, $action );
+		
 		if ( !$sql->execute( ) )
 		{
 			$this->debug->write( 'Problem logging the action: could not write to log table', 'warning' );

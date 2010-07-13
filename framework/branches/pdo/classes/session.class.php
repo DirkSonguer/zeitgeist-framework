@@ -90,7 +90,7 @@ class zgSession
 		{
 			if ( $this->storageMode == 'database' )
 			{
-				$ret = session_set_save_handler( array(&$this, '_openSession'), array(&$this, '_closeSession'), array(&$this, '_readSession'), array(&$this, '_writeSession'), array(&$this, '_destroySession'), array(&$this, '_cleanSession') );
+				$ret = session_set_save_handler( array( &$this, '_openSession' ), array( &$this, '_closeSession' ), array( &$this, '_readSession' ), array( &$this, '_writeSession' ), array( &$this, '_destroySession' ), array( &$this, '_cleanSession' ) );
 				if ( !$ret )
 				{
 					$this->debug->write( 'Could not register session save handlers!', 'error' );
@@ -151,7 +151,7 @@ class zgSession
 	{
 		$this->debug->guard( );
 
-		$_SESSION [$key] = $value;
+		$_SESSION[ $key ] = $value;
 
 		$this->debug->unguard( true );
 		return true;
@@ -169,10 +169,10 @@ class zgSession
 	{
 		$this->debug->guard( );
 
-		if ( isset( $_SESSION [$key] ) )
+		if ( isset( $_SESSION[ $key ] ) )
 		{
-			$this->debug->unguard( $_SESSION [$key] );
-			return $_SESSION [$key];
+			$this->debug->unguard( $_SESSION[ $key ] );
+			return $_SESSION[ $key ];
 		}
 
 		$this->debug->unguard( false );
@@ -191,9 +191,9 @@ class zgSession
 	{
 		$this->debug->guard( );
 
-		if ( isset( $_SESSION [$key] ) )
+		if ( isset( $_SESSION[ $key ] ) )
 		{
-			unset( $_SESSION [$key] );
+			unset( $_SESSION[ $key ] );
 		}
 
 		$this->debug->unguard( true );
@@ -218,9 +218,9 @@ class zgSession
 
 		foreach ( $_SESSION as $key => $value )
 		{
-			if ( isset( $_SESSION [$key] ) )
+			if ( isset( $_SESSION[ $key ] ) )
 			{
-				unset( $_SESSION [$key] );
+				unset( $_SESSION[ $key ] );
 			}
 		}
 
@@ -311,8 +311,8 @@ class zgSession
 			if ( $this->database->numRows( $res ) )
 			{
 				$row = $this->database->fetchArray( $res );
-				$sessiondata = $row ['sessiondata_content'];
-				$this->boundIP = long2ip( $row ['sessiondata_ip'] );
+				$sessiondata = $row[ 'sessiondata_content' ];
+				$this->boundIP = long2ip( $row[ 'sessiondata_ip' ] );
 
 				$this->newSession = false;
 

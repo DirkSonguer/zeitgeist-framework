@@ -41,13 +41,12 @@ class zgTemplate
 		$this->configuration = zgConfiguration::init( );
 		$this->locale = new zgLocalisation( );
 
-		$this->database = new zgDatabase( );
-		$this->database->connect( );
+		$this->database = new zgDatabasePDO( "mysql:host=" . ZG_DB_DBSERVER . ";dbname=" . ZG_DB_DATABASE, ZG_DB_USERNAME, ZG_DB_USERPASS );
 
 		$this->file = '';
 		$this->content = '';
-		$this->blocks = array();
-		$this->variables = array();
+		$this->blocks = array( );
+		$this->variables = array( );
 	}
 
 
@@ -77,10 +76,10 @@ class zgTemplate
 		{
 			$this->debug->write( 'Template found and successfully loaded: ' . $filename );
 
-			$this->file = $template ['file'];
-			$this->content = $template ['content'];
-			$this->blocks = $template ['blocks'];
-			$this->variables = $template ['variables'];
+			$this->file = $template[ 'file' ];
+			$this->content = $template[ 'content' ];
+			$this->blocks = $template[ 'blocks' ];
+			$this->variables = $template[ 'variables' ];
 			$gotTemplateFromDatabase = true;
 		}
 		else
@@ -222,7 +221,7 @@ class zgTemplate
 	{
 		$this->debug->guard( );
 
-		if ( empty( $this->blocks [$blockname] ) )
+		if ( empty( $this->blocks[ $blockname ] ) )
 		{
 			$this->debug->write( 'Could not find the given block: ' . $blockname, 'warning' );
 			$this->messages->setMessage( 'Could not find the given block: ' . $blockname, 'warning' );
@@ -238,7 +237,7 @@ class zgTemplate
 			return false;
 		}
 
-		$ret = $this->blocks [$blockname]->currentContent;
+		$ret = $this->blocks[ $blockname ]->currentContent;
 
 		if ( $reset )
 		{
@@ -262,7 +261,7 @@ class zgTemplate
 	{
 		$this->debug->guard( );
 
-		if ( empty( $this->variables [$variablename] ) )
+		if ( empty( $this->variables[ $variablename ] ) )
 		{
 			$this->debug->write( 'Could not find the given variable: ' . $variablename, 'warning' );
 			$this->messages->setMessage( 'Could not find the given variable: ' . $variablename, 'warning' );
@@ -270,7 +269,7 @@ class zgTemplate
 			return false;
 		}
 
-		$this->variables [$variablename]->currentContent = $value;
+		$this->variables[ $variablename ]->currentContent = $value;
 
 		$this->debug->unguard( true );
 		return true;
@@ -299,9 +298,9 @@ class zgTemplate
 
 		foreach ( $values as $variablename => $variablevalue )
 		{
-			if ( !empty( $this->variables [$variablename] ) )
+			if ( !empty( $this->variables[ $variablename ] ) )
 			{
-				$this->variables [$variablename]->currentContent = $variablevalue;
+				$this->variables[ $variablename ]->currentContent = $variablevalue;
 			}
 		}
 
@@ -322,7 +321,7 @@ class zgTemplate
 	{
 		$this->debug->guard( );
 
-		if ( empty( $this->blocks [$blockname] ) )
+		if ( empty( $this->blocks[ $blockname ] ) )
 		{
 			$this->debug->write( 'Could not find the given block: ' . $blockname, 'warning' );
 			$this->messages->setMessage( 'Could not find the given block: ' . $blockname, 'warning' );
@@ -339,13 +338,13 @@ class zgTemplate
 		}
 
 		$blockID = $this->configuration->getConfiguration( 'zeitgeist', 'template', 'blockSubstBegin' ) . $blockname . $this->configuration->getConfiguration( 'zeitgeist', 'template', 'blockSubstEnd' );
-		if ( empty( $this->blocks [$blockname]->blockParent ) )
+		if ( empty( $this->blocks[ $blockname ]->blockParent ) )
 		{
-			$this->content = str_replace( $blockID, $this->blocks [$blockname]->currentContent . "\n" . $blockID, $this->content );
+			$this->content = str_replace( $blockID, $this->blocks[ $blockname ]->currentContent . "\n" . $blockID, $this->content );
 		}
 		else
 		{
-			$this->blocks [$this->blocks [$blockname]->blockParent]->currentContent = str_replace( $blockID, $this->blocks [$blockname]->currentContent . "\n" . $blockID, $this->blocks [$this->blocks [$blockname]->blockParent]->currentContent );
+			$this->blocks[ $this->blocks[ $blockname ]->blockParent ]->currentContent = str_replace( $blockID, $this->blocks[ $blockname ]->currentContent . "\n" . $blockID, $this->blocks[ $this->blocks[ $blockname ]->blockParent ]->currentContent );
 		}
 
 		if ( $reset )
@@ -456,14 +455,14 @@ class zgTemplate
 				 */
 		$linkurl = 'index.php';
 
-		$link = array();
+		$link = array( );
 		if ( $module != 'main' )
 		{
-			$link [0] = 'module=' . $module;
+			$link[ 0 ] = 'module=' . $module;
 		}
 		if ( $action != 'index' )
 		{
-			$link [1] = 'action=' . $action;
+			$link[ 1 ] = 'action=' . $action;
 		}
 		if ( count( $link ) > 0 )
 		{
@@ -509,12 +508,12 @@ class zgTemplate
 
 			$linkArray = explode( '.', $linkContent );
 
-			if ( $linkArray [0] == '' )
+			if ( $linkArray[ 0 ] == '' )
 			{
-				$linkArray [0] = 'main';
+				$linkArray[ 0 ] = 'main';
 			}
 
-			$newLink = $this->createLink( $linkArray [0], $linkArray [1] );
+			$newLink = $this->createLink( $linkArray[ 0 ], $linkArray[ 1 ] );
 			$this->content = str_replace( $completeLink, $newLink, $this->content );
 		}
 
@@ -550,11 +549,11 @@ class zgTemplate
 				$completeVariable = substr( $block->currentContent, $startPosition, ( $endPosition - $startPosition + strlen( $this->configuration->getConfiguration( 'zeitgeist', 'template', 'variableEnd' ) ) ) );
 				$variableContent = substr( $completeVariable, strlen( $this->configuration->getConfiguration( 'zeitgeist', 'template', 'variableBegin' ) ), ( strlen( $completeVariable ) - strlen( $this->configuration->getConfiguration( 'zeitgeist', 'template', 'variableBegin' ) ) - strlen( $this->configuration->getConfiguration( 'zeitgeist', 'template', 'variableEnd' ) ) ) );
 
-				$this->variables [$variableContent] = new zgTemplateVariable( );
+				$this->variables[ $variableContent ] = new zgTemplateVariable( );
 				$newVariableID = $this->configuration->getConfiguration( 'zeitgeist', 'template', 'variableSubstBegin' ) . $variableContent . $this->configuration->getConfiguration( 'zeitgeist', 'template', 'variableSubstEnd' );
 				$block->currentContent = str_replace( $completeVariable, $newVariableID, $block->currentContent );
 				$block->originalContent = $block->currentContent;
-				$block->blockVariables [$variableContent] = $newVariableID;
+				$block->blockVariables[ $variableContent ] = $newVariableID;
 			}
 		}
 
@@ -574,7 +573,7 @@ class zgTemplate
 	{
 		$this->debug->guard( );
 
-		$this->blocks ['root'] = new zgTemplateBlock( );
+		$this->blocks[ 'root' ] = new zgTemplateBlock( );
 
 		while ( $startPosition = strpos( $this->content, $this->configuration->getConfiguration( 'zeitgeist', 'template', 'variableBegin' ) ) )
 		{
@@ -590,10 +589,10 @@ class zgTemplate
 			$completeVariable = substr( $this->content, $startPosition, ( $endPosition - $startPosition + strlen( $this->configuration->getConfiguration( 'zeitgeist', 'template', 'variableEnd' ) ) ) );
 			$variableContent = substr( $completeVariable, strlen( $this->configuration->getConfiguration( 'zeitgeist', 'template', 'variableBegin' ) ), ( strlen( $completeVariable ) - strlen( $this->configuration->getConfiguration( 'zeitgeist', 'template', 'variableBegin' ) ) - strlen( $this->configuration->getConfiguration( 'zeitgeist', 'template', 'variableEnd' ) ) ) );
 
-			$this->variables [$variableContent] = new zgTemplateVariable( );
+			$this->variables[ $variableContent ] = new zgTemplateVariable( );
 			$newVariableID = $this->configuration->getConfiguration( 'zeitgeist', 'template', 'variableSubstBegin' ) . $variableContent . $this->configuration->getConfiguration( 'zeitgeist', 'template', 'variableSubstEnd' );
 			$this->content = str_replace( $completeVariable, $newVariableID, $this->content );
-			$this->blocks ['root']->blockVariables [$variableContent] = $newVariableID;
+			$this->blocks[ 'root' ]->blockVariables[ $variableContent ] = $newVariableID;
 		}
 
 		$this->debug->unguard( true );
@@ -654,15 +653,15 @@ class zgTemplate
 			}
 
 			$blockName = substr( $blockDefinition, $startPosition + 6 );
-			$this->blocks [$blockName] = new zgTemplateBlock( );
+			$this->blocks[ $blockName ] = new zgTemplateBlock( );
 
 			// extract block content
 			$startPosition = strpos( $completeBlock, $this->configuration->getConfiguration( 'zeitgeist', 'template', 'blockOpenEnd' ) );
 			$blockContent = substr( $completeBlock, ( $startPosition + strlen( $this->configuration->getConfiguration( 'zeitgeist', 'template', 'blockOpenEnd' ) ) ) );
 			$endPosition = strpos( $blockContent, $this->configuration->getConfiguration( 'zeitgeist', 'template', 'blockClose' ) );
 			$blockContent = substr( $blockContent, 0, $endPosition );
-			$this->blocks [$blockName]->currentContent = $blockContent;
-			$this->blocks [$blockName]->originalContent = $blockContent;
+			$this->blocks[ $blockName ]->currentContent = $blockContent;
+			$this->blocks[ $blockName ]->originalContent = $blockContent;
 
 			$newBlockID = $this->configuration->getConfiguration( 'zeitgeist', 'template', 'blockSubstBegin' ) . $blockName . $this->configuration->getConfiguration( 'zeitgeist', 'template', 'blockSubstEnd' );
 			$this->content = str_replace( $completeBlock, $newBlockID, $this->content );
@@ -711,7 +710,7 @@ class zgTemplate
 				}
 
 				$subblockName = substr( $blockID, strlen( $this->configuration->getConfiguration( 'zeitgeist', 'template', 'blockSubstBegin' ) ), ( $endPosition - strlen( $this->configuration->getConfiguration( 'zeitgeist', 'template', 'blockSubstBegin' ) ) ) );
-				$this->blocks [$subblockName]->blockParent = $parentName;
+				$this->blocks[ $subblockName ]->blockParent = $parentName;
 				$currentBlock = str_replace( $blockID, '', $currentBlock );
 			}
 
@@ -736,11 +735,11 @@ class zgTemplate
 	{
 		$this->debug->guard( );
 
-		if ( !empty( $this->blocks [$blockname]->blockVariables ) )
+		if ( !empty( $this->blocks[ $blockname ]->blockVariables ) )
 		{
-			foreach ( $this->blocks [$blockname]->blockVariables as $variableName => $variableID )
+			foreach ( $this->blocks[ $blockname ]->blockVariables as $variableName => $variableID )
 			{
-				if ( empty( $this->variables [$variableName] ) )
+				if ( empty( $this->variables[ $variableName ] ) )
 				{
 					$this->debug->write( 'Error inserting the variable ' . $variableName . ' into block ' . $blockname, 'error' );
 					$this->messages->setMessage( 'Error inserting the variable ' . $variableName . ' into block ' . $blockname, 'error' );
@@ -748,7 +747,7 @@ class zgTemplate
 					return false;
 				}
 
-				$this->blocks [$blockname]->currentContent = str_replace( $variableID, $this->variables [$variableName]->currentContent, $this->blocks [$blockname]->currentContent );
+				$this->blocks[ $blockname ]->currentContent = str_replace( $variableID, $this->variables[ $variableName ]->currentContent, $this->blocks[ $blockname ]->currentContent );
 			}
 		}
 
@@ -768,11 +767,11 @@ class zgTemplate
 	{
 		$this->debug->guard( );
 
-		if ( !empty( $this->blocks ['root']->blockVariables ) )
+		if ( !empty( $this->blocks[ 'root' ]->blockVariables ) )
 		{
-			foreach ( $this->blocks ['root']->blockVariables as $variableName => $variableID )
+			foreach ( $this->blocks[ 'root' ]->blockVariables as $variableName => $variableID )
 			{
-				if ( empty( $this->variables [$variableName] ) )
+				if ( empty( $this->variables[ $variableName ] ) )
 				{
 					$this->debug->write( 'Error inserting the variable ' . $variableName . ' into the outer template node', 'error' );
 					$this->messages->setMessage( 'Error inserting the variable ' . $variableName . ' into outer template node', 'error' );
@@ -780,7 +779,7 @@ class zgTemplate
 					return false;
 				}
 
-				$this->content = str_replace( $variableID, $this->variables [$variableName]->currentContent, $this->content );
+				$this->content = str_replace( $variableID, $this->variables[ $variableName ]->currentContent, $this->content );
 			}
 		}
 
@@ -804,7 +803,7 @@ class zgTemplate
 
 		if ( $name != '' )
 		{
-			if ( empty( $this->blocks [$name] ) )
+			if ( empty( $this->blocks[ $name ] ) )
 			{
 				$this->debug->write( 'Error resetting block ' . $name, 'error' );
 				$this->messages->setMessage( 'Error resetting block ' . $name, 'error' );
@@ -812,7 +811,7 @@ class zgTemplate
 				return false;
 			}
 
-			$this->blocks [$name]->currentContent = $this->blocks [$name]->originalContent;
+			$this->blocks[ $name ]->currentContent = $this->blocks[ $name ]->originalContent;
 		}
 		else
 		{
@@ -867,15 +866,24 @@ class zgTemplate
 		$this->debug->guard( );
 
 		$templatecacheTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_templatecache' );
-		$res = $this->database->query( "SELECT templatecache_content, templatecache_timestamp FROM " . $templatecacheTablename . " WHERE templatecache_name = '" . $filename . "'" );
-
-		if ( $this->database->numRows( $res ) == 1 )
+		$sql = $this->database->prepare( "SELECT templatecache_content, templatecache_timestamp FROM " . $templatecacheTablename . " WHERE templatecache_name = ?" );
+		$sql->bindParam( 1, $filename );
+		if ( !$sql->execute( ) )
 		{
-			$row = $this->database->fetchArray( $res );
+			$this->debug->write( 'Problem loading the template from the database: could not read from template table', 'warning' );
+			$this->messages->setMessage( 'Problem loading the template from the database: could not read from template table', 'warning' );
 
-			if ( $row ['templatecache_timestamp'] == filemtime( $filename ) )
+			$this->debug->unguard( false );
+			return false;
+		}
+
+		if ( $sql->rowCount( ) == 1 )
+		{
+			$row = $sql->fetch( PDO::FETCH_ASSOC );
+
+			if ( $row[ 'templatecache_timestamp' ] == filemtime( $filename ) )
 			{
-				$serializedTemplate = $row ['templatecache_content'];
+				$serializedTemplate = $row[ 'templatecache_content' ];
 				$serializedTemplate = base64_decode( $serializedTemplate );
 				$template = unserialize( $serializedTemplate );
 
@@ -889,9 +897,20 @@ class zgTemplate
 			}
 			else
 			{
-				$res = $this->database->query( "DELETE FROM " . $templatecacheTablename . " WHERE templatecache_name = '" . $filename . "'" );
-				$this->debug->write( 'Template data in the database is outdated', 'warning' );
-				$this->messages->setMessage( 'Template data in the database is outdated', 'warning' );
+				$this->debug->write( 'Template data in the database is outdated', 'message' );
+				$this->messages->setMessage( 'Template data in the database is outdated', 'message' );
+
+				$sql = $this->database->prepare( "DELETE FROM " . $templatecacheTablename . " WHERE templatecache_name = ?" );
+				$sql->bindParam( 1, $filename );
+				if ( !$sql->execute( ) )
+				{
+					$this->debug->write( 'Problem loading the template from the database: could not write to template table', 'warning' );
+					$this->messages->setMessage( 'Problem loading the template from the database: could not write to template table', 'warning' );
+
+					$this->debug->unguard( false );
+					return false;
+				}
+
 				$this->debug->unguard( false );
 				return false;
 			}
@@ -922,12 +941,12 @@ class zgTemplate
 	{
 		$this->debug->guard( );
 
-		$template = array();
+		$template = array( );
 
-		$template ['file'] = $filename;
-		$template ['content'] = $this->content;
-		$template ['blocks'] = $this->blocks;
-		$template ['variables'] = $this->variables;
+		$template[ 'file' ] = $filename;
+		$template[ 'content' ] = $this->content;
+		$template[ 'blocks' ] = $this->blocks;
+		$template[ 'variables' ] = $this->variables;
 
 		$serializedTemplate = serialize( $template );
 		if ( $serializedTemplate == '' )
@@ -944,7 +963,19 @@ class zgTemplate
 		}
 
 		$templatecacheTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_templatecache' );
-		$res = $this->database->query( "INSERT INTO " . $templatecacheTablename . "(templatecache_name, templatecache_content, templatecache_timestamp) " . "VALUES('" . $filename . "', '" . $serializedTemplate . "', '" . filemtime( $filename ) . "')" );
+
+		$sql = $this->database->prepare( "INSERT INTO " . $templatecacheTablename . "(templatecache_name, templatecache_content, templatecache_timestamp) " . "VALUES(?, ?, ?)" );
+		$sql->bindParam( 1, $filename );
+		$sql->bindParam( 2, $serializedTemplate );
+		$sql->bindParam( 3, filemtime( $filename ) );
+		if ( !$sql->execute( ) )
+		{
+			$this->debug->write( 'Problem saving the template to the database: could not write to template table', 'warning' );
+			$this->messages->setMessage( 'Problem saving the template to the database: could not write to template table', 'warning' );
+
+			$this->debug->unguard( false );
+			return false;
+		}
 
 		$this->debug->unguard( true );
 		return true;
@@ -965,7 +996,7 @@ class zgTemplateBlock
 		$currentContent = '';
 		$originalContent = '';
 		$blockParent = '';
-		$blockVariables = array();
+		$blockVariables = array( );
 	}
 }
 

@@ -40,10 +40,9 @@ class zgConfiguration
 		$this->debug = zgDebug::init( );
 		$this->messages = zgMessages::init( );
 
-		$this->database = new zgDatabase( );
-		$this->database->connect( );
+		$this->database = new zgDatabasePDO( "mysql:host=" . ZG_DB_DBSERVER . ";dbname=" . ZG_DB_DATABASE, ZG_DB_USERNAME, ZG_DB_USERPASS );
 
-		$this->configuration = array();
+		$this->configuration = array( );
 	}
 
 
@@ -94,7 +93,7 @@ class zgConfiguration
 		if ( $section == '' )
 		{
 			// try to return the complete configuration if not empty
-			if ( empty( $this->configuration [$module] ) )
+			if ( empty( $this->configuration[ $module ] ) )
 			{
 				$this->debug->write( 'Problem reading the configuration: module not found', 'warning' );
 				$this->messages->setMessage( 'Problem reading the configuration: module not found', 'warning' );
@@ -102,13 +101,13 @@ class zgConfiguration
 				return false;
 			}
 
-			$ret = $this->configuration [$module];
-			array_walk_recursive( $ret, array($this, '_replaceReferences') );
+			$ret = $this->configuration[ $module ];
+			array_walk_recursive( $ret, array( $this, '_replaceReferences' ) );
 		}
 		elseif ( $configuration == '' )
 		{
 			// try to return the section configuration if not empty
-			if ( empty( $this->configuration [$module] [$section] ) )
+			if ( empty( $this->configuration[ $module ][ $section ] ) )
 			{
 				$this->debug->write( 'Problem reading the configuration: section not found', 'warning' );
 				$this->messages->setMessage( 'Problem reading the configuration: section not found', 'warning' );
@@ -116,13 +115,13 @@ class zgConfiguration
 				return false;
 			}
 
-			$ret = $this->configuration [$module] [$section];
-			array_walk_recursive( $ret, array($this, '_replaceReferences') );
+			$ret = $this->configuration[ $module ][ $section ];
+			array_walk_recursive( $ret, array( $this, '_replaceReferences' ) );
 		}
 		else
 		{
 			// try to return the configuration value if it's not empty
-			if ( !isset( $this->configuration [$module] [$section] [$configuration] ) )
+			if ( !isset( $this->configuration[ $module ][ $section ][ $configuration ] ) )
 			{
 				$this->debug->write( 'Problem reading the configuration: configuration not found (' . $module . ' - ' . $section . ' - ' . $configuration . ')', 'warning' );
 				$this->messages->setMessage( 'Problem reading the configuration: configuration not found (' . $module . ' - ' . $section . ' - ' . $configuration . ')', 'warning' );
@@ -130,14 +129,14 @@ class zgConfiguration
 				return false;
 			}
 
-			$ret = $this->configuration [$module] [$section] [$configuration];
+			$ret = $this->configuration[ $module ][ $section ][ $configuration ];
 			if ( !is_array( $ret ) )
 			{
 				$this->_replaceReferences( $ret, '' );
 			}
 			else
 			{
-				array_walk_recursive( $ret, array($this, '_replaceReferences') );
+				array_walk_recursive( $ret, array( $this, '_replaceReferences' ) );
 			}
 		}
 
@@ -160,7 +159,7 @@ class zgConfiguration
 		$this->debug->guard( );
 
 		// check if module with this name is already loaded
-		if ( ( !empty( $this->configuration [$modulename] ) ) && ( $overwrite == false ) )
+		if ( ( !empty( $this->configuration[ $modulename ] ) ) && ( $overwrite == false ) )
 		{
 			$this->debug->write( 'Problem loading the configuration: module already loaded', 'warning' );
 			$this->messages->setMessage( 'Problem loading the configuration: module already loaded', 'warning' );
@@ -176,17 +175,17 @@ class zgConfiguration
 			$this->debug->write( 'Configuration found and successfully loaded: ' . $filename );
 			if ( !$overwrite )
 			{
-				$this->configuration [$modulename] = $configurationArray;
+				$this->configuration[ $modulename ] = $configurationArray;
 			}
 			else
 			{
-				if ( is_array( $this->configuration [$modulename] ) )
+				if ( is_array( $this->configuration[ $modulename ] ) )
 				{
-					$this->configuration [$modulename] = array_merge( $this->configuration [$modulename], $configurationArray );
+					$this->configuration[ $modulename ] = array_merge( $this->configuration[ $modulename ], $configurationArray );
 				}
 				else
 				{
-					$this->configuration [$modulename] = $configurationArray;
+					$this->configuration[ $modulename ] = $configurationArray;
 				}
 			}
 		}
@@ -206,17 +205,17 @@ class zgConfiguration
 
 			if ( !$overwrite )
 			{
-				$this->configuration [$modulename] = $configurationArray;
+				$this->configuration[ $modulename ] = $configurationArray;
 			}
 			else
 			{
-				if ( is_array( $this->configuration [$modulename] ) )
+				if ( is_array( $this->configuration[ $modulename ] ) )
 				{
-					$this->configuration [$modulename] = array_merge( $this->configuration [$modulename], $configurationArray );
+					$this->configuration[ $modulename ] = array_merge( $this->configuration[ $modulename ], $configurationArray );
 				}
 				else
 				{
-					$this->configuration [$modulename] = $configurationArray;
+					$this->configuration[ $modulename ] = $configurationArray;
 				}
 			}
 		}
@@ -239,39 +238,61 @@ class zgConfiguration
 	{
 		$this->debug->guard( );
 
-		$res = $this->database->query( "SELECT configurationcache_content, configurationcache_timestamp FROM " . ZG_DB_CONFIGURATIONCACHE . " WHERE configurationcache_name = '" . $filename . "'" );
+		$sql = $this->database->prepare( "SELECT configurationcache_content, configurationcache_timestamp FROM " . ZG_DB_CONFIGURATIONCACHE . " WHERE configurationcache_name = ?" );
+		$sql->bindParam( 1, $filename );
 
-		if ( $this->database->numRows( $res ) == 1 )
+		if ( !$sql->execute( ) )
 		{
-			$row = $this->database->fetchArray( $res );
+			$this->debug->write( 'Problem loading the configuration from database: could not read from configuration table', 'warning' );
+			$this->messages->setMessage( 'Problem loading the configuration from database: could not read from configuration table', 'warning' );
 
-			if ( $row ['configurationcache_timestamp'] == filemtime( $filename ) )
+			$this->debug->unguard( false );
+			return false;
+		}
+
+		if ( $sql->rowCount( ) == 1 )
+		{
+			// as there is only one row, we only need to fetch once
+			$row = $sql->fetch( PDO::FETCH_ASSOC );
+
+			if ( $row[ 'configurationcache_timestamp' ] == filemtime( $filename ) )
 			{
-				$serializedConfiguration = $row ['configurationcache_content'];
+				$serializedConfiguration = $row[ 'configurationcache_content' ];
 				$serializedConfiguration = base64_decode( $serializedConfiguration );
 				$configuration = unserialize( $serializedConfiguration );
 
 				if ( $configuration === false )
 				{
-					$this->debug->write( 'Error unserializing configuration content from the database', 'error' );
-					$this->messages->setMessage( 'Error unserializing configuration content from the database', 'error' );
+					$this->debug->write( 'Problem loading the configuration from database: error unserializing configuration content from the database', 'error' );
+					$this->messages->setMessage( 'Problem loading the configuration from database: error unserializing configuration content from the database', 'error' );
 					$this->debug->unguard( false );
 					return false;
 				}
 			}
 			else
 			{
-				$res = $this->database->query( "DELETE FROM " . ZG_DB_CONFIGURATIONCACHE . " WHERE configurationcache_name = '" . $filename . "'" );
-				$this->debug->write( 'Configuration data in the database is outdated', 'warning' );
-				$this->messages->setMessage( 'Configuration data in the database is outdated', 'warning' );
+				$sql = $this->database->prepare( "DELETE FROM " . ZG_DB_CONFIGURATIONCACHE . " WHERE configurationcache_name = ?" );
+				$sql->bindParam( 1, $filename );
+
+				if ( !$sql->execute( ) )
+				{
+					$this->debug->write( 'Problem loading the configuration from database: could not delete outdated data from configuration table', 'warning' );
+					$this->messages->setMessage( 'Problem loading the configuration from database: could not delete outdated data from configuration table', 'warning' );
+
+					$this->debug->unguard( false );
+					return false;
+				}
+
+				$this->debug->write( 'Info while loading the configuration from database: configuration data in the database is outdated', 'warning' );
+				$this->messages->setMessage( 'Info while loading the configuration from database: configuration data in the database is outdated', 'warning' );
 				$this->debug->unguard( false );
 				return false;
 			}
 		}
 		else
 		{
-			$this->debug->write( 'No configuration is stored in database for this module', 'warning' );
-			$this->messages->setMessage( 'No configuration is stored in database for this module', 'warning' );
+			$this->debug->write( 'Info while loading the configuration from database: no configuration is stored in database for this module', 'warning' );
+			$this->messages->setMessage( 'Info while loading the configuration from database: no configuration is stored in database for this module', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -309,7 +330,19 @@ class zgConfiguration
 			return false;
 		}
 
-		$res = $this->database->query( "INSERT INTO " . ZG_DB_CONFIGURATIONCACHE . "(configurationcache_name, configurationcache_content, configurationcache_timestamp) " . "VALUES('" . $filename . "', '" . $serializedConfiguration . "', '" . filemtime( $filename ) . "')" );
+		$sql = $this->database->prepare( "INSERT INTO " . ZG_DB_CONFIGURATIONCACHE . "(configurationcache_name, configurationcache_content, configurationcache_timestamp) " . "VALUES(?, ?, ?)" );
+		$sql->bindParam( 1, $filename );
+		$sql->bindParam( 2, $serializedConfiguration );
+		$sql->bindParam( 3, filemtime( $filename ) );
+		
+		if ( !$sql->execute( ) )
+		{
+			$this->debug->write( 'Problem saving the configuration to database: could not insert data into configuration table', 'warning' );
+			$this->messages->setMessage( 'Problem saving the configuration to database: could not insert data into configuration table', 'warning' );
+
+			$this->debug->unguard( false );
+			return false;
+		}
 
 		$this->debug->unguard( true );
 		return true;
@@ -339,9 +372,9 @@ class zgConfiguration
 			$referenceArray = explode( '.', $reference );
 			if ( count( $referenceArray ) == 3 )
 			{
-				if ( $this->getConfiguration( $referenceArray [0], $referenceArray [1], $referenceArray [2] ) )
+				if ( $this->getConfiguration( $referenceArray[ 0 ], $referenceArray[ 1 ], $referenceArray[ 2 ] ) )
 				{
-					$referenceValue = $this->getConfiguration( $referenceArray [0], $referenceArray [1], $referenceArray [2] );
+					$referenceValue = $this->getConfiguration( $referenceArray[ 0 ], $referenceArray[ 1 ], $referenceArray[ 2 ] );
 					$configurationValue = str_replace( $referenceString, $referenceValue, $configurationValue );
 				}
 				else
@@ -381,9 +414,9 @@ class zgConfiguration
 			return false;
 		}
 
-		$retArray = array();
+		$retArray = array( );
 
-		$fileArray = array();
+		$fileArray = array( );
 		$fileArray = file( $filename );
 
 		if ( !$fileArray )
@@ -437,18 +470,18 @@ class zgConfiguration
 
 					if ( !$arrayvalue )
 					{
-						$retArray [$currentSection] [$configurationKey] = $configurationValue;
+						$retArray[ $currentSection ][ $configurationKey ] = $configurationValue;
 						$arrayKey = false;
 					}
 					else
 					{
 						if ( !$arrayKey )
 						{
-							$retArray [$currentSection] [$configurationKey] [] = $configurationValue;
+							$retArray[ $currentSection ][ $configurationKey ][ ] = $configurationValue;
 						}
 						else
 						{
-							$retArray [$currentSection] [$configurationKey] [$arrayKey] = $configurationValue;
+							$retArray[ $currentSection ][ $configurationKey ][ $arrayKey ] = $configurationValue;
 						}
 					}
 				}

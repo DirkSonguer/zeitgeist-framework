@@ -40,8 +40,7 @@ class zgController
 		$this->user = zgUserhandler::init( );
 		$this->actionlog = new zgActionlog( );
 
-		$this->database = new zgDatabase( );
-		$this->database->connect( );
+		$this->database = new zgDatabasePDO( "mysql:host=" . ZG_DB_DBSERVER . ";dbname=" . ZG_DB_DATABASE, ZG_DB_USERNAME, ZG_DB_USERPASS );
 	}
 
 
@@ -57,24 +56,23 @@ class zgController
 		$this->debug->guard( );
 
 		$modulesTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_modules' );
-		$sql = "SELECT * FROM " . $modulesTablename . " WHERE module_name = '" . mysql_real_escape_string( $module ) . "'";
 
-		$res = $this->database->query( $sql );
-		if ( !empty( $res ) )
-		{
-			$row = $this->database->fetchArray( $res );
+		$sql = $this->database->prepare( "SELECT * FROM " . $modulesTablename . " WHERE module_name = ?" );
+		$sql->bindParam( 1, $module );
 
-			$this->debug->unguard( $row );
-			return $row;
-		}
-		else
+		if ( !$sql->execute( ) )
 		{
+			$this->debug->write( 'Problem getting the module data: could not read from module table', 'warning' );
+			$this->messages->setMessage( 'Problem getting the module data: could not read from module table', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
 
-		$this->debug->unguard( true );
-		return true;
+		$row = $sql->fetch( PDO::FETCH_ASSOC );
+
+		$this->debug->unguard( $row );
+		return $row;
 	}
 
 
@@ -91,24 +89,24 @@ class zgController
 		$this->debug->guard( );
 
 		$actionsTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_actions' );
-		$sql = "SELECT * FROM " . $actionsTablename . " WHERE action_module = '" . $module ['module_id'] . "' AND action_name = '" . mysql_real_escape_string( $action ) . "'";
 
-		$res = $this->database->query( $sql );
-		if ( !empty( $res ) )
-		{
-			$row = $this->database->fetchArray( $res );
+		$sql = $this->database->prepare( "SELECT * FROM " . $actionsTablename . " WHERE action_module = ? AND action_name = ?" );
+		$sql->bindParam( 1, $module[ 'module_id' ] );
+		$sql->bindParam( 2, $action );
 
-			$this->debug->unguard( $row );
-			return $row;
-		}
-		else
+		if ( !$sql->execute( ) )
 		{
+			$this->debug->write( 'Problem getting the action data: could not read from action table', 'warning' );
+			$this->messages->setMessage( 'Problem getting the action data: could not read from action table', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
 
-		$this->debug->unguard( true );
-		return true;
+		$row = $sql->fetch( PDO::FETCH_ASSOC );
+
+		$this->debug->unguard( $row );
+		return $row;
 	}
 
 
@@ -126,7 +124,7 @@ class zgController
 
 		if ( $this->user->isLoggedIn( ) )
 		{
-			$ret = $this->user->hasUserright( $actionData ['action_id'] );
+			$ret = $this->user->hasUserright( $actionData[ 'action_id' ] );
 
 			$this->debug->unguard( $ret );
 			return $ret;
@@ -151,21 +149,25 @@ class zgController
 
 		$actionsTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_actions' );
 		$modulesTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_modules' );
-		$sql = "SELECT a.action_requiresuserright FROM " . $actionsTablename . " a ";
-		$sql .= "LEFT JOIN " . $modulesTablename . " m ON a.action_module = m.module_id ";
-		$sql .= "WHERE m.module_name = '" . mysql_real_escape_string( $module ) . "' AND a.action_name = '" . mysql_real_escape_string( $action ) . "'";
+		
+		$sql = $this->database->prepare( "SELECT a.action_requiresuserright FROM " . $actionsTablename . " a LEFT JOIN " . $modulesTablename . " m ON a.action_module = m.module_id WHERE m.module_name = ? AND a.action_name = ?" );
+		$sql->bindParam( 1, $module );
+		$sql->bindParam( 2, $action );
 
-		$res = $this->database->query( $sql );
-		if ( !empty( $res ) )
+		if ( !$sql->execute( ) )
 		{
-			$row = $this->database->fetchArray( $res );
+			$this->debug->write( 'Problem getting userrights data: could not read from action and / or module table', 'warning' );
+			$this->messages->setMessage( 'Problem getting userrights data: could not read from action and / or module', 'warning' );
 
-			$this->debug->unguard( $row ['action_requiresuserright'] );
-			return $row ['action_requiresuserright'];
+			$this->debug->unguard( false );
+			return false;
 		}
 
-		$this->debug->unguard( false );
-		return false;
+		$row = $sql->fetch( PDO::FETCH_ASSOC );
+		$ret = $row[ 'action_requiresuserright' ];
+
+		$this->debug->unguard( $ret );
+		return $ret;
 	}
 
 
@@ -224,7 +226,7 @@ class zgController
 		}
 
 		// check from data if module is active
-		if ( $moduleData ['module_active'] != '1' )
+		if ( $moduleData[ 'module_active' ] != '1' )
 		{
 			$this->debug->write( 'Error loading the module: Module is not active: ' . $module, 'error' );
 			$this->messages->setMessage( 'Error loading the module: Module is not active: ' . $module, 'error' );
@@ -272,7 +274,7 @@ class zgController
 		}
 
 		// check if user has rights for given action
-		if ( $actionData ['action_requiresuserright'] == '1' )
+		if ( $actionData[ 'action_requiresuserright' ] == '1' )
 		{
 			if ( !$this->_checkRightsForAction( $moduleData, $actionData ) )
 			{
@@ -298,11 +300,11 @@ class zgController
 		// log the pageview if logging is active
 		if ( $this->configuration->getConfiguration( 'zeitgeist', 'actionlog', 'actionlog_active' ) == '1' )
 		{
-			$this->actionlog->logAction( $moduleData ['module_id'], $actionData ['action_id'], $safeparameters );
+			$this->actionlog->logAction( $moduleData[ 'module_id' ], $actionData[ 'action_id' ], $safeparameters );
 		}
 
 		// execute action in module
-		$ret = call_user_func( array(&$moduleClass, $action), $safeparameters );
+		$ret = call_user_func( array( &$moduleClass, $action ), $safeparameters );
 		if ( $ret !== true )
 		{
 			$this->debug->unguard( $ret );
