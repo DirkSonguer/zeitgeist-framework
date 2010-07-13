@@ -53,7 +53,7 @@ class zgActionlog
 		$sql = $this->database->prepare( "INSERT INTO actionlog(actionlog_module, actionlog_action, actionlog_ip) VALUES(?, ?, INET_ATON('" . getenv( 'REMOTE_ADDR' ) . "'))" );
 		$sql->bindParam( 1, $module );
 		$sql->bindParam( 2, $action );
-		
+
 		if ( !$sql->execute( ) )
 		{
 			$this->debug->write( 'Problem logging the action: could not write to log table', 'warning' );

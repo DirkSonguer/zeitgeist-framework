@@ -149,7 +149,7 @@ class zgController
 
 		$actionsTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_actions' );
 		$modulesTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_modules' );
-		
+
 		$sql = $this->database->prepare( "SELECT a.action_requiresuserright FROM " . $actionsTablename . " a LEFT JOIN " . $modulesTablename . " m ON a.action_module = m.module_id WHERE m.module_name = ? AND a.action_name = ?" );
 		$sql->bindParam( 1, $module );
 		$sql->bindParam( 2, $action );

@@ -133,7 +133,7 @@ class zgUserrights
 		{
 			$sql->bindParam( 1, $key );
 			$sql->bindParam( 2, $userid );
-			
+
 			if ( !$sql->execute( ) )
 			{
 				$this->debug->write( 'Problem setting the user rights: could not insert the rights into the database', 'warning' );

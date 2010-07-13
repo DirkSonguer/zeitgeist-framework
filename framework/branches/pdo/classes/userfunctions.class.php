@@ -156,7 +156,7 @@ class zgUserfunctions
 		$this->debug->guard( );
 
 		// user
-		$sql = $this->database->prepare( "DELETE FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " WHERE user_id=?" );
+		$sql = $this->database->prepare( "DELETE FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " WHERE user_id = ?" );
 		$sql->bindParam( 1, $userid );
 
 		if ( !$sql->execute( ) )
@@ -169,7 +169,7 @@ class zgUserfunctions
 		}
 
 		// userdata
-		$sql = $this->database->prepare( "DELETE FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userdata' ) . " WHERE userdata_user=?" );
+		$sql = $this->database->prepare( "DELETE FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userdata' ) . " WHERE userdata_user = ?" );
 		$sql->bindParam( 1, $userid );
 
 		if ( !$sql->execute( ) )
@@ -182,7 +182,7 @@ class zgUserfunctions
 		}
 
 		// userrights
-		$sql = $this->database->prepare( "DELETE FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userrights' ) . " WHERE userright_user=?" );
+		$sql = $this->database->prepare( "DELETE FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userrights' ) . " WHERE userright_user = ?" );
 		$sql->bindParam( 1, $userid );
 
 		if ( !$sql->execute( ) )
@@ -195,7 +195,7 @@ class zgUserfunctions
 		}
 
 		// userroles
-		$sql = $this->database->prepare( "DELETE FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userroles_to_users' ) . " WHERE userroleuser_user=?" );
+		$sql = $this->database->prepare( "DELETE FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userroles_to_users' ) . " WHERE userroleuser_user = ?" );
 		$sql->bindParam( 1, $userid );
 
 		if ( !$sql->execute( ) )
@@ -208,7 +208,7 @@ class zgUserfunctions
 		}
 
 		// userconfirmation
-		$sql = $this->database->prepare( "DELETE FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userconfirmation' ) . " WHERE userconfirmation_user=?" );
+		$sql = $this->database->prepare( "DELETE FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userconfirmation' ) . " WHERE userconfirmation_user = ?" );
 		$sql->bindParam( 1, $userid );
 
 		if ( !$sql->execute( ) )
@@ -238,7 +238,7 @@ class zgUserfunctions
 	{
 		$this->debug->guard( );
 
-		$sql = $this->database->prepare( "SELECT user_id, user_key, user_username FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " WHERE user_username = ? AND user_password = ? AND user_active='1'" );
+		$sql = $this->database->prepare( "SELECT user_id, user_key, user_username FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " WHERE user_username = ? AND user_password = ? AND user_active = '1'" );
 		$sql->bindParam( 1, $username );
 		$sql->bindParam( 2, md5( $password ) );
 
@@ -296,7 +296,7 @@ class zgUserfunctions
 			return false;
 		}
 
-		$sql = $this->database->prepare( "UPDATE " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " SET user_password = ? WHERE user_id=?" );
+		$sql = $this->database->prepare( "UPDATE " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " SET user_password = ? WHERE user_id = ?" );
 		$sql->bindParam( 1, md5( $password ) );
 		$sql->bindParam( 2, $userid );
 
@@ -335,7 +335,7 @@ class zgUserfunctions
 			return false;
 		}
 
-		$sql = $this->database->prepare( "SELECT * FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " WHERE user_username=?" );
+		$sql = $this->database->prepare( "SELECT * FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " WHERE user_username = ?" );
 		$sql->bindParam( 1, $username );
 
 		if ( !$sql->execute( ) )
@@ -355,7 +355,7 @@ class zgUserfunctions
 			return false;
 		}
 
-		$sql = $this->database->prepare( "UPDATE " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " SET user_username = ? WHERE user_id=?" );
+		$sql = $this->database->prepare( "UPDATE " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " SET user_username = ? WHERE user_id = ?" );
 		$sql->bindParam( 1, $username );
 		$sql->bindParam( 2, $userid );
 
@@ -519,7 +519,7 @@ class zgUserfunctions
 		$this->debug->guard( );
 
 		// activate the user if it's not already active
-		$sql = $this->database->prepare( "UPDATE " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " SET user_active='1' WHERE user_id=? AND user_active='0'" );
+		$sql = $this->database->prepare( "UPDATE " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " SET user_active = '1' WHERE user_id = ? AND user_active = '0'" );
 		$sql->bindParam( 1, $userid );
 
 		if ( !$sql->execute( ) )
@@ -533,7 +533,7 @@ class zgUserfunctions
 
 		// delete the according user confirmation data as it's no longer
 		// needed for an active user
-		$sql = $this->database->prepare( "DELETE FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userconfirmation' ) . " WHERE userconfirmation_user=?" );
+		$sql = $this->database->prepare( "DELETE FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userconfirmation' ) . " WHERE userconfirmation_user = ?" );
 		$sql->bindParam( 1, $userid );
 
 		if ( !$sql->execute( ) )
@@ -562,7 +562,7 @@ class zgUserfunctions
 		$this->debug->guard( );
 
 		// deactivate the user if it's active
-		$sql = $this->database->prepare( "UPDATE " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " SET user_active='0' WHERE user_id=? AND user_active='1'" );
+		$sql = $this->database->prepare( "UPDATE " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " SET user_active = '0' WHERE user_id = ? AND user_active = '1'" );
 		$sql->bindParam( 1, $userid );
 
 		if ( !$sql->execute( ) )
