@@ -2,11 +2,7 @@
 
 if ( !defined( 'MULTITEST' ) )
 {
-	define( 'DEBUGMODE', true );
-
 	include( dirname( __FILE__ ) . '/../_configuration.php' );
-
-	$debug = zgDebug::init( );
 }
 
 /**
@@ -275,12 +271,4 @@ if ( !defined( 'MULTITEST' ) )
 	$test->addTestCase( new zgUserrolesTest( ) );
 
 	$test->run( new HtmlReporter( ) );
-
-
-$debug->loadStylesheet( 'debug.css' );
-//	$debug->showInnerLoops = true;
-$debug->showMiscInformation();
-$debug->showDebugMessages( );
-$debug->showQueryMessages();
-$debug->showGuardMessages();	
 }
