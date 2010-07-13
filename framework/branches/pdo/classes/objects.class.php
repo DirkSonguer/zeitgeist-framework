@@ -39,7 +39,7 @@ class zgObjects
 		$this->debug = zgDebug::init( );
 		$this->messages = zgMessages::init( );
 
-		$this->objects = array();
+		$this->objects = array( );
 	}
 
 
@@ -72,7 +72,7 @@ class zgObjects
 	{
 		$this->debug->guard( );
 
-		if ( ( !empty( $this->objects [$name] ) ) && ( !$overwrite ) )
+		if ( ( !empty( $this->objects[ $name ] ) ) && ( !$overwrite ) )
 		{
 			$this->debug->write( 'An object of this name ("' . $name . '") already exists', 'error' );
 			$this->messages->setMessage( 'An object of this name ("' . $name . '") already exists', 'error' );
@@ -80,7 +80,7 @@ class zgObjects
 			return false;
 		}
 
-		$this->objects [$name] = $object;
+		$this->objects[ $name ] = $object;
 
 		$this->debug->unguard( true );
 		return true;
@@ -98,7 +98,7 @@ class zgObjects
 	{
 		$this->debug->guard( );
 
-		if ( empty( $this->objects [$objectname] ) )
+		if ( empty( $this->objects[ $objectname ] ) )
 		{
 			$this->debug->write( 'Object with name ' . $objectname . ' not found', 'error' );
 			$this->messages->setMessage( 'Object with name ' . $objectname . ' not found', 'error' );
@@ -106,7 +106,7 @@ class zgObjects
 			return false;
 		}
 
-		$ret = $this->objects [$objectname];
+		$ret = $this->objects[ $objectname ];
 
 		$this->debug->unguard( $ret );
 		return $ret;
@@ -124,7 +124,7 @@ class zgObjects
 	{
 		$this->debug->guard( );
 
-		if ( empty( $this->objects [$objectname] ) )
+		if ( empty( $this->objects[ $objectname ] ) )
 		{
 			$this->debug->write( 'Object with name ' . $objectname . ' not found', 'error' );
 			$this->messages->setMessage( 'Object with name ' . $objectname . ' not found', 'error' );
@@ -132,7 +132,7 @@ class zgObjects
 			return false;
 		}
 
-		unset( $this->objects [$objectname] );
+		unset( $this->objects[ $objectname ] );
 
 		$this->debug->unguard( true );
 		return true;
@@ -149,7 +149,7 @@ class zgObjects
 	{
 		$this->debug->guard( );
 
-		$this->objects = array();
+		$this->objects = array( );
 
 		$this->debug->unguard( true );
 		return true;

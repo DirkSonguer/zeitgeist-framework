@@ -39,7 +39,7 @@ class zgMessages
 	protected function __construct( )
 	{
 		$this->debug = zgDebug::init( );
-		$this->messages = array();
+		$this->messages = array( );
 	}
 
 
@@ -77,10 +77,10 @@ class zgMessages
 		$newMessage->type = $type;
 
 		$backtrace = debug_backtrace( );
-		$backtraceSender = $backtrace [0];
-		$newMessage->from = array_pop( explode( '\\', $backtraceSender ['file'] ) );
+		$backtraceSender = $backtrace[ 0 ];
+		$newMessage->from = array_pop( explode( '\\', $backtraceSender[ 'file' ] ) );
 
-		$this->messages [] = $newMessage;
+		$this->messages[ ] = $newMessage;
 
 		$this->debug->unguard( true );
 		return true;
@@ -98,13 +98,13 @@ class zgMessages
 	{
 		$this->debug->guard( );
 
-		$retArray = array();
+		$retArray = array( );
 
 		foreach ( $this->messages as $message )
 		{
 			if ( $message->type == $type )
 			{
-				$retArray [] = $message;
+				$retArray[ ] = $message;
 			}
 		}
 
@@ -124,13 +124,13 @@ class zgMessages
 	{
 		$this->debug->guard( );
 
-		$retArray = array();
+		$retArray = array( );
 
 		foreach ( $this->messages as $message )
 		{
 			if ( ( $from == '' ) || ( $message->from == $from ) )
 			{
-				$retArray [] = $message;
+				$retArray[ ] = $message;
 			}
 		}
 
@@ -148,7 +148,7 @@ class zgMessages
 	{
 		$this->debug->guard( );
 
-		$this->messages = array();
+		$this->messages = array( );
 
 		$this->debug->unguard( true );
 		return true;
@@ -163,7 +163,7 @@ class zgMessages
 	 *
 	 * @return boolean
 	 */
-	public function importMessages( $messagearray = array() )
+	public function importMessages( $messagearray = array( ) )
 	{
 		$this->debug->guard( );
 
@@ -223,17 +223,18 @@ class zgMessages
 
 			if ( ( $messages === false ) || ( !is_array( $messages ) ) )
 			{
-				$this->debug->write( 'Error unserializing message content from the database', 'error' );
-				$this->setMessage( 'Error unserializing message content from the database', 'error' );
+				$this->debug->write( 'Error unserializing message content from the session', 'error' );
+				$this->setMessage( 'Error unserializing message content from the session', 'error' );
 				$this->debug->unguard( false );
 				return false;
 			}
 
 			$this->importMessages( $messages );
-		} else
+		}
+		else
 		{
-			$this->debug->write( 'No messagedata is stored in database for this user', 'warning' );
-			$this->setMessage( 'No messagedata is stored in database for this user', 'warning' );
+			$this->debug->write( 'No messagedata is stored in session for this user', 'warning' );
+			$this->setMessage( 'No messagedata is stored in session for this user', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}

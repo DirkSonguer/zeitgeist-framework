@@ -105,6 +105,7 @@ class zgUserfunctionsTest extends UnitTestCase
 		$testfunctions = new testFunctions( );
 
 		$testfunctions->createZeitgeistTable( 'users' );
+		$testfunctions->createZeitgeistTable( 'userconfirmation' );
 
 		$username = uniqid( );
 		$password = uniqid( );
@@ -116,6 +117,7 @@ class zgUserfunctionsTest extends UnitTestCase
 		$ret = $this->database->numRows( $res );
 		$this->assertEqual( $ret, 1 );
 
+		$testfunctions->dropZeitgeistTable( 'userconfirmation' );
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
 	}
@@ -130,6 +132,7 @@ class zgUserfunctionsTest extends UnitTestCase
 		$testfunctions = new testFunctions( );
 
 		$testfunctions->createZeitgeistTable( 'users' );
+		$testfunctions->createZeitgeistTable( 'userconfirmation' );
 
 		$username = uniqid( );
 		$password = uniqid( );
@@ -144,6 +147,7 @@ class zgUserfunctionsTest extends UnitTestCase
 		$ret = $this->database->numRows( $res );
 		$this->assertEqual( $ret, 1 );
 
+		$testfunctions->dropZeitgeistTable( 'userconfirmation' );
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
 	}
@@ -158,6 +162,10 @@ class zgUserfunctionsTest extends UnitTestCase
 		$testfunctions = new testFunctions( );
 
 		$testfunctions->createZeitgeistTable( 'users' );
+		$testfunctions->createZeitgeistTable( 'userdata' );
+		$testfunctions->createZeitgeistTable( 'userrights' );
+		$testfunctions->createZeitgeistTable( 'userroles_to_users' );
+		$testfunctions->createZeitgeistTable( 'userconfirmation' );
 
 		$username = uniqid( );
 		$password = uniqid( );
@@ -171,6 +179,10 @@ class zgUserfunctionsTest extends UnitTestCase
 		$ret = $this->database->numRows( $res );
 		$this->assertEqual( $ret, 1 );
 
+		$testfunctions->dropZeitgeistTable( 'userconfirmation' );
+		$testfunctions->dropZeitgeistTable( 'userroles_to_users' );
+		$testfunctions->dropZeitgeistTable( 'userrights' );
+		$testfunctions->dropZeitgeistTable( 'userdata' );
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
 	}
@@ -185,6 +197,10 @@ class zgUserfunctionsTest extends UnitTestCase
 		$testfunctions = new testFunctions( );
 
 		$testfunctions->createZeitgeistTable( 'users' );
+		$testfunctions->createZeitgeistTable( 'userdata' );
+		$testfunctions->createZeitgeistTable( 'userrights' );
+		$testfunctions->createZeitgeistTable( 'userroles_to_users' );
+		$testfunctions->createZeitgeistTable( 'userconfirmation' );
 
 		$username = uniqid( );
 		$password = uniqid( );
@@ -198,6 +214,10 @@ class zgUserfunctionsTest extends UnitTestCase
 		$ret = $this->database->numRows( $res );
 		$this->assertEqual( $ret, 0 );
 
+		$testfunctions->dropZeitgeistTable( 'userconfirmation' );
+		$testfunctions->dropZeitgeistTable( 'userroles_to_users' );
+		$testfunctions->dropZeitgeistTable( 'userrights' );
+		$testfunctions->dropZeitgeistTable( 'userdata' );
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
 	}
@@ -244,6 +264,7 @@ class zgUserfunctionsTest extends UnitTestCase
 		$testfunctions = new testFunctions( );
 
 		$testfunctions->createZeitgeistTable( 'users' );
+		$testfunctions->createZeitgeistTable( 'userconfirmation' );
 
 		$username = uniqid( );
 		$password = uniqid( );
@@ -253,6 +274,7 @@ class zgUserfunctionsTest extends UnitTestCase
 		$ret = $this->zgUserfunctions->login( $username, $password . '1' );
 		$this->assertFalse( $ret );
 
+		$testfunctions->dropZeitgeistTable( 'userconfirmation' );
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
 	}
@@ -267,6 +289,7 @@ class zgUserfunctionsTest extends UnitTestCase
 		$testfunctions = new testFunctions( );
 
 		$testfunctions->createZeitgeistTable( 'users' );
+		$testfunctions->createZeitgeistTable( 'userconfirmation' );
 
 		$username = uniqid( );
 		$password = uniqid( );
@@ -276,6 +299,7 @@ class zgUserfunctionsTest extends UnitTestCase
 		$ret = $this->zgUserfunctions->login( $username, $password );
 		$this->assertEqual( $ret, $newuserid );
 
+		$testfunctions->dropZeitgeistTable( 'userconfirmation' );
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
 	}
@@ -290,6 +314,7 @@ class zgUserfunctionsTest extends UnitTestCase
 		$testfunctions = new testFunctions( );
 
 		$testfunctions->createZeitgeistTable( 'users' );
+		$testfunctions->createZeitgeistTable( 'userconfirmation' );
 
 		$username = uniqid( );
 		$password = uniqid( );
@@ -301,6 +326,7 @@ class zgUserfunctionsTest extends UnitTestCase
 		$ret = $this->database->numRows( $res );
 		$this->assertEqual( $ret, 1 );
 
+		$testfunctions->dropZeitgeistTable( 'userconfirmation' );
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
 	}
@@ -329,6 +355,7 @@ class zgUserfunctionsTest extends UnitTestCase
 		$testfunctions = new testFunctions( );
 
 		$testfunctions->createZeitgeistTable( 'users' );
+		$testfunctions->createZeitgeistTable( 'userconfirmation' );
 
 		$username = uniqid( );
 		$password = uniqid( );
@@ -340,6 +367,7 @@ class zgUserfunctionsTest extends UnitTestCase
 		$ret = $this->database->numRows( $res );
 		$this->assertEqual( $ret, 1 );
 
+		$testfunctions->dropZeitgeistTable( 'userconfirmation' );
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
 	}
@@ -354,6 +382,7 @@ class zgUserfunctionsTest extends UnitTestCase
 		$testfunctions = new testFunctions( );
 
 		$testfunctions->createZeitgeistTable( 'users' );
+		$testfunctions->createZeitgeistTable( 'userconfirmation' );
 
 		$username = uniqid( );
 		$password = uniqid( );
@@ -365,6 +394,7 @@ class zgUserfunctionsTest extends UnitTestCase
 		$ret = $this->database->numRows( $res );
 		$this->assertEqual( $ret, 1 );
 
+		$testfunctions->dropZeitgeistTable( 'userconfirmation' );
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
 	}
@@ -379,6 +409,7 @@ class zgUserfunctionsTest extends UnitTestCase
 		$testfunctions = new testFunctions( );
 
 		$testfunctions->createZeitgeistTable( 'users' );
+		$testfunctions->createZeitgeistTable( 'userconfirmation' );
 
 		$username = uniqid( );
 		$password = uniqid( );
@@ -395,6 +426,7 @@ class zgUserfunctionsTest extends UnitTestCase
 		$ret = $this->database->numRows( $res );
 		$this->assertEqual( $ret, 1 );
 
+		$testfunctions->dropZeitgeistTable( 'userconfirmation' );
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
 	}
@@ -423,6 +455,7 @@ class zgUserfunctionsTest extends UnitTestCase
 		$testfunctions = new testFunctions( );
 
 		$testfunctions->createZeitgeistTable( 'users' );
+		$testfunctions->createZeitgeistTable( 'userconfirmation' );
 
 		$username = uniqid( );
 		$password = uniqid( );
@@ -434,6 +467,7 @@ class zgUserfunctionsTest extends UnitTestCase
 		$ret = $this->database->numRows( $res );
 		$this->assertEqual( $ret, 1 );
 
+		$testfunctions->dropZeitgeistTable( 'userconfirmation' );
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
 	}
@@ -467,8 +501,8 @@ class zgUserfunctionsTest extends UnitTestCase
 		$ret = $this->zgUserfunctions->getConfirmationKey( 1 );
 		$this->assertFalse( $ret );
 
-		$testfunctions->dropZeitgeistTable( 'users' );
 		$testfunctions->dropZeitgeistTable( 'userconfirmation' );
+		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
 	}
 
@@ -506,10 +540,10 @@ class zgUserfunctionsTest extends UnitTestCase
 
 		$res = $this->database->query( "SELECT * FROM userconfirmation WHERE userconfirmation_user='" . $newuserid . "'" );
 		$ret = $this->database->fetchArray( $res );
-		$this->assertEqual( $ret ['userconfirmation_key'], $confirmationkey );
+		$this->assertEqual( $ret [ 'userconfirmation_key' ], $confirmationkey );
 
-		$testfunctions->dropZeitgeistTable( 'users' );
 		$testfunctions->dropZeitgeistTable( 'userconfirmation' );
+		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
 	}
 
@@ -533,8 +567,8 @@ class zgUserfunctionsTest extends UnitTestCase
 		$ret = $this->zgUserfunctions->checkConfirmation( $confirmationkey . '1' );
 		$this->assertFalse( $ret );
 
-		$testfunctions->dropZeitgeistTable( 'users' );
 		$testfunctions->dropZeitgeistTable( 'userconfirmation' );
+		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
 	}
 
@@ -572,8 +606,8 @@ class zgUserfunctionsTest extends UnitTestCase
 		$ret = $this->zgUserfunctions->checkConfirmation( $confirmationkey );
 		$this->assertEqual( $ret, $newuserid );
 
-		$testfunctions->dropZeitgeistTable( 'users' );
 		$testfunctions->dropZeitgeistTable( 'userconfirmation' );
+		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
 	}
 
@@ -636,8 +670,8 @@ class zgUserfunctionsTest extends UnitTestCase
 		$ret = $this->database->numRows( $res );
 		$this->assertEqual( $ret, 0 );
 
-		$testfunctions->dropZeitgeistTable( 'users' );
 		$testfunctions->dropZeitgeistTable( 'userconfirmation' );
+		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
 	}
 
@@ -701,8 +735,8 @@ class zgUserfunctionsTest extends UnitTestCase
 		$ret = $this->database->numRows( $res );
 		$this->assertEqual( $ret, 1 );
 
-		$testfunctions->dropZeitgeistTable( 'users' );
 		$testfunctions->dropZeitgeistTable( 'userconfirmation' );
+		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
 	}
 }

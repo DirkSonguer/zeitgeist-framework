@@ -35,14 +35,14 @@ class zgDatabasePDO extends PDO
 	 * @param $passwd
 	 * @param $options [optional]
 	 */
-	public function __construct( $dsn, $username = "", $passwd = "", $options = array() )
+	public function __construct( $dsn, $username = "", $passwd = "", $options = array( ) )
 	{
 		$this->debug = zgDebug::init( );
 		$this->messages = zgMessages::init( );
 
 		parent::__construct( $dsn, $username, $passwd, $options );
 		parent::setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-		parent::setAttribute( PDO::ATTR_STATEMENT_CLASS, array('zgDatabasePDOStatement', array($this)) );
+		parent::setAttribute( PDO::ATTR_STATEMENT_CLASS, array( 'zgDatabasePDOStatement', array( $this ) ) );
 	}
 
 
@@ -73,7 +73,7 @@ class zgDatabasePDO extends PDO
 	 * Emulated prepared statements does not communicate with the database server
 	 * so PDO::prepare does not check the statement.
 	 */
-	public function prepare( $statement, $driver_options = array() )
+	public function prepare( $statement, $driver_options = array( ) )
 	{
 		$this->debug->guard( );
 		$this->debug->beginSQLStatement( );
@@ -90,6 +90,7 @@ class zgDatabasePDO extends PDO
 class zgDatabasePDOStatement extends PDOStatement
 {
 	public $dbh;
+	private $currentQueryParameters;
 
 
 	protected function __construct( $dbh )
@@ -98,6 +99,53 @@ class zgDatabasePDOStatement extends PDOStatement
 		$this->messages = zgMessages::init( );
 
 		$this->dbh = $dbh;
+
+		$this->currentQueryParameters = array( );
+	}
+
+
+	/**
+	 * (PHP 5 &gt;= 5.1.0, PECL pdo &gt;= 0.1.0)<br/>
+	 * Binds a parameter to the specified variable name
+	 * @link http://php.net/manual/en/pdostatement.bindparam.php
+	 * @param mixed $parameter <p>
+	 * Parameter identifier. For a prepared statement using named
+	 * placeholders, this will be a parameter name of the form
+	 * :name. For a prepared statement using
+	 * question mark placeholders, this will be the 1-indexed position of
+	 * the parameter.
+	 * </p>
+	 * @param mixed $variable <p>
+	 * Name of the PHP variable to bind to the SQL statement parameter.
+	 * </p>
+	 * @param int $data_type [optional] <p>
+	 * Explicit data type for the parameter using the PDO::PARAM_*
+	 * constants.
+	 * To return an INOUT parameter from a stored procedure,
+	 * use the bitwise OR operator to set the PDO::PARAM_INPUT_OUTPUT bits
+	 * for the data_type parameter.
+	 * </p>
+	 * @param int $length [optional] <p>
+	 * Length of the data type. To indicate that a parameter is an OUT
+	 * parameter from a stored procedure, you must explicitly set the
+	 * length.
+	 * </p>
+	 * @param mixed $driver_options [optional] <p>
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
+	 */
+	public function bindParam( $parameter, &$variable, $data_type = null, $length = null, $driver_options = null )
+	{
+		$this->debug->guard( );
+
+		// fill the parameter log
+		// this will be used for debugging when the query is executed
+		$this->currentQueryParameters[ $parameter ] = $variable;
+
+		$return = parent::bindParam( $parameter, $variable, $data_type, $length, $driver_options );
+
+		$this->debug->unguard( $return );
+		return $return;
 	}
 
 
@@ -117,7 +165,7 @@ class zgDatabasePDOStatement extends PDOStatement
 	 * </p>
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function execute( $input_parameters = array() )
+	public function execute( $input_parameters = array( ) )
 	{
 		$this->debug->guard( );
 		$this->debug->beginSQLStatement( );
@@ -136,12 +184,17 @@ class zgDatabasePDOStatement extends PDOStatement
 		}
 		catch ( PDOException $e )
 		{
+			$return = false;
 			$sqlMessage = $e->getMessage( );
 		}
 
-		var_dump($this->debugDumpParams());
+		// print out sql information
+		// this includes the parameters (from the parameter cache) and possible error messages
+		$this->debug->storeSQLStatement( 'EXECUTE( ' . implode( $this->currentQueryParameters, ', ' ) . ' ' . $sqlMessage . ' )', $return );
 
-		$this->debug->storeSQLStatement( $sqlMessage, $return );
+		// clear the query buffer
+		$this->currentQueryParameters = array( );
+
 		$this->debug->unguard( $return );
 		return $return;
 	}

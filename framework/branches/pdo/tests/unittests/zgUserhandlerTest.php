@@ -141,6 +141,7 @@ class zgUserhandlerTest extends UnitTestCase
 		$testfunctions = new testFunctions( );
 
 		$testfunctions->createZeitgeistTable( 'users' );
+		$testfunctions->createZeitgeistTable( 'userconfirmation' );
 
 		$username = uniqid( );
 		$password = uniqid( );
@@ -150,6 +151,7 @@ class zgUserhandlerTest extends UnitTestCase
 		$ret = $this->zgUserhandler->login( $username, $password );
 		$this->assertTrue( $ret );
 
+		$testfunctions->dropZeitgeistTable( 'userconfirmation' );
 		$testfunctions->dropZeitgeistTable( 'users' );
 
 		$this->tearDown( );
@@ -228,6 +230,7 @@ class zgUserhandlerTest extends UnitTestCase
 		$testfunctions = new testFunctions( );
 
 		$testfunctions->createZeitgeistTable( 'users' );
+		$testfunctions->createZeitgeistTable( 'userconfirmation' );
 
 		$username = uniqid( );
 		$password = uniqid( );
@@ -239,6 +242,7 @@ class zgUserhandlerTest extends UnitTestCase
 		$ret = $this->zgUserhandler->isLoggedIn( );
 		$this->assertTrue( $ret );
 
+		$testfunctions->dropZeitgeistTable( 'userconfirmation' );
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
 	}
@@ -310,6 +314,7 @@ class zgUserhandlerTest extends UnitTestCase
 		$testfunctions = new testFunctions( );
 
 		$testfunctions->createZeitgeistTable( 'users' );
+		$testfunctions->createZeitgeistTable( 'userconfirmation' );
 
 		$username = uniqid( );
 		$password = uniqid( );
@@ -321,6 +326,7 @@ class zgUserhandlerTest extends UnitTestCase
 		$ret = $this->zgUserhandler->getUsername( );
 		$this->assertEqual( $username, $ret );
 
+		$testfunctions->dropZeitgeistTable( 'userconfirmation' );
 		$testfunctions->dropZeitgeistTable( 'users' );
 		$this->tearDown( );
 	}
