@@ -119,7 +119,7 @@ class zgUserdata
 
 		$userdataTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userdata' );
 
-		$sql = $this->database->prepare( "DELETE FROM " . $userdataTablename . " WHERE userdata_user= ?" );
+		$sql = $this->database->prepare( "DELETE FROM " . $userdataTablename . " WHERE userdata_user = ?" );
 		$sql->bindParam( 1, $userid );
 
 		if ( !$sql->execute( ) )

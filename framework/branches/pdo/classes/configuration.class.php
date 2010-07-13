@@ -334,7 +334,7 @@ class zgConfiguration
 		$sql->bindParam( 1, $filename );
 		$sql->bindParam( 2, $serializedConfiguration );
 		$sql->bindParam( 3, filemtime( $filename ) );
-		
+
 		if ( !$sql->execute( ) )
 		{
 			$this->debug->write( 'Problem saving the configuration to database: could not insert data into configuration table', 'warning' );
