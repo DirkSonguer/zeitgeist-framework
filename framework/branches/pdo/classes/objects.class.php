@@ -74,8 +74,8 @@ class zgObjects
 
 		if ( ( !empty( $this->objects[ $name ] ) ) && ( !$overwrite ) )
 		{
-			$this->debug->write( 'An object of this name ("' . $name . '") already exists', 'error' );
-			$this->messages->setMessage( 'An object of this name ("' . $name . '") already exists', 'error' );
+			$this->debug->write( 'Problem storing object: an object of this name ("' . $name . '") already exists', 'warning' );
+			$this->messages->setMessage( 'Problem storing object: an object of this name ("' . $name . '") already exists', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -100,8 +100,8 @@ class zgObjects
 
 		if ( empty( $this->objects[ $objectname ] ) )
 		{
-			$this->debug->write( 'Object with name ' . $objectname . ' not found', 'error' );
-			$this->messages->setMessage( 'Object with name ' . $objectname . ' not found', 'error' );
+			$this->debug->write( 'Problem getting object: object with name ' . $objectname . ' not found', 'warning' );
+			$this->messages->setMessage( 'Problem getting object: object with name ' . $objectname . ' not found', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -126,8 +126,8 @@ class zgObjects
 
 		if ( empty( $this->objects[ $objectname ] ) )
 		{
-			$this->debug->write( 'Object with name ' . $objectname . ' not found', 'error' );
-			$this->messages->setMessage( 'Object with name ' . $objectname . ' not found', 'error' );
+			$this->debug->write( 'Problem deleting object: Object with name ' . $objectname . ' not found', 'warning' );
+			$this->messages->setMessage( 'Problem deleting object: Object with name ' . $objectname . ' not found', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}

@@ -23,6 +23,7 @@ class zgActionlog
 	protected $debug;
 	protected $messages;
 	protected $database;
+	protected $configuration;
 
 
 	/**
@@ -32,6 +33,7 @@ class zgActionlog
 	{
 		$this->debug = zgDebug::init( );
 		$this->messages = zgMessages::init( );
+		$this->configuration = zgConfiguration::init( );
 
 		$this->database = new zgDatabasePDO( "mysql:host=" . ZG_DB_DBSERVER . ";dbname=" . ZG_DB_DATABASE, ZG_DB_USERNAME, ZG_DB_USERPASS );
 	}
@@ -48,9 +50,11 @@ class zgActionlog
 	{
 		$this->debug->guard( );
 
+		$modulesTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_actionlog' );
+
 		// insert the main call into the database
 		// this will only log the module and action, not the parameters
-		$sql = $this->database->prepare( "INSERT INTO actionlog(actionlog_module, actionlog_action, actionlog_ip) VALUES(?, ?, INET_ATON('" . getenv( 'REMOTE_ADDR' ) . "'))" );
+		$sql = $this->database->prepare( "INSERT INTO " . $modulesTablename . "(actionlog_module, actionlog_action, actionlog_ip) VALUES(?, ?, INET_ATON('" . getenv( 'REMOTE_ADDR' ) . "'))" );
 		$sql->bindParam( 1, $module );
 		$sql->bindParam( 2, $action );
 
