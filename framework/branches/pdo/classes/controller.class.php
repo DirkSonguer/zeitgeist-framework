@@ -113,12 +113,11 @@ class zgController
 	/**
 	 * Checks if the user has the right for a given action
 	 *
-	 * @param array $moduleData data of the module to load
 	 * @param array $actionData data of the action to load
 	 *
 	 * @return boolean
 	 */
-	protected function _checkRightsForAction( $moduleData, $actionData )
+	protected function _checkRightsForAction( $actionData )
 	{
 		$this->debug->guard( );
 
@@ -219,8 +218,8 @@ class zgController
 		// check if module is installed and get module data
 		if ( !$moduleData = $this->_getModuleData( $module ) )
 		{
-			$this->debug->write( 'Error loading the module: Module is not found/ installed: ' . $module, 'error' );
-			$this->messages->setMessage( 'Error loading the module: Module is not found/ installed: ' . $module, 'error' );
+			$this->debug->write( 'Problem loading the module: Module is not found/ installed: ' . $module, 'warning' );
+			$this->messages->setMessage( 'Problem loading the module: Module is not found/ installed: ' . $module, 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -228,8 +227,8 @@ class zgController
 		// check from data if module is active
 		if ( $moduleData[ 'module_active' ] != '1' )
 		{
-			$this->debug->write( 'Error loading the module: Module is not active: ' . $module, 'error' );
-			$this->messages->setMessage( 'Error loading the module: Module is not active: ' . $module, 'error' );
+			$this->debug->write( 'Problem loading the module: Module is not active: ' . $module, 'warning' );
+			$this->messages->setMessage( 'Problem loading the module: Module is not active: ' . $module, 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -237,8 +236,8 @@ class zgController
 		// check if the classname is already used
 		if ( class_exists( $module, false ) )
 		{
-			$this->debug->write( 'Error loading the module: Class name already used: ' . $module, 'error' );
-			$this->messages->setMessage( 'Error loading the module: Class name already used: ' . $module, 'error' );
+			$this->debug->write( 'Problem loading the module: Class name already used: ' . $module, 'warning' );
+			$this->messages->setMessage( 'Problem loading the module: Class name already used: ' . $module, 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -246,8 +245,8 @@ class zgController
 		//check if zeitgeist can load the module
 		if ( !class_exists( $module, true ) )
 		{
-			$this->debug->write( 'Error loading the module: Could not find matching class: ' . $module, 'error' );
-			$this->messages->setMessage( 'Error loading the module: Could not find matching class: ' . $module, 'error' );
+			$this->debug->write( 'Problem loading the module: Could not find matching class: ' . $module, 'warning' );
+			$this->messages->setMessage( 'Problem loading the module: Could not find matching class: ' . $module, 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -258,8 +257,8 @@ class zgController
 		// check if action is installed and get action data
 		if ( !$actionData = $this->_getActionData( $moduleData, $action ) )
 		{
-			$this->debug->write( 'Error loading the action (' . $action . ') in module (' . $module . '): Action is not installed for module', 'error' );
-			$this->messages->setMessage( 'Error loading the action (' . $action . ') in module (' . $module . '): Action is not installed for module', 'error' );
+			$this->debug->write( 'Problem loading the action (' . $action . ') in module (' . $module . '): Action is not installed for module', 'warning' );
+			$this->messages->setMessage( 'Problem loading the action (' . $action . ') in module (' . $module . '): Action is not installed for module', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -267,8 +266,8 @@ class zgController
 		// check if action method exists in module
 		if ( !method_exists( $moduleClass, $action ) )
 		{
-			$this->debug->write( 'Error loading the action (' . $action . ') in module (' . $module . '): Could not find method', 'error' );
-			$this->messages->setMessage( 'Error loading the action (' . $action . ') in module (' . $module . '): Could not find method', 'error' );
+			$this->debug->write( 'Problem loading the action (' . $action . ') in module (' . $module . '): Could not find method', 'warning' );
+			$this->messages->setMessage( 'Problem loading the action (' . $action . ') in module (' . $module . '): Could not find method', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -276,7 +275,7 @@ class zgController
 		// check if user has rights for given action
 		if ( $actionData[ 'action_requiresuserright' ] == '1' )
 		{
-			if ( !$this->_checkRightsForAction( $moduleData, $actionData ) )
+			if ( !$this->_checkRightsForAction( $actionData ) )
 			{
 				$this->debug->write( 'User (' . $this->user->getUserID( ) . ') has no rights for action (' . $action . ') in module (' . $module . ')', 'warning' );
 				$this->messages->setMessage( 'User (' . $this->user->getUserID( ) . ') has no rights for action (' . $action . ') in module (' . $module . ')', 'warning' );

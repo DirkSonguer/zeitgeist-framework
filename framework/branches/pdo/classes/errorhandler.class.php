@@ -48,7 +48,7 @@ class zgErrorhandler
 		$this->previousErrorhandler = set_error_handler( array( $this, 'errorhandler' ) );
 		if ( $this->previousErrorhandler === false )
 		{
-			$this->debug->write( 'Could not set the new error handler', 'error' );
+			$this->debug->write( 'Problem: could not set the new error handler', 'warning' );
 		}
 	}
 

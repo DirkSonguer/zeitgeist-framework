@@ -167,7 +167,8 @@ class zgConfiguration
 			return false;
 		}
 
-		// try to load the configuration
+		// try to load the configuration from the database
+		// if this succeeds, $configurationArray will contain the configuration array
 		$configurationArray = $this->_loadConfigurationFromDatabase( $filename );
 
 		if ( is_array( $configurationArray ) )
@@ -191,6 +192,8 @@ class zgConfiguration
 		}
 		else
 		{
+			// no configuration could be found in the database
+			// thus we have to load the data from the file system
 			$configurationArray = $this->_readINIfile( $filename );
 
 			if ( !is_array( $configurationArray ) )
@@ -201,10 +204,13 @@ class zgConfiguration
 				return false;
 			}
 
+			// after successfully loading the data, store it in the database
 			$ret = $this->_saveConfigurationToDatabase( $filename, $configurationArray );
 
 			if ( !$overwrite )
 			{
+				// as we checked at the beginning of this method that there is no
+				// configuration with this id already, we can just fill the array
 				$this->configuration[ $modulename ] = $configurationArray;
 			}
 			else
@@ -250,27 +256,31 @@ class zgConfiguration
 			return false;
 		}
 
-		if ( $sql->rowCount( ) == 1 )
+		// only one row is expected as the module names should be unique
+ 		if ( $sql->rowCount( ) == 1 )
 		{
 			// as there is only one row, we only need to fetch once
 			$row = $sql->fetch( PDO::FETCH_ASSOC );
 
+			// check if the timestamp of the file matches the timestamp in the database
 			if ( $row[ 'configurationcache_timestamp' ] == filemtime( $filename ) )
 			{
+				// decode and unserialze it
 				$serializedConfiguration = $row[ 'configurationcache_content' ];
 				$serializedConfiguration = base64_decode( $serializedConfiguration );
 				$configuration = unserialize( $serializedConfiguration );
 
 				if ( $configuration === false )
 				{
-					$this->debug->write( 'Problem loading the configuration from database: error unserializing configuration content from the database', 'error' );
-					$this->messages->setMessage( 'Problem loading the configuration from database: error unserializing configuration content from the database', 'error' );
+					$this->debug->write( 'Problem loading the configuration from database: error unserializing configuration content from the database', 'warning' );
+					$this->messages->setMessage( 'Problem loading the configuration from database: error unserializing configuration content from the database', 'warning' );
 					$this->debug->unguard( false );
 					return false;
 				}
 			}
 			else
 			{
+				// the configuration in the database is outdated thus it can be deleted
 				$sql = $this->database->prepare( "DELETE FROM " . ZG_DB_CONFIGURATIONCACHE . " WHERE configurationcache_name = ?" );
 				$sql->bindParam( 1, $filename );
 
@@ -323,6 +333,10 @@ class zgConfiguration
 			return false;
 		}
 
+		// we are encoding the serialzed data string with base64
+		// this is due to an PHP bug in an early version of PHP5 where sometimes
+		// serialized objects could not be saved and retrieved from the database correctly
+		// normally you would not need this as the bug is fixed by now
 		$serializedConfiguration = base64_encode( $serializedConfiguration );
 		if ( $serializedConfiguration === false )
 		{
@@ -363,12 +377,16 @@ class zgConfiguration
 		// check for references
 		if ( ( strpos( $configurationValue, '[[' ) !== false ) && ( strpos( $configurationValue, ']]' ) !== false ) )
 		{
+			// get start and end of the reference id
 			$referenceStart = strpos( $configurationValue, '[[' );
 			$referenceEnd = strpos( $configurationValue, ']]' );
 
+			// extract reference id
 			$referenceString = substr( $configurationValue, $referenceStart, $referenceEnd - $referenceStart + 2 );
 			$reference = substr( $referenceString, 2, -2 );
 
+			// get individual information from the reference id
+			// this points to the configuration that need to be already loaded
 			$referenceArray = explode( '.', $reference );
 			if ( count( $referenceArray ) == 3 )
 			{
@@ -408,8 +426,8 @@ class zgConfiguration
 
 		if ( !file_exists( $filename ) )
 		{
-			$this->debug->write( 'Error loading the configuration file ' . $filename . ': file not found', 'error' );
-			$this->messages->setMessage( 'Error loading the configuration file ' . $filename . ': file not found', 'error' );
+			$this->debug->write( 'Problem loading the configuration file ' . $filename . ': file not found', 'warning' );
+			$this->messages->setMessage( 'Problem loading the configuration file ' . $filename . ': file not found', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -421,8 +439,8 @@ class zgConfiguration
 
 		if ( !$fileArray )
 		{
-			$this->debug->write( 'Error loading the configuration file ' . $filename . ': file not a valid ini file', 'error' );
-			$this->messages->setMessage( 'Error loading the configuration file ' . $filename . ': file not a valid ini file', 'error' );
+			$this->debug->write( 'Problem loading the configuration file ' . $filename . ': file not a valid ini file', 'warning' );
+			$this->messages->setMessage( 'Problem loading the configuration file ' . $filename . ': file not a valid ini file', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -434,31 +452,39 @@ class zgConfiguration
 			$fileData = trim( $fileData );
 
 			// check for comments
+			// if comment is found, continue to next line
 			if ( ( substr( $fileData, 0, 1 ) == ';' ) && ( $fileData == '' ) ) continue;
 
+			// check if the line is the beginn of a new section
 			if ( ( substr( $fileData, 0, 1 ) == '[' ) && ( substr( $fileData, -1, 1 ) == ']' ) )
 			{
-				// parsing section
+				// parsing section name and set it as the new section name
 				$currentSection = substr( $fileData, 1, -1 );
 			}
 			else
 			{
 				// parsing key/value
+				// information will be separated into key and value
 				$delimiter = strpos( $fileData, '=' );
 				$configurationKey = '';
 				$configurationValue = '';
 
+				// check if the delemiter was found
+				// if not, it's an invalid line, thus it does not need to be processed
 				if ( $delimiter > 0 )
 				{
+					// separate line into key and value
 					$configurationKey = trim( substr( $fileData, 0, $delimiter ) );
 					$configurationValue = trim( substr( $fileData, $delimiter + 1 ) );
 
-					// check if value is escaped. if so, cut the escape chars
+					// check if value is escaped
+					// if so, cut the escape chars
 					if ( ( substr( $configurationValue, 1, 1 ) == '"' ) && ( substr( $configurationValue, -1, 1 ) == '"' ) )
 					{
 						$configurationValue = substr( $configurationValue, 1, -1 );
 					}
 
+					// check if the value is an array
 					$arrayvalue = false;
 					if ( ( strpos( $configurationKey, '[' ) !== false ) && ( strpos( $configurationKey, ']' ) !== false ) )
 					{

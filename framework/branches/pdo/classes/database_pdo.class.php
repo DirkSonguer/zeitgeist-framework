@@ -42,6 +42,8 @@ class zgDatabasePDO extends PDO
 
 		parent::__construct( $dsn, $username, $passwd, $options );
 		parent::setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+
+		// extend the default PDOStatement class to the extended one
 		parent::setAttribute( PDO::ATTR_STATEMENT_CLASS, array( 'zgDatabasePDOStatement', array( $this ) ) );
 	}
 
@@ -78,6 +80,7 @@ class zgDatabasePDO extends PDO
 		$this->debug->guard( );
 		$this->debug->beginSQLStatement( );
 
+		// call the parent method
 		$result = parent::prepare( $statement, $driver_options );
 
 		$this->debug->storeSQLStatement( 'PREPARE: ' . $statement, true );
@@ -98,6 +101,7 @@ class zgDatabasePDOStatement extends PDOStatement
 		$this->debug = zgDebug::init( );
 		$this->messages = zgMessages::init( );
 
+		// this is needed to remember the database handle
 		$this->dbh = $dbh;
 
 		$this->currentQueryParameters = array( );
@@ -142,6 +146,7 @@ class zgDatabasePDOStatement extends PDOStatement
 		// this will be used for debugging when the query is executed
 		$this->currentQueryParameters[ $parameter ] = $variable;
 
+		// call the parent method
 		$return = parent::bindParam( $parameter, $variable, $data_type, $length, $driver_options );
 
 		$this->debug->unguard( $return );

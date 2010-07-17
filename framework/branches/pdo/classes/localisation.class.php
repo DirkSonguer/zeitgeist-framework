@@ -52,7 +52,7 @@ class zgLocalisation
 	{
 		$this->debug->guard( true );
 
-		if ( !$this->locales[ $id ] = $this->configuration->loadConfiguration( 'zglocale_' . $id, $filename, $overwrite ) )
+		if ( !$this->configuration->loadConfiguration( 'zglocale_' . $id, $filename, $overwrite ) )
 		{
 			$this->debug->write( 'Problem loading the locale: the given locale file could not be load', 'warning' );
 			$this->messages->setMessage( 'Problem loading the locale: the given locale file could not be load', 'warning' );

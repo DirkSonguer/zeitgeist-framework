@@ -93,8 +93,8 @@ class zgSession
 				$ret = session_set_save_handler( array( &$this, '_openSession' ), array( &$this, '_closeSession' ), array( &$this, '_readSession' ), array( &$this, '_writeSession' ), array( &$this, '_destroySession' ), array( &$this, '_cleanSession' ) );
 				if ( !$ret )
 				{
-					$this->debug->write( 'Could not register session save handlers!', 'error' );
-					$this->messages->setMessage( 'Could not register session save handlers!', 'error' );
+					$this->debug->write( 'Problem starting session: could not register session save handlers!', 'warning' );
+					$this->messages->setMessage( 'Problem starting session: could not register session save handlers!', 'warning' );
 				}
 			}
 
@@ -107,8 +107,8 @@ class zgSession
 			$ret = session_start( );
 			if ( !$ret )
 			{
-				$this->debug->write( 'Could not start session', 'error' );
-				$this->messages->setMessage( 'Could not start session', 'error' );
+				$this->debug->write( 'Problem starting session: could not start session', 'warning' );
+				$this->messages->setMessage( 'Problem starting session: could not start session', 'warning' );
 			}
 
 			$this->sessionStarted = true;

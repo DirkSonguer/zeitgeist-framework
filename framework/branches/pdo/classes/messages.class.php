@@ -223,8 +223,8 @@ class zgMessages
 
 			if ( ( $messages === false ) || ( !is_array( $messages ) ) )
 			{
-				$this->debug->write( 'Error unserializing message content from the session', 'error' );
-				$this->setMessage( 'Error unserializing message content from the session', 'error' );
+				$this->debug->write( 'Problem unserializing message content from the session', 'warning' );
+				$this->setMessage( 'Problem unserializing message content from the session', 'warning' );
 				$this->debug->unguard( false );
 				return false;
 			}
@@ -255,10 +255,10 @@ class zgMessage
 
 	public function __construct( )
 	{
-		$message = '';
-		$type = '';
-		$from = '';
-		$to = '';
+		$this->message = '';
+		$this->type = '';
+		$this->from = '';
+		$this->to = '';
 	}
 }
 

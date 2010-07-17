@@ -160,8 +160,8 @@ class zgFacebookUserhandler extends zgUserhandler
 		$userid = $this->createUser( $fbid );
 		if ( !$userid )
 		{
-			$this->debug->write( 'Problem linking the user: could not create the user for the facebook account', 'error' );
-			$this->messages->setMessage( 'Problem creating the user: could not create the user for the facebook account', 'error' );
+			$this->debug->write( 'Problem linking the user: could not create the user for the facebook account', 'warning' );
+			$this->messages->setMessage( 'Problem creating the user: could not create the user for the facebook account', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -198,8 +198,8 @@ class zgFacebookUserhandler extends zgUserhandler
 		// check if the user is already nown and logged in
 		if ( $this->loggedIn )
 		{
-			$this->debug->write( 'Error logging in a user: user is already logged in. Cannot login user twice', 'error' );
-			$this->messages->setMessage( 'Error logging in a user: user is already logged in. Cannot login user twice', 'error' );
+			$this->debug->write( 'Problem logging in a user: user is already logged in. Cannot login user twice', 'warning' );
+			$this->messages->setMessage( 'Problem logging in a user: user is already logged in. Cannot login user twice', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -208,8 +208,8 @@ class zgFacebookUserhandler extends zgUserhandler
 		$fbid = $this->facebook->require_login( );
 		if ( empty( $fbid ) )
 		{
-			$this->debug->write( 'Error logging in a user: facebook session not initialized', 'warning' );
-			$this->messages->setMessage( 'Error logging in a user: facebook session not initialized', 'warning' );
+			$this->debug->write( 'Problem logging in a user: facebook session not initialized', 'warning' );
+			$this->messages->setMessage( 'Problem logging in a user: facebook session not initialized', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -305,8 +305,8 @@ class zgFacebookUserhandler extends zgUserhandler
 		$res = $this->database->query( $sql );
 		if ( !$res )
 		{
-			$this->debug->write( 'Problem creating the user: could not insert the user into the database', 'error' );
-			$this->messages->setMessage( 'Problem creating the user: could not insert the user into the database', 'error' );
+			$this->debug->write( 'Problem creating the user: could not insert the user into the database', 'warning' );
+			$this->messages->setMessage( 'Problem creating the user: could not insert the user into the database', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -319,8 +319,8 @@ class zgFacebookUserhandler extends zgUserhandler
 		$res = $this->database->query( $sql );
 		if ( !$res )
 		{
-			$this->debug->write( 'Problem creating the user: could not connect the user data to the facebook data', 'error' );
-			$this->messages->setMessage( 'Problem creating the user: could not connect the user data to the facebook data', 'error' );
+			$this->debug->write( 'Problem creating the user: could not connect the user data to the facebook data', 'warning' );
+			$this->messages->setMessage( 'Problem creating the user: could not connect the user data to the facebook data', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -346,16 +346,16 @@ class zgFacebookUserhandler extends zgUserhandler
 		$sql .= "WHERE fb.facebookuser_fbid = '" . $fbid . "' AND u.user_active='1'";
 		if ( !$res = $this->database->query( $sql ) )
 		{
-			$this->debug->write( 'Error searching a user: could not read the user table', 'error' );
-			$this->messages->setMessage( 'Error searching a user: could not read the user table', 'error' );
+			$this->debug->write( 'Problem getting facebook user information: could not read the user table', 'warning' );
+			$this->messages->setMessage( 'Problem getting facebook user information: could not read the user table', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
 
 		if ( $this->database->numRows( $res ) != 1 )
 		{
-			$this->debug->write( 'Problem logging in the user: no linked user exists for this facebook id', 'warning' );
-			$this->messages->setMessage( 'Problem logging in the user: no linked user exists for this facebook id', 'warning' );
+			$this->debug->write( 'Problem getting facebook user information: no linked user exists for this facebook id', 'warning' );
+			$this->messages->setMessage( 'Problem getting facebook user information: no linked user exists for this facebook id', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
