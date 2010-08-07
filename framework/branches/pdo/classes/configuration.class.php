@@ -257,7 +257,7 @@ class zgConfiguration
 		}
 
 		// only one row is expected as the module names should be unique
- 		if ( $sql->rowCount( ) == 1 )
+		if ( $sql->rowCount( ) == 1 )
 		{
 			// as there is only one row, we only need to fetch once
 			$row = $sql->fetch( PDO::FETCH_ASSOC );
