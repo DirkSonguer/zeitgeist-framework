@@ -92,7 +92,7 @@ class zgFiles
 	{
 		$this->debug->guard( true );
 
-		$dirContents = array();
+		$dirContents = array( );
 		$directoryhandle = @opendir( $path );
 
 		if ( !$directoryhandle )
@@ -105,7 +105,7 @@ class zgFiles
 
 		while ( ( $dirEntry = readdir( $directoryhandle ) ) !== false )
 		{
-			$dirContents [] = $dirEntry;
+			$dirContents[ ] = $dirEntry;
 		}
 
 		closedir( $directoryhandle );
@@ -135,7 +135,7 @@ class zgFiles
 			return false;
 		}
 
-		if ( $_FILES ["file"] ["error"] > 0 )
+		if ( $_FILES[ "file" ][ "error" ] > 0 )
 		{
 			$this->debug->write( 'File was uploaded with errors', 'warning' );
 			$this->messages->setMessage( 'File was uploaded with errors', 'warning' );
@@ -143,15 +143,15 @@ class zgFiles
 			return false;
 		}
 
-		if ( ( file_exists( $path . $_FILES ["file"] ["name"] ) ) && ( $overwrite == false ) )
+		if ( ( file_exists( $path . $_FILES[ "file" ][ "name" ] ) ) && ( $overwrite == false ) )
 		{
-			$this->debug->write( 'File ' . $_FILES ["file"] ["name"] . ' already exists at ' . $path, 'warning' );
-			$this->messages->setMessage( 'File ' . $_FILES ["file"] ["name"] . ' already exists at ' . $path, 'warning' );
+			$this->debug->write( 'File ' . $_FILES[ "file" ][ "name" ] . ' already exists at ' . $path, 'warning' );
+			$this->messages->setMessage( 'File ' . $_FILES[ "file" ][ "name" ] . ' already exists at ' . $path, 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
 
-		$ret = move_uploaded_file( $_FILES ["file"] ["tmp_name"], $path . $_FILES ["file"] ["name"] );
+		$ret = move_uploaded_file( $_FILES[ "file" ][ "tmp_name" ], $path . $_FILES[ "file" ][ "name" ] );
 
 		$this->debug->unguard( $ret );
 		return $ret;

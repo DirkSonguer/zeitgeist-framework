@@ -48,8 +48,7 @@ class zgSession
 		$this->messages = zgMessages::init( );
 		$this->configuration = zgConfiguration::init( );
 
-		$this->database = new zgDatabase( );
-		$this->database->connect( );
+		$this->database = new zgDatabasePDO( "mysql:host=" . ZG_DB_DBSERVER . ";dbname=" . ZG_DB_DATABASE, ZG_DB_USERNAME, ZG_DB_USERPASS );
 
 		$this->boundIP = '';
 		$this->newSession = true;
@@ -90,11 +89,11 @@ class zgSession
 		{
 			if ( $this->storageMode == 'database' )
 			{
-				$ret = session_set_save_handler( array(&$this, '_openSession'), array(&$this, '_closeSession'), array(&$this, '_readSession'), array(&$this, '_writeSession'), array(&$this, '_destroySession'), array(&$this, '_cleanSession') );
+				$ret = session_set_save_handler( array( &$this, '_openSession' ), array( &$this, '_closeSession' ), array( &$this, '_readSession' ), array( &$this, '_writeSession' ), array( &$this, '_destroySession' ), array( &$this, '_cleanSession' ) );
 				if ( !$ret )
 				{
-					$this->debug->write( 'Could not register session save handlers!', 'error' );
-					$this->messages->setMessage( 'Could not register session save handlers!', 'error' );
+					$this->debug->write( 'Problem starting session: could not register session save handlers!', 'warning' );
+					$this->messages->setMessage( 'Problem starting session: could not register session save handlers!', 'warning' );
 				}
 			}
 
@@ -107,8 +106,8 @@ class zgSession
 			$ret = session_start( );
 			if ( !$ret )
 			{
-				$this->debug->write( 'Could not start session', 'error' );
-				$this->messages->setMessage( 'Could not start session', 'error' );
+				$this->debug->write( 'Problem starting session: could not start session', 'warning' );
+				$this->messages->setMessage( 'Problem starting session: could not start session', 'warning' );
 			}
 
 			$this->sessionStarted = true;
@@ -151,7 +150,7 @@ class zgSession
 	{
 		$this->debug->guard( );
 
-		$_SESSION [$key] = $value;
+		$_SESSION[ $key ] = $value;
 
 		$this->debug->unguard( true );
 		return true;
@@ -169,10 +168,10 @@ class zgSession
 	{
 		$this->debug->guard( );
 
-		if ( isset( $_SESSION [$key] ) )
+		if ( isset( $_SESSION[ $key ] ) )
 		{
-			$this->debug->unguard( $_SESSION [$key] );
-			return $_SESSION [$key];
+			$this->debug->unguard( $_SESSION[ $key ] );
+			return $_SESSION[ $key ];
 		}
 
 		$this->debug->unguard( false );
@@ -191,9 +190,9 @@ class zgSession
 	{
 		$this->debug->guard( );
 
-		if ( isset( $_SESSION [$key] ) )
+		if ( isset( $_SESSION[ $key ] ) )
 		{
-			unset( $_SESSION [$key] );
+			unset( $_SESSION[ $key ] );
 		}
 
 		$this->debug->unguard( true );
@@ -218,9 +217,9 @@ class zgSession
 
 		foreach ( $_SESSION as $key => $value )
 		{
-			if ( isset( $_SESSION [$key] ) )
+			if ( isset( $_SESSION[ $key ] ) )
 			{
-				unset( $_SESSION [$key] );
+				unset( $_SESSION[ $key ] );
 			}
 		}
 
@@ -300,33 +299,36 @@ class zgSession
 	{
 		$this->debug->guard( );
 
-		$id = mysql_real_escape_string( $id );
-
 		$sessionTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_sessiondata' );
-		$sql = "SELECT sessiondata_content, sessiondata_ip FROM " . $sessionTablename . " WHERE sessiondata_id = '" . $id . "'";
+		$sql = $this->database->prepare( "SELECT sessiondata_content, sessiondata_ip FROM " . $sessionTablename . " WHERE sessiondata_id = ?" );
+		$sql->bindParam( 1, $id );
 
-		$res = $this->database->query( $sql );
-		if ( $res )
+		if ( !$sql->execute( ) )
 		{
-			if ( $this->database->numRows( $res ) )
-			{
-				$row = $this->database->fetchArray( $res );
-				$sessiondata = $row ['sessiondata_content'];
-				$this->boundIP = long2ip( $row ['sessiondata_ip'] );
+			$this->debug->write( 'Problem reading the session: could not read the session table', 'warning' );
+			$this->messages->setMessage( 'Problem reading the session: could not read the session table', 'warning' );
 
-				$this->newSession = false;
+			$this->debug->unguard( false );
+			return false;
+		}
 
-				$this->debug->guard( $sessiondata );
-				return $sessiondata;
-			}
-			else
-			{
-				$this->newSession = true;
-			}
+		// check if a session is available in the database
+		// if not, create a new one
+		if ( $sql->rowCount( ) > 0 )
+		{
+			// as there is only one row, we only need to fetch once
+			$row = $sql->fetch( PDO::FETCH_ASSOC );
+			$sessiondata = $row[ 'sessiondata_content' ];
+			$this->boundIP = long2ip( $row[ 'sessiondata_ip' ] );
+
+			$this->newSession = false;
+
+			$this->debug->guard( $sessiondata );
+			return $sessiondata;
 		}
 		else
 		{
-			$this->debug->write( 'Stopping Session through hook' );
+			$this->newSession = true;
 		}
 
 		$this->debug->guard( '' );
@@ -348,24 +350,37 @@ class zgSession
 
 		$currentTime = time( );
 
-		$id = mysql_escape_string( $id );
-		$data = mysql_escape_string( $data );
-
 		$sessionTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_sessiondata' );
 
+		// if the user does not have a session yet, add the new session to the database
+		// otherwise just update the existing session data
 		if ( $this->newSession )
 		{
-			$startTime = time( );
-			$sql = "INSERT INTO " . $sessionTablename . " VALUES  ('" . $id . "', '" . $startTime . "', '" . $currentTime . "', '" . $data . "', INET_ATON('" . getenv( 'REMOTE_ADDR' ) . "'))";
+			$sql = $this->database->prepare( "INSERT INTO " . $sessionTablename . "(sessiondata_id, sessiondata_created, sessiondata_lastupdate, sessiondata_content, sessiondata_ip) VALUES  (?, ?, ?, ?, INET_ATON('" . getenv( 'REMOTE_ADDR' ) . "') )" );
+			$sql->bindParam( 1, $id );
+			$sql->bindParam( 2, $currentTime );
+			$sql->bindParam( 3, $currentTime );
+			$sql->bindParam( 4, $data );
 		}
 		else
 		{
-			$sql = "UPDATE " . $sessionTablename . " SET " . $sessionTablename . "_lastupdate = '" . $currentTime . "', " . $sessionTablename . "_content = '" . $data . "'" . " WHERE " . $sessionTablename . "_id = '" . $id . "'";
+			$sql = $this->database->prepare( "UPDATE " . $sessionTablename . " SET sessiondata_lastupdate = ?, sessiondata_content = ? WHERE sessiondata_id = ?" );
+			$sql->bindParam( 1, $currentTime );
+			$sql->bindParam( 2, $data );
+			$sql->bindParam( 3, $id );
 		}
 
-		$ret = $this->database->query( $sql );
-		$this->debug->unguard( $ret );
-		return $ret;
+		if ( !$sql->execute( ) )
+		{
+			$this->debug->write( 'Problem writing the session: could not update the session table', 'warning' );
+			$this->messages->setMessage( 'Problem writing the session: could not writing the session table', 'warning' );
+
+			$this->debug->unguard( false );
+			return false;
+		}
+
+		$this->debug->unguard( true );
+		return true;
 	}
 
 
@@ -381,14 +396,21 @@ class zgSession
 	{
 		$this->debug->guard( );
 
-		$id = mysql_escape_string( $id );
-
 		$sessionTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_sessiondata' );
-		$sql = "DELETE FROM " . $sessionTablename . " WHERE sessiondata_id = '" . $id . "'";
+		$sql = $this->database->prepare( "DELETE FROM " . $sessionTablename . " WHERE sessiondata_id = ?" );
+		$sql->bindParam( 1, $id );
 
-		$ret = $this->database->query( $sql );
-		$this->debug->guard( $ret );
-		return $ret;
+		if ( !$sql->execute( ) )
+		{
+			$this->debug->write( 'Problem destroying the session: could not update the session table', 'warning' );
+			$this->messages->setMessage( 'Problem reading the session: could not update the session table', 'warning' );
+
+			$this->debug->unguard( false );
+			return false;
+		}
+
+		$this->debug->guard( true );
+		return true;
 	}
 
 
@@ -405,14 +427,22 @@ class zgSession
 		$this->debug->guard( );
 
 		$old = time( ) - $max;
-		$old = mysql_escape_string( $old );
 
 		$sessionTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_sessiondata' );
-		$sql = "DELETE FROM " . $sessionTablename . " WHERE sessiondata_lastupdate < '" . $old . "'";
+		$sql = $this->database->prepare( "DELETE FROM " . $sessionTablename . " WHERE sessiondata_lastupdate < ?" );
+		$sql->bindParam( 1, $old );
 
-		$ret = $this->database->query( $sql );
-		$this->debug->guard( $ret );
-		return $ret;
+		if ( !$sql->execute( ) )
+		{
+			$this->debug->write( 'Problem cleaning up the sessions: could not update the session table', 'warning' );
+			$this->messages->setMessage( 'Problem cleaning up the sessions: could not update the session table', 'warning' );
+
+			$this->debug->unguard( false );
+			return false;
+		}
+
+		$this->debug->guard( true );
+		return true;
 	}
 }
 

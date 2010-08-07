@@ -81,16 +81,16 @@ class zgDatabase
 
 		if ( !$this->dblink )
 		{
-			$this->debug->write( 'Error connecting to database server: ' . mysql_error( ), 'error' );
-			$this->messages->setMessage( 'Error connecting to database server: ' . mysql_error( ), 'error' );
+			$this->debug->write( 'Problem connecting to database server: ' . mysql_error( ), 'warning' );
+			$this->messages->setMessage( 'Problem connecting to database server: ' . mysql_error( ), 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
 
 		if ( !mysql_select_db( $database, $this->dblink ) )
 		{
-			$this->debug->write( 'Error connecting to database: ' . mysql_error( ), 'error' );
-			$this->messages->setMessage( 'Error connecting to database: ' . mysql_error( ), 'error' );
+			$this->debug->write( 'Problem connecting to database: ' . mysql_error( ), 'warning' );
+			$this->messages->setMessage( 'Problem connecting to database: ' . mysql_error( ), 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
