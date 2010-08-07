@@ -36,16 +36,15 @@ class zgUserfunctions
 		$this->messages = zgMessages::init( );
 		$this->configuration = zgConfiguration::init( );
 
-		$this->database = new zgDatabase( );
-		$this->database->connect( );
+		$this->database = new zgDatabasePDO( "mysql:host=" . ZG_DB_DBSERVER . ";dbname=" . ZG_DB_DATABASE, ZG_DB_USERNAME, ZG_DB_USERPASS );
 
-		$this->userrights = array();
+		$this->userrights = array( );
 		$this->userrightsLoaded = false;
 
-		$this->userdata = array();
+		$this->userdata = array( );
 		$this->userdataLoaded = false;
 
-		$this->userroles = array();
+		$this->userroles = array( );
 		$this->userrolesLoaded = false;
 	}
 
@@ -63,6 +62,8 @@ class zgUserfunctions
 	{
 		$this->debug->guard( );
 
+		// check if name and password are given
+		// they are mandatory for a new user
 		if ( ( empty( $name ) ) or ( empty( $password ) ) )
 		{
 			$this->debug->write( 'Problem creating a new user: no name or password was given for the user', 'warning' );
@@ -71,9 +72,21 @@ class zgUserfunctions
 			return false;
 		}
 
-		$sql = "SELECT * FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " WHERE user_username = '" . $name . "'";
-		$res = $this->database->query( $sql );
-		if ( $this->database->numRows( $res ) > 0 )
+		// check if a user with that name already exists
+		$sql = $this->database->prepare( "SELECT * FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " WHERE user_username = ?" );
+		$sql->bindParam( 1, $name );
+
+		if ( !$sql->execute( ) )
+		{
+			$this->debug->write( 'Problem creating a new user: could not read from user table', 'warning' );
+			$this->messages->setMessage( 'Problem creating a new user: could not read from user table', 'warning' );
+
+			$this->debug->unguard( false );
+			return false;
+		}
+
+		// if you want to allow multiple users with the same name, change the following check
+		if ( $sql->rowCount( ) > 0 )
 		{
 			$this->debug->write( 'Problem creating a new user: a user with this name already exists in the database. Please choose another username.', 'warning' );
 			$this->messages->setMessage( 'Problem creating a new user: a user with this name already exists in the database. Please choose another username.', 'warning' );
@@ -81,6 +94,7 @@ class zgUserfunctions
 			return false;
 		}
 
+		// define some default values
 		$active = 1;
 		$key = md5( uniqid( ) );
 		if ( $this->configuration->getConfiguration( 'zeitgeist', 'userhandler', 'use_doubleoptin' ) == '1' )
@@ -88,22 +102,42 @@ class zgUserfunctions
 			$active = 0;
 		}
 
-		$sql = "INSERT INTO " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . "(user_username, user_key, user_password, user_active) VALUES('" . $name . "', '" . $key . "', '" . md5( $password ) . "', '" . $active . "')";
-		$res = $this->database->query( $sql );
-		if ( !$res )
+		$sql = $this->database->prepare( "INSERT INTO " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . "(user_username, user_key, user_password, user_active) VALUES(?, ?, ?, ?)" );
+		$sql->bindParam( 1, $name );
+		$sql->bindParam( 2, $key );
+		$sql->bindParam( 3, md5( $password ) );
+		$sql->bindParam( 4, $active );
+
+		if ( !$sql->execute( ) )
 		{
-			$this->debug->write( 'Problem creating the user: could not insert the user into the database.', 'error' );
-			$this->messages->setMessage( 'Problem creating the user: could not insert the user into the database.', 'error' );
+			$this->debug->write( 'Problem creating a new user: could not insert the user into the database', 'warning' );
+			$this->messages->setMessage( 'Problem creating a new user: could not insert the user into the database', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
 
-		$currentId = $this->database->insertId( );
+		$currentId = $this->database->lastInsertId( );
 
 		// insert confirmation key
-		$confirmationkey = md5( uniqid( ) );
-		$sqlUser = "INSERT INTO " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userconfirmation' ) . "(userconfirmation_user, userconfirmation_key) VALUES('" . $currentId . "', '" . $confirmationkey . "')";
-		$resUser = $this->database->query( $sqlUser );
+		// this is used only if the double opt in is used
+		if ( $this->configuration->getConfiguration( 'zeitgeist', 'userhandler', 'use_doubleoptin' ) == '1' )
+		{
+			$confirmationkey = md5( uniqid( ) );
+
+			$sql = $this->database->prepare( "INSERT INTO " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userconfirmation' ) . "(userconfirmation_user, userconfirmation_key) VALUES(?, ?)" );
+			$sql->bindParam( 1, $currentId );
+			$sql->bindParam( 2, $confirmationkey );
+
+			if ( !$sql->execute( ) )
+			{
+				$this->debug->write( 'Problem creating a new user: could not insert the user confirmation key into the database', 'warning' );
+				$this->messages->setMessage( 'Problem creating a new user: could not insert the user confirmation key into the database', 'warning' );
+
+				$this->debug->unguard( false );
+				return false;
+			}
+		}
 
 		$this->debug->unguard( $currentId );
 		return $currentId;
@@ -122,24 +156,69 @@ class zgUserfunctions
 		$this->debug->guard( );
 
 		// user
-		$sql = "DELETE FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " WHERE user_id='" . $userid . "'";
-		$res = $this->database->query( $sql );
+		$sql = $this->database->prepare( "DELETE FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " WHERE user_id = ?" );
+		$sql->bindParam( 1, $userid );
+
+		if ( !$sql->execute( ) )
+		{
+			$this->debug->write( 'Problem deleting user: could not delete the user from database', 'warning' );
+			$this->messages->setMessage( 'Problem deleting user: could not delete the user from database', 'warning' );
+
+			$this->debug->unguard( false );
+			return false;
+		}
 
 		// userdata
-		$sql = "DELETE FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userdata' ) . " WHERE userdata_user='" . $userid . "'";
-		$res = $this->database->query( $sql );
+		$sql = $this->database->prepare( "DELETE FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userdata' ) . " WHERE userdata_user = ?" );
+		$sql->bindParam( 1, $userid );
+
+		if ( !$sql->execute( ) )
+		{
+			$this->debug->write( 'Problem deleting user: could not delete the userdata from database', 'warning' );
+			$this->messages->setMessage( 'Problem deleting user: could not delete the userdata from database', 'warning' );
+
+			$this->debug->unguard( false );
+			return false;
+		}
 
 		// userrights
-		$sql = "DELETE FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userrights' ) . " WHERE userright_user='" . $userid . "'";
-		$res = $this->database->query( $sql );
+		$sql = $this->database->prepare( "DELETE FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userrights' ) . " WHERE userright_user = ?" );
+		$sql->bindParam( 1, $userid );
+
+		if ( !$sql->execute( ) )
+		{
+			$this->debug->write( 'Problem deleting user: could not delete the userrights from database', 'warning' );
+			$this->messages->setMessage( 'Problem deleting user: could not delete the userrights from database', 'warning' );
+
+			$this->debug->unguard( false );
+			return false;
+		}
 
 		// userroles
-		$sql = "DELETE FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userroles_to_users' ) . " WHERE userroleuser_user='" . $userid . "'";
-		$res = $this->database->query( $sql );
+		$sql = $this->database->prepare( "DELETE FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userroles_to_users' ) . " WHERE userroleuser_user = ?" );
+		$sql->bindParam( 1, $userid );
+
+		if ( !$sql->execute( ) )
+		{
+			$this->debug->write( 'Problem deleting user: could not delete the userroles from database', 'warning' );
+			$this->messages->setMessage( 'Problem deleting user: could not delete the userroles from database', 'warning' );
+
+			$this->debug->unguard( false );
+			return false;
+		}
 
 		// userconfirmation
-		$sql = "DELETE FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userconfirmation' ) . " WHERE userconfirmation_user='" . $userid . "'";
-		$res = $this->database->query( $sql );
+		$sql = $this->database->prepare( "DELETE FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userconfirmation' ) . " WHERE userconfirmation_user = ?" );
+		$sql->bindParam( 1, $userid );
+
+		if ( !$sql->execute( ) )
+		{
+			$this->debug->write( 'Problem deleting user: could not delete the userconfirmation from database', 'warning' );
+			$this->messages->setMessage( 'Problem deleting user: could not delete the userconfirmation from database', 'warning' );
+
+			$this->debug->unguard( false );
+			return false;
+		}
 
 		$this->debug->unguard( true );
 		return true;
@@ -159,31 +238,35 @@ class zgUserfunctions
 	{
 		$this->debug->guard( );
 
-		$sql = "SELECT user_id, user_key, user_username FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " WHERE user_username = '" . $username . "' AND user_password = '" . md5( $password ) . "' AND user_active='1'";
+		$sql = $this->database->prepare( "SELECT user_id, user_key, user_username FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " WHERE user_username = ? AND user_password = ? AND user_active = '1'" );
+		$sql->bindParam( 1, $username );
+		$sql->bindParam( 2, md5( $password ) );
 
-		$res = $this->database->query( $sql );
-		if ( $res )
+		if ( !$sql->execute( ) )
 		{
-			if ( $this->database->numRows( $res ) )
-			{
-				$row = $this->database->fetchArray( $res );
-				$ret = $row ['user_id'];
+			$this->debug->write( 'Problem logging in: could not read user information from user table', 'warning' );
+			$this->messages->setMessage( 'Problem logging in: could not read user information from user table', 'warning' );
 
-				$this->debug->unguard( $ret );
-				return $ret;
-			}
-			else
-			{
-				$this->debug->write( 'Problem validating a user: user not found/is inactive or password is wrong', 'warning' );
-				$this->messages->setMessage( 'Problem validating a user: user not found/is inactive or password is wrong', 'warning' );
-				$this->debug->unguard( false );
-				return false;
-			}
+			$this->debug->unguard( false );
+			return false;
+		}
+
+		// check if there is a user with the given name and password in the users table
+		if ( $sql->rowCount( ) > 0 )
+		{
+			// as we expect a unique name / password combination, we only need to get the first row
+			// if multiple users with the same username are allowed you need to change this
+			// see also method loadUserdata() in userfunctions.class.php
+			$row = $sql->fetch( PDO::FETCH_ASSOC );
+			$ret = $row[ 'user_id' ];
+
+			$this->debug->unguard( $ret );
+			return $ret;
 		}
 		else
 		{
-			$this->debug->write( 'Error searching a user: could not read the user table', 'error' );
-			$this->messages->setMessage( 'Error searching a user: could not read the user table', 'error' );
+			$this->debug->write( 'Problem logging in: user not found/is inactive or password is wrong', 'warning' );
+			$this->messages->setMessage( 'Problem logging in: user not found/is inactive or password is wrong', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -213,12 +296,15 @@ class zgUserfunctions
 			return false;
 		}
 
-		$sql = "UPDATE " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " SET user_password = '" . md5( $password ) . "' WHERE user_id='" . $userid . "'";
-		$res = $this->database->query( $sql );
-		if ( !$res )
+		$sql = $this->database->prepare( "UPDATE " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " SET user_password = ? WHERE user_id = ?" );
+		$sql->bindParam( 1, md5( $password ) );
+		$sql->bindParam( 2, $userid );
+
+		if ( !$sql->execute( ) )
 		{
 			$this->debug->write( 'Problem changing the password of a user: could not write to database', 'warning' );
 			$this->messages->setMessage( 'Problem changing the password of a user: could not write to database', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -243,15 +329,25 @@ class zgUserfunctions
 
 		if ( empty( $username ) )
 		{
-			$this->debug->write( 'Problem changing the username of a user: no username was given for the user', 'warning' );
+			$this->debug->write( 'Problem changing username of a user: no username was given for the user', 'warning' );
 			$this->messages->setMessage( 'Problem changing the username of a user: no username was given for the user', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
 
-		$sql = "SELECT * FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " WHERE user_username='" . $username . "'";
-		$res = $this->database->query( $sql );
-		if ( $this->database->numRows( $res ) > 0 )
+		$sql = $this->database->prepare( "SELECT * FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " WHERE user_username = ?" );
+		$sql->bindParam( 1, $username );
+
+		if ( !$sql->execute( ) )
+		{
+			$this->debug->write( 'Problem changing username of a user: could not read from users table', 'warning' );
+			$this->messages->setMessage( 'Problem changing username of a user: could not read from users table', 'warning' );
+
+			$this->debug->unguard( false );
+			return false;
+		}
+
+		if ( $sql->rowCount( ) > 0 )
 		{
 			$this->debug->write( 'Problem changing username of a user: username already exists', 'warning' );
 			$this->messages->setMessage( 'Problem changing username of a user: username already exists', 'warning' );
@@ -259,12 +355,15 @@ class zgUserfunctions
 			return false;
 		}
 
-		$sql = "UPDATE " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " SET user_username = '" . $username . "' WHERE user_id='" . $userid . "'";
-		$res = $this->database->query( $sql );
-		if ( !$res )
+		$sql = $this->database->prepare( "UPDATE " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " SET user_username = ? WHERE user_id = ?" );
+		$sql->bindParam( 1, $username );
+		$sql->bindParam( 2, $userid );
+
+		if ( !$sql->execute( ) )
 		{
-			$this->debug->write( 'Problem changing the username of a user: could not update database', 'warning' );
-			$this->messages->setMessage( 'Problem changing the username of a user: could not update database', 'warning' );
+			$this->debug->write( 'Problem changing username of a user: could not update database', 'warning' );
+			$this->messages->setMessage( 'Problem changing username of a user:could not update database', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -286,31 +385,29 @@ class zgUserfunctions
 	{
 		$this->debug->guard( );
 
-		$sql = "SELECT * FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " WHERE user_id = '" . $userid . "'";
-		$res = $this->database->query( $sql );
-		if ( $res )
-		{
-			if ( $this->database->numRows( $res ) )
-			{
-				$ret = array();
-				$row = $this->database->fetchArray( $res );
-				$ret = $row;
+		$sql = $this->database->prepare( "SELECT * FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " WHERE user_id = ?" );
+		$sql->bindParam( 1, $userid );
 
-				$this->debug->unguard( $ret );
-				return $ret;
-			}
-			else
-			{
-				$this->debug->write( 'Problem getting user information: id not found for given user', 'warning' );
-				$this->messages->setMessage( 'Problem getting user information: id not found for given user', 'warning' );
-				$this->debug->unguard( false );
-				return false;
-			}
+		if ( !$sql->execute( ) )
+		{
+			$this->debug->write( 'Problem getting user information: could not read from users table', 'warning' );
+			$this->messages->setMessage( 'Problem getting user information: could not read from users table', 'warning' );
+
+			$this->debug->unguard( false );
+			return false;
+		}
+
+		if ( $sql->rowCount( ) > 0 )
+		{
+			$ret = $sql->fetch( PDO::FETCH_ASSOC );
+
+			$this->debug->unguard( $ret );
+			return $ret;
 		}
 		else
 		{
-			$this->debug->write( 'Error searching a user: could not read the user table', 'error' );
-			$this->messages->setMessage( 'Error searching a user: could not read the user table', 'error' );
+			$this->debug->write( 'Problem getting user information: user not found', 'warning' );
+			$this->messages->setMessage( 'Problem getting user information: user not found', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -332,28 +429,30 @@ class zgUserfunctions
 	{
 		$this->debug->guard( );
 
-		$sql = "SELECT * FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userconfirmation' ) . " WHERE userconfirmation_user = '" . $userid . "'";
-		$res = $this->database->query( $sql );
-		if ( $res )
+		$sql = $this->database->prepare( "SELECT * FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userconfirmation' ) . " WHERE userconfirmation_user = ?" );
+		$sql->bindParam( 1, $userid );
+
+		if ( !$sql->execute( ) )
 		{
-			if ( $this->database->numRows( $res ) )
-			{
-				$row = $this->database->fetchArray( $res );
-				$this->debug->unguard( $row ['userconfirmation_key'] );
-				return $row ['userconfirmation_key'];
-			}
-			else
-			{
-				$this->debug->write( 'Problem confirming a user: key not found for given user', 'warning' );
-				$this->messages->setMessage( 'Problem confirming a user: key not found for given user', 'warning' );
-				$this->debug->unguard( false );
-				return false;
-			}
+			$this->debug->write( 'Problem confirming a user: could not read from user confirmation table', 'warning' );
+			$this->messages->setMessage( 'Problem confirming a user: could not read from user confirmation table', 'warning' );
+
+			$this->debug->unguard( false );
+			return false;
+		}
+
+		if ( $sql->rowCount( ) > 0 )
+		{
+			$row = $sql->fetch( PDO::FETCH_ASSOC );
+			$ret = $row[ 'userconfirmation_key' ];
+
+			$this->debug->unguard( $ret );
+			return $ret;
 		}
 		else
 		{
-			$this->debug->write( 'Error searching a user: could not read the user table', 'error' );
-			$this->messages->setMessage( 'Error searching a user: could not read the user table', 'error' );
+			$this->debug->write( 'Problem confirming a user: key not found for given user', 'warning' );
+			$this->messages->setMessage( 'Problem confirming a user: key not found for given user', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -375,28 +474,30 @@ class zgUserfunctions
 	{
 		$this->debug->guard( );
 
-		$sql = "SELECT * FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userconfirmation' ) . " WHERE userconfirmation_key = '" . $confirmationkey . "'";
-		$res = $this->database->query( $sql );
-		if ( $res )
+		$sql = $this->database->prepare( "SELECT * FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userconfirmation' ) . " WHERE userconfirmation_key = ?" );
+		$sql->bindParam( 1, $confirmationkey );
+
+		if ( !$sql->execute( ) )
 		{
-			if ( $this->database->numRows( $res ) )
-			{
-				$row = $this->database->fetchArray( $res );
-				$this->debug->unguard( $row ['userconfirmation_user'] );
-				return $row ['userconfirmation_user'];
-			}
-			else
-			{
-				$this->debug->write( 'Problem confirming a user: key not found for given user', 'warning' );
-				$this->messages->setMessage( 'Problem confirming a user: key not found for given user', 'warning' );
-				$this->debug->unguard( false );
-				return false;
-			}
+			$this->debug->write( 'Problem confirming a user: could not read from user confirmation table', 'warning' );
+			$this->messages->setMessage( 'Problem confirming a user: could not read from user confirmation table', 'warning' );
+
+			$this->debug->unguard( false );
+			return false;
+		}
+
+		if ( $sql->rowCount( ) > 0 )
+		{
+			$row = $sql->fetch( PDO::FETCH_ASSOC );
+			$ret = $row[ 'userconfirmation_user' ];
+
+			$this->debug->unguard( $ret );
+			return $ret;
 		}
 		else
 		{
-			$this->debug->write( 'Error searching a user: could not read the user table', 'error' );
-			$this->messages->setMessage( 'Error searching a user: could not read the user table', 'error' );
+			$this->debug->write( 'Problem confirming a user: given key not found', 'warning' );
+			$this->messages->setMessage( 'Problem confirming a user: given key not found', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -418,22 +519,28 @@ class zgUserfunctions
 		$this->debug->guard( );
 
 		// activate the user if it's not already active
-		$sql = "UPDATE " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " SET user_active='1' WHERE user_id='" . $userid . "' AND user_active='0'";
-		if ( !$res = $this->database->query( $sql ) )
+		$sql = $this->database->prepare( "UPDATE " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " SET user_active = '1' WHERE user_id = ? AND user_active = '0'" );
+		$sql->bindParam( 1, $userid );
+
+		if ( !$sql->execute( ) )
 		{
 			$this->debug->write( 'Problem activating user: user not found or is already active', 'warning' );
 			$this->messages->setMessage( 'Problem activating user: user not found or is already active', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
 
 		// delete the according user confirmation data as it's no longer
 		// needed for an active user
-		$sql = "DELETE FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userconfirmation' ) . " WHERE userconfirmation_user='" . $userid . "'";
-		if ( !$res = $this->database->query( $sql ) )
+		$sql = $this->database->prepare( "DELETE FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userconfirmation' ) . " WHERE userconfirmation_user = ?" );
+		$sql->bindParam( 1, $userid );
+
+		if ( !$sql->execute( ) )
 		{
 			$this->debug->write( 'Problem activating user: could not delete user confirmation data', 'warning' );
 			$this->messages->setMessage( 'Problem activating user: could not delete user confirmation data', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -455,23 +562,29 @@ class zgUserfunctions
 		$this->debug->guard( );
 
 		// deactivate the user if it's active
-		$sql = "UPDATE " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " SET user_active='0' WHERE user_id='" . $userid . "' AND user_active='1'";
-		if ( !$res = $this->database->query( $sql ) )
+		$sql = $this->database->prepare( "UPDATE " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " SET user_active = '0' WHERE user_id = ? AND user_active = '1'" );
+		$sql->bindParam( 1, $userid );
+
+		if ( !$sql->execute( ) )
 		{
-			$this->debug->write( 'Problem activating user: user not found or is already active', 'warning' );
-			$this->messages->setMessage( 'Problem activating user: user not found or is already active', 'warning' );
+			$this->debug->write( 'Problem deactivating user: user not found or is already inactive', 'warning' );
+			$this->messages->setMessage( 'Problem deactivating user: user not found or is already inactive', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
 
 		// create the according user confirmation data as it's needed for the
 		// user to activate again through an opt in
-		$confirmationkey = md5( uniqid( ) );
-		$sql = "INSERT INTO " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userconfirmation' ) . "(userconfirmation_user, userconfirmation_key) VALUES('" . $userid . "', '" . $confirmationkey . "')";
-		if ( !$res = $this->database->query( $sql ) )
+		$sql = $this->database->prepare( "INSERT INTO " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userconfirmation' ) . "(userconfirmation_user, userconfirmation_key) VALUES(?, ?)" );
+		$sql->bindParam( 1, $userid );
+		$sql->bindParam( 2, md5( uniqid( ) ) );
+
+		if ( !$sql->execute( ) )
 		{
-			$this->debug->write( 'Problem activating user: could not delete user confirmation data', 'warning' );
-			$this->messages->setMessage( 'Problem activating user: could not delete user confirmation data', 'warning' );
+			$this->debug->write( 'Problem deactivating user: could not create user confirmation data', 'warning' );
+			$this->messages->setMessage( 'Problem deactivating user: could not create user confirmation data', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}

@@ -27,7 +27,6 @@ class zgUserhandler
 	protected $debug;
 	protected $messages;
 	protected $session;
-	protected $database;
 	protected $configuration;
 	protected $userroles;
 	protected $userrolesLoaded;
@@ -50,19 +49,16 @@ class zgUserhandler
 		$this->messages = zgMessages::init( );
 		$this->configuration = zgConfiguration::init( );
 
-		$this->database = new zgDatabase( );
-		$this->database->connect( );
-
 		$this->session = zgSession::init( );
 		$this->session->startSession( );
 
-		$this->userroles = array();
+		$this->userroles = array( );
 		$this->userrolesLoaded = false;
 
-		$this->userrights = array();
+		$this->userrights = array( );
 		$this->userrightsLoaded = false;
 
-		$this->userdata = array();
+		$this->userdata = array( );
 		$this->userdataLoaded = false;
 
 		$this->loggedIn = false;
@@ -146,9 +142,9 @@ class zgUserhandler
 			if ( $userid )
 			{
 				$userinformation = $userfunctions->getInformation( $userid );
-				$this->session->setSessionVariable( 'user_id', $userinformation ['user_id'] );
-				$this->session->setSessionVariable( 'user_key', $userinformation ['user_key'] );
-				$this->session->setSessionVariable( 'user_username', $userinformation ['user_username'] );
+				$this->session->setSessionVariable( 'user_id', $userinformation[ 'user_id' ] );
+				$this->session->setSessionVariable( 'user_key', $userinformation[ 'user_key' ] );
+				$this->session->setSessionVariable( 'user_username', $userinformation[ 'user_username' ] );
 
 				$this->loggedIn = true;
 
@@ -418,10 +414,10 @@ class zgUserhandler
 
 		if ( $datakey != '' )
 		{
-			if ( !empty( $this->userdata [$datakey] ) )
+			if ( !empty( $this->userdata[ $datakey ] ) )
 			{
-				$this->debug->unguard( $this->userdata [$datakey] );
-				return $this->userdata [$datakey];
+				$this->debug->unguard( $this->userdata[ $datakey ] );
+				return $this->userdata[ $datakey ];
 			}
 			else
 			{
@@ -464,7 +460,7 @@ class zgUserhandler
 
 		if ( array_key_exists( $userdata, $this->userdata ) )
 		{
-			$this->userdata [$userdata] = $value;
+			$this->userdata[ $userdata ] = $value;
 			if ( $saveuserdata ) $this->_saveUserdata( );
 
 			$this->debug->unguard( true );
@@ -473,7 +469,7 @@ class zgUserhandler
 
 		if ( $forceupdate )
 		{
-			$this->userdata [$userdata] = $value;
+			$this->userdata[ $userdata ] = $value;
 			if ( $saveuserdata ) $this->_saveUserdata( );
 
 			$this->debug->unguard( true );
@@ -564,7 +560,7 @@ class zgUserhandler
 			$this->_loadUserrights( );
 		}
 
-		if ( !empty( $this->userrights [$actionid] ) )
+		if ( !empty( $this->userrights[ $actionid ] ) )
 		{
 			$this->debug->unguard( true );
 			return true;
@@ -595,7 +591,7 @@ class zgUserhandler
 			$this->_loadUserrights( );
 		}
 
-		$this->userrights [$actionid] = true;
+		$this->userrights[ $actionid ] = true;
 		if ( $saveuserrights )
 		{
 			$this->_saveUserrights( );
@@ -623,9 +619,9 @@ class zgUserhandler
 			$this->_loadUserrights( );
 		}
 
-		if ( isset( $this->userrights [$actionid] ) )
+		if ( isset( $this->userrights[ $actionid ] ) )
 		{
-			unset( $this->userrights [$actionid] );
+			unset( $this->userrights[ $actionid ] );
 			if ( $saveuserrights ) $this->_saveUserrights( );
 		}
 
@@ -751,7 +747,7 @@ class zgUserhandler
 		$userroles = new zgUserroles( );
 		$roleid = $userroles->identifyRole( $rolename );
 
-		$this->userroles [$roleid] = $rolename;
+		$this->userroles[ $roleid ] = $rolename;
 		if ( $saveuserroles )
 		{
 			$this->_saveUserroles( );
@@ -782,7 +778,7 @@ class zgUserhandler
 		$roleid = array_search( $rolename, $this->userroles );
 		if ( $roleid )
 		{
-			unset( $this->userroles [$roleid] );
+			unset( $this->userroles[ $roleid ] );
 			if ( $saveuserroles ) $this->_saveUserroles( );
 		}
 
