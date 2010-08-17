@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `actions` (
   `action_module` int(12) NOT NULL,
   `action_name` varchar(30) NOT NULL DEFAULT '',
   `action_description` text NOT NULL,
-  `action_requiresuserright` tinyint(1) NOT NULL DEFAULT '0',
+  `action_active` tinyint(1) NOT NULL default '0',
   PRIMARY KEY (`action_id`),
   KEY `action_module` (`action_module`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
@@ -78,17 +78,17 @@ CREATE TABLE IF NOT EXISTS `actions` (
 -- Daten für Tabelle `actions`
 --
 
-INSERT INTO `actions` (`action_id`, `action_module`, `action_name`, `action_description`, `action_requiresuserright`) VALUES
-(1, 1, 'index', 'Main index action', 0),
-(2, 5, 'index', 'Index for the configuration exampels', 0),
-(4, 3, 'index', 'Overview of message examples', 0),
-(3, 2, 'index', 'Examples for the debug class', 0),
-(5, 4, 'index', 'Template Examples', 0),
-(6, 6, 'index', 'Index for dataserver examples', 0),
-(7, 7, 'index', 'Index for the parameterhandler examples', 0),
-(8, 8, 'index', 'Examples for the userhandler', 0),
-(9, 9, 'index', 'Acrion for the object handler examples', 0),
-(10, 10, 'index', 'Index for the controller examples', 0);
+INSERT INTO `actions` (`action_id`, `action_module`, `action_name`, `action_description`, `action_active`) VALUES
+(1, 1, 'index', 'Main index action', 1),
+(2, 5, 'index', 'Index for the configuration exampels', 1),
+(4, 3, 'index', 'Overview of message examples', 1),
+(3, 2, 'index', 'Examples for the debug class', 1),
+(5, 4, 'index', 'Template Examples', 1),
+(6, 6, 'index', 'Index for dataserver examples', 1),
+(7, 7, 'index', 'Index for the parameterhandler examples', 1),
+(8, 8, 'index', 'Examples for the userhandler', 1),
+(9, 9, 'index', 'Acrion for the object handler examples', 1),
+(10, 10, 'index', 'Index for the controller examples', 1);
 
 -- --------------------------------------------------------
 

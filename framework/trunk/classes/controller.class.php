@@ -25,7 +25,6 @@ class zgController
 	protected $messages;
 	protected $database;
 	protected $configuration;
-	protected $user;
 	protected $actionlog;
 
 
@@ -37,7 +36,6 @@ class zgController
 		$this->debug = zgDebug::init( );
 		$this->messages = zgMessages::init( );
 		$this->configuration = zgConfiguration::init( );
-		$this->user = zgUserhandler::init( );
 		$this->actionlog = new zgActionlog( );
 
 		$this->database = new zgDatabasePDO( "mysql:host=" . ZG_DB_DBSERVER . ";dbname=" . ZG_DB_DATABASE, ZG_DB_USERNAME, ZG_DB_USERPASS );
@@ -49,7 +47,7 @@ class zgController
 	 *
 	 * @param string $module name of the module
 	 *
-	 * @return boolean
+	 * @return array
 	 */
 	protected function _getModuleData( $module )
 	{
@@ -79,19 +77,19 @@ class zgController
 	/**
 	 * Loads all relevant data for an action from the database
 	 *
-	 * @param string $module name of the module
+	 * @param array $moduledata moduledata as defined by _getModuleData()
 	 * @param string $action name of the action
 	 *
 	 * @return boolean
 	 */
-	protected function _getActionData( $module, $action )
+	protected function _getActionData( $moduledata, $action )
 	{
 		$this->debug->guard( );
 
 		$actionsTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_actions' );
 
 		$sql = $this->database->prepare( "SELECT * FROM " . $actionsTablename . " WHERE action_module = ? AND action_name = ?" );
-		$sql->bindParam( 1, $module[ 'module_id' ] );
+		$sql->bindParam( 1, $moduledata['module_id'] );
 		$sql->bindParam( 2, $action );
 
 		if ( !$sql->execute( ) )
@@ -111,97 +109,11 @@ class zgController
 
 
 	/**
-	 * Checks if the user has the right for a given action
-	 *
-	 * @param array $actionData data of the action to load
-	 *
-	 * @return boolean
-	 */
-	protected function _checkRightsForAction( $actionData )
-	{
-		$this->debug->guard( );
-
-		if ( $this->user->isLoggedIn( ) )
-		{
-			$ret = $this->user->hasUserright( $actionData[ 'action_id' ] );
-
-			$this->debug->unguard( $ret );
-			return $ret;
-		}
-
-		$this->debug->unguard( false );
-		return false;
-	}
-
-
-	/**
-	 * Checks if the given action requires special user rights
-	 *
-	 * @param string $module name of the module
-	 * @param string $action name of the action
-	 *
-	 * @return boolean
-	 */
-	public function requiresUserRights( $module, $action )
-	{
-		$this->debug->guard( );
-
-		$actionsTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_actions' );
-		$modulesTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_modules' );
-
-		$sql = $this->database->prepare( "SELECT a.action_requiresuserright FROM " . $actionsTablename . " a LEFT JOIN " . $modulesTablename . " m ON a.action_module = m.module_id WHERE m.module_name = ? AND a.action_name = ?" );
-		$sql->bindParam( 1, $module );
-		$sql->bindParam( 2, $action );
-
-		if ( !$sql->execute( ) )
-		{
-			$this->debug->write( 'Problem getting userrights data: could not read from action and / or module table', 'warning' );
-			$this->messages->setMessage( 'Problem getting userrights data: could not read from action and / or module', 'warning' );
-
-			$this->debug->unguard( false );
-			return false;
-		}
-
-		$row = $sql->fetch( PDO::FETCH_ASSOC );
-		$ret = $row[ 'action_requiresuserright' ];
-
-		$this->debug->unguard( $ret );
-		return $ret;
-	}
-
-
-	/**
-	 * Sets a custom userhandler
-	 * The userhandler class will be used to check rights and roles of a user
-	 *
-	 * @param zgUserhandler $userhandler userhandler class
-	 *
-	 * @return boolean
-	 */
-	public function setEventhandler( $userhandler )
-	{
-		$this->debug->guard( );
-
-		if ( $userhandler instanceof zgUserhandler )
-		{
-			$this->user = $userhandler;
-			$this->debug->unguard( true );
-			return true;
-		}
-
-		$this->debug->unguard( false );
-		return false;
-	}
-
-
-	/**
 	 * Executes an action inside a module
 	 * Also handles all security related aspects
 	 *
 	 * @param string $module name of the module to load
 	 * @param string $action name of the action to load
-	 * @param array $parameters array with parameters the action is called
-	 * @param integer $user id of the current user
 	 *
 	 * @return boolean
 	 */
@@ -209,7 +121,7 @@ class zgController
 	{
 		$this->debug->guard( );
 
-		// load message data for user
+		// load message data for the current session
 		if ( $this->configuration->getConfiguration( 'zeitgeist', 'messages', 'use_persistent_messages' ) )
 		{
 			$this->messages->loadMessagesFromSession( );
@@ -218,14 +130,14 @@ class zgController
 		// check if module is installed and get module data
 		if ( !$moduleData = $this->_getModuleData( $module ) )
 		{
-			$this->debug->write( 'Problem loading the module: Module is not found/ installed: ' . $module, 'warning' );
-			$this->messages->setMessage( 'Problem loading the module: Module is not found/ installed: ' . $module, 'warning' );
+			$this->debug->write( 'Problem loading the module: Module is not found / installed: ' . $module, 'warning' );
+			$this->messages->setMessage( 'Problem loading the module: Module is not found / installed: ' . $module, 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
 
 		// check from data if module is active
-		if ( $moduleData[ 'module_active' ] != '1' )
+		if ( $moduleData['module_active'] != '1' )
 		{
 			$this->debug->write( 'Problem loading the module: Module is not active: ' . $module, 'warning' );
 			$this->messages->setMessage( 'Problem loading the module: Module is not active: ' . $module, 'warning' );
@@ -236,8 +148,8 @@ class zgController
 		// check if the classname is already used
 		if ( class_exists( $module, false ) )
 		{
-			$this->debug->write( 'Problem loading the module: Class name already used: ' . $module, 'warning' );
-			$this->messages->setMessage( 'Problem loading the module: Class name already used: ' . $module, 'warning' );
+			$this->debug->write( 'Problem loading the module (' . $module . '): Class name already used', 'warning' );
+			$this->messages->setMessage( 'Problem loading the module: Class name already used', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -245,8 +157,8 @@ class zgController
 		//check if zeitgeist can load the module
 		if ( !class_exists( $module, true ) )
 		{
-			$this->debug->write( 'Problem loading the module: Could not find matching class: ' . $module, 'warning' );
-			$this->messages->setMessage( 'Problem loading the module: Could not find matching class: ' . $module, 'warning' );
+			$this->debug->write( 'Problem loading the module (' . $module . '): Could not find matching class', 'warning' );
+			$this->messages->setMessage( 'Problem loading the module: Could not find matching class', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -263,6 +175,15 @@ class zgController
 			return false;
 		}
 
+		// check from data if action is active
+		if ( $actionData['action_active'] != '1' )
+		{
+			$this->debug->write( 'Problem loading the action (' . $action . ') in module (' . $module . '): Action is not active', 'warning' );
+			$this->messages->setMessage( 'Problem loading the action (' . $action . ') in module (' . $module . '): Action is not active', 'warning' );
+			$this->debug->unguard( false );
+			return false;
+		}
+
 		// check if action method exists in module
 		if ( !method_exists( $moduleClass, $action ) )
 		{
@@ -270,19 +191,6 @@ class zgController
 			$this->messages->setMessage( 'Problem loading the action (' . $action . ') in module (' . $module . '): Could not find method', 'warning' );
 			$this->debug->unguard( false );
 			return false;
-		}
-
-		// check if user has rights for given action
-		if ( $actionData[ 'action_requiresuserright' ] == '1' )
-		{
-			if ( !$this->_checkRightsForAction( $actionData ) )
-			{
-				$this->debug->write( 'User (' . $this->user->getUserID( ) . ') has no rights for action (' . $action . ') in module (' . $module . ')', 'warning' );
-				$this->messages->setMessage( 'User (' . $this->user->getUserID( ) . ') has no rights for action (' . $action . ') in module (' . $module . ')', 'warning' );
-
-				$this->debug->unguard( false );
-				return false;
-			}
 		}
 
 		// load configuration
@@ -299,18 +207,18 @@ class zgController
 		// log the pageview if logging is active
 		if ( $this->configuration->getConfiguration( 'zeitgeist', 'actionlog', 'actionlog_active' ) == '1' )
 		{
-			$this->actionlog->logAction( $moduleData[ 'module_id' ], $actionData[ 'action_id' ], $safeparameters );
+			$this->actionlog->logAction( $moduleData['module_id'], $actionData['action_id'], $safeparameters );
 		}
 
 		// execute action in module
-		$ret = call_user_func( array( &$moduleClass, $action ), $safeparameters );
+		$ret = call_user_func( array(&$moduleClass, $action), $safeparameters );
 		if ( $ret !== true )
 		{
 			$this->debug->unguard( $ret );
 			return $ret;
 		}
 
-		// save message data for user
+		// save message data for session
 		if ( $this->configuration->getConfiguration( 'zeitgeist', 'messages', 'use_persistent_messages' ) )
 		{
 			$this->messages->saveMessagesToSession( );

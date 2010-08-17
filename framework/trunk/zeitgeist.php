@@ -48,11 +48,6 @@ require_once ( ZEITGEIST_ROOTDIRECTORY . 'classes/configuration.class.php' );
 require_once ( ZEITGEIST_ROOTDIRECTORY . 'classes/localisation.class.php' );
 require_once ( ZEITGEIST_ROOTDIRECTORY . 'classes/objects.class.php' );
 require_once ( ZEITGEIST_ROOTDIRECTORY . 'classes/session.class.php' );
-require_once ( ZEITGEIST_ROOTDIRECTORY . 'classes/userroles.class.php' );
-require_once ( ZEITGEIST_ROOTDIRECTORY . 'classes/userrights.class.php' );
-require_once ( ZEITGEIST_ROOTDIRECTORY . 'classes/userdata.class.php' );
-require_once ( ZEITGEIST_ROOTDIRECTORY . 'classes/userfunctions.class.php' );
-require_once ( ZEITGEIST_ROOTDIRECTORY . 'classes/userhandler.class.php' );
 require_once ( ZEITGEIST_ROOTDIRECTORY . 'classes/errorhandler.class.php' );
 require_once ( ZEITGEIST_ROOTDIRECTORY . 'classes/parameters.class.php' );
 require_once ( ZEITGEIST_ROOTDIRECTORY . 'classes/controller.class.php' );
@@ -66,6 +61,11 @@ require_once ( ZEITGEIST_ROOTDIRECTORY . 'includes/autoloader.include.php' );
 spl_autoload_register( 'zgAutoload' );
 
 // include modules
+require_once ( ZEITGEIST_ROOTDIRECTORY . 'modules/user/userroles.class.php' );
+require_once ( ZEITGEIST_ROOTDIRECTORY . 'modules/user/userrights.class.php' );
+require_once ( ZEITGEIST_ROOTDIRECTORY . 'modules/user/userdata.class.php' );
+require_once ( ZEITGEIST_ROOTDIRECTORY . 'modules/user/userfunctions.class.php' );
+require_once ( ZEITGEIST_ROOTDIRECTORY . 'modules/user/userhandler.class.php' );
 require_once ( ZEITGEIST_ROOTDIRECTORY . 'modules/facebook/facebookuserhandler.class.php' );
 require_once ( ZEITGEIST_ROOTDIRECTORY . 'modules/form/form.class.php' );
 require_once ( ZEITGEIST_ROOTDIRECTORY . 'modules/gamesystem/gamesystem.class.php' );
