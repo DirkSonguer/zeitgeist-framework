@@ -2,6 +2,9 @@
 
 	define('MULTITEST', true);
 
+	// SimpleTest is used for the tests however it is not part of the SVN
+	// Download SimpleTest from here: http://www.simpletest.org/
+	// Place it into a directory and change the path below to point there
 	if (!defined('SIMPLE_TEST'))
 	{
 	    define('SIMPLE_TEST', './simpletest/');
