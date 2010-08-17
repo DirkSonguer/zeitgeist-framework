@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `actions` (
   `action_module` int(11) NOT NULL,
   `action_name` varchar(30) NOT NULL default '',
   `action_description` text NOT NULL,
-  `action_requiresuserright` tinyint(1) NOT NULL default '0',
+  `action_active` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`action_id`),
   KEY `action_module` (`action_module`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
