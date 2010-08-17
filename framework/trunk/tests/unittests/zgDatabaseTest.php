@@ -184,7 +184,7 @@ class zgDatabaseTest extends UnitTestCase
 		$this->setUp( );
 		$this->zgDatabase->connect( );
 
-		$ret = $this->zgDatabase->fetchArray( '' );
+		$ret = $this->zgDatabase->fetchArray( null );
 		$this->assertFalse( $ret );
 
 		$this->zgDatabase->close( );
@@ -230,7 +230,7 @@ class zgDatabaseTest extends UnitTestCase
 		$this->setUp( );
 		$this->zgDatabase->connect( );
 
-		$ret = $this->zgDatabase->numRows( '' );
+		$ret = $this->zgDatabase->numRows( null );
 		$this->assertFalse( $ret );
 
 		$this->zgDatabase->close( );

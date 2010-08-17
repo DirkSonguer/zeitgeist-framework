@@ -8,7 +8,7 @@ class testUserhandler extends UnitTestCase
 	function test_init( )
 	{
 		$this->database = new zgDatabase( );
-		$ret = $this->database->connect( );
+		$this->database->connect( );
 
 		$userhandler = zgUserhandler::init( );
 		$this->assertNotNull( $userhandler );

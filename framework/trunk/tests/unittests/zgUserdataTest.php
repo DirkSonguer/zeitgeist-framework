@@ -178,7 +178,6 @@ class zgUserdataTest extends UnitTestCase
 	public function testSaveUserdata_WithoutDatabase( )
 	{
 		$this->setUp( );
-		$testfunctions = new testFunctions( );
 
 		$testuser = rand( 100, 200 );
 		$testdata = array();

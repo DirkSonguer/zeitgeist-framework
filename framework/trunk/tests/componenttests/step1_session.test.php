@@ -13,8 +13,8 @@ class testSession extends UnitTestCase
 	function test_setSessionVariable( )
 	{
 		$session = zgSession::init( );
-		$ret = $session->setSessionVariable( 'test1', 1 );
-		$ret = $session->setSessionVariable( 'test2', 'test' );
+		$session->setSessionVariable( 'test1', 1 );
+		$session->setSessionVariable( 'test2', 'test' );
 
 		$this->assertEqual( $_SESSION['test1'], 1 );
 		$this->assertEqual( $_SESSION['test2'], 'test' );
@@ -41,10 +41,10 @@ class testSession extends UnitTestCase
 	{
 		$session = zgSession::init( );
 
-		$ret = $session->unsetSessionVariable( 'test1' );
+		$session->unsetSessionVariable( 'test1' );
 		$this->assertNull( $_SESSION['test1'] );
 
-		$ret = $session->unsetSessionVariable( 'test2' );
+		$session->unsetSessionVariable( 'test2' );
 		$this->assertNull( $_SESSION['test2'] );
 
 		unset( $session );
