@@ -36,7 +36,7 @@ class zgDatabase
 		$this->messages = zgMessages::init( );
 
 		$this->persistent = false;
-		$this->dblink = false;
+		$this->dblink = null;
 	}
 
 

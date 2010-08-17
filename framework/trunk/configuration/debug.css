@@ -1,8 +1,8 @@
 <style type="text/css">
 
-.debug { font-family:'Verdana'; color: black; background-color: #FFFFFF; vertical-align: top; text-align: left; clear: both; }
+.debug { font-family:'Verdana', sans-serif; color: black; background-color: #FFFFFF; vertical-align: top; text-align: left; clear: both; }
 .debug h1 { margin-top:15pt; }
-.debug table { border-collapse: collapse; width: 100%; border: 1px; border-style: solid; border-color: #A0A0A0; }
+.debug table { border-collapse: collapse; width: 100%; border: 1px solid #A0A0A0; }
 .debug tr.guardLine { background-color: #DAEFDA; }
 .debug tr.unguardLine { background-color: #fcd4be;}
 .debug tr.message { background-color: #DAEFDA; }
@@ -14,8 +14,8 @@
 .debug tr.sqlerror { background-color: #CF5A5A; }
 .debug tr.sqlerror td { padding:10px; }
 .debug span.sqlproblem { background-color: #CF5A5A; }
-.debug td { font-size: 9pt; border-collapse: collapse; border: 1px; border-style: solid; border-color: #A0A0A0; vertical-align: top; text-align: left; }
-.debug th { font-size: 9pt; border-collapse: collapse; border: 1px; border-style: solid; border-color: #A0A0A0; vertical-align: top; text-align: left; }
+.debug td { font-size: 9pt; border: 1px solid #A0A0A0; vertical-align: top; text-align: left; }
+.debug th { font-size: 9pt; border: 1px solid #A0A0A0; vertical-align: top; text-align: left; }
 .debug span.guardArgument { color: #339933; }
 .debug span.guardLine { color: #993333; }
 .debug span.guardFile { color: #993333; }
