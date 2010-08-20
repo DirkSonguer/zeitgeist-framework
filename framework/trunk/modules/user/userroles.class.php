@@ -39,10 +39,12 @@ class zgUserroles
 
 	/**
 	 * Returns roles for a given user
+	 * The userroles will be stored in an array with the userrole id as key
+	 * and the name as value
 	 *
 	 * @param integer $userid id of the user
 	 *
-	 * @return boolean
+	 * @return array | boolean
 	 */
 	public function loadUserroles( $userid )
 	{
@@ -66,7 +68,6 @@ class zgUserroles
 		$ret = array( );
 		while ( $row = $row = $sql->fetch( PDO::FETCH_ASSOC ) )
 		{
-			if ( $row[ 'userrole_name' ] == NULL ) $row[ 'userrole_name' ] = true;
 			$ret[ $row[ 'userroleuser_userrole' ] ] = $row[ 'userrole_name' ];
 		}
 
