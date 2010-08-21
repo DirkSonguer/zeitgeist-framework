@@ -69,7 +69,7 @@ CREATE TABLE actions (
   action_module int(12) NOT NULL DEFAULT '0',
   action_name varchar(30) NOT NULL DEFAULT '',
   action_description text NOT NULL,
-  action_requiresuserright tinyint(1) NOT NULL DEFAULT '0',
+  action_active tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (action_id),
   KEY action_module (action_module)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
@@ -78,32 +78,32 @@ CREATE TABLE actions (
 -- Daten für Tabelle 'actions'
 --
 
-INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright) VALUES(1, 1, 'index', 'main index', 0);
-INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright) VALUES(2, 1, 'login', 'login functionality', 0);
-INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright) VALUES(3, 1, 'logout', 'log out user', 0);
-INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright) VALUES(4, 2, 'index', 'Main index of the setup module', 0);
-INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright) VALUES(5, 3, 'index', 'Main index for user module', 0);
-INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright) VALUES(6, 2, 'showmodules', 'Shows the list of available modules', 0);
-INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright) VALUES(7, 2, 'showactions', 'Shows the overview of available actions', 0);
-INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright) VALUES(8, 2, 'showuserroles', 'Shows the list of userroles', 0);
-INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright) VALUES(9, 3, 'edituser', 'Edits the user with the given id', 0);
-INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright) VALUES(10, 4, 'index', 'Main index for the configure module', 0);
-INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright) VALUES(11, 4, 'activateproject', 'Activates the given project', 0);
-INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright) VALUES(12, 4, 'deleteproject', 'Deletes a configured Zeitgeist project', 0);
-INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright) VALUES(14, 4, 'editproject', 'Edits a given project', 0);
-INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright) VALUES(13, 4, 'createproject', 'Creates a new Zeitgeist project', 0);
-INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright) VALUES(15, 2, 'deletemodule', 'Deletes a given module and all its actions', 0);
-INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright) VALUES(16, 2, 'editmodule', 'Edits the given module', 0);
-INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright) VALUES(17, 2, 'activatemodule', 'Activate a given module', 0);
-INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright) VALUES(18, 2, 'deactivatemodule', 'Deactivate a module', 0);
-INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright) VALUES(19, 2, 'createmodule', 'Create a new module', 0);
-INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright) VALUES(20, 2, 'editaction', 'Edits an action', 0);
-INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright) VALUES(21, 2, 'createaction', 'Creates a new action', 0);
-INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright) VALUES(22, 2, 'deleteaction', 'Deletes a given action', 0);
-INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright) VALUES(23, 2, 'edituserrole', 'Edits a given userrole', 0);
-INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright) VALUES(24, 2, 'deleteuserrole', 'Deletes a given userrole', 0);
-INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright) VALUES(25, 2, 'createuserrole', 'Creates a new userrole', 0);
-INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright) VALUES(26, 2, 'showuserdata', 'Shows list of userdata elements', 0);
+INSERT INTO actions (action_id, action_module, action_name, action_description, action_active) VALUES(1, 1, 'index', 'main index', 1);
+INSERT INTO actions (action_id, action_module, action_name, action_description, action_active) VALUES(2, 1, 'login', 'login functionality', 1);
+INSERT INTO actions (action_id, action_module, action_name, action_description, action_active) VALUES(3, 1, 'logout', 'log out user', 1);
+INSERT INTO actions (action_id, action_module, action_name, action_description, action_active) VALUES(4, 2, 'index', 'Main index of the setup module', 1);
+INSERT INTO actions (action_id, action_module, action_name, action_description, action_active) VALUES(5, 3, 'index', 'Main index for user module', 1);
+INSERT INTO actions (action_id, action_module, action_name, action_description, action_active) VALUES(6, 2, 'showmodules', 'Shows the list of available modules', 1);
+INSERT INTO actions (action_id, action_module, action_name, action_description, action_active) VALUES(7, 2, 'showactions', 'Shows the overview of available actions', 1);
+INSERT INTO actions (action_id, action_module, action_name, action_description, action_active) VALUES(8, 2, 'showuserroles', 'Shows the list of userroles', 1);
+INSERT INTO actions (action_id, action_module, action_name, action_description, action_active) VALUES(9, 3, 'edituser', 'Edits the user with the given id', 1);
+INSERT INTO actions (action_id, action_module, action_name, action_description, action_active) VALUES(10, 4, 'index', 'Main index for the configure module', 1);
+INSERT INTO actions (action_id, action_module, action_name, action_description, action_active) VALUES(11, 4, 'activateproject', 'Activates the given project', 1);
+INSERT INTO actions (action_id, action_module, action_name, action_description, action_active) VALUES(12, 4, 'deleteproject', 'Deletes a configured Zeitgeist project', 1);
+INSERT INTO actions (action_id, action_module, action_name, action_description, action_active) VALUES(14, 4, 'editproject', 'Edits a given project', 1);
+INSERT INTO actions (action_id, action_module, action_name, action_description, action_active) VALUES(13, 4, 'createproject', 'Creates a new Zeitgeist project', 1);
+INSERT INTO actions (action_id, action_module, action_name, action_description, action_active) VALUES(15, 2, 'deletemodule', 'Deletes a given module and all its actions', 1);
+INSERT INTO actions (action_id, action_module, action_name, action_description, action_active) VALUES(16, 2, 'editmodule', 'Edits the given module', 1);
+INSERT INTO actions (action_id, action_module, action_name, action_description, action_active) VALUES(17, 2, 'activatemodule', 'Activate a given module', 1);
+INSERT INTO actions (action_id, action_module, action_name, action_description, action_active) VALUES(18, 2, 'deactivatemodule', 'Deactivate a module', 1);
+INSERT INTO actions (action_id, action_module, action_name, action_description, action_active) VALUES(19, 2, 'createmodule', 'Create a new module', 1);
+INSERT INTO actions (action_id, action_module, action_name, action_description, action_active) VALUES(20, 2, 'editaction', 'Edits an action', 1);
+INSERT INTO actions (action_id, action_module, action_name, action_description, action_active) VALUES(21, 2, 'createaction', 'Creates a new action', 1);
+INSERT INTO actions (action_id, action_module, action_name, action_description, action_active) VALUES(22, 2, 'deleteaction', 'Deletes a given action', 1);
+INSERT INTO actions (action_id, action_module, action_name, action_description, action_active) VALUES(23, 2, 'edituserrole', 'Edits a given userrole', 1);
+INSERT INTO actions (action_id, action_module, action_name, action_description, action_active) VALUES(24, 2, 'deleteuserrole', 'Deletes a given userrole', 1);
+INSERT INTO actions (action_id, action_module, action_name, action_description, action_active) VALUES(25, 2, 'createuserrole', 'Creates a new userrole', 1);
+INSERT INTO actions (action_id, action_module, action_name, action_description, action_active) VALUES(26, 2, 'showuserdata', 'Shows list of userdata elements', 1);
 
 -- --------------------------------------------------------
 

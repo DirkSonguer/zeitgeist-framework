@@ -8,7 +8,7 @@ class setup
 	protected $messages;
 	protected $database;
 	protected $configuration;
-	protected $user;	
+	protected $user;
 	protected $setupfunctions;
 
 	public function __construct()
@@ -28,7 +28,7 @@ class setup
 	public function index($parameters=array())
 	{
 		$this->debug->guard();
-		
+
 		$tpl = new zgaTemplate();
 		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_index'));
 
@@ -42,16 +42,16 @@ class setup
 	public function showmodules($parameters=array())
 	{
 		$this->debug->guard();
-		
+
 		$tpl = new zgaTemplate();
 		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_showmodules'));
 
 		$moduledata = $this->setupfunctions->getAllModules();
-		
+
 		foreach ($moduledata as $module)
-		{			
+		{
 			$tpl->assignDataset($module);
-			
+
 			if ($module['module_active'] == 1)
 			{
 				$tpl->insertBlock('moduleactive');
@@ -60,7 +60,7 @@ class setup
 			{
 				$tpl->insertBlock('moduleinactive');
 			}
-			
+
 			$tpl->insertBlock('applicationmodule');
 		}
 
@@ -74,7 +74,7 @@ class setup
 	public function deletemodule($parameters=array())
 	{
 		$this->debug->guard();
-		
+
 		$tpl = new zgaTemplate();
 
 		if (empty($parameters['id']))
@@ -83,7 +83,7 @@ class setup
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		$ret = $this->setupfunctions->deleteModule($parameters['id']);
 
 		if (!$ret)
@@ -94,9 +94,9 @@ class setup
 		{
 			$this->messages->setMessage('Module deleted', 'usermessage');
 		}
-		
+
 		$tpl->redirect($tpl->createLink('setup', 'showmodules'));
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -142,7 +142,7 @@ class setup
 		}
 
 		$tpl->show();
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -200,7 +200,7 @@ class setup
 
 		$tpl->assign('module_id:value', $currentId);
 		$tpl->show();
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -209,7 +209,7 @@ class setup
 	public function activatemodule($parameters=array())
 	{
 		$this->debug->guard();
-		
+
 		$tpl = new zgaTemplate();
 
 		if (empty($parameters['id']))
@@ -218,7 +218,7 @@ class setup
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		$ret = $this->setupfunctions->activateModule($parameters['id']);
 		if (!$ret)
 		{
@@ -228,9 +228,9 @@ class setup
 		{
 			$this->messages->setMessage('Module activated', 'usermessage');
 		}
-		
+
 		$tpl->redirect($tpl->createLink('setup', 'showmodules'));
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -239,7 +239,7 @@ class setup
 	public function deactivatemodule($parameters=array())
 	{
 		$this->debug->guard();
-		
+
 		$tpl = new zgaTemplate();
 
 		if (empty($parameters['id']))
@@ -248,7 +248,7 @@ class setup
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		$ret = $this->setupfunctions->deactivateModule($parameters['id']);
 		if (!$ret)
 		{
@@ -258,9 +258,9 @@ class setup
 		{
 			$this->messages->setMessage('Module deactivated', 'usermessage');
 		}
-		
+
 		$tpl->redirect($tpl->createLink('setup', 'showmodules'));
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -269,12 +269,12 @@ class setup
 	public function showactions($parameters=array())
 	{
 		$this->debug->guard();
-		
+
 		$tpl = new zgaTemplate();
 		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_showactions'));
 
 		$actiondata = $this->setupfunctions->getAllActions();
-		
+
 		foreach ($actiondata as $action)
 		{
 			$tpl->assignDataset($action);
@@ -292,7 +292,7 @@ class setup
 	{
 		$this->debug->guard();
 
-		if (!empty($parameters['actiondata']['action_requiresuserright'])) $parameters['actiondata']['action_requiresuserright'] = 1;
+		if (!empty($parameters['actiondata']['action_active'])) $parameters['actiondata']['action_active'] = 1;
 		if (!empty($parameters['actiondata']['action_module']))
 		{
 			$currentModuleId = $parameters['actiondata']['action_module'];
@@ -329,8 +329,8 @@ class setup
 				return true;
 			}
 
-			$active = $actionForm->getElementValue('action_requiresuserright');
-			if ($active) $actionForm->setElementValue('action_requiresuserright', 'checked="checked"');
+			$active = $actionForm->getElementValue('action_active');
+			if ($active) $actionForm->setElementValue('action_active', 'checked="checked"');
 
 			$formcreated = $actionForm->insert($tpl);
 		}
@@ -349,13 +349,13 @@ class setup
 			{
 				$tpl->assign('module_isactive', 'selected="selected"');
 			}
-			
+
 
 			$tpl->insertBlock('module_loop');
 		}
 
 		$tpl->show();
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -368,7 +368,7 @@ class setup
 		$currentId = 1;
 		if (!empty($parameters['id'])) $currentId = $parameters['id'];
 		if (!empty($parameters['actiondata']['action_id'])) $currentId = $parameters['actiondata']['action_id'];
-		if (!empty($parameters['actiondata']['action_requiresuserright'])) $parameters['actiondata']['action_requiresuserright'] = 1;
+		if (!empty($parameters['actiondata']['action_active'])) $parameters['actiondata']['action_active'] = 1;
 
 		$tpl = new zgaTemplate();
 		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_editaction'));
@@ -408,8 +408,8 @@ class setup
 			$formvalid = $actionForm->validate($processData);
 		}
 
-		$active = $actionForm->getElementValue('action_requiresuserright');
-		if ($active) $actionForm->setElementValue('action_requiresuserright', 'checked="checked"');
+		$active = $actionForm->getElementValue('action_active');
+		if ($active) $actionForm->setElementValue('action_active', 'checked="checked"');
 
 		$formcreated = $actionForm->insert($tpl);
 
@@ -427,14 +427,14 @@ class setup
 			{
 				$tpl->assign('module_isactive', 'selected="selected"');
 			}
-			
+
 
 			$tpl->insertBlock('module_loop');
 		}
 
 		$tpl->assign('action_id:value', $currentId);
 		$tpl->show();
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -443,7 +443,7 @@ class setup
 	public function deleteaction($parameters=array())
 	{
 		$this->debug->guard();
-		
+
 		$tpl = new zgaTemplate();
 
 		if (empty($parameters['id']))
@@ -452,7 +452,7 @@ class setup
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		$ret = $this->setupfunctions->deleteAction($parameters['id']);
 
 		if (!$ret)
@@ -463,23 +463,23 @@ class setup
 		{
 			$this->messages->setMessage('Action deleted', 'usermessage');
 		}
-		
+
 		$tpl->redirect($tpl->createLink('setup', 'showactions'));
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
-	
-	
+
+
 	public function showuserroles($parameters=array())
 	{
 		$this->debug->guard();
-		
+
 		$tpl = new zgaTemplate();
 		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_showuserroles'));
 
 		$roledata = $this->setupfunctions->getAllUserroles();
-		
+
 		foreach ($roledata as $userrole)
 		{
 			$tpl->assignDataset($userrole);
@@ -490,7 +490,7 @@ class setup
 
 		$this->debug->unguard(true);
 		return true;
-	}	
+	}
 
 
 	public function createuserrole($parameters=array())
@@ -536,7 +536,7 @@ class setup
 					$tpl->assign('action_id', $action['action_id']);
 					$tpl->assign('action_name', $action['action_name']);
 					$tpl->assign('module_name', $action['module_name']);
-					
+
 					if (array_key_exists($action['action_id'], $userroleactions))
 					{
 						$tpl->assign('action_active', 'checked="checked"');
@@ -555,19 +555,19 @@ class setup
 		else
 		{
 			$actions = $this->setupfunctions->getAllActions();
-	
+
 			foreach ($actions as $action)
 			{
 				$tpl->assign('action_id', $action['action_id']);
 				$tpl->assign('action_name', $action['action_name']);
 				$tpl->assign('module_name', $action['module_name']);
-				
+
 				$tpl->insertBlock('userrole_action');
 			}
 		}
 
 		$tpl->show();
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -619,7 +619,7 @@ class setup
 					$tpl->assign('action_id', $action['action_id']);
 					$tpl->assign('action_name', $action['action_name']);
 					$tpl->assign('module_name', $action['module_name']);
-					
+
 					if (array_key_exists($action['action_id'], $userroleactions))
 					{
 						$tpl->assign('action_active', 'checked="checked"');
@@ -649,7 +649,7 @@ class setup
 				$tpl->assign('action_id', $action['action_id']);
 				$tpl->assign('action_name', $action['action_name']);
 				$tpl->assign('module_name', $action['module_name']);
-				
+
 				if (in_array($action['action_id'], $userroleactions))
 				{
 					$tpl->assign('action_active', 'checked="checked"');
@@ -666,7 +666,7 @@ class setup
 		$formcreated = $userroleForm->insert($tpl);
 		$tpl->assign('userrole_id:value', $currentId);
 		$tpl->show();
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -675,7 +675,7 @@ class setup
 	public function deleteuserrole($parameters=array())
 	{
 		$this->debug->guard();
-		
+
 		$tpl = new zgaTemplate();
 
 		if (empty($parameters['id']))
@@ -684,7 +684,7 @@ class setup
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		$ret = $this->setupfunctions->deleteUserrole($parameters['id']);
 
 		if (!$ret)
@@ -695,9 +695,9 @@ class setup
 		{
 			$this->messages->setMessage('Userrole deleted', 'usermessage');
 		}
-		
+
 		$tpl->redirect($tpl->createLink('setup', 'showuserroles'));
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -727,7 +727,7 @@ class setup
 
 		$this->debug->unguard(true);
 		return true;
-	}	
+	}
 
 
 	public function createuserdata($parameters=array())
@@ -772,7 +772,7 @@ class setup
 		}
 
 		$tpl->show();
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -852,7 +852,7 @@ class setup
 		}
 
 		$tpl->show();
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -861,7 +861,7 @@ class setup
 	public function deleteuserdata($parameters=array())
 	{
 		$this->debug->guard();
-		
+
 		$tpl = new zgaTemplate();
 
 		if (empty($parameters['id']))
@@ -870,7 +870,7 @@ class setup
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		$ret = $this->setupfunctions->deleteUserdata($parameters['id']);
 
 		if (!$ret)
@@ -881,9 +881,9 @@ class setup
 		{
 			$this->messages->setMessage('Userdata field deleted', 'usermessage');
 		}
-		
+
 		$tpl->redirect($tpl->createLink('setup', 'showuserdata'));
-		
+
 		$this->debug->unguard(true);
 		return true;
 	}

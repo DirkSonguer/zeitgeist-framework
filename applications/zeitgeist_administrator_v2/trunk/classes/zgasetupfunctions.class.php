@@ -37,14 +37,14 @@ class zgaSetupfunctions
 		$this->projectDatabase = new zgDatabase();
 		$this->projectDatabase->connect($activeproject['project_dbserver'], $activeproject['project_dbuser'], $activeproject['project_dbpassword'], $activeproject['project_dbdatabase'], false, true);
 	}
-	
+
 
 	public function getAllModules()
 	{
 		$this->debug->guard();
-		
+
 		$sql = "SELECT * FROM modules m";
-	
+
 		$res = $this->projectDatabase->query($sql);
 		if (!$res)
 		{
@@ -53,12 +53,12 @@ class zgaSetupfunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		$modules = array();
 		while ($row = $this->projectDatabase->fetchArray($res))
 		{
 			$modules[] = $row;
-		}		
+		}
 
 		$this->debug->unguard($modules);
 		return $modules;
@@ -68,7 +68,7 @@ class zgaSetupfunctions
 	public function getModule($moduleid)
 	{
 		$this->debug->guard();
-		
+
 		$sql = "SELECT * FROM modules WHERE module_id = '" . $moduleid . "'";
 		$res = $this->projectDatabase->query($sql);
 		if (!$res)
@@ -78,7 +78,7 @@ class zgaSetupfunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		$ret = $this->projectDatabase->fetchArray($res);
 
 		$this->debug->unguard($ret);
@@ -89,7 +89,7 @@ class zgaSetupfunctions
 	public function activateModule($moduleid)
 	{
 		$this->debug->guard();
-		
+
 		$sql = "UPDATE modules SET module_active = '1' WHERE module_id = '" . $moduleid . "'";
 		$res = $this->projectDatabase->query($sql);
 		if (!$res)
@@ -108,7 +108,7 @@ class zgaSetupfunctions
 	public function deactivateModule($moduleid)
 	{
 		$this->debug->guard();
-		
+
 		$sql = "UPDATE modules SET module_active = '0' WHERE module_id = '" . $moduleid . "'";
 		$res = $this->projectDatabase->query($sql);
 		if (!$res)
@@ -135,7 +135,7 @@ class zgaSetupfunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		if (!empty($moduledata['module_active']))
 		{
 			$moduledata['module_active'] = '1';
@@ -144,7 +144,7 @@ class zgaSetupfunctions
 		{
 			$moduledata['module_active'] = '0';
 		}
-		
+
 		if (empty($moduledata['module_id']))
 		{
 			$sql = "INSERT INTO modules(module_name, module_description, module_active)";
@@ -203,20 +203,20 @@ class zgaSetupfunctions
 			$this->messages->setMessage('Could not delete action data for module from project database: could not connect to database', 'warning');
 			$this->debug->unguard(false);
 			return false;
-		}		
+		}
 
 		$this->debug->unguard(true);
 		return true;
 	}
-	
-	
+
+
 	public function getAllActions()
 	{
 		$this->debug->guard();
-		
+
 		$sql = "SELECT a.*, m.module_name FROM actions a ";
 		$sql .= "LEFT JOIN modules m ON a.action_module = m.module_id";
-	
+
 		$res = $this->projectDatabase->query($sql);
 		if (!$res)
 		{
@@ -225,22 +225,22 @@ class zgaSetupfunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		$actions = array();
 		while ($row = $this->projectDatabase->fetchArray($res))
 		{
 			$actions[] = $row;
-		}		
+		}
 
 		$this->debug->unguard($actions);
 		return $actions;
 	}
-	
-	
+
+
 	public function getAction($actionid)
 	{
 		$this->debug->guard();
-		
+
 		$sql = "SELECT * FROM actions WHERE action_id = '" . $actionid . "'";
 		$res = $this->projectDatabase->query($sql);
 		if (!$res)
@@ -250,7 +250,7 @@ class zgaSetupfunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		$ret = $this->projectDatabase->fetchArray($res);
 
 		$this->debug->unguard($ret);
@@ -271,19 +271,19 @@ class zgaSetupfunctions
 			return false;
 		}
 
-		if (!empty($actiondata['action_requiresuserright']))
+		if (!empty($actiondata['action_active']))
 		{
-			$actiondata['action_requiresuserright'] = '1';
+			$actiondata['action_active'] = '1';
 		}
 		else
 		{
-			$actiondata['action_requiresuserright'] = '0';
+			$actiondata['action_active'] = '0';
 		}
-		
+
 		if (empty($actiondata['action_id']))
 		{
-			$sql = "INSERT INTO actions(action_name, action_description, action_module, action_requiresuserright)";
-			$sql .= " VALUES('" . $actiondata['action_name'] . "', '" . $actiondata['action_description'] . "', '" . $actiondata['action_module'] . "', '" . $actiondata['action_requiresuserright'] . "')";
+			$sql = "INSERT INTO actions(action_name, action_description, action_module, action_active)";
+			$sql .= " VALUES('" . $actiondata['action_name'] . "', '" . $actiondata['action_description'] . "', '" . $actiondata['action_module'] . "', '" . $actiondata['action_active'] . "')";
 
 			$res = $this->projectDatabase->query($sql);
 			if (!$res)
@@ -299,7 +299,7 @@ class zgaSetupfunctions
 			$sql = "UPDATE actions SET action_name = '" . $actiondata['action_name'] . "', ";
 			$sql .= "action_description = '" . $actiondata['action_description'] . "', ";
 			$sql .= "action_module = '" . $actiondata['action_module'] . "', ";
-			$sql .= "action_requiresuserright = '" . $actiondata['action_requiresuserright'] . "' ";
+			$sql .= "action_active = '" . $actiondata['action_active'] . "' ";
 			$sql .= "WHERE action_id = '" . $actiondata['action_id'] . "' ";
 
 			$res = $this->projectDatabase->query($sql);
@@ -354,14 +354,14 @@ class zgaSetupfunctions
 		$this->debug->unguard(true);
 		return true;
 	}
-	
+
 
 	public function getAllUserroles()
 	{
 		$this->debug->guard();
-		
+
 		$sql = "SELECT * FROM userroles ur ";
-	
+
 		$res = $this->projectDatabase->query($sql);
 		if (!$res)
 		{
@@ -370,12 +370,12 @@ class zgaSetupfunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		$userroles = array();
 		while ($row = $this->projectDatabase->fetchArray($res))
 		{
 			$userroles[] = $row;
-		}		
+		}
 
 		$this->debug->unguard($userroles);
 		return $userroles;
@@ -384,7 +384,7 @@ class zgaSetupfunctions
 	public function getUserrole($userroleid)
 	{
 		$this->debug->guard();
-		
+
 		$sql = "SELECT * FROM userroles WHERE userrole_id = '" . $userroleid . "'";
 		$res = $this->projectDatabase->query($sql);
 		if (!$res)
@@ -394,7 +394,7 @@ class zgaSetupfunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		$ret = $this->projectDatabase->fetchArray($res);
 
 		$this->debug->unguard($ret);
@@ -404,7 +404,7 @@ class zgaSetupfunctions
 	public function getUserroleActions($userroleid)
 	{
 		$this->debug->guard();
-		
+
 		$sql = "SELECT * FROM userroles_to_actions WHERE userroleaction_userrole = '" . $userroleid . "'";
 		$res = $this->projectDatabase->query($sql);
 		if (!$res)
@@ -438,7 +438,7 @@ class zgaSetupfunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		if (empty($roledata['userrole_id']))
 		{
 			$sql = "INSERT INTO userroles(userrole_name, userrole_description)";
@@ -452,7 +452,7 @@ class zgaSetupfunctions
 				$this->debug->unguard(false);
 				return false;
 			}
-			
+
 			$userroleID = $this->projectDatabase->insertId();
 		}
 		else
@@ -529,7 +529,7 @@ class zgaSetupfunctions
 		$this->debug->unguard(true);
 		return true;
 	}
-	
+
 
 	public function saveUserdata($userdata)
 	{

@@ -24,7 +24,7 @@
 
 		$("#block").click($.tooltip.block);
 	});
-	
+
 </script>
 
 <!-- InstanceBeginEditable name="head" -->
@@ -35,7 +35,7 @@
 	{
 		window.location.href = "@@{[setup.showactions]}@@";
 	}
-	
+
 </script>
 
 <!-- InstanceEndEditable -->
@@ -45,15 +45,15 @@
 
 	<!-- navigation starts here -->
 	<div id="nav">
-		
+
 		<h3>Zeitgeist Administrator v2 - <a href="@@{[projects.index]}@@" id="projectlink">@@{activeproject}@@</a></h3>
-	
+
 	</div>
 
 	<!-- header starts here -->
 	<!-- TemplateBeginBlock name="mainmenu" -->
-	<div id="header">	
-	
+	<div id="header">
+
         	<div id="topnavleft">
                 <a href="@@{[main.index]}@@"><img src="@@{templatepath}@@/images/icons/home_128.png" id="naviconleft" alt="Home" title="Home" border="0"/></a>
                 <a href="@@{[setup.index]}@@"><img src="@@{templatepath}@@/images/icons/setup_128.png" id="naviconleft" alt="Setup application" title="Setup application" border="0" /></a>
@@ -67,7 +67,7 @@
 			</div>
             <div style="clear:both;"></div>
 
-	</div>	
+	</div>
 	<!-- TemplateEndBlock -->
 
 	<!-- TemplateBeginBlock name="usermessages" -->
@@ -80,13 +80,13 @@
 
 	<!-- TemplateBeginBlock name="usererrors" -->
 		<h3 class="usererror"><img src="@@{templatepath}@@/images/icons/error_32.png" alt="" align="left" style="margin-right:5px;" /> @@{usererror}@@</h3>
-	<!-- TemplateEndBlock -->	
-				
+	<!-- TemplateEndBlock -->
+
 	<!-- content-wrap starts here -->
 	<div id="content-wrap">
-    <div id="content">	 
+    <div id="content">
 
-		<div id="sidebar" >	
+		<div id="sidebar" >
         <!-- InstanceBeginEditable name="sidebar" -->
 
 			<h3>Editing actions</h3>
@@ -95,13 +95,13 @@
 			<p>Inactive actions are ignored by the controller. If a user tries to use an inactive action, an error is thrown.</p>
 
 		<!-- InstanceEndEditable -->
-		</div>	
-	
-		<div id="main">		
+		</div>
+
+		<div id="main">
         <!-- InstanceBeginEditable name="main" -->
 
 			<h2>Create project action</h2>
-			
+
 			<form method="post" action="@@{[setup.createaction]}@@" name="actionform" enctype="multipart/form-data; charset=utf-8">
 			<input type="hidden" value="@@{action_id:value}@@" name="actiondata[action_id]" />
 
@@ -143,10 +143,10 @@
 			<tr>
 				<td align="right" nowrap="nowrap" valign="top"><p class="formlabel">Requires userrights</p></td>
 				<td align="left" valign="middle">
-					<!-- TemplateBeginBlock name="action_requiresuserright:errorblock" -->
-						<br /><span class="formerrormsg">@@{action_requiresuserright:errormessage}@@</span><br />
+					<!-- TemplateBeginBlock name="action_active:errorblock" -->
+						<br /><span class="formerrormsg">@@{action_active:errormessage}@@</span><br />
 					<!-- TemplateEndBlock -->
-					<input type="checkbox" name="actiondata[action_requiresuserright]" @@{action_requiresuserright:value}@@ />
+					<input type="checkbox" name="actiondata[action_active]" @@{action_active:value}@@ />
 				</td>
 			</tr>
 			<tr>
@@ -162,24 +162,24 @@
 			</form>
 
 		<!-- InstanceEndEditable -->
-		</div>					
-		
-	<!-- content-wrap ends here -->		
+		</div>
+
+	<!-- content-wrap ends here -->
 	</div>
     </div>
 
-	<!-- footer starts here-->	
+	<!-- footer starts here-->
 	<div id="footer-wrap">
-		
-		<div id="footer-bottom">		
+
+		<div id="footer-bottom">
 			<p>
-			&copy; 2009 <strong><a href="http://www.menschenwerk.net">Menschenwerk.net</a></strong> | 
-			Original template design: <a href="http://www.styleshout.com/">styleshout</a> | 
+			&copy; 2009 <strong><a href="http://www.menschenwerk.net">Menschenwerk.net</a></strong> |
+			Original template design: <a href="http://www.styleshout.com/">styleshout</a> |
             Icons by: <a href="http://www.icon-king.com/projects/nuvola/">David Vignoni</a>
-			</p>		
-		</div>	
-	
-	<!-- footer ends-->		
+			</p>
+		</div>
+
+	<!-- footer ends-->
 	</div>
 
 </body>
