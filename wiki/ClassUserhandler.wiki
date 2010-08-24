@@ -1,11 +1,9 @@
-#summary Describes the Userhandler Classes (Core).
-#labels Core
+#summary Describes the Userhandler Classes (Module).
+#labels Module
 
-= Userhandler (Core Class) =
+= Userhandler (Module Class) =
 
 The userhandler represents the current user and gives him access to the user functionalities.
-
-Part of the [ZeitgeistClasses Core Classes].
 
 == Examples ==
 
