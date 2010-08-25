@@ -2,7 +2,7 @@
 
 defined('TICTACTUTORIAL_ACTIVE') or die();
 
-class main
+class user
 {
 	protected $debug;
 	protected $messages;
@@ -26,7 +26,14 @@ class main
 	{
 		$this->debug->guard();
 
-        echo "Hello, World!";
+		$this->debug->unguard(true);
+		return true;
+	}
+
+
+	public function create($parameters=array())
+	{
+		$this->debug->guard();
 
 		$this->debug->unguard(true);
 		return true;
