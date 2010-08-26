@@ -3,7 +3,11 @@
 
 = Template (Core Class) =
 
-A simple but effective template system based on Dreamweaver templates.
+A simple but effective template system.
+
+The syntax is based on Adobe Dreamweaver, so DW will be able to somewhat help you with the development. Otherwise it's perfectly usable without DW.
+
+Also, if you don't like the syntax you can change it in /zeitgeist/configuration/zeitgeist.ini -> template. Be careful to choose unique identifiers or you might replace or overwrite unwanted code or content blocks in your template.
 
 Part of the [ZeitgeistClasses Core Classes].
 
