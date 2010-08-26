@@ -52,6 +52,10 @@ class zgTemplate
 
 	/**
 	 * Loads a template file
+	 * If the template is cached in the database, the cached
+	 * version will be used
+	 * The template will be cached into the database if it
+	 * is not already cached there
 	 *
 	 * @param string $filename name of the file to load
 	 *
@@ -147,6 +151,9 @@ class zgTemplate
 
 	/**
 	 * Shows the template buffer
+	 * This just prints out all the current contents of the
+	 * template buffer
+	 * All template commands, blocks etc. will be removed
 	 *
 	 * @return boolean
 	 */
@@ -179,6 +186,8 @@ class zgTemplate
 
 	/**
 	 * Returns the template buffer as string
+	 * All template commands, blocks etc. will be removed
+	 * if the parameter is set to true (default)
 	 *
 	 * @param boolean $filterTemplateCommands set false to leave template commands intact
 	 *
