@@ -1,124 +1,23 @@
 #summary Tutorial - How to create a simple PBBG, part 4
-= Part 4 - User Actions (user creation) =
+= Part 4 - Presentation Layer =
 
 This tutorial is about creating a working persistent browser based game with the Zeitgeist Framework. To keep it simple, we're just doing a simple Tic Tac Toe game. However we will use a much Zeitgeist specific functionalities as possible to show how they work.
 
 If you have specific questions about the tutorial, please mail us or open an [http://code.google.com/p/zeitgeist-framework/issues/list issue].
 
-
 == The Goal ==
 
-The current goal is to create a working user infrastructure. A user should be able to create an account, log in, log off as well as edit and delete his account again. However as this is a pretty major goal, the tasks will be splitted between tutorials and this part only covers creating a user.
+In this tutorial we take a little detour before diving into the application logic in the next part: We'll set up the presentation layer (the frontent of the Tic Tac Toe game).
 
-== The User Module ==
+== Presentation Layer ==
 
-First we need to actually create the files for the user module. To do that you can either create the needed files or just copy the existing main module and rename it. When developing you will most likely just copy & paste an existing module and build from that. However we will create the files from scratch for this part of the tutorial so that you will have a better insight into how modules work.
+The presentation layer is basically everything a user sees in your application or game. This may be HTML, but also a Flash, Silverlight or even Air clients - in short: evey frontend technology.
 
-Let's start by creating a new directory for the module: locate the folder called "modules" in the application you created last time. Create a new directory there called "user". You should now have two module folders now: "main" and "user".
+Zeitgeist, as a very basic framework, does not limit you to any frontend technology. Neither does it define that you have to separate your application code from the frontend. For example you could just write HTML output in your actions and be done with it. However this would most likely result in pretty messy applications very soon. It is always the best practice to separate the backend code from the frontend.
 
-As said in the second part of this tutorial the module directories always contain 2 files:
+The Zeitgeist framework offers a basic HTML [ClassTemplate templating class], but again: you are not limited to it. You may easily use every other templating class you prefer. [http://www.smarty.net/ Smarty] for example is a very capable and popular template engine.
 
- * The module class that contains the actual code for the module. Its name matches the module name, followed by _".module.php"_. Note that the module classes should start by checking for the application define.
- * The module configuration that contains all the module specific configuration. Its name also matches the module name and is followed by _".ini"_. The configuration will be automatically loaded by the controller class.
-
-=== The Module Configuration ===
-
-Create a file called "user.ini" in the module directory. This file will contain all the configuration data needed for the module.
-
-The content is according to standard [http://en.wikipedia.org/wiki/INI_file .ini files]. For our module it might look something like this at first:
-
-{{{
-[user]
-
-[index]
-
-hasExternalParameters = false
-
-[create]
-
-hasExternalParameters = false
-
-[templates]
-
-}}}
-
-The root block of the configuration has to be the name of the module. Otherwise you can name additional blocks and data.
-
-The [ClassParameters parameter handler] will check for special configuration definitions. The purpose of the parameters class is to check every incoming data and filter out unwanted ones. For that you have to define the expected prameter and its pattern for each action, stored in a configuration block with the same name as the action. For now we don't expect any data for the index action, so we define _hasExternalParameters = false_
-
-Another best practise is to define the name of the templates for the presentation layer here. We'll go into those a little bit later in the tutorials.
-
-=== The Module Class ===
-
-The module class contains all the code for the individual actions. For now it mostly mimicks the main module:
-
-{{{
-<?php
-
-defined('TICTACTUTORIAL_ACTIVE') or die();
-
-class user
-{
-	protected $debug;
-	protected $messages;
-	protected $database;
-	protected $configuration;
-	protected $user;
-
-	public function __construct()
-	{
-		$this->debug = zgDebug::init();
-		$this->messages = zgMessages::init();
-		$this->configuration = zgConfiguration::init();
-		$this->user = zgUserhandler::init();
-
-		$this->database = new zgDatabase();
-		$this->database->connect();
-	}
-
-
-	public function index($parameters=array())
-	{
-		$this->debug->guard();
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-	public function create($parameters=array())
-	{
-		$this->debug->guard();
-
-		echo "Hello, Usermodule!";
-
-		$this->debug->unguard(true);
-		return true;
-	}
-
-}
-?>
-}}}
-
-As in the main module, we'll first define some generic method that will be the default method. In our case the index function does pretty much nothing. More interesting is the empty "create" method which will contain all the logic to actually create a user.
-
-=== Module Registration ===
-
-As described in the second tutorial you have to register the module and each action in the database:
-
-{{{
-	INSERT INTO modules( module_id, module_name, module_description, module_active )
-	VALUES ( '2', 'user', 'The user module', '1' );
-
-	INSERT INTO actions (action_id, action_module, action_name, action_description, action_active)
-	VALUES ('2', '1', 'index', 'The default action for the user module', '1');
-
-	INSERT INTO actions (action_id, action_module, action_name, action_description, action_active)
-	VALUES ('3', '1', 'create', 'Create a new user', '1');
-}}}
-
-=== Adding the creation logic ===
-
-
+For this tutorial we'll use a simple HTML output, rendered by the Zeitgeist template class as a small example how to use it in your projects.
 
 == Closing ==
 
