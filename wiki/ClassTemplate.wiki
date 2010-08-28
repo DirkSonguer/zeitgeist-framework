@@ -1,7 +1,7 @@
-#summary Describes the Template Class (Core).
-#labels Core
+#summary Describes the Template Class (Module).
+#labels Module
 
-= Template (Core Class) =
+= Template (Module Class) =
 
 A simple but effective template system.
 
