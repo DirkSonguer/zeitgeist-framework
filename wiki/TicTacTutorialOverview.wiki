@@ -1,0 +1,29 @@
+#summary Tutorial - How to create a simple PBBG, Overview
+#labels Phase-Implementation,Tutorial
+= Overview =
+
+This tutorial is about creating a working persistent browser based game with the Zeitgeist Framework. To keep it simple, we're just doing a simple Tic Tac Toe game. However we will use a much Zeitgeist specific functionalities as possible to show how they work.
+
+If you have specific questions about the tutorial, please mail us or open an [http://code.google.com/p/zeitgeist-framework/issues/list issue].
+
+= The Goal=
+
+In this tutorial, we want to create a game, based on the Zeitgeist Framework. The game will be a working implementation of [http://en.wikipedia.org/wiki/Tic-tac-toe Tic Tac Toe] where two players play against each other. The game should have the following properties:
+
+ * The game will only feature player against player, no AI
+ * A player has to have an account to play
+ * A player has to be logged in to play
+ * Wins, losses and ties will be stored for each account
+ * Each win earns the player points, which will also be stored for each account
+ * The game will use a simple matchmaking pattern: The game will either open a new game or match a player to an already open game
+ * A player can only play one game at a time
+ * A game ends if a player wins, the game is tied or one player forfeits
+
+As said, the game will use the Zeitgeist Framework. The game specific implementation will use the [http://code.google.com/p/zeitgeist-framework/source/browse/#svn/framework/trunk/modules/gamesystem gamesystem module].
+
+= Tutorial Parts =
+
+ * [TicTacTutorial1 Part 1, Introduction]
+ * [TicTacTutorial2 Part 2, Basic Setup]
+ * [TicTacTutorial3 Part 3, Game Architecture]
+ * [TicTacTutorial4 Part 4, Presentation Layer]
