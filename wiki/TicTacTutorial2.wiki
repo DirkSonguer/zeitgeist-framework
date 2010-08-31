@@ -224,15 +224,15 @@ The first thing we have to do is to register the default module. We do this by a
 If you try to run your application now, you should see another error in the debug messages: *"Error loading the action (index) in module (main): Action is not installed for module"*. As you might have guessed, the actions need to be registered in the database much like the modules:
 
 {{{
-	INSERT INTO actions (action_id, action_module, action_name, action_description, action_requiresuserright)
-	VALUES ('1', '1', 'index', 'The default action for the main module', '0');
+	INSERT INTO actions (action_id, action_module, action_name, action_description, action_active)
+	VALUES ('1', '1', 'index', 'The default action for the main module', '1');
 }}}
 
 Note that the field "action_module" has to match the ID that was assigned / given to your module you added earlier.
 
 If you run the application again you will see the output of the action: "Hello, World!".
 
-So for now, remember that the (simplyfied) pipeline is: index.php -> controller -> module -> action(). Actually it's a bit more complex than that, but we'll get there later. 
+So for now, remember that the (simplyfied) pipeline is: index.php -> controller -> module -> action(). Actually it's a bit more complex than that, but we'll get there later.
 
 == Closing ==
 
