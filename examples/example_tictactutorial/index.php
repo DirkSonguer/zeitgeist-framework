@@ -84,6 +84,19 @@
 
     // call the controller with the defined module and action
     // this executes the action method in the module class
+    $user = zgUserhandler::init();
+    $userLoggedIn = $user->establishUserSession();
+
+	// check if user is alreay logged in
+	// if not, only show the not logged in page / action
+    if (!$userLoggedIn)
+	{
+		$module = 'user';
+		$action = 'login';
+	}
+
+    // call the controller with the defined module and action
+    // this executes the action method in the module class
     $controller = new zgController();
 	$ret = $controller->callEvent($module, $action);
 

@@ -48,6 +48,5 @@ class main
 		$this->debug->unguard(true);
 		return true;
 	}
-
 }
 ?>
