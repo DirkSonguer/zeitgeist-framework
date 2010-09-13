@@ -238,7 +238,7 @@ In case you activated debugging you'll see the parameters being transmitted:
     login : Login
 }}}
 
-If you're using parameters inside a Zeitgeist application, you *should not* use the _GET, _POST or _REQUEST superglobals. Instead all legal parameters for an action are given to the action method in the method parameter: public function login(*$parameters=array()*).
+If you're using parameters inside a Zeitgeist application, you *should not* use the GET, POST or REQUEST superglobals. Instead all legal parameters for an action are given to the action method in the method parameter: public function login(*$parameters=array()*).
 
 However if you dump out the contents of this parameter ( var_dump($parameters); ), you will get nothing. Note that only *legal* parameters are given, so we have to tell the system first which parameters the actions actually expects. And this brings us back to the module configuration file.
 
