@@ -1,0 +1,347 @@
+#summary Tutorial - How to create a simple PBBG, part 5
+#labels Phase-Implementation,Tutorial
+= Part 5 - User Actions (user login) =
+
+This tutorial is about creating a working persistent browser based game with the Zeitgeist Framework. To keep it simple, we're just doing a simple Tic Tac Toe game. However we will use a much Zeitgeist specific functionalities as possible to show how they work.
+
+If you have specific questions about the tutorial, please mail us or open an [http://code.google.com/p/zeitgeist-framework/issues/list issue].
+
+== The Goal ==
+
+The current goal is to create a working user infrastructure. A user should be able to create an account, log in, log off as well as edit and delete his account again. However as this is a pretty major goal, the tasks will be splitted between tutorials.
+
+This part deals with providing an HTML input form in a template where a user can enter his credentials and the credentials are send to the game application.
+
+== The User Module ==
+
+First we need to actually create the files for the user module. To do that you can either create the needed files or just copy the existing main module and rename it. When developing you will most likely just copy & paste an existing module and build from that. However we will create the files from scratch for this part of the tutorial so that you will have a better insight into how modules work.
+
+Let's start by creating a new directory for the module: locate the folder called "modules" in the application you created last time. Create a new directory there called "user". You should now have two module folders now: "main" and "user".
+
+As said in the second part of this tutorial the module directories always contain 2 files:
+
+ * The module class that contains the actual code for the module. Its name matches the module name, followed by _".module.php"_. Note that the module classes should start by checking for the application define.
+ * The module configuration that contains all the module specific configuration. Its name also matches the module name and is followed by _".ini"_. The configuration will be automatically loaded by the controller class.
+
+=== The Module Configuration ===
+
+Create a file called "user.ini" in the module directory. This file will contain all the configuration data needed for the module.
+
+The content is according to standard [http://en.wikipedia.org/wiki/INI_file .ini files]. For our module it might look something like this at first:
+
+{{{
+    [user]
+
+    [index]
+
+    hasExternalParameters = false
+
+    [templates]
+}}}
+
+The root block of the configuration has to be the name of the module. Otherwise you can name additional blocks and data.
+
+The [ClassParameters parameter handler] will check for special configuration definitions. The purpose of the parameters class is to check every incoming data and filter out unwanted ones. For that you have to define the expected prameter and its pattern for each action, stored in a configuration block with the same name as the action. For now we don't expect any data for the index action, so we define _hasExternalParameters = false_.
+
+Another best practise is to define the name of the templates for the presentation layer here. Right now we don't have any.
+
+=== The Module Class ===
+
+The module class contains all the code for the individual actions. For now it mostly mimicks the main module:
+
+{{{
+<?php
+
+defined('TICTACTUTORIAL_ACTIVE') or die();
+
+class user
+{
+	protected $debug;
+	protected $messages;
+	protected $database;
+	protected $configuration;
+	protected $user;
+
+	public function __construct()
+	{
+		$this->debug = zgDebug::init();
+		$this->messages = zgMessages::init();
+		$this->configuration = zgConfiguration::init();
+		$this->user = zgUserhandler::init();
+
+		$this->database = new zgDatabase();
+		$this->database->connect();
+	}
+
+
+	public function index($parameters=array())
+	{
+		$this->debug->guard();
+
+		$this->debug->unguard(true);
+		return true;
+	}
+
+	public function login($parameters=array())
+	{
+		$this->debug->guard();
+
+		echo "Hello, Usermodule!";
+
+		$this->debug->unguard(true);
+		return true;
+	}
+}
+?>
+}}}
+
+As in the main module, we'll first define some generic method that will be the default method. In our case the index function does pretty much nothing. More interesting is the empty "login" method which will contain all the logic to actually log in an existing user.
+
+=== Module Registration ===
+
+As described in the second tutorial you have to register the module and each action in the database:
+
+{{{
+	INSERT INTO modules( module_id, module_name, module_description, module_active )
+	VALUES ( '2', 'user', 'The user module', '1' );
+
+	INSERT INTO actions ( action_module, action_name, action_description, action_active )
+	VALUES ( '2', 'index', 'The default action for the user module', '1' );
+
+	INSERT INTO actions ( action_module, action_name, action_description, action_active )
+	VALUES ( '2', 'login', 'Log in an existing user', '1' );
+}}}
+
+=== Adding a user ===
+
+To log in a user one has to exist first. As we don't have an action for creating a user yet, we'll just add one to the database directly.
+
+Note that the passwords are stored as md5 hashes by default. We'll use "testuser" as the users name as well as password. The user has to be active of course (last parameter). The user key is another unique id for the user. It can be used as a secret key as it should not be made public anywhere in the application frontend (use the user_id for frontend identification as a best practise).
+
+{{{
+    INSERT INTO users ( user_username, user_password, user_key, user_active )
+    VALUES ( 'testuser', '5d9c68c6c50ed3d02a2fcf54f63993b6', NULL , '1' );
+}}}
+
+=== General user logic ===
+
+The question if a user is logged in or not is a global one. Basically it revolves around the question if the current browser session can be connected to a specific user in the database. If a user has authenticated himself (with his username and password) during a browsersession, we define the user as "logged in" as long as the session persists. If he logs out at any point in time, the session is destroyed.
+
+As this is a global issue the code has to be added to the application itself. Actually the code *is already* in the index.php of a standard project (line 56-59):
+
+{{{
+    // pick up the session for the user
+    // this requires cookies to work
+    $user = zgUserhandler::init();
+    $user->establishUserSession();
+}}}
+
+The userhandler class provides functionality to handle a user session. As the class is a singleton it can be used throughout the application and always point to the current user / session.
+
+The method establishUserSession() checks if a user has already verified himself during the active session. If so, it returns true. If not, no user is bound to the current session.
+
+For our game we only want logged in users to actually play the game. Thus we check in the index if a user is already logged in. If so, we let him access everything. If not, we will only see the standard page. The code for this looks somethink like this:
+
+{{{
+    // call the controller with the defined module and action
+    // this executes the action method in the module class
+    $user = zgUserhandler::init();
+    $userLoggedIn = $user->establishUserSession();
+
+	// check if user is alreay logged in
+	// if not, only show the not logged in page / action
+    if (!$userLoggedIn)
+	{
+		$module = 'user';
+		$action = 'login';
+	}
+}}}
+
+This is a pretty easy way, but it means that a user without an account is only able to see one page (or whatever is hiding behind the notloggedin action). Note that we are redirecting to the user module and action we created earlier in this tutorial.
+
+Another way of handling this is to use the rights and roles management functionalities of Zeitgeist. Using those you are able to control which kind of user is able to call which actions. For now we're using the easy way but we'll keep this in mind as it may come up later in the tutorial.
+
+=== Adding a user login template ===
+
+If we call the game now, it the user should be routed to the login action in the user module, even if he explicitly calls another module / action. As a user can't login right now, he won't be recognized by establishUserSession(), thus see the login action.
+
+First, we'll add a new template for the login action. The action method should now look like this:
+
+{{{
+	public function login($parameters=array())
+	{
+		$this->debug->guard();
+
+		$tpl = new zgTemplate();
+		$tpl->load($this->configuration->getConfiguration('application', 'application', 'templatepath') . '/user_login.tpl.html');
+
+		$tpl->show();
+
+		$this->debug->unguard(true);
+		return true;
+	}
+}}}
+
+Of course we have to add the template itself as well. Create a new file in your template directory (defined in the application configuration) and name it "user_login.tpl.html".
+
+In the template we need a form where the users can enter their login credentials. A simple form would be something like this:
+
+{{{
+    <html>
+    <head>
+        <title>Welcome to Tic Tac Tutorial</title>
+    </head>
+
+    <body>
+
+        <h1>Welcome to Tic Tac Tutorial</h1>
+
+        <p>Please log in to play the game. Enter your username and password here:</p>
+
+        <form method="post" action="@@{[user.login]}@@" name="login">
+            <table border="0">
+                <tr>
+                    <td align="right" nowrap width="110"><p>Username</p></td>
+                    <td align="left" valign="middle" nowrap><input type="text" size="35" maxlength="20" name="username" style="width:250px;" /></td>
+                </tr>
+                <tr>
+                    <td align="right" nowrap><p>Password</p></td>
+                    <td align="left" valign="middle" nowrap><input type="password" size="35" maxlength="32" name="password" style="width:250px;" /></td>
+                </tr>
+                <tr>
+                    <td align="left" nowrap>&nbsp;</td>
+                    <td align="right" valign="middle" nowrap><input type="submit" name="login" value="Login" /></td>
+                </tr>
+            </table>
+        </form>
+
+    </body>
+    </html>
+}}}
+
+I'm sorry for the table layout, but let's keep things simple here and don't use things like CSS layouts etc. You may enter that later on your own pretty easily. For now we'll concentrate on the functionality itself.
+
+So the template contains a form that will send the form data via POST to something called "@@{[user.login]}@@". This is a special dynamic element handled by the template class. In this case it defines a dynamic link inside the Zeitgeist application. The syntax is "@@{[MODULE.ACTION]}@@". So in this case "@@{[user.login]}@@" just means that the template system substitutes this for the right link to this module and action.
+
+Otherwise we don't have any special content and it's straight HTML.
+
+=== Handling the login input ===
+
+If you now click on login, you will send the login data via POST and of course be routed to the user module and login action again as you're still not logged in as the actual login logic is still missing.
+
+In case you activated debugging you'll see the parameters being transmitted:
+
+{{{
+    _POST:
+    username : testname
+    password : testpassword
+    login : Login
+}}}
+
+If you're using parameters inside a Zeitgeist application, you *should not* use the _GET, _POST or _REQUEST superglobals. Instead all legal parameters for an action are given to the action method in the method parameter: public function login(*$parameters=array()*).
+
+However if you dump out the contents of this parameter ( var_dump($parameters); ), you will get nothing. Note that only *legal* parameters are given, so we have to tell the system first which parameters the actions actually expects. And this brings us back to the module configuration file.
+
+The user.ini looks like this at the moment:
+
+{{{
+    [user]
+
+    [index]
+
+    hasExternalParameters = false
+
+    [templates]
+}}}
+
+We defined only one action called "index" which explicitly has no parameters. For actions not defined here it is assumed that they don't have parameters by default. So we have to add a block for the "login" action as well. Also we tell the system that  this action actually has some parameters.
+
+{{{
+    [login]
+
+    hasExternalParameters = true
+}}}
+
+Next we have to define each parameter that is given. In case of our login we have 3 parameters:
+
+ * username: a string, between 4 and 16 characters, no special chars allowed
+ * password: a string, between 4 and 16 characters, special chars are allowed
+ * login: a flag, contains the string "Login"
+
+For most parameters 3 attributes are needed: a flag if the parameter is active, the source and what kind of content is expected. The attributes are stored in an array inside of the action block with the name of the parameter.
+
+The flag is pretty easy, it's just a field called "parameter" with the value "true".
+
+{{{
+    password[parameter] = true
+}}}
+
+The source is either _GET or _POST, depending on your frontend form.
+
+{{{
+password[source] = POST
+}}}
+
+The last needed parameter is the expected type. The parameter can be a regexp definition. The framework checks the incoming parameter against this regexp. If it matches, the parameter will end up in the $parameters array.
+
+{{{
+    password[expected] = /^.{4,32}$/
+}}}
+
+The framework provides a couple of predefined types so you don't have to write the same regexps all over. The types are defined in the original framework configuration file (framework/configuration/configuration.ini).
+
+{{{
+    email = /^[\w\-\+\&\*]+(?:\.[\w\-\_\+\&\*]+)*@(?:[\w-]+\.)+[a-zA-Z]{2,7}$/
+    url = /^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/
+    zip = /^\d{3,5}$/
+    string = /^[\wüÜäÄöÖ ]+(([\,\@\.\:\-\/\(\)\!\? ])?[\wüÜäÄöÖ ]*)*$/
+    text = /^[\wüÜäÄöÖ ]+(([\\\@\"\,\.\:\-\/\r\n\t\!\?\(\) ])?[\wüÜäÄöÖ ]*)*$/
+    number = /^[0-9]*(\.|\,)?[0-9]+$/
+    boolean = /^[0-1]{1}$/
+    date = /^[0-9]{2}(\.)?[0-9]{2}(\.)?[0-9]{4}$/
+}}}
+
+As we want the username to be a normal string (without language specific special chars) we can use the string type like this:
+
+{{{
+    username[expected] = [[zeitgeist.parameters.string]]
+}}}
+
+The finished file looks something like this:
+
+{{{ 
+    [user]
+
+    [index]
+
+    hasExternalParameters = false
+
+    [login]
+
+    hasExternalParameters = true
+
+    username[parameter] = true
+    username[source] = POST
+    username[expected] = [[zeitgeist.parameters.string]]
+
+    password[parameter] = true
+    password[source] = POST
+    password[expected] = /^.{4,32}$/
+
+    login[parameter] = true
+    login[source] = POST
+    login[expected] = CONSTANT
+    login[value] = Login
+
+    [templates]
+}}}
+
+So now your login parameters will passed safely to your application. They are included in the parameters the action is called with ($parameters) as an associative array. If the parameters do not match the definitions (for example a password with only 3 characters), they will not be included in the array (instead they will end up in an [ClassObjects object] called "unsafeParameters").
+
+If you now dump out the contents of the action parameters ( var_dump($parameters); ), you will now get the contents of the HTML form (if they match the definition).
+
+== Closing ==
+
+In this part of the tutorial we now created a new action for logging in and added a template for this action. The template includes a login form where a user can enter his login credentials. Those credentials will be send as post to the application and we added definitions for the parameters so they will be safely sent to the actions.
+
+In the next tutorial part we'll use these credentials to do an actual login and logout for the testuser.
