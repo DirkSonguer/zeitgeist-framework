@@ -1,0 +1,30 @@
+<html>
+<head>
+	<title>Welcome to Tic Tac Tutorial</title>
+</head>
+
+<body>
+
+	<h1>Welcome to Tic Tac Tutorial</h1>
+
+    <p>Please log in to play the game. Enter your username and password here:</p>
+
+    <form method="post" action="@@{[user.login]}@@" name="login">
+        <table border="0">
+            <tr>
+                <td align="right" nowrap width="110"><p>Username</p></td>
+                <td align="left" valign="middle" nowrap><input type="text" size="35" maxlength="20" name="username" style="width:250px;" /></td>
+            </tr>
+            <tr>
+                <td align="right" nowrap><p>Password</p></td>
+                <td align="left" valign="middle" nowrap><input type="password" size="35" maxlength="32" name="password" style="width:250px;" /></td>
+            </tr>
+            <tr>
+                <td align="left" nowrap>&nbsp;</td>
+                <td align="right" valign="middle" nowrap><input type="submit" name="login" value="Login" /></td>
+            </tr>
+        </table>
+    </form>
+
+</body>
+</html>

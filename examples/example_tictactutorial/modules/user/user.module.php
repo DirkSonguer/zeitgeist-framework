@@ -31,9 +31,14 @@ class user
 	}
 
 
-	public function create($parameters=array())
+	public function login($parameters=array())
 	{
 		$this->debug->guard();
+
+		$tpl = new zgTemplate();
+		$tpl->load($this->configuration->getConfiguration('application', 'application', 'templatepath') . '/user_login.tpl.html');
+
+		$tpl->show();
 
 		$this->debug->unguard(true);
 		return true;
