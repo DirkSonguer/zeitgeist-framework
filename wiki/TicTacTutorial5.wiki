@@ -276,7 +276,7 @@ The flag is pretty easy, it's just a field called "parameter" with the value "tr
     password[parameter] = true
 }}}
 
-The source is either _GET or _POST, depending on your frontend form.
+The source is either GET or POST, depending on your frontend form.
 
 {{{
 password[source] = POST
