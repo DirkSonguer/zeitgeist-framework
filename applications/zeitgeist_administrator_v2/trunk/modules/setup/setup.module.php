@@ -30,6 +30,15 @@ class setup
 		$this->debug->guard();
 
 		$tpl = new zgaTemplate();
+        if (!$this->setupfunctions->isProjectActive())
+        {
+            $this->debug->write('Could not access project: no project is currently active', 'warning');
+            $this->messages->setMessage('Could not access project: no project is currently active', 'warning');
+            $tpl->redirect($tpl->createLink('setup', 'noactiveproject'));
+            $this->debug->unguard(false);
+            return false;
+        }
+
 		$tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_index'));
 
 		$tpl->show();
@@ -887,6 +896,20 @@ class setup
 		$this->debug->unguard(true);
 		return true;
 	}
+
+
+    public function noactiveproject($parameters=array())
+    {
+        $this->debug->guard();
+
+        $tpl = new zgaTemplate();
+        $tpl->load($this->configuration->getConfiguration('setup', 'templates', 'setup_noactiveproject'));
+
+        $tpl->show();
+
+        $this->debug->unguard(true);
+        return true;
+    }
 
 }
 ?>

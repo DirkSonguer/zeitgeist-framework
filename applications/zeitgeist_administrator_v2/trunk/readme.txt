@@ -3,7 +3,7 @@ Zeitgeist Administrator v2
 
 Welcome to the Zeitgeist Administrator v2.
 
-If you have questions about the tool or the source feel free to ignore this email and figure it out yourself: dirk@songuer.de
+If you have questions about the tool or the source feel free to ignore tbe following email and figure it out yourself: dirk@songuer.de
 
 If you don't, ask nicely.
 
