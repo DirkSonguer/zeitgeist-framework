@@ -34,18 +34,18 @@ class zgaUserfunctions
 		$activeproject = $projectfunctions->getActiveProject();
 
 		$this->projectDatabase = new zgDatabase();
-		$this->projectDatabase->connect($activeproject['project_dbserver'], $activeproject['project_dbuser'], $activeproject['project_dbpassword'], $activeproject['project_dbdatabase'], false, true);
+		$this->projectDatabase->connect($activeproject['project_dbserver'], $activeproject['project_dbuser'], $activeproject['project_dbpassword'], $activeproject['project_dbdatabase'], true, true);
 	}
-	
-	
+
+
 	public function getAllUsers()
 	{
 		$this->debug->guard();
-		
+
 		$sql = "SELECT * FROM users u ";
 		$sql .= "LEFT JOIN userroles_to_users r2u ON u.user_id = r2u.userroleuser_user ";
 		$sql .= "GROUP BY u.user_id";
-	
+
 		$res = $this->projectDatabase->query($sql);
 		if (!$res)
 		{
@@ -54,23 +54,23 @@ class zgaUserfunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		$userdata = array();
 		while ($row = $this->projectDatabase->fetchArray($res))
 		{
 			$userdata[] = $row;
-		}		
+		}
 
 		$this->debug->unguard($userdata);
 		return $userdata;
 	}
-	
+
 	function getUserdataDefinition()
 	{
 		$this->debug->guard();
-		
+
 		$sql = "EXPLAIN userdata";
-	
+
 		$res = $this->projectDatabase->query($sql);
 		if (!$res)
 		{
@@ -79,18 +79,18 @@ class zgaUserfunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		$userdata = array();
 		while ($row = $this->projectDatabase->fetchArray($res))
 		{
 			$userdata[] = $row;
-		}		
+		}
 
 		$this->debug->unguard($userdata);
 		return $userdata;
 	}
 
-		
+
 	public function getInformation($userid)
 	{
 		$this->debug->guard();
@@ -139,7 +139,7 @@ class zgaUserfunctions
 			$this->debug->unguard(false);
 			return false;
 		}
-		
+
 		$sql = 'UPDATE users SET ';
 		foreach ($userinformation as $fieldkey => $fieldvalue)
 		{

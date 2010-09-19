@@ -34,7 +34,7 @@ class zgaUserroles extends zgUserroles
 		$activeproject = $projectfunctions->getActiveProject();
 
 		$this->database = new zgDatabase();
-		$this->database->connect($activeproject['project_dbserver'], $activeproject['project_dbuser'], $activeproject['project_dbpassword'], $activeproject['project_dbdatabase'], false, true);
+		$this->database->connect($activeproject['project_dbserver'], $activeproject['project_dbuser'], $activeproject['project_dbpassword'], $activeproject['project_dbdatabase'], true, true);
 	}
 
 }
