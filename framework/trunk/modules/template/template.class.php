@@ -465,9 +465,9 @@ class zgTemplate
 		$this->debug->guard( );
 
 		/*
-				 *  Using $linkurl this way, we prevent Zeitgeist applications to be run
-				 *  in any other place than the webservers documentroot.
-				 */
+		*  Using $linkurl this way, we prevent Zeitgeist applications to be run
+		*  in any other place than the webservers document root.
+		*/
 		$linkurl = 'index.php';
 
 		$link = array( );
@@ -1000,6 +1000,7 @@ class zgTemplate
 
 class zgTemplateBlock
 {
+
 	public $currentContent;
 	public $originalContent;
 	public $blockParent;
