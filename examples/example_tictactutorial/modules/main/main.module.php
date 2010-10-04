@@ -1,6 +1,6 @@
 <?php
 
-defined('TICTACTUTORIAL_ACTIVE') or die();
+defined( 'TICTACTUTORIAL_ACTIVE' ) or die( );
 
 class main
 {
@@ -10,24 +10,25 @@ class main
 	protected $configuration;
 	protected $user;
 
-	public function __construct()
-	{
-		$this->debug = zgDebug::init();
-		$this->messages = zgMessages::init();
-		$this->configuration = zgConfiguration::init();
-		$this->user = zgUserhandler::init();
 
-		$this->database = new zgDatabase();
-		$this->database->connect();
+	public function __construct( )
+	{
+		$this->debug = zgDebug::init( );
+		$this->messages = zgMessages::init( );
+		$this->configuration = zgConfiguration::init( );
+		$this->user = zgUserhandler::init( );
+
+		$this->database = new zgDatabase( );
+		$this->database->connect( );
 	}
 
 
-	public function index($parameters=array())
+	public function index( $parameters = array( ) )
 	{
-		$this->debug->guard();
+		$this->debug->guard( );
 
 		// create a new template object
-		$tpl = new zgTemplate();
+		$tpl = new zgTemplate( );
 
 		// load the template file
 		// we're using the template path defined in the application
@@ -38,15 +39,16 @@ class main
 		// application or module)
 		// the load method loads the content of the template file
 		// into the object.
-		$tpl->load($this->configuration->getConfiguration('application', 'application', 'templatepath') . '/main_index.tpl.html');
+		$tpl->load( $this->configuration->getConfiguration( 'application', 'application', 'templatepath' ) . '/main_index.tpl.html' );
 
 		// this shows the final template in the browser
 		// all template commands and control codes will be stripped
 		// before output
-		$tpl->show();
+		$tpl->show( );
 
-		$this->debug->unguard(true);
+		$this->debug->unguard( true );
 		return true;
 	}
 }
+
 ?>

@@ -88,7 +88,6 @@ Actions of this module:
 
  * startGame
 
-
 === Module '''game''' ===
 
 Actions of this module:
@@ -96,7 +95,6 @@ Actions of this module:
  * setMarker
  * forfeit
  * update
-
 
 == Closing ==
 
