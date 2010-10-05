@@ -3,11 +3,17 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 13. September 2010 um 12:04
+-- Erstellungszeit: 05. Oktober 2010 um 06:49
 -- Server Version: 5.1.41
 -- PHP-Version: 5.3.1
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
 
 --
 -- Datenbank: `tictactutorial`
@@ -66,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `actions` (
   `action_active` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`action_id`),
   KEY `action_module` (`action_module`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
 -- Daten für Tabelle `actions`
@@ -75,7 +81,8 @@ CREATE TABLE IF NOT EXISTS `actions` (
 INSERT INTO `actions` (`action_id`, `action_module`, `action_name`, `action_description`, `action_active`) VALUES
 (1, 1, 'index', 'The default action for the main module', 1),
 (2, 2, 'index', 'The default action for the user module', 1),
-(3, 2, 'login', 'Log in an existing user', 1);
+(3, 2, 'login', 'Log in an existing user', 1),
+(4, 2, 'logout', 'Log out a user that is currently logged in', 1);
 
 -- --------------------------------------------------------
 
@@ -90,12 +97,18 @@ CREATE TABLE IF NOT EXISTS `configurationcache` (
   `configurationcache_content` text NOT NULL,
   PRIMARY KEY (`configurationcache_id`),
   UNIQUE KEY `configuration_cache_modulename` (`configurationcache_name`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
 
 --
 -- Daten für Tabelle `configurationcache`
 --
 
+INSERT INTO `configurationcache` (`configurationcache_id`, `configurationcache_name`, `configurationcache_timestamp`, `configurationcache_content`) VALUES
+(9, './zeitgeist/configuration/zeitgeist.ini', '1282678190', 'YTo5OntzOjc6Im1vZHVsZXMiO2E6Mjp7czoxMToiZm9ybWNyZWF0b3IiO3M6NDoidHJ1ZSI7czo0OiJzaG9wIjtzOjQ6InRydWUiO31zOjY6InRhYmxlcyI7YToxNTp7czoxNToidGFibGVfYWN0aW9ubG9nIjtzOjk6ImFjdGlvbmxvZyI7czoxMzoidGFibGVfYWN0aW9ucyI7czo3OiJhY3Rpb25zIjtzOjE4OiJ0YWJsZV9tZXNzYWdlY2FjaGUiO3M6MTI6Im1lc3NhZ2VjYWNoZSI7czoxMzoidGFibGVfbW9kdWxlcyI7czo3OiJtb2R1bGVzIjtzOjE3OiJ0YWJsZV9zZXNzaW9uZGF0YSI7czoxMToic2Vzc2lvbmRhdGEiO3M6MTk6InRhYmxlX3RlbXBsYXRlY2FjaGUiO3M6MTM6InRlbXBsYXRlY2FjaGUiO3M6MTE6InRhYmxlX3VzZXJzIjtzOjU6InVzZXJzIjtzOjE0OiJ0YWJsZV91c2VyZGF0YSI7czo4OiJ1c2VyZGF0YSI7czoxNjoidGFibGVfdXNlcnJpZ2h0cyI7czoxMDoidXNlcnJpZ2h0cyI7czoxNToidGFibGVfdXNlcnJvbGVzIjtzOjk6InVzZXJyb2xlcyI7czoyMDoidGFibGVfdXNlcmNoYXJhY3RlcnMiO3M6MTQ6InVzZXJjaGFyYWN0ZXJzIjtzOjI0OiJ0YWJsZV91c2Vycm9sZXNfdG9fdXNlcnMiO3M6MTg6InVzZXJyb2xlc190b191c2VycyI7czoyNjoidGFibGVfdXNlcnJvbGVzX3RvX2FjdGlvbnMiO3M6MjA6InVzZXJyb2xlc190b19hY3Rpb25zIjtzOjE4OiJ0YWJsZV91c2Vyc2Vzc2lvbnMiO3M6MTI6InVzZXJzZXNzaW9ucyI7czoyMjoidGFibGVfdXNlcmNvbmZpcm1hdGlvbiI7czoxNjoidXNlcmNvbmZpcm1hdGlvbiI7fXM6Nzoic2Vzc2lvbiI7YTozOntzOjE1OiJzZXNzaW9uX3N0b3JhZ2UiO3M6ODoiZGF0YWJhc2UiO3M6MTI6InNlc3Npb25fbmFtZSI7czoxOToiWkVJVEdFSVNUX1NFU1NJT05JRCI7czoxNjoic2Vzc2lvbl9saWZldGltZSI7czoxOiIwIjt9czo4OiJtZXNzYWdlcyI7YToxOntzOjIzOiJ1c2VfcGVyc2lzdGVudF9tZXNzYWdlcyI7czoxOiIxIjt9czo4OiJ0ZW1wbGF0ZSI7YToxNTp7czoxMjoicmV3cml0ZV91cmxzIjtzOjE6IjAiO3M6MTg6InZhcmlhYmxlU3Vic3RCZWdpbiI7czo1OiI8IS0tQCI7czoxNjoidmFyaWFibGVTdWJzdEVuZCI7czo0OiJALS0+IjtzOjE1OiJibG9ja1N1YnN0QmVnaW4iO3M6NToiPCEtLSMiO3M6MTM6ImJsb2NrU3Vic3RFbmQiO3M6NDoiIy0tPiI7czo5OiJsaW5rQmVnaW4iO3M6NDoiQEB7WyI7czo3OiJsaW5rRW5kIjtzOjQ6Il19QEAiO3M6MTM6InZhcmlhYmxlQmVnaW4iO3M6MzoiQEB7IjtzOjExOiJ2YXJpYWJsZUVuZCI7czozOiJ9QEAiO3M6MTQ6ImJsb2NrT3BlbkJlZ2luIjtzOjMwOiI8IS0tIFRlbXBsYXRlQmVnaW5CbG9jayBuYW1lPSIiO3M6MTI6ImJsb2NrT3BlbkVuZCI7czo1OiIiIC0tPiI7czoxMDoiYmxvY2tDbG9zZSI7czoyNToiPCEtLSBUZW1wbGF0ZUVuZEJsb2NrIC0tPiI7czoxOToiVXNlcm1lc3NhZ2VNZXNzYWdlcyI7czoxMjoidXNlcm1lc3NhZ2VzIjtzOjE5OiJVc2VybWVzc2FnZVdhcm5pbmdzIjtzOjEyOiJ1c2Vyd2FybmluZ3MiO3M6MTc6IlVzZXJtZXNzYWdlRXJyb3JzIjtzOjEwOiJ1c2VyZXJyb3JzIjt9czo5OiJhY3Rpb25sb2ciO2E6MTp7czoxNjoiYWN0aW9ubG9nX2FjdGl2ZSI7czoxOiIwIjt9czoxMjoiZXJyb3JoYW5kbGVyIjthOjE6e3M6MTc6ImVycm9yX3JlcG9ydGxldmVsIjtzOjE6IjIiO31zOjExOiJ1c2VyaGFuZGxlciI7YToxOntzOjE1OiJ1c2VfZG91Ymxlb3B0aW4iO3M6MToiMSI7fXM6MTA6InBhcmFtZXRlcnMiO2E6OTp7czoxNzoiZXNjYXBlX3BhcmFtZXRlcnMiO3M6MToiMSI7czo1OiJlbWFpbCI7czo2NjoiL15bXHdcLVwrXCZcKl0rKD86XC5bXHdcLVxfXCtcJlwqXSspKkAoPzpbXHctXStcLikrW2EtekEtWl17Miw3fSQvIjtzOjM6InVybCI7czo4NToiL14oZnRwfGh0dHB8aHR0cHMpOlwvXC8oXHcrOnswLDF9XHcqQCk/KFxTKykoOlswLTldKyk/KFwvfFwvKFtcdyMhOi4/Kz0mJUAhXC1cL10pKT8kLyI7czozOiJ6aXAiO3M6MTE6Ii9eXGR7Myw1fSQvIjtzOjY6InN0cmluZyI7czo2OToiL15bXHfDvMOcw6TDhMO2w5YgXSsoKFtcLFxAXC5cOlwtXC9cKFwpXCFcPyBdKT9bXHfDvMOcw6TDhMO2w5YgXSopKiQvIjtzOjQ6InRleHQiO3M6Nzk6Ii9eW1x3w7zDnMOkw4TDtsOWIF0rKChbXFxcQFwiXCxcLlw6XC1cL1xyXG5cdFwhXD9cKFwpIF0pP1tcd8O8w5zDpMOEw7bDliBdKikqJC8iO3M6NjoibnVtYmVyIjtzOjI0OiIvXlswLTldKihcLnxcLCk/WzAtOV0rJC8iO3M6NzoiYm9vbGVhbiI7czoxMjoiL15bMC0xXXsxfSQvIjtzOjQ6ImRhdGUiO3M6Mzg6Ii9eWzAtOV17Mn0oXC4pP1swLTldezJ9KFwuKT9bMC05XXs0fSQvIjt9fQ=='),
+(10, './configuration/zeitgeist.ini', '1277747985', 'YTozOntzOjc6InNlc3Npb24iO2E6Mzp7czoxNToic2Vzc2lvbl9zdG9yYWdlIjtzOjg6ImRhdGFiYXNlIjtzOjEyOiJzZXNzaW9uX25hbWUiO3M6MTM6IlpHQVBQTElDQVRJT04iO3M6MTY6InNlc3Npb25fbGlmZXRpbWUiO3M6MToiMCI7fXM6MTM6InRyYWZmaWNsb2dnZXIiO2E6MTp7czoyMDoidHJhZmZpY2xvZ2dlcl9hY3RpdmUiO3M6MToiMSI7fXM6ODoibWVzc2FnZXMiO2E6MTp7czoyMzoidXNlX3BlcnNpc3RlbnRfbWVzc2FnZXMiO3M6MToiMSI7fX0='),
+(11, 'configuration/application.ini', '1283031751', 'YToyOntzOjExOiJhcHBsaWNhdGlvbiI7YTozOntzOjg6ImJhc2VwYXRoIjtzOjMyOiJodHRwOi8vMTI3LjAuMC4xL3RpY3RhY3R1dG9yaWFsLyI7czoxMjoidGVtcGxhdGVwYXRoIjtzOjMzOiIuL3RlbXBsYXRlcy9hcHBsaWNhdGlvbl90ZW1wbGF0ZXMiO3M6MTE6InZlcnNpb25pbmZvIjtzOjE5OiJBcHBsaWNhdGlvbiBWZXJzaW9uIjt9czoxNDoicGFyYW1ldGVydHlwZXMiO2E6Mjp7czo4OiJ1c2VybmFtZSI7czoyOToiL15bXHfDvMOcw7bDlsOkw4TDnyBdezQsMTZ9JC8iO3M6MTI6InVzZXJwYXNzd29yZCI7czoxMToiL14uezQsMTZ9JC8iO319'),
+(12, './modules/user/user.ini', '1286221247', 'YToyOntzOjU6ImluZGV4IjthOjE6e3M6MjE6Imhhc0V4dGVybmFsUGFyYW1ldGVycyI7czo1OiJmYWxzZSI7fXM6NToibG9naW4iO2E6NDp7czoyMToiaGFzRXh0ZXJuYWxQYXJhbWV0ZXJzIjtzOjQ6InRydWUiO3M6ODoidXNlcm5hbWUiO2E6Mzp7czo5OiJwYXJhbWV0ZXIiO3M6NDoidHJ1ZSI7czo2OiJzb3VyY2UiO3M6NDoiUE9TVCI7czo4OiJleHBlY3RlZCI7czozMToiW1t6ZWl0Z2Vpc3QucGFyYW1ldGVycy5zdHJpbmddXSI7fXM6ODoicGFzc3dvcmQiO2E6Mzp7czo5OiJwYXJhbWV0ZXIiO3M6NDoidHJ1ZSI7czo2OiJzb3VyY2UiO3M6NDoiUE9TVCI7czo4OiJleHBlY3RlZCI7czoxMToiL14uezQsMzJ9JC8iO31zOjU6ImxvZ2luIjthOjQ6e3M6OToicGFyYW1ldGVyIjtzOjQ6InRydWUiO3M6Njoic291cmNlIjtzOjQ6IlBPU1QiO3M6ODoiZXhwZWN0ZWQiO3M6ODoiQ09OU1RBTlQiO3M6NToidmFsdWUiO3M6NToiTG9naW4iO319fQ=='),
+(13, './modules/main/main.ini', '1277747985', 'YToxOntzOjU6ImluZGV4IjthOjE6e3M6MjE6Imhhc0V4dGVybmFsUGFyYW1ldGVycyI7czo1OiJmYWxzZSI7fX0=');
 
 -- --------------------------------------------------------
 
@@ -289,6 +302,8 @@ CREATE TABLE IF NOT EXISTS `sessiondata` (
 -- Daten für Tabelle `sessiondata`
 --
 
+INSERT INTO `sessiondata` (`sessiondata_id`, `sessiondata_created`, `sessiondata_lastupdate`, `sessiondata_content`, `sessiondata_ip`) VALUES
+('l5c3uou798qvk2cvbtotao9lu3', 1286226047, 1286226426, 'messagecache_session|s:3249:"a:17:{i:0;O:9:"zgMessage":4:{s:7:"message";s:62:"Could not establish user session: user id not found in session";s:4:"type";s:7:"warning";s:4:"from";s:21:"userhandler.class.php";s:2:"to";s:0:"";}i:1;O:9:"zgMessage":4:{s:7:"message";s:62:"Could not establish user session: user id not found in session";s:4:"type";s:7:"warning";s:4:"from";s:21:"userhandler.class.php";s:2:"to";s:0:"";}i:2;O:9:"zgMessage":4:{s:7:"message";s:62:"Could not establish user session: user id not found in session";s:4:"type";s:7:"warning";s:4:"from";s:21:"userhandler.class.php";s:2:"to";s:0:"";}i:3;O:9:"zgMessage":4:{s:7:"message";s:62:"Could not establish user session: user id not found in session";s:4:"type";s:7:"warning";s:4:"from";s:21:"userhandler.class.php";s:2:"to";s:0:"";}i:4;O:9:"zgMessage":4:{s:7:"message";s:62:"Could not establish user session: user id not found in session";s:4:"type";s:7:"warning";s:4:"from";s:21:"userhandler.class.php";s:2:"to";s:0:"";}i:5;O:9:"zgMessage":4:{s:7:"message";s:62:"Could not establish user session: user id not found in session";s:4:"type";s:7:"warning";s:4:"from";s:21:"userhandler.class.php";s:2:"to";s:0:"";}i:6;O:9:"zgMessage":4:{s:7:"message";s:62:"Could not establish user session: user id not found in session";s:4:"type";s:7:"warning";s:4:"from";s:21:"userhandler.class.php";s:2:"to";s:0:"";}i:7;O:9:"zgMessage":4:{s:7:"message";s:62:"Could not establish user session: user id not found in session";s:4:"type";s:7:"warning";s:4:"from";s:21:"userhandler.class.php";s:2:"to";s:0:"";}i:8;O:9:"zgMessage":4:{s:7:"message";s:62:"Could not establish user session: user id not found in session";s:4:"type";s:7:"warning";s:4:"from";s:21:"userhandler.class.php";s:2:"to";s:0:"";}i:9;O:9:"zgMessage":4:{s:7:"message";s:62:"Could not establish user session: user id not found in session";s:4:"type";s:7:"warning";s:4:"from";s:21:"userhandler.class.php";s:2:"to";s:0:"";}i:10;O:9:"zgMessage":4:{s:7:"message";s:62:"Could not establish user session: user id not found in session";s:4:"type";s:7:"warning";s:4:"from";s:21:"userhandler.class.php";s:2:"to";s:0:"";}i:11;O:9:"zgMessage":4:{s:7:"message";s:62:"Could not establish user session: user id not found in session";s:4:"type";s:7:"warning";s:4:"from";s:21:"userhandler.class.php";s:2:"to";s:0:"";}i:12;O:9:"zgMessage":4:{s:7:"message";s:49:"No messagedata is stored in session for this user";s:4:"type";s:7:"warning";s:4:"from";s:18:"messages.class.php";s:2:"to";s:0:"";}i:13;O:9:"zgMessage":4:{s:7:"message";s:67:"Problem logging in: user not found/is inactive or password is wrong";s:4:"type";s:7:"warning";s:4:"from";s:23:"userfunctions.class.php";s:2:"to";s:0:"";}i:14;O:9:"zgMessage":4:{s:7:"message";s:74:"Problem validating a user: user not found/is inactive or password is wrong";s:4:"type";s:7:"warning";s:4:"from";s:21:"userhandler.class.php";s:2:"to";s:0:"";}i:15;O:9:"zgMessage":4:{s:7:"message";s:67:"Problem logging in: user not found/is inactive or password is wrong";s:4:"type";s:7:"warning";s:4:"from";s:23:"userfunctions.class.php";s:2:"to";s:0:"";}i:16;O:9:"zgMessage":4:{s:7:"message";s:74:"Problem validating a user: user not found/is inactive or password is wrong";s:4:"type";s:7:"warning";s:4:"from";s:21:"userhandler.class.php";s:2:"to";s:0:"";}}";', 2130706433);
 
 -- --------------------------------------------------------
 
@@ -302,12 +317,15 @@ CREATE TABLE IF NOT EXISTS `templatecache` (
   `templatecache_timestamp` varchar(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   `templatecache_content` text CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`templatecache_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
 --
 -- Daten für Tabelle `templatecache`
 --
 
+INSERT INTO `templatecache` (`templatecache_id`, `templatecache_name`, `templatecache_timestamp`, `templatecache_content`) VALUES
+(6, './templates/application_templates/main_index.tpl.html', '1286224431', 'YTo0OntzOjQ6ImZpbGUiO3M6NTM6Ii4vdGVtcGxhdGVzL2FwcGxpY2F0aW9uX3RlbXBsYXRlcy9tYWluX2luZGV4LnRwbC5odG1sIjtzOjc6ImNvbnRlbnQiO3M6MjExOiI8aHRtbD4NCjxoZWFkPg0KCTx0aXRsZT5XZWxjb21lIHRvIFRpYyBUYWMgVHV0b3JpYWw8L3RpdGxlPg0KPC9oZWFkPg0KDQo8Ym9keT4NCg0KCTxoMT5XZWxjb21lIHRvIFRpYyBUYWMgVHV0b3JpYWw8L2gxPg0KDQogICAgPHA+PGEgaHJlZj0iaW5kZXgucGhwP21vZHVsZT11c2VyJmFjdGlvbj1sb2dvdXQiPkxvZyBvdXQ8L2E+PC9wPg0KDQo8L2JvZHk+DQo8L2h0bWw+IjtzOjY6ImJsb2NrcyI7YToxOntzOjQ6InJvb3QiO086MTU6InpnVGVtcGxhdGVCbG9jayI6NDp7czoxNDoiY3VycmVudENvbnRlbnQiO3M6MDoiIjtzOjE1OiJvcmlnaW5hbENvbnRlbnQiO3M6MDoiIjtzOjExOiJibG9ja1BhcmVudCI7czowOiIiO3M6MTQ6ImJsb2NrVmFyaWFibGVzIjthOjA6e319fXM6OToidmFyaWFibGVzIjthOjA6e319'),
+(7, './templates/application_templates/user_login.tpl.html', '1286224374', 'YTo0OntzOjQ6ImZpbGUiO3M6NTM6Ii4vdGVtcGxhdGVzL2FwcGxpY2F0aW9uX3RlbXBsYXRlcy91c2VyX2xvZ2luLnRwbC5odG1sIjtzOjc6ImNvbnRlbnQiO3M6MTEwNzoiPGh0bWw+DQo8aGVhZD4NCgk8dGl0bGU+V2VsY29tZSB0byBUaWMgVGFjIFR1dG9yaWFsPC90aXRsZT4NCjwvaGVhZD4NCg0KPGJvZHk+DQoNCgk8aDE+V2VsY29tZSB0byBUaWMgVGFjIFR1dG9yaWFsPC9oMT4NCg0KICAgIDwhLS0jbG9naW5FcnJvciMtLT4NCg0KICAgIDxwPlBsZWFzZSBsb2cgaW4gdG8gcGxheSB0aGUgZ2FtZS4gRW50ZXIgeW91ciB1c2VybmFtZSBhbmQgcGFzc3dvcmQgaGVyZTo8L3A+DQoNCiAgICA8Zm9ybSBtZXRob2Q9InBvc3QiIGFjdGlvbj0iaW5kZXgucGhwP21vZHVsZT11c2VyJmFjdGlvbj1sb2dpbiIgbmFtZT0ibG9naW4iPg0KICAgICAgICA8dGFibGUgYm9yZGVyPSIwIj4NCiAgICAgICAgICAgIDx0cj4NCiAgICAgICAgICAgICAgICA8dGQgYWxpZ249InJpZ2h0IiBub3dyYXAgd2lkdGg9IjExMCI+PHA+VXNlcm5hbWU8L3A+PC90ZD4NCiAgICAgICAgICAgICAgICA8dGQgYWxpZ249ImxlZnQiIHZhbGlnbj0ibWlkZGxlIiBub3dyYXA+PGlucHV0IHR5cGU9InRleHQiIHNpemU9IjM1IiBtYXhsZW5ndGg9IjIwIiBuYW1lPSJ1c2VybmFtZSIgc3R5bGU9IndpZHRoOjI1MHB4OyIgLz48L3RkPg0KICAgICAgICAgICAgPC90cj4NCiAgICAgICAgICAgIDx0cj4NCiAgICAgICAgICAgICAgICA8dGQgYWxpZ249InJpZ2h0IiBub3dyYXA+PHA+UGFzc3dvcmQ8L3A+PC90ZD4NCiAgICAgICAgICAgICAgICA8dGQgYWxpZ249ImxlZnQiIHZhbGlnbj0ibWlkZGxlIiBub3dyYXA+PGlucHV0IHR5cGU9InBhc3N3b3JkIiBzaXplPSIzNSIgbWF4bGVuZ3RoPSIzMiIgbmFtZT0icGFzc3dvcmQiIHN0eWxlPSJ3aWR0aDoyNTBweDsiIC8+PC90ZD4NCiAgICAgICAgICAgIDwvdHI+DQogICAgICAgICAgICA8dHI+DQogICAgICAgICAgICAgICAgPHRkIGFsaWduPSJsZWZ0IiBub3dyYXA+Jm5ic3A7PC90ZD4NCiAgICAgICAgICAgICAgICA8dGQgYWxpZ249InJpZ2h0IiB2YWxpZ249Im1pZGRsZSIgbm93cmFwPjxpbnB1dCB0eXBlPSJzdWJtaXQiIG5hbWU9ImxvZ2luIiB2YWx1ZT0iTG9naW4iIC8+PC90ZD4NCiAgICAgICAgICAgIDwvdHI+DQogICAgICAgIDwvdGFibGU+DQogICAgPC9mb3JtPg0KDQo8L2JvZHk+DQo8L2h0bWw+IjtzOjY6ImJsb2NrcyI7YToyOntzOjEwOiJsb2dpbkVycm9yIjtPOjE1OiJ6Z1RlbXBsYXRlQmxvY2siOjQ6e3M6MTQ6ImN1cnJlbnRDb250ZW50IjtzOjEwMzoiDQogICAgICAgICAgICA8cD48Yj5BbiBlcnJvciBoYXMgb2NjdXJlZC4gUGxlYXNlIGVudGVyIHlvdXIgbG9naW4gY3JlZGVudGlhbHMgY2FyZWZ1bGx5Li48L2I+PC9wPg0KICAgICI7czoxNToib3JpZ2luYWxDb250ZW50IjtzOjEwMzoiDQogICAgICAgICAgICA8cD48Yj5BbiBlcnJvciBoYXMgb2NjdXJlZC4gUGxlYXNlIGVudGVyIHlvdXIgbG9naW4gY3JlZGVudGlhbHMgY2FyZWZ1bGx5Li48L2I+PC9wPg0KICAgICI7czoxMToiYmxvY2tQYXJlbnQiO3M6MDoiIjtzOjE0OiJibG9ja1ZhcmlhYmxlcyI7YTowOnt9fXM6NDoicm9vdCI7TzoxNToiemdUZW1wbGF0ZUJsb2NrIjo0OntzOjE0OiJjdXJyZW50Q29udGVudCI7czowOiIiO3M6MTU6Im9yaWdpbmFsQ29udGVudCI7czowOiIiO3M6MTE6ImJsb2NrUGFyZW50IjtzOjA6IiI7czoxNDoiYmxvY2tWYXJpYWJsZXMiO2E6MDp7fX19czo5OiJ2YXJpYWJsZXMiO2E6MDp7fX0=');
 
 -- --------------------------------------------------------
 
@@ -439,3 +457,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`user_id`, `user_username`, `user_password`, `user_key`, `user_active`) VALUES
 (1, 'testuser', '5d9c68c6c50ed3d02a2fcf54f63993b6', NULL, 1);
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
