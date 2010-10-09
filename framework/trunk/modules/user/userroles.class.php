@@ -68,7 +68,6 @@ class zgUserroles
 		$ret = array( );
 		while ( $row = $sql->fetch( PDO::FETCH_ASSOC ) )
 		{
-			var_dump($row);
 			$ret[ $row[ 'userroleuser_userrole' ] ] = $row[ 'userrole_name' ];
 		}
 
