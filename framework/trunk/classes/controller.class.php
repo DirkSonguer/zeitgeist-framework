@@ -45,16 +45,18 @@ class zgController
 
 
 	/**
-	 * Loads all relevant data for a module from the database
+	 * Loads all relevant data for an action from the database
 	 *
 	 * @param string $module name of the module
+	 * @param string $action name of the action
 	 *
 	 * @return boolean
 	 */
-	protected function _getModuleData( $module )
+	protected function _loadActionInformation( $module, $action )
 	{
 		$this->debug->guard( );
 
+		// start loading module information
 		$modulesTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_modules' );
 
 		$sql = $this->database->prepare( "SELECT * FROM " . $modulesTablename . " WHERE module_name = ?" );
@@ -69,24 +71,10 @@ class zgController
 			return false;
 		}
 
+		// store module information in class structure
 		$this->moduledata = $sql->fetch( PDO::FETCH_ASSOC );
 
-		$this->debug->unguard( true );
-		return true;
-	}
-
-
-	/**
-	 * Loads all relevant data for an action from the database
-	 *
-	 * @param string $action name of the action
-	 *
-	 * @return boolean
-	 */
-	protected function _getActionData( $action )
-	{
-		$this->debug->guard( );
-
+		// start loading action information
 		$actionsTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_actions' );
 
 		$sql = $this->database->prepare( "SELECT * FROM " . $actionsTablename . " WHERE action_module = ? AND action_name = ?" );
@@ -102,6 +90,7 @@ class zgController
 			return false;
 		}
 
+		// store action informatíon in class structure
 		$this->actiondata = $sql->fetch( PDO::FETCH_ASSOC );
 
 		$this->debug->unguard( true );
@@ -110,39 +99,32 @@ class zgController
 
 
 	/**
-	 * Returns the module id of the current module if loaded
-	 * If the module is not known yet, false is returned
-	 *
-	 * @return integer | boolean
-	 */
-	public function getCurrentModuleID( )
-	{
-		$this->debug->guard( );
-
-		if ( empty( $this->moduledata[ 'module_id' ] ) )
-		{
-			$this->debug->write( 'Problem getting the module id: module data is not loaded yet', 'warning' );
-			$this->messages->setMessage( 'Problem getting the module id: module data is not loaded yet', 'warning' );
-
-			$this->debug->unguard( false );
-			return false;
-		}
-
-		$this->debug->unguard( $this->moduledata[ 'module_id' ] );
-		return $this->moduledata[ 'module_id' ];
-	}
-
-
-	/**
 	 * Returns the action id of the current action if loaded
 	 * If the action is not known yet, false is returned
 	 *
+	 * @param string $module name of the module
+	 * @param string $action name of the action
+	 *
 	 * @return integer | boolean
 	 */
-	public function getCurrentActionID( )
+	public function getActionID( $module, $action )
 	{
 		$this->debug->guard( );
 
+		// check if module data is already loaded
+		if ( ( empty( $this->moduledata[ 'module_id' ] ) ) || ( empty( $this->actiondata[ 'action_id' ] ) ) )
+		{
+			// if not, load module data into class structure
+			if ( !$this->_loadActionInformation( $module, $action ) )
+			{
+				$this->debug->write( 'Problem getting the action id: action information could not be loaded: ' . $module, 'warning' );
+				$this->messages->setMessage( 'Problem getting the action id: action information could not be loaded: ' . $module, 'warning' );
+				$this->debug->unguard( false );
+				return false;
+			}
+		}
+		
+		// check if action data is already loaded
 		if ( empty( $this->actiondata[ 'action_id' ] ) )
 		{
 			$this->debug->write( 'Problem getting the action id: action data is not loaded yet', 'warning' );
@@ -176,13 +158,17 @@ class zgController
 			$this->messages->loadMessagesFromSession( );
 		}
 
-		// check if module is installed and get module data
-		if ( !$this->_getModuleData( $module ) )
+		// check if module data is already loaded
+		if ( ( empty( $this->moduledata[ 'module_id' ] ) ) || ( empty( $this->actiondata[ 'action_id' ] ) ) )
 		{
-			$this->debug->write( 'Problem loading the module: Module is not found / installed: ' . $module, 'warning' );
-			$this->messages->setMessage( 'Problem loading the module: Module is not found / installed: ' . $module, 'warning' );
-			$this->debug->unguard( false );
-			return false;
+			// if not, load module data into class structure
+			if ( !$this->_loadActionInformation( $module, $action ) )
+			{
+				$this->debug->write( 'Problem loading the module: action information could not be loaded: ' . $module, 'warning' );
+				$this->messages->setMessage( 'Problem loading the module: action information could not be loaded: ' . $module, 'warning' );
+				$this->debug->unguard( false );
+				return false;
+			}
 		}
 
 		// check from data if module is active
@@ -214,15 +200,6 @@ class zgController
 
 		// load the module class through the autoloader
 		$moduleClass = new $module( );
-
-		// check if action is installed and get action data
-		if ( !$this->_getActionData( $action ) )
-		{
-			$this->debug->write( 'Problem loading the action (' . $action . ') in module (' . $module . '): Action is not installed for module', 'warning' );
-			$this->messages->setMessage( 'Problem loading the action (' . $action . ') in module (' . $module . '): Action is not installed for module', 'warning' );
-			$this->debug->unguard( false );
-			return false;
-		}
 
 		// check from data if action is active
 		if ( $this->actiondata[ 'action_active' ] != '1' )
