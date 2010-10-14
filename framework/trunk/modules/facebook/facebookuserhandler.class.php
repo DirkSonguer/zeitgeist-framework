@@ -44,6 +44,9 @@ class zgFacebookUserhandler extends zgUserhandler
 	{
 		$this->facebook = NULL;
 
+		$this->database = new zgDatabase( );
+		$this->database->connect( );
+
 		parent::__construct( );
 
 		if ( file_exists( ZEITGEIST_ROOTDIRECTORY . 'configuration/zgfacebook.ini' ) )
