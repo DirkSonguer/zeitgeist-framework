@@ -41,6 +41,8 @@ class zgConfiguration
 		$this->messages = zgMessages::init( );
 
 		$this->database = new zgDatabasePDO( "mysql:host=" . ZG_DB_DBSERVER . ";dbname=" . ZG_DB_DATABASE, ZG_DB_USERNAME, ZG_DB_USERPASS );
+		$this->database->query( "SET NAMES 'utf8'" );
+		$this->database->query( "SET CHARACTER SET utf8" );
 
 		$this->configuration = array( );
 	}
