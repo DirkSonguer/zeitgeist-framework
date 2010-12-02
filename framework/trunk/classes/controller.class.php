@@ -125,7 +125,7 @@ class zgController
 				return false;
 			}
 		}
-		
+
 		// check if action data is already loaded
 		if ( empty( $this->actiondata[ 'action_id' ] ) )
 		{
@@ -173,8 +173,8 @@ class zgController
 			}
 		}
 
-		// check from data if module is active
-		if ( $this->moduledata[ 'module_active' ] != '1' )
+		// check from data if module is available and active
+		if ( ( empty ( $this->moduledata[ 'module_active' ] ) ) || ( $this->moduledata[ 'module_active' ] != '1' ) )
 		{
 			$this->debug->write( 'Problem loading the module: Module is not active: ' . $module, 'warning' );
 			$this->messages->setMessage( 'Problem loading the module: Module is not active: ' . $module, 'warning' );
