@@ -291,6 +291,20 @@ class zgDebug
 			echo '<p>' . $key . ' : ' . $value;
 		}
 
+		echo '<h2>_FILES:</h2>';
+		foreach ( $_FILES as $key => $value )
+		{
+			if ( is_array( $value ) )
+			{
+				ob_start( );
+				var_dump( $value );
+				$value = ob_get_contents( );
+				ob_end_clean( );
+			}
+
+			echo '<p>' . $key . ' : ' . $value;
+		}
+
 		$session = session_id( );
 		if ( !empty( $session ) )
 		{
