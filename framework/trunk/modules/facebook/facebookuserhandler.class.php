@@ -150,9 +150,9 @@ class zgFacebookUserhandler extends zgUserhandler
 		if ( is_array( $userInformation ) )
 		{
 			$this->session->setSessionVariable( 'user_facebookid', $fbid );
-			$this->session->setSessionVariable( 'user_id', $userInformation ['user_id'] );
-			$this->session->setSessionVariable( 'user_key', $userInformation ['user_key'] );
-			$this->session->setSessionVariable( 'user_username', $userInformation ['user_username'] );
+			$this->session->setSessionVariable( 'user_id', $userInformation [ 'user_id' ] );
+			$this->session->setSessionVariable( 'user_key', $userInformation [ 'user_key' ] );
+			$this->session->setSessionVariable( 'user_username', $userInformation [ 'user_username' ] );
 
 			$this->debug->unguard( true );
 			return true;
@@ -175,9 +175,9 @@ class zgFacebookUserhandler extends zgUserhandler
 		if ( is_array( $userInformation ) )
 		{
 			$this->session->setSessionVariable( 'user_facebookid', $fbid );
-			$this->session->setSessionVariable( 'user_id', $userInformation ['user_id'] );
-			$this->session->setSessionVariable( 'user_key', $userInformation ['user_key'] );
-			$this->session->setSessionVariable( 'user_username', $userInformation ['user_username'] );
+			$this->session->setSessionVariable( 'user_id', $userInformation [ 'user_id' ] );
+			$this->session->setSessionVariable( 'user_key', $userInformation [ 'user_key' ] );
+			$this->session->setSessionVariable( 'user_username', $userInformation [ 'user_username' ] );
 
 			$this->debug->unguard( true );
 			return true;
@@ -302,7 +302,7 @@ class zgFacebookUserhandler extends zgUserhandler
 		// insert a new user into database
 		$active = 1;
 		$key = md5( uniqid( ) );
-		$fbusername = $fbuserdata [0] ['first_name'] . ' ' . $fbuserdata [0] ['last_name'];
+		$fbusername = $fbuserdata [ 0 ] [ 'first_name' ] . ' ' . $fbuserdata [ 0 ] [ 'last_name' ];
 
 		$sql = "INSERT INTO " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . "(user_username, user_key, user_password, user_active) VALUES('" . $fbusername . "', '" . $key . "', '" . '' . "', '" . $active . "')";
 		$res = $this->database->query( $sql );
@@ -367,6 +367,29 @@ class zgFacebookUserhandler extends zgUserhandler
 
 		$this->debug->unguard( $row );
 		return $row;
+	}
+
+
+	/**
+	 * Gets the current facebook id for a user
+	 *
+	 * @return integer
+	 */
+	public function getFacebookUserID( )
+	{
+		$this->debug->guard( );
+
+		$fbid = $this->facebook->get_loggedin_user( );
+		if ( empty( $fbid ) )
+		{
+			$this->debug->write( 'Could not get facebook user id: facebook session not initialized', 'warning' );
+			$this->messages->setMessage( 'Could not get facebook user id: facebook session not initialized', 'warning' );
+			$this->debug->unguard( false );
+			return false;
+		}
+
+		$this->debug->unguard( $fbid );
+		return $fbid;
 	}
 }
 
