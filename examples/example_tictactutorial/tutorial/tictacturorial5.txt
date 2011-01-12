@@ -15,16 +15,16 @@ This part deals with providing an HTML input form in a template where a user can
 
 First we need to actually create the files for the user module. To do that you can either create the needed files or just copy the existing main module and rename it. When developing you will most likely just copy & paste an existing module and build from that. However we will create the files from scratch for this part of the tutorial so that you will have a better insight into how modules work.
 
-Let's start by creating a new directory for the module: locate the folder called "modules" in the application you created last time. Create a new directory there called "user". You should now have two module folders now: "main" and "user".
+Let's start by creating a new directory for the module: locate the folder called "modules" in the application tree you created last time. Create a new directory there called "user". You should now have two module folders now: "main" and "user".
 
 As said in the second part of this tutorial the module directories always contain 2 files:
 
- * The module class that contains the actual code for the module. Its name matches the module name, followed by _".module.php"_. Note that the module classes should start by checking for the application define.
- * The module configuration that contains all the module specific configuration. Its name also matches the module name and is followed by _".ini"_. The configuration will be automatically loaded by the controller class.
+ * The module class that contains the actual code for the module. Its name matches the module name, followed by _".module.php"_. Note that the module classes should start by checking for the application flag.
+ * The module configuration that contains all the module specific configuration. Its name also matches the module name and is followed by _".ini"_. The configuration will be automatically loaded by the controller class and is accessible by the module.
 
 === The Module Configuration ===
 
-Create a file called "user.ini" in the module directory. This file will contain all the configuration data needed for the module.
+Create a file called "user.ini" in the module directory. This file will later contain all the configuration data needed for the module.
 
 The content is according to standard [http://en.wikipedia.org/wiki/INI_file .ini files]. For our module it might look something like this at first:
 
@@ -38,7 +38,7 @@ The content is according to standard [http://en.wikipedia.org/wiki/INI_file .ini
     [templates]
 }}}
 
-The root block of the configuration has to be the name of the module. Otherwise you can name additional blocks and data.
+The root block of the configuration has to be the name of the module. Otherwise you can name additional blocks and data for each action in the module.
 
 The [ClassParameters parameter handler] will check for special configuration definitions. The purpose of the parameters class is to check every incoming data and filter out unwanted ones. For that you have to define the expected prameter and its pattern for each action, stored in a configuration block with the same name as the action. For now we don't expect any data for the index action, so we define _hasExternalParameters = false_.
 
@@ -77,6 +77,8 @@ class user
 	{
 		$this->debug->guard();
 
+		echo "Hello, Usermodule!";
+
 		$this->debug->unguard(true);
 		return true;
 	}
@@ -85,7 +87,7 @@ class user
 	{
 		$this->debug->guard();
 
-		echo "Hello, Usermodule!";
+		echo "Hello, Login!";
 
 		$this->debug->unguard(true);
 		return true;
@@ -111,20 +113,10 @@ As described in the second tutorial you have to register the module and each act
 	VALUES ( '2', 'login', 'Log in an existing user', '1' );
 }}}
 
-=== Adding a user ===
-
-To log in a user one has to exist first. As we don't have an action for creating a user yet, we'll just add one to the database directly.
-
-Note that the passwords are stored as md5 hashes by default. We'll use "testuser" as the users name as well as password. The user has to be active of course (last parameter). The user key is another unique id for the user. It can be used as a secret key as it should not be made public anywhere in the application frontend (use the user_id for frontend identification as a best practise).
-
-{{{
-    INSERT INTO users ( user_username, user_password, user_key, user_active )
-    VALUES ( 'testuser', '5d9c68c6c50ed3d02a2fcf54f63993b6', NULL , '1' );
-}}}
 
 === General user logic ===
 
-The question if a user is logged in or not is a global one. Basically it revolves around the question if the current browser session can be connected to a specific user in the database. If a user has authenticated himself (with his username and password) during a browsersession, we define the user as "logged in" as long as the session persists. If he logs out at any point in time, the session is destroyed.
+The question if a user is logged in or not is a global one. Basically it revolves around the question if the current browser session can be connected to a specific user in the database. If a user has authenticated himself (with his username and password) during a browser session, we define the user as "logged in" as long as the session persists. If he logs out at any point in time, the session is destroyed.
 
 As this is a global issue the code has to be added to the application itself. Actually the code *is already* in the index.php of a standard project (line 56-59):
 
@@ -149,16 +141,16 @@ For our game we only want logged in users to actually play the game. Thus we che
 
 	// check if user is alreay logged in
 	// if not, only show the not logged in page / action
-    if (!$userLoggedIn)
+	if (!$userLoggedIn)
 	{
 		$module = 'user';
 		$action = 'login';
 	}
 }}}
 
-This is a pretty easy way, but it means that a user without an account is only able to see one page (or whatever is hiding behind the notloggedin action). Note that we are redirecting to the user module and action we created earlier in this tutorial.
+This is a pretty easy way, but it means that a user without an account is only able to see one page (or whatever is hiding behind the defined action). Note that we are redirecting to the user module and action we created earlier in this tutorial.
 
-Another way of handling this is to use the rights and roles management functionalities of Zeitgeist. Using those you are able to control which kind of user is able to call which actions. For now we're using the easy way but we'll keep this in mind as it may come up later in the tutorial.
+Another way of handling this is to use the rights and roles management functionalities of Zeitgeist. Using those you are able to control which kind of user is able to call which actions. For example let the user use the game but not store any scores or achievements. For now we're using the easy way but we'll keep this in mind as it may come up later in the tutorial.
 
 === Adding a user login template ===
 
@@ -278,7 +270,7 @@ The flag is pretty easy, it's just a field called "parameter" with the value "tr
 The source is either _GET or _POST, depending on your frontend form.
 
 {{{
-password[source] = POST
+    password[source] = POST
 }}}
 
 The last needed parameter is the expected type. The parameter can be a regexp definition. The framework checks the incoming parameter against this regexp. If it matches, the parameter will end up in the $parameters array.

@@ -50,6 +50,8 @@ class user
 			return true;
 		}
 
+		// load the user login template
+		// this just shows a login form
 		$tpl->load( $this->configuration->getConfiguration( 'application', 'application', 'templatepath' ) . '/user_login.tpl.html' );
 
 		// check if the login parameters are present
