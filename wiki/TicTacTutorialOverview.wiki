@@ -27,4 +27,5 @@ As said, the game will use the Zeitgeist Framework. The game specific implementa
  * [TicTacTutorial2 Part 2, Basic Setup]
  * [TicTacTutorial3 Part 3, Game Architecture]
  * [TicTacTutorial4 Part 4, Presentation Layer]
- * [TicTacTutorial5 Part 5, User Actions (user login)]
+ * [TicTacTutorial5 Part 5, User Actions (user login, part 1)]
+ * [TicTacTutorial6 Part 6, User Actions (user login, part 2)]
