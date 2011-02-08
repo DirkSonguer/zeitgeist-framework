@@ -301,7 +301,7 @@ class zgFacebookUserhandler extends zgUserhandler
 
 		// insert a new user into database
 		$active = 1;
-		$key = md5( uniqid( ) );
+		$key = md5( uniqid( md5( mt_rand( ) ), true ) );
 		$fbusername = $fbuserdata [ 0 ] [ 'first_name' ] . ' ' . $fbuserdata [ 0 ] [ 'last_name' ];
 
 		$sql = "INSERT INTO " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . "(user_username, user_key, user_password, user_active) VALUES('" . $fbusername . "', '" . $key . "', '" . '' . "', '" . $active . "')";
