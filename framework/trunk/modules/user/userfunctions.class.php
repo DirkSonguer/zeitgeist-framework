@@ -96,7 +96,7 @@ class zgUserfunctions
 
 		// define some default values
 		$active = 1;
-		$key = md5( uniqid( ) );
+		$key = md5( uniqid( mt_rand( ), true ) );
 		if ( $this->configuration->getConfiguration( 'zeitgeist', 'userhandler', 'use_doubleoptin' ) == '1' )
 		{
 			$active = 0;
@@ -123,7 +123,7 @@ class zgUserfunctions
 		// this is used only if the double opt in is used
 		if ( $this->configuration->getConfiguration( 'zeitgeist', 'userhandler', 'use_doubleoptin' ) == '1' )
 		{
-			$confirmationkey = md5( uniqid( ) );
+			$confirmationkey = md5( uniqid( mt_rand( ), true ) );
 
 			$sql = $this->database->prepare( "INSERT INTO " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userconfirmation' ) . "(userconfirmation_user, userconfirmation_key) VALUES(?, ?)" );
 			$sql->bindParam( 1, $currentId );
@@ -578,7 +578,7 @@ class zgUserfunctions
 		// user to activate again through an opt in
 		$sql = $this->database->prepare( "INSERT INTO " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_userconfirmation' ) . "(userconfirmation_user, userconfirmation_key) VALUES(?, ?)" );
 		$sql->bindParam( 1, $userid );
-		$sql->bindParam( 2, md5( uniqid( ) ) );
+		$sql->bindParam( 2, md5( uniqid( mt_rand( ), true ) ) );
 
 		if ( !$sql->execute( ) )
 		{

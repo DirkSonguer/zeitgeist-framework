@@ -43,7 +43,7 @@ class zgForm
 		$this->database = new zgDatabase( );
 		$this->database->connect( );
 
-		$this->id = 'form_' . uniqid( rand( ), true );
+		$this->id = 'form_' . uniqid( mt_rand( ), true );
 		$this->initial = false;
 	}
 
