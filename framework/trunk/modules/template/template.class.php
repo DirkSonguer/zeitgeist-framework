@@ -432,7 +432,7 @@ class zgTemplate
 	{
 		$this->debug->guard( );
 
-		if ( strpos( $url, 'http://' ) === false )
+		if ( ( strpos( $url, 'http://' ) === false ) && ( strpos( $url, 'https://' ) === false ) )
 		{
 			$url = 'http://' . $url;
 		}
