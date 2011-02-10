@@ -198,7 +198,7 @@ class zgFacebookUserhandler extends zgUserhandler
 	{
 		$this->debug->guard( );
 
-		// check if the user is already nown and logged in
+		// check if the user is already known and logged in
 		if ( $this->loggedIn )
 		{
 			$this->debug->write( 'Problem logging in a user: user is already logged in. Cannot login user twice', 'warning' );
