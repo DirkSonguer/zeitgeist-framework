@@ -141,67 +141,6 @@ class zgTwitterUserhandler extends zgUserhandler
 
 
 	/**
-	 * Login a user with username and password
-	 * If successfull it will gather the user specific data and tie it to the session
-	 *
-	 * @return boolean
-	 */
-	public function login( )
-	{
-		$this->debug->guard( );
-
-		// check if the user is already known and logged in
-		if ( $this->loggedIn )
-		{
-			$this->debug->write( 'Problem logging in a user: user is already logged in . Cannot login user twice', 'warning' );
-			$this->messages->setMessage( 'Problem logging in a user: user is already logged in . Cannot login user twice', 'warning' );
-			$this->debug->unguard( false );
-			return false;
-		}
-
-		// check if the user already has started a login process
-		if ( $this->session->getSessionVariable( 'twitter_oauth_initiated' ) )
-		{
-			$this->debug->write( 'Problem logging in a user: user has already started a login process', 'warning' );
-			$this->messages->setMessage( 'Problem logging in a user: user has already started a login process', 'warning' );
-			$this->debug->unguard( false );
-			return false;
-		}
-
-		// bind twitter class to current twitter app and user oauth token
-		// this uses the application key and secret
-		$connection = new TwitterOAuth( $this->configuration->getConfiguration( 'twitter', 'api', 'consumer_key' ), $this->configuration->getConfiguration( 'twitter', 'api', 'consumer_secret' ) );
-
-		// get temporary credentials from twitter
-		// will be redirected to the callback url afterwards
-		$request_token = $connection->getRequestToken( $this->configuration->getConfiguration( 'twitter', 'api', 'oauth_callback' ) );
-
-		// store temporary credentials to the session
-		$this->session->setSessionVariable( 'oauth_token', $request_token[ 'oauth_token' ] );
-		$this->session->setSessionVariable( 'oauth_token_secret', $request_token[ 'oauth_token_secret' ] );
-
-		// check what happened to the auth request preparation call
-		switch ( $connection->http_code )
-		{
-			case 200:
-				// store into session that we attempt to authorize a user
-				$this->session->setSessionVariable( 'twitter_oauth_initiated', true );
-
-				// get the authorize url with the request token we negotiated earlier
-				$url = $connection->getAuthorizeURL( $request_token[ 'oauth_token' ] );
-				$tpl = new zgTemplate( );
-				$tpl->redirect( $url );
-				break;
-			default:
-				echo 'Could not connect to Twitter . Refresh the page or try again later . ';
-		}
-
-		$this->debug->unguard( false );
-		return false;
-	}
-
-
-	/**
 	 * Validates a user
 	 * This has to be called as the callback from twitter
 	 * This also checks if the user is already known in the system
@@ -353,6 +292,67 @@ class zgTwitterUserhandler extends zgUserhandler
 
 
 	/**
+	 * Login a user with username and password
+	 * If successfull it will gather the user specific data and tie it to the session
+	 *
+	 * @return boolean
+	 */
+	public function login( )
+	{
+		$this->debug->guard( );
+
+		// check if the user is already known and logged in
+		if ( $this->loggedIn )
+		{
+			$this->debug->write( 'Problem logging in a user: user is already logged in . Cannot login user twice', 'warning' );
+			$this->messages->setMessage( 'Problem logging in a user: user is already logged in . Cannot login user twice', 'warning' );
+			$this->debug->unguard( false );
+			return false;
+		}
+
+		// check if the user already has started a login process
+		if ( $this->session->getSessionVariable( 'twitter_oauth_initiated' ) )
+		{
+			$this->debug->write( 'Problem logging in a user: user has already started a login process', 'warning' );
+			$this->messages->setMessage( 'Problem logging in a user: user has already started a login process', 'warning' );
+			$this->debug->unguard( false );
+			return false;
+		}
+
+		// bind twitter class to current twitter app and user oauth token
+		// this uses the application key and secret
+		$connection = new TwitterOAuth( $this->configuration->getConfiguration( 'twitter', 'api', 'consumer_key' ), $this->configuration->getConfiguration( 'twitter', 'api', 'consumer_secret' ) );
+
+		// get temporary credentials from twitter
+		// will be redirected to the callback url afterwards
+		$request_token = $connection->getRequestToken( $this->configuration->getConfiguration( 'twitter', 'api', 'oauth_callback' ) );
+
+		// store temporary credentials to the session
+		$this->session->setSessionVariable( 'oauth_token', $request_token[ 'oauth_token' ] );
+		$this->session->setSessionVariable( 'oauth_token_secret', $request_token[ 'oauth_token_secret' ] );
+
+		// check what happened to the auth request preparation call
+		switch ( $connection->http_code )
+		{
+			case 200:
+				// store into session that we attempt to authorize a user
+				$this->session->setSessionVariable( 'twitter_oauth_initiated', true );
+
+				// get the authorize url with the request token we negotiated earlier
+				$url = $connection->getAuthorizeURL( $request_token[ 'oauth_token' ] );
+				$tpl = new zgTemplate( );
+				$tpl->redirect( $url );
+				break;
+			default:
+				echo 'Could not connect to Twitter . Refresh the page or try again later . ';
+		}
+
+		$this->debug->unguard( false );
+		return false;
+	}
+
+
+	/**
 	 * Log out the user if he is currently logged in
 	 *
 	 * @return boolean
@@ -471,11 +471,14 @@ class zgTwitterUserhandler extends zgUserhandler
 	{
 		$this->debug->guard( );
 
-		$sql = "SELECT u . user_id, u . user_key, u . user_username FROM " . $this->configuration->getConfiguration( 'twitter', 'tables', 'table_twitterusers' ) . " tw ";
-		$sql .= "LEFT JOIN " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " u ON tw . twitteruser_user = u . user_id ";
-		$sql .= "WHERE tw . twitteruser_twitterid = '" . $twitterid . "' AND u . user_active = '1'";
+		// get userinformation from database
+		$sqlquery = "SELECT u . user_id, u . user_key, u . user_username FROM " . $this->configuration->getConfiguration( 'twitter', 'tables', 'table_twitterusers' ) . " tw ";
+		$sqlquery .= "LEFT JOIN " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " u ON tw . twitteruser_user = u . user_id ";
+		$sqlquery .= "WHERE tw . twitteruser_twitterid = ? AND u . user_active = '1'";
+		$sql = $this->database->prepare( $sqlquery );
+		$sql->bindParam( 1, $twitterid );
 
-		if ( !$res = $this->database->query( $sql ) )
+		if ( !$sql->execute( ) )
 		{
 			$this->debug->write( 'Problem getting twitter user information: could not read the user table', 'warning' );
 			$this->messages->setMessage( 'Problem getting twitter user information: could not read the user table', 'warning' );
@@ -483,7 +486,7 @@ class zgTwitterUserhandler extends zgUserhandler
 			return false;
 		}
 
-		if ( $this->database->numRows( $res ) != 1 )
+		if ( $sql->rowCount( )  != 1 )
 		{
 			$this->debug->write( 'Problem getting twitter user information: no linked user exists for this twitter id{', 'warning' );
 			$this->messages->setMessage( 'Problem getting twitter user information: no linked user exists for this twitter id{', 'warning' );
@@ -491,10 +494,10 @@ class zgTwitterUserhandler extends zgUserhandler
 			return false;
 		}
 
-		$row = $this->database->fetchArray( $res );
+		$ret = $sql->fetch( PDO::FETCH_ASSOC );
 
-		$this->debug->unguard( $row );
-		return $row;
+		$this->debug->unguard( $ret );
+		return $ret;
 	}
 
 
