@@ -42,10 +42,16 @@ class zgFacebookUserhandler extends zgUserhandler
 	 */
 	protected function __construct( )
 	{
+		$this->debug = zgDebug::init( );
+		$this->messages = zgMessages::init( );
+		$this->configuration = zgConfiguration::init( );
+
+		$this->session = zgSession::init( );
+		$this->session->startSession( );
+
 		$this->facebook = NULL;
 
-		$this->database = new zgDatabase( );
-		$this->database->connect( );
+		$this->database = new zgDatabasePDO( "mysql:host=" . ZG_DB_DBSERVER . ";dbname=" . ZG_DB_DATABASE, ZG_DB_USERNAME, ZG_DB_USERPASS );
 
 		parent::__construct( );
 
@@ -109,7 +115,7 @@ class zgFacebookUserhandler extends zgUserhandler
 		}
 
 		// check if the users facebook id can be linked to a user account
-		if ( !$this->linkFacebookUser( $fbid ) )
+		if ( !$this->validateFacebookUser( $fbid ) )
 		{
 			$this->debug->write( 'Could not establish user session: facebook user can not be linked to a local user', 'warning' );
 			$this->messages->setMessage( 'Could not establish user session: facebook user can not be linked to a local user', 'warning' );
@@ -132,7 +138,7 @@ class zgFacebookUserhandler extends zgUserhandler
 	 *
 	 * @return boolean
 	 */
-	public function linkFacebookUser( $fbid )
+	public function validateFacebookUser( $fbid )
 	{
 		$this->debug->guard( );
 
@@ -219,7 +225,7 @@ class zgFacebookUserhandler extends zgUserhandler
 
 		// link the facebook user session to a local system session
 		$this->debug->write( 'linking facebook user', 'message' );
-		$linkstatus = $this->linkFacebookUser( $fbid );
+		$linkstatus = $this->validateFacebookUser( $fbid );
 		$this->loggedIn = $linkstatus;
 
 		$this->debug->unguard( $linkstatus );
@@ -269,12 +275,21 @@ class zgFacebookUserhandler extends zgUserhandler
 		$this->debug->guard( );
 
 		// see if user already exists in database
-		$sql = "SELECT * FROM " . $this->configuration->getConfiguration( 'facebook', 'tables', 'table_facebookusers' ) . " WHERE facebookuser_fbid = '" . $fbid . "'";
-		$res = $this->database->query( $sql );
-		if ( $this->database->numRows( $res ) > 0 )
+		$sql = $this->database->prepare( "SELECT * FROM " . $this->configuration->getConfiguration( 'facebook', 'tables', 'table_facebookusers' ) . " WHERE facebookuser_fbid = ?" );
+		$sql->bindParam( 1, $fbid );
+
+		if ( !$sql->execute( ) )
 		{
-			$this->debug->write( 'A user with this facebook id already exists in the database', 'warning' );
-			$this->messages->setMessage( 'A user with this facebook id already exists in the database', 'warning' );
+			$this->debug->write( 'Problem creating the user: could not access the user table', 'warning' );
+			$this->messages->setMessage( 'Problem creating the user: could not access the user table', 'warning' );
+			$this->debug->unguard( false );
+			return false;
+		}
+
+		if ( $sql->rowCount( ) > 0 )
+		{
+			$this->debug->write( 'Problem creating the user: a user with this facebook id already exists in the database', 'warning' );
+			$this->messages->setMessage( 'Problem creating the user: a user with this facebook id already exists in the database', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -283,8 +298,8 @@ class zgFacebookUserhandler extends zgUserhandler
 		$fbid = $this->facebook->require_login( );
 		if ( empty( $fbid ) )
 		{
-			$this->debug->write( 'Could not create facebook user: facebook session not initialized', 'warning' );
-			$this->messages->setMessage( 'Could not create facebook user: facebook session not initialized', 'warning' );
+			$this->debug->write( 'Problem creating the user: facebook session not initialized', 'warning' );
+			$this->messages->setMessage( 'Problem creating the user: facebook session not initialized', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -293,8 +308,8 @@ class zgFacebookUserhandler extends zgUserhandler
 		$fbuserdata = $this->facebook->api_client->users_getInfo( $fbid, 'first_name, last_name' );
 		if ( !is_array( $fbuserdata ) )
 		{
-			$this->debug->write( 'Could not create facebook user: could not get user data for user', 'warning' );
-			$this->messages->setMessage( 'Could not create facebook user: could not get user data for user', 'warning' );
+			$this->debug->write( 'Problem creating the user: could not get user data for user', 'warning' );
+			$this->messages->setMessage( 'Problem creating the user: could not get user data for user', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -304,9 +319,13 @@ class zgFacebookUserhandler extends zgUserhandler
 		$key = md5( uniqid( md5( mt_rand( ) ), true ) );
 		$fbusername = $fbuserdata [ 0 ] [ 'first_name' ] . ' ' . $fbuserdata [ 0 ] [ 'last_name' ];
 
-		$sql = "INSERT INTO " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . "(user_username, user_key, user_password, user_active) VALUES('" . $fbusername . "', '" . $key . "', '" . '' . "', '" . $active . "')";
-		$res = $this->database->query( $sql );
-		if ( !$res )
+		$sql = $this->database->prepare( "INSERT INTO " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . "(user_username, user_key, user_password, user_active) VALUES(?, ?, ?, ?)" );
+		$sql->bindParam( 1, $fbusername );
+		$sql->bindParam( 2, $key );
+		$sql->bindParam( 3, $key );
+		$sql->bindParam( 4, $active );
+
+		if ( !$sql->execute( ) )
 		{
 			$this->debug->write( 'Problem creating the user: could not insert the user into the database', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: could not insert the user into the database', 'warning' );
@@ -314,13 +333,15 @@ class zgFacebookUserhandler extends zgUserhandler
 			return false;
 		}
 
-		$userid = $this->database->insertId( );
+		// this is the id for the user that just has been created
+		$currentId = $this->database->lastInsertId( );
 
 		// insert facebook user to link table
-		$sql = "INSERT INTO " . $this->configuration->getConfiguration( 'facebook', 'tables', 'table_facebookusers' ) . "(facebookuser_fbid, facebookuser_user) ";
-		$sql .= "VALUES('" . $fbid . "', '" . $userid . "')";
-		$res = $this->database->query( $sql );
-		if ( !$res )
+		$sql = $this->database->prepare( "INSERT INTO " . $this->configuration->getConfiguration( 'facebook', 'tables', 'table_facebookusers' ) . "(facebookuser_fbid, facebookuser_user) VALUES(?, ?)" );
+		$sql->bindParam( 1, $fbid );
+		$sql->bindParam( 2, $currentId );
+
+		if ( !$sql->execute( ) )
 		{
 			$this->debug->write( 'Problem creating the user: could not connect the user data to the facebook data', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: could not connect the user data to the facebook data', 'warning' );
@@ -328,8 +349,8 @@ class zgFacebookUserhandler extends zgUserhandler
 			return false;
 		}
 
-		$this->debug->unguard( $userid );
-		return $userid;
+		$this->debug->unguard( $currentId );
+		return $currentId;
 	}
 
 
@@ -344,10 +365,14 @@ class zgFacebookUserhandler extends zgUserhandler
 	{
 		$this->debug->guard( );
 
-		$sql = "SELECT u.user_id, u.user_key, u.user_username FROM " . $this->configuration->getConfiguration( 'facebook', 'tables', 'table_facebookusers' ) . " fb ";
-		$sql .= "LEFT JOIN " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " u ON fb.facebookuser_user = u.user_id ";
-		$sql .= "WHERE fb.facebookuser_fbid = '" . $fbid . "' AND u.user_active='1'";
-		if ( !$res = $this->database->query( $sql ) )
+		// get userinformation from database
+		$sqlquery = "SELECT u.user_id, u.user_key, u.user_username FROM " . $this->configuration->getConfiguration( 'facebook', 'tables', 'table_facebookusers' ) . " fb ";
+		$sqlquery .= "LEFT JOIN " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " u ON fb.facebookuser_user = u.user_id ";
+		$sqlquery .= "WHERE fb.facebookuser_fbid = ? AND u.user_active='1'";
+		$sql = $this->database->prepare( $sqlquery );
+		$sql->bindParam( 1, $fbid );
+
+		if ( !$sql->execute( ) )
 		{
 			$this->debug->write( 'Problem getting facebook user information: could not read the user table', 'warning' );
 			$this->messages->setMessage( 'Problem getting facebook user information: could not read the user table', 'warning' );
@@ -355,7 +380,7 @@ class zgFacebookUserhandler extends zgUserhandler
 			return false;
 		}
 
-		if ( $this->database->numRows( $res ) != 1 )
+		if ( $sql->rowCount( )  != 1 )
 		{
 			$this->debug->write( 'Problem getting facebook user information: no linked user exists for this facebook id', 'warning' );
 			$this->messages->setMessage( 'Problem getting facebook user information: no linked user exists for this facebook id', 'warning' );
@@ -363,10 +388,10 @@ class zgFacebookUserhandler extends zgUserhandler
 			return false;
 		}
 
-		$row = $this->database->fetchArray( $res );
+		$ret = $sql->fetch( PDO::FETCH_ASSOC );
 
-		$this->debug->unguard( $row );
-		return $row;
+		$this->debug->unguard( $ret );
+		return $ret;
 	}
 
 
