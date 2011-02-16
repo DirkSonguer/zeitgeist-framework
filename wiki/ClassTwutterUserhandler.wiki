@@ -1,0 +1,34 @@
+#summary Describes the Twitter Userhandler Class (Module).
+#labels Module
+
+= Twitter Userhandler (Module Class) =
+
+The twitter userhandler represents an alternative to the regular [ClassUserhandler userhandler] of Zeitgeist. Instead of using the build in user functions and data to log in the twitter oauth method is used, essentially enabling users to log in with their twitter accounts.
+
+The workflow and capabilities of the user classes (rights & roles) remain untouched and are available to users that log in this way.
+
+= Example =
+
+{{{
+	public function login( $parameters = array( ) )
+	{
+		$this->debug->guard( );
+
+		$user = zgTwitterUserhandler::init( );
+		if ( !$this->session->getSessionVariable( 'twitter_oauth_initiated' ) )
+		{
+			$this->debug->write('first round - logging in user', 'error');
+			$user->login( );
+		}
+		else
+		{
+			$this->debug->write('second round - validating user tokens', 'error');
+			$user->validateLogin( );
+			$tpl = new tskTemplate();
+			$tpl->redirect( $tpl->createLink( 'main', 'index' ) );
+		}
+
+		$this->debug->unguard( true );
+		return true;
+	}
+}}}
