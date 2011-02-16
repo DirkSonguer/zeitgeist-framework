@@ -135,6 +135,11 @@ class zgSession
 			$ret = session_destroy( );
 		}
 
+		if ( empty( $ret ) )
+		{
+			$ret = true;
+		}
+
 		$this->debug->unguard( $ret );
 		return $ret;
 	}

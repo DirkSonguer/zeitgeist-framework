@@ -52,6 +52,8 @@ class zgFacebookUserhandler extends zgUserhandler
 		$this->facebook = NULL;
 
 		$this->database = new zgDatabasePDO( "mysql:host=" . ZG_DB_DBSERVER . ";dbname=" . ZG_DB_DATABASE, ZG_DB_USERNAME, ZG_DB_USERPASS );
+		$this->database->query( "SET NAMES 'utf8'" );
+		$this->database->query( "SET CHARACTER SET utf8" );
 
 		parent::__construct( );
 
@@ -169,8 +171,8 @@ class zgFacebookUserhandler extends zgUserhandler
 		$userid = $this->createUser( $fbid );
 		if ( !$userid )
 		{
-			$this->debug->write( 'Problem linking the user: could not create the user for the facebook account', 'warning' );
-			$this->messages->setMessage( 'Problem creating the user: could not create the user for the facebook account', 'warning' );
+			$this->debug->write( 'Problem validating the user: could not create the user for the facebook account', 'warning' );
+			$this->messages->setMessage( 'Problem validating the user: could not create the user for the facebook account', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}

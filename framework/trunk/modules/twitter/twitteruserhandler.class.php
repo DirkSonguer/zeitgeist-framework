@@ -53,6 +53,8 @@ class zgTwitterUserhandler extends zgUserhandler
 		$this->twitteroauth = NULL;
 
 		$this->database = new zgDatabasePDO( "mysql:host=" . ZG_DB_DBSERVER . ";dbname=" . ZG_DB_DATABASE, ZG_DB_USERNAME, ZG_DB_USERPASS );
+		$this->database->query( "SET NAMES 'utf8'" );
+		$this->database->query( "SET CHARACTER SET utf8" );
 
 		parent::__construct( );
 
@@ -236,7 +238,7 @@ class zgTwitterUserhandler extends zgUserhandler
 		$this->debug->guard( );
 
 		// check if the user has its twitter data already in the session
-		if ( !$this->session->getSessionVariable( 'user_twitterid' ) )
+		if ( $this->session->getSessionVariable( 'user_twitterid' ) )
 		{
 			// the user had his session activated at least once
 			// and this user must be known to the system
@@ -245,7 +247,7 @@ class zgTwitterUserhandler extends zgUserhandler
 		}
 
 		// check if the twitteroauth class has been initialized correctly
-		if ( !$this->twitteroauth->id )
+		if ( empty($this->twitteroauth) )
 		{
 			$this->debug->write( 'Problem validating the twitter user: twitter oauth object not initialized', 'warning' );
 			$this->messages->setMessage( 'Problem validating the twitter user: twitter oauth object not initialized', 'warning' );
@@ -255,7 +257,7 @@ class zgTwitterUserhandler extends zgUserhandler
 
 		// check if the connection is still active or if twitter has closed the session
 		$twitteruserdata = $this->twitteroauth->get( 'account/verify_credentials' );
-		if ( !empty( $twitteruserdata->id ) )
+		if ( empty( $twitteruserdata->id ) )
 		{
 			$this->debug->write( 'Problem validating the twitter user: twitter id could not be found in object', 'warning' );
 			$this->messages->setMessage( 'Problem validating the twitter user: twitter id could not be found in object', 'warning' );
@@ -265,29 +267,44 @@ class zgTwitterUserhandler extends zgUserhandler
 
 		// check if user already exists in the database
 		$userInformation = $this->_getUserInformationFromTwitterId( $twitteruserdata->id );
-		if ( !is_array( $userInformation ) )
+		if ( is_array( $userInformation ) )
 		{
-			// if not create a new user and bind it to the twitter id
-			// the data of the new user will be returned as an array
-			$userInformation = $this->createUser( $twitteruserdata );
-			if ( !is_array( $userInformation ) )
-			{
-				$this->debug->write( 'Problem validating the twitter user: could not create the user for the facebook account', 'warning' );
-				$this->messages->setMessage( 'Problem validating the twitter user: could not create the user for the facebook account', 'warning' );
-				$this->debug->unguard( false );
-				return false;
-			}
+			$this->session->setSessionVariable( 'user_facebookid', $twitteruserdata->id );
+			$this->session->setSessionVariable( 'user_id', $userInformation [ 'user_id' ] );
+			$this->session->setSessionVariable( 'user_key', $userInformation [ 'user_key' ] );
+			$this->session->setSessionVariable( 'user_username', $userInformation [ 'user_username' ] );
+
+			$this->debug->unguard( true );
+			return true;
 		}
 
-		// now the user should exist in the system and its data should
-		// be in $userInformation (either from loading or creating it)
-		$this->session->setSessionVariable( 'user_twitterid', $twitteruserdata->id );
-		$this->session->setSessionVariable( 'user_id', $userInformation[ 'user_id' ] );
-		$this->session->setSessionVariable( 'user_key', $userInformation[ 'user_key' ] );
-		$this->session->setSessionVariable( 'user_username', $userInformation[ 'user_username' ] );
+		// seems like the user is not known to the system
+		// first create a new user based on the twitter data
+		$userid = $this->createUser( $twitteruserdata );
+		if ( !$userInformation )
+		{
+			$this->debug->write( 'Problem validating the twitter user: could not create the user for the facebook account', 'warning' );
+			$this->messages->setMessage( 'Problem validating the twitter user: could not create the user for the facebook account', 'warning' );
+			$this->debug->unguard( false );
+			return false;
+		}
 
-		$this->debug->unguard( true );
-		return true;
+		// now the user should exist in the system
+		// if so, fill the session vars and create the user
+		$userInformation = $this->_getUserInformationFromTwitterId( $twitteruserdata->id );
+		if ( is_array( $userInformation ) )
+		{
+			$this->session->setSessionVariable( 'user_twitterid', $twitteruserdata->id );
+			$this->session->setSessionVariable( 'user_id', $userInformation[ 'user_id' ] );
+			$this->session->setSessionVariable( 'user_key', $userInformation[ 'user_key' ] );
+			$this->session->setSessionVariable( 'user_username', $userInformation[ 'user_username' ] );
+
+			$this->debug->unguard( true );
+			return true;
+		}
+
+		$this->debug->unguard( false );
+		return false;
 	}
 
 
@@ -402,7 +419,7 @@ class zgTwitterUserhandler extends zgUserhandler
 		}
 
 		// see if user already exists in database
-		$sql = $this->database->prepare( "SELECT * FROM " . $this->configuration->getConfiguration( 'twitter', 'tables', 'table_twitterusers' ) . " WHERE twitteruser_twitter = ?" );
+		$sql = $this->database->prepare( "SELECT * FROM " . $this->configuration->getConfiguration( 'twitter', 'tables', 'table_twitterusers' ) . " WHERE twitteruser_twitterid = ?" );
 		$sql->bindParam( 1, $twitteruserdata->id );
 
 		if ( !$sql->execute( ) )
@@ -454,8 +471,8 @@ class zgTwitterUserhandler extends zgUserhandler
 			return false;
 		}
 
-		$this->debug->unguard( true );
-		return true;
+		$this->debug->unguard( $currentId );
+		return $currentId;
 	}
 
 
