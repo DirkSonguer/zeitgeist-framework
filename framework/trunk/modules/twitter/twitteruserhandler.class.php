@@ -223,6 +223,7 @@ class zgTwitterUserhandler extends zgUserhandler
 			return false;
 		}
 
+		// check if the login process has already started
 		if ( !$this->session->getSessionVariable( 'twitter_oauth_initiated' ) )
 		{
 			$this->debug->write( 'Problem validating a user login: no login process in progress', 'warning' );
@@ -247,7 +248,6 @@ class zgTwitterUserhandler extends zgUserhandler
 		// requests access tokens from twitter and checks them against the stored ones
 		$this->twitteroauth = new TwitterOAuth( $this->configuration->getConfiguration( 'twitter', 'api', 'consumer_key' ), $this->configuration->getConfiguration( 'twitter', 'api', 'consumer_secret' ), $oauth_token, $oauth_token_secret );
 		$access_token = $this->twitteroauth->getAccessToken( $_REQUEST[ 'oauth_verifier' ] );
-
 		if ( !$access_token )
 		{
 			$this->debug->write( 'Problem validating a user login: could not get twitter token', 'warning' );
@@ -510,8 +510,8 @@ class zgTwitterUserhandler extends zgUserhandler
 		// check if the user is already known and logged in
 		if ( !$this->loggedIn )
 		{
-			$this->debug->write( 'Problem getting the Twitter id: user is not logged in', 'warning' );
-			$this->messages->setMessage( 'Problem getting the Twitter id: user is not logged in', 'warning' );
+			$this->debug->write( 'Problem getting the twitter id: user is not logged in', 'warning' );
+			$this->messages->setMessage( 'Problem getting the twitter id: user is not logged in', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
