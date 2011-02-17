@@ -30,16 +30,18 @@ class messages
 		// Enter something into the message system		
 		// notice that "my_type" as type
 		$this->messages->setMessage('Hello Messages', 'my_type');
-		$this->messages->setMessage('How are you today?', 'my_type');
+		$this->messages->setMessage('How are you today?', 'other_type');
 
 		// Get it back again
 		// We only ask for messages with type "my_type"
+		// That should be only one of the messages
 		$messagearray = $this->messages->getMessagesByType('my_type');
 
 		// Show raw object we got back
 		var_dump($messagearray); echo "<br /><br />";
 
 		// Alternatively you could ask for either all messages
+		// This should contain all two messages
 		$messagearray = $this->messages->getAllMessages();
 
 		// Show raw object we got back
