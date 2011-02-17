@@ -47,11 +47,16 @@ class messages
 		// Show raw object we got back
 		var_dump($messagearray); echo "<br /><br />";
 
-		// or just the messages sent by this module
+/*
+		// Or just the messages sent by this module
+		// This however will check for the absolute name of the file
+		// As there is no way to know what this will be for you, just check the
+		// "from" field in your message object
 		$messagearray = $this->messages->getAllMessages('messages.module.php');
 
 		// Show raw object we got back
 		var_dump($messagearray); echo "<br /><br />";
+*/
 
 		// As you can see the return value is an array of objects 
 		// with type zgMessage
