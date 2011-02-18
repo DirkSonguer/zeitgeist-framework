@@ -361,7 +361,10 @@ class zgTwitterUserhandler extends zgUserhandler
 				$tpl->redirect( $url );
 				break;
 			default:
-				echo 'Could not connect to Twitter . Refresh the page or try again later . ';
+				$this->debug->write( 'Problem logging in a user: could not connect to twitter', 'warning' );
+				$this->messages->setMessage( 'Problem logging in a user: could not connect to twitter', 'warning' );
+				$this->debug->unguard( false );
+				return false;
 		}
 
 		$this->debug->unguard( false );
