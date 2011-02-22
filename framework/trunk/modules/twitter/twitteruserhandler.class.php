@@ -180,6 +180,7 @@ class zgTwitterUserhandler extends zgUserhandler
 		// check for the answer by twitter
 		if ( empty( $_REQUEST[ 'oauth_verifier' ] ) )
 		{
+			$this->session->unsetSessionVariable( 'twitter_oauth_initiated' );
 			$this->debug->write( 'Problem validating a user login: oauth verifier not found in request', 'warning' );
 			$this->messages->setMessage( 'Problem validating a user login: oauth verifier not found in request', 'warning' );
 			$this->debug->unguard( false );
@@ -191,6 +192,7 @@ class zgTwitterUserhandler extends zgUserhandler
 		$access_token = $this->twitteroauth->getAccessToken( $_REQUEST[ 'oauth_verifier' ] );
 		if ( !$access_token )
 		{
+			$this->session->unsetSessionVariable( 'twitter_oauth_initiated' );
 			$this->debug->write( 'Problem validating a user login: could not get twitter token', 'warning' );
 			$this->messages->setMessage( 'Problem validating a user login: could not get twitter token', 'warning' );
 			$this->debug->unguard( false );
@@ -216,6 +218,7 @@ class zgTwitterUserhandler extends zgUserhandler
 		else
 		{
 			// user could not be verified
+			$this->session->unsetSessionVariable( 'twitter_oauth_initiated' );
 			$this->debug->write( 'Problem validating a user login: user could not be verified', 'warning' );
 			$this->messages->setMessage( 'Problem validating a user login: user could not be verified', 'warning' );
 			$this->debug->unguard( false );
