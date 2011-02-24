@@ -121,6 +121,7 @@ class zgController
 			{
 				$this->debug->write( 'Problem getting the action id: action information could not be loaded: ' . $module, 'warning' );
 				$this->messages->setMessage( 'Problem getting the action id: action information could not be loaded: ' . $module, 'warning' );
+
 				$this->debug->unguard( false );
 				return false;
 			}
@@ -168,6 +169,7 @@ class zgController
 			{
 				$this->debug->write( 'Problem loading the module: action information could not be loaded: ' . $module, 'warning' );
 				$this->messages->setMessage( 'Problem loading the module: action information could not be loaded: ' . $module, 'warning' );
+
 				$this->debug->unguard( false );
 				return false;
 			}
@@ -178,6 +180,7 @@ class zgController
 		{
 			$this->debug->write( 'Problem loading the module: Module is not active: ' . $module, 'warning' );
 			$this->messages->setMessage( 'Problem loading the module: Module is not active: ' . $module, 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -187,6 +190,7 @@ class zgController
 		{
 			$this->debug->write( 'Problem loading the module (' . $module . '): Class name already used', 'warning' );
 			$this->messages->setMessage( 'Problem loading the module: Class name already used', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -196,6 +200,7 @@ class zgController
 		{
 			$this->debug->write( 'Problem loading the module (' . $module . '): Could not find matching class', 'warning' );
 			$this->messages->setMessage( 'Problem loading the module: Could not find matching class', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -208,6 +213,7 @@ class zgController
 		{
 			$this->debug->write( 'Problem loading the action (' . $action . ') in module (' . $module . '): Action is not active', 'warning' );
 			$this->messages->setMessage( 'Problem loading the action (' . $action . ') in module (' . $module . '): Action is not active', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -217,6 +223,7 @@ class zgController
 		{
 			$this->debug->write( 'Problem loading the action (' . $action . ') in module (' . $module . '): Could not find method', 'warning' );
 			$this->messages->setMessage( 'Problem loading the action (' . $action . ') in module (' . $module . '): Could not find method', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}

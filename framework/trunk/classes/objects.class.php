@@ -76,6 +76,7 @@ class zgObjects
 		{
 			$this->debug->write( 'Problem storing object: an object of this name ("' . $name . '") already exists', 'warning' );
 			$this->messages->setMessage( 'Problem storing object: an object of this name ("' . $name . '") already exists', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -102,6 +103,7 @@ class zgObjects
 		{
 			$this->debug->write( 'Problem getting object: object with name ' . $objectname . ' not found', 'warning' );
 			$this->messages->setMessage( 'Problem getting object: object with name ' . $objectname . ' not found', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -128,6 +130,7 @@ class zgObjects
 		{
 			$this->debug->write( 'Problem deleting object: Object with name ' . $objectname . ' not found', 'warning' );
 			$this->messages->setMessage( 'Problem deleting object: Object with name ' . $objectname . ' not found', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}

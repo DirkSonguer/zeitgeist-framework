@@ -449,21 +449,37 @@ class zgDebug
 
 				$currentGuardLine .= '<td class="guardMessageLine">';
 
-				if ( !empty( $guardMessage[ 'filename' ] ) ) $currentGuardLine .= '[<span class="guardFile">' . $guardMessage[ 'filename' ] . '</span> ';
+				if ( !empty( $guardMessage[ 'filename' ] ) ) {
+					$currentGuardLine .= '[<span class="guardFile">' . $guardMessage[ 'filename' ] . '</span> ';
+				}
 				else
+				{
 					$currentGuardLine .= '[ ';
+				}
 
-				if ( !empty( $guardMessage[ 'line' ] ) ) $currentGuardLine .= '(<span class="guardLine">' . $guardMessage[ 'line' ] . '</span>)] ';
+				if ( !empty( $guardMessage[ 'line' ] ) ) {
+					$currentGuardLine .= '(<span class="guardLine">' . $guardMessage[ 'line' ] . '</span>)] ';
+				}
 				else
+				{
 					$currentGuardLine .= ' ]';
+				}
 
-				if ( !empty( $guardMessage[ 'filename' ] ) ) $currentGuardLine .= '<span class="guardClass">' . $guardMessage[ 'class' ] . '-&gt;</span>';
+				if ( !empty( $guardMessage[ 'filename' ] ) ) {
+					$currentGuardLine .= '<span class="guardClass">' . $guardMessage[ 'class' ] . '-&gt;</span>';
+				}
 				else
+				{
 					$currentGuardLine .= ' ';
+				}
 
-				if ( !empty( $guardMessage[ 'function' ] ) ) $currentGuardLine .= '<span class="guardFunction">' . $guardMessage[ 'function' ] . '</span>';
+				if ( !empty( $guardMessage[ 'function' ] ) ) {
+					$currentGuardLine .= '<span class="guardFunction">' . $guardMessage[ 'function' ] . '</span>';
+				}
 				else
+				{
 					$currentGuardLine .= ' ';
+				}
 
 				if ( $guardMessage[ 'type' ] == 'GUARD' )
 				{

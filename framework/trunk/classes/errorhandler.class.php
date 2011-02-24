@@ -102,7 +102,10 @@ class zgErrorhandler
 			foreach ( $trace as $backtrace )
 			{
 				echo basename( $backtrace[ 'file' ] );
-				if ( !empty( $backtrace[ 'line' ] ) ) echo "[" . $backtrace[ 'line' ] . "]";
+				if ( !empty( $backtrace[ 'line' ] ) )
+				{
+					echo "[" . $backtrace[ 'line' ] . "]";
+				}
 				echo " ::" . $backtrace[ 'function' ];
 				if ( !empty( $backtrace[ 'args' ] ) )
 				{
