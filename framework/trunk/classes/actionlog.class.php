@@ -54,6 +54,15 @@ class zgActionlog
 
 		$modulesTablename = $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_actionlog' );
 
+		// begin transaction as we have multiple inserts depending on each other
+		if ( !$this->database->beginTransaction( ) )
+		{
+			$this->debug->write( 'Problem logging the action: could no begin database transaction', 'warning' );
+			$this->messages->setMessage( 'Problem logging the action: could no begin database transaction', 'warning' );
+			$this->debug->unguard( false );
+			return false;
+		}
+
 		// insert the main call into the database
 		// this will only log the module and action, not the parameters
 		$sql = $this->database->prepare( "INSERT INTO " . $modulesTablename . "(actionlog_module, actionlog_action, actionlog_ip) VALUES(?, ?, INET_ATON('" . getenv( 'REMOTE_ADDR' ) . "'))" );
@@ -62,9 +71,9 @@ class zgActionlog
 
 		if ( !$sql->execute( ) )
 		{
+			$this->database->rollBack( );
 			$this->debug->write( 'Problem logging the action: could not write to log table', 'warning' );
 			$this->messages->setMessage( 'Problem logging the action: could not write to log table', 'warning' );
-
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -86,15 +95,18 @@ class zgActionlog
 
 				if ( !$sql->execute( ) )
 				{
+					$this->database->rollBack( );
 					$this->debug->write( 'Problem logging the action: could not write parameter to log table', 'warning' );
 					$this->messages->setMessage( 'Problem logging the action: could not write parameter to log table', 'warning' );
-
 					$this->debug->unguard( false );
 					return false;
 				}
 			}
 		}
 
+		// commit inserts into database
+		$this->database->commit( );
+		
 		$this->debug->unguard( true );
 		return true;
 	}

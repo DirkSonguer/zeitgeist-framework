@@ -276,12 +276,22 @@ class zgFacebookUserhandler extends zgUserhandler
 	{
 		$this->debug->guard( );
 
+		// begin transaction as we have multiple inserts depending on each other
+		if ( !$this->database->beginTransaction( ) )
+		{
+			$this->debug->write( 'Problem creating the user: could no begin database transaction', 'warning' );
+			$this->messages->setMessage( 'Problem creating the user: could no begin database transaction', 'warning' );
+			$this->debug->unguard( false );
+			return false;
+		}
+
 		// see if user already exists in database
 		$sql = $this->database->prepare( "SELECT * FROM " . $this->configuration->getConfiguration( 'facebook', 'tables', 'table_facebookusers' ) . " WHERE facebookuser_fbid = ?" );
 		$sql->bindParam( 1, $fbid );
 
 		if ( !$sql->execute( ) )
 		{
+			$this->database->rollBack( );
 			$this->debug->write( 'Problem creating the user: could not access the user table', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: could not access the user table', 'warning' );
 			$this->debug->unguard( false );
@@ -290,6 +300,7 @@ class zgFacebookUserhandler extends zgUserhandler
 
 		if ( $sql->rowCount( ) > 0 )
 		{
+			$this->database->rollBack( );
 			$this->debug->write( 'Problem creating the user: a user with this facebook id already exists in the database', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: a user with this facebook id already exists in the database', 'warning' );
 			$this->debug->unguard( false );
@@ -300,6 +311,7 @@ class zgFacebookUserhandler extends zgUserhandler
 		$fbid = $this->facebook->require_login( );
 		if ( empty( $fbid ) )
 		{
+			$this->database->rollBack( );
 			$this->debug->write( 'Problem creating the user: facebook session not initialized', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: facebook session not initialized', 'warning' );
 			$this->debug->unguard( false );
@@ -310,6 +322,7 @@ class zgFacebookUserhandler extends zgUserhandler
 		$fbuserdata = $this->facebook->api_client->users_getInfo( $fbid, 'first_name, last_name' );
 		if ( !is_array( $fbuserdata ) )
 		{
+			$this->database->rollBack( );
 			$this->debug->write( 'Problem creating the user: could not get user data for user', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: could not get user data for user', 'warning' );
 			$this->debug->unguard( false );
@@ -329,6 +342,7 @@ class zgFacebookUserhandler extends zgUserhandler
 
 		if ( !$sql->execute( ) )
 		{
+			$this->database->rollBack( );
 			$this->debug->write( 'Problem creating the user: could not insert the user into the database', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: could not insert the user into the database', 'warning' );
 			$this->debug->unguard( false );
@@ -345,12 +359,16 @@ class zgFacebookUserhandler extends zgUserhandler
 
 		if ( !$sql->execute( ) )
 		{
+			$this->database->rollBack( );
 			$this->debug->write( 'Problem creating the user: could not connect the user data to the facebook data', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: could not connect the user data to the facebook data', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
 
+		// commit inserts into database
+		$this->database->commit( );
+		
 		$this->debug->unguard( $currentId );
 		return $currentId;
 	}
