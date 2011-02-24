@@ -68,6 +68,7 @@ class zgFiles
 		{
 			$this->debug->write( 'Could not open file: "' . $filename . '"', 'warning' );
 			$this->messages->setMessage( 'Could not open file: "' . $filename . '"', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -99,6 +100,7 @@ class zgFiles
 		{
 			$this->debug->write( 'Could not open directory: "' . $path . '"', 'warning' );
 			$this->messages->setMessage( 'Could not open directory: "' . $path . '"', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -131,6 +133,7 @@ class zgFiles
 		{
 			$this->debug->write( 'Could not find uploaded file', 'warning' );
 			$this->messages->setMessage( 'Could not find uploaded file', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -139,6 +142,7 @@ class zgFiles
 		{
 			$this->debug->write( 'File was uploaded with errors', 'warning' );
 			$this->messages->setMessage( 'File was uploaded with errors', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}

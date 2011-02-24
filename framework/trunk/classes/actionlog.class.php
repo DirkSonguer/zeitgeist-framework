@@ -59,6 +59,7 @@ class zgActionlog
 		{
 			$this->debug->write( 'Problem logging the action: could no begin database transaction', 'warning' );
 			$this->messages->setMessage( 'Problem logging the action: could no begin database transaction', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -71,9 +72,10 @@ class zgActionlog
 
 		if ( !$sql->execute( ) )
 		{
-			$this->database->rollBack( );
 			$this->debug->write( 'Problem logging the action: could not write to log table', 'warning' );
 			$this->messages->setMessage( 'Problem logging the action: could not write to log table', 'warning' );
+
+			$this->database->rollBack( );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -95,9 +97,10 @@ class zgActionlog
 
 				if ( !$sql->execute( ) )
 				{
-					$this->database->rollBack( );
 					$this->debug->write( 'Problem logging the action: could not write parameter to log table', 'warning' );
 					$this->messages->setMessage( 'Problem logging the action: could not write parameter to log table', 'warning' );
+
+					$this->database->rollBack( );
 					$this->debug->unguard( false );
 					return false;
 				}
@@ -106,7 +109,7 @@ class zgActionlog
 
 		// commit inserts into database
 		$this->database->commit( );
-		
+
 		$this->debug->unguard( true );
 		return true;
 	}

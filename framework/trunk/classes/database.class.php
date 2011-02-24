@@ -83,6 +83,7 @@ class zgDatabase
 		{
 			$this->debug->write( 'Problem connecting to database server: ' . mysql_error( ), 'warning' );
 			$this->messages->setMessage( 'Problem connecting to database server: ' . mysql_error( ), 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -91,6 +92,7 @@ class zgDatabase
 		{
 			$this->debug->write( 'Problem connecting to database: ' . mysql_error( ), 'warning' );
 			$this->messages->setMessage( 'Problem connecting to database: ' . mysql_error( ), 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -146,6 +148,7 @@ class zgDatabase
 		{
 			$this->debug->write( 'Problem setting charset for connection: ' . mysql_error( ), 'warning' );
 			$this->messages->setMessage( 'Problem setting charset for connection: ' . mysql_error( ), 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -155,6 +158,7 @@ class zgDatabase
 		{
 			$this->debug->write( 'Problem setting charset for results: ' . mysql_error( ), 'warning' );
 			$this->messages->setMessage( 'Problem setting charset for results: ' . mysql_error( ), 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -164,6 +168,7 @@ class zgDatabase
 		{
 			$this->debug->write( 'Problem setting charset for client: ' . mysql_error( ), 'warning' );
 			$this->messages->setMessage( 'Problem setting charset for client: ' . mysql_error( ), 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -192,6 +197,7 @@ class zgDatabase
 		{
 			$this->debug->write( 'Problem executing query: ' . mysql_error( ) . ' Query was: "' . $query . '"', 'warning' );
 			$this->messages->setMessage( 'Problem executing query: ' . mysql_error( ) . ' Query was: "' . $query . '"', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -219,6 +225,7 @@ class zgDatabase
 		{
 			$this->debug->write( 'Problem fetching result: The given result was not a resource: "' . $result . '"', 'warning' );
 			$this->messages->setMessage( 'Problem fetching result: The given result was not a resource: "' . $result . '"', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -246,6 +253,7 @@ class zgDatabase
 		{
 			$this->debug->write( 'Problem counting rows: The given result was not a resource: "' . $result . '"', 'warning' );
 			$this->messages->setMessage( 'Problem counting rows: The given result was not a resource: "' . $result . '"', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -288,6 +296,7 @@ class zgDatabase
 		{
 			$this->debug->write( 'Problem geting the last insert id: ' . mysql_error( ), 'warning' );
 			$this->messages->setMessage( 'Problem geting the last insert id: ' . mysql_error( ), 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}

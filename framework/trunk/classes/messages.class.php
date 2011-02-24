@@ -225,6 +225,7 @@ class zgMessages
 			{
 				$this->debug->write( 'Problem unserializing message content from the session', 'warning' );
 				$this->setMessage( 'Problem unserializing message content from the session', 'warning' );
+
 				$this->debug->unguard( false );
 				return false;
 			}
@@ -235,6 +236,7 @@ class zgMessages
 		{
 			$this->debug->write( 'No messagedata is stored in session for this user', 'warning' );
 			$this->setMessage( 'No messagedata is stored in session for this user', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}

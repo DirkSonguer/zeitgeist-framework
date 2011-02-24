@@ -58,7 +58,6 @@ class zgParameters
 	{
 		$this->debug->guard( );
 
-		$allowedParameters = array( );
 		$allowedParameters = $this->_getAllowedParameters( $module, $action );
 
 		$safeParameters = array( );
@@ -94,7 +93,9 @@ class zgParameters
 		{
 			foreach ( $moduleConfiguration[ $action ] as $parametername => $parametervalue )
 			{
-				if ( ( !is_array( $parametervalue ) ) || ( !array_key_exists( 'parameter', $parametervalue ) ) ) continue;
+				if ( ( !is_array( $parametervalue ) ) || ( !array_key_exists( 'parameter', $parametervalue ) ) ) {
+					continue;
+				}
 
 				$allowedParameters[ $parametername ] = $parametervalue;
 			}
@@ -163,13 +164,8 @@ class zgParameters
 			$this->debug->unguard( 'Parameter not safe: ' . $parametername . ' (value: ' . $this->rawParameters[ $parameterdefinition[ 'source' ] ][ $parametername ] . ' tested against: ' . $parameterdefinition[ 'expected' ] . ')' );
 			return false;
 		}
-		else
-		{
-			$this->debug->unguard( 'Parameter not set: ' . $parametername );
-			return false;
-		}
 
-		$this->debug->unguard( false );
+		$this->debug->unguard( 'Parameter not set: ' . $parametername );
 		return false;
 	}
 
@@ -223,12 +219,12 @@ class zgParameters
 					{
 						foreach ( $safeParameters[ $parametername ] as $key => $value )
 						{
-							$safeParameters[ $parametername ][ $key ] = mysql_escape_string( $value );
+							$safeParameters[ $parametername ][ $key ] = mysql_real_escape_string( $value );
 						}
 					}
 					else
 					{
-						$safeParameters[ $parametername ] = mysql_escape_string( $safeParameters[ $parametername ] );
+						$safeParameters[ $parametername ] = mysql_real_escape_string( $safeParameters[ $parametername ] );
 					}
 				}
 

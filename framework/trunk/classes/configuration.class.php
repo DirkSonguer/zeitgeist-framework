@@ -99,6 +99,7 @@ class zgConfiguration
 			{
 				$this->debug->write( 'Problem reading the configuration: module not found', 'warning' );
 				$this->messages->setMessage( 'Problem reading the configuration: module not found', 'warning' );
+
 				$this->debug->unguard( false );
 				return false;
 			}
@@ -113,6 +114,7 @@ class zgConfiguration
 			{
 				$this->debug->write( 'Problem reading the configuration: section not found', 'warning' );
 				$this->messages->setMessage( 'Problem reading the configuration: section not found', 'warning' );
+
 				$this->debug->unguard( false );
 				return false;
 			}
@@ -127,6 +129,7 @@ class zgConfiguration
 			{
 				$this->debug->write( 'Problem reading the configuration: configuration not found (' . $module . ' - ' . $section . ' - ' . $configuration . ')', 'warning' );
 				$this->messages->setMessage( 'Problem reading the configuration: configuration not found (' . $module . ' - ' . $section . ' - ' . $configuration . ')', 'warning' );
+
 				$this->debug->unguard( false );
 				return false;
 			}
@@ -134,7 +137,7 @@ class zgConfiguration
 			$ret = $this->configuration[ $module ][ $section ][ $configuration ];
 			if ( !is_array( $ret ) )
 			{
-				$this->_replaceReferences( $ret, '' );
+				$this->_replaceReferences( $ret );
 			}
 			else
 			{
@@ -165,6 +168,7 @@ class zgConfiguration
 		{
 			$this->debug->write( 'Problem loading the configuration: module already loaded', 'warning' );
 			$this->messages->setMessage( 'Problem loading the configuration: module already loaded', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -202,12 +206,17 @@ class zgConfiguration
 			{
 				$this->debug->write( 'Problem loading the configuration: no contents could be extracted', 'warning' );
 				$this->messages->setMessage( 'Problem loading the configuration: no contents could be extracted', 'warning' );
+
 				$this->debug->unguard( false );
 				return false;
 			}
 
 			// after successfully loading the data, store it in the database
-			$ret = $this->_saveConfigurationToDatabase( $filename, $configurationArray );
+			if ( !$this->_saveConfigurationToDatabase( $filename, $configurationArray ) )
+			{
+				$this->debug->write( 'Problem loading the configuration: could not save configuration to database', 'warning' );
+				$this->messages->setMessage( 'Problem loading the configuration: could not save configuration to database', 'warning' );
+			}
 
 			if ( !$overwrite )
 			{
@@ -276,6 +285,7 @@ class zgConfiguration
 				{
 					$this->debug->write( 'Problem loading the configuration from database: error unserializing configuration content from the database', 'warning' );
 					$this->messages->setMessage( 'Problem loading the configuration from database: error unserializing configuration content from the database', 'warning' );
+
 					$this->debug->unguard( false );
 					return false;
 				}
@@ -297,6 +307,7 @@ class zgConfiguration
 
 				$this->debug->write( 'Info while loading the configuration from database: configuration data in the database is outdated', 'warning' );
 				$this->messages->setMessage( 'Info while loading the configuration from database: configuration data in the database is outdated', 'warning' );
+
 				$this->debug->unguard( false );
 				return false;
 			}
@@ -305,6 +316,7 @@ class zgConfiguration
 		{
 			$this->debug->write( 'Info while loading the configuration from database: no configuration is stored in database for this module', 'warning' );
 			$this->messages->setMessage( 'Info while loading the configuration from database: no configuration is stored in database for this module', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -355,7 +367,6 @@ class zgConfiguration
 		{
 			$this->debug->write( 'Problem saving the configuration to database: could not insert data into configuration table', 'warning' );
 			$this->messages->setMessage( 'Problem saving the configuration to database: could not insert data into configuration table', 'warning' );
-
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -372,9 +383,8 @@ class zgConfiguration
 	 * @access protected
 	 *
 	 * @param string $configurationValue value of the configuration
-	 * @param string $configurationKey key of the configuration
 	 */
-	protected function _replaceReferences( &$configurationValue, $configurationKey )
+	protected function _replaceReferences( &$configurationValue )
 	{
 		// check for references
 		if ( ( strpos( $configurationValue, '[[' ) !== false ) && ( strpos( $configurationValue, ']]' ) !== false ) )
@@ -430,19 +440,20 @@ class zgConfiguration
 		{
 			$this->debug->write( 'Problem loading the configuration file ' . $filename . ': file not found', 'warning' );
 			$this->messages->setMessage( 'Problem loading the configuration file ' . $filename . ': file not found', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
 
 		$retArray = array( );
 
-		$fileArray = array( );
 		$fileArray = file( $filename );
 
 		if ( !$fileArray )
 		{
 			$this->debug->write( 'Problem loading the configuration file ' . $filename . ': file not a valid ini file', 'warning' );
 			$this->messages->setMessage( 'Problem loading the configuration file ' . $filename . ': file not a valid ini file', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -455,7 +466,10 @@ class zgConfiguration
 
 			// check for comments
 			// if comment is found, continue to next line
-			if ( ( substr( $fileData, 0, 1 ) == ';' ) && ( $fileData == '' ) ) continue;
+			if ( ( substr( $fileData, 0, 1 ) == ';' ) && ( $fileData == '' ) )
+			{
+				continue;
+			}
 
 			// check if the line is the beginn of a new section
 			if ( ( substr( $fileData, 0, 1 ) == '[' ) && ( substr( $fileData, -1, 1 ) == ']' ) )
@@ -468,8 +482,6 @@ class zgConfiguration
 				// parsing key/value
 				// information will be separated into key and value
 				$delimiter = strpos( $fileData, '=' );
-				$configurationKey = '';
-				$configurationValue = '';
 
 				// check if the delemiter was found
 				// if not, it's an invalid line, thus it does not need to be processed
@@ -487,6 +499,7 @@ class zgConfiguration
 					}
 
 					// check if the value is an array
+					$arrayKey = '';
 					$arrayvalue = false;
 					if ( ( strpos( $configurationKey, '[' ) !== false ) && ( strpos( $configurationKey, ']' ) !== false ) )
 					{
@@ -499,7 +512,6 @@ class zgConfiguration
 					if ( !$arrayvalue )
 					{
 						$retArray[ $currentSection ][ $configurationKey ] = $configurationValue;
-						$arrayKey = false;
 					}
 					else
 					{
