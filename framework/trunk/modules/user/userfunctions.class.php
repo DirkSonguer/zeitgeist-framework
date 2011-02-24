@@ -87,9 +87,9 @@ class zgUserfunctions
 
 		if ( !$sql->execute( ) )
 		{
+			$this->database->rollBack( );
 			$this->debug->write( 'Problem creating a new user: could not read from user table', 'warning' );
 			$this->messages->setMessage( 'Problem creating a new user: could not read from user table', 'warning' );
-
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -97,6 +97,7 @@ class zgUserfunctions
 		// if you want to allow multiple users with the same name, change the following check
 		if ( $sql->rowCount( ) > 0 )
 		{
+			$this->database->rollBack( );
 			$this->debug->write( 'Problem creating a new user: a user with this name already exists in the database. Please choose another username.', 'warning' );
 			$this->messages->setMessage( 'Problem creating a new user: a user with this name already exists in the database. Please choose another username.', 'warning' );
 			$this->debug->unguard( false );

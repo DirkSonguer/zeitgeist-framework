@@ -424,12 +424,22 @@ class zgTwitterUserhandler extends zgUserhandler
 			return false;
 		}
 
+		// begin transaction as we have multiple inserts depending on each other
+		if ( !$this->database->beginTransaction( ) )
+		{
+			$this->debug->write( 'Problem creating the user: could no begin database transaction', 'warning' );
+			$this->messages->setMessage( 'Problem creating the user: could no begin database transaction', 'warning' );
+			$this->debug->unguard( false );
+			return false;
+		}
+
 		// see if user already exists in database
 		$sql = $this->database->prepare( "SELECT * FROM " . $this->configuration->getConfiguration( 'twitter', 'tables', 'table_twitterusers' ) . " WHERE twitteruser_twitterid = ?" );
 		$sql->bindParam( 1, $twitteruserdata->id );
 
 		if ( !$sql->execute( ) )
 		{
+			$this->database->rollBack( );
 			$this->debug->write( 'Problem creating the user: could not access the user table', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: could not access the user table', 'warning' );
 			$this->debug->unguard( false );
@@ -438,6 +448,7 @@ class zgTwitterUserhandler extends zgUserhandler
 
 		if ( $sql->rowCount( ) > 0 )
 		{
+			$this->database->rollBack( );
 			$this->debug->write( 'Problem creating the user: user with this twitter id already exists in the database', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: user with this twitter id already exists in the database', 'warning' );
 			$this->debug->unguard( false );
@@ -456,6 +467,7 @@ class zgTwitterUserhandler extends zgUserhandler
 
 		if ( !$sql->execute( ) )
 		{
+			$this->database->rollBack( );
 			$this->debug->write( 'Problem creating the user: could not insert the user into the database', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: could not insert the user into the database', 'warning' );
 			$this->debug->unguard( false );
@@ -471,12 +483,16 @@ class zgTwitterUserhandler extends zgUserhandler
 
 		if ( !$sql->execute( ) )
 		{
+			$this->database->rollBack( );
 			$this->debug->write( 'Problem creating the user: could not insert the twitter to user mapping into the database', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: could not insert the twitter to user mapping into the database', 'warning' );
 			$this->debug->unguard( false );
 			return false;
 		}
 
+		// commit inserts into database
+		$this->database->commit( );
+		
 		$this->debug->unguard( $currentId );
 		return $currentId;
 	}
