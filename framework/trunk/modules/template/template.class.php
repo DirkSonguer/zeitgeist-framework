@@ -69,12 +69,12 @@ class zgTemplate
 		{
 			$this->debug->write( 'Problem loading the template: could not find the template file: ' . $filename, 'warning' );
 			$this->messages->setMessage( 'Problem loading the template: could not find the template file: ' . $filename, 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
 
 		// try to load the template
-		$gotTemplateFromDatabase = false;
 		$template = $this->_loadTemplateFromDatabase( $filename );
 		if ( $template !== false )
 		{
@@ -84,7 +84,6 @@ class zgTemplate
 			$this->content = $template[ 'content' ];
 			$this->blocks = $template[ 'blocks' ];
 			$this->variables = $template[ 'variables' ];
-			$gotTemplateFromDatabase = true;
 		}
 		else
 		{
@@ -96,6 +95,7 @@ class zgTemplate
 			{
 				$this->debug->write( 'Problem loading the template: could not rewrite links in : ' . $filename, 'warning' );
 				$this->messages->setMessage( 'Problem loading the template: could not rewrite links in : ' . $filename, 'warning' );
+
 				$this->debug->unguard( false );
 				return false;
 			}
@@ -104,6 +104,7 @@ class zgTemplate
 			{
 				$this->debug->write( 'Problem loading the template: could not load the blocks in: ' . $filename, 'warning' );
 				$this->messages->setMessage( 'Problem loading the template: could not load the blocks in: ' . $filename, 'warning' );
+
 				$this->debug->unguard( false );
 				return false;
 			}
@@ -112,6 +113,7 @@ class zgTemplate
 			{
 				$this->debug->write( 'Problem loading the template: could not load the variables in: ' . $filename, 'warning' );
 				$this->messages->setMessage( 'Problem loading the template: could not load the variables in: ' . $filename, 'warning' );
+
 				$this->debug->unguard( false );
 				return false;
 			}
@@ -120,6 +122,7 @@ class zgTemplate
 			{
 				$this->debug->write( 'Problem loading the template: could not resolve the block tree in: ' . $filename, 'warning' );
 				$this->messages->setMessage( 'Problem loading the template: could not resolve the block tree in: ' . $filename, 'warning' );
+
 				$this->debug->unguard( false );
 				return false;
 			}
@@ -128,19 +131,18 @@ class zgTemplate
 			{
 				$this->debug->write( 'Problem loading the template: could not load the root variables in: ' . $filename, 'warning' );
 				$this->messages->setMessage( 'Problem loading the template: could not load the root variables in: ' . $filename, 'warning' );
+
 				$this->debug->unguard( false );
 				return false;
 			}
 
-			if ( !$gotTemplateFromDatabase )
+			if ( !$this->_saveTemplateToDatabase( $filename ) )
 			{
-				if ( !$this->_saveTemplateToDatabase( $filename ) )
-				{
-					$this->debug->write( 'Problem loading the template: could not save the template in database', 'warning' );
-					$this->messages->setMessage( 'Problem loading the template: could not save the template in database', 'warning' );
-					$this->debug->unguard( false );
-					return false;
-				}
+				$this->debug->write( 'Problem loading the template: could not save the template in database', 'warning' );
+				$this->messages->setMessage( 'Problem loading the template: could not save the template in database', 'warning' );
+
+				$this->debug->unguard( false );
+				return false;
 			}
 		}
 
@@ -165,6 +167,7 @@ class zgTemplate
 		{
 			$this->debug->write( 'Problem showing the template: could not insertg the root variables', 'warning' );
 			$this->messages->setMessage( 'Problem showing the template: could not insertg the root variables', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -173,6 +176,7 @@ class zgTemplate
 		{
 			$this->debug->write( 'Problem showing the template: could not filter the template commands', 'warning' );
 			$this->messages->setMessage( 'Problem showing the template: could not filter the template commands', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -201,6 +205,7 @@ class zgTemplate
 		{
 			$this->debug->write( 'Problem inserting the root variables', 'warning' );
 			$this->messages->setMessage( 'Problem inserting the root variables', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -211,6 +216,7 @@ class zgTemplate
 			{
 				$this->debug->write( 'Problem filtering the template commands', 'warning' );
 				$this->messages->setMessage( 'Problem filtering the template commands', 'warning' );
+
 				$this->debug->unguard( false );
 				return false;
 			}
@@ -240,6 +246,7 @@ class zgTemplate
 		{
 			$this->debug->write( 'Problem getting the block content: could not find the given block: ' . $blockname, 'warning' );
 			$this->messages->setMessage( 'Problem getting the block content: could not find the given block: ' . $blockname, 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -248,6 +255,7 @@ class zgTemplate
 		{
 			$this->debug->write( 'Problem getting the block content: could not insert variables into the given block: ' . $blockname, 'warning' );
 			$this->messages->setMessage( 'Problem getting the block content: could not insert variables into the given block: ' . $blockname, 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -280,6 +288,7 @@ class zgTemplate
 		{
 			$this->debug->write( 'Problem assigning a variable: could not find the given variable: ' . $variablename, 'warning' );
 			$this->messages->setMessage( 'Problem assigning a variable: could not find the given variable: ' . $variablename, 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -307,6 +316,7 @@ class zgTemplate
 		{
 			$this->debug->write( 'Problem assigning a dataset: given dataset is not an array', 'warning' );
 			$this->messages->setMessage( 'Problem assigning a dataset: given dataset is not an array', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -340,6 +350,7 @@ class zgTemplate
 		{
 			$this->debug->write( 'Problem inserting a block: could not find the given block: ' . $blockname, 'warning' );
 			$this->messages->setMessage( 'Problem inserting a block: could not find the given block: ' . $blockname, 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -348,6 +359,7 @@ class zgTemplate
 		{
 			$this->debug->write( 'Could not insert variables into the given block: ' . $blockname, 'error' );
 			$this->messages->setMessage( 'Could not insert variables into the given block: ' . $blockname, 'error' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -514,6 +526,7 @@ class zgTemplate
 			{
 				$this->debug->write( 'Problem loading links: could not extract internal link', 'warning' );
 				$this->messages->setMessage( 'Problem loading links: could not extract internal link', 'warning' );
+
 				$this->debug->unguard( false );
 				return false;
 			}
@@ -557,6 +570,7 @@ class zgTemplate
 				{
 					$this->debug->write( 'Problem loading the template variables: could not extract variables from template', 'warning' );
 					$this->messages->setMessage( 'Problem loading the template variables: could not extract variables from template', 'warning' );
+
 					$this->debug->unguard( false );
 					return false;
 				}
@@ -597,6 +611,7 @@ class zgTemplate
 			{
 				$this->debug->write( 'Problem loading root variables: could not extract root variables from template', 'warning' );
 				$this->messages->setMessage( 'Problem loading root variables: could not extract root variables from template', 'warning' );
+
 				$this->debug->unguard( false );
 				return false;
 			}
@@ -634,6 +649,7 @@ class zgTemplate
 			{
 				$this->debug->write( 'Problem loading template blocks: could not extract blocks from template', 'warning' );
 				$this->messages->setMessage( 'Problem loading template blocks: could not extract blocks from template', 'warning' );
+
 				$this->debug->unguard( false );
 				return false;
 			}
@@ -652,6 +668,7 @@ class zgTemplate
 			{
 				$this->debug->write( 'Problem loading template blocks: could not extract blockname from block', 'warning' );
 				$this->messages->setMessage( 'Problem loading template blocks: could not extract blockname from block', 'warning' );
+
 				$this->debug->unguard( false );
 				return false;
 			}
@@ -663,6 +680,7 @@ class zgTemplate
 			{
 				$this->debug->write( 'Problem loading template blocks: could not extract blockname from block', 'warning' );
 				$this->messages->setMessage( 'Problem loading template blocks: could not extract blockname from block', 'warning' );
+
 				$this->debug->unguard( false );
 				return false;
 			}
@@ -709,6 +727,7 @@ class zgTemplate
 				{
 					$this->debug->write( 'Problem getting template block parents: could not extract the blockname of a child from block', 'warning' );
 					$this->messages->setMessage( 'Problem getting template block parents: could not extract the blockname of a child from block', 'warning' );
+
 					$this->debug->unguard( false );
 					return false;
 				}
@@ -720,6 +739,7 @@ class zgTemplate
 				{
 					$this->debug->write( 'Problem getting template block parents: could not extract the blockname of a child from block', 'warning' );
 					$this->messages->setMessage( 'Problem getting template block parents: could not extract the blockname of a child from block', 'warning' );
+
 					$this->debug->unguard( false );
 					return false;
 				}
@@ -758,6 +778,7 @@ class zgTemplate
 				{
 					$this->debug->write( 'Problem inserting variables into block: could not insert the variable ' . $variableName . ' into block ' . $blockname, 'warning' );
 					$this->messages->setMessage( 'Problem inserting variables into block: could not insert the variable ' . $variableName . ' into block ' . $blockname, 'warning' );
+
 					$this->debug->unguard( false );
 					return false;
 				}
@@ -790,6 +811,7 @@ class zgTemplate
 				{
 					$this->debug->write( 'Problem inserting root variables: could not insert the variable ' . $variableName . ' into the outer template node', 'warning' );
 					$this->messages->setMessage( 'Problem inserting root variables: could not insert the variable ' . $variableName . ' into the outer template node', 'warning' );
+
 					$this->debug->unguard( false );
 					return false;
 				}
@@ -822,6 +844,7 @@ class zgTemplate
 			{
 				$this->debug->write( 'Problem resetting block: could not find block: ' . $name, 'warning' );
 				$this->messages->setMessage( 'Problem resetting block: could not find block: ' . $name, 'warning' );
+
 				$this->debug->unguard( false );
 				return false;
 			}
@@ -906,6 +929,7 @@ class zgTemplate
 				{
 					$this->debug->write( 'Problem loading the template from the database: could not unserialize template content from the database', 'warning' );
 					$this->messages->setMessage( 'Problem loading the template from the database: could not unserialize template content from the database', 'warning' );
+
 					$this->debug->unguard( false );
 					return false;
 				}
