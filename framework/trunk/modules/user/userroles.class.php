@@ -98,6 +98,7 @@ class zgUserroles
 		{
 			$this->debug->write( 'Problem setting the user roles: array not valid', 'warning' );
 			$this->messages->setMessage( 'Problem setting the user roles: array not valid', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -127,6 +128,7 @@ class zgUserroles
 			{
 				$this->debug->write( 'Problem setting the user roles: could not insert the roles into the database', 'warning' );
 				$this->messages->setMessage( 'Problem setting the user roles: could not insert the roles into the database', 'warning' );
+
 				$this->debug->unguard( false );
 				return false;
 			}
@@ -173,6 +175,7 @@ class zgUserroles
 
 		$this->debug->write( 'Problem getting role id: could not find the userrole', 'warning' );
 		$this->messages->setMessage( 'Problem getting role id: could not find the userrole', 'warning' );
+
 		$this->debug->unguard( false );
 		return false;
 	}

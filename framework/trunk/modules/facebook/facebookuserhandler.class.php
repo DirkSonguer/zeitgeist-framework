@@ -102,6 +102,7 @@ class zgFacebookUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Could not establish user session: could not find a session id', 'warning' );
 			$this->messages->setMessage( 'Could not establish user session: could not find a session id', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -112,6 +113,7 @@ class zgFacebookUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Could not establish user session: facebook session not initialized', 'warning' );
 			$this->messages->setMessage( 'Could not establish user session: facebook session not initialized', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -121,6 +123,7 @@ class zgFacebookUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Could not establish user session: facebook user can not be linked to a local user', 'warning' );
 			$this->messages->setMessage( 'Could not establish user session: facebook user can not be linked to a local user', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -173,6 +176,7 @@ class zgFacebookUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Problem validating the user: could not create the user for the facebook account', 'warning' );
 			$this->messages->setMessage( 'Problem validating the user: could not create the user for the facebook account', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -211,6 +215,7 @@ class zgFacebookUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Problem logging in a user: user is already logged in. Cannot login user twice', 'warning' );
 			$this->messages->setMessage( 'Problem logging in a user: user is already logged in. Cannot login user twice', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -221,6 +226,7 @@ class zgFacebookUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Problem logging in a user: facebook session not initialized', 'warning' );
 			$this->messages->setMessage( 'Problem logging in a user: facebook session not initialized', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -253,6 +259,7 @@ class zgFacebookUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Problem logging out user: user is not logged in', 'warning' );
 			$this->messages->setMessage( 'Problem logging out user: user is not logged in', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -281,6 +288,7 @@ class zgFacebookUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Problem creating the user: could no begin database transaction', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: could no begin database transaction', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -291,18 +299,20 @@ class zgFacebookUserhandler extends zgUserhandler
 
 		if ( !$sql->execute( ) )
 		{
-			$this->database->rollBack( );
 			$this->debug->write( 'Problem creating the user: could not access the user table', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: could not access the user table', 'warning' );
+
+			$this->database->rollBack( );
 			$this->debug->unguard( false );
 			return false;
 		}
 
 		if ( $sql->rowCount( ) > 0 )
 		{
-			$this->database->rollBack( );
 			$this->debug->write( 'Problem creating the user: a user with this facebook id already exists in the database', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: a user with this facebook id already exists in the database', 'warning' );
+
+			$this->database->rollBack( );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -311,9 +321,10 @@ class zgFacebookUserhandler extends zgUserhandler
 		$fbid = $this->facebook->require_login( );
 		if ( empty( $fbid ) )
 		{
-			$this->database->rollBack( );
 			$this->debug->write( 'Problem creating the user: facebook session not initialized', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: facebook session not initialized', 'warning' );
+
+			$this->database->rollBack( );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -322,9 +333,10 @@ class zgFacebookUserhandler extends zgUserhandler
 		$fbuserdata = $this->facebook->api_client->users_getInfo( $fbid, 'first_name, last_name' );
 		if ( !is_array( $fbuserdata ) )
 		{
-			$this->database->rollBack( );
 			$this->debug->write( 'Problem creating the user: could not get user data for user', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: could not get user data for user', 'warning' );
+
+			$this->database->rollBack( );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -342,9 +354,10 @@ class zgFacebookUserhandler extends zgUserhandler
 
 		if ( !$sql->execute( ) )
 		{
-			$this->database->rollBack( );
 			$this->debug->write( 'Problem creating the user: could not insert the user into the database', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: could not insert the user into the database', 'warning' );
+
+			$this->database->rollBack( );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -359,9 +372,10 @@ class zgFacebookUserhandler extends zgUserhandler
 
 		if ( !$sql->execute( ) )
 		{
-			$this->database->rollBack( );
 			$this->debug->write( 'Problem creating the user: could not connect the user data to the facebook data', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: could not connect the user data to the facebook data', 'warning' );
+
+			$this->database->rollBack( );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -396,6 +410,7 @@ class zgFacebookUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Problem getting facebook user information: could not read the user table', 'warning' );
 			$this->messages->setMessage( 'Problem getting facebook user information: could not read the user table', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -404,6 +419,7 @@ class zgFacebookUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Problem getting facebook user information: no linked user exists for this facebook id', 'warning' );
 			$this->messages->setMessage( 'Problem getting facebook user information: no linked user exists for this facebook id', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -429,6 +445,7 @@ class zgFacebookUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Could not get facebook user id: facebook session not initialized', 'warning' );
 			$this->messages->setMessage( 'Could not get facebook user id: facebook session not initialized', 'warning' );
+			
 			$this->debug->unguard( false );
 			return false;
 		}

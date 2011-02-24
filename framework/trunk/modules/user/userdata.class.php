@@ -112,6 +112,7 @@ class zgUserdata
 		{
 			$this->debug->write( 'Problem setting the user data: array not valid', 'warning' );
 			$this->messages->setMessage( 'Problem setting the user data: array not valid', 'warning' );
+			
 			$this->debug->unguard( false );
 			return false;
 		}

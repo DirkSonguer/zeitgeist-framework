@@ -109,6 +109,7 @@ class zgUserrights
 		{
 			$this->debug->write( 'Problem setting the user rights: array not valid', 'warning' );
 			$this->messages->setMessage( 'Problem setting the user rights: array not valid', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -138,6 +139,7 @@ class zgUserrights
 			{
 				$this->debug->write( 'Problem setting the user rights: could not insert the rights into the database', 'warning' );
 				$this->messages->setMessage( 'Problem setting the user rights: could not insert the rights into the database', 'warning' );
+
 				$this->debug->unguard( false );
 				return false;
 			}
@@ -183,6 +185,7 @@ class zgUserrights
 		{
 			$this->debug->write( 'Possible problem getting the rights for the roles of a user: there seems to be no rights assigned with the roles', 'warning' );
 			$this->messages->setMessage( 'Possible problem getting the rights for the roles of a user: there seems to be no rights assigned with the roles', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}

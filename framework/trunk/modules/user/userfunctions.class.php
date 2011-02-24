@@ -68,6 +68,7 @@ class zgUserfunctions
 		{
 			$this->debug->write( 'Problem creating a new user: no name or password was given for the user', 'warning' );
 			$this->messages->setMessage( 'Problem creating a new user: no name or password was given for the user', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -87,9 +88,10 @@ class zgUserfunctions
 
 		if ( !$sql->execute( ) )
 		{
-			$this->database->rollBack( );
 			$this->debug->write( 'Problem creating a new user: could not read from user table', 'warning' );
 			$this->messages->setMessage( 'Problem creating a new user: could not read from user table', 'warning' );
+
+			$this->database->rollBack( );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -97,9 +99,10 @@ class zgUserfunctions
 		// if you want to allow multiple users with the same name, change the following check
 		if ( $sql->rowCount( ) > 0 )
 		{
-			$this->database->rollBack( );
 			$this->debug->write( 'Problem creating a new user: a user with this name already exists in the database. Please choose another username.', 'warning' );
 			$this->messages->setMessage( 'Problem creating a new user: a user with this name already exists in the database. Please choose another username.', 'warning' );
+
+			$this->database->rollBack( );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -120,9 +123,10 @@ class zgUserfunctions
 
 		if ( !$sql->execute( ) )
 		{
-			$this->database->rollBack( );
 			$this->debug->write( 'Problem creating a new user: could not insert the user into the database', 'warning' );
 			$this->messages->setMessage( 'Problem creating a new user: could not insert the user into the database', 'warning' );
+
+			$this->database->rollBack( );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -141,9 +145,10 @@ class zgUserfunctions
 
 			if ( !$sql->execute( ) )
 			{
-				$this->database->rollBack( );
 				$this->debug->write( 'Problem creating a new user: could not insert the user confirmation key into the database', 'warning' );
 				$this->messages->setMessage( 'Problem creating a new user: could not insert the user confirmation key into the database', 'warning' );
+
+				$this->database->rollBack( );
 				$this->debug->unguard( false );
 				return false;
 			}
@@ -276,13 +281,9 @@ class zgUserfunctions
 			$this->debug->unguard( $ret );
 			return $ret;
 		}
-		else
-		{
-			$this->debug->write( 'Problem logging in: user not found/is inactive or password is wrong', 'warning' );
-			$this->messages->setMessage( 'Problem logging in: user not found/is inactive or password is wrong', 'warning' );
-			$this->debug->unguard( false );
-			return false;
-		}
+
+		$this->debug->write( 'Problem logging in: user not found/is inactive or password is wrong', 'warning' );
+		$this->messages->setMessage( 'Problem logging in: user not found/is inactive or password is wrong', 'warning' );
 
 		$this->debug->unguard( false );
 		return false;
@@ -417,13 +418,9 @@ class zgUserfunctions
 			$this->debug->unguard( $ret );
 			return $ret;
 		}
-		else
-		{
-			$this->debug->write( 'Problem getting user information: user not found', 'warning' );
-			$this->messages->setMessage( 'Problem getting user information: user not found', 'warning' );
-			$this->debug->unguard( false );
-			return false;
-		}
+
+		$this->debug->write( 'Problem getting user information: user not found', 'warning' );
+		$this->messages->setMessage( 'Problem getting user information: user not found', 'warning' );
 
 		$this->debug->unguard( false );
 		return false;
@@ -462,13 +459,9 @@ class zgUserfunctions
 			$this->debug->unguard( $ret );
 			return $ret;
 		}
-		else
-		{
-			$this->debug->write( 'Problem confirming a user: key not found for given user', 'warning' );
-			$this->messages->setMessage( 'Problem confirming a user: key not found for given user', 'warning' );
-			$this->debug->unguard( false );
-			return false;
-		}
+
+		$this->debug->write( 'Problem confirming a user: key not found for given user', 'warning' );
+		$this->messages->setMessage( 'Problem confirming a user: key not found for given user', 'warning' );
 
 		$this->debug->unguard( false );
 		return false;
@@ -507,14 +500,9 @@ class zgUserfunctions
 			$this->debug->unguard( $ret );
 			return $ret;
 		}
-		else
-		{
-			$this->debug->write( 'Problem confirming a user: given key not found', 'warning' );
-			$this->messages->setMessage( 'Problem confirming a user: given key not found', 'warning' );
-			$this->debug->unguard( false );
-			return false;
-		}
 
+		$this->debug->write( 'Problem confirming a user: given key not found', 'warning' );
+		$this->messages->setMessage( 'Problem confirming a user: given key not found', 'warning' );
 		$this->debug->unguard( false );
 		return false;
 	}

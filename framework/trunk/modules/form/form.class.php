@@ -92,6 +92,7 @@ class zgForm
 
 			$this->debug->write( 'Problem processing the form data: no formdata found in parameters', 'warning' );
 			$this->messages->setMessage( 'Problem processing the form data: no formdata found in parameters', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -151,6 +152,7 @@ class zgForm
 		{
 			$this->debug->write( 'Problem setting the status of the element: element not found in form configuration', 'warning' );
 			$this->messages->setMessage( 'Problem setting the status of the element: element not found in form configuration', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -175,6 +177,7 @@ class zgForm
 		{
 			$this->debug->write( 'Problem getting the value of the element: element not found in form configuration', 'warning' );
 			$this->messages->setMessage( 'Problem getting the value of the element: element not found in form configuration', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -206,6 +209,7 @@ class zgForm
 		{
 			$this->debug->write( 'Problem setting the value of the element: element not found in form configuration', 'warning' );
 			$this->messages->setMessage( 'Problem setting the value of the element: element not found in form configuration', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -262,6 +266,7 @@ class zgForm
 		{
 			$this->debug->write( 'Problem loading the form: no form elements could be found', 'warning' );
 			$this->messages->setMessage( 'Problem loading the form: no form elements could be found', 'warning' );
+			
 			$this->debug->unguard( false );
 			return false;
 		}

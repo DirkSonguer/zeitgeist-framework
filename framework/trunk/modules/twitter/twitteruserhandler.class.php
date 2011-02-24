@@ -101,6 +101,7 @@ class zgTwitterUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Could not establish user session: could not find a session id', 'warning' );
 			$this->messages->setMessage( 'Could not establish user session: could not find a session id', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -111,6 +112,7 @@ class zgTwitterUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Could not establish user session: twitter token not initialized', 'warning' );
 			$this->messages->setMessage( 'Could not establish user session: twitter token not initialized', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -121,6 +123,7 @@ class zgTwitterUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Could not establish user session: twitter class does not accept token or API key', 'warning' );
 			$this->messages->setMessage( 'Could not establish user session: twitter class does not accept token or API key', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -131,6 +134,7 @@ class zgTwitterUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Problem validating a user login: twitter user can not be linked to a local user', 'warning' );
 			$this->messages->setMessage( 'Problem validating a user login: twitter user can not be linked to a local user', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -160,6 +164,7 @@ class zgTwitterUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Problem validating a user login: user is already logged in', 'warning' );
 			$this->messages->setMessage( 'Problem validating a user login: user is already logged in', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -169,6 +174,7 @@ class zgTwitterUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Problem validating a user login: no login process in progress', 'warning' );
 			$this->messages->setMessage( 'Problem validating a user login: no login process in progress', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -183,6 +189,7 @@ class zgTwitterUserhandler extends zgUserhandler
 			$this->session->unsetSessionVariable( 'twitter_oauth_initiated' );
 			$this->debug->write( 'Problem validating a user login: oauth verifier not found in request', 'warning' );
 			$this->messages->setMessage( 'Problem validating a user login: oauth verifier not found in request', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -195,6 +202,7 @@ class zgTwitterUserhandler extends zgUserhandler
 			$this->session->unsetSessionVariable( 'twitter_oauth_initiated' );
 			$this->debug->write( 'Problem validating a user login: could not get twitter token', 'warning' );
 			$this->messages->setMessage( 'Problem validating a user login: could not get twitter token', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -221,6 +229,7 @@ class zgTwitterUserhandler extends zgUserhandler
 			$this->session->unsetSessionVariable( 'twitter_oauth_initiated' );
 			$this->debug->write( 'Problem validating a user login: user could not be verified', 'warning' );
 			$this->messages->setMessage( 'Problem validating a user login: user could not be verified', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -250,10 +259,11 @@ class zgTwitterUserhandler extends zgUserhandler
 		}
 
 		// check if the twitteroauth class has been initialized correctly
-		if ( empty($this->twitteroauth) )
+		if ( empty( $this->twitteroauth ) )
 		{
 			$this->debug->write( 'Problem validating the twitter user: twitter oauth object not initialized', 'warning' );
 			$this->messages->setMessage( 'Problem validating the twitter user: twitter oauth object not initialized', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -264,6 +274,7 @@ class zgTwitterUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Problem validating the twitter user: twitter id could not be found in object', 'warning' );
 			$this->messages->setMessage( 'Problem validating the twitter user: twitter id could not be found in object', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -288,6 +299,7 @@ class zgTwitterUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Problem validating the twitter user: could not create the user for the facebook account', 'warning' );
 			$this->messages->setMessage( 'Problem validating the twitter user: could not create the user for the facebook account', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -326,6 +338,7 @@ class zgTwitterUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Problem logging in a user: user is already logged in . Cannot login user twice', 'warning' );
 			$this->messages->setMessage( 'Problem logging in a user: user is already logged in . Cannot login user twice', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -335,6 +348,7 @@ class zgTwitterUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Problem logging in a user: user has already started a login process', 'warning' );
 			$this->messages->setMessage( 'Problem logging in a user: user has already started a login process', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -366,6 +380,7 @@ class zgTwitterUserhandler extends zgUserhandler
 			default:
 				$this->debug->write( 'Problem logging in a user: could not connect to twitter', 'warning' );
 				$this->messages->setMessage( 'Problem logging in a user: could not connect to twitter', 'warning' );
+
 				$this->debug->unguard( false );
 				return false;
 		}
@@ -420,6 +435,7 @@ class zgTwitterUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Problem creating the user: given object is not a twitter userdata object', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: given object is not a twitter userdata object', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -429,6 +445,7 @@ class zgTwitterUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Problem creating the user: could no begin database transaction', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: could no begin database transaction', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -439,18 +456,20 @@ class zgTwitterUserhandler extends zgUserhandler
 
 		if ( !$sql->execute( ) )
 		{
-			$this->database->rollBack( );
 			$this->debug->write( 'Problem creating the user: could not access the user table', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: could not access the user table', 'warning' );
+
+			$this->database->rollBack( );
 			$this->debug->unguard( false );
 			return false;
 		}
 
 		if ( $sql->rowCount( ) > 0 )
 		{
-			$this->database->rollBack( );
 			$this->debug->write( 'Problem creating the user: user with this twitter id already exists in the database', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: user with this twitter id already exists in the database', 'warning' );
+
+			$this->database->rollBack( );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -467,9 +486,10 @@ class zgTwitterUserhandler extends zgUserhandler
 
 		if ( !$sql->execute( ) )
 		{
-			$this->database->rollBack( );
 			$this->debug->write( 'Problem creating the user: could not insert the user into the database', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: could not insert the user into the database', 'warning' );
+
+			$this->database->rollBack( );
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -483,16 +503,17 @@ class zgTwitterUserhandler extends zgUserhandler
 
 		if ( !$sql->execute( ) )
 		{
-			$this->database->rollBack( );
 			$this->debug->write( 'Problem creating the user: could not insert the twitter to user mapping into the database', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: could not insert the twitter to user mapping into the database', 'warning' );
+
+			$this->database->rollBack( );
 			$this->debug->unguard( false );
 			return false;
 		}
 
 		// commit inserts into database
 		$this->database->commit( );
-		
+
 		$this->debug->unguard( $currentId );
 		return $currentId;
 	}
@@ -521,14 +542,16 @@ class zgTwitterUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Problem getting twitter user information: could not read the user table', 'warning' );
 			$this->messages->setMessage( 'Problem getting twitter user information: could not read the user table', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
 
-		if ( $sql->rowCount( )  != 1 )
+		if ( $sql->rowCount( ) != 1 )
 		{
 			$this->debug->write( 'Problem getting twitter user information: no linked user exists for this twitter id{', 'warning' );
 			$this->messages->setMessage( 'Problem getting twitter user information: no linked user exists for this twitter id{', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -554,6 +577,7 @@ class zgTwitterUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Problem getting the twitter id: user is not logged in', 'warning' );
 			$this->messages->setMessage( 'Problem getting the twitter id: user is not logged in', 'warning' );
+
 			$this->debug->unguard( false );
 			return false;
 		}
