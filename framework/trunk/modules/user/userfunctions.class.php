@@ -72,6 +72,15 @@ class zgUserfunctions
 			return false;
 		}
 
+		// begin transaction as we have multiple inserts depending on each other
+		if ( !$this->database->beginTransaction( ) )
+		{
+			$this->debug->write( 'Problem creating a new user: could no begin database transaction', 'warning' );
+			$this->messages->setMessage( 'Problem creating a new user: could no begin database transaction', 'warning' );
+			$this->debug->unguard( false );
+			return false;
+		}
+
 		// check if a user with that name already exists
 		$sql = $this->database->prepare( "SELECT * FROM " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . " WHERE user_username = ?" );
 		$sql->bindParam( 1, $name );
@@ -110,9 +119,9 @@ class zgUserfunctions
 
 		if ( !$sql->execute( ) )
 		{
+			$this->database->rollBack( );
 			$this->debug->write( 'Problem creating a new user: could not insert the user into the database', 'warning' );
 			$this->messages->setMessage( 'Problem creating a new user: could not insert the user into the database', 'warning' );
-
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -131,13 +140,16 @@ class zgUserfunctions
 
 			if ( !$sql->execute( ) )
 			{
+				$this->database->rollBack( );
 				$this->debug->write( 'Problem creating a new user: could not insert the user confirmation key into the database', 'warning' );
 				$this->messages->setMessage( 'Problem creating a new user: could not insert the user confirmation key into the database', 'warning' );
-
 				$this->debug->unguard( false );
 				return false;
 			}
 		}
+
+		// commit inserts into database
+		$this->database->commit( );
 
 		$this->debug->unguard( $currentId );
 		return $currentId;
