@@ -219,12 +219,12 @@ class zgParameters
 					{
 						foreach ( $safeParameters[ $parametername ] as $key => $value )
 						{
-							$safeParameters[ $parametername ][ $key ] = mysql_real_escape_string( $value );
+							$safeParameters[ $parametername ][ $key ] = mysql_escape_string( $value );
 						}
 					}
 					else
 					{
-						$safeParameters[ $parametername ] = mysql_real_escape_string( $safeParameters[ $parametername ] );
+						$safeParameters[ $parametername ] = mysql_escape_string( $safeParameters[ $parametername ] );
 					}
 				}
 
