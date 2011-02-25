@@ -85,6 +85,54 @@ class zgMessagesTest extends UnitTestCase
 
 
 	/**
+	 * Tests zgMessages->getLastMessage()
+	 */
+	public function testGetLastMessage_NoMessage( )
+	{
+		$this->setUp( );
+
+		$this->zgMessages->clearAllMessages( );
+		$ret = $this->zgMessages->getLastMessage( );
+		$this->assertNull( $ret );
+
+		$this->tearDown( );
+	}
+
+
+	/**
+	 * Tests zgMessages->getLastMessage()
+	 */
+	public function testGetLastMessage_OneMessage( )
+	{
+		$this->setUp( );
+
+		$this->zgMessages->clearAllMessages( );
+		$this->zgMessages->setMessage( 'hello world' );
+		$ret = $this->zgMessages->getLastMessage( );
+		$this->assertEqual( $ret->message, 'hello world' );
+
+		$this->tearDown( );
+	}
+
+
+	/**
+	 * Tests zgMessages->getLastMessage()
+	 */
+	public function testGetLastMessage_TwoMessages( )
+	{
+		$this->setUp( );
+
+		$this->zgMessages->clearAllMessages( );
+		$this->zgMessages->setMessage( 'hello world' );
+		$this->zgMessages->setMessage( 'hello message' );
+		$ret = $this->zgMessages->getLastMessage( );
+		$this->assertEqual( $ret->message, 'hello message' );
+
+		$this->tearDown( );
+	}
+
+
+	/**
 	 * Tests zgMessages->getMessagesByType()
 	 */
 	public function testGetMessagesByType_NoMessages( )
@@ -93,7 +141,7 @@ class zgMessagesTest extends UnitTestCase
 
 		$this->zgMessages->clearAllMessages( );
 		$ret = $this->zgMessages->getMessagesByType( );
-		$this->assertEqual( $ret, array() );
+		$this->assertEqual( $ret, array( ) );
 
 		$this->tearDown( );
 	}
@@ -110,7 +158,7 @@ class zgMessagesTest extends UnitTestCase
 		$this->zgMessages->setMessage( 'hello world' );
 
 		$ret = $this->zgMessages->getMessagesByType( 'test' );
-		$this->assertEqual( $ret, array() );
+		$this->assertEqual( $ret, array( ) );
 
 		$this->tearDown( );
 	}
@@ -215,7 +263,7 @@ class zgMessagesTest extends UnitTestCase
 
 		$this->zgMessages->clearAllMessages( );
 
-		$ret = $this->zgMessages->importMessages( array() );
+		$ret = $this->zgMessages->importMessages( array( ) );
 		$this->assertTrue( $ret );
 
 		$ret = $this->zgMessages->getAllMessages( );

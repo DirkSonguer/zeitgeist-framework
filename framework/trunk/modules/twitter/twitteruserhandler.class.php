@@ -479,7 +479,7 @@ class zgTwitterUserhandler extends zgUserhandler
 		$key = md5( uniqid( md5( mt_rand( ) ), true ) );
 
 		$sql = $this->database->prepare( "INSERT INTO " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . "(user_username, user_key, user_password, user_active) VALUES(?, ?, ?, ?)" );
-		$sql->bindParam( 1, $twitteruserdata->name );
+		$sql->bindParam( 1, $twitteruserdata->screen_name );
 		$sql->bindParam( 2, $key );
 		$sql->bindParam( 3, $key );
 		$sql->bindParam( 4, $active );
