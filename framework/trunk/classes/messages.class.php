@@ -88,6 +88,22 @@ class zgMessages
 
 
 	/**
+	 * Gets the last message from the message stack
+	 *
+	 * @return array
+	 */
+	public function getLastMessage( )
+	{
+		$this->debug->guard( );
+
+		$retArray = $this->messages[ ( count( $this->messages ) - 1 ) ];
+
+		$this->debug->unguard( $retArray );
+		return $retArray;
+	}
+
+
+	/**
 	 * Gets all messages with the given type from the message stack
 	 *
 	 * @param string $type gets all messages with this type
