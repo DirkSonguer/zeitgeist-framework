@@ -101,7 +101,7 @@ class zgTwitterUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Could not establish user session: could not find a session id', 'warning' );
 			$this->messages->setMessage( 'Could not establish user session: could not find a session id', 'warning' );
-
+			
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -179,10 +179,6 @@ class zgTwitterUserhandler extends zgUserhandler
 			return false;
 		}
 
-		// get tokens from the session
-		$oauth_token = $this->session->getSessionVariable( 'oauth_token' );
-		$oauth_token_secret = $this->session->getSessionVariable( 'oauth_token_secret' );
-
 		// check for the answer by twitter
 		if ( empty( $_REQUEST[ 'oauth_verifier' ] ) )
 		{
@@ -193,6 +189,22 @@ class zgTwitterUserhandler extends zgUserhandler
 			$this->debug->unguard( false );
 			return false;
 		}
+
+		// If the oauth_token is old redirect to the connect page
+		if ( isset( $_REQUEST[ 'oauth_token' ] ) && $_SESSION[ 'oauth_token' ] !== $_REQUEST[ 'oauth_token' ] )
+		{
+			$this->logout();
+			$this->session->unsetSessionVariable( 'twitter_oauth_initiated' );
+			$this->debug->write( 'Problem validating a user login: used an old oauth token for request', 'warning' );
+			$this->messages->setMessage( 'Problem validating a user login: used an old oauth token for request', 'warning' );
+
+			$this->debug->unguard( false );
+			return false;
+		}
+
+		// get tokens from the session
+		$oauth_token = $this->session->getSessionVariable( 'oauth_token' );
+		$oauth_token_secret = $this->session->getSessionVariable( 'oauth_token_secret' );
 
 		// requests access tokens from twitter and checks them against the stored ones
 		$this->twitteroauth = new TwitterOAuth( $this->configuration->getConfiguration( 'twitter', 'api', 'consumer_key' ), $this->configuration->getConfiguration( 'twitter', 'api', 'consumer_secret' ), $oauth_token, $oauth_token_secret );
@@ -219,7 +231,6 @@ class zgTwitterUserhandler extends zgUserhandler
 		{
 			// user has been verified and the access tokens are stored in the session
 			$this->session->unsetSessionVariable( 'twitter_oauth_initiated' );
-
 			$this->debug->write( 'Oauth connection call ok and verified', 'warning' );
 			$this->messages->setMessage( 'Oauth connection call ok and verified', 'warning' );
 		}
@@ -354,7 +365,8 @@ class zgTwitterUserhandler extends zgUserhandler
 		}
 
 		// bind twitter class to current twitter app and user oauth token
-		// this uses the application key and secret
+		// this uses only the application key and secret pair
+		// as we should not have a connection yet (thus no session keys)
 		$connection = new TwitterOAuth( $this->configuration->getConfiguration( 'twitter', 'api', 'consumer_key' ), $this->configuration->getConfiguration( 'twitter', 'api', 'consumer_secret' ) );
 
 		// get temporary credentials from twitter
@@ -385,8 +397,8 @@ class zgTwitterUserhandler extends zgUserhandler
 				return false;
 		}
 
-		$this->debug->unguard( false );
-		return false;
+		$this->debug->unguard( true );
+		return true;
 	}
 
 
