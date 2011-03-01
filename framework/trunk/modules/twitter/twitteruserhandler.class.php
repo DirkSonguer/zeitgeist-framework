@@ -11,7 +11,7 @@
  * @license MIT License <http://creativecommons.org/licenses/MIT/>
  *
  * @package ZEITGEIST
- * @subpackage ZEITGEIST FACEBOOK
+ * @subpackage ZEITGEIST TWITTER
  */
 
 defined( 'ZEITGEIST_ACTIVE' ) or die( );
@@ -294,7 +294,7 @@ class zgTwitterUserhandler extends zgUserhandler
 		$userInformation = $this->_getUserInformationFromTwitterId( $twitteruserdata->id );
 		if ( is_array( $userInformation ) )
 		{
-			$this->session->setSessionVariable( 'user_facebookid', $twitteruserdata->id );
+			$this->session->setSessionVariable( 'user_twitterid', $twitteruserdata->id );
 			$this->session->setSessionVariable( 'user_id', $userInformation [ 'user_id' ] );
 			$this->session->setSessionVariable( 'user_key', $userInformation [ 'user_key' ] );
 			$this->session->setSessionVariable( 'user_username', $userInformation [ 'user_username' ] );
@@ -308,8 +308,8 @@ class zgTwitterUserhandler extends zgUserhandler
 		$userid = $this->createUser( $twitteruserdata );
 		if ( !$userInformation )
 		{
-			$this->debug->write( 'Problem validating the twitter user: could not create the user for the facebook account', 'warning' );
-			$this->messages->setMessage( 'Problem validating the twitter user: could not create the user for the facebook account', 'warning' );
+			$this->debug->write( 'Problem validating the twitter user: could not create the user for the twitter account', 'warning' );
+			$this->messages->setMessage( 'Problem validating the twitter user: could not create the user for the twitter account', 'warning' );
 
 			$this->debug->unguard( false );
 			return false;
@@ -576,7 +576,7 @@ class zgTwitterUserhandler extends zgUserhandler
 
 
 	/**
-	 * Gets the current facebook id for a user
+	 * Gets the current twitter id for a user
 	 *
 	 * @return integer
 	 */
