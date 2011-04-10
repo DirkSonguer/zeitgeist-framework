@@ -90,16 +90,16 @@ class zgMessages
 	/**
 	 * Gets the last message from the message stack
 	 *
-	 * @return array
+	 * @return zgMessage
 	 */
 	public function getLastMessage( )
 	{
 		$this->debug->guard( );
 
-		$retArray = $this->messages[ ( count( $this->messages ) - 1 ) ];
+		$message = $this->messages[ ( count( $this->messages ) - 1 ) ];
 
-		$this->debug->unguard( $retArray );
-		return $retArray;
+		$this->debug->unguard( $message );
+		return $message;
 	}
 
 
