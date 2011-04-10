@@ -101,7 +101,7 @@ class zgTwitterUserhandler extends zgUserhandler
 		{
 			$this->debug->write( 'Could not establish user session: could not find a session id', 'warning' );
 			$this->messages->setMessage( 'Could not establish user session: could not find a session id', 'warning' );
-			
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -193,7 +193,7 @@ class zgTwitterUserhandler extends zgUserhandler
 		// If the oauth_token is old redirect to the connect page
 		if ( isset( $_REQUEST[ 'oauth_token' ] ) && $_SESSION[ 'oauth_token' ] !== $_REQUEST[ 'oauth_token' ] )
 		{
-			$this->logout();
+			$this->logout( );
 			$this->session->unsetSessionVariable( 'twitter_oauth_initiated' );
 			$this->debug->write( 'Problem validating a user login: used an old oauth token for request', 'warning' );
 			$this->messages->setMessage( 'Problem validating a user login: used an old oauth token for request', 'warning' );
@@ -337,10 +337,14 @@ class zgTwitterUserhandler extends zgUserhandler
 	/**
 	 * Login a user with username and password
 	 * If successfull it will gather the user specific data and tie it to the session
+	 * The given callback URL will be used after the login attempt
+	 * If no callback URL was given, the standard one will be used
+	 *
+	 * @param string $callbackurl callback url
 	 *
 	 * @return boolean
 	 */
-	public function login( )
+	public function login( $callbackurl = false )
 	{
 		$this->debug->guard( );
 
@@ -364,6 +368,13 @@ class zgTwitterUserhandler extends zgUserhandler
 			return false;
 		}
 
+		// check if a callback url has been given
+		// is not then use the default one specified in the zgTwitter.ini configuration
+		if ( !$callbackurl )
+		{
+			$callbackurl = $this->configuration->getConfiguration( 'twitter', 'api', 'oauth_callback' );
+		}
+
 		// bind twitter class to current twitter app and user oauth token
 		// this uses only the application key and secret pair
 		// as we should not have a connection yet (thus no session keys)
@@ -371,7 +382,7 @@ class zgTwitterUserhandler extends zgUserhandler
 
 		// get temporary credentials from twitter
 		// will be redirected to the callback url afterwards
-		$request_token = $connection->getRequestToken( $this->configuration->getConfiguration( 'twitter', 'api', 'oauth_callback' ) );
+		$request_token = $connection->getRequestToken( $callbackurl );
 
 		// store temporary credentials to the session
 		$this->session->setSessionVariable( 'oauth_token', $request_token[ 'oauth_token' ] );
