@@ -341,10 +341,11 @@ class zgTwitterUserhandler extends zgUserhandler
 	 * If no callback URL was given, the standard one will be used
 	 *
 	 * @param string $callbackurl callback url
+     * @param string $none not needed
 	 *
 	 * @return boolean
 	 */
-	public function login( $callbackurl = false )
+	public function login( $callbackurl = false, $none = false )
 	{
 		$this->debug->guard( );
 

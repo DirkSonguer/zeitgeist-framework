@@ -97,7 +97,8 @@ class zgDebug
 		{
 			if ( !empty( $trace[ 'file' ] ) )
 			{
-				$newDebugMessage[ 'filename' ][ ] = array_pop( explode( '\\', $trace[ 'file' ] ) );
+                $filename = explode( '\\', $trace[ 'file' ] );
+                $newGuardMessage[ 'filename' ] = array_pop ( $filename );
 				$newDebugMessage[ 'function' ][ ] = $trace[ 'function' ];
 				$newDebugMessage[ 'line' ][ ] = $trace[ 'line' ];
 				$i++;
@@ -176,7 +177,8 @@ class zgDebug
 
 		if ( !empty( $backtrace[ 'file' ] ) )
 		{
-			$newGuardMessage[ 'filename' ] = basename( array_pop( explode( '\\', $backtrace[ 'file' ] ) ) );
+            $filename = explode( '\\', $backtrace[ 'file' ] );
+			$newGuardMessage[ 'filename' ] = basename( array_pop ( $filename ) );
 		}
 
 		if ( !empty( $backtrace[ 'class' ] ) )
@@ -228,7 +230,8 @@ class zgDebug
 
 		if ( !empty( $backtrace[ 'file' ] ) )
 		{
-			$newGuardMessage[ 'filename' ] = basename( array_pop( explode( '\\', $backtrace[ 'file' ] ) ) );
+            $filename = explode( '\\', $backtrace[ 'file' ] );
+			$newGuardMessage[ 'filename' ] = basename( array_pop ( $filename ) );
 		}
 
 		if ( !empty( $backtrace[ 'class' ] ) )

@@ -203,10 +203,13 @@ class zgFacebookUserhandler extends zgUserhandler
 	/**
 	 * Login a user with username and password
 	 * If successfull it will gather the user specific data and tie it to the session
+     *
+     * @param string $username not needed
+     * @param string $password not needed
 	 *
 	 * @return boolean
 	 */
-	public function login( )
+	public function login( $username = false, $password = false )
 	{
 		$this->debug->guard( );
 
