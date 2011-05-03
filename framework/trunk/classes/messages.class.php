@@ -78,7 +78,8 @@ class zgMessages
 
 		$backtrace = debug_backtrace( );
 		$backtraceSender = $backtrace[ 0 ];
-		$newMessage->from = array_pop( explode( '\\', $backtraceSender[ 'file' ] ) );
+        $filename = explode( '\\', $backtraceSender[ 'file' ] );
+		$newMessage->from = array_pop( $filename );
 
 		$this->messages[ ] = $newMessage;
 
