@@ -28,7 +28,7 @@ class zgForm
 	public $name;
 	public $method;
 	public $initial;
-	public $formelements = array();
+	public $formelements = array( );
 
 
 	/**
@@ -82,11 +82,11 @@ class zgForm
 	 *
 	 * @return boolean
 	 */
-	public function validate( $parameters = array() )
+	public function validate( $parameters = array( ) )
 	{
 		$this->debug->guard( );
 
-		if ( ( empty( $parameters[$this->name] ) ) || ( count( $parameters[$this->name] ) < 1 ) )
+		if ( ( empty( $parameters[ $this->name ] ) ) || ( count( $parameters[ $this->name ] ) < 1 ) )
 		{
 			$this->initial = true;
 
@@ -97,7 +97,7 @@ class zgForm
 			return false;
 		}
 
-		$formdata = $parameters[$this->name];
+		$formdata = $parameters[ $this->name ];
 
 		$valid = true;
 		foreach ( $this->formelements as $elementname => $elementdata )
@@ -106,19 +106,21 @@ class zgForm
 
 			if ( $elementdata->valid )
 			{
-				if ( empty( $formdata[$elementname] ) ) $formdata[$elementname] = '';
+				if ( empty( $formdata[ $elementname ] ) ) {
+					$formdata[ $elementname ] = '';
+				}
 
 				if ( $elementdata->stripslashes == 'true' )
 				{
-					$formdata[$elementname] = stripslashes( $formdata[$elementname] );
+					$formdata[ $elementname ] = stripslashes( $formdata[ $elementname ] );
 				}
 
 				if ( $elementdata->escape == 'true' )
 				{
-					$formdata[$elementname] = mysql_real_escape_string( $formdata[$elementname] );
+					$formdata[ $elementname ] = mysql_real_escape_string( $formdata[ $elementname ] );
 				}
 
-				$elementdata->value = $formdata[$elementname];
+				$elementdata->value = $formdata[ $elementname ];
 			}
 			else
 			{
@@ -144,9 +146,9 @@ class zgForm
 	{
 		$this->debug->guard( );
 
-		if ( !empty( $this->formelements[$elementname] ) )
+		if ( !empty( $this->formelements[ $elementname ] ) )
 		{
-			$this->formelements[$elementname]->valid = $validation;
+			$this->formelements[ $elementname ]->valid = $validation;
 		}
 		else
 		{
@@ -173,7 +175,7 @@ class zgForm
 	{
 		$this->debug->guard( );
 
-		if ( empty( $this->formelements[$elementname] ) )
+		if ( empty( $this->formelements[ $elementname ] ) )
 		{
 			$this->debug->write( 'Problem getting the value of the element: element not found in form configuration', 'warning' );
 			$this->messages->setMessage( 'Problem getting the value of the element: element not found in form configuration', 'warning' );
@@ -182,7 +184,7 @@ class zgForm
 			return false;
 		}
 
-		$ret = $this->formelements[$elementname]->value;
+		$ret = $this->formelements[ $elementname ]->value;
 
 		$this->debug->unguard( $ret );
 		return $ret;
@@ -201,9 +203,9 @@ class zgForm
 	{
 		$this->debug->guard( );
 
-		if ( !empty( $this->formelements[$elementname] ) )
+		if ( !empty( $this->formelements[ $elementname ] ) )
 		{
-			$this->formelements[$elementname]->value = $value;
+			$this->formelements[ $elementname ]->value = $value;
 		}
 		else
 		{
@@ -259,14 +261,14 @@ class zgForm
 	{
 		$this->debug->guard( );
 
-		$elements = array();
+		$elements = array( );
 		$elements = $this->configuration->getConfiguration( $this->id, 'elements' );
 
 		if ( count( $elements ) < 1 )
 		{
 			$this->debug->write( 'Problem loading the form: no form elements could be found', 'warning' );
 			$this->messages->setMessage( 'Problem loading the form: no form elements could be found', 'warning' );
-			
+
 			$this->debug->unguard( false );
 			return false;
 		}
@@ -275,13 +277,31 @@ class zgForm
 		{
 			if ( is_array( $elementdata ) )
 			{
-				$this->formelements[$elementname] = new zgFormelement( );
-				if ( !empty( $elementdata['value'] ) ) $this->formelements[$elementname]->value = $elementdata['value'];
-				if ( !empty( $elementdata['required'] ) ) $this->formelements[$elementname]->required = $elementdata['required'];
-				if ( !empty( $elementdata['expected'] ) ) $this->formelements[$elementname]->expected = $elementdata['expected'];
-				if ( ( !empty( $elementdata['escape'] ) ) && ( $elementdata['escape'] == 'true' ) ) $this->formelements[$elementname]->escape = true;
-				if ( ( !empty( $elementdata['stripslashes'] ) ) && ( $elementdata['stripslashes'] == 'true' ) ) $this->formelements[$elementname]->stripslashes = true;
-				if ( !empty( $elementdata['errormsg'] ) ) $this->formelements[$elementname]->errormsg = $elementdata['errormsg'];
+				$this->formelements[ $elementname ] = new zgFormelement( );
+				if ( !empty( $elementdata[ 'value' ] ) ) {
+					$this->formelements[ $elementname ]->value = $elementdata[ 'value' ];
+				}
+				if ( !empty( $elementdata[ 'required' ] ) ) {
+					$this->formelements[ $elementname ]->required = $elementdata[ 'required' ];
+				}
+				if ( !empty( $elementdata[ 'expected' ] ) ) {
+					$this->formelements[ $elementname ]->expected = $elementdata[ 'expected' ];
+				}
+				if ( !empty( $elementdata[ 'minlength' ] ) ) {
+					$this->formelements[ $elementname ]->minlength = $elementdata[ 'minlength' ];
+				}
+				if ( !empty( $elementdata[ 'maxlength' ] ) ) {
+					$this->formelements[ $elementname ]->maxlength = $elementdata[ 'maxlength' ];
+				}
+				if ( ( !empty( $elementdata[ 'escape' ] ) ) && ( $elementdata[ 'escape' ] == 'true' ) ) {
+					$this->formelements[ $elementname ]->escape = true;
+				}
+				if ( ( !empty( $elementdata[ 'stripslashes' ] ) ) && ( $elementdata[ 'stripslashes' ] == 'true' ) ) {
+					$this->formelements[ $elementname ]->stripslashes = true;
+				}
+				if ( !empty( $elementdata[ 'errormsg' ] ) ) {
+					$this->formelements[ $elementname ]->errormsg = $elementdata[ 'errormsg' ];
+				}
 			}
 			else
 			{
@@ -310,10 +330,24 @@ class zgForm
 	{
 		$this->debug->guard( true );
 
-		if ( !empty( $formdata[$elementname] ) )
+		if ( !empty( $formdata[ $elementname ] ) )
 		{
-			$ret = preg_match( $elementdata->expected, $formdata[$elementname] );
+			// check for minimum length
+			if ( ( !empty( $elementdata->minlength ) ) && ( strlen( $formdata[ $elementname ] ) < $elementdata->minlength ) )
+			{
+				$this->debug->unguard( false );
+				return false;
+			}
 
+			// check for maximum length
+			if ( ( !empty( $elementdata->maxlength ) ) && ( strlen( $formdata[ $elementname ] ) > $elementdata->maxlength ) )
+			{
+				$this->debug->unguard( false );
+				return false;
+			}
+
+			// check for regexp definition
+			$ret = preg_match( $elementdata->expected, $formdata[ $elementname ] );
 			if ( $ret === false )
 			{
 				$this->debug->unguard( false );
@@ -346,6 +380,8 @@ class zgFormelement
 	public $value;
 	public $required;
 	public $expected;
+	public $minlength;
+	public $maxlength;
 	public $escape;
 	public $stripslashes;
 	public $errormsg;
@@ -356,6 +392,8 @@ class zgFormelement
 	{
 		$this->value = '';
 		$this->required = 0;
+		$this->minlength = 0;
+		$this->maxlength = 0;
 		$this->expected = '';
 		$this->errormsg = '';
 
