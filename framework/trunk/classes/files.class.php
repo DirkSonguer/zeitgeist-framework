@@ -121,7 +121,7 @@ class zgFiles
 	 * stores an uploaded file in the given directory with the original name
 	 *
 	 * @param string $path system path of the directoy to store the files
-	 * @param string $boolean if true, files in the trget dir can be overwritten
+	 * @param boolean $overwrite if true, files in the target dir can be overwritten
 	 *
 	 * @return boolean
 	 */

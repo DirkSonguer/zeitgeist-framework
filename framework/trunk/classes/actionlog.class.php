@@ -47,6 +47,8 @@ class zgActionlog
 	 * @param int $module id of the module
 	 * @param int $action id of the action
 	 * @param array $parameters array with parameters of the call
+	 *
+	 * @return boolean
 	 */
 	public function logAction( $module, $action, $parameters = array( ) )
 	{
@@ -80,7 +82,7 @@ class zgActionlog
 			return false;
 		}
 
-		// retreive the insert id of the last insert
+		// retrieve the insert id of the last insert
 		// this id represents the current request call
 		// the parameters will be bound to this id and thus to the call
 		$logId = $this->database->lastInsertId( );

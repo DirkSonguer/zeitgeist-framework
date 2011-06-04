@@ -22,6 +22,7 @@ define( 'ZEITGEIST_ACTIVE', true );
 // is located in the document root of your application
 // change the values to whatever fits your system, for example
 // moving the framework and application into different directories
+// or moving the framework out of your htdocs directory
 if ( !defined( 'ZEITGEIST_ROOTDIRECTORY' ) )
 {
 	define( 'ZEITGEIST_ROOTDIRECTORY', './zeitgeist/' );
@@ -33,9 +34,11 @@ if ( !defined( 'APPLICATION_ROOTDIRECTORY' ) )
 
 // configuration
 // this is the zeitgeist default configuration
-// most likely this will be overwritte by the
+// most likely this will be overwritten by the
 // application.configuration.php in the /configuration directory
 // of your application
+// however note that all properties in the configuration that are
+// Not overwritten will stay as defined in here
 require_once ( ZEITGEIST_ROOTDIRECTORY . 'configuration/zeitgeist.config.php' );
 
 // check for debug mode
@@ -72,6 +75,8 @@ require_once ( ZEITGEIST_ROOTDIRECTORY . 'includes/autoloader.include.php' );
 spl_autoload_register( 'zgAutoload' );
 
 // include modules
+// all these modules are optional however some may be dependant
+// on each other (for example the user classes)
 require_once ( ZEITGEIST_ROOTDIRECTORY . 'modules/user/userroles.class.php' );
 require_once ( ZEITGEIST_ROOTDIRECTORY . 'modules/user/userrights.class.php' );
 require_once ( ZEITGEIST_ROOTDIRECTORY . 'modules/user/userdata.class.php' );

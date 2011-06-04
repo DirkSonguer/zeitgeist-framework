@@ -45,6 +45,7 @@ class zgLocalisation
 	 *
 	 * @param string $id id of the new locale
 	 * @param string $filename file that contains the locale definition
+	 * @param boolean $overwrite if true then the existing locale is overwritten
 	 *
 	 * @return boolean
 	 */

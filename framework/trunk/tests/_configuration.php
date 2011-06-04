@@ -21,7 +21,7 @@ require_once dirname( __FILE__ ) . '/_testfunctions.php';
 // Place it into a directory and change the path below to point there
 if ( !defined( 'SIMPLETEST_DIR' ) )
 {
-	define( 'SIMPLETEST_DIR', dirname( __FILE__ ) . '/../../../simpletest/' );
+	define( 'SIMPLETEST_DIR', dirname( __FILE__ ) . '/../../../../simpletest/' );
 }
 require_once( SIMPLETEST_DIR . 'autorun.php' );
 

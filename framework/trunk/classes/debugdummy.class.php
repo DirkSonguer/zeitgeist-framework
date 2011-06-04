@@ -57,7 +57,7 @@ class zgDebug
 	 * Write a debug message to the cache
 	 *
 	 * @param string $message debug message to print
-	 * @param integer $level level of the message. 0 = important,.. , 3 = unimportant
+	 * @param string $type type of the message.
 	 */
 	public function write( $message, $type = 'message' )
 	{

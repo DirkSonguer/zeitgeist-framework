@@ -541,6 +541,7 @@ class zgDebug
 	 * Saves debug information to file
 	 *
 	 * @param string $filename file to save the debug information to
+	 * @param string $cssfile css file for adding output formatting
 	 *
 	 * @return boolean
 	 */
