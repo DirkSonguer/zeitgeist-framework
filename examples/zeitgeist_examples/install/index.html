@@ -1,164 +1,172 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/zeitgeist_administrator.dwt" codeOutsideHTMLIsLocked="false" -->
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<!-- InstanceBeginEditable name="doctitle" -->
-<title>Zeitgeist Examples - Installation process</title>
-<!-- InstanceEndEditable -->
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<!-- InstanceBeginEditable name="doctitle" -->
+	<title>Zeitgeist Examples - Installation process</title>
+	<!-- InstanceEndEditable -->
 
-<link rel="stylesheet" href="./css/main.css" type="text/css" />
+	<link rel="stylesheet" href="./css/main.css" type="text/css"/>
 
-<script language="JavaScript" type="text/javascript" src="./js/jquery-1.3.2.min.js"></script>
-<script language="JavaScript" type="text/javascript" src="./js/jquery-ui-1.7.2.custom.min.js"></script>
+	<script language="JavaScript" type="text/javascript" src="./js/jquery-1.3.2.min.js"></script>
+	<script language="JavaScript" type="text/javascript" src="./js/jquery-ui-1.7.2.custom.min.js"></script>
 
-<!-- InstanceBeginEditable name="head" -->
+	<!-- InstanceBeginEditable name="head" -->
 
-<script type="text/javascript">
+	<script type="text/javascript">
 
-	function contentloader(targetid, contentid)
-	{
-		jQuery("#"+targetid).html('<h3 class="usermessage" style="text-align:center;"><img src="./images/loading.gif" alt="Loading, please wait" /></h3>');
-		$("#"+targetid).load("installer.php?contentid="+contentid);
-	}
+		function contentloader( targetid, contentid )
+		{
+			jQuery( "#" + targetid ).html( '<h3 class="usermessage" style="text-align:center;"><img src="./images/loading.gif" alt="Loading, please wait" /></h3>' );
+			$( "#" + targetid ).load( "installer.php?contentid=" + contentid );
+		}
 
-	function check_all()
-	{
-		contentloader('message_zeitgeist', 'check_zeitgeist');
-	}
+		function check_all()
+		{
+			contentloader( 'message_zeitgeist', 'check_zeitgeist' );
+		}
 
 
-	function checkDatabaseCredentials()
-	{
-		jQuery("#message_database").html('<h3 class="usermessage" style="text-align:center;"><img src="./images/loading.gif" alt="Loading, please wait" /></h3>');
-		var database_server = jQuery("#database_server").attr("value");
-		var database_user = jQuery("#database_user").attr("value");
-		var database_password = jQuery("#database_password").attr("value");
-		var database_database = jQuery("#database_database").attr("value");
-		var database_createdatabase = jQuery("#database_createdatabase").attr("checked");
-		var database_resetdatabase = jQuery("#database_resetdatabase").attr("checked");
-		jQuery.ajax({
- 			type: "POST",
- 			url: "installer.php?contentid=database_connection",
-			dataType: "html",
-			data: "database_server=" + database_server + "&database_user=" + database_user + "&database_password=" + database_password + "&database_database=" + database_database + "&database_createdatabase=" + database_createdatabase + "&database_resetdatabase=" + database_resetdatabase,
-			success: function(response)
-			{
-				// if sucessful; response will contain some stuff echo-ed from .php
-				// quick tect: alert("Here is your response: " + response);
-				// Append this response to some <div> => let's append it to div with id "serverMsg"
-				jQuery("#message_database").html(response);
-			}
-		});
-	}
+		function checkDatabaseCredentials()
+		{
+			jQuery( "#message_database" ).html( '<h3 class="usermessage" style="text-align:center;"><img src="./images/loading.gif" alt="Loading, please wait" /></h3>' );
+			var database_server = jQuery( "#database_server" ).attr( "value" );
+			var database_user = jQuery( "#database_user" ).attr( "value" );
+			var database_password = jQuery( "#database_password" ).attr( "value" );
+			var database_database = jQuery( "#database_database" ).attr( "value" );
+			var database_createdatabase = jQuery( "#database_createdatabase" ).attr( "checked" );
+			var database_resetdatabase = jQuery( "#database_resetdatabase" ).attr( "checked" );
+			jQuery.ajax( {
+				type: "POST",
+				url: "installer.php?contentid=database_connection",
+				dataType: "html",
+				data: "database_server=" + database_server + "&database_user=" + database_user + "&database_password=" + database_password + "&database_database=" + database_database + "&database_createdatabase=" + database_createdatabase + "&database_resetdatabase=" + database_resetdatabase,
+				success: function( response )
+				{
+					// if sucessful; response will contain some stuff echo-ed from .php
+					// quick tect: alert("Here is your response: " + response);
+					// Append this response to some <div> => let's append it to div with id "serverMsg"
+					jQuery( "#message_database" ).html( response );
+				}
+			} );
+		}
 
-</script>
+	</script>
 
-<!-- InstanceEndEditable -->
+	<!-- InstanceEndEditable -->
 </head>
 
 <body>
 
-	<!-- navigation starts here -->
-	<div id="nav">
-		
-		<h3>Zeitgeist Examples - <span id="projectlink">Installation process</span></h3>
-	
-	</div>
+<!-- navigation starts here -->
+<div id="nav">
 
-	<!-- header starts here -->
-	<!-- TemplateBeginBlock name="mainmenu" -->
-	<div id="header">	
-	
-	</div>	
-	<!-- TemplateEndBlock -->
-				
-	<!-- content-wrap starts here -->
-	<div id="content-wrap">
-    <div id="content">	 
+	<h3>Zeitgeist Examples - <span id="projectlink">Installation process</span></h3>
 
-		<div id="main">		
-        <!-- InstanceBeginEditable name="main" -->
+</div>
+
+<!-- header starts here -->
+<!-- TemplateBeginBlock name="mainmenu" -->
+<div id="header">
+
+</div>
+<!-- TemplateEndBlock -->
+
+<!-- content-wrap starts here -->
+<div id="content-wrap">
+	<div id="content">
+
+		<div id="main">
+			<!-- InstanceBeginEditable name="main" -->
 
 			<h2>Zeitgeist Examples</h2>
 
-            <h3 id="projectlink">Zeitgeist Framework</h3>
-            <p>The examples are based on the <a href="http://www.zeitgeist-framework.com">Zeitgeist Framework</a> and requires that the framework is available on the server as well. Depending on how you obtained the Zeitgeist Examples the framework itself may not have been part of the package.</p>
+			<h3 id="projectlink">Zeitgeist Framework</h3>
+
+			<p>The examples are based on the <a href="http://www.zeitgeist-framework.com">Zeitgeist Framework</a> and requires that the framework is available on the server as well. Depending on how
+				you obtained the Zeitgeist Examples the framework itself may not have been part of the package.</p>
+
 			<div id="message_zeitgeist"></div>
 
-            <h3 id="projectlink">Database</h3>
-            <p>The Zeitgeist Examples requires a MySQL database to work. Please enter the connection details to the database you want to use.</p>
-            <p>New databases can only be created if no database with the same name exists already. If you want to reset an already existing database, choose "Reset Database".</p>
+			<h3 id="projectlink">Database</h3>
+
+			<p>The Zeitgeist Examples requires a MySQL database to work. Please enter the connection details to the database you want to use.</p>
+
+			<p>New databases can only be created if no database with the same name exists already. If you want to reset an already existing database, choose "Reset Database".</p>
+
 			<form method="post" action="" name="database_connection" enctype="multipart/form-data; charset=utf-8">
-			<table border="0" cellpadding="0" cellspacing="0">
-			<tr>
-				<td valign="top" nowrap="nowrap"><p class="formlabel">Server(:Port)*</p></td>
-				<td valign="middle">
-				<input type="text" maxlength="60" id="database_server" value="localhost" class="formtext" />
-				</td>
-			</tr>
-			<tr>
-				<td valign="top" nowrap="nowrap"><p class="formlabel">Username*</p></td>
-				<td valign="middle">
-				<input type="text" maxlength="60" id="database_user" value="root" class="formtext" />
-				</td>
-			</tr>
-			<tr>
-				<td valign="top" nowrap="nowrap"><p class="formlabel">Password*</p></td>
-				<td valign="middle">
-				<input type="text" maxlength="60" id="database_password" value="" class="formtext" />
-				</td>
-			</tr>
-			<tr>
-				<td valign="top" nowrap="nowrap"><p class="formlabel">Database*</p></td>
-				<td valign="middle">
-				<input type="text" maxlength="60" id="database_database" value="zeitgeist_examples" class="formtext" />
-				</td>
-			</tr>
-			<tr>
-				<td valign="top" nowrap="nowrap"><p class="formlabel">Create database</p></td>
-				<td valign="left">
-				<input type="checkbox" id="database_createdatabase" />
-				</td>
-			</tr>
-			<tr>
-				<td valign="top" nowrap="nowrap"><p class="formlabel">Reset Database</p></td>
-				<td valign="left">
-				<input type="checkbox" id="database_resetdatabase" />
-				</td>
-			</tr>
-			<tr>
-				<td valign="top" nowrap="nowrap" colspan="2">
-				<p style="margin-top:15px; margin-left:0px;"><button id="database_submit" type="button" class="formlabel" onclick="javascript:checkDatabaseCredentials();">Check database credentials and import database</button></p>
-				</td>
-			</tr>
-            </table>
-            </form>
+				<table border="0" cellpadding="0" cellspacing="0">
+					<tr>
+						<td valign="top" nowrap="nowrap"><p class="formlabel">Server(:Port)*</p></td>
+						<td valign="middle">
+							<input type="text" maxlength="60" id="database_server" value="localhost" class="formtext"/>
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" nowrap="nowrap"><p class="formlabel">Username*</p></td>
+						<td valign="middle">
+							<input type="text" maxlength="60" id="database_user" value="root" class="formtext"/>
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" nowrap="nowrap"><p class="formlabel">Password*</p></td>
+						<td valign="middle">
+							<input type="text" maxlength="60" id="database_password" value="" class="formtext"/>
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" nowrap="nowrap"><p class="formlabel">Database*</p></td>
+						<td valign="middle">
+							<input type="text" maxlength="60" id="database_database" value="zeitgeist_examples" class="formtext"/>
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" nowrap="nowrap"><p class="formlabel">Create database</p></td>
+						<td valign="left">
+							<input type="checkbox" id="database_createdatabase"/>
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" nowrap="nowrap"><p class="formlabel">Reset Database</p></td>
+						<td valign="left">
+							<input type="checkbox" id="database_resetdatabase"/>
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" nowrap="nowrap" colspan="2">
+							<p style="margin-top:15px; margin-left:0px;">
+								<button id="database_submit" type="button" class="formlabel" onclick="javascript:checkDatabaseCredentials();">Check database credentials and import database</button>
+							</p>
+						</td>
+					</tr>
+				</table>
+			</form>
 			<div id="message_database"></div>
 
-	<script type="text/javascript">
-		check_all();
-    </script>
+			<script type="text/javascript">
+				check_all();
+			</script>
 
-		<!-- InstanceEndEditable -->
-		</div>					
-		
-	<!-- content-wrap ends here -->		
-	</div>
-    </div>
+			<!-- InstanceEndEditable -->
+		</div>
 
-	<!-- footer starts here-->	
-	<div id="footer-wrap">
-		
-		<div id="footer-bottom">		
-			<p>
-			&copy; 2009 <strong><a href="http://www.menschenwerk.net">Menschenwerk.net</a></strong> | 
-			Original template design: <a href="http://www.styleshout.com/">styleshout</a> | 
-            Icons by: <a href="http://www.icon-king.com/projects/nuvola/">David Vignoni</a>
-			</p>		
-		</div>	
-	
-	<!-- footer ends-->		
+		<!-- content-wrap ends here -->
 	</div>
+</div>
+
+<!-- footer starts here-->
+<div id="footer-wrap">
+
+	<div id="footer-bottom">
+		<p>
+			&copy; 2009 <strong><a href="http://www.menschenwerk.net">Menschenwerk.net</a></strong> |
+			Original template design: <a href="http://www.styleshout.com/">styleshout</a> |
+			Icons by: <a href="http://www.icon-king.com/projects/nuvola/">David Vignoni</a>
+		</p>
+	</div>
+
+	<!-- footer ends-->
+</div>
 
 </body>
 <!-- InstanceEnd --></html>
