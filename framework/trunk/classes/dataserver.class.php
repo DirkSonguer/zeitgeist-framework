@@ -44,6 +44,7 @@ class zgDataserver
 	 * Creates an xml dataset from an sql query
 	 *
 	 * @param string $sql string with the sql statement
+	 * @param zgDatabase $database link to an existing database
 	 * @param string $encoding the encoding of the final xml
 	 * @param string $rootElement root element of the final xml
 	 *
@@ -88,7 +89,7 @@ class zgDataserver
 	/**
 	 * Creates an xml dataset from an array
 	 *
-	 * @param string $array array with the dataset
+	 * @param string $arrDataset array with the dataset
 	 * @param string $encoding the encoding of the final xml
 	 * @param string $rootElement root element of the final xml
 	 *

@@ -7,8 +7,7 @@
  *
  * This class acts as a simple front controller to call modules and
  * actions
- * It also handles the usual tasks like checking user and security related
- * issues
+ * It also handles the usual tasks like security related issues
  *
  * @author Dirk Songür <dirk@zeitalter3.de>
  * @license MIT License <http://creativecommons.org/licenses/MIT/>

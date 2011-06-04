@@ -67,9 +67,9 @@ class zgActionlogTest extends UnitTestCase
 		$param1 = rand( 100, 5000 );
 		$param2 = rand( 100, 5000 );
 
-		$parameters = array();
-		$parameters ['test1'] = 'test' . $param1;
-		$parameters ['test2'] = 'test' . $param2;
+		$parameters = array( );
+		$parameters [ 'test1' ] = 'test' . $param1;
+		$parameters [ 'test2' ] = 'test' . $param2;
 		$ret = $this->zgActionlog->logAction( $param1, $param2, $parameters );
 		$this->assertFalse( $ret );
 
@@ -90,9 +90,9 @@ class zgActionlogTest extends UnitTestCase
 		$param1 = rand( 100, 5000 );
 		$param2 = rand( 100, 5000 );
 
-		$parameters = array();
-		$parameters ['test1'] = 'test' . $param1;
-		$parameters ['test2'] = 'test' . $param2;
+		$parameters = array( );
+		$parameters [ 'test1' ] = 'test' . $param1;
+		$parameters [ 'test2' ] = 'test' . $param2;
 		$ret = $this->zgActionlog->logAction( $param1, $param2, $parameters );
 		$this->assertFalse( $ret );
 
@@ -115,9 +115,9 @@ class zgActionlogTest extends UnitTestCase
 		$param1 = rand( 100, 5000 );
 		$param2 = rand( 100, 5000 );
 
-		$parameters = array();
-		$parameters ['test1'] = 'test' . $param1;
-		$parameters ['test2'] = 'test' . $param2;
+		$parameters = array( );
+		$parameters [ 'test1' ] = 'test' . $param1;
+		$parameters [ 'test2' ] = 'test' . $param2;
 		$ret = $this->zgActionlog->logAction( $param1, $param2, $parameters );
 		$this->assertTrue( $ret );
 
@@ -128,20 +128,20 @@ class zgActionlogTest extends UnitTestCase
 		$this->assertEqual( $ret, 1 );
 
 		$ret = $this->database->fetchArray( $res );
-		$this->assertEqual( $ret ['actionlog_module'], $param1 );
-		$this->assertEqual( $ret ['actionlog_action'], $param2 );
+		$this->assertEqual( $ret [ 'actionlog_module' ], $param1 );
+		$this->assertEqual( $ret [ 'actionlog_action' ], $param2 );
 
 		$res = $this->database->query( "SELECT * FROM actionlog_parameters" );
 		$ret = $this->database->numRows( $res );
 		$this->assertEqual( $ret, 2 );
 
 		$ret = $this->database->fetchArray( $res );
-		$this->assertEqual( $ret ['actionparameter_key'], 'test1' );
-		$this->assertEqual( $ret ['actionparameter_value'], 'test' . $param1 );
+		$this->assertEqual( $ret [ 'actionparameter_key' ], 'test1' );
+		$this->assertEqual( $ret [ 'actionparameter_value' ], 'test' . $param1 );
 
 		$ret = $this->database->fetchArray( $res );
-		$this->assertEqual( $ret ['actionparameter_key'], 'test2' );
-		$this->assertEqual( $ret ['actionparameter_value'], 'test' . $param2 );
+		$this->assertEqual( $ret [ 'actionparameter_key' ], 'test2' );
+		$this->assertEqual( $ret [ 'actionparameter_value' ], 'test' . $param2 );
 
 		$testfunctions->dropZeitgeistTable( 'actionlog' );
 		$testfunctions->dropZeitgeistTable( 'actionlog_parameters' );

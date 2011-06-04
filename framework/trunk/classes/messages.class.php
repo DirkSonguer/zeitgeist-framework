@@ -63,7 +63,7 @@ class zgMessages
 	 * Puts a message to the message stack
 	 *
 	 * @param string $message message to store
-	 * @param string $to the recipient of the message. This should be a filename. If left empty, the message is public
+	 * @param string $type type of the message (basically a tag to group messages together)
 	 *
 	 * @return boolean
 	 */

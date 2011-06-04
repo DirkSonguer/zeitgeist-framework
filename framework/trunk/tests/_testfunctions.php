@@ -16,6 +16,17 @@ class testFunctions
 	}
 
 
+	/**
+	 * Creates a new zeitgeist table with the given name
+	 * As a reference for creating the table the default database
+	 * dump in /_additional_material/zeitgeist.sql will be used
+	 * If the given table name is not found in the default dump,
+	 * it will be ignored
+	 *
+	 * @param string $table name of the table to create
+	 *
+	 * @return boolean
+	 */
 	function createZeitgeistTable( $table )
 	{
 		if ( empty( $this->sqldata ) )
@@ -35,6 +46,13 @@ class testFunctions
 	}
 
 
+	/**
+	 * Drops an existing zeitgeist table with the given name
+	 *
+	 * @param string $table name of the table to drop
+	 *
+	 * @return boolean
+	 */
 	function dropZeitgeistTable( $table )
 	{
 		$this->database->query( 'DROP TABLE ' . $table );
