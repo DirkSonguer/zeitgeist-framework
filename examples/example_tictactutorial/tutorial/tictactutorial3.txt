@@ -5,7 +5,6 @@ This tutorial is about creating a working persistent browser based game with the
 
 If you have specific questions about the tutorial, please mail us or open an [http://code.google.com/p/zeitgeist-framework/issues/list issue].
 
-
 == The Goal ==
 
 The goal of this part is to specify how our game works from an architectural standpoint and what components and classes are needed to implement it.
