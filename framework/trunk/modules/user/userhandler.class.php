@@ -270,6 +270,9 @@ class zgUserhandler
 
 		if ( $this->loggedIn )
 		{
+			// a logged in user has an assigned user id
+			// the user id represents the unique id in the database
+			// this id is stored in the session once the user logs in
 			$userid = $this->session->getSessionVariable( 'user_id' );
 
 			if ( $userid )
@@ -279,8 +282,11 @@ class zgUserhandler
 			}
 		}
 
-		$this->debug->unguard( false );
-		return false;
+		// if the user is not logged in, return 0
+		// this is used for example for getting users rights
+		// where 0 is the default for a not logged in user
+		$this->debug->unguard( 0 );
+		return 0;
 	}
 
 
