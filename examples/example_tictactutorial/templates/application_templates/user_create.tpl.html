@@ -7,13 +7,13 @@
 
 	<h1>Welcome to Tic Tac Tutorial</h1>
 
-    <!-- TemplateBeginBlock name="loginError" -->
-            <p><b>An error has occured. Please enter your login credentials carefully..</b></p>
+    <!-- TemplateBeginBlock name="creationError" -->
+            <p><b>An error has occured. Please try again or contact an administrator..</b></p>
     <!-- TemplateEndBlock -->
 
-    <p>Please log in to play the game. Enter your username and password here:</p>
+    <p>Please enter your desired username and password here to create your user:</p>
 
-    <form method="post" action="@@{[user.login]}@@" name="login">
+    <form method="post" action="@@{[user.create]}@@" name="create">
         <table border="0">
             <tr>
                 <td align="right" nowrap width="110"><p>Username</p></td>
@@ -25,12 +25,12 @@
             </tr>
             <tr>
                 <td align="left" nowrap>&nbsp;</td>
-                <td align="right" valign="middle" nowrap><input type="submit" name="login" value="Login" /></td>
+                <td align="right" valign="middle" nowrap><input type="submit" name="create" value="Create User" /></td>
             </tr>
         </table>
     </form>
 
-	<p><a href="@@{[user.create]}@@">Create a new user</a></p>
+	<p><a href="@@{[main.index]}@@">Home</a></p>
 
 </body>
 </html>

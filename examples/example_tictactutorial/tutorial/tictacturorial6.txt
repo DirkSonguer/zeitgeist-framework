@@ -9,7 +9,7 @@ If you have specific questions about the tutorial, please mail us or open an [ht
 
 The current goal is to create a working user infrastructure. A user should be able to create an account, log in, log off as well as edit and delete his account again. However as this is a pretty major goal, the tasks will be splitted between tutorials.
 
-In the last tutorial we created a new module for the user actions and an action for the login. We also created a matching template for the action and a configuration for parse the input. In the database we added a test user with the name "testuser" and password "testuser". However the login action does not do anything with the user input. This is about to change.
+In the last tutorial we created a new module for the user actions and an action for the login. We also created a matching template for the action and a configuration for parse the input. However the login action does not do anything with the user input. This is about to change.
 
 === Adding a user ===
 

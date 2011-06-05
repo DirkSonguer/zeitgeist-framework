@@ -1,0 +1,67 @@
+#summary Tutorial - How to create a simple PBBG, part 7
+= Part 7 - User Creation (user login 3) =
+
+This tutorial is about creating a working persistent browser based game with the Zeitgeist Framework. To keep it simple, we're just doing a simple Tic Tac Toe game. However we will use a much Zeitgeist specific functionalities as possible to show how they work.
+
+If you have specific questions about the tutorial, please mail us or open an [http://code.google.com/p/zeitgeist-framework/issues/list issue].
+
+== The Goal ==
+
+The current goal is still to create a working user infrastructure. A user should be able to create an account, log in, log off as well as edit and delete his account again. However as this is a pretty major goal, the tasks will be splitted between tutorials.
+
+In the last tutorial we created actions for a user loging. In the database we added a test user with the name "testuser" and password "testuser" and made sure that the actions worked. Now we're adding an action so that a new user can be created by the user itself. We're also introducing userrights.
+
+=== User creation ===
+
+First we need to create an actual action for the creation of the user. We start again by creating the action in the database.
+
+{{{
+	INSERT INTO actions ( action_module, action_name, action_description, action_active )
+	VALUES ( '2', 'create', 'The default action for the main module', '1' );
+}}}
+
+A player
+
+{{{
+	INSERT INTO  userroles ( userrole_id, userrole_name, userrole_description )
+	VALUES ( '2', 'default', 'Userrole for standard player' );
+
+	INSERT INTO userroles_to_users ( userroleuser_userrole	userroleuser_user )
+	VALUES ( '2', '1' );
+}}}
+
+Default not logged in
+
+{{{
+	INSERT INTO  userroles ( userrole_id, userrole_name, userrole_description )
+	VALUES ( '1', 'notloggedin', 'Default userrole for not logged in users' );
+
+	INSERT INTO userroles_to_users ( userroleuser_userrole	userroleuser_user )
+	VALUES ( '1', '0' );
+}}}
+
+Add actions to the user
+
+{{{
+	INSERT INTO userroles_to_actions  ( userroleaction_userrole , userroleaction_action ) VALUES
+	(1, 4),
+	(1, 5);
+}}}
+
+{{{
+	// check if user is alreay logged in
+	// if he is logged in, check if he has the right to call this action
+	// if not the action is changed to the user login action
+	if ( ( $user->isLoggedIn( ) ) && ( !$user->hasUserright( $controller->getActionID( $module, $action ) ) ) )
+	{
+		$module = 'user';
+		$action = 'login';
+	}
+}}}
+
+
+== Closing ==
+
+In this part of the tutorial we now created a new action for logging in and added a template for this action. The template includes a login form where a user can enter his login credentials. Those credentials will be send as post to the application and we added definitions for the parameters so they will be safely sent to the actions.
+
+In the next tutorial part we'll use these credentials to do an actual login and logout for the testuser.
