@@ -91,7 +91,7 @@ class zgController
 			return false;
 		}
 
-		// store action informatíon in class structure
+		// store action information in class structure
 		$this->actiondata = $sql->fetch( PDO::FETCH_ASSOC );
 
 		$this->debug->unguard( true );
