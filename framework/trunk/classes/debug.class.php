@@ -116,7 +116,7 @@ class zgDebug
 	public function beginSQLStatement( )
 	{
 		list ( $usec, $sec ) = explode( " ", microtime( ) );
-		$this->queryStart = (float) $usec + (float) $sec;
+		$this->queryStart = (float)$usec + (float)$sec;
 	}
 
 
@@ -131,7 +131,7 @@ class zgDebug
 		$newQueryMessage = array( );
 
 		list ( $usec, $sec ) = explode( " ", microtime( ) );
-		$newQueryMessage[ 'executionTime' ] = ( (float) $usec + (float) $sec ) - $this->queryStart;
+		$newQueryMessage[ 'executionTime' ] = ( (float)$usec + (float)$sec ) - $this->queryStart;
 		$newQueryMessage[ 'query' ] = $query;
 		$newQueryMessage[ 'type' ] = substr( $query, 0, strpos( $query, ' ' ) );
 		if ( !$result )
@@ -260,12 +260,13 @@ class zgDebug
 
 
 	/**
-	 * Shows somemisc information
+	 * Shows some misc information
 	 */
 	public function showMiscInformation( )
 	{
 		echo '<div class="debug">';
-		echo '<h1>Misc Infomation</h1>';
+		echo '<h1>Misc Information</h1>';
+		echo '<h2>URL:</h2><p>' . $_SERVER[ 'REQUEST_URI' ] . '</p>';
 		echo '<h2>_GET:</h2>';
 		foreach ( $_GET as $key => $value )
 		{
@@ -452,7 +453,8 @@ class zgDebug
 
 				$currentGuardLine .= '<td class="guardMessageLine">';
 
-				if ( !empty( $guardMessage[ 'filename' ] ) ) {
+				if ( !empty( $guardMessage[ 'filename' ] ) )
+				{
 					$currentGuardLine .= '[<span class="guardFile">' . $guardMessage[ 'filename' ] . '</span> ';
 				}
 				else
@@ -460,7 +462,8 @@ class zgDebug
 					$currentGuardLine .= '[ ';
 				}
 
-				if ( !empty( $guardMessage[ 'line' ] ) ) {
+				if ( !empty( $guardMessage[ 'line' ] ) )
+				{
 					$currentGuardLine .= '(<span class="guardLine">' . $guardMessage[ 'line' ] . '</span>)] ';
 				}
 				else
@@ -468,7 +471,8 @@ class zgDebug
 					$currentGuardLine .= ' ]';
 				}
 
-				if ( !empty( $guardMessage[ 'filename' ] ) ) {
+				if ( !empty( $guardMessage[ 'filename' ] ) )
+				{
 					$currentGuardLine .= '<span class="guardClass">' . $guardMessage[ 'class' ] . '-&gt;</span>';
 				}
 				else
@@ -476,7 +480,8 @@ class zgDebug
 					$currentGuardLine .= ' ';
 				}
 
-				if ( !empty( $guardMessage[ 'function' ] ) ) {
+				if ( !empty( $guardMessage[ 'function' ] ) )
+				{
 					$currentGuardLine .= '<span class="guardFunction">' . $guardMessage[ 'function' ] . '</span>';
 				}
 				else
