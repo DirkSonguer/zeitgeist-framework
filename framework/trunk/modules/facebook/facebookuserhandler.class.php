@@ -14,7 +14,7 @@
  * @subpackage ZEITGEIST FACEBOOK
  */
 
-defined( 'ZEITGEIST_ACTIVE' ) or die( );
+defined( 'ZEITGEIST_ACTIVE' ) or die();
 
 require_once ( ZEITGEIST_ROOTDIRECTORY . 'modules/facebook/facebook-platform/facebook.php' );
 
@@ -40,14 +40,14 @@ class zgFacebookUserhandler extends zgUserhandler
 	 *
 	 * The constructor is set to private to prevent files from calling the class as a class instead of a singleton.
 	 */
-	protected function __construct( )
+	protected function __construct()
 	{
-		$this->debug = zgDebug::init( );
-		$this->messages = zgMessages::init( );
-		$this->configuration = zgConfiguration::init( );
+		$this->debug = zgDebug::init();
+		$this->messages = zgMessages::init();
+		$this->configuration = zgConfiguration::init();
 
-		$this->session = zgSession::init( );
-		$this->session->startSession( );
+		$this->session = zgSession::init();
+		$this->session->startSession();
 
 		$this->facebook = NULL;
 
@@ -55,7 +55,7 @@ class zgFacebookUserhandler extends zgUserhandler
 		$this->database->query( "SET NAMES 'utf8'" );
 		$this->database->query( "SET CHARACTER SET utf8" );
 
-		parent::__construct( );
+		parent::__construct();
 
 		if ( file_exists( ZEITGEIST_ROOTDIRECTORY . 'configuration/zgfacebook.ini' ) )
 		{
@@ -67,7 +67,12 @@ class zgFacebookUserhandler extends zgUserhandler
 			$this->configuration->loadConfiguration( 'facebook', APPLICATION_ROOTDIRECTORY . 'configuration/zgfacebook.ini', true );
 		}
 
-		$this->facebook = new Facebook( $this->configuration->getConfiguration( 'facebook', 'api', 'api_key' ), $this->configuration->getConfiguration( 'facebook', 'api', 'secret_key' ) );
+		// initialize facebook api
+		// you already need the correct app information for this
+		$facebookConnectParameters = array();
+		$facebookConnectParameters[ 'appId' ] = $this->configuration->getConfiguration( 'facebook', 'api', 'app_id' );
+		$facebookConnectParameters[ 'secret' ] = $this->configuration->getConfiguration( 'facebook', 'api', 'app_secret' );
+		$this->facebook = new Facebook( $facebookConnectParameters );
 	}
 
 
@@ -76,11 +81,11 @@ class zgFacebookUserhandler extends zgUserhandler
 	 *
 	 * @return zgFacebookUserhandler
 	 */
-	public static function init( )
+	public static function init()
 	{
 		if ( self::$instance === false )
 		{
-			self::$instance = new zgFacebookUserhandler( );
+			self::$instance = new zgFacebookUserhandler();
 		}
 
 		return self::$instance;
@@ -93,12 +98,12 @@ class zgFacebookUserhandler extends zgUserhandler
 	 *
 	 * @return boolean
 	 */
-	public function establishUserSession( )
+	public function establishUserSession()
 	{
-		$this->debug->guard( );
+		$this->debug->guard();
 
 		// check if the session handling works
-		if ( !$this->session->getSessionId( ) )
+		if ( !$this->session->getSessionId() )
 		{
 			$this->debug->write( 'Could not establish user session: could not find a session id', 'warning' );
 			$this->messages->setMessage( 'Could not establish user session: could not find a session id', 'warning' );
@@ -107,8 +112,10 @@ class zgFacebookUserhandler extends zgUserhandler
 			return false;
 		}
 
-		// check if the user is logged into facebook
-		$fbid = $this->facebook->get_loggedin_user( );
+		// check if the user is already logged into facebook
+		// this only means that the user has registered the app, is logged into facebook and has a session
+		// it does not mean that the user is known to the apps user system
+		$fbid = $this->facebook->getUser();
 		if ( empty( $fbid ) )
 		{
 			$this->debug->write( 'Could not establish user session: facebook session not initialized', 'warning' );
@@ -145,7 +152,7 @@ class zgFacebookUserhandler extends zgUserhandler
 	 */
 	public function validateFacebookUser( $fbid )
 	{
-		$this->debug->guard( );
+		$this->debug->guard();
 
 		// check if the user has its facebook data already in the session
 		$fbSessionId = $this->session->getSessionVariable( 'user_facebookid' );
@@ -169,7 +176,7 @@ class zgFacebookUserhandler extends zgUserhandler
 			return true;
 		}
 
-		// seems like the user is not known to the system
+		// seems like the user is logged in but not known to the system yet
 		// first create a new user based on the facebook data
 		$userid = $this->createUser( $fbid );
 		if ( !$userid )
@@ -203,15 +210,15 @@ class zgFacebookUserhandler extends zgUserhandler
 	/**
 	 * Login a user with username and password
 	 * If successfull it will gather the user specific data and tie it to the session
-     *
-     * @param string $username not needed
-     * @param string $password not needed
+	 *
+	 * @param string $username not needed
+	 * @param string $password not needed
 	 *
 	 * @return boolean
 	 */
-	public function login( $username = false, $password = false )
+	public function login( $username = '', $password = '' )
 	{
-		$this->debug->guard( );
+		$this->debug->guard();
 
 		// check if the user is already known and logged in
 		if ( $this->loggedIn )
@@ -224,23 +231,23 @@ class zgFacebookUserhandler extends zgUserhandler
 		}
 
 		// call the facebook login and auth method
-		$fbid = $this->facebook->require_login( );
-		if ( empty( $fbid ) )
+		$fbid = $this->facebook->getUser();
+		if ( !empty( $fbid ) )
 		{
-			$this->debug->write( 'Problem logging in a user: facebook session not initialized', 'warning' );
-			$this->messages->setMessage( 'Problem logging in a user: facebook session not initialized', 'warning' );
+			$this->debug->write( 'Problem logging in a user: user already has a facebook session', 'warning' );
+			$this->messages->setMessage( 'Problem logging in a user: user already has a facebook session', 'warning' );
 
 			$this->debug->unguard( false );
 			return false;
 		}
 
-		// link the facebook user session to a local system session
-		$this->debug->write( 'linking facebook user', 'message' );
-		$linkstatus = $this->validateFacebookUser( $fbid );
-		$this->loggedIn = $linkstatus;
+		$tpl = new zgTemplate();
+		$tpl->redirect( $this->facebook->getLoginUrl() );
+		$this->debug->write( 'User login: redirecting to Facebook for authentication', 'message' );
+		$this->messages->setMessage( 'User login: redirecting to Facebook for authentication', 'message' );
 
-		$this->debug->unguard( $linkstatus );
-		return $linkstatus;
+		$this->debug->unguard( true );
+		return true;
 	}
 
 
@@ -249,14 +256,20 @@ class zgFacebookUserhandler extends zgUserhandler
 	 *
 	 * @return boolean
 	 */
-	public function logout( )
+	public function logout()
 	{
-		$this->debug->guard( );
+		$this->debug->guard();
 
 		if ( $this->loggedIn )
 		{
-			$this->facebook->expire_session( );
-			$this->session->unsetAllSessionVariables( );
+			$this->session->unsetAllSessionVariables();
+			$this->session->stopSession();
+			$this->loggedIn = false;
+
+			$tpl = new zgTemplate();
+			$tpl->redirect( $this->facebook->getLogoutUrl() );
+			$this->debug->write( 'User logout: redirecting to Facebook for logout', 'message' );
+			$this->messages->setMessage( 'User logout: redirecting to Facebook for logout', 'message' );
 		}
 		else
 		{
@@ -267,7 +280,7 @@ class zgFacebookUserhandler extends zgUserhandler
 			return false;
 		}
 
-		$this->session->stopSession( );
+		$this->session->stopSession();
 		$this->loggedIn = false;
 
 		$this->debug->unguard( true );
@@ -284,10 +297,10 @@ class zgFacebookUserhandler extends zgUserhandler
 	 */
 	public function createUser( $fbid )
 	{
-		$this->debug->guard( );
+		$this->debug->guard();
 
 		// begin transaction as we have multiple inserts depending on each other
-		if ( !$this->database->beginTransaction( ) )
+		if ( !$this->database->beginTransaction() )
 		{
 			$this->debug->write( 'Problem creating the user: could no begin database transaction', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: could no begin database transaction', 'warning' );
@@ -300,54 +313,42 @@ class zgFacebookUserhandler extends zgUserhandler
 		$sql = $this->database->prepare( "SELECT * FROM " . $this->configuration->getConfiguration( 'facebook', 'tables', 'table_facebookusers' ) . " WHERE facebookuser_fbid = ?" );
 		$sql->bindParam( 1, $fbid );
 
-		if ( !$sql->execute( ) )
+		if ( !$sql->execute() )
 		{
 			$this->debug->write( 'Problem creating the user: could not access the user table', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: could not access the user table', 'warning' );
 
-			$this->database->rollBack( );
+			$this->database->rollBack();
 			$this->debug->unguard( false );
 			return false;
 		}
 
-		if ( $sql->rowCount( ) > 0 )
+		if ( $sql->rowCount() > 0 )
 		{
 			$this->debug->write( 'Problem creating the user: a user with this facebook id already exists in the database', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: a user with this facebook id already exists in the database', 'warning' );
 
-			$this->database->rollBack( );
-			$this->debug->unguard( false );
-			return false;
-		}
-
-		// call the facebook login and auth method
-		$fbid = $this->facebook->require_login( );
-		if ( empty( $fbid ) )
-		{
-			$this->debug->write( 'Problem creating the user: facebook session not initialized', 'warning' );
-			$this->messages->setMessage( 'Problem creating the user: facebook session not initialized', 'warning' );
-
-			$this->database->rollBack( );
+			$this->database->rollBack();
 			$this->debug->unguard( false );
 			return false;
 		}
 
 		// get userdata from facebook
-		$fbuserdata = $this->facebook->api_client->users_getInfo( $fbid, 'first_name, last_name' );
+		$fbuserdata = $this->facebook->api( '/me' );
 		if ( !is_array( $fbuserdata ) )
 		{
 			$this->debug->write( 'Problem creating the user: could not get user data for user', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: could not get user data for user', 'warning' );
 
-			$this->database->rollBack( );
+			$this->database->rollBack();
 			$this->debug->unguard( false );
 			return false;
 		}
 
 		// insert a new user into database
 		$active = 1;
-		$key = md5( uniqid( md5( mt_rand( ) ), true ) );
-		$fbusername = $fbuserdata [ 0 ] [ 'first_name' ] . ' ' . $fbuserdata [ 0 ] [ 'last_name' ];
+		$key = md5( uniqid( md5( mt_rand() ), true ) );
+		$fbusername = $fbuserdata [ 'name' ];
 
 		$sql = $this->database->prepare( "INSERT INTO " . $this->configuration->getConfiguration( 'zeitgeist', 'tables', 'table_users' ) . "(user_username, user_key, user_password, user_active) VALUES(?, ?, ?, ?)" );
 		$sql->bindParam( 1, $fbusername );
@@ -355,44 +356,44 @@ class zgFacebookUserhandler extends zgUserhandler
 		$sql->bindParam( 3, $key );
 		$sql->bindParam( 4, $active );
 
-		if ( !$sql->execute( ) )
+		if ( !$sql->execute() )
 		{
 			$this->debug->write( 'Problem creating the user: could not insert the user into the database', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: could not insert the user into the database', 'warning' );
 
-			$this->database->rollBack( );
+			$this->database->rollBack();
 			$this->debug->unguard( false );
 			return false;
 		}
 
 		// this is the id for the user that just has been created
-		$currentId = $this->database->lastInsertId( );
+		$currentId = $this->database->lastInsertId();
 
 		// insert facebook user to link table
 		$sql = $this->database->prepare( "INSERT INTO " . $this->configuration->getConfiguration( 'facebook', 'tables', 'table_facebookusers' ) . "(facebookuser_fbid, facebookuser_user) VALUES(?, ?)" );
 		$sql->bindParam( 1, $fbid );
 		$sql->bindParam( 2, $currentId );
 
-		if ( !$sql->execute( ) )
+		if ( !$sql->execute() )
 		{
 			$this->debug->write( 'Problem creating the user: could not connect the user data to the facebook data', 'warning' );
 			$this->messages->setMessage( 'Problem creating the user: could not connect the user data to the facebook data', 'warning' );
 
-			$this->database->rollBack( );
+			$this->database->rollBack();
 			$this->debug->unguard( false );
 			return false;
 		}
 
 		// commit inserts into database
-		$this->database->commit( );
-		
+		$this->database->commit();
+
 		$this->debug->unguard( $currentId );
 		return $currentId;
 	}
 
 
 	/**
-	 * Gets a user id from a facebook id
+	 * Gets user information from a facebook id
 	 *
 	 * @param integer $fbid facebook id of the user
 	 *
@@ -400,7 +401,7 @@ class zgFacebookUserhandler extends zgUserhandler
 	 */
 	private function _getUserInformationFromFacebookId( $fbid )
 	{
-		$this->debug->guard( );
+		$this->debug->guard();
 
 		// get userinformation from database
 		$sqlquery = "SELECT u.user_id, u.user_key, u.user_username FROM " . $this->configuration->getConfiguration( 'facebook', 'tables', 'table_facebookusers' ) . " fb ";
@@ -409,7 +410,7 @@ class zgFacebookUserhandler extends zgUserhandler
 		$sql = $this->database->prepare( $sqlquery );
 		$sql->bindParam( 1, $fbid );
 
-		if ( !$sql->execute( ) )
+		if ( !$sql->execute() )
 		{
 			$this->debug->write( 'Problem getting facebook user information: could not read the user table', 'warning' );
 			$this->messages->setMessage( 'Problem getting facebook user information: could not read the user table', 'warning' );
@@ -418,7 +419,7 @@ class zgFacebookUserhandler extends zgUserhandler
 			return false;
 		}
 
-		if ( $sql->rowCount( )  != 1 )
+		if ( $sql->rowCount() != 1 )
 		{
 			$this->debug->write( 'Problem getting facebook user information: no linked user exists for this facebook id', 'warning' );
 			$this->messages->setMessage( 'Problem getting facebook user information: no linked user exists for this facebook id', 'warning' );
@@ -439,16 +440,16 @@ class zgFacebookUserhandler extends zgUserhandler
 	 *
 	 * @return integer
 	 */
-	public function getFacebookUserID( )
+	public function getFacebookUserID()
 	{
-		$this->debug->guard( );
+		$this->debug->guard();
 
-		$fbid = $this->facebook->get_loggedin_user( );
+		$fbid = $this->facebook->getUser();
 		if ( empty( $fbid ) )
 		{
 			$this->debug->write( 'Could not get facebook user id: facebook session not initialized', 'warning' );
 			$this->messages->setMessage( 'Could not get facebook user id: facebook session not initialized', 'warning' );
-			
+
 			$this->debug->unguard( false );
 			return false;
 		}
