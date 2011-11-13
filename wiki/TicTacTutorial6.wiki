@@ -10,7 +10,7 @@ If you have specific questions about the tutorial, please mail us or open an [ht
 
 The current goal is to create a working user infrastructure. A user should be able to create an account, log in, log off as well as edit and delete his account again. However as this is a pretty major goal, the tasks will be splitted between tutorials.
 
-In the last tutorial we created a new module for the user actions and an action for the login. We also created a matching template for the action and a configuration for parse the input. In the database we added a test user with the name "testuser" and password "testuser". However the login action does not do anything with the user input. This is about to change.
+In the last tutorial we created a new module for the user actions and an action for the login. We also created a matching template for the action and a configuration for parse the input. However the login action does not do anything with the user input. This is about to change.
 
 === Adding a user ===
 
@@ -27,7 +27,7 @@ We have now a user in the database which we can log in. Last tutorial we also bu
 
 == User Login ==
 
-We return to the login action in the user module and first implement a check if the user is already logged in. If he is, he obviously does not need to log in again and is redirected to the main index action.
+We return to the login action in the user module ("user.module.php") and first implement a check if the user is already logged in. If he is, he obviously does not need to log in again and is redirected to the main index action.
 
 We do this by checking a method in the user class:
 
@@ -40,11 +40,13 @@ We do this by checking a method in the user class:
 		}
 }}}
 
-Note that we use two functions of the template class. redirect() does a header redirect and createLink() creates a link to a given module and action. Note that if debugging is activated, the redirect will not be executed but shown as a link.
+Note that we use two functions of the template class. redirect() does a header redirect and createLink() creates a link to a given module and action. Note that if debugging is activated, the redirect will not be executed right away but shown as a link.
 
 We then check if the user has already sent the form. If he has, the name and password fields are filled, so we first check if there is any content stored in the according parameters.
 
 The actual login process is done by the user class. The method login() is called with the name and password. If a matching user is found and the password is correct, the method returns true.
+
+Note that we can pass the input parameters to the backend as they are. First off, we can guarantee that they are safe as we could define them that way in the parameter definition. The Zeitgeist backend also adds database security so even if you pass unsecure parameters an SWL injection should not be possible. 
 
 If the login is successful we redirect the user to the main index. If not, an error message is shown.
 
@@ -118,3 +120,5 @@ That's it. The logout will flush the session and thus disconnect the user from i
 In this part of the tutorial we now created a working example for logging in. After logging in a generic page will be shown with a log out link where the user will be logged out again.
 
 In the next tutorial we'll start adding the actual game logic so a player can start playing a game.
+
+[http://code.google.com/p/zeitgeist-framework/wiki/TicTacTutorialOverview Back to the tutorial overview page]
