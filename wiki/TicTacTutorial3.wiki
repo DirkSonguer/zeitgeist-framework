@@ -1,6 +1,6 @@
-#summary Tutorial - How to create a simple PBBG, part 3
+#summary Tutorial - How to create a simple PBBG, part 4
 #labels Phase-Implementation,Tutorial
-= Part 3 - Game Architecture =
+= Part 4 - Presentation Layer =
 
 This tutorial is about creating a working persistent browser based game with the Zeitgeist Framework. To keep it simple, we're just doing a simple Tic Tac Toe game. However we will use a much Zeitgeist specific functionalities as possible to show how they work.
 
@@ -8,98 +8,72 @@ If you have specific questions about the tutorial, please mail us or open an [ht
 
 == The Goal ==
 
-The goal of this part is to specify how our game works from an architectural standpoint and what components and classes are needed to implement it.
+In this tutorial we take a little detour before diving into the application logic in the next part: We'll set up the presentation layer (the frontent of the Tic Tac Toe game).
 
-== Game Properties Reviewed ==
+== Presentation Layer ==
 
-In the first part we defined some properties for our game. Here they are again:
+The presentation layer is basically everything a user sees in your application or game. This may be HTML, but also a Flash, Silverlight or even Air clients - in short: pretty much every frontend technology you can think of.
 
- * The game will only feature player against player, no AI
+Zeitgeist, as a very basic framework, does not limit you to any frontend technology. Neither does it define that you have to separate your application code from the frontend. For example you could just write HTML output in your actions and be done with it. However this would most likely result in pretty messy applications very soon. It is always the best practice to separate the backend code from the frontend.
 
-This means we don't have to worry about AI - it's only player interacting with the game.
+The Zeitgeist framework offers a basic HTML [ClassTemplate templating class], but again: you are not limited to it. You may easily use every other templating class you prefer. [http://www.smarty.net/ Smarty] for example is a very capable and popular template engine.
 
- * A player has to have an account to play
- * A player has to be logged in to play
+For this tutorial we'll use a simple HTML output, rendered by the Zeitgeist template class as a small example how to use it in your projects.
 
-The game needs some kind of user handling. A user has to be able to create an account, login, logout, edit and delete his account.
+== Basics ==
 
- * Wins, losses and ties will be stored for each account
- * Each win earns the player points, which will also be stored for each account
+A template file is basically just an HTML file with some additional control codes. We'll start off by creating a simple HTML file and placing it in the according template directory. In our case this would be "*/templates/application_templates/*", but it can be configured in /configuration/application.ini -> templatepath.
 
-The game needs some kind of mechanism to assess played games and to reward points accordingly. Also, the earned points have to be shown somewhere.
+{{{
+<html>
+<head>
+	<title>Welcome to Tic Tac Tutorial</title>
+</head>
 
- * The game will use a simple matchmaking pattern: The game will either open a new game or match a player to an already open game
+<body>
 
-The game needs a simple lobby handling where a lobby is opened when a user wants to play a game but no lobby is already open. If a player wants to play and an open lobby already exists, he should join it and the game should start.
+	<h1>Welcome to Tic Tac Tutorial</h1>
 
- * A player can only play one game at a time
+</body>
+</html>
+}}}
 
-This may be a simple test if the user is allowed to join a new game.
+You can name the template as you want, but should stick to a naming convention that fits your application. For this tutorial we'll name the files according to the actions they're called from, in this instance /templates/application_templates/main_index.tpl.html. If you use templates in mutiple actions this of course won't work.
 
- * A game ends if a player wins, the game is tied or one player forfeits
+== Loading and Showing Templates ==
 
-The game has to test for its state while playing.
+The load method takes the filename of the template as parameter. Note that we add the template path from the configuration as prefix so the path points to the right template directory. If you want to use multiple skins, either choosable by the user or by random, make this path changable and create matching template files for each skin in the individual directories.
 
-== Game Components ==
+{{{
+	$tpl = new zgTemplate();
+	$tpl->load($this->configuration->getConfiguration('application', 'application', 'templatepath') . '/main_index.tpl.html');
+}}}
 
-From these properties we can now derive the components our game needs. Before we do that, we'll take a look again at how the pipeline in a Zeitgeist project works.
+The template itself is now loaded into the object. The content of the template is loaded into the class structure in a content buffer. All functions are manipulating the content buffer directly, nothing will be sent to the browser until the buffer is printed.
 
-All calls go through the '''index.php'''. It is called with a module and action. Example: http://www.zeitgeistapplication.com/index.php?module=main&action=index
+To show the content of the tempate buffer you can either get the content, store it into a variable and print it out:
 
-From there the '''[ClassController controller]''' of Zeitgeist will route the call accordingly:
+{{{
+	$tplcontent = $tpl->getContent();
+	echo $tplcotent;
+}}}
 
- * The '''[ZeitgeistModules module]''' is the name of the class. In our example this would be "class main" in "/modules/main/main.php". It also loads the accordig configuration for the module.
- * The '''[ZeitgeistActions action]''' is the name of the method inside the module class. In our example it would be "function index" in "/modules/main/main.php" that does all the magic
+Otherwise you can achieve the same with the show() method.
 
-So basically the modules are just containers for a number of actions. The concept behind this is that multiple actions that are locigally connected can be aggregated into one place.
+{{{
+	$tpl->show();
+}}}
 
-When we look at the properties of the game again, we'll notice that they can be grouped as follows:
+== Dynamic Template Content ==
 
- * user handling
- * lobby / matchmaking
- * game itself
+The whole point of a template system is of course to insert dynamic content into the templates. At this in the tutorial however, we don't have any dynamic content to show. We'll go further into really using the template system later on.
 
-Note that Zeitgeist actions only represent calls from outside of the application (from a user or an external system). So to determine the actions of a module, only actions that a user will call are relevant. All internal methods and classes should be handled as '''internal worker''' classes.
-
-So an external call goes like this:
-
- * An action in a specific module is called
- * The action calls methods in the worker classes to do the actual work
-
-However this is just a recommendation. Zeitgeist itself does not specify how you implement your project - you may just as well write everything directly into the actions. Then again, this would probably mean that you would repeat some logic at some point, so it pretty much depends on your own code style. For this tutorial, we'll use worker classes.
-
-Let's take a closer look at the modules:
-
-=== Module '''user''' ===
-
-The user module should take care of handling all actions related to the user and his account. As all relevant
-
-Actions of this module:
-
- * login
- * logout
- * create
- * edit
- * delete
-
-=== Module '''lobby''' ===
-
-Actions of this module:
-
- * startGame
-
-=== Module '''game''' ===
-
-Actions of this module:
-
- * setMarker
- * forfeit
- * update
+If you are curious you may look at the [http://code.google.com/p/zeitgeist-framework/source/browse/#svn/examples/zeitgeist_examples examples project] or at the [ClassTemplate template documentation]
 
 == Closing ==
 
-You should now have a running application. In the next part we will lay out our game architecture and start implementing it.
+For now you know where to place your templates, how to load and show them.
 
-Please note that while we will continue adding modules, actions and other project related information directly into the database, there actually is a tool providing an interface for doing all this: [http://code.google.com/p/zeitgeist-framework/wiki/ZeitgeistAdministrator Zeitgeist Administrator]. Although a coder tool (thus a bit messy, unstable and undocumented), it will help you a great deal when developing Zeitgeist based applications. Take a look if you have some time.
+In the next part of the tutorial series you will learn about the user system, how to add and log in users and add dynamic content to the project templates.
 
 [http://code.google.com/p/zeitgeist-framework/wiki/TicTacTutorialOverview Back to the tutorial overview page]
