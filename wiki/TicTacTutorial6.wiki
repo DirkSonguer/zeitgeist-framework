@@ -1,6 +1,6 @@
 #summary Tutorial - How to create a simple PBBG, part 6
 #labels Phase-Implementation,Tutorial
-= Part 6 - User Actions (user login 2) =
+= Part 6 - User Login (user login 2) =
 
 This tutorial is about creating a working persistent browser based game with the Zeitgeist Framework. To keep it simple, we're just doing a simple Tic Tac Toe game. However we will use a much Zeitgeist specific functionalities as possible to show how they work.
 
@@ -46,7 +46,7 @@ We then check if the user has already sent the form. If he has, the name and pas
 
 The actual login process is done by the user class. The method login() is called with the name and password. If a matching user is found and the password is correct, the method returns true.
 
-Note that we can pass the input parameters to the backend as they are. First off, we can guarantee that they are safe as we could define them that way in the parameter definition. The Zeitgeist backend also adds database security so even if you pass unsecure parameters an SWL injection should not be possible. 
+Note that we can pass the input parameters to the backend as they are. First off, we can guarantee that they are safe as we could define them that way in the parameter definition. The Zeitgeist backend also adds database security so even if you pass unsecure parameters an SWL injection should not be possible.
 
 If the login is successful we redirect the user to the main index. If not, an error message is shown.
 
