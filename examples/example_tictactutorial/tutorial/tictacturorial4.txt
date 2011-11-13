@@ -11,7 +11,7 @@ In this tutorial we take a little detour before diving into the application logi
 
 == Presentation Layer ==
 
-The presentation layer is basically everything a user sees in your application or game. This may be HTML, but also a Flash, Silverlight or even Air clients - in short: evey frontend technology.
+The presentation layer is basically everything a user sees in your application or game. This may be HTML, but also a Flash, Silverlight or even Air clients - in short: pretty much every frontend technology you can think of.
 
 Zeitgeist, as a very basic framework, does not limit you to any frontend technology. Neither does it define that you have to separate your application code from the frontend. For example you could just write HTML output in your actions and be done with it. However this would most likely result in pretty messy applications very soon. It is always the best practice to separate the backend code from the frontend.
 
@@ -45,8 +45,7 @@ The load method takes the filename of the template as parameter. Note that we ad
 
 {{{
 	$tpl = new zgTemplate();
-
-    $tpl->load($this->configuration->getConfiguration('application', 'application', 'templatepath') . '/main_index.tpl.html');
+	$tpl->load($this->configuration->getConfiguration('application', 'application', 'templatepath') . '/main_index.tpl.html');
 }}}
 
 The template itself is now loaded into the object. The content of the template is loaded into the class structure in a content buffer. All functions are manipulating the content buffer directly, nothing will be sent to the browser until the buffer is printed.
@@ -75,3 +74,5 @@ If you are curious you may look at the [http://code.google.com/p/zeitgeist-frame
 For now you know where to place your templates, how to load and show them.
 
 In the next part of the tutorial series you will learn about the user system, how to add and log in users and add dynamic content to the project templates.
+
+[http://code.google.com/p/zeitgeist-framework/wiki/TicTacTutorialOverview Back to the tutorial overview page]
