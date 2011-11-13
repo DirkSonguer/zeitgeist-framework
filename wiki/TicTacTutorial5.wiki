@@ -152,7 +152,7 @@ For our game we only want logged in users to actually play the game. Thus we che
 
 This is a pretty easy way, but it means that a user without an account is only able to see one page (or whatever is hiding behind the defined action). Note that we are redirecting to the user module and action we created earlier in this tutorial.
 
-Another way of handling this is to use the rights and roles management functionalities of Zeitgeist. Using those you are able to control which kind of user is able to call which actions. For example let the user use the game but not store any scores or achievements. For now we're using the easy way but we'll keep this in mind as it may come up later in the tutorial.
+Another way of handling this is to use the rights and roles management functionalities of Zeitgeist. Using those you are able to control which kind of user is able to call which actions. For example let the user use the game but not store any scores or achievements. This will come up later in the tutorial.
 
 === Adding a user login template ===
 
