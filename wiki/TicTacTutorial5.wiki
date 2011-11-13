@@ -1,6 +1,6 @@
 #summary Tutorial - How to create a simple PBBG, part 5
 #labels Phase-Implementation,Tutorial
-= Part 5 - User Actions (user login) =
+= Part 5 - User Handling Basics (user login) =
 
 This tutorial is about creating a working persistent browser based game with the Zeitgeist Framework. To keep it simple, we're just doing a simple Tic Tac Toe game. However we will use a much Zeitgeist specific functionalities as possible to show how they work.
 
