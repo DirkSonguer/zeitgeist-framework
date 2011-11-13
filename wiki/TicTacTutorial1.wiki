@@ -56,3 +56,5 @@ Use your SVN client to check out the current version of the framework files: "sv
 == Closing ==
 
 That's it for the setup process. You now have everything you need to start developing. Unfortunately you can't see anything at the moment as the whole project needs to be configured first. We'll cover that in the next part of the tutorial.
+
+[http://code.google.com/p/zeitgeist-framework/wiki/TicTacTutorialOverview Back to the tutorial overview page]
