@@ -1,0 +1,48 @@
+# Actionlog #
+
+The actionlog acts as a log of all action requests. As such it records all calls that go through the [Controller](ClassController.md) with their assorted parameters.
+
+The class is only responsible for 'storing' the data, not for retrieving or analyzing it. You need to write your own custom tools or export the data for use with third party systems.
+
+## Activating logging ##
+
+Action logging can be activated in the Zeitgeist configuration file: "./zeitgeist/configuration/zeitgeist.ini":
+
+```
+[actionlog]
+
+actionlog_active = 0
+```
+
+It may also be overwritten in the basic application configuration: "./configuration/zeitgeist.ini".
+
+If active the controller class will automatically call the logging class and record everything.
+
+## Data storage ##
+
+The collected data is stored in two tables.
+
+### actionlog ###
+
+This table stores the request itself. Every request adds one line to the data table.
+
+The following data is stored:
+
+  * '''actionlog\_id''': The id for the data entry. Will be defined by the database.
+  * '''actionlog\_module''': The id of the module in the module registry.
+  * '''actionlog\_action''': The id of the action in the action registry.
+  * '''actionlog\_ip''': The ip from where the request originated.
+  * '''actionlog\_timestamp''': The timestamp when the request was received.
+
+Note a few things: if you delete or rename a module or an action it will break your reporting. So be sure you'll either map this to real names when importing it to a data mining tool or not to change your application structure.
+
+Also storing the IP of a user might be a problem, depending on the legal situation.
+
+### actionlog\_parameters ###
+
+This contains the parameters that were received with a request.
+
+  * '''actionparameters\_id''': The id for the data entry. Will be defined by the database.
+  * '''actionparameters\_trafficid''': The id of the associated request in the actionlog table.
+  * '''actionparameters\_key''': The key of the parameter.
+  * '''actionparameters\_value''': The value of the parameter.

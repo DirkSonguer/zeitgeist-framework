@@ -1,0 +1,43 @@
+# Zeitgeist Actions #
+
+An action in Zeitgeist is a specific function inside a module. As a module is just a class, an action is represented as a method inside the modules class.
+
+The action is called as a parameter to the index: zeitgeistapplication/index.php?module=MODULENAME&action=ACTIONNAME
+
+## Action registry ##
+
+All actions have to be registered in the database for the framework to use it. The table defines the attributes of an action and binds it to a module:
+
+  * '''action\_id''': the id of the action
+  * '''action\_module''': this is the id of the module the action is bound to
+  * '''action\_name''': this is the name of the action (ACTIONNAME)
+  * '''action\_decription''': a human readable description for the action
+  * '''action\_requiresuserright''': if "1" the user needs the userright to call the action. If "0" it's usable by all users
+
+You may use the [Zeitgeist Administrator](ZeitgeistAdministrator.md) to handle the action registry.
+
+## Action configuration ##
+
+The configuration for an action is taken from the module configuration, which is automatically loaded when the module is used. Just add a block with the name of the action and it will be loaded and used (for example by the [parameter handler](ClassParameters.md). See the [configuration documentation](ClassConfiguration.md) for more details.
+
+## Action code ##
+
+```
+#!php
+
+// .. module class ..
+
+        public function index($parameters=array())
+        {
+                $this->debug->guard();
+
+//              .. action code ..
+
+                $this->debug->unguard(true);
+                return true;
+        }
+
+// .. module class ..
+
+?>
+```

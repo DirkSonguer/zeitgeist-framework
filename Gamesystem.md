@@ -1,0 +1,23 @@
+# Gamesystem #
+
+As said in the introduction, Zeitgeist is meant not only as a generic framework for web applications but has a special focus on games, especially persistent browser based games (PBBGs).
+
+The game specific code is located in the [Gamesystem](http://code.google.com/p/zeitgeist-framework/source/browse/#svn/framework/trunk/modules/gamesystem) which is not part of the core classes but a seperate module.
+
+# The Gamesystem module #
+
+The Gamesystem is meant to be offer very generic methods that can be used by almost any game. It's based on the following assumptions:
+
+  * Every user with a session is a potential player
+  * Every instance of the application is a potential game ([Sharding](http://www.raphkoster.com/2009/01/08/database-sharding-came-from-uo/))
+  * Every game has players
+  * Every player has data that defines his condition in the game
+  * Players interact with other players as well as the game world itself
+  * Every interaction can be mapped to a game action (defined by the game mechanics)
+  * Actions change the data associated with the players and the game world
+  * Actions can be executed at any present or future time
+
+Based on these assumptions the Gamesystems has two major duties:
+
+  * Handle incoming actions and dispatch them at the given time (provided by the [Gamehandler class](GamesystemGamehandler.md))
+  * Handle the game specific data (provided by the [Gamedata class](GamesystemGamedata.md))

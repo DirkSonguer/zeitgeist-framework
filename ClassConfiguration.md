@@ -1,0 +1,91 @@
+# Configuration (Core Class) #
+
+The configuration system handles loading & using configuration files. It's used throughout the framework for all kinds of configuration purposes.
+
+The files itself are basically [.ini files](http://en.wikipedia.org/wiki/INI_file). The only difference is that they support references to other configuration items.
+
+Once loaded the configuration files are cached in the database.
+
+## Configuration structure ##
+
+The configuration files work as [usual .ini files](http://en.wikipedia.org/wiki/INI_file).
+
+Assigning values is just a matter of defining key and value pairs:
+
+```
+name=value
+```
+
+Values can be grouped in sections, however only one depth is allowed.
+
+```
+[section]
+```
+
+Line comments can be defined with a semicolon at the start of the line.
+
+```
+; comment text
+```
+
+The Zeitgeist .ini files also support references and arrays. See below for details.
+
+## Using the configuration files ##
+
+The configuration files are accessible through the configuration system (zgConfiguration). The configuration class is a singleton, so every class and method can access the configuration information once it's loaded.
+
+```
+$configuration = zgConfiguration::init();
+```
+
+You may then load a configuration file. Each configuration file is loaded with a handler to it.
+
+```
+$configuration->loadConfiguration('config_example', './configuration/example_configuration.ini');
+```
+
+In this example, the handler is "config\_example". To access the configuration, just call it by the handler:
+
+```
+$configdata = $configuration->getConfiguration('config_example');
+```
+
+This will actually load the entire configuration in an associative array. You may give additional parameters to access only a specific section or key:
+
+```
+$configurationdata = $configuration->getConfiguration(CONFIGURATIONHANDLE, BLOCK, KEY);
+```
+
+## References ##
+
+As said the configuration files support references to other configurations:
+
+```
+key = [[CONFIGURATIONHANDLE.BLOCK.KEY]]
+```
+
+References are just dynamic links to another configuration item. The referenced item has to be loaded previously to calling it.
+
+It's only possible to link to another configuration item, not to another block or handle.
+
+## Value Arrays ##
+
+Values can be grouped into arryas. For this, just use the key and address it as an associative array:
+
+```
+key[id] = 12345
+key[name] = testarray
+key[description] = this shows you how a configuration array works
+```
+
+By addressing the key you will get an associative array containing your configuration array.
+
+## Module configuration ##
+
+Each module has a configuration file, located in the module directory and named the same as the module: "./MODULENAME/MODULENAME.ini".
+
+It holds general configuration items needed by the module, for example template and table references and so on. It might also hold items used to configure the actions, for example [parameter definitions](ClassParameters.md) etc.
+
+## Examples ##
+
+Examples can be found [source:/examples/zeitgeist\_examples/modules/configuration/configuration.module.php here].

@@ -1,0 +1,48 @@
+# Template (Module Class) #
+
+A simple but effective template system.
+
+The syntax is based on Adobe Dreamweaver, so DW will be able to somewhat help you with the development. Otherwise it's perfectly usable without DW.
+
+Also, if you don't like the syntax you can change it in /zeitgeist/configuration/zeitgeist.ini -> template. Be careful to choose unique identifiers or you might replace or overwrite unwanted code or content blocks in your template.
+
+Part of the [Core Classes](ZeitgeistClasses.md).
+
+## Examples ##
+
+```
+// Create a new object of type template
+$tpl = new zgTemplate();
+
+// Load the example template
+// Open it and take a look at how it works
+$tpl->load('_additional_files/example_template.tpl.html');
+
+// Assign a value to a template var
+$tpl->assign('examplecontent', 'Hello, Template!');
+
+// The createLink() method can be used to create a complete link
+// All paths etc. are added automatically
+// The parameters are createLink(MODULE, ACTION)
+$tpl->assign('manuallink', $tpl->createLink('main', 'index'));
+
+// You can also assign the contents of an array automatically to
+// the template. The keys are mapped to the template vars, the
+// values are assigned as content
+$contentarray = array();
+$contentarray['hello'] = 'Hello';
+$contentarray['template'] = 'Template';
+$tpl->assignDataset($contentarray);
+
+// Blocks do not show up by default, they have to be inserted first
+$tpl->assign('blockcontent', 'Hello, Block 1');
+$tpl->insertBlock('exampleblock');
+
+// However blocks can be inserted multiple times. the contents of the
+// template vars inside the blocks are parsed when a block is inserted
+$tpl->assign('blockcontent', 'Hello, Block 2');
+$tpl->insertBlock('exampleblock');
+
+// Sends the contents of the template buffer to the output
+$tpl->show();
+```

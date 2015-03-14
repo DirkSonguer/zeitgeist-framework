@@ -1,0 +1,122 @@
+# Part 6 - User Login (user login 2) #
+
+This tutorial is about creating a working persistent browser based game with the Zeitgeist Framework. To keep it simple, we're just doing a simple Tic Tac Toe game. However we will use a much Zeitgeist specific functionalities as possible to show how they work.
+
+If you have specific questions about the tutorial, please mail us or open an [issue](http://code.google.com/p/zeitgeist-framework/issues/list).
+
+## The Goal ##
+
+The current goal is to create a working user infrastructure. A user should be able to create an account, log in, log off as well as edit and delete his account again. However as this is a pretty major goal, the tasks will be splitted between tutorials.
+
+In the last tutorial we created a new module for the user actions and an action for the login. We also created a matching template for the action and a configuration for parse the input. However the login action does not do anything with the user input. This is about to change.
+
+### Adding a user ###
+
+To log in a user it has to exist first. As we don't have an action for creating a user yet, we'll just add one to the database directly.
+
+Note that the passwords are stored as md5 hashes by default. We'll use "testuser" as the users name as well as password. The user has to be active of course (last parameter). The user key is another unique id for the user. It can be used as a secret key as it should not be made public anywhere in the application frontend (use the user\_id for frontend identification as a best practise).
+
+```
+    INSERT INTO users ( user_username, user_password, user_key, user_active )
+    VALUES ( 'testuser', '5d9c68c6c50ed3d02a2fcf54f63993b6', NULL , '1' );
+```
+
+We have now a user in the database which we can log in. Last tutorial we also build a page for a user to log in as well as added the module and action for it. We now have to add the actual log in functionality.
+
+## User Login ##
+
+We return to the login action in the user module ("user.module.php") and first implement a check if the user is already logged in. If he is, he obviously does not need to log in again and is redirected to the main index action.
+
+We do this by checking a method in the user class:
+
+```
+		if ( $this->user->isLoggedIn( ) )
+		{
+			$tpl->redirect( $this->configuration->getConfiguration( 'application', 'application', 'basepath' ) . $tpl->createLink( 'main', 'index' ) );
+			$this->debug->unguard( true );
+			return true;
+		}
+```
+
+Note that we use two functions of the template class. redirect() does a header redirect and createLink() creates a link to a given module and action. Note that if debugging is activated, the redirect will not be executed right away but shown as a link.
+
+We then check if the user has already sent the form. If he has, the name and password fields are filled, so we first check if there is any content stored in the according parameters.
+
+The actual login process is done by the user class. The method login() is called with the name and password. If a matching user is found and the password is correct, the method returns true.
+
+Note that we can pass the input parameters to the backend as they are. First off, we can guarantee that they are safe as we could define them that way in the parameter definition. The Zeitgeist backend also adds database security so even if you pass unsecure parameters an SWL injection should not be possible.
+
+If the login is successful we redirect the user to the main index. If not, an error message is shown.
+
+```
+		if ( ( !empty( $parameters[ 'username' ] ) ) && ( !empty( $parameters[ 'password' ] ) ) )
+		{
+			$login = $this->user->login( $parameters[ 'username' ], $parameters[ 'password' ] );
+			if ( $login )
+			{
+				// if the login is successful, redirect to the main page
+				$tpl->redirect( $this->configuration->getConfiguration( 'application', 'application', 'basepath' ) . $tpl->createLink( 'main', 'index' ) );
+				$this->debug->unguard( true );
+				return true;
+			}
+
+			$tpl->insertBlock( "loginError" );
+		}
+```
+
+And that would be it. Everything else is done by the user class. If successful the login method will associate the session with the user id. You can now access all the related data of a user.
+
+Take a minute to try to log in the created testuser. If it works you should be redirected to the main page.
+
+## User Logout ##
+
+Logging a user out is pretty similar to a user login - meaning that we just need an action for the logout and call a method in the user class.
+
+First we add the link to the logout action into the standard template. Open **/templates/application\_templates/main\_index.tpl.html** and add the following line in the main content area.
+
+```
+    <p><a href="@@{[user.logout]}@@">Log out</a></p>
+```
+
+Next we need to add the action to the database so it becomes available.
+
+```
+	INSERT INTO actions ( action_module, action_name, action_description, action_active )
+	VALUES ( '2', 'logout', 'Logs the current user out', '1' );
+```
+
+And finally we just need a method that calls the logout method if the user is already logged in in the user module. This will be executed when the action is called.
+
+```
+	public function logout( $parameters = array( ) )
+	{
+		$this->debug->guard( );
+
+		// although this action does not use an actual template
+		// the class is needed for the redirects
+		$tpl = new zgTemplate( );
+
+		// check if the user is logged in
+		if ( $this->user->isLoggedIn( ) )
+		{
+			// if the user is logged in, call the logout method
+			// this will invalidate the user session and log him out
+			$this->user->logout( );
+		}
+
+		// redirect the user to the main page
+		$tpl->redirect( $this->configuration->getConfiguration( 'application', 'application', 'basepath' ) . $tpl->createLink( 'main', 'index' ) );
+		$this->debug->unguard( true );
+		return true;
+	}
+```
+
+That's it. The logout will flush the session and thus disconnect the user from its old session.
+
+## Closing ##
+
+In this part of the tutorial we now created a working example for logging in. After logging in a generic page will be shown with a log out link where the user will be logged out again.
+
+In the next tutorial we'll add functionality to create a user in the frontend instead of adding it directly to the database.
+
+[Back to the tutorial overview page](http://code.google.com/p/zeitgeist-framework/wiki/TicTacTutorialOverview)

@@ -1,0 +1,77 @@
+# Part 4 - Presentation Layer #
+
+This tutorial is about creating a working persistent browser based game with the Zeitgeist Framework. To keep it simple, we're just doing a simple Tic Tac Toe game. However we will use a much Zeitgeist specific functionalities as possible to show how they work.
+
+If you have specific questions about the tutorial, please mail us or open an [issue](http://code.google.com/p/zeitgeist-framework/issues/list).
+
+## The Goal ##
+
+In this tutorial we take a little detour before diving into the application logic in the next part: We'll set up the presentation layer (the frontent of the Tic Tac Toe game).
+
+## Presentation Layer ##
+
+The presentation layer is basically everything a user sees in your application or game. This may be HTML, but also a Flash, Silverlight or even Air clients - in short: pretty much every frontend technology you can think of.
+
+Zeitgeist, as a very basic framework, does not limit you to any frontend technology. Neither does it define that you have to separate your application code from the frontend. For example you could just write HTML output in your actions and be done with it. However this would most likely result in pretty messy applications very soon. It is always the best practice to separate the backend code from the frontend.
+
+The Zeitgeist framework offers a basic HTML [templating class](ClassTemplate.md), but again: you are not limited to it. You may easily use every other templating class you prefer. [Smarty](http://www.smarty.net/) for example is a very capable and popular template engine.
+
+For this tutorial we'll use a simple HTML output, rendered by the Zeitgeist template class as a small example how to use it in your projects.
+
+## Basics ##
+
+A template file is basically just an HTML file with some additional control codes. We'll start off by creating a simple HTML file and placing it in the according template directory. In our case this would be "**/templates/application\_templates/**", but it can be configured in /configuration/application.ini -> templatepath.
+
+```
+<html>
+<head>
+	<title>Welcome to Tic Tac Tutorial</title>
+</head>
+
+<body>
+
+	<h1>Welcome to Tic Tac Tutorial</h1>
+
+</body>
+</html>
+```
+
+You can name the template as you want, but should stick to a naming convention that fits your application. For this tutorial we'll name the files according to the actions they're called from, in this instance /templates/application\_templates/main\_index.tpl.html. If you use templates in mutiple actions this of course won't work.
+
+## Loading and Showing Templates ##
+
+The load method takes the filename of the template as parameter. Note that we add the template path from the configuration as prefix so the path points to the right template directory. If you want to use multiple skins, either choosable by the user or by random, make this path changable and create matching template files for each skin in the individual directories.
+
+```
+	$tpl = new zgTemplate();
+	$tpl->load($this->configuration->getConfiguration('application', 'application', 'templatepath') . '/main_index.tpl.html');
+```
+
+The template itself is now loaded into the object. The content of the template is loaded into the class structure in a content buffer. All functions are manipulating the content buffer directly, nothing will be sent to the browser until the buffer is printed.
+
+To show the content of the tempate buffer you can either get the content, store it into a variable and print it out:
+
+```
+	$tplcontent = $tpl->getContent();
+	echo $tplcotent;
+```
+
+Otherwise you can achieve the same with the show() method.
+
+```
+	$tpl->show();
+```
+
+## Dynamic Template Content ##
+
+The whole point of a template system is of course to insert dynamic content into the templates. At this in the tutorial however, we don't have any dynamic content to show. We'll go further into really using the template system later on.
+
+If you are curious you may look at the [examples project](http://code.google.com/p/zeitgeist-framework/source/browse/#svn/examples/zeitgeist_examples) or at the [template documentation](ClassTemplate.md)
+
+## Closing ##
+
+For now you know where to place your templates, how to load and show them.
+
+In the next part of the tutorial series you will learn about the user system, how to add and log in users and add dynamic content to the project templates.
+
+[Back to the tutorial overview page](http://code.google.com/p/zeitgeist-framework/wiki/TicTacTutorialOverview)

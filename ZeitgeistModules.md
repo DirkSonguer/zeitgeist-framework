@@ -1,0 +1,71 @@
+# Zeitgeist Modules #
+
+Zeitgeist modules are logical containers to group the [actions](ZeitgeistActions.md) of your application. They basically allow you to keep your app readable and maintain a logical structure within you application. Also, they make the requests / URLs more readable.
+
+The module is called as a parameter to the index: zeitgeistapplication/index.php?module=MODULENAME&action=ACTIONNAME
+
+Each module is represented by a class and resides in its own folder below the "./modules" directory of your application. It may also have a configuration file to define some aspects of the actions inside the module.
+
+A module consists of 3 parts: the module class, the configuration (both inside the module folder) and its entry in the module registry table:
+
+  * '''Module folder''': has to be places in the ./modules directory of you app
+  * '''Module class''': is placed inside a file in the folder of your module. The file has to be named MODULENAME.module.php. The class has to be named MODULENAME.
+  * '''Module configuration''': is placed in the folder of your module. Has to be named MODULENAME.ini
+  * '''Module registry''': is entered in the module table (''INSERT INTO modules(module\_name, module\_description, module\_active) VALUES('MODULENAME', 'Module Description', '1');'')
+
+[[Image(wiki:ZeitgeistModules:modules\_structure.2.png)]]
+
+## Module registry ##
+
+All modules have to be registered in the database for the framework to use it. The table defines the attributes of a module:
+
+  * '''module\_id''': the id of the module. You'll need this to bind actions in the action registry to a module
+  * '''module\_name''': this is the name of the module (MODULENAME)
+  * '''module\_decription''': a human readable description for the module
+  * '''module\_active''': if "1" the module is active. If "0" it's not usable within the framework
+
+You may use the [Zeitgeist Administrator](ZeitgeistAdministrator.md) to handle the module registry.
+
+## Module configuration ##
+
+A module configuration file is just a normal .ini configuration file as used throughout the framework. See the [configuration documentation](ClassConfiguration.md) for more details.
+
+## Module code ##
+
+A module is just a class. All methods of the class (except the constructor and destructor) are available as actions - as long as they are included in the action registry (see [action description](ZeitgeistActions.md) for more details.
+
+```
+#!php
+<?php
+
+class MODULENAME
+{
+	protected $debug;
+	protected $messages;
+	protected $database;
+	protected $configuration;
+	protected $user;
+
+	public function __construct()
+	{
+		$this->debug = zgDebug::init();
+		$this->messages = zgMessages::init();
+		$this->configuration = zgConfiguration::init();
+		$this->user = zgUserhandler::init();
+
+		$this->database = new zgDatabase();
+		$this->database->connect();
+	}
+
+	public function index($parameters=array())
+	{
+		$this->debug->guard();
+
+		$this->debug->unguard(true);
+		return true;
+	}
+}
+
+?>
+```
+s

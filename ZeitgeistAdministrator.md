@@ -1,0 +1,9 @@
+# Zeitgeist Administrator v2 #
+
+The Zeitgeist Administrator v2 will help you create and manage projects based on the Zeitgeist framework. It is meant as a tool to help you develop applications with Zeitgeist as well as manage your running applications.
+
+Note that it's a pretty simple tool with very little failsafes. So be careful when editing or it will bring down your application!
+
+## Installing the ZGAv2 ##
+
+Download a release version from [the download page](ZeitgeistDownloadOverview.md) or export it from the [SVN](http://code.google.com/p/zeitgeist-framework/source/browse/applications/zeitgeist_administrator_v2/#zeitgeist_administrator_v2/trunk). Afterwards follow the [installation instructions](http://code.google.com/p/zeitgeist-framework/source/browse/applications/zeitgeist_administrator_v2/trunk/readme.txt).
